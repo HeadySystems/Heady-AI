@@ -28,27 +28,23 @@ const EventEmitter = require('events');
 const os = require('os');
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
+const logger = require('../utils/logger');
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;
 try { express    = require('express');    } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 try { promClient = require('prom-client'); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 try { pg         = require('pg');          } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 try { redis      = require('ioredis');     } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 try { axios      = require('axios');       } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
@@ -260,7 +256,7 @@ class HealthMonitor extends EventEmitter {
     // Trigger self-healing if needed
     if (state !== STATE.HEALTHY && !this._healingLock) {
       this._triggerHealing(result).catch(err => {
-        console.error('[HealthMonitor] Self-healing error:', err.message);
+        logger.error('[HealthMonitor] Self-healing error:', err.message);
       });
     }
 
@@ -606,7 +602,7 @@ class HealthMonitor extends EventEmitter {
 
       // DB healing: release idle connections
       if (result.checks.database.score < 50 && this._pgPool) {
-        console.warn('[HealthMonitor] DB degraded — releasing idle pool connections');
+        logger.warn('[HealthMonitor] DB degraded — releasing idle pool connections');
         // Force idle connections to be recycled
         this._pgPool._clients
           .filter(c => c._idle)
@@ -616,7 +612,7 @@ class HealthMonitor extends EventEmitter {
 
       // Redis healing: reconnect if disconnected
       if (result.checks.redis.score < 30 && this._redisClient) {
-        console.warn('[HealthMonitor] Redis degraded — attempting reconnect');
+        logger.warn('[HealthMonitor] Redis degraded — attempting reconnect');
         await this._redisClient.connect().catch(() => {});
         actions.push('redis-reconnect');
       }
@@ -633,7 +629,7 @@ class HealthMonitor extends EventEmitter {
       this.emit('healing', { actions, result });
 
       if (actions.length > 0) {
-        console.log('[HealthMonitor] Self-healing actions applied:', actions);
+        logger.info('[HealthMonitor] Self-healing actions applied:', actions);
         await this._sendAlert({
           level:   result.status,
           message: `Self-healing triggered. Score: ${result.score}. Actions: ${actions.join(', ')}`,
@@ -674,7 +670,7 @@ class HealthMonitor extends EventEmitter {
               { title: 'Timestamp', value: payload.timestamp, short: true },
             ],
           }],
-        }).catch(err => console.error('[HealthMonitor] Slack alert failed:', err.message))
+        }).catch(err => logger.error('[HealthMonitor] Slack alert failed:', err.message))
       );
     }
 
@@ -682,7 +678,7 @@ class HealthMonitor extends EventEmitter {
     if (this.config.alerts.webhookUrl && axios) {
       tasks.push(
         axios.post(this.config.alerts.webhookUrl, payload)
-          .catch(err => console.error('[HealthMonitor] Webhook alert failed:', err.message))
+          .catch(err => logger.error('[HealthMonitor] Webhook alert failed:', err.message))
       );
     }
 
@@ -698,7 +694,7 @@ class HealthMonitor extends EventEmitter {
       try {
         await this.check();
       } catch (err) {
-        console.error('[HealthMonitor] Background check error:', err.message);
+        logger.error('[HealthMonitor] Background check error:', err.message);
       }
     }, this.config.checkInterval);
 

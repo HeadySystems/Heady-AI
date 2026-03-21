@@ -284,7 +284,6 @@ async function kvCachePut(kv, cacheKey, value, ttlSeconds) {
   try {
     await kv.put(cacheKey, JSON.stringify(value), { expirationTtl: ttlSeconds });
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 }

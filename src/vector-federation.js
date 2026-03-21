@@ -10,6 +10,7 @@ const PHI = (1 + Math.sqrt(5)) / 2;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
+const logger = require('./utils/logger');
 
 const SYNC_STRATEGIES = {
   PUSH: 'push',     // Push changes to peers
@@ -175,7 +176,6 @@ class VectorFederation extends EventEmitter {
     const timer = setInterval(async () => {
       if (this._syncStrategy === SYNC_STRATEGIES.PULL) {
         try { await this.pullFromPeer(peerId); } catch (e) {
-          const logger = require('./utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -204,7 +204,6 @@ class VectorFederation extends EventEmitter {
         const local = await this._localMemory.search(query, { topK });
         results.push(...(local || []).map(r => ({ ...r, node: this.nodeId, source: 'local' })));
       } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -218,7 +217,6 @@ class VectorFederation extends EventEmitter {
         const peerResults = resp.data?.results || [];
         results.push(...peerResults.map(r => ({ ...r, node: peer.id, source: 'peer' })));
       } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

@@ -18,6 +18,7 @@
  */
 
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 const {
   PHI,
@@ -1126,7 +1127,7 @@ class MistakeReport {
  * @example
  * const engine = new MistakeAnalysisEngine(vectorMemory, wisdomStore);
  * const report = await engine.analyze(pipelineRun);
- * console.log(report.toMarkdown());
+ * logger.info(report.toMarkdown());
  */
 class MistakeAnalysisEngine extends EventEmitter {
   /**
@@ -1364,7 +1365,6 @@ class MistakeAnalysisEngine extends EventEmitter {
       this._wisdomStore.set('anti_regression.trial_warnings', trialRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.csl_gates',      gateRules.map(r => r.gate));
     } catch (_) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 

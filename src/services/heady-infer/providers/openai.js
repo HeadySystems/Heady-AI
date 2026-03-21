@@ -4,6 +4,7 @@ const https = require('https');
 const http  = require('http');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * OpenAIProvider — GPT adapter
@@ -112,7 +113,6 @@ class OpenAIProvider extends BaseProvider {
                 completionTokens = evt.usage.completion_tokens || 0;
               }
             } catch (_) {
-              const logger = require('../../../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }

@@ -7,7 +7,6 @@
 
 let TERMINAL_STATES;
 try { TERMINAL_STATES = require("../memory/memory-receipts").TERMINAL_STATES; } catch(_) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: _.message, stack: _.stack });
 }
 if (!TERMINAL_STATES) TERMINAL_STATES = new Set(["success", "failure", "timeout", "cancelled", "skipped"]);

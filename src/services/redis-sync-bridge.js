@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const yaml = require('../core/heady-yaml');
+const logger = require('../utils/logger');
 
 const CONFIG_PATH = path.resolve(__dirname, '../../configs/services/buddy-system-config.yaml');
 
@@ -136,7 +137,6 @@ class RedisSyncBridge {
                 await this.redisClient.set(key, serialized, 'EX', ttlSec);
                 return;
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -156,7 +156,6 @@ class RedisSyncBridge {
                 const raw = await this.redisClient.get(key);
                 if (raw) { this._stats.hits++; return JSON.parse(raw); }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -190,7 +189,6 @@ class RedisSyncBridge {
                 await this.redisClient.publish(channel, serialized);
                 return;
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -211,7 +209,6 @@ class RedisSyncBridge {
         const key = this._key(id);
         if (this.mode === 'redis' && this.redisClient) {
             try { await this.redisClient.del(key); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -227,7 +224,6 @@ class RedisSyncBridge {
                 const keys = await this.redisClient.keys(`${this.prefix}*`);
                 if (keys.length > 0) await this.redisClient.del(...keys);
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

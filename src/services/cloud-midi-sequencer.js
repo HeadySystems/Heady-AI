@@ -19,6 +19,7 @@
 'use strict';
 
 const { PHI, PHI_INV, BASE, phiScale, phiTiming } = require('../shared/heady-principles');
+const logger = require('../utils/logger');
 
 // ── High-Resolution Clock ──────────────────────────────────────────
 
@@ -157,7 +158,6 @@ class MasterClock {
     _emit(event, data) {
         for (const cb of this.subscribers) {
             try { cb(event, data); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -469,7 +469,6 @@ class SequencerTransport {
                     });
             }
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
         return null;

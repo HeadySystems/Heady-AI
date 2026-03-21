@@ -21,6 +21,7 @@ const router  = express.Router();
 const guard   = require('./index');
 const { getRules, setRules, addRule, removeRule } = require('./rules');
 const config  = require('./config');
+const logger = require('../../utils/logger');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -245,7 +246,7 @@ router.use((err, req, res, _next) => {
     : err.message;
 
   if (status === 500) {
-    console.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
+    logger.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
   }
 
   return res.status(status).json({ error: 'guard_error', message });

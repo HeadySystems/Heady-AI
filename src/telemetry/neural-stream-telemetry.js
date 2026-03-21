@@ -17,6 +17,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // Golden ratio — consistent with Heady™Systems implementations
 const PHI = 1.6180339887;
@@ -493,7 +494,6 @@ class TelemetryInterceptor {
         const fullAlert = { ...alertObj, timestamp: new Date().toISOString() };
         for (const listener of this._alertListeners) {
             try { listener(fullAlert); } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }

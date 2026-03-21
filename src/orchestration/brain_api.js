@@ -3,7 +3,6 @@
  * Provides /plan, /feedback, /status endpoints for the brain orchestration layer.
  */
 let express = null; try { express = require('../core/heady-server'); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 const router = express.Router();

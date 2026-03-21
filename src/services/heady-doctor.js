@@ -22,6 +22,7 @@
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
+const logger = require('../utils/logger');
 
 const ROOT = path.resolve(__dirname, '..');
 process.chdir(ROOT);
@@ -33,9 +34,9 @@ function check(name, fn) {
     CHECKS.push({ name, fn });
 }
 
-function pass(msg) { passed++; console.log(`  ✅ ${msg}`); }
-function warn(msg) { warned++; console.log(`  ⚠️  ${msg}`); }
-function fail(msg) { failed++; console.log(`  ❌ ${msg}`); }
+function pass(msg) { passed++; logger.info(`  ✅ ${msg}`); }
+function warn(msg) { warned++; logger.info(`  ⚠️  ${msg}`); }
+function fail(msg) { failed++; logger.info(`  ❌ ${msg}`); }
 
 // ── 1. Core Files ─────────────────────────────────────────────
 check('Core Files', () => {
@@ -137,7 +138,6 @@ check('Secure Vault', () => {
                         credCount += data.filter(v => v.metadata?.type === 'credential').length;
                     }
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }
@@ -216,14 +216,14 @@ check('Patent Registry', () => {
 
 // ── Run All ──────────────────────────────────────────────────
 async function main() {
-    console.log('');
-    console.log('─── heady doctor ───────────────────────────────');
-    console.log(`  Diagnosing: ${ROOT}`);
-    console.log(`  Time: ${new Date().toISOString()}`);
-    console.log('');
+    logger.info('');
+    logger.info('─── heady doctor ───────────────────────────────');
+    logger.info(`  Diagnosing: ${ROOT}`);
+    logger.info(`  Time: ${new Date().toISOString()}`);
+    logger.info('');
 
     for (const { name, fn } of CHECKS) {
-        console.log(`\n[${name}]`);
+        logger.info(`\n[${name}]`);
         try {
             await fn();
         } catch (err) {
@@ -231,21 +231,21 @@ async function main() {
         }
     }
 
-    console.log('\n─── Summary ────────────────────────────────────');
-    console.log(`  ✅ Passed:  ${passed}`);
-    console.log(`  ⚠️  Warned: ${warned}`);
-    console.log(`  ❌ Failed:  ${failed}`);
-    console.log(`  Total:     ${passed + warned + failed}`);
-    console.log('');
+    logger.info('\n─── Summary ────────────────────────────────────');
+    logger.info(`  ✅ Passed:  ${passed}`);
+    logger.info(`  ⚠️  Warned: ${warned}`);
+    logger.info(`  ❌ Failed:  ${failed}`);
+    logger.info(`  Total:     ${passed + warned + failed}`);
+    logger.info('');
 
     if (failed > 0) {
-        console.log('  Status: UNHEALTHY — fix failed checks above');
+        logger.info('  Status: UNHEALTHY — fix failed checks above');
         process.exit(1);
     } else if (warned > 0) {
-        console.log('  Status: DEGRADED — review warnings above');
+        logger.info('  Status: DEGRADED — review warnings above');
         process.exit(0);
     } else {
-        console.log('  Status: HEALTHY ✅');
+        logger.info('  Status: HEALTHY ✅');
         process.exit(0);
     }
 }

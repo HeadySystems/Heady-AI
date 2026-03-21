@@ -27,8 +27,8 @@
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
+const logger = require('../utils/logger');
 let CSL = null; try { CSL = require("../core/semantic-logic"); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
@@ -334,7 +334,6 @@ function contextualize(rawMessages, opts = {}) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
         fs.appendFileSync(CONTEXT_FILE, JSON.stringify(contextEntry) + "\n");
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -364,7 +363,6 @@ function contextualize(rawMessages, opts = {}) {
 
 // ─── Express Router (mount on /api/contextualizer) ──────────
 let express = null; try { express = require('../core/heady-server'); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 const router = express.Router();

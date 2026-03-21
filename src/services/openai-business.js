@@ -13,6 +13,7 @@
  */
 const HeadyCompute = (() => { try { return require('headycompute') } catch (e) { return {} } })();
 const path = require('path');
+const logger = require('../utils/logger');
 const HeadyGateway = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'gateway'));
 const { createProviders } = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'providers'));
 
@@ -182,7 +183,6 @@ async function embed(text, model = 'text-embedding-3-small') {
             };
         }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

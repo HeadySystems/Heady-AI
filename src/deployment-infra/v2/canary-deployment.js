@@ -38,6 +38,7 @@ const https = require('https');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../../utils/logger');
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
@@ -115,7 +116,7 @@ const STATE = Object.freeze({
 // ─── Utilities ─────────────────────────────────────────────────────────────────
 
 function log(level, msg, data = {}) {
-  console.log(JSON.stringify({
+  logger.info(JSON.stringify({
     level,
     ts: new Date().toISOString(),
     msg,
@@ -203,7 +204,6 @@ async function collectMetrics(serviceUrl) {
       metrics.raw.gateway = gatewayData;
     }
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 
@@ -219,7 +219,6 @@ async function collectMetrics(serviceUrl) {
     }
     metrics.raw.full = { uptime: fullData?.uptime, memory: fullData?.memory };
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 
@@ -644,17 +643,17 @@ async function main() {
   if (args.includes('--status')) {
     const state = loadState();
     if (!state) {
-      console.log('No active canary deployment');
+      logger.info('No active canary deployment');
       process.exit(0);
     }
-    console.log(JSON.stringify(state, null, 2));
+    logger.info(JSON.stringify(state, null, 2));
     process.exit(0);
   }
 
   if (args.includes('--rollback')) {
     const state = loadState();
     if (!state) {
-      console.error('No canary state found — nothing to roll back');
+      logger.error('No canary state found — nothing to roll back');
       process.exit(1);
     }
     const engine = new CanaryDeployment({ imageTag: state.imageTag });
@@ -665,7 +664,7 @@ async function main() {
 
   const imageIdx = args.indexOf('--image');
   if (imageIdx === -1 || !args[imageIdx + 1]) {
-    console.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
+    logger.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
     process.exit(1);
   }
 

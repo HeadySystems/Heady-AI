@@ -12,6 +12,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
@@ -320,7 +321,6 @@ function applyProposal(proposalId) {
         // Rollback: restore original if we backed it up
         if (backupPath && originalContent !== null) {
             try { fs.writeFileSync(targetPath, originalContent, 'utf-8'); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

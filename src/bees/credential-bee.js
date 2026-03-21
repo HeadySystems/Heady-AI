@@ -19,6 +19,7 @@
  */
 
 const path = require('path');
+const logger = require('../utils/logger');
 
 const BEE_ID = 'credential-bee';
 const CREDENTIAL_ROTATION_DAYS = {
@@ -37,7 +38,6 @@ let vault = null;
 try {
     vault = require(path.join(__dirname, '..', 'services', 'secure-key-vault')).vault;
 } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 

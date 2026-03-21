@@ -19,6 +19,7 @@ const { MemoryManager, BufferMemory } = require('./memory');
 const { ChatPromptTemplate, OutputParsers, PromptTemplate } = require('./prompts');
 const { httpPost, interpolate } = require('./nodes');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Shared LLM call helper ───────────────────────────────────────────────────
 
@@ -182,7 +183,7 @@ Final Answer: [your complete answer]`;
         steps[steps.length - 1].observation = observation;
 
         if (this.verbose) {
-          console.log(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
+          logger.info(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
         }
       } else {
         // Unexpected format — ask LLM to continue
@@ -448,7 +449,6 @@ class ConversationalAgent {
           try {
             fnArgs = typeof tc.function?.arguments === 'string' ? JSON.parse(tc.function.arguments) : tc.input || {};
           } catch (e) {
-            const logger = require('../../utils/logger');
             logger.error('Unexpected error', { error: e.message, stack: e.stack });
           }
 

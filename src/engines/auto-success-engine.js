@@ -249,7 +249,6 @@ const CODE_QUALITY = {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     if (count > 21) { // fib(8)
@@ -515,7 +514,6 @@ const CODE_QUALITY = {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     const status = hits === 0 ? 'pass' : hits <= 5 ? 'warn' : 'fail';
@@ -726,7 +724,6 @@ const SECURITY = {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     const status = hits === 0 ? 'pass' : hits <= 3 ? 'warn' : 'fail';
@@ -753,7 +750,6 @@ const SECURITY = {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     const status = hits === 0 ? 'pass' : hits <= 5 ? 'warn' : 'fail';
@@ -780,7 +776,6 @@ const SECURITY = {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     const status = hits === 0 ? 'pass' : 'warn';
@@ -805,7 +800,6 @@ const SECURITY = {
         hits += traversals > 5 ? 1 : 0; // threshold: >5 traversals in a single file
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     const status = hits === 0 ? 'pass' : 'warn';
@@ -859,7 +853,6 @@ const SECURITY = {
           }
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -998,7 +991,6 @@ const PERFORMANCE = {
       const v8 = require('v8');
       heapStats = v8.getHeapStatistics();
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     if (!heapStats) {

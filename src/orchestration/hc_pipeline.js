@@ -30,6 +30,7 @@ const path = require("path");
 const crypto = require("crypto");
 const yaml = require('core/heady-yaml');
 const EventEmitter = require("events");
+const logger = require('../utils/logger');
 
 const CONFIGS_DIR = path.join(__dirname, "..", "configs");
 const LOGS_DIR = path.join(__dirname, "..");
@@ -160,7 +161,6 @@ function appendLog(state, level, message, detail) {
   try {
     fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
   } catch (_) {
-    const logger = require('../utils/logger');
     logger.error('Unexpected error', { error: _.message, stack: _.stack });
   }
 }
@@ -350,7 +350,6 @@ function saveTaskCache() {
     if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
     fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
   } catch (_) {
-    const logger = require('../utils/logger');
     logger.error('Unexpected error', { error: _.message, stack: _.stack });
   }
 }
@@ -878,7 +877,6 @@ class HCFullPipeline extends EventEmitter {
     // ── Auto-commit + push after pipeline run ──────────────────────────
     try {
       let { autoCommitEngine } = {}; try { { autoCommitEngine } = require("./engines/auto-commit-engine"); } catch(e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
       const commitResult = await autoCommitEngine.autoCommitAndPush({
@@ -918,7 +916,6 @@ class HCFullPipeline extends EventEmitter {
                 taskResult.status === "completed" ? 85 : 40
               );
             } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }
@@ -936,7 +933,6 @@ class HCFullPipeline extends EventEmitter {
               tags: ["pipeline", "stage_timing", stageId],
             });
           } catch (_) {
-            const logger = require('../utils/logger');
             logger.error('Unexpected error', { error: _.message, stack: _.stack });
           }
         }
@@ -949,7 +945,6 @@ class HCFullPipeline extends EventEmitter {
                 tags: ["pipeline", "task_failure", taskName],
               });
             } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }
@@ -999,7 +994,6 @@ class HCFullPipeline extends EventEmitter {
           status: this.state.status === RunStatus.COMPLETED ? "applied" : "needs_review",
         });
       } catch (_) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }

@@ -27,6 +27,7 @@ const https         = require('https');
 const { execSync, exec } = require('child_process');
 
 const phiMath = require('../../shared/phi-math.js');
+const logger = require('../utils/logger');
 const {
   PHI,
   PSI,
@@ -374,7 +375,6 @@ async function scanConfigDrift(rootDir) {
           }
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -425,7 +425,6 @@ async function scanConfigDrift(rootDir) {
           result.envMismatches.push({ key: 'NODE_ENV', config: pkgNodeEnv, env: envNodeEnv });
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -501,7 +500,6 @@ async function scanServiceHealth(rootDir) {
             break;
           }
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -722,7 +720,6 @@ async function scanDependencyFreshness(rootDir) {
         result.moderate  = vulns.moderate  || 0;
         result.vulnerable = result.critical + result.high + result.moderate;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -734,7 +731,6 @@ async function scanDependencyFreshness(rootDir) {
         const outdated = JSON.parse(outdatedRaw);
         result.outdated = Object.keys(outdated).length;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -820,7 +816,6 @@ async function scanVectorMemory(rootDir) {
       const raw = tryRead(mp);
       if (raw) {
         try { meta = JSON.parse(raw); break; } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -976,7 +971,6 @@ async function scanResourceUtilization(rootDir) {
         if (crMetrics.memUtil   !== undefined) result.avgMemUtilization = crMetrics.memUtil;
         if (crMetrics.diskUtil  !== undefined) result.diskUtilization   = crMetrics.diskUtil;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -1049,7 +1043,6 @@ async function scanCostTrajectory(rootDir) {
       const raw = tryRead(bp);
       if (raw) {
         try { budgetConfig = JSON.parse(raw); break; } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -1073,7 +1066,6 @@ async function scanCostTrajectory(rootDir) {
       const raw = tryRead(clp);
       if (raw) {
         try { costData = JSON.parse(raw); break; } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }

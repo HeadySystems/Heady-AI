@@ -8,6 +8,7 @@
  * Provides /health/live, /health/ready, and /health/full for Kubernetes-style probes.
  */
 const express = require('../core/heady-server');
+const logger = require('../utils/logger');
 const router = express.Router();
 
 const startTime = Date.now();
@@ -120,7 +121,6 @@ router.get('/full', async (req, res) => {
     try {
         resilienceStatus = require('../resilience').getResilienceStatus();
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -128,7 +128,6 @@ router.get('/full', async (req, res) => {
     try {
         introspection = require('../self-awareness').getSystemIntrospection();
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

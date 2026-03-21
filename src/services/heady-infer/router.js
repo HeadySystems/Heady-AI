@@ -1,6 +1,7 @@
 'use strict';
 
 const EventEmitter = require('events');
+const logger = require('../../utils/logger');
 
 /**
  * TaskRouter — Task-aware routing engine.
@@ -97,7 +98,6 @@ class TaskRouter extends EventEmitter {
           return { chain, taskType, reason: 'custom_rule' };
         }
       } catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
@@ -155,7 +155,6 @@ class TaskRouter extends EventEmitter {
         return routeList.slice(1).length > 0 ? routeList.slice(1) : routeList;
       }
     } catch (_) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
     return routeList;

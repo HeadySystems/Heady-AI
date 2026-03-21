@@ -20,6 +20,7 @@ const EventEmitter = require("events");
 const crypto = require("crypto");
 const { midiBus, CHANNELS } = require("../engines/midi-event-bus");
 const { PHI_TIMING } = require("../shared/phi-math");
+const logger = require('../utils/logger');
 
 const STATE = {
     DISCOVERING: "discovering", MAPPING: "mapping", GENERATING: "generating",
@@ -86,7 +87,6 @@ class DynamicConnectorService extends EventEmitter {
                 body: JSON.stringify({ query: "{ __schema { types { name kind fields { name } } } }" }), signal: AbortSignal.timeout(15000) });
             if (res.ok) { const d = await res.json(); if (d.data?.__schema) return { type: "graphql", data: d.data.__schema, sourceUrl: `${url}/graphql` }; }
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
         // Raw fallback

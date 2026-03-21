@@ -1,4 +1,5 @@
 const { PHI_TIMING } = require('../shared/phi-math');
+const logger = require('../utils/logger');
 /**
  * @fileoverview MCP Multi-Transport Adapter
  *
@@ -147,7 +148,6 @@ export async function detectTransport(endpoint) {
         return TransportId.SSE;
       }
     } catch (_) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 
@@ -436,7 +436,6 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.data) {
             this._handleIncoming(evt.data);
             try { lastResult = deserializeMessage(evt.data); } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }
@@ -577,7 +576,6 @@ export class LegacySSETransport extends BaseTransport {
   async close() {
     this._connected = false;
     try { await this._sseReader?.cancel(); } catch (_) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
     this._sseReader = null;

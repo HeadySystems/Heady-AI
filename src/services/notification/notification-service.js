@@ -210,7 +210,7 @@ function createNotificationService() {
   }
 
   const server = http.createServer(async (req, res) => {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
     const method = req.method;
 
     if (url.pathname.startsWith('/health')) {

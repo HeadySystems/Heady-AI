@@ -86,6 +86,7 @@ const PHI3  = PHI2 * PHI;   // ≈ 4.2360
  * @property {number} newsBlackoutMinutes  Minutes around news events to avoid entries.
  */
 const APEX_RULES = Object.freeze({
+const logger = require('../utils/logger');
     accounts: {
         '25K':  { balance: 25000,  trailingDrawdown: 1500, initialMAE: 450,  safetyNetBuffer: 100 },
         '50K':  { balance: 50000,  trailingDrawdown: 2500, initialMAE: 750,  safetyNetBuffer: 100 },
@@ -232,7 +233,7 @@ const CONSTANTS_DIGEST = sha256({ PHI, PSI, EPSILON, PSI2, PSI3, PHI2, PHI3 });
  * const agent = new ApexRiskAgentCSL({ accountType: '100K' });
  * agent.startSession();
  * const result = agent.checkRiskCSL(100450, -200);
- * console.log(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
+ * logger.info(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
  */
 class ApexRiskAgentCSL extends EventEmitter {
 

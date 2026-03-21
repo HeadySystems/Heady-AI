@@ -41,6 +41,7 @@ const PSI = 1 / PHI; // ≈ 0.618
 
 // CSL gate thresholds for prompt relevance filtering
 const CSL_GATES = Object.freeze({
+const logger = require('../utils/logger');
   MINIMUM: 0.500,
   LOW: 0.691,
   MEDIUM: 0.809,
@@ -104,7 +105,7 @@ function loadUniversalPrompt() {
     _promptHash = crypto.createHash("sha256").update(_cachedPrompt).digest("hex").slice(0, 16);
     return _cachedPrompt;
   } catch (err) {
-    console.error(`[universal-agent-prompt] Failed to load prompt: ${err.message}`);
+    logger.error(`[universal-agent-prompt] Failed to load prompt: ${err.message}`);
     return getFallbackPrompt();
   }
 }

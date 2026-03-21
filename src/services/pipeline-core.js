@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const yaml = require('../core/heady-yaml');
+const logger = require('../utils/logger');
 
 const CONFIGS_DIR = path.join(__dirname, "..", "..", "configs");
 const LOGS_DIR = path.join(__dirname, "..", "..");
@@ -116,7 +117,6 @@ function appendLog(state, level, message, detail) {
     try {
         fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
     } catch (_) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 }

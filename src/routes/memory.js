@@ -33,7 +33,7 @@ const logger = require("../utils/logger");
 const CSL = require("../core/semantic-logic");
 
 // Qdrant configuration
-const QDRANT_URL = process.env.QDRANT_URL || "http://127.0.0.1:6333";
+const QDRANT_URL = process.env.QDRANT_URL || "http://0.0.0.0:6333";
 const QDRANT_COLLECTION = "heady-memory";
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");

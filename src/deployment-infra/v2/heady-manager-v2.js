@@ -44,7 +44,7 @@ const startupState = {
 // CHANGE: Added structured error logging before process exit.
 // Original had no uncaughtException handler — silent crashes with no log context.
 process.on('uncaughtException', (err, origin) => {
-  console.error(JSON.stringify({
+  logger.error(JSON.stringify({
     level: 'fatal',
     msg: 'Uncaught exception — process will exit',
     error: err.message,
@@ -58,7 +58,7 @@ process.on('uncaughtException', (err, origin) => {
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  console.error(JSON.stringify({
+  logger.error(JSON.stringify({
     level: 'error',
     msg: 'Unhandled promise rejection',
     reason: reason instanceof Error ? reason.message : String(reason),
@@ -73,7 +73,7 @@ process.on('unhandledRejection', (reason, promise) => {
 // CHANGE: If bootstrap takes longer than BOOT_TIMEOUT_MS, exit with failure.
 // Cloud Run will then roll back to the previous revision automatically.
 const bootTimeoutHandle = setTimeout(() => {
-  console.error(JSON.stringify({
+  logger.error(JSON.stringify({
     level: 'fatal',
     msg: `Boot timeout after ${BOOT_TIMEOUT_MS}ms — last phase: ${startupState.phase}`,
     ts: new Date().toISOString(),
@@ -215,6 +215,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
 startupState.phase = 'engines';
 const { wireEngines } = require('./src/bootstrap/engine-wiring');
 const { loadRegistry } = require('./src/routes/registry');
+const logger = require('../../utils/logger');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
 const _engines = wireEngines(app, {
   pipeline, loadRegistry, eventBus,
@@ -293,7 +294,6 @@ if (metricsRegistry) {
       help: 'Time taken to boot the server in seconds',
     }).set(startupState.bootTimeMs / 1000);
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 }
@@ -385,7 +385,6 @@ async function gracefulShutdown(signal) {
   try {
     if (watchdog?.stop) watchdog.stop();
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 

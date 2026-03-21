@@ -25,6 +25,7 @@ const crypto = require("crypto");
 
 const USERS_PATH = path.join(__dirname, "..", ".heady", "users.json");
 const PLANS = {
+const logger = require('./utils/logger');
   explorer: { name: "Explorer", price: 0, dailyLimit: 100, stripePriceId: null },
   starter: { name: "Starter", price: 2900, dailyLimit: 2000, stripePriceId: process.env.STRIPE_PRICE_STARTER || null },
   pro: { name: "Pro", price: 9900, dailyLimit: Infinity, stripePriceId: process.env.STRIPE_PRICE_PRO || null },
@@ -40,7 +41,7 @@ function loadUsers() {
       return JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
     }
   } catch (e) {
-    console.error("[hc_billing] Failed to load users:", e.message);
+    logger.error("[hc_billing] Failed to load users:", e.message);
   }
   return { users: [], metadata: { createdAt: new Date().toISOString() } };
 }
@@ -59,7 +60,7 @@ function getStripe() {
   try {
     return require("stripe")(key);
   } catch (e) {
-    console.warn("[hc_billing] Stripe not available:", e.message);
+    logger.warn("[hc_billing] Stripe not available:", e.message);
     return null;
   }
 }

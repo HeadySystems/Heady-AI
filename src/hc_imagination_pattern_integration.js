@@ -24,11 +24,12 @@ const { imagination } = require('./hc_imagination');
 
 // Try to load pattern engine if available
 let patternEngine = null;
+const logger = require('./utils/logger');
 try {
   const { patternStore } = require('./hc_pattern_engine');
   patternEngine = patternStore;
 } catch (e) {
-  console.log('[Imagination-Pattern] Pattern engine not available');
+  logger.info('[Imagination-Pattern] Pattern engine not available');
 }
 
 class ImaginationPatternIntegration {

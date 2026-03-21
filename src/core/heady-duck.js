@@ -35,7 +35,6 @@ class Database {
         this.db.close();
       }
     } catch (err) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
     this.db = null;

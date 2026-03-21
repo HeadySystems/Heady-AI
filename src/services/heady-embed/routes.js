@@ -29,6 +29,7 @@ const config = require('./config');
 
 /** @type {Map<string, object>} jobId -> job state */
 const jobStore = new Map();
+const logger = require('../../utils/logger');
 
 function createJob(texts, options) {
   const jobId = crypto.randomUUID();
@@ -379,7 +380,7 @@ function createRouter(embedService) {
   // -------------------------------------------------------------------------
 
   router.use((err, req, res, next) => {
-    console.error('[HeadyEmbed Router Error]', err);
+    logger.error('[HeadyEmbed Router Error]', err);
     if (res.headersSent) return next(err);
     return res.status(422).json({ error: err.message || 'Internal error' });
   });

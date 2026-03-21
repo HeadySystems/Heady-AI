@@ -49,6 +49,7 @@ const PHI = 1.6180339887;
 
 // ─── Circuit-breaker states ───────────────────────────────────────────────────
 const CB_STATE = Object.freeze({
+const logger = require('../../utils/logger');
   CLOSED:    'CLOSED',    // healthy, requests flow freely
   OPEN:      'OPEN',      // tripped, requests rejected immediately
   HALF_OPEN: 'HALF_OPEN', // probe period — one request allowed through
@@ -502,19 +503,19 @@ class HeadyServiceMesh extends EventEmitter {
 
     // Initial probe pass (non-blocking)
     this._runHealthProbes().catch((err) =>
-      console.error('[mesh] initial health probe error:', err.message)
+      logger.error('[mesh] initial health probe error:', err.message)
     );
 
     // Periodic probe
     this._probeTimer = setInterval(
-      () => this._runHealthProbes().catch(console.error),
+      () => this._runHealthProbes().catch(err => logger.error(err.message || String(err), { error: err })),
       this._config.healthCheckIntervalMs
     );
 
     // Prevent timer from blocking process exit
     if (this._probeTimer.unref) this._probeTimer.unref();
 
-    console.log('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
+    logger.info('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
     this._publish('heady:service:mesh_started', { ts: Date.now() });
   }
 
@@ -555,7 +556,7 @@ class HeadyServiceMesh extends EventEmitter {
       const exists = entry.instances.find((i) => i.url === url);
       if (!exists) {
         entry.addInstance({ url, weight, tags });
-        console.log(`[mesh] added instance ${url} → ${name}`);
+        logger.info(`[mesh] added instance ${url} → ${name}`);
       }
     } else {
       const entry = new ServiceEntry(
@@ -564,7 +565,7 @@ class HeadyServiceMesh extends EventEmitter {
         this._config
       );
       this._registry.set(name, entry);
-      console.log(`[mesh] registered new service: ${name}`);
+      logger.info(`[mesh] registered new service: ${name}`);
     }
 
     this._publish('heady:service:registered', { name, url, tags, ts: Date.now() });
@@ -706,7 +707,7 @@ class HeadyServiceMesh extends EventEmitter {
         inst.cb.onSuccess();
         inst.consecutiveFails = 0;
         if (!wasHealthy) {
-          console.log(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
+          logger.info(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
           this._publish('heady:service:healthy', { name: entry.name, url: inst.url, ts: Date.now() });
         }
       } else {
@@ -725,7 +726,7 @@ class HeadyServiceMesh extends EventEmitter {
     inst.lastHealthCheck = Date.now();
 
     if (wasHealthy) {
-      console.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
+      logger.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
       this._publish('heady:service:unhealthy', {
         name:  entry.name,
         url:   inst.url,

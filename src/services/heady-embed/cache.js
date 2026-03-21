@@ -13,6 +13,7 @@ const path = require('path');
 const readline = require('readline');
 const EventEmitter = require('events');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Bloom Filter (simple bit-array implementation)
@@ -314,7 +315,6 @@ class EmbeddingCache extends EventEmitter {
     try {
       fs.mkdirSync(dir, { recursive: true });
     } catch (_) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 
@@ -374,7 +374,6 @@ class EmbeddingCache extends EventEmitter {
           this.set(entry.k, entry.v);
           loaded++;
         } catch (_) {
-          const logger = require('../../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
       });

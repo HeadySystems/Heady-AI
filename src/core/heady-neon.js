@@ -32,7 +32,6 @@ class NeonDB {
         this.connection.end();
       }
     } catch (err) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
     this.connection = null;

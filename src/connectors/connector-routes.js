@@ -9,6 +9,7 @@ const { ConnectorVault } = require("./connector-vault");
 const { listProviders, listServices, getScopesForServices, PROVIDERS } = require("./oauth-scopes");
 
 const vault = new ConnectorVault();
+const logger = require('../utils/logger');
 
 /**
  * Register connector API routes on the Express app.
@@ -128,7 +129,7 @@ function registerConnectorRoutes(app) {
     try {
         require("../utils/logger").logSystem("🔌 Connector routes registered: providers, services, token vault, health");
     } catch {
-        console.log("🔌 Connector routes registered");
+        logger.info("🔌 Connector routes registered");
     }
 }
 

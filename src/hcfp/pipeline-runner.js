@@ -27,6 +27,7 @@ const { createAuditedAction, ACTION_TYPES } = require("../telemetry/cognitive-te
 const finops = require("../engines/finops-budget-router");
 const { classify } = require("./task-dispatcher");
 const { midiBus, CHANNELS, NOTES } = require("../engines/midi-event-bus");
+const logger = require('../utils/logger');
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const PIPELINE_LOG = path.join(DATA_DIR, "hcfp-pipeline.jsonl");
@@ -263,7 +264,6 @@ function persist(manifestId) {
             body: JSON.stringify(embedPayload),
         }).catch(() => { /* never block pipeline on embedding failures */ });
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -318,7 +318,6 @@ function persistManifestEvent(manifest, event) {
         };
         fs.appendFile(PIPELINE_LOG, JSON.stringify(entry) + "\n", () => { });
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }

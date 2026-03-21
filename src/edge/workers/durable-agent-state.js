@@ -1,4 +1,5 @@
 const { PHI_TIMING } = require('../../shared/phi-math');
+const logger = require('../../utils/logger');
 /**
  * durable-agent-state.js
  * Heady™ Latent OS — Durable Agent State Object
@@ -525,7 +526,6 @@ export class DurableAgentState {
                   ws.send(wsOut({ type: 'token', content: token, requestId: msg.requestId }));
                 }
               } catch (e) {
-                const logger = require('../../utils/logger');
                 logger.error('Unexpected error', { error: e.message, stack: e.stack });
               }
             }
@@ -763,7 +763,6 @@ export class DurableAgentState {
     const stateMsg = wsOut({ type: 'state', data: { lifecycle: to } });
     for (const ws of this.activeSockets.values()) {
       try { ws.send(stateMsg); } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -909,7 +908,6 @@ export class DurableAgentState {
     const taskMsg = wsOut({ type: 'state', data: { event: 'proactive_task_start', task } });
     for (const ws of this.activeSockets.values()) {
       try { ws.send(taskMsg); } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -946,7 +944,6 @@ export class DurableAgentState {
         ws.send(expiredMsg);
         ws.close(1001, 'Session expired');
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

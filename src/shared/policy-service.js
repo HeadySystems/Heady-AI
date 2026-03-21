@@ -8,11 +8,9 @@
  */
 
 let PolicyEngine = null; try { PolicyEngine = require("./policy-engine"); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 let BudgetService = null; try { BudgetService = require("./services/budget-service"); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 

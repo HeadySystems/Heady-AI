@@ -14,6 +14,7 @@
 
 const crypto = require('crypto');
 const { PHI } = require('../shared/heady-principles');
+const logger = require('../utils/logger');
 
 const SYNC_VERSION = 'v3457890';
 const SYNC_INTERVAL_MS = Math.round(5000 * PHI); // ~8090ms — phi-based interval
@@ -261,7 +262,6 @@ class CrossDeviceSync {
         const handlers = this.eventHandlers.get(event) || [];
         for (const handler of handlers) {
             try { handler(data); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

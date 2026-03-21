@@ -57,7 +57,6 @@ function setupDashboardRoutes(app) {
         rateLimit: p.rateLimit,
       }));
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

@@ -21,6 +21,7 @@
 // ─── XSS Patterns ────────────────────────────────────────────────────────────
 
 const HTML_ENTITY_MAP = {
+const logger = require('../utils/logger');
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -416,7 +417,7 @@ function requestSanitizer(opts = {}) {
 
       if (allViolations.length > 0) {
         // Log all violations
-        console.warn('[SANITIZER] Violations detected:', {
+        logger.warn('[SANITIZER] Violations detected:', {
           path:       req.path,
           method:     req.method,
           ip:         req.ip,

@@ -16,6 +16,7 @@
 
 const { EventEmitter } = require('events');
 const { normalize, fibonacciShardIndex, isValidVector, DIMS } = require('./vector-space-ops');
+const logger = require('../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -418,7 +419,6 @@ class VectorPipeline extends EventEmitter {
       item.stageTimes.totalMs = Date.now() - item.enqueuedAt;
       if (this.onAcknowledge) {
         try { this.onAcknowledge(item); } catch (_) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
       }

@@ -8,6 +8,7 @@
 
 const EventEmitter = require('events');
 const crypto       = require('crypto');
+const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────
 // Response Normalizer
@@ -228,7 +229,6 @@ async function* streamToSSE(stream, requestId) {
                           ?? '';
               if (delta) yield { requestId, delta, done: false };
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
           }

@@ -13,6 +13,7 @@
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -75,7 +76,6 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                 const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
                 this.battleService = new HeadyBattleService({ gateway: this._gateway });
             } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }
@@ -303,7 +303,6 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                     };
                 }
             } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }

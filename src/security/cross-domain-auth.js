@@ -25,6 +25,7 @@ const {
   cslGate, sigmoid,
 } = require('../../shared/phi-math');
 const { HEADY_DOMAINS, ALLOWED_ORIGINS, isAllowedOrigin } = require('../../shared/heady-domains');
+const logger = require('../utils/logger');
 
 // ─── φ-Constants ─────────────────────────────────────────────────────────────
 
@@ -190,7 +191,6 @@ function generateBridgeHTML(sessionValid, userInfo) {
         timestamp: Date.now(),
       }, '*');
     } catch (_bridgeErr) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _bridgeErr.message, stack: _bridgeErr.stack });
     }
   }

@@ -9,6 +9,7 @@
 
 const STREAM_KEY = 'heady:events';
 const CONSUMER_GROUP = 'hcfp-consumers';
+const logger = require('../utils/logger');
 
 /**
  * HeadyEventSpine — Event bus using Redis Streams.
@@ -88,7 +89,7 @@ class HeadyEventSpine {
         }
       } catch (err) {
         // Log error and continue — don't crash the event loop
-        console.error('[HeadyEventSpine] Stream error:', err.message);
+        logger.error('[HeadyEventSpine] Stream error:', err.message);
         await new Promise(r => setTimeout(r, 1000)); // Brief pause on error only
       }
     }
@@ -120,7 +121,7 @@ class HeadyEventSpine {
       try {
         await handler(event);
       } catch (err) {
-        console.error(`[HeadyEventSpine] Handler error for ${eventType}:`, err.message);
+        logger.error(`[HeadyEventSpine] Handler error for ${eventType}:`, err.message);
       }
     }
 
@@ -129,7 +130,7 @@ class HeadyEventSpine {
       try {
         await this._defaultHandler(event);
       } catch (err) {
-        console.error('[HeadyEventSpine] Default handler error:', err.message);
+        logger.error('[HeadyEventSpine] Default handler error:', err.message);
       }
     }
   }

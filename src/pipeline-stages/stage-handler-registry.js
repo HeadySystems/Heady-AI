@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { execSync } = require('child_process');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895; // 1/φ
@@ -53,7 +54,6 @@ async function syncCrossDeviceContext(ctx) {
   let context = {};
   if (fs.existsSync(memoryPath)) {
     try { context = JSON.parse(fs.readFileSync(memoryPath, 'utf8')); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -110,7 +110,6 @@ async function ingestSecurityLogs(ctx) {
       const content = fs.readFileSync(auditLog, 'utf8');
       recentEntries = content.split('\n').filter(Boolean).length;
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -130,7 +129,6 @@ async function retrieve3dVectorContext(ctx) {
       try {
         totalVectors += fs.readFileSync(full, 'utf8').split('\n').filter(Boolean).length;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -259,7 +257,6 @@ async function spawnTrialSandbox(ctx) {
   const sandboxId = `sandbox_${Date.now()}_${crypto.randomBytes(3).toString('hex')}`;
   const sandboxDir = path.join('/tmp', 'heady-sandboxes', sandboxId);
   try { fs.mkdirSync(sandboxDir, { recursive: true }); } catch (e) {
-    const logger = require('../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
   return {
@@ -486,7 +483,6 @@ async function scanOptimizationOps(ctx) {
       const depCount = Object.keys(pkg.dependencies || {}).length;
       if (depCount > 100) opportunities.push({ type: 'dependency_bloat', count: depCount, suggestion: 'Audit unused deps' });
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

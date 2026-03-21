@@ -16,6 +16,7 @@
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
@@ -224,7 +225,6 @@ class HeadyRedisPool {
         // Close all connections
         for (const client of this.pool) {
             try { await client.quit(); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -271,7 +271,6 @@ class HeadyRedisPool {
             if (idx < 0) continue;
 
             try { await client.quit(); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
 

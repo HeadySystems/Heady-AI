@@ -8,6 +8,7 @@
 
 const { httpPost, getPath } = require('./nodes');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Message / Memory Item ────────────────────────────────────────────────────
 
@@ -263,7 +264,6 @@ class VectorMemory {
     try {
       await httpPost(`${this.vectorUrl}/vectors/delete`, { namespace: this.namespace }, 5000);
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

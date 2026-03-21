@@ -24,6 +24,7 @@ const fs = require('fs');
 const path = require('path');
 
 const REGISTRY_PATH = 'heady-registry.json';
+const logger = require('./utils/logger');
 
 function loadRegistry(registryPath = REGISTRY_PATH) {
   try {
@@ -32,7 +33,7 @@ function loadRegistry(registryPath = REGISTRY_PATH) {
     }
     return null;
   } catch (error) {
-    console.error(`Error loading registry: ${error.message}`);
+    logger.error(`Error loading registry: ${error.message}`);
     return null;
   }
 }
@@ -42,7 +43,7 @@ function saveRegistry(registry, registryPath = REGISTRY_PATH) {
     fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2));
     return true;
   } catch (error) {
-    console.error(`Error saving registry: ${error.message}`);
+    logger.error(`Error saving registry: ${error.message}`);
     return false;
   }
 }

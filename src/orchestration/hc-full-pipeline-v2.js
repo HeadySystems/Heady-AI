@@ -34,6 +34,7 @@
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ── Stage definitions ─────────────────────────────────────────────
 const STAGES = [
@@ -508,7 +509,6 @@ class HCFullPipeline extends EventEmitter {
                     graphContext = await this.vectorMemory.queryWithRelationships(stimulus, 3);
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -629,7 +629,6 @@ class HCFullPipeline extends EventEmitter {
             try {
                 run._buddyConfidence = await this.buddyMetacognition.assessConfidence();
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -729,7 +728,6 @@ class HCFullPipeline extends EventEmitter {
                     return true;
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -833,7 +831,6 @@ class HCFullPipeline extends EventEmitter {
                     selfHealStats: { ...this.selfHealStats },
                 });
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

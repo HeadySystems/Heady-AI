@@ -92,6 +92,7 @@ const PHI = 1.6180339887;
 
 // ─── Severity mapping: Heady™ level → Cloud Logging severity ──────────────────
 const SEVERITY = Object.freeze({
+const logger = require('../../utils/logger');
   debug:    'DEBUG',
   info:     'INFO',
   notice:   'NOTICE',
@@ -914,9 +915,9 @@ if (require.main === module) {
     const traceId = obs.tracer.currentTraceId() || 'unknown';
     obs.logger.info('Trace complete', { traceId });
 
-    console.log('\n=== Prometheus metrics sample ===');
+    logger.info('\n=== Prometheus metrics sample ===');
     const output = obs.metrics.collect();
     // Print just the first 20 lines
-    console.log(output.split('\n').slice(0, 20).join('\n') + '\n...');
-  })().catch(console.error);
+    logger.info(output.split('\n').slice(0, 20).join('\n') + '\n...');
+  })().catch(err => logger.error(err.message || String(err), { error: err }));
 }

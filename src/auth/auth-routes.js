@@ -142,7 +142,6 @@ export function createAuthRouter({
         req.tokenScopes = req.user.permissions?.scopes ?? [];
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     next();

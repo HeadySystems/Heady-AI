@@ -35,6 +35,7 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597
 const RUNTIME_COUNT = parseInt(process.env.HEADY_COLAB_RUNTIME_COUNT || "4");
 
 const RUNTIMES = {
+const logger = require('../utils/logger');
     "colab-a": {
         id: "colab-a",
         role: "realtime-inference-and-projection",
@@ -200,7 +201,7 @@ class ColabOrchestrator {
         const now = Date.now();
         for (const [taskId, entry] of this.activeTasks) {
             if (now - entry.startedAt > this._staleTaskTimeoutMs) {
-                console.warn(`🧹 Reaping stale task ${taskId} on ${entry.runtimeId} (${((now - entry.startedAt) / 1000).toFixed(0)}s old)`);
+                logger.warn(`🧹 Reaping stale task ${taskId} on ${entry.runtimeId} (${((now - entry.startedAt) / 1000).toFixed(0)}s old)`);
                 this.complete(taskId, { status: "reaped", reason: "stale-timeout" });
             }
         }
@@ -267,7 +268,7 @@ class ColabOrchestrator {
 
         // Circuit breaker check — don't dispatch to broken runtimes
         if (runtime._circuitBroken && runtimeId !== "colab-d") {
-            console.warn(`⚡ ${runtimeId} circuit-broken, rerouting task`);
+            logger.warn(`⚡ ${runtimeId} circuit-broken, rerouting task`);
             return this._dispatchLeastLoaded(task, [runtimeId]);
         }
         // For colab-d (dedicated), queue even if circuit-broken — no fallback
@@ -414,12 +415,12 @@ class ColabOrchestrator {
                     if (newFailures >= FIB[5]) {
                         this.runtimes[id]._circuitBroken = true;
                         this.runtimes[id]._circuitBrokenAt = Date.now();
-                        console.warn(`⚡ Circuit breaker OPEN for ${id} after ${newFailures} failures`);
+                        logger.warn(`⚡ Circuit breaker OPEN for ${id} after ${newFailures} failures`);
                     }
                 } else {
                     // Recovery: reset failure count and circuit breaker
                     if (failures > 0) {
-                        console.log(`✅ ${id} recovered after ${failures} failures`);
+                        logger.info(`✅ ${id} recovered after ${failures} failures`);
                         this.runtimes[id]._circuitBroken = false;
                         this.runtimes[id]._circuitBrokenAt = null;
                     }
@@ -485,7 +486,7 @@ class ColabOrchestrator {
  */
 async function setupNgrokTunnel(port) {
     if (!GPU_CONFIG.ngrokToken) {
-        console.log("⚠ No NGROK_TOKEN — API only accessible within Colab");
+        logger.info("⚠ No NGROK_TOKEN — API only accessible within Colab");
         return null;
     }
     try {
@@ -496,11 +497,11 @@ async function setupNgrokTunnel(port) {
             domain: GPU_CONFIG.ngrokDomain || undefined,
         });
         const url = listener.url();
-        console.log(`🌐 Heady accessible at: ${url}`);
+        logger.info(`🌐 Heady accessible at: ${url}`);
         return url;
     } catch (err) {
-        console.log(`⚠ ngrok setup failed: ${err.message}`);
-        console.log("  Install: pip install pyngrok && npm install @ngrok/ngrok");
+        logger.info(`⚠ ngrok setup failed: ${err.message}`);
+        logger.info("  Install: pip install pyngrok && npm install @ngrok/ngrok");
         return null;
     }
 }

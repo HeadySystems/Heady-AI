@@ -23,6 +23,7 @@
  */
 
 const errorBridge = require("../lifecycle/error-pipeline-bridge");
+const logger = require('../utils/logger');
 
 /**
  * Express error-handling middleware.
@@ -48,7 +49,6 @@ function autoErrorPipeline(err, req, res, next) {
             },
         });
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -84,7 +84,6 @@ function notFoundCapture(req, res, next) {
                 },
             });
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

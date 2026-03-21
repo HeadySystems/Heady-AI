@@ -459,7 +459,6 @@ class ProjectionManager {
                 vectorMemory.add('perception:latest', perception);
                 vectorMemory.add(`perception:${Date.now()}`, perception);
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -519,7 +518,6 @@ class VectorSpaceOps {
             const { AutoSuccessEngine } = require('./hc_auto_success');
             this.autoSuccess = new AutoSuccessEngine();
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 
@@ -572,7 +570,6 @@ class VectorSpaceOps {
                     });
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }, PHI_INTERVALS.analyze));

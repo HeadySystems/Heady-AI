@@ -460,7 +460,6 @@ class MonteCarloEngine {
     const hooks = this._pipelineHooks.get(stageName) || [];
     for (const hook of hooks) {
       try { hook(result); } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

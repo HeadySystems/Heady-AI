@@ -27,6 +27,7 @@
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
+const logger = require('./utils/logger');
 
 // ============================================================================
 // DATA STRUCTURES
@@ -202,7 +203,6 @@ class ImaginationEngine {
     try {
       await fs.mkdir(cacheDir, { recursive: true });
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     
@@ -213,7 +213,7 @@ class ImaginationEngine {
     await this.loadIPPackages();
     
     this.initialized = true;
-    console.log(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
+    logger.info(`[Imagination] Initialized with ${this.primitives.size} primitives, ${this.concepts.size} concepts`);
   }
 
   async loadPrimitives() {
@@ -226,7 +226,6 @@ class ImaginationEngine {
         this.primitives.set(p.id, p);
       }
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -246,7 +245,6 @@ class ImaginationEngine {
         this.concepts.set(c.id, c);
       }
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -266,7 +264,6 @@ class ImaginationEngine {
         this.experiments.set(e.id, e);
       }
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -285,7 +282,6 @@ class ImaginationEngine {
         this.ipPackages.set(p.id, p);
       }
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -575,7 +571,7 @@ class ImaginationEngine {
     // Select primitives for recombination
     const primitives = this.selectPrimitives(this.config.maxPrimitivesPerConcept);
     if (primitives.length < this.config.minPrimitivesPerConcept) {
-      console.log('[Imagination] Not enough primitives for recombination');
+      logger.info('[Imagination] Not enough primitives for recombination');
       return [];
     }
     
@@ -632,7 +628,7 @@ class ImaginationEngine {
     await this.saveConcepts();
     await this.savePrimitives();
     
-    console.log(`[Imagination] Generated ${newConcepts.length} new concepts`);
+    logger.info(`[Imagination] Generated ${newConcepts.length} new concepts`);
     return newConcepts;
   }
 
@@ -857,7 +853,7 @@ class ImaginationEngine {
       
       if (isHot && concept.status === 'raw') {
         concept.status = 'hot';
-        console.log(`[Imagination] Hot concept identified: ${concept.title}`);
+        logger.info(`[Imagination] Hot concept identified: ${concept.title}`);
       }
     }
   }

@@ -30,12 +30,12 @@ try {
     // The brain module exports a router, but the chat functions are module-level
     // We need to call the brain API internally via HTTP for proper routing
 } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
 // Internal brain dispatch — calls the real /api/brain/chat endpoint
 const http = require("http");
+const logger = require('../utils/logger');
 function brainChat(message, system, options = {}) {
     return new Promise((resolve, reject) => {
         const body = JSON.stringify({
@@ -44,7 +44,7 @@ function brainChat(message, system, options = {}) {
             temperature: options.temperature || 0.7,
             max_tokens: options.max_tokens || 2048,
         });
-        const req = http.request("http://127.0.0.1:3301/api/brain/chat", {
+        const req = http.request(`${process.env.HEADY_MANAGER_URL || "http://0.0.0.0:3301"}/api/brain/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
             timeout: PHI_TIMING.CYCLE,

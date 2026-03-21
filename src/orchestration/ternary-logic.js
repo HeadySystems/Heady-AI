@@ -202,7 +202,7 @@ class TernaryDecisionMatrix extends EventEmitter {
                 });
             } catch (err) {
                 logger.error?.(`Ternary K3D commit failed: ${err.message}`) ||
-                    console.error(`Ternary K3D commit failed: ${err.message}`);
+                    logger.error(`Ternary K3D commit failed: ${err.message}`);
             }
         }
 

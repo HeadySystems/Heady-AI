@@ -18,6 +18,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 const {
     resonance_gate,
     consensus_superposition,
@@ -546,7 +547,6 @@ class AttestationMesh {
     _emit(event, data) {
         for (const listener of this._listeners) {
             try { listener(event, data); } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }

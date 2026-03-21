@@ -21,7 +21,7 @@
  *
  *   // Subscribe
  *   bus.subscribe('heady:pipeline:run:completed', (event) => {
- *     console.log('Pipeline done:', event.runId);
+ *     logger.info('Pipeline done:', event.runId);
  *   });
  *
  *   // Publish
@@ -43,6 +43,7 @@
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─── Topic Namespace Rules ───────────────────────────────────────────────────
 
@@ -242,7 +243,7 @@ class HeadyEventBus extends EventEmitter {
       this._stats.errors++;
       this._deadLetterEvent(topic, event, err.message);
       this._logger.error?.(`[EventBus] Delivery error on topic ${topic}: ${err.message}`) ||
-        console.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
+        logger.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
     }
 
     // Bridge to Redis (non-blocking)
@@ -386,7 +387,6 @@ class HeadyEventBus extends EventEmitter {
         this.emit(topic, dl.event);
         retried++;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -538,11 +538,9 @@ class HeadyEventBus extends EventEmitter {
   async destroy() {
     if (this._subClient) {
       try { await this._subClient.unsubscribe(); } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
       try { this._subClient.disconnect(); } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

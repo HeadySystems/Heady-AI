@@ -27,6 +27,7 @@ const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const fs     = require('fs');
 const path   = require('path');
+const logger = require('../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -283,7 +284,6 @@ class DissolutionModule {
           fs.unlinkSync(filePath);
           diskDeleted = true;
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -796,7 +796,6 @@ class DynamicBeeFactory {
                     }
                   }
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
               };
@@ -964,7 +963,6 @@ module.exports = { domain, description, priority, getWork };
 `;
 
     try { fs.writeFileSync(filePath, code, 'utf8'); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

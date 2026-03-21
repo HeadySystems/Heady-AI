@@ -1,5 +1,6 @@
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
+const logger = require('../utils/logger');
     'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
     'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
     'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
@@ -379,8 +380,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`\n  🔐 Heady Universal Auth — http://0.0.0.0:${PORT}`);
-    console.log(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
+    logger.info(`\n  🔐 Heady Universal Auth — http://0.0.0.0:${PORT}`);
+    logger.info(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
 });
 
 module.exports = { PROVIDERS, server };

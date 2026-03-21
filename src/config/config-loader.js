@@ -10,6 +10,7 @@ const { PHI_TIMING } = require('../shared/phi-math');
 const fs           = require('fs');
 const path         = require('path');
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────
 // Defaults
@@ -378,7 +379,6 @@ class ConfigLoader extends EventEmitter {
    */
   stopWatchers() {
     for (const w of this._watchers) { try { w.close(); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     } }
     this._watchers = [];
@@ -463,7 +463,6 @@ class ConfigLoader extends EventEmitter {
         const w = fs.watch(filePath, () => this._onFileChange(filePath));
         this._watchers.push(w);
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

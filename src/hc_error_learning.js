@@ -50,6 +50,7 @@ const { EventEmitter } = require('events');
 
 // ─── Graceful dependency loading ─────────────────────────────────
 let latent, logger;
+const logger = require('./utils/logger');
 
 try {
   latent = require('./hc_latent_space');
@@ -62,9 +63,9 @@ try {
   logger = createLogger('error-learning', 'intelligence');
 } catch (e) {
   logger = {
-    info: (msg, data) => console.log(`[INFO] error-learning: ${msg}`, data || ''),
-    warn: (msg, data) => console.warn(`[WARN] error-learning: ${msg}`, data || ''),
-    error: (msg, data) => console.error(`[ERROR] error-learning: ${msg}`, data || ''),
+    info: (msg, data) => logger.info(`[INFO] error-learning: ${msg}`, data || ''),
+    warn: (msg, data) => logger.warn(`[WARN] error-learning: ${msg}`, data || ''),
+    error: (msg, data) => logger.error(`[ERROR] error-learning: ${msg}`, data || ''),
     debug: () => {},
   };
 }

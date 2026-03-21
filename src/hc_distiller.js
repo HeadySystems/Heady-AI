@@ -36,6 +36,7 @@ const ReplayClient = require('./hc_replay_client');
 const TrajectoryFilter = require('./hc_trajectory_filter');
 const SkillSynthesizer = require('./hc_skill_synthesizer');
 const PromptOptimizer = require('./hc_prompt_optimizer');
+const logger = require('./utils/logger');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'configs', 'distiller-config.yaml');
 
@@ -272,7 +273,6 @@ class HeadyDistiller extends EventEmitter {
         fileConfig = parsed?.distiller || parsed || {};
       }
     } catch (e) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

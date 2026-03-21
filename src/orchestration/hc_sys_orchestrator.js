@@ -3,7 +3,6 @@
  * Routes tasks across brain layers and manages orchestration.
  */
 let express = null; try { express = require('../core/heady-server'); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 const router = express.Router();

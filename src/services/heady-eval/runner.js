@@ -17,6 +17,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Concurrency pool ─────────────────────────────────────────────────────────
 
@@ -139,7 +140,6 @@ class Runner extends EventEmitter {
     try {
       fs.mkdirSync(this.checkpointsDir, { recursive: true });
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -342,7 +342,6 @@ class Runner extends EventEmitter {
     try {
       fs.writeFileSync(this._checkpointPath(runId), JSON.stringify(data), 'utf-8');
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -351,7 +350,6 @@ class Runner extends EventEmitter {
     try {
       fs.unlinkSync(this._checkpointPath(runId));
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

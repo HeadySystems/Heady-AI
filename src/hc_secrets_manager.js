@@ -14,6 +14,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const logger = require('./utils/logger');
 
 const STATE_FILE = path.join(__dirname, "..", "data", "secrets-state.json");
 
@@ -160,7 +161,6 @@ class SecretsManager {
             }, null, 2);
             fs.writeFileSync(STATE_FILE, this._encrypt(plaintext));
         } catch (e) {
-          const logger = require('./utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }
@@ -177,7 +177,6 @@ class SecretsManager {
                 if (data.rotationLog) this._rotationLog = data.rotationLog;
             }
         } catch (e) {
-          const logger = require('./utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }
@@ -192,7 +191,7 @@ const secretsManager = new SecretsManager();
 function registerSecretsRoutes(app, { authenticateJWT } = {}) {
     // If no auth middleware provided, create a no-op that logs a warning
     const auth = authenticateJWT || ((req, res, next) => {
-        console.warn("[SecretsManager] WARNING: Secrets routes loaded without authentication middleware");
+        logger.warn("[SecretsManager] WARNING: Secrets routes loaded without authentication middleware");
         next();
     });
 

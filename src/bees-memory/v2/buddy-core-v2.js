@@ -31,6 +31,7 @@ const crypto = require('crypto');
 const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../../utils/logger');
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -51,7 +52,6 @@ function safeOp(label, fn) {
   try { return fn(); } catch (err) {
     // Non-fatal — just log
     try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     return null;
@@ -255,7 +255,6 @@ class EpisodicMemoryManager {
           namespace: this.EPISODE_NS,
         });
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -544,7 +543,6 @@ class DeterministicErrorInterceptorV2 {
           interception.phase3.confidence = results[0].score;
         }
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -608,7 +606,6 @@ class DeterministicErrorInterceptorV2 {
           metadata: { type: 'error_resolution', ruleId: rule.id, errorKey: rule.errorKey, constraintViolation: rule.constraintViolation },
         });
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -674,7 +671,6 @@ class TaskLockManager {
         if (result === 'OK') { this.stats.acquired++; return true; }
         this.stats.collisions++; return false;
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -694,7 +690,6 @@ class TaskLockManager {
         if (cur && JSON.parse(cur).agentId === agentId) { await this._redisClient.del(key); this.stats.released++; return true; }
         return false;
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

@@ -6,13 +6,13 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const logger = require('../utils/logger');
 
 // Try to load the existing projection engine
 let projectionEngine = null;
 try {
   projectionEngine = require(path.join(__dirname, "..", "onboarding", "ui-projection-engine"));
 } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
@@ -21,7 +21,6 @@ let projectionManager = null;
 try {
   projectionManager = require(path.join(__dirname, "..", "projection", "projection-manager"));
 } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 

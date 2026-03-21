@@ -29,6 +29,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
+const logger = require('./utils/logger');
 
 const DEFAULT_TRACE_DIR = path.join(__dirname, '..', 'logs', 'traces');
 
@@ -340,7 +341,6 @@ class TraceRecorder extends EventEmitter {
           filepath: fp,
         });
       } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

@@ -36,6 +36,7 @@ class AdvancedCacheStrategy {
 
     get(key) {
         const now = Date.now();
+const logger = require('./utils/logger');
         
         // Track frequency
         this.frequencyMap.set(key, (this.frequencyMap.get(key) || 0) + 1);
@@ -149,7 +150,7 @@ class AdvancedCacheStrategy {
                     const data = await this.fetchData(key);
                     this.put(key, data);
                 } catch (error) {
-                    console.warn(`Failed to warm cache for ${key}:`, error);
+                    logger.warn(`Failed to warm cache for ${key}:`, error);
                 }
             }
         }

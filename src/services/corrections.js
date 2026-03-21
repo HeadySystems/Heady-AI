@@ -10,6 +10,7 @@ const crypto = require('crypto');
 // ─── Pattern Categories ───────────────────────────────────────────────────────
 
 const PATTERN_CATEGORIES = Object.freeze({
+const logger = require('../utils/logger');
   INEFFICIENCY:     'inefficiency',
   ERROR_PRONE:      'error_prone',
   SUBOPTIMAL:       'suboptimal',
@@ -107,8 +108,8 @@ class Corrections extends EventEmitter {
   _defaultLogger() {
     return {
       info:  () => {},
-      warn:  (...a) => console.error('[Corrections:WARN]',  ...a),
-      error: (...a) => console.error('[Corrections:ERROR]', ...a),
+      warn:  (...a) => logger.error('[Corrections:WARN]',  ...a),
+      error: (...a) => logger.error('[Corrections:ERROR]', ...a),
     };
   }
 

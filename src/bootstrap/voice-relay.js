@@ -30,11 +30,9 @@ module.exports = function mountVoiceRelay(app, { logger }) {
         voiceSessions.forEach((session, id) => {
             if (session.lastActivity < staleThreshold) {
                 if (session.sender) try { session.sender.close(); } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
                 session.receivers.forEach(r => { try { r.close(); } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 } });
                 voiceSessions.delete(id);

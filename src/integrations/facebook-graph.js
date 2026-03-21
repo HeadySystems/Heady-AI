@@ -16,6 +16,7 @@
 
 const GRAPH_API_VERSION = 'v19.0';
 const GRAPH_BASE = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
+const logger = require('../utils/logger');
 
 class FacebookGraph {
     constructor(opts = {}) {
@@ -64,7 +65,7 @@ class FacebookGraph {
         const data = await this._request('/me?fields=id,name');
         this.pageId = data.id;
         this.pageName = data.name;
-        console.log(`[facebook-graph] Discovered page: ${data.name} (${data.id})`);
+        logger.info(`[facebook-graph] Discovered page: ${data.name} (${data.id})`);
         return this.pageId;
     }
 

@@ -8,6 +8,7 @@
 
 const fs   = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const PHI  = 1.6180339887;
 const PSI  = 0.6180339887;
@@ -228,7 +229,6 @@ class WisdomCuratorBee {
     try {
       fs.writeFileSync(this.storeFile, JSON.stringify(this._export(), null, 2), 'utf8');
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

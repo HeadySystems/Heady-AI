@@ -16,6 +16,7 @@ const path = require('path');
 const crypto = require('crypto');
 const readline = require('readline');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Schema validation ───────────────────────────────────────────────────────
 
@@ -109,7 +110,6 @@ async function loadCSV(filePath) {
             // Parse metadata column if present
             if (typeof obj.metadata === 'string' && obj.metadata) {
               try { obj.metadata = JSON.parse(obj.metadata); } catch (e) {
-                const logger = require('../../utils/logger');
                 logger.error('Unexpected error', { error: e.message, stack: e.stack });
               }
             }
@@ -313,7 +313,6 @@ class DatasetManager {
     try {
       fs.mkdirSync(this.storageDir, { recursive: true });
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -398,7 +397,6 @@ class DatasetManager {
           file,
         });
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -423,7 +421,6 @@ class DatasetManager {
           return dataset;
         }
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

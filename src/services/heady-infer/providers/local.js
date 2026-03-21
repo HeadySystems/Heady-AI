@@ -4,6 +4,7 @@ const http  = require('http');
 const https = require('https');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * LocalProvider — Ollama adapter for locally-hosted models.
@@ -13,7 +14,7 @@ const BaseProvider = require('./base-provider');
 class LocalProvider extends BaseProvider {
   constructor(config) {
     super('local', config);
-    this.baseUrl = config.baseUrl || 'http://localhost:11434';
+    this.baseUrl = config.baseUrl || process.env.OLLAMA_BASE_URL || 'http://0.0.0.0:11434';
   }
 
   _request(path, body, timeoutMs, signal) {
@@ -183,7 +184,6 @@ class LocalProvider extends BaseProvider {
                 outputTokens = evt.eval_count         || 0;
               }
             } catch (_) {
-              const logger = require('../../../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }

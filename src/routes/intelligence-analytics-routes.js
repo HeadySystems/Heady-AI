@@ -11,6 +11,7 @@
 'use strict';
 
 const { Router } = require('express');
+const logger = require('../utils/logger');
 
 const router = Router();
 
@@ -45,7 +46,6 @@ router.get('/providers', async (_req, res) => {
             if (typeof modelRouter.getProviderStats === 'function') providerStats = modelRouter.getProviderStats();
             else if (typeof modelRouter.getStats === 'function') providerStats = modelRouter.getStats();
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
         res.json({ ok: true, data: providerStats });
@@ -63,7 +63,6 @@ router.get('/embeddings', async (_req, res) => {
             if (typeof embedder.getStats === 'function') embeddingStats = embedder.getStats();
             else if (typeof embedder.getMetrics === 'function') embeddingStats = embedder.getMetrics();
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
         res.json({ ok: true, data: embeddingStats });
@@ -88,7 +87,6 @@ router.get('/overview', async (_req, res) => {
             const { getAllCacheMetrics } = require('../resilience/cache');
             overview.cacheMetrics = getAllCacheMetrics();
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 

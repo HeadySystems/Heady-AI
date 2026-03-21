@@ -7,8 +7,8 @@
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require("crypto");
+const logger = require('../utils/logger');
 let { TERMINAL_STATES } = {}; try { { TERMINAL_STATES } = require("../memory/memory-receipts"); } catch(e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 

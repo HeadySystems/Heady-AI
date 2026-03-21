@@ -83,7 +83,6 @@ async function checkMemoryStore() {
       const data = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
       memoryCount = Array.isArray(data) ? data.length : 0;
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

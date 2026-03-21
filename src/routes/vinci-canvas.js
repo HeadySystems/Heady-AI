@@ -16,6 +16,7 @@ const express = require('../core/heady-server');
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
+const logger = require('../utils/logger');
 
 const SESSIONS_DIR = path.join(__dirname, "..", "data", "canvas-sessions");
 
@@ -157,7 +158,6 @@ function _persistSession(session) {
             JSON.stringify(session, null, 2)
         );
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }

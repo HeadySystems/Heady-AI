@@ -23,6 +23,7 @@ const EventEmitter = require('events');
 const http         = require('http');
 const https        = require('https');
 const { URL }      = require('url');
+const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────
 // Domain Registry
@@ -276,7 +277,6 @@ class HealthMonitor extends EventEmitter {
       const res = await this._httpGet(url, this.timeoutMs);
       status    = res.statusCode >= 200 && res.statusCode < 400 ? 'healthy' : 'degraded';
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

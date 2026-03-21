@@ -18,6 +18,7 @@ const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─── Phi Constants ────────────────────────────────────────────────────────────
 
@@ -519,7 +520,7 @@ function createDefaultExecutors() {
  * @example
  * const { HybridPipeline } = require('./hybrid-pipeline');
  * const pipeline = new HybridPipeline();
- * pipeline.on('pipeline:complete', (result) => console.log(result));
+ * pipeline.on('pipeline:complete', (result) => logger.info(result));
  * const result = await pipeline.run({ payload: { prompt: 'Hello' } });
  */
 class HybridPipeline extends EventEmitter {
@@ -763,7 +764,6 @@ class HybridPipeline extends EventEmitter {
                 await this._autoSuccessEngine.runCycle();
                 autoSuccessMetrics = this._autoSuccessEngine.getLastCycleResults?.() || [];
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

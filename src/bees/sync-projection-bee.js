@@ -22,6 +22,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const logger = require('../utils/logger');
 
 const domain = "sync-projection";
 const description = "RAM-first auto-sync: detects state deltas, renders templates, projects to GitHub/HF/Cloudflare";
@@ -70,7 +71,6 @@ function computeRAMStateHash() {
             }
         }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -153,7 +153,6 @@ function injectTemplatesIntoHFSpaces() {
 
         // Also project to dev folder (services/heady-web/sites/)
         try { renderer.projectToDevFolder(); } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 
@@ -168,7 +167,6 @@ function generateFullPage(rendered, template) {
     const renderer = getSiteRenderer();
     if (renderer && template) {
         try { return renderer.renderSiteToHTML(template); } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

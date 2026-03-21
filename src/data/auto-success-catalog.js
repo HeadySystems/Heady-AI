@@ -7,22 +7,18 @@
 // ─── EXTERNAL TASK SOURCES ──────────────────────────────────────────────────
 let extraTasks = [];
 try { extraTasks = require('../auto-flow-tasks.json'); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 let nonprofitTasks = [];
 try { nonprofitTasks = require('../nonprofit-tasks.json'); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 let buddyTasks = [];
 try { buddyTasks = require('../buddy-tasks.json'); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 let prodOptTasks = [];
 try { prodOptTasks = require('./production-optimization-tasks.json'); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 

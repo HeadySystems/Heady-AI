@@ -22,6 +22,7 @@
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
+const logger = require('../utils/logger');
 
 const AGENTS_MD_PATH = path.join(__dirname, "..", "..", "AGENTS.md");
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
@@ -435,7 +436,6 @@ function persistEvent(event) {
     try {
         fs.appendFileSync(ERROR_LOG, JSON.stringify(event) + "\n");
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }

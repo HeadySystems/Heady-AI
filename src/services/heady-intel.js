@@ -11,6 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const yaml = require('js-yaml');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 const ROOT = path.resolve(__dirname, '..', '..');
@@ -70,7 +71,6 @@ class PatentTracker {
             }
           }
         } catch (err) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
       }

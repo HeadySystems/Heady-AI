@@ -11,6 +11,7 @@
 'use strict';
 
 const { Router } = require('express');
+const logger = require('../utils/logger');
 
 const router = Router();
 
@@ -23,7 +24,6 @@ router.get('/status', (_req, res) => {
             if (typeof relay.getStatus === 'function') relayStatus = relay.getStatus();
             else relayStatus.active = true;
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
         res.json({ ok: true, data: relayStatus });
@@ -46,7 +46,6 @@ router.post('/tts', async (req, res) => {
                 audioUrl = await ttsProvider.textToSpeech(text, { voice, format });
             }
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 
@@ -77,7 +76,6 @@ router.post('/stt', async (req, res) => {
                 transcription = await sttProvider.speechToText(audioUrl, { language });
             }
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 

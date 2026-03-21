@@ -19,6 +19,7 @@ const http = require('http');
 const crypto = require('crypto');
 const { URL } = require('url');
 const express = require('express');
+const logger = require('../../utils/logger');
 const {
   PHI, PSI, fib, phiMs, phiBackoff, phiBackoffWithJitter,
   CSL_THRESHOLDS, PHI_TIMING, PHI_BACKOFF_SEQ,
@@ -95,7 +96,6 @@ async function initNats() {
         max_age: fib(11) * fib(12) * fib(10) * fib(6) * 1e9,  // 89 × 144 × 55 × 8 = 5,637,120s ≈ 65d (Fibonacci-derived retention)
       });
     } catch (_streamErr) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _streamErr.message, stack: _streamErr.stack });
     }
 
@@ -338,7 +338,6 @@ server.on('upgrade', (req, socket, head) => {
         wsSend(ws, { type: 'read_confirmed', notificationId: msg.notificationId });
       }
     } catch (_frameErr) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _frameErr.message, stack: _frameErr.stack });
     }
   });
@@ -639,13 +638,11 @@ function gracefulShutdown(signal) {
 
   for (const [, conns] of sseConnections) {
     for (const res of conns) { try { res.end(); } catch (_closeErr) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _closeErr.message, stack: _closeErr.stack });
     } }
   }
   for (const [, conns] of wsConnections) {
     for (const ws of conns) { try { wsSend(ws, { type: 'server_shutdown' }); ws.destroy(); } catch (_closeErr) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _closeErr.message, stack: _closeErr.stack });
     } }
   }

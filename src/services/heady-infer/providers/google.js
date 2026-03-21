@@ -4,6 +4,7 @@ const https = require('https');
 const http  = require('http');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * GoogleProvider — Gemini adapter
@@ -230,7 +231,6 @@ class GoogleProvider extends BaseProvider {
                 outputTokens = meta.candidatesTokenCount || outputTokens;
               }
             } catch (_) {
-              const logger = require('../../../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }

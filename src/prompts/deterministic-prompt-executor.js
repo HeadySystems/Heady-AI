@@ -19,6 +19,7 @@
 
 const crypto = require('crypto');
 const CSLConfidenceGate = require('./csl-confidence-gate');
+const logger = require('../utils/logger');
 
 // Lazy-load PromptManager (template literals evaluate at require time)
 let _PromptManager = null;
@@ -349,7 +350,6 @@ class DeterministicPromptExecutor {
         const listeners = this._listeners.get(event) || [];
         for (const cb of listeners) {
             try { cb(data); } catch (_) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }

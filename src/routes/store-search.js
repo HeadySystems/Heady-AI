@@ -229,7 +229,6 @@ function extractJSON(content) {
                 const parsed = JSON.parse(jsonMatch[0]);
                 if (parsed.products?.length > 0) return parsed;
             } catch (e2) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e2.message, stack: e2.stack });
             }
         }
@@ -259,17 +258,17 @@ async function storeSearchHandler(req, res) {
 
         for (const provider of providers) {
             try {
-                console.log(`[store-search] Trying ${provider.name}...`);
+                logger.info(`[store-search] Trying ${provider.name}...`);
                 const result = await provider.fn(userMessage);
                 if (result?.products?.length > 0) {
-                    console.log(`[store-search] ${provider.name} returned ${result.products.length} products`);
+                    logger.info(`[store-search] ${provider.name} returned ${result.products.length} products`);
                     return res.json({
                         ...result,
                         _provider: provider.name,
                     });
                 }
             } catch (err) {
-                console.warn(`[store-search] ${provider.name} failed:`, err.message);
+                logger.warn(`[store-search] ${provider.name} failed:`, err.message);
             }
         }
 
@@ -297,7 +296,7 @@ async function storeSearchHandler(req, res) {
         });
 
     } catch (err) {
-        console.error('Store search error:', err);
+        logger.error('Store search error:', err);
         res.status(500).json({ error: 'Search failed', message: err.message });
     }
 }

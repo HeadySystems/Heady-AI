@@ -17,6 +17,7 @@
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
+const logger = require('./utils/logger');
 
 class ImprovementScheduler extends EventEmitter {
   constructor({
@@ -60,7 +61,7 @@ class ImprovementScheduler extends EventEmitter {
 
   async runCycle() {
     if (!this.pipeline || !this.patternEngine || !this.selfCritiqueEngine) {
-      console.warn('[ImprovementScheduler] Dependencies not available, skipping cycle');
+      logger.warn('[ImprovementScheduler] Dependencies not available, skipping cycle');
       return;
     }
     
@@ -85,7 +86,7 @@ class ImprovementScheduler extends EventEmitter {
       
       this.emit('cycle_complete', { improvements: prioritized.length });
     } catch (error) {
-      console.warn(`[ImprovementScheduler] Cycle error: ${error.message}`);
+      logger.warn(`[ImprovementScheduler] Cycle error: ${error.message}`);
       this.emit('cycle_error', error);
     }
   }
@@ -167,7 +168,6 @@ class ImprovementScheduler extends EventEmitter {
       existing.push(logEntry);
       fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
     } catch (_) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 
@@ -200,7 +200,6 @@ class ImprovementScheduler extends EventEmitter {
       existing.push(logEntry);
       fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
     } catch (_) {
-      const logger = require('./utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 

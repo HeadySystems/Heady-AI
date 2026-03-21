@@ -41,6 +41,7 @@ const EventEmitter = require('events');
 
 /** @type {string[]} All recognised agent IDs in the Heady™ platform */
 const KNOWN_AGENTS = [
+const logger = require('../utils/logger');
   'JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS',
   'PYTHIA', 'BRIDGE', 'MUSE', 'SENTINEL', 'NOVA',
   'JANITOR', 'SOPHIA', 'CIPHER', 'LENS',
@@ -562,7 +563,7 @@ class SubscriptionRegistry {
  * mesh.registerAgent('MUSE',  { capabilities: ['create', 'content'] });
  *
  * mesh.subscribe('JULES', 'code.review.requested', async (msg) => {
- *   console.log('JULES got review request:', msg.payload);
+ *   logger.info('JULES got review request:', msg.payload);
  * });
  *
  * // MUSE requests a code review without knowing JULES exists

@@ -19,6 +19,7 @@ const PHI = 1.6180339887498948;
 const CACHE_IMMUTABLE = Math.round(PHI * 365 * 86400);  // ~1 year (hashed assets)
 const CACHE_STATIC    = Math.round(PHI * 86400);          // ~1.6 days (icons, manifests)
 const CACHE_VOLATILE  = 0;                                 // no-cache (healthz, well-known)
+const logger = require('../utils/logger');
 
 /**
  * Mount static hosting middleware on the Express app.
@@ -30,7 +31,7 @@ function mountStaticHosting(app, projectRoot) {
     const publicDir = path.resolve(projectRoot || process.cwd(), "public");
 
     if (!fs.existsSync(publicDir)) {
-        console.warn("⚠ Static hosting: public/ directory not found, skipping");
+        logger.warn("⚠ Static hosting: public/ directory not found, skipping");
         return;
     }
 

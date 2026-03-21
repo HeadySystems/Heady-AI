@@ -22,6 +22,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const logger = require('../../utils/logger');
 
 // ─── φ-Math Constants ─────────────────────────────────────────────────────────
 const PHI = 1.618033988749895;
@@ -288,7 +289,6 @@ function _closeWS(ws, code, reason) {
             ws.close(code, reason);
         }
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }

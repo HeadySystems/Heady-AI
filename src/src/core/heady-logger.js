@@ -15,6 +15,7 @@
 'use strict';
 
 const { fib, PSI } = require('../../shared/phi-math');
+const logger = require('../../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -141,7 +142,6 @@ class HeadyLogger {
           ts:        Date.now(),
         });
       } catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }

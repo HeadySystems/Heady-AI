@@ -80,6 +80,7 @@ const { URL }      = require('url');
 const crypto       = require('crypto');
 const EventEmitter = require('events');
 const { pipeline } = require('stream');
+const logger = require('../utils/logger');
 
 // ─── φ constant ───────────────────────────────────────────────────────────────
 const PHI = 1.6180339887;
@@ -295,7 +296,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
     if (!this._mesh) {
       try { this._mesh = require('./heady-service-mesh').getServiceMesh(); }
       catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -306,7 +306,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
     if (!this._obs) {
       try { this._obs = require('./heady-observability').getObservability({ service: this._opts.serviceName }); }
       catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -317,7 +316,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
     if (!this._cfg) {
       try { this._cfg = require('./heady-config-server').getConfigServer(); }
       catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -328,7 +326,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
     if (!this._bus) {
       try { this._bus = require('./heady-event-bus').getEventBus(); }
       catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -398,7 +395,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
 
     this._started = true;
     this.emit('gateway:started', { port });
-    console.log(`[HeadyApiGatewayV2] Listening on port ${port}`);
+    logger.info(`[HeadyApiGatewayV2] Listening on port ${port}`);
     return this;
   }
 
@@ -407,7 +404,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
     // Drain SSE clients
     for (const [, res] of this._sseClients) {
       try { res.end(); } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -709,7 +705,6 @@ class HeadyApiGatewayV2 extends EventEmitter {
         try {
           res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
         } catch (e) {
-          const logger = require('../../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       };
@@ -1013,11 +1008,11 @@ if (require.main === module) {
 
     // Graceful shutdown
     const shutdown = async (sig) => {
-      console.log(`[HeadyApiGatewayV2] ${sig} received — draining connections...`);
+      logger.info(`[HeadyApiGatewayV2] ${sig} received — draining connections...`);
       await gw.stop();
       process.exit(0);
     };
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT',  () => shutdown('SIGINT'));
-  })().catch((err) => { console.error(err); process.exit(1); });
+  })().catch((err) => { logger.error(err); process.exit(1); });
 }

@@ -20,6 +20,7 @@
 
 const { EventEmitter } = require("events");
 const crypto = require("crypto");
+const logger = require('../utils/logger');
 
 const STAGES = [
     "CHANNEL_ENTRY",      //  0. Resolve channel, sync context, route branch
@@ -242,7 +243,6 @@ class HCFullPipeline extends EventEmitter {
                             this.emit("stage:completed", { runId, stage: stage.name, result: retryResult, selfHealed: true });
                             continue; // Move to next stage
                         } catch (e) {
-                          const logger = require('../utils/logger');
                           logger.error('Unexpected error', { error: e.message, stack: e.stack });
                         }
                     }
@@ -389,7 +389,6 @@ class HCFullPipeline extends EventEmitter {
                     graphContext = await this.vectorMemory.queryWithRelationships(stimulus, 3);
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -430,7 +429,6 @@ class HCFullPipeline extends EventEmitter {
                     graphContext = await this.vectorMemory.queryWithRelationships(stimulus, 3);
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -607,7 +605,6 @@ class HCFullPipeline extends EventEmitter {
                     const buddyAssessment = await this.buddyMetacognition.assessConfidence();
                     run._buddyConfidence = buddyAssessment;
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }
@@ -653,7 +650,6 @@ class HCFullPipeline extends EventEmitter {
                     );
                     confidence = assessment.confidence || confidence;
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }
@@ -826,7 +822,6 @@ class HCFullPipeline extends EventEmitter {
                         return true;
                     }
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }
@@ -859,7 +854,6 @@ class HCFullPipeline extends EventEmitter {
                         },
                     });
                 } catch (e) {
-                  const logger = require('../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }

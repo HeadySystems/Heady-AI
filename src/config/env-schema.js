@@ -10,6 +10,7 @@
  */
 
 const ENV_SCHEMA = {
+const logger = require('../utils/logger');
     // ── Critical (app won't function without these) ──
     critical: [
         { name: 'DATABASE_URL', description: 'Neon Postgres connection string' },
@@ -95,16 +96,16 @@ function validateEnvironment(options = {}) {
 
     // Log warnings
     if (!silent && warnings.length > 0) {
-        console.warn(`\n🔧 Environment Validation (${warnings.length} warnings):`);
-        warnings.forEach(w => console.warn(`  ${w}`));
-        console.warn('');
+        logger.warn(`\n🔧 Environment Validation (${warnings.length} warnings):`);
+        warnings.forEach(w => logger.warn(`  ${w}`));
+        logger.warn('');
     }
 
     const total = ENV_SCHEMA.critical.length + ENV_SCHEMA.required.length + ENV_SCHEMA.optional.length;
     const set = total - missing.critical.length - missing.required.length - missing.optional.length;
 
     if (!silent) {
-        console.log(`✅ Environment: ${set}/${total} vars set (${missing.optional.length} optional missing)`);
+        logger.info(`✅ Environment: ${set}/${total} vars set (${missing.optional.length} optional missing)`);
     }
 
     return {

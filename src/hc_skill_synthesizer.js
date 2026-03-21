@@ -26,6 +26,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const logger = require('./utils/logger');
 
 class SkillSynthesizer {
   constructor(options = {}) {
@@ -116,7 +117,6 @@ class SkillSynthesizer {
         // Collect step names
         allStepNames.push(...tools);
       } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

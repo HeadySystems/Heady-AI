@@ -16,6 +16,7 @@ const { DriftDetector } = require('./drift-detector');
 const { SpatialMapper } = require('./spatial-mapper');
 const { MemoryConsolidator } = require('./memory-consolidation');
 const { GraphRAG, KnowledgeGraph } = require('./graph-rag');
+const logger = require('../utils/logger');
 
 /**
  * Factory: create a fully wired Latent OS instance.
@@ -60,14 +61,12 @@ function createLatentOS(opts = {}) {
     // Cross-wire events
     pipeline.on && pipeline.on('stored', (entry) => {
         try { spatialMapper.add && spatialMapper.add(entry.key, entry.vector); } catch (_) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
     });
 
     awareness.on && awareness.on('drift-detected', (data) => {
         try { driftDetector.onDriftSignal && driftDetector.onDriftSignal(data); } catch (_) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
     });

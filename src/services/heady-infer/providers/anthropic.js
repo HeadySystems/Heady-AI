@@ -4,6 +4,7 @@ const https = require('https');
 const http  = require('http');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * AnthropicProvider — Claude adapter
@@ -140,7 +141,6 @@ class AnthropicProvider extends BaseProvider {
                 model       = evt.message.model || model;
               }
             } catch (_) {
-              const logger = require('../../../utils/logger');
               logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
           }

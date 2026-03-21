@@ -6,6 +6,7 @@
  */
 
 const EventEmitter = require('events');
+const logger = require('./utils/logger');
 const PHI = (1 + Math.sqrt(5)) / 2;
 
 class ComputeDashboard extends EventEmitter {
@@ -142,7 +143,6 @@ class ComputeDashboard extends EventEmitter {
     if (this._timer) return;
     this._timer = setInterval(async () => {
       try { await this.getDashboard({ force: true }); } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }, this._refreshIntervalMs);

@@ -14,6 +14,7 @@ const PHI = 1.618033988749895;
 const HEARTBEAT_MS = 29034; // phi^7
 const DEFAULT_TIMEOUT_MS = Math.round(5000 * PHI); // 8090ms
 const DEFAULT_POOL_SIZE = 8; // Fibonacci
+const logger = require('../../../utils/logger');
 
 async function main() {
   const agent = new Agent({
@@ -25,15 +26,15 @@ async function main() {
 
   await agent.initialize();
 
-  console.log(`[{{PROJECT_NAME}}] Agent started with phi-scaled defaults`);
-  console.log(`  timeout: ${DEFAULT_TIMEOUT_MS}ms`);
-  console.log(`  poolSize: ${DEFAULT_POOL_SIZE}`);
-  console.log(`  heartbeat: ${HEARTBEAT_MS}ms`);
+  logger.info(`[{{PROJECT_NAME}}] Agent started with phi-scaled defaults`);
+  logger.info(`  timeout: ${DEFAULT_TIMEOUT_MS}ms`);
+  logger.info(`  poolSize: ${DEFAULT_POOL_SIZE}`);
+  logger.info(`  heartbeat: ${HEARTBEAT_MS}ms`);
 
   // Main loop with phi-scaled heartbeat
   const interval = setInterval(async () => {
     const status = agent.getStatus();
-    console.log(`[{{PROJECT_NAME}}] heartbeat — status: ${status.state}`);
+    logger.info(`[{{PROJECT_NAME}}] heartbeat — status: ${status.state}`);
   }, HEARTBEAT_MS);
 
   process.on('SIGINT', () => {
@@ -44,7 +45,7 @@ async function main() {
 
   // Execute agent's primary task
   const result = await agent.execute({ type: 'init' });
-  console.log(`[{{PROJECT_NAME}}] Initial execution result:`, result);
+  logger.info(`[{{PROJECT_NAME}}] Initial execution result:`, result);
 }
 
-main().catch(console.error);
+main().catch(err => logger.error(err.message || String(err), { error: err }));

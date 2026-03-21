@@ -560,7 +560,6 @@ Actions:
     const { config: loadEnv } = await import('dotenv');
     loadEnv({ path: path.join(__dirname, '../../.env') });
   } catch (e) {
-    const logger = require('../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 

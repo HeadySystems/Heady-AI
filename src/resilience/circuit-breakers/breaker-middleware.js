@@ -30,6 +30,7 @@ const { githubBreaker }       = require('./github-api-breaker');
 const { cloudflareBreaker }   = require('./cloudflare-breaker');
 const { mcpBreaker }          = require('./mcp-breaker');
 const { STATES }              = require('../../circuit-breaker');
+const logger = require('../../utils/logger');
 
 // ---------------------------------------------------------------------------
 // URL → service mapping
@@ -60,7 +61,6 @@ function serviceForUrl(urlString) {
       if (hostname === host || hostname.endsWith(`.${host}`)) return service;
     }
   } catch (e) {
-    const logger = require('../../utils/logger');
     logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
   return null;
@@ -115,7 +115,6 @@ function circuitStateHeaders() {
         res.setHeader('X-Circuit-Service', service);
         res.setHeader('X-Circuit-State',   breaker.state);
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

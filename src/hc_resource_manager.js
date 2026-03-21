@@ -32,6 +32,7 @@ const log = new ColorfulLogger({ level: "info" });
 // ─── RESOURCE TYPES & SEVERITY ─────────────────────────────────────────────
 
 const RESOURCE_TYPES = [
+const logger = require('./utils/logger');
   "CPU", "RAM", "DISK", "GPU_COMPUTE", "GPU_VRAM", "NETWORK", "LOCAL_DB",
 ];
 
@@ -316,7 +317,7 @@ class HCResourceManager extends EventEmitter {
   }
 
   start() {
-    console.log("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
+    logger.info("[HCResourceManager] Starting resource monitoring (poll: %dms)", this.pollInterval);
     this._poll();
     this.timer = setInterval(() => this._poll(), this.pollInterval);
     return this;
@@ -324,7 +325,7 @@ class HCResourceManager extends EventEmitter {
 
   stop() {
     if (this.timer) { clearInterval(this.timer); this.timer = null; }
-    console.log("[HCResourceManager] Stopped.");
+    logger.info("[HCResourceManager] Stopped.");
   }
 
   getSnapshot() {

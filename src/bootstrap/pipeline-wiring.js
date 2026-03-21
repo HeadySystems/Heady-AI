@@ -78,7 +78,6 @@ module.exports = function wirePipeline(app, { pipeline, buddy, vectorMemory, sel
                 logger.logNodeActivity("CONDUCTOR", `[AutoTask] Task ${taskId}: ${text}`);
                 if (storyDriver) storyDriver.ingestSystemEvent({ type: 'AUTO_TASK_CREATED', refs: { taskId, text }, source: 'auto_task_conversion' });
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         });

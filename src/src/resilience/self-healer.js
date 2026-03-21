@@ -153,7 +153,6 @@ class SelfHealer {
     if (this.onStateChange) {
       try { this.onStateChange(newState, prev, reason); }
       catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
@@ -161,7 +160,6 @@ class SelfHealer {
     if (newState === HEALTH_STATE.QUARANTINED && this.onQuarantine) {
       try { this.onQuarantine(this.name, reason); }
       catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
@@ -169,7 +167,6 @@ class SelfHealer {
     if (newState === HEALTH_STATE.HEALTHY && this.onRestore) {
       try { this.onRestore(this.name); }
       catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }

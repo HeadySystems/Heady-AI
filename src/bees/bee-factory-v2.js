@@ -33,6 +33,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -625,7 +626,6 @@ class BeeFactoryV2 extends EventEmitter {
                   }
                 }
               } catch (e) {
-                const logger = require('../utils/logger');
                 logger.error('Unexpected error', { error: e.message, stack: e.stack });
               }
             };
@@ -964,7 +964,6 @@ class BeeFactoryV2 extends EventEmitter {
     const fn = this._hooks[hookName];
     if (typeof fn === 'function') {
       try { fn(...args); } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -1055,7 +1054,6 @@ module.exports = { domain, description, csl_relevance, getWork };
 `;
 
     try { fs.writeFileSync(filePath, code, 'utf8'); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

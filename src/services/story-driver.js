@@ -10,6 +10,7 @@ const crypto = require('crypto');
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const EVENT_TYPES = Object.freeze({
+const logger = require('../utils/logger');
   ACTION_TAKEN: 'action_taken',
   DECISION_MADE: 'decision_made',
   ERROR_ENCOUNTERED: 'error_encountered',
@@ -76,8 +77,8 @@ class StoryDriver extends EventEmitter {
   _defaultLogger() {
     return {
       info: (...a) => { },  // Silent by default in story driver
-      warn: (...a) => console.error('[StoryDriver:WARN]', ...a),
-      error: (...a) => console.error('[StoryDriver:ERROR]', ...a),
+      warn: (...a) => logger.error('[StoryDriver:WARN]', ...a),
+      error: (...a) => logger.error('[StoryDriver:ERROR]', ...a),
     };
   }
 

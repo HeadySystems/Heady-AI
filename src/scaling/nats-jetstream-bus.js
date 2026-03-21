@@ -82,7 +82,7 @@ class NATSJetStreamBus {
      * @param {object} [opts.nats]       - Pre-connected NATS client
      */
     constructor(opts = {}) {
-        this._url = opts.url || process.env.NATS_URL || 'nats://localhost:4222';
+        this._url = opts.url || process.env.NATS_URL || 'nats://0.0.0.0:4222';
         this._streamName = opts.streamName || 'HEADY';
         this._nc = opts.nats || null;
         this._js = null;
@@ -306,7 +306,6 @@ class NATSJetStreamBus {
         this._connected = false;
         for (const [name, sub] of this._subscribers) {
             try { sub.unsubscribe(); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -322,6 +321,7 @@ class NATSJetStreamBus {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const _crypto = require('crypto');
+const logger = require('../utils/logger');
 function _eventId() { return _crypto.randomUUID(); }
 
 function _encodeJSON(obj) {

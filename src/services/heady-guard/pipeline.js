@@ -23,6 +23,7 @@ const config = require('./config');
 // ── Stage registry ────────────────────────────────────────────────────────────
 
 const _registry = new Map(); // stageName → { runner, priority, parallel }
+const logger = require('../../utils/logger');
 
 /**
  * Register a filter stage.
@@ -231,7 +232,7 @@ function loadBuiltinStages() {
       const mod = require(path);
       registerStage(name, mod.run, priority, parallel);
     } catch (err) {
-      console.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
+      logger.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
     }
   }
 }

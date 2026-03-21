@@ -21,6 +21,7 @@ const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 const LOG_DIR = path.join(__dirname, '..', '..', 'data', 'telemetry');
 const AUDIT_FILE = path.join(LOG_DIR, 'audit-trail.jsonl');
@@ -29,7 +30,6 @@ const OPTIMIZATION_FILE = path.join(LOG_DIR, 'optimizations.jsonl');
 
 // Ensure log directory exists
 try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) {
-  const logger = require('../utils/logger');
   logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
@@ -325,7 +325,6 @@ class HeadyTelemetry {
         try {
             fs.appendFileSync(file, JSON.stringify(entry) + '\n');
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

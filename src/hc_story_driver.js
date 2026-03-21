@@ -30,6 +30,7 @@ const path = require("path");
 
 // ─── Phrasing Templates ──────────────────────────────────────────────
 const PHRASING = {
+const logger = require('./utils/logger');
   PIPELINE_CYCLE_COMPLETE: (refs) =>
     `Pipeline cycle #${refs.cycleNumber || "?"} completed. Gates: ${refs.gatesSummary || "all passed"}.`,
   PIPELINE_GATE_FAIL: (refs) =>
@@ -112,7 +113,7 @@ class HCStoryDriver extends EventEmitter {
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(this.storePath, JSON.stringify(this.stories, null, 2), "utf8");
     } catch (err) {
-      console.error("StoryDriver: Failed to save stories:", err.message);
+      logger.error("StoryDriver: Failed to save stories:", err.message);
     }
   }
 

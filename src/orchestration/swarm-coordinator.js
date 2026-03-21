@@ -28,6 +28,7 @@
 
 const { EventEmitter } = require("events");
 const { createHash, randomUUID } = require("crypto");
+const logger = require('../utils/logger');
 const { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence, PHI_TIMING } = (function() { try { return require("../../shared/phi-math.js"); } catch(e) { return {}; } })();
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -462,7 +463,6 @@ class SwarmMessageBus extends EventEmitter {
     if (allSubs.size > 0) {
       for (const handler of allSubs) {
         try { handler(envelope); } catch (err) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
       }
@@ -491,7 +491,6 @@ class SwarmMessageBus extends EventEmitter {
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
         try { handler(env); } catch (_) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
       }

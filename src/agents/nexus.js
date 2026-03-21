@@ -6,6 +6,7 @@
 'use strict';
 
 const PHI = 1.618033988749895;
+const logger = require('../utils/logger');
 
 class NexusAgent {
   constructor(opts = {}) {
@@ -19,11 +20,11 @@ class NexusAgent {
   }
 
   async start() {
-    console.log('[NEXUS] Federation/tenant agent active');
+    logger.info('[NEXUS] Federation/tenant agent active');
     return { status: 'active', agent: this.name };
   }
 
-  async stop() { console.log('[NEXUS] Shutdown complete'); }
+  async stop() { logger.info('[NEXUS] Shutdown complete'); }
 
   /** Register a tenant with scope boundaries */
   registerTenant(tenantId, config = {}) {

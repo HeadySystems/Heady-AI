@@ -30,7 +30,6 @@ function getWork(ctx = {}) {
             try {
                 moduleCount = fs.readdirSync(srcDir).filter(f => f.endsWith('.js')).length;
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
             const learning = {
@@ -52,7 +51,6 @@ function getWork(ctx = {}) {
             try {
                 beeCount = fs.readdirSync(beesDir).filter(f => f.endsWith('-bee.js')).length;
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
             return {

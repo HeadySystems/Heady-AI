@@ -25,6 +25,7 @@ const { loadDynamicRemote, mountRemote, preloadRemote } = require('./load-dynami
 const SHELL_VERSION = '3.0.1';
 
 const REMOTE_REGISTRY = {
+const logger = require('../utils/logger');
     'antigravity': {
         url: '/remotes/antigravity/remoteEntry.js',
         scope: 'antigravity',
@@ -73,7 +74,7 @@ const REMOTE_REGISTRY = {
 async function bootShell() {
     const container = document.getElementById('heady-root');
     if (!container) {
-        console.error('[HeadyShell] #heady-root not found');
+        logger.error('[HeadyShell] #heady-root not found');
         return;
     }
 
@@ -90,14 +91,14 @@ async function bootShell() {
         const response = await fetch('/api/domains/current');
         const projection = await response.json();
 
-        console.log(`[HeadyShell] Domain resolved → ${projection.uiId} (${projection.category})`);
+        logger.info(`[HeadyShell] Domain resolved → ${projection.uiId} (${projection.category})`);
 
         // Step 2: Look up the remote config
         const remote = REMOTE_REGISTRY[projection.uiId];
 
         if (!remote) {
             // Fallback: render the landing page
-            console.warn(`[HeadyShell] No remote registered for "${projection.uiId}", falling back to landing`);
+            logger.warn(`[HeadyShell] No remote registered for "${projection.uiId}", falling back to landing`);
             container.innerHTML = renderFallbackUI(projection);
             return;
         }
@@ -114,10 +115,10 @@ async function bootShell() {
             },
         });
 
-        console.log(`[HeadyShell] Mounted ${projection.uiId} successfully`);
+        logger.info(`[HeadyShell] Mounted ${projection.uiId} successfully`);
 
     } catch (error) {
-        console.error('[HeadyShell] Boot error:', error);
+        logger.error('[HeadyShell] Boot error:', error);
         container.innerHTML = renderErrorUI(error);
     }
 }

@@ -17,6 +17,7 @@
 
 const crypto = require('crypto');
 const { AUTH_PROVIDERS, SWARM_TASKS } = require('../../configs/templates/auth-providers-swarm');
+const logger = require('../utils/logger');
 
 // ─── Bee Metadata ───────────────────────────────────────────────────────
 
@@ -293,7 +294,6 @@ class AuthProviderBee {
     _emit(event, data) {
         if (this.eventBus) {
             try { this.eventBus.emit(event, data); } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

@@ -11,6 +11,7 @@ const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Model Registry
@@ -196,7 +197,6 @@ class ModelManager extends EventEmitter {
     // and let GC collect. Some runtimes expose dispose().
     if (entry.pipeline && typeof entry.pipeline.dispose === 'function') {
       try { await entry.pipeline.dispose(); } catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
@@ -271,7 +271,6 @@ class ModelManager extends EventEmitter {
     try {
       fs.mkdirSync(this._options.cacheDir, { recursive: true });
     } catch (_) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 

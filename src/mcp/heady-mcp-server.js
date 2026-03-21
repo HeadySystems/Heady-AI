@@ -4,6 +4,7 @@
 // Generated: March 7, 2026
 
 const { generateMCPManifest, getService, getAllServices } = require('./mcp-service-registry');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 
@@ -93,7 +94,6 @@ class HeadyMCPServer {
         return await toolModule.handler(args || {});
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -106,7 +106,6 @@ class HeadyMCPServer {
         return await toolDef.handler(args || {});
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

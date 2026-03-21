@@ -12,6 +12,7 @@ const fs = require('fs');
 const { PHI_TIMING } = require('../shared/phi-math');
 const path = require('path');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 const REGISTRY_PATH = path.resolve(__dirname, '..', '..', 'heady-registry.json');
 const FABRIC_PATH = path.resolve(__dirname, '..', '..', 'configs', 'resources', 'liquid-unified-fabric.yaml');
@@ -251,7 +252,6 @@ function _loadRegistry() {
             return JSON.parse(fs.readFileSync(REGISTRY_PATH, 'utf8'));
         }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     return null;

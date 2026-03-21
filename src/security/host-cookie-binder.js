@@ -14,6 +14,7 @@ import { createHash } from 'crypto';
 
 // ── φ-Derived Constants ──────────────────────────────────
 const CSL_THRESHOLDS = {
+const logger = require('../utils/logger');
   CRITICAL: phiThreshold(4),
   HIGH:     phiThreshold(3),
   MEDIUM:   phiThreshold(2),
@@ -53,18 +54,18 @@ const ALLOWED_ORIGINS = new Set([
 
 // Development origins
 const DEV_ORIGINS = new Set([
-  'http://localhost:3310',
-  'http://localhost:3311',
-  'http://localhost:3312',
-  'http://localhost:3313',
-  'http://localhost:3314',
-  'http://localhost:3315',
-  'http://localhost:3316',
-  'http://localhost:3317',
-  'http://localhost:3318',
-  'http://localhost:3319',
-  'http://localhost:8080',
-  'http://localhost:5173',
+  'http://0.0.0.0:3310',
+  'http://0.0.0.0:3311',
+  'http://0.0.0.0:3312',
+  'http://0.0.0.0:3313',
+  'http://0.0.0.0:3314',
+  'http://0.0.0.0:3315',
+  'http://0.0.0.0:3316',
+  'http://0.0.0.0:3317',
+  'http://0.0.0.0:3318',
+  'http://0.0.0.0:3319',
+  'http://0.0.0.0:8080',
+  'http://0.0.0.0:5173',
 ]);
 
 // ── Cookie Options Factory ──────────────────────────────
@@ -176,7 +177,7 @@ export function generateRelayScript(options = {}) {
       
       window.addEventListener('message', function(event) {
         if (allowedOrigins.indexOf(event.origin) === -1) {
-          console.warn('[HeadyRelay] Rejected message from unauthorized origin:', event.origin);
+          logger.warn('[HeadyRelay] Rejected message from unauthorized origin:', event.origin);
           return;
         }
         

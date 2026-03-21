@@ -12,6 +12,7 @@
 'use strict';
 
 const {
+const logger = require('../utils/logger');
   PSI,
   PSI2,
   PSI3,
@@ -504,7 +505,7 @@ class BudgetTracker {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      console.log(`[BudgetTracker] ${msg}`, meta);
+      logger.info(`[BudgetTracker] ${msg}`, meta);
     }
   }
 }

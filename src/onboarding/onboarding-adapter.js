@@ -17,6 +17,7 @@ const router = express.Router();
 // ---------------------------------------------------------------------------
 
 const Steps = Object.freeze({
+const logger = require('../utils/logger');
   WELCOME:          'WELCOME',
   AUTH:             'AUTH',
   PERMISSIONS:      'PERMISSIONS',
@@ -340,7 +341,7 @@ router.get('/steps', (req, res) => {
 // Error handler
 // ---------------------------------------------------------------------------
 router.use((err, req, res, _next) => {
-  console.error('[OnboardingAdapter] Error:', err.message);
+  logger.error('[OnboardingAdapter] Error:', err.message);
   res.status(500).json(failure('An internal error occurred. Please try again.'));
 });
 

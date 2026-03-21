@@ -5,6 +5,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 class AuditLogger {
     constructor(opts = {}) {
@@ -78,7 +79,7 @@ function auditMiddleware(auditLogger) {
                 metadata: { statusCode: res.statusCode, durationMs: Date.now() - start },
                 ip: req.ip || req.headers['x-forwarded-for'],
                 userAgent: req.headers['user-agent'],
-            }).catch(err => console.error('[AUDIT] Log error:', err.message));
+            }).catch(err => logger.error('[AUDIT] Log error:', err.message));
         });
         next();
     };

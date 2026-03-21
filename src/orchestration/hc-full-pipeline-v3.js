@@ -52,6 +52,7 @@ const { PHI, PSI, fib, PIPELINE_STAGES, STAGE_TIMEOUTS, CSL_THRESHOLDS, phiBacko
 const { judgeArenaResults } = require('../scoring/csl-judge-scorer');
 const { KeyRotationManager } = require('../crypto/ed25519-receipt-signer');
 const { CognitiveFusion } = require('../cognitive/cognitive-layer-integration');
+const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATUS enum — pipeline and stage execution statuses
@@ -1184,7 +1185,6 @@ class HCFullPipeline extends EventEmitter {
           ).catch(() => null);
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -1273,7 +1273,6 @@ class HCFullPipeline extends EventEmitter {
           ).catch(() => null);
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -1452,7 +1451,6 @@ class HCFullPipeline extends EventEmitter {
         return true;
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -1478,7 +1476,6 @@ class HCFullPipeline extends EventEmitter {
         try {
           this.selfAwareness.ingestTelemetry?.(event, data);
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       });
@@ -1695,7 +1692,6 @@ class HCFullPipeline extends EventEmitter {
 
   async _safeCall(fn) {
     try { return await fn(); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

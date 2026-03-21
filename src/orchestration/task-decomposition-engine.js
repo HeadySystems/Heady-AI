@@ -630,7 +630,6 @@ class TaskDecompositionEngine extends EventEmitter {
       try {
         queryEmbedding = await this._embedFn(subtask.description);
       } catch (_) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }

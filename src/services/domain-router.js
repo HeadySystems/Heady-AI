@@ -68,8 +68,8 @@ const DOMAIN_PROJECTIONS = {
     'www.headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
     'headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
 
-    // Localhost development
-    'localhost': { uiId: 'antigravity', module: 'Antigravity3D', category: 'dev' },
+    // Local development (bind address)
+    '0.0.0.0': { uiId: 'antigravity', module: 'Antigravity3D', category: 'dev' },
 };
 
 // ── Core Router ─────────────────────────────────────────────────
@@ -130,7 +130,7 @@ function _getDefault(hostname) {
  * Express middleware that injects the domain projection into req.headyProjection.
  */
 function domainRoutingMiddleware(req, _res, next) {
-    const hostname = req.hostname || req.headers.host || 'localhost';
+    const hostname = req.hostname || req.headers.host || '0.0.0.0';
     req.headyProjection = resolveProjection(hostname);
     next();
 }
@@ -183,7 +183,7 @@ function domainRouterRoutes(app) {
 
     // Current projection for this request
     app.get('/api/domains/current', (req, res) => {
-        const hostname = req.hostname || req.headers.host || 'localhost';
+        const hostname = req.hostname || req.headers.host || '0.0.0.0';
         res.json(resolveProjection(hostname));
     });
 

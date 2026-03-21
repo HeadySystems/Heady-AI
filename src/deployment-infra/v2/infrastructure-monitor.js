@@ -44,6 +44,7 @@ const http = require('http');
 const net = require('net');
 const { EventEmitter } = require('events');
 const os = require('os');
+const logger = require('../../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -309,7 +310,7 @@ class InfrastructureMonitor extends EventEmitter {
     this._check(); // Immediate first check
     this._timer = setInterval(() => this._check(), this.config.intervalMs);
     this._timer.unref?.();
-    console.log(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
+    logger.info(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
   }
 
   stop() {
@@ -399,7 +400,7 @@ class InfrastructureMonitor extends EventEmitter {
 
     this.history.push({ score, errorRate: 0, latencyMs: results[this.targets[0]?.name]?.latencyMs });
 
-    console.log(JSON.stringify({
+    logger.info(JSON.stringify({
       level: isCritical ? 'error' : isDegraded ? 'warn' : 'info',
       msg: 'Health check',
       score,
@@ -432,7 +433,6 @@ class InfrastructureMonitor extends EventEmitter {
         const { data: gwData } = await fetchJson(`${target.url}/api/ai/status`, { timeoutMs: 5000 });
         if (gwData) result.gatewayStatus = gwData;
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
 
@@ -583,7 +583,7 @@ class InfrastructureMonitor extends EventEmitter {
       }
     });
     this._server.listen(this.config.port, () => {
-      console.log(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
+      logger.info(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
     });
   }
 }
@@ -596,13 +596,13 @@ async function main() {
 
   if (args.includes('--once')) {
     const report = await monitor.runOnce();
-    console.log(JSON.stringify(report, null, 2));
+    logger.info(JSON.stringify(report, null, 2));
     process.exit(report.status === 'critical' ? 1 : 0);
   }
 
   if (args.includes('--report')) {
     await monitor.runOnce();
-    console.log(JSON.stringify(monitor.lastReport, null, 2));
+    logger.info(JSON.stringify(monitor.lastReport, null, 2));
     process.exit(0);
   }
 
@@ -614,7 +614,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch(err => {
-    console.error(JSON.stringify({ level: 'fatal', error: err.message }));
+    logger.error(JSON.stringify({ level: 'fatal', error: err.message }));
     process.exit(1);
   });
 }

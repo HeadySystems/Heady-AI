@@ -437,7 +437,6 @@ export class MCPMetaServerProxy extends EventEmitter {
 
     // Close connection
     try { await server.client.close?.(); } catch (_) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 

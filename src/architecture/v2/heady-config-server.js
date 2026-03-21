@@ -52,7 +52,7 @@
  *   await cfg.start();
  *
  *   const maxBees = cfg.get('conductor.maxBees');    // → 50
- *   cfg.watch('buddy.maxLog', (newVal) => console.log('maxLog changed:', newVal));
+ *   cfg.watch('buddy.maxLog', (newVal) => logger.info('maxLog changed:', newVal));
  *
  * ════════════════════════════════════════════════════════════════════
  */
@@ -66,6 +66,7 @@ const path         = require('path');
 const crypto       = require('crypto');
 const http         = require('http');
 const https        = require('https');
+const logger = require('../../utils/logger');
 
 // ─── Golden ratio — sacred, immutable, cannot be overridden at runtime ────────
 const PHI = 1.6180339887;
@@ -852,7 +853,6 @@ class ConfigServer extends EventEmitter {
         }
       });
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -881,7 +881,6 @@ class ConfigServer extends EventEmitter {
     if (handlers) {
       for (const fn of handlers) {
         try { fn(newVal, oldVal, key); } catch (e) {
-          const logger = require('../../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -940,23 +939,23 @@ if (require.main === module) {
     const cfg = getConfigServer({ configFile: '/tmp/heady-test-config.json' });
     await cfg.start();
 
-    console.log('=== HeadyConfigServer self-test ===');
-    console.log('buddy.maxLog         :', cfg.get('buddy.maxLog'));
-    console.log('conductor.maxBees    :', cfg.get('conductor.maxBees'));
-    console.log('selfAwareness.drift  :', cfg.get('selfAwareness.driftThreshold'));
-    console.log('phi (readonly)       :', cfg.get('phi'));
+    logger.info('=== HeadyConfigServer self-test ===');
+    logger.info('buddy.maxLog         :', cfg.get('buddy.maxLog'));
+    logger.info('conductor.maxBees    :', cfg.get('conductor.maxBees'));
+    logger.info('selfAwareness.drift  :', cfg.get('selfAwareness.driftThreshold'));
+    logger.info('phi (readonly)       :', cfg.get('phi'));
 
-    cfg.watch('buddy.maxLog', (nv, ov) => console.log(`buddy.maxLog changed: ${ov} → ${nv}`));
+    cfg.watch('buddy.maxLog', (nv, ov) => logger.info(`buddy.maxLog changed: ${ov} → ${nv}`));
     cfg.set('buddy.maxLog', 400);
-    console.log('After runtime set    :', cfg.get('buddy.maxLog'));
+    logger.info('After runtime set    :', cfg.get('buddy.maxLog'));
 
     try {
       cfg.set('phi', 3.14);
     } catch (err) {
-      console.log('Readonly guard OK    :', err.message);
+      logger.info('Readonly guard OK    :', err.message);
     }
 
-    console.log('Diff vs defaults     :', cfg.diff());
+    logger.info('Diff vs defaults     :', cfg.diff());
     cfg.stop();
-  })().catch(console.error);
+  })().catch(err => logger.error(err.message || String(err), { error: err }));
 }

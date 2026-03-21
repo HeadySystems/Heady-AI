@@ -5,6 +5,7 @@
  */
 
 const { CONFIG } = require('../config/global');
+const logger = require('../utils/logger');
 
 async function storeCheckoutHandler(req, res) {
     try {
@@ -71,7 +72,7 @@ async function storeCheckoutHandler(req, res) {
         });
 
     } catch (err) {
-        console.error('Stripe checkout error:', err);
+        logger.error('Stripe checkout error:', err);
         res.status(500).json({ error: 'Checkout failed', message: err.message });
     }
 }

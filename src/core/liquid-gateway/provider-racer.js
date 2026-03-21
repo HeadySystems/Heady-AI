@@ -266,7 +266,6 @@ export class ProviderRacer extends EventEmitter {
       // Ensure all aborted
       for (const [, controller] of controllers) {
         try { controller.abort(); } catch (_) {
-          const logger = require('../../utils/logger');
           logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
       }

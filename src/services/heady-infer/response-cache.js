@@ -2,6 +2,7 @@
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
+const logger = require('../../utils/logger');
 
 /**
  * ResponseCache — LRU cache for LLM responses.
@@ -177,7 +178,6 @@ class ResponseCache extends EventEmitter {
         this.set(key, response, response.model || request.model);
         warmed++;
       } catch (_) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }

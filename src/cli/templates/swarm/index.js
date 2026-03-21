@@ -15,6 +15,7 @@ const HEARTBEAT_MS = 29034; // phi^7
 const DEFAULT_TIMEOUT_MS = Math.round(5000 * PHI); // 8090ms
 const SWARM_SIZE = 13; // Fibonacci
 const POOL_SIZE = 8; // Fibonacci
+const logger = require('../../../utils/logger');
 
 async function main() {
   const swarm = [];
@@ -34,14 +35,14 @@ async function main() {
     swarm.push(bee);
   }
 
-  console.log(`[{{PROJECT_NAME}}] Swarm initialized with ${swarm.length} bees`);
-  console.log(`  categories: ${JSON.stringify(getCategoryCounts(swarm))}`);
+  logger.info(`[{{PROJECT_NAME}}] Swarm initialized with ${swarm.length} bees`);
+  logger.info(`  categories: ${JSON.stringify(getCategoryCounts(swarm))}`);
 
   // Swarm heartbeat
   const interval = setInterval(() => {
     const statuses = swarm.map((b) => b.getStatus());
     const active = statuses.filter((s) => s.state === 'ready').length;
-    console.log(`[{{PROJECT_NAME}}] swarm heartbeat — ${active}/${swarm.length} bees ready`);
+    logger.info(`[{{PROJECT_NAME}}] swarm heartbeat — ${active}/${swarm.length} bees ready`);
   }, HEARTBEAT_MS);
 
   process.on('SIGINT', () => {
@@ -56,7 +57,7 @@ async function main() {
   );
 
   const succeeded = results.filter((r) => r.status === 'fulfilled').length;
-  console.log(`[{{PROJECT_NAME}}] Init complete: ${succeeded}/${swarm.length} bees succeeded`);
+  logger.info(`[{{PROJECT_NAME}}] Init complete: ${succeeded}/${swarm.length} bees succeeded`);
 }
 
 function getCategoryCounts(swarm) {
@@ -66,4 +67,4 @@ function getCategoryCounts(swarm) {
   }, {});
 }
 
-main().catch(console.error);
+main().catch(err => logger.error(err.message || String(err), { error: err }));

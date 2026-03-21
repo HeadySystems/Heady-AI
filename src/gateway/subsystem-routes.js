@@ -29,6 +29,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
 const { ColabRuntimeCluster } = require('../colab/colab-runtime-nodes.js');
+const logger = require('../utils/logger');
 const { loadUniversalPrompt, buildAgentPrompt, buildCompactDirective,
         getPromptHash, CSL_GATES, ARCHETYPES, COLAB_RUNTIMES,
         SWARM_MATRIX } = require('../agents/universal-agent-prompt.js');
@@ -462,7 +463,6 @@ async function shutdownSubsystems() {
   if (colabRuntimeManager) {
     for (const rt of colabRuntimeManager.getAllRuntimes()) {
       try { await colabRuntimeManager.terminate(rt.id); } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

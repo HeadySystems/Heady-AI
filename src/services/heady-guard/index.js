@@ -24,6 +24,7 @@ const path    = require('path');
 const config   = require('./config');
 const pipeline = require('./pipeline');
 const rules    = require('./rules');
+const logger = require('../../utils/logger');
 
 // ── Audit log ─────────────────────────────────────────────────────────────────
 
@@ -40,7 +41,6 @@ function _writeAudit(entry) {
     try {
       _auditStream.write(JSON.stringify(entry) + '\n');
     } catch (err) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
   }
@@ -51,10 +51,10 @@ function _openAuditStream() {
   try {
     _auditStream = fs.createWriteStream(config.auditLogPath, { flags: 'a' });
     _auditStream.on('error', err => {
-      console.error(`[HeadyGuard] Audit log write error: ${err.message}`);
+      logger.error(`[HeadyGuard] Audit log write error: ${err.message}`);
     });
   } catch (err) {
-    console.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
+    logger.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
   }
 }
 
@@ -304,7 +304,7 @@ async function initialize(opts = {}) {
     try {
       rules.loadFromFile(config.rulesPath);
     } catch (err) {
-      console.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
+      logger.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
     }
   }
 
@@ -322,7 +322,7 @@ async function initialize(opts = {}) {
   }
 
   _initialized = true;
-  console.log(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
+  logger.info(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
 }
 
 /**
@@ -368,7 +368,7 @@ function middleware(opts = {}) {
       return next();
     } catch (err) {
       // Guard failure should not block the request — log and pass through
-      console.error(`[HeadyGuard] Middleware error: ${err.message}`);
+      logger.error(`[HeadyGuard] Middleware error: ${err.message}`);
       req.guardResult = null;
       return next();
     }

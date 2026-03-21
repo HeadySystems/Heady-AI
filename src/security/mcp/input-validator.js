@@ -19,6 +19,7 @@
 
 const { URL } = require('url');
 const { fib, CSL_THRESHOLDS } = require('../../shared/phi-math');
+const logger = require('../../utils/logger');
 
 // ── Threat Detection Patterns ───────────────────────────────────────────────
 const THREAT_PATTERNS = {
@@ -254,7 +255,6 @@ class InputValidator {
         threats.push(`SSRF: Blocked cloud metadata endpoint in field "${key}"`);
       }
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     return threats;

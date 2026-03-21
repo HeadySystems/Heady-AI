@@ -18,6 +18,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const logger = require('../utils/logger');
 
 const RECEIPTS_DIR = path.join(__dirname, "..", "..", "data", "receipts");
 if (!fs.existsSync(RECEIPTS_DIR)) fs.mkdirSync(RECEIPTS_DIR, { recursive: true });
@@ -156,7 +157,6 @@ function getTodaySummary() {
             const prov = r.cost?.provider || "unknown";
             providers[prov] = (providers[prov] || 0) + 1;
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

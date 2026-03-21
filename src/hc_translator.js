@@ -58,6 +58,7 @@ const path = require('path');
 const http = require('http');
 const dgram = require('dgram');
 const { EventEmitter } = require('events');
+const logger = require('./utils/logger');
 
 const HEADY_ROOT = path.resolve(__dirname, '..');
 
@@ -189,7 +190,6 @@ const httpAdapter = {
     let body = req.body;
     if (typeof body === 'string') {
       try { body = JSON.parse(body); } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -224,7 +224,6 @@ const httpAdapter = {
         res.on('end', () => {
           let parsed = data;
           try { parsed = JSON.parse(data); } catch (e) {
-            const logger = require('./utils/logger');
             logger.error('Unexpected error', { error: e.message, stack: e.stack });
           }
           resolve({ status: res.statusCode, body: parsed, protocol: 'http' });
@@ -409,7 +408,6 @@ const midiAdapter = {
             payload: parsed.p
           });
         } catch (e) {
-          const logger = require('./utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
@@ -574,7 +572,6 @@ class HeadyTranslator extends EventEmitter {
           return { success: false, error: 'Blocked by middleware', message };
         }
       } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -629,7 +626,6 @@ class HeadyTranslator extends EventEmitter {
     // Run middleware (post-translate)
     for (const mw of this._middleware) {
       try { await mw(message, 'post'); } catch (e) {
-        const logger = require('./utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

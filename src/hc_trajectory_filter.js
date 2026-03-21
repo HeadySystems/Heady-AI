@@ -26,6 +26,7 @@
  */
 
 const crypto = require('crypto');
+const logger = require('./utils/logger');
 
 class TrajectoryFilter {
   constructor(options = {}) {
@@ -269,7 +270,6 @@ class TrajectoryFilter {
           const entries = traceLoader(summary.traceId);
           this.extractTips(entries, summary);
         } catch (e) {
-          const logger = require('./utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }

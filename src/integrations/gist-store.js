@@ -17,6 +17,7 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
 const MAX_FILES_PER_GIST = FIB[6]; // 13
 const RETRY_DELAYS_MS    = [FIB[8], FIB[9], FIB[10], FIB[11]].map(f => f * 100); // [2100,3400,5500,8900]ms
 const MAX_DESCRIPTION_LEN = FIB[12]; // 233 chars
+const logger = require('../utils/logger');
 
 /**
  * GistStore — GitHub Gists as a persistent KV checkpoint layer.
@@ -36,7 +37,7 @@ class GistStore {
     this.token = opts.token || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
     this.owner = opts.owner || process.env.GITHUB_ACTOR || 'heady-systems';
     if (!this.token) {
-      console.warn('[GistStore] No GITHUB_TOKEN — writes will fail, reads of public gists still work');
+      logger.warn('[GistStore] No GITHUB_TOKEN — writes will fail, reads of public gists still work');
     }
     // In-memory index: gistId → { description, files[], updatedAt }
     this._index = new Map();
@@ -84,7 +85,7 @@ class GistStore {
         lastErr = err;
         if (i < RETRY_DELAYS_MS.length) {
           const delay = RETRY_DELAYS_MS[i];
-          console.warn(`[GistStore] ${label} attempt ${i + 1} failed, retry in ${delay}ms — ${err.message}`);
+          logger.warn(`[GistStore] ${label} attempt ${i + 1} failed, retry in ${delay}ms — ${err.message}`);
           await new Promise(r => setTimeout(r, delay));
         }
       }
@@ -142,7 +143,7 @@ class GistStore {
     }
 
     this._index.set(key, { gistId: result.id, url: result.html_url, updatedAt: ts });
-    console.log(`[GistStore] ✓ checkpoint saved: ${key} → ${result.html_url}`);
+    logger.info(`[GistStore] ✓ checkpoint saved: ${key} → ${result.html_url}`);
     return { gistId: result.id, url: result.html_url, key };
   }
 
@@ -200,7 +201,7 @@ class GistStore {
     for (const [key, val] of this._index.entries()) {
       if (val.gistId === gistId) this._index.delete(key);
     }
-    console.log(`[GistStore] ✓ deleted gist ${gistId}`);
+    logger.info(`[GistStore] ✓ deleted gist ${gistId}`);
   }
 
   // ── Colab-Specific Helpers ─────────────────────────────────────────────────

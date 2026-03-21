@@ -15,6 +15,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const logger = require('../utils/logger');
 
 // ── Import factories ─────────────────────────────────────────────
 let beeFactory;
@@ -72,7 +73,6 @@ function checkForTemplate(toolName, args) {
             };
         }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -209,7 +209,6 @@ async function withTemplateAutoGen(originalCallTool, toolName, args) {
             };
             result.content[0].text = JSON.stringify(parsed, null, 2);
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

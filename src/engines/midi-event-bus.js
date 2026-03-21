@@ -22,6 +22,7 @@
 const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
+const logger = require('../utils/logger');
 
 // ═══ Channel Assignments ═══
 const CHANNELS = {
@@ -239,7 +240,6 @@ class MidiEventBus extends EventEmitter {
             };
             fs.appendFile(MIDI_LOG, JSON.stringify(entry) + "\n", () => { });
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

@@ -55,7 +55,6 @@ export class HeadyAutoContext {
         });
         this.#watchers.push(watcher);
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -84,7 +83,6 @@ export class HeadyAutoContext {
         this.#vectorStore.set(filePath, { vector, hash, indexedAt: Date.now() });
         indexed++;
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

@@ -306,7 +306,6 @@ class LogFileRotator {
         }
       }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
@@ -879,7 +878,6 @@ export class MCPAuditLogger extends EventEmitter {
             const record = JSON.parse(line);
             results.push(record);
           } catch (e) {
-            const logger = require('../utils/logger');
             logger.error('Unexpected error', { error: e.message, stack: e.stack });
           }
         }

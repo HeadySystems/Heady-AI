@@ -19,7 +19,7 @@ class MultiCloudFailover {
             try {
                 return await this._fetch(this.primary, request);
             } catch (err) {
-                console.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
+                logger.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
                 this._primaryHealthy = false;
                 this._failoverCount++;
                 return this._fetch(this.fallback, request);
@@ -32,10 +32,9 @@ class MultiCloudFailover {
             try {
                 await this._healthCheck(this.primary);
                 this._primaryHealthy = true;
-                console.log(`[FAILOVER] Primary recovered, routing restored`);
+                logger.info(`[FAILOVER] Primary recovered, routing restored`);
                 return this._fetch(this.primary, request);
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }

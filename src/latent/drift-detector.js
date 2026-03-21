@@ -26,6 +26,7 @@ const { cosineSimilarity } = require('./vector-space-ops');
 
 /** @enum {string} */
 const AlertLevel = {
+const logger = require('../utils/logger');
   HEALTHY: 'healthy',
   WARNING: 'warning',
   CRITICAL: 'critical',
@@ -413,7 +414,7 @@ class DriftDetector extends EventEmitter {
       } catch (err) {
         // Log scan error without crashing.
         if (process.env.NODE_ENV !== 'test') {
-          console.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
+          logger.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
         }
       }
     }
@@ -507,7 +508,7 @@ class DriftDetector extends EventEmitter {
         this.onHealingTrigger(monitor.componentId, coherence);
       } catch (err) {
         if (process.env.NODE_ENV !== 'test') {
-          console.error(`[DriftDetector] Healing trigger error: ${err.message}`);
+          logger.error(`[DriftDetector] Healing trigger error: ${err.message}`);
         }
       }
     }

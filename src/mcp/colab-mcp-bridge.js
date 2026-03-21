@@ -35,6 +35,7 @@ const http = require('http');
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const path = require('path');
+const logger = require('../utils/logger');
 
 // ── Configuration ────────────────────────────────────────────────
 const PORT = parseInt(process.env.PORT || process.env.HEADY_MCP_PORT || '8420');
@@ -79,14 +80,14 @@ const telemetry = new HeadyTelemetry(vectorStore, learner);
     learner.learnPreference('3D GPU vector space for all memory operations');
     learner.learnPreference('Comprehensive data gathering during and between interactions for optimization');
 
-    console.log(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
-    console.log(`  📊 Telemetry: audit trail + optimization engine active`);
+    logger.info(`  🧠 Seeded ${learner.interactionCount} knowledge vectors`);
+    logger.info(`  📊 Telemetry: audit trail + optimization engine active`);
 })();
 
 // ── Project History Ingestion — Full codebase context on boot ────
 const { ProjectHistoryIngestor } = require('./project-history-ingestor');
 const historyIngestor = new ProjectHistoryIngestor(learner);
-historyIngestor.ingestAll().catch(e => console.error(`  ⚠ History ingest error: ${e.message}`));
+historyIngestor.ingestAll().catch(e => logger.error(`  ⚠ History ingest error: ${e.message}`));
 
 // ── Tool Registry ────────────────────────────────────────────────
 // Full 33-tool registry: 30 from heady-mcp-server.js + 3 vector space tools.
@@ -142,7 +143,7 @@ function loadMCPTools() {
         { name: 'heady_memory_stats', description: 'Get continuous learning stats (interactions, directives, categories, memory usage).', inputSchema: { type: 'object', properties: {} } },
         { name: 'heady_telemetry', description: 'Get comprehensive telemetry stats (audit trail, tool call analytics, optimizations, environment).', inputSchema: { type: 'object', properties: {} } },
     ];
-    console.log(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
+    logger.info(`  📋 ${HEADY_TOOLS.length} MCP tools loaded (35 Heady + 8 bridge)`);
 }
 
 // ── Tool Handler ─────────────────────────────────────────────────
@@ -222,7 +223,6 @@ async function callTool(name, args) {
                     try {
                         learner.learn(`[Research:${analyzeType}] ${(args.content || '').substring(0, 200)}`, 'interaction', { type: 'research', mode: analyzeType });
                     } catch (e) {
-                      const logger = require('../utils/logger');
                       logger.error('Unexpected error', { error: e.message, stack: e.stack });
                     }
                     return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
@@ -685,24 +685,24 @@ function startHTTPServer() {
     });
 
     server.listen(PORT, async () => {
-        console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
-        console.log(`  ════════════════════════════════════`);
-        console.log(`  📡 HTTP REST : http://0.0.0.0:${PORT}/mcp/tools`);
-        console.log(`  📡 JSON-RPC  : http://0.0.0.0:${PORT}/mcp/rpc`);
-        console.log(`  📡 SSE       : http://0.0.0.0:${PORT}/sse`);
-        console.log(`  📡 WebSocket : ws://0.0.0.0:${PORT}`);
-        console.log(`  📡 Health    : http://0.0.0.0:${PORT}/health`);
-        console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
-        console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
+        logger.info(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
+        logger.info(`  ════════════════════════════════════`);
+        logger.info(`  📡 HTTP REST : http://0.0.0.0:${PORT}/mcp/tools`);
+        logger.info(`  📡 JSON-RPC  : http://0.0.0.0:${PORT}/mcp/rpc`);
+        logger.info(`  📡 SSE       : http://0.0.0.0:${PORT}/sse`);
+        logger.info(`  📡 WebSocket : ws://0.0.0.0:${PORT}`);
+        logger.info(`  📡 Health    : http://0.0.0.0:${PORT}/health`);
+        logger.info(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
+        logger.info(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
 
         // ngrok tunnel for Colab
         const ngrokUrl = await setupNgrokTunnel(PORT);
         if (ngrokUrl) {
-            console.log(`  🌐 ngrok     : ${ngrokUrl}`);
-            console.log(`  🌐 SSE       : ${ngrokUrl}/sse`);
+            logger.info(`  🌐 ngrok     : ${ngrokUrl}`);
+            logger.info(`  🌐 SSE       : ${ngrokUrl}/sse`);
         }
 
-        console.log(`  ════════════════════════════════════\n`);
+        logger.info(`  ════════════════════════════════════\n`);
     });
 }
 
@@ -724,7 +724,7 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
+    logger.error(`[Heady™ MCP Bridge] Fatal: ${err.message}`);
     process.exit(1);
 });
 

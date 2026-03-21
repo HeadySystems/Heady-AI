@@ -26,6 +26,7 @@
  */
 
 const config = require('../config');
+const logger = require('../../../utils/logger');
 
 // Lazy-require pg to avoid crashing if not installed
 let pg;
@@ -323,7 +324,6 @@ class PgStore {
         ON heady_cache USING ivfflat (vector vector_cosine_ops) WITH (lists = 100)
       `);
     } catch (e) {
-      const logger = require('../../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

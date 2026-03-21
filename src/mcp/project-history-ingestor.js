@@ -16,6 +16,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
@@ -36,7 +37,7 @@ class ProjectHistoryIngestor {
         this._ingestPatterns();
         this._ingestBranches();
         const duration = Date.now() - start;
-        console.log(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
+        logger.info(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
         return this.stats;
     }
 
@@ -67,7 +68,7 @@ class ProjectHistoryIngestor {
                 this.stats.commits += batch.length;
             }
         } catch (err) {
-            console.error(`  ⚠ Git commit ingest failed: ${err.message}`);
+            logger.error(`  ⚠ Git commit ingest failed: ${err.message}`);
         }
     }
 
@@ -109,7 +110,6 @@ class ProjectHistoryIngestor {
                 );
                 this.stats.files += files.length;
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -146,12 +146,10 @@ class ProjectHistoryIngestor {
                         );
                         this.stats.docs++;
                     } catch (e) {
-                      const logger = require('../utils/logger');
                       logger.error('Unexpected error', { error: e.message, stack: e.stack });
                     }
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
@@ -197,7 +195,6 @@ class ProjectHistoryIngestor {
                 { subtype: 'branches', count: branches.length }
             );
         } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }

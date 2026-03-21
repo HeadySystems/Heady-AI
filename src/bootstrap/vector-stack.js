@@ -95,19 +95,15 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
 
     // Spatial subsystems
     try { require('../services/spatial-embedder').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { require('../services/octree-manager').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { require('../services/redis-sync-bridge').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { require('../services/buddy-system').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -136,7 +132,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         const brainRoutes = require('../routes/brain');
         if (brainRoutes.setMemoryWrapper) brainRoutes.setMemoryWrapper(vectorMemory);
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -159,7 +154,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     const Handshake = require('../security/handshake');
 
     try { require('../security/code-governance').loadConfig(); require('../security/code-governance').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -191,7 +185,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         const redisHealth = require('../routes/redis-health');
         if (redisHealth.getClient && redisHealth.getClient()) buddy.setRedis(redisHealth.getClient());
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     buddy.registerRoutes(app);
@@ -226,7 +219,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         const { VectorServe } = require('../vector-serve');
         new VectorServe(vectorMemory, logger).wireRoutes(app);
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -236,7 +228,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         const syncHub = new CrossDeviceSyncHub();
         syncHub.registerRoutes(app);
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -246,7 +237,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         sysMonitor.registerRoutes(app);
         sysMonitor.start();
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -256,7 +246,6 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
         learningEngine.registerRoutes(app);
         app.locals.vectorMemory = vectorMemory;
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

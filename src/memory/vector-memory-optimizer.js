@@ -27,7 +27,7 @@
  *
  * // On-demand index check
  * const advice = await optimizer.getIndexRecommendation('vector_memories');
- * console.log(advice.recommendation, advice.action);
+ * logger.info(advice.recommendation, advice.action);
  */
 
 import { EventEmitter } from 'events';
@@ -42,6 +42,7 @@ import {
 
 /** Vector count thresholds for index type selection */
 const THRESHOLDS = {
+const logger = require('../utils/logger');
   bruteForce:     30_000,    // <30K: brute-force acceptable
   hnswPreferred:  50_000,    // 30K–50K: HNSW starts winning
   hnswRequired:   1_000_000, // 50K–1M: HNSW strongly preferred

@@ -21,6 +21,7 @@ const { EvictionEngine } = require('./eviction');
 const { CacheAnalytics } = require('./analytics');
 const { MemoryStore } = require('./storage/memory-store');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 const PHI = config.phi;
 
@@ -526,7 +527,6 @@ class HeadyCache {
         }
         evicted++;
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -541,7 +541,6 @@ class HeadyCache {
           ? (await Promise.resolve(this._store.byteSize())) : 0;
         this._analytics.updateSize(entries, bytes);
       } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     });

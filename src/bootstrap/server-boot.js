@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 const { HeadyWebSocket } = require('../core/heady-server');
+const logger = require('../utils/logger');
 
 module.exports = function bootServer(app, { logger, voiceSessions }) {
     const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
@@ -69,7 +70,6 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
                     session.sender.send(JSON.stringify(msg));
                 }
             } catch (e) {
-              const logger = require('../utils/logger');
               logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         });

@@ -24,6 +24,7 @@ const PSI = 0.618033988749895;
 const AgentStatus = { IDLE: 'idle', BUSY: 'busy', OVERLOADED: 'overloaded', OFFLINE: 'offline' };
 const TaskStatus = { PENDING: 'pending', ASSIGNED: 'assigned', RUNNING: 'running', COMPLETED: 'completed', FAILED: 'failed', COMPENSATING: 'compensating' };
 const CircuitState = { CLOSED: 'closed', OPEN: 'open', HALF_OPEN: 'half-open' };
+const logger = require('../utils/logger');
 
 // ═══════════════════════════════════════════════════════════════════
 // Circuit Breaker
@@ -160,7 +161,7 @@ class SagaOrchestrator {
                     try {
                         await completed.compensate(context);
                     } catch (compErr) {
-                        console.error(`Compensation failed for ${completed.name}:`, compErr.message);
+                        logger.error(`Compensation failed for ${completed.name}:`, compErr.message);
                     }
                 }
                 throw new Error(`Saga failed at step "${step.name}": ${err.message}`);

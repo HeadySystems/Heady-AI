@@ -25,6 +25,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const yaml = require('js-yaml');
 const { EventEmitter } = require('events');
+const logger = require('./utils/logger');
 
 class SkillExecutor extends EventEmitter {
   constructor(options = {}) {
@@ -59,11 +60,11 @@ class SkillExecutor extends EventEmitter {
       this.registerBuiltInHandlers();
       
       this.emit('initialized', { skillCount: this.skills.size });
-      console.log(`✓ Skill Executor initialized with ${this.skills.size} skills`);
+      logger.info(`✓ Skill Executor initialized with ${this.skills.size} skills`);
       
       return true;
     } catch (error) {
-      console.error('Failed to initialize skill executor:', error);
+      logger.error('Failed to initialize skill executor:', error);
       throw error;
     }
   }

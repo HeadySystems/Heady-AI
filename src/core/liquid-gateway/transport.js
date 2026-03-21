@@ -235,7 +235,6 @@ export class SSETransport extends EventEmitter {
     try {
       connection.res.end();
     } catch (_) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 
@@ -395,7 +394,6 @@ export class WebSocketTransport extends EventEmitter {
     try {
       session.ws.close(code, reason);
     } catch (_) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 

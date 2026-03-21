@@ -41,7 +41,6 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
 
     // SSE Streaming
     try { require('../routes/sse-streaming')(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -60,14 +59,12 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
     // Core API
     try { app.use('/api', require('../services/core-api')); } catch {
         try { app.use('/api', require('../routes/config-api')); } catch (e) {
-          const logger = require('../utils/logger');
           logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }
 
     // Pipeline API
     try { app.use('/api/pipeline', require('../routes/pipeline-api')); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -86,7 +83,6 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
         if (secretsManager) { require('../hc_secrets_manager').registerSecretsRoutes(app); secretsManager.startMonitor(60000); }
         if (cfManager) { require('../hc_cloudflare').registerCloudflareRoutes(app, cfManager); }
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -95,7 +91,6 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
         const upstash = require('../services/upstash-redis');
         upstash.redisRoutes(app);
     } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
@@ -116,43 +111,35 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
 
     // Autonomous Scheduler + Swarm Ignition + Bee Templates + Consensus
     try { const s = require('../services/autonomous-scheduler'); s.start(); s.schedulerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { const { igniteSwarm, swarmIgnitionRoutes } = require('../orchestration/swarm-ignition'); igniteSwarm({ enablePruner: true, enableTester: true, enableEmbedder: true }); swarmIgnitionRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { require('../bees/headybee-template-registry').registerRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     try { const { consensus, registerConsensusRoutes } = require('../orchestration/swarm-consensus'); consensus.startStaleCheck(); registerConsensusRoutes(app); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     // Redis pool shutdown
     try { const { onShutdown } = require('../lifecycle/graceful-shutdown'); const rp = require('../utils/redis-pool'); onShutdown('redis-pool', () => rp.close()); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     // Provider analytics
     try { app.use('/api/providers', require('../routes/provider-analytics')); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     // Models API
     try { app.use('/api', require('../routes/models-api')); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     // Aloha Protocol
     try { require('../routes/aloha')(app, { selfCritiqueEngine: _engines?.selfCritiqueEngine, storyDriver: _engines?.storyDriver, resourceManager: _engines?.resourceManager, patternEngine: _engines?.patternEngine }); } catch (e) {
-      const logger = require('../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 };

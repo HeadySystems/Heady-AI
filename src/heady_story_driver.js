@@ -29,6 +29,7 @@ const DECISION_LOG_PATH = '.heady-memory/decisions';
 const AUDIT_LOG_PATH = '.heady-memory/audit';
 
 const DECISION_ENGINE_CONFIG = Object.freeze({
+const logger = require('./utils/logger');
   maxHistorySize: 10000,
   decisionTimeoutMs: 30000,
   retryAttempts: 3,
@@ -87,7 +88,7 @@ class StoryDriver {
     this.ensureDirectories();
     this.loadState();
     
-    console.log('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
+    logger.info('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
   }
 
   ensureDirectories() {
@@ -108,7 +109,7 @@ class StoryDriver {
         this.decisionHistory = lines.slice(-DECISION_ENGINE_CONFIG.maxHistorySize).map(line => JSON.parse(line));
       }
     } catch (e) {
-      console.warn('Could not load decision history:', e.message);
+      logger.warn('Could not load decision history:', e.message);
     }
   }
 

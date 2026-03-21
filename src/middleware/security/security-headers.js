@@ -339,13 +339,12 @@ function cspViolationHandler(opts = {}) {
     // Call optional handler
     if (typeof opts.onViolation === 'function') {
       try { opts.onViolation(violation, req); } catch (e) {
-        const logger = require('../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
 
     // Default: log to stderr
-    console.warn('[CSP-VIOLATION]', JSON.stringify(violation));
+    logger.warn('[CSP-VIOLATION]', JSON.stringify(violation));
 
     res.status(204).end();
   };
@@ -369,6 +368,7 @@ module.exports = {
 /*
 const express = require('express');
 const { securityHeaders, cspViolationHandler, frameOptions } = require('./security-headers');
+const logger = require('../../utils/logger');
 
 const app = express();
 
@@ -391,6 +391,6 @@ app.post('/.well-known/csp-violations',
 // Override frame options for specific embeddable page
 app.get('/embed/widget', frameOptions('SAMEORIGIN'), (req, res) => {
   // This page can be embedded in same-origin iframes
-  res.send(`<script nonce="${res.locals.cspNonce}">console.log('widget')</script>`);
+  res.send(`<script nonce="${res.locals.cspNonce}">logger.info('widget')</script>`);
 });
 */

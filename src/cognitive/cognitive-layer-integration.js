@@ -204,7 +204,6 @@ class CognitiveFusion {
           });
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -290,7 +289,6 @@ class CognitiveFusion {
           });
         }
       } catch (e) {
-        const logger = require('../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }

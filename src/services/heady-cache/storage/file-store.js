@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const { MemoryStore } = require('./memory-store');
+const logger = require('../../../utils/logger');
 
 const WAL_OP_SET = 'set';
 const WAL_OP_DEL = 'del';
@@ -169,7 +170,6 @@ class FileStore {
         const rec = JSON.parse(trimmed);
         if (rec && rec.key) this._mem.set(rec.key, rec.value, rec.meta || {});
       } catch (e) {
-        const logger = require('../../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -195,7 +195,6 @@ class FileStore {
           else if (op.namespace) this._mem.clear(op.namespace);
         }
       } catch (e) {
-        const logger = require('../../../utils/logger');
         logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
@@ -233,7 +232,6 @@ class FileStore {
       this._walStream = fs.createWriteStream(this._walPath, { flags: 'a' });
       this._walOps = 0;
     } catch (e) {
-      const logger = require('../../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }

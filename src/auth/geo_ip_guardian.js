@@ -1,5 +1,6 @@
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
+const logger = require('../utils/logger');
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -30,14 +31,14 @@ const geoIpGuardian = (req, res, next) => {
     if (existingSession) {
         // IP Binding Check
         if (existingSession.ip !== currentIp) {
-            console.warn(`[SECURITY] Session IP mismatch. Expected ${existingSession.ip}, got ${currentIp}. Checking geolocation...`);
+            logger.warn(`[SECURITY] Session IP mismatch. Expected ${existingSession.ip}, got ${currentIp}. Checking geolocation...`);
             // Impossible Travel Check
             if (existingSession.geoLoc && currentLoc) {
                 const distance = getDistanceInMiles(existingSession.geoLoc.ll[0], existingSession.geoLoc.ll[1], currentLoc.ll[0], currentLoc.ll[1]);
                 const hoursPassed = (now - existingSession.lastSeen) / (1000 * 60 * 60);
                 const mph = distance / (hoursPassed || 0.001); // avoid div by 0
                 if (mph > 600) { // e.g., > 600 mph implies impossible travel
-                    console.error(`[SOUL VETO] Impossible travel detected! Speed: ${mph} mph.`);
+                    logger.error(`[SOUL VETO] Impossible travel detected! Speed: ${mph} mph.`);
                     return res.status(403).json({ error: "Heady SOUL Veto: Suspicious activity leading to instant session termination." });
                 }
             }
