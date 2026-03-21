@@ -29,7 +29,7 @@
     },
     "mac": {
       "icon": "assets/icon.png",
-      "target": "dmg"
+      "target": "zip"
     },
     "linux": {
       "icon": "assets/icon.png",
