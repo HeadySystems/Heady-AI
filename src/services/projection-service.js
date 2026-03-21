@@ -451,12 +451,10 @@ module.exports = {
 };
 
 
-// --- Auto-Unified Latent Service Pattern ---
-if (module.exports && typeof module.exports === 'object') {
-  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
-  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
-  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
-  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
-  if (!module.exports._tick) module.exports._tick = async () => {};
-}
+// --- Auto-Unified Latent Service Pattern (wired to ProjectionService) ---
+module.exports.start = async () => { const svc = getProjectionService(); svc.start(); return { status: 'started', agents: svc.activeAgentCount }; };
+module.exports.stop = async () => { const svc = getProjectionService(); svc.stop(); return { status: 'stopped' }; };
+module.exports.health = () => { const svc = getProjectionService(); return svc.getHealth(); };
+module.exports.metrics = () => { const svc = getProjectionService(); return { activeAgents: svc.activeAgentCount, maxAgents: MAX_AGENTS }; };
+module.exports._tick = async () => {};
 // -------------------------------------------
