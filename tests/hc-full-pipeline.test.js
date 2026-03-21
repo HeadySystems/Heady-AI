@@ -32,7 +32,7 @@ describe("HCFullPipeline — 9-Stage State Machine", () => {
         });
 
         test("emits run:created event on createRun", () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             pipeline.on("run:created", spy);
             pipeline.createRun({ task: "test" });
             expect(spy).toHaveBeenCalledTimes(1);

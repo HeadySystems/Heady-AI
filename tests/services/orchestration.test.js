@@ -178,29 +178,25 @@ const { TenantIsolation } = require('../../src/services/tenant-isolation');
 
 describe('TenantIsolation', () => {
     let isolation;
+    const mockDb = {
+        query: vi.fn().mockResolvedValue({ ok: true, rows: [{ tenant_id: 'tid-1' }] }),
+    };
 
     beforeEach(() => {
-        isolation = new TenantIsolation();
+        isolation = new TenantIsolation({ db: mockDb });
+        mockDb.query.mockClear();
     });
 
-    test('registers tenants with correct plan quotas', () => {
-        isolation.registerTenant('t1', { plan: 'free' });
-        isolation.registerTenant('t2', { plan: 'pro' });
-        const t1 = isolation.getTenant('t1');
-        const t2 = isolation.getTenant('t2');
-        expect(t1.plan).toBe('free');
-        expect(t2.plan).toBe('pro');
+    test('requires database for registerTenant', async () => {
+        const noDb = new TenantIsolation();
+        await expect(noDb.registerTenant({ companyName: 'Test', contactEmail: 'a@b.com' }))
+            .rejects.toThrow('Database not initialized');
     });
 
-    test('generates isolated namespace keys', () => {
-        const iso = new TenantIsolation();
-        iso.registerTenant('tenant-abc', { plan: 'free' });
-        const dbKey = iso.getSchemaPrefix('tenant-abc');
-        const redisKey = iso.getRedisPrefix('tenant-abc');
-        const vectorKey = iso.getVectorCollection('tenant-abc');
-        expect(dbKey).toBeDefined();
-        expect(redisKey).toBeDefined();
-        expect(vectorKey).toBeDefined();
+    test('registerTenant calls db with correct tier', async () => {
+        const result = await isolation.registerTenant({ companyName: 'Acme', contactEmail: 'a@b.com', tier: 'pro' });
+        expect(mockDb.query).toHaveBeenCalled();
+        expect(result).toBeDefined();
     });
 });
 

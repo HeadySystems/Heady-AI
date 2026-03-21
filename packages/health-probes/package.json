@@ -12,7 +12,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@heady-ai/phi-math-foundation": "workspace:*",
+    "@heady/phi-math-foundation": "workspace:*",
     "@heady/structured-logger": "workspace:*"
   },
   "keywords": ["health", "probes", "kubernetes", "readiness", "liveness", "heady"],

@@ -23,13 +23,13 @@
   "author": "Heady Systems",
   "license": "MIT",
   "dependencies": {
-    "@heady/phi-math": "^1.0.0",
-    "@heady/structured-logger": "^1.0.0",
+    "@heady/phi-math": "workspace:*",
+    "@heady/structured-logger": "workspace:*",
     "@heady/bee": "^1.0.0"
   },
   "peerDependencies": {
-    "@heady/phi-math": "^1.0.0",
-    "@heady/structured-logger": "^1.0.0"
+    "@heady/phi-math": "workspace:*",
+    "@heady/structured-logger": "workspace:*"
   },
   "peerDependenciesOptional": {
     "@heady/bee": "^1.0.0"

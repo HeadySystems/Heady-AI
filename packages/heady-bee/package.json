@@ -21,7 +21,7 @@
     "directory": "packages/heady-bee"
   },
   "dependencies": {
-    "@heady-ai/phi-math": "workspace:*",
+    "@heady/phi-math": "workspace:*",
     "@heady/structured-logger": "workspace:*"
   }
 }
