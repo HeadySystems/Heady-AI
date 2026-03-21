@@ -158,7 +158,7 @@ class SagaOrchestrator {
             } catch (err) { // Compensation — unwind in reverse order
                 for (const completed of [...this.completedSteps].reverse()) {
                     try {
-                        await completed.compensate(context);  logger.error('Operation failed', { error: err.message }); } catch (compErr) {
+                        await completed.compensate(context); catch (compErr) { }
                         console.error(`Compensation failed for ${completed.name}:`, compErr.message);
                     }
                 }

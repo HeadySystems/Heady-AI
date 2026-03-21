@@ -314,7 +314,7 @@ class EmbeddingCache extends EventEmitter {
 
     try {
       fs.mkdirSync(dir, { recursive: true });
-    } catch (_) { /* ok */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* ok */  }
 
     const tmpPath = `${this._persistPath}.tmp`;
     const stream = fs.createWriteStream(tmpPath, { flags: 'w', encoding: 'utf8' });
@@ -371,7 +371,7 @@ class EmbeddingCache extends EventEmitter {
           if (entry.e !== null && now > entry.e) return;
           this.set(entry.k, entry.v);
           loaded++;
-        } catch (_) { /* skip corrupt lines */  logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { /* skip corrupt lines */  }
       });
       rl.on('close', resolve);
       rl.on('error', reject);

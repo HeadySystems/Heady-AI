@@ -119,7 +119,7 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
       riskScore: 0,
       confidence: 0,
       findings:  [],
-      meta:      { error: err.message, timedOut: err.message.includes('timed out')  logger.error('Operation failed', { error: err.message }); },
+      meta:      { error: err.message, timedOut: err.message.includes('timed out') },
     };
   }
 }

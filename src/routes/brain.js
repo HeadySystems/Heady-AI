@@ -727,7 +727,7 @@ router.post("/chat", async (req, res) => {
     } catch (err) { // Gateway crashed — absolute fallback
         logger.logError('HCFP', 'Gateway error', err);
         const contextualResponse = generateContextualResponse(message);
-        session.history.push({ role: "user", content: message  logger.error('Operation failed', { error: err.message }); });
+        session.history.push({ role: "user", content: message });
         session.history.push({ role: "assistant", content: contextualResponse });
         trimSessionHistory(session);
         session.updatedAt = ts;
@@ -896,7 +896,7 @@ router.post("/embed", async (req, res) => {
         const pseudoEmbed = Array.from(hash).map((b) => (b / 255) * 2 - 1);
 
         logMemoryReceipt({
-            stored: `Hash-based pseudo-embedding (32 dims) — structural match only, NOT semantic: "${(text || "").substring(0, 80)  logger.error('Operation failed', { error: err.message }); }..."`,
+            stored: `Hash-based pseudo-embedding (32 dims) — structural match only, NOT semantic: "${(text || "").substring(0, 80)}..."`,
             notStored: `Semantic meaning NOT captured — real ${model || "nomic-embed-text"} embedding failed (${err.message}). Full text (${(text || "").length} chars) has no 3D vector representation.`,
             method: "hash-fallback",
             fallbackUsed: true,
@@ -973,7 +973,7 @@ router.post("/search", async (req, res) => {
                 if (results.length >= (limit || 10)) break;
             }
         }
-    } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
+    } catch (err) { // Non-critical  }
 
     res.json({
         ok: true,

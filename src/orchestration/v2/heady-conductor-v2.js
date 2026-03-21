@@ -34,7 +34,7 @@
 const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
 const crypto = require('crypto');
-let logger = null; try { logger = require('../../utils/logger'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let logger = null; try { logger = require('../../utils/logger'); } catch (e) { /* graceful */  }
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 const HEARTBEAT_INTERVAL_MS = Math.round(PHI * 5000); // ~8.09s — golden-ratio cadence
@@ -352,7 +352,7 @@ class HeadyConductor extends EventEmitter {
                 error: err.message,
                 durationMs,
                 priority,
-                failedAt: Date.now(),  logger.error('Operation failed', { error: err.message }); };
+                failedAt: Date.now(), };
             this._appendExecutionLog(failEntry);
             this.emit('task:failed', failEntry);
             this._emitTelemetry('task_failed', failEntry);

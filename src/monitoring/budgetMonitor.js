@@ -105,7 +105,7 @@ export async function recordSpend(redis, event) {
   try {
     await Promise.all(ops);
   } catch (err) { // Non-blocking — spend tracking must never interrupt the inference call
-    console.error('[budgetMonitor] Redis write failed:', err.message);  logger.error('Operation failed', { error: err.message }); }
+    console.error('[budgetMonitor] Redis write failed:', err.message);
 
   return { cost, provider, month };
 }

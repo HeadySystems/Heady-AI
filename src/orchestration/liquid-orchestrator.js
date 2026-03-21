@@ -538,7 +538,7 @@ class LiquidOrchestrator extends EventEmitter {
 
     try {
       await this._dispatchToBee(bee, task, provider, routeStart, task._priorityScore || 0);
-    } catch (_) { /* error already emitted */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* error already emitted */  }
   }
 
   // ─── Priority Scoring ────────────────────────────────────────────────────────

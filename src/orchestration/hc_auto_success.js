@@ -42,7 +42,7 @@ const EventEmitter = require("events");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  }
 
 const HISTORY_PATH = path.join(__dirname, "..", "data", "auto-success-tasks.json");
 const AUDIT_PATH = path.join(__dirname, "..", "data", "auto-success-audit.json");
@@ -107,24 +107,24 @@ const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
 
 // ─── TASK CATALOG (fib(12) = 144 tasks × fib(7) = 13 categories) ────────────
 let extraTasks = [];
-try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { }
 let nonprofitTasks = [];
-try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { }
 let buddyTasks = [];
-try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { }
 let long814Tasks = [];
-try { long814Tasks = require('./long814-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { long814Tasks = require('./long814-tasks.json'); } catch (e) { }
 let headyosTasks = [];
-try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { }
 let orchProtocolTasks = [];
-try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { }
 let phase5Tasks = [];
-try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
 let downloadsTasks = [];
-try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
 // ─── AUDIT-DISCOVERED FIXES — tasks generated from deep audit 2026-03-19 ─────
 let auditFixTasks = [];
-try { auditFixTasks = require('./audit-fix-tasks.json'); } catch (e) { logger.error('Operation failed', { error: e.message }); }
+try { auditFixTasks = require('./audit-fix-tasks.json'); } catch (e) { }
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -859,7 +859,7 @@ class AutoSuccessEngine extends EventEmitter {
 
         // ═══ AUTO-COMMIT/PUSH/DEPLOY — Permanent pipeline automation ════════
         try {
-            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch (e) { /* graceful */  }
             autoCommitDeploy.start();
             logger.logSystem("  ∞ AutoCommitDeploy: WIRED — event-driven auto-commit/push/deploy");
         } catch (e) {

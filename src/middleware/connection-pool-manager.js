@@ -374,7 +374,7 @@ class ConnectionPool extends EventEmitter {
     conn.state = ConnectionState.DRAINING;
     try {
       await conn.client?.close?.();
-    } catch (_) { /* ignore */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* ignore */  }
     conn.state = ConnectionState.CLOSED;
     this._connections.delete(connId);
     this._idle = this._idle.filter(id => id !== connId);

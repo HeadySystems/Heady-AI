@@ -131,7 +131,7 @@ function _auditWrite(record) {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
         fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-    } catch (_) { logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -162,7 +162,7 @@ function integrateConductor(conductor, projectionManager, projectionSwarm) {
             if (conductor.groupHits) {
                 conductor.groupHits['projection'] = conductor.groupHits['projection'] || 0;
             }
-        } catch (_) { logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { }
     }
 
     // ── 3. Lifecycle: Conductor events → Swarm actions ────────────────────────
@@ -358,7 +358,7 @@ function _buildRouter(projectionManager, projectionSwarm) {
     // Lazy-require express to avoid hard dep at module load time
     let express;
     try { express = require('express'); } catch (_) { // Return a minimal shim if express isn't available yet
-        return { registerRoutes: () => {  logger.error('Operation failed', { error: _.message }); } };
+        return { registerRoutes: () => { } };
     }
 
     const router = express.Router();

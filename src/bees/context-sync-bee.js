@@ -118,7 +118,7 @@ function _loadState(root) {
     try {
         const p = path.join(root, STATE_FILE);
         if (fs.existsSync(p)) _state = JSON.parse(fs.readFileSync(p, 'utf8'));
-    } catch (_) { /* first run */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* first run */  }
 }
 
 function _saveState(root) {
@@ -196,7 +196,7 @@ function generateContextPackage(tier, workspaceRoot) {
                 if (content.length < tierConfig.maxSizeKB * 1024) {
                     files.push({ path: dst, content });
                 }
-            } catch (_) { /* skip */  logger.error('Operation failed', { error: _.message }); }
+            } catch (_) { /* skip */  }
         }
     }
 
@@ -212,7 +212,7 @@ function generateContextPackage(tier, workspaceRoot) {
             if (fs.existsSync(fp) && files.length < tierConfig.maxFiles) {
                 try {
                     files.push({ path: `docs/${path.basename(doc)}`, content: fs.readFileSync(fp, 'utf8') });
-                } catch (_) { /* skip */  logger.error('Operation failed', { error: _.message }); }
+                } catch (_) { /* skip */  }
             }
         }
     }
@@ -232,7 +232,7 @@ function generateContextPackage(tier, workspaceRoot) {
                         path: `services/${f}`,
                         content: `${header}\n\n// ... (truncated for context) ...\n\n${exports}`,
                     });
-                } catch (_) { /* skip */  logger.error('Operation failed', { error: _.message }); }
+                } catch (_) { /* skip */  }
             }
         }
         files.push(...serviceFiles.slice(0, tierConfig.maxFiles - files.length));
@@ -348,7 +348,7 @@ async function pushToGitHub(files, workspaceRoot, trigger = 'bee') {
             execSync(`git ls-remote --heads https://github.com/${GITHUB_REPO}.git`, { stdio: 'pipe' });
             const output = execSync(`git ls-remote --heads https://github.com/${GITHUB_REPO}.git`, { encoding: 'utf8' });
             hasCommits = output.includes('refs/heads/');
-        } catch (_) { /* empty repo */  logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { /* empty repo */  }
 
         if (hasCommits) {
             execSync(`git clone --depth 1 https://github.com/${GITHUB_REPO}.git ${tmpDir}`, {
@@ -388,7 +388,7 @@ async function pushToGitHub(files, workspaceRoot, trigger = 'bee') {
             execSync('git diff --cached --quiet', { cwd: tmpDir, stdio: 'pipe' });
             logger.info('[context-sync] No changes to push');
             return { pushed: false, files: written, reason: 'no-changes' };
-        } catch (_) { /* there are changes — proceed */  logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { /* there are changes — proceed */  }
 
         const commitMsg = `sync: AutoContext ${trigger} — ${written} files [${new Date().toISOString().slice(0, 16)}]`;
         execSync(`git commit -m "${commitMsg}"`, { cwd: tmpDir, stdio: 'pipe' });
@@ -417,7 +417,7 @@ async function pushToGitHub(files, workspaceRoot, trigger = 'bee') {
         return { pushed: false, files: 0, error: e.message };
     } finally {
         // Cleanup
-        try { execSync(`rm -rf ${tmpDir}`, { stdio: 'pipe' }); } catch (_) { /* ok */  logger.error('Operation failed', { error: _.message }); }
+        try { execSync(`rm -rf ${tmpDir}`, { stdio: 'pipe' }); } catch (_) { /* ok */  }
     }
 }
 

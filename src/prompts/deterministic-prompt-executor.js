@@ -30,7 +30,7 @@ function getPromptManager() {
         } catch (err) { // Fallback: minimal stub for environments where templates can't load
             _PromptManager = class StubPromptManager {
                 interpolate(id, vars) {
-                    return `[PROMPT:${id  logger.error('Operation failed', { error: err.message }); }] ` + Object.entries(vars).map(([k, v]) => `${k}=${v}`).join(', ');
+                    return `[PROMPT:${id}] ` + Object.entries(vars).map(([k, v]) => `${k}=${v}`).join(', ');
                 }
                 getPrompt(id) { return { id, variables: [], template: '', tags: [] }; }
                 listPrompts() { return []; }
@@ -348,7 +348,7 @@ class DeterministicPromptExecutor {
     _emit(event, data) {
         const listeners = this._listeners.get(event) || [];
         for (const cb of listeners) {
-            try { cb(data); } catch (_) { /* fire-and-forget */  logger.error('Operation failed', { error: _.message }); }
+            try { cb(data); } catch (_) { /* fire-and-forget */  }
         }
     }
 }

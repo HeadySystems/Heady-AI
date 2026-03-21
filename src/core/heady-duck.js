@@ -16,7 +16,7 @@ class Database {
       const duckdb = require('duckdb');
       this.db = new duckdb.Database(this.path);
     } catch (err) { // DuckDB native bindings not available, using in-memory fallback
-      this.db = { type: 'in-memory'  logger.error('Operation failed', { error: err.message }); };
+      this.db = { type: 'in-memory' };
     }
   }
 
@@ -34,7 +34,7 @@ class Database {
       if (this.db && this.db.close) {
         this.db.close();
       }
-    } catch (err) { // ignore  logger.error('Operation failed', { error: err.message }); }
+    } catch (err) { // ignore  }
     this.db = null;
   }
 }

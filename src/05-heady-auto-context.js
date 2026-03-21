@@ -582,9 +582,9 @@ class HeadyAutoContext extends EventEmitter {
                         }
                     });
                     if (w.unref) w.unref();
-                } catch (_) { /* some dirs may not be watchable */  logger.error('Operation failed', { error: _.message }); }
+                } catch (_) { /* some dirs may not be watchable */  }
             }
-        } catch (_) { /* fs.watch not available */  logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { /* fs.watch not available */  }
 
         logger.info('[AutoContext] Background indexer started (interval: ' + INDEX_INTERVAL_MS + 'ms)');
     }
@@ -775,7 +775,7 @@ class HeadyAutoContext extends EventEmitter {
                     }
                 }
             }
-        } catch (err) { /* structured-logger: emit error */  logger.error('Operation failed', { error: err.message }); }
+        } catch (err) { /* structured-logger: emit error */  }
 
         return sources;
     }
@@ -817,7 +817,7 @@ class HeadyAutoContext extends EventEmitter {
                         }));
                     }
                 }
-            } catch (err) { /* structured-logger: emit error */  logger.error('Operation failed', { error: err.message }); }
+            } catch (err) { /* structured-logger: emit error */  }
         }
 
         return sources;

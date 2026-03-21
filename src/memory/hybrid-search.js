@@ -344,7 +344,7 @@ export class HybridSearchEngine extends EventEmitter {
       }));
     } catch (error) { // Degrade gracefully: return empty if BM25 fails
       this.logger.warn('[HybridSearch] BM25 search error (degrading):', error.message);
-      return [];  logger.error('Operation failed', { error: error.message }); }
+      return [];
   }
 
   /**

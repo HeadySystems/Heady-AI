@@ -493,7 +493,7 @@ class TelemetryInterceptor {
     _alert(alertObj) {
         const fullAlert = { ...alertObj, timestamp: new Date().toISOString() };
         for (const listener of this._alertListeners) {
-            try { listener(fullAlert); } catch (_) { /* swallow */  logger.error('Operation failed', { error: _.message }); }
+            try { listener(fullAlert); } catch (_) { /* swallow */  }
         }
     }
 

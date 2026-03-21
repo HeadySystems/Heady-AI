@@ -898,7 +898,7 @@ class ProjectionSyncEngine extends EventEmitter {
       });
     } catch (pushErr) { // Rollback on push failure
       if (snapshotSha) {
-        await git.rollbackTo(snapshotSha).catch(() => {  logger.error('Operation failed', { error: pushErr.message }); });
+        await git.rollbackTo(snapshotSha).catch(() => { });
         this.emit('sync:rollback', { projectionId, target: 'github', snapshotSha });
       }
       throw pushErr;

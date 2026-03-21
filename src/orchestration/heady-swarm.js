@@ -560,7 +560,7 @@ Actions:
   try {
     const { config: loadEnv } = await import('dotenv');
     loadEnv({ path: path.join(__dirname, '../../.env') });
-  } catch (e) { /* dotenv optional */  logger.error('Operation failed', { error: e.message }); }
+  } catch (e) { /* dotenv optional */  }
 
   const swarm = getSwarm();
 

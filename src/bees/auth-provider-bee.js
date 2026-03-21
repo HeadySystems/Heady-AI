@@ -293,7 +293,7 @@ class AuthProviderBee {
     // ─── Event emission ─────────────────────────────────────────────
     _emit(event, data) {
         if (this.eventBus) {
-            try { this.eventBus.emit(event, data); } catch (e) { /* swallow */  logger.error('Operation failed', { error: e.message }); }
+            try { this.eventBus.emit(event, data); } catch (e) { /* swallow */  }
         }
     }
 

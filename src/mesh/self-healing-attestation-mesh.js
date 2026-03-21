@@ -546,7 +546,7 @@ class AttestationMesh {
 
     _emit(event, data) {
         for (const listener of this._listeners) {
-            try { listener(event, data); } catch (_) { /* swallow listener errors */  logger.error('Operation failed', { error: _.message }); }
+            try { listener(event, data); } catch (_) { /* swallow listener errors */  }
         }
     }
 }

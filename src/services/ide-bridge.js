@@ -318,7 +318,7 @@ function applyProposal(proposalId) {
         };
     } catch (err) { // Rollback: restore original if we backed it up
         if (backupPath && originalContent !== null) {
-            try { fs.writeFileSync(targetPath, originalContent, 'utf-8');  logger.error('Operation failed', { error: err.message }); } catch { /* best effort */ }
+            try { fs.writeFileSync(targetPath, originalContent, 'utf-8'); catch { /* best effort */ } }
         }
 
         return {

@@ -112,7 +112,7 @@ class OpenAIProvider extends BaseProvider {
                 promptTokens     = evt.usage.prompt_tokens     || 0;
                 completionTokens = evt.usage.completion_tokens || 0;
               }
-            } catch (_) { logger.error('Operation failed', { error: _.message }); }
+            } catch (_) { }
           }
         });
 
@@ -242,7 +242,7 @@ class OpenAIProvider extends BaseProvider {
       try {
         await this._request('/v1/chat/completions', {
           model:      'gpt-4o-mini',
-          messages:   [{ role: 'user', content: 'ping'  logger.error('Operation failed', { error: err.message }); }],
+          messages:   [{ role: 'user', content: 'ping' }],
           max_tokens: 1,
         }, 5000, null);
         return { provider: 'openai', status: 'healthy', latencyMs: Date.now() - start };

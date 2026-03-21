@@ -261,7 +261,7 @@ class CrossDeviceSync {
     emit(event, data) {
         const handlers = this.eventHandlers.get(event) || [];
         for (const handler of handlers) {
-            try { handler(data); } catch (e) { /* swallow */  logger.error('Operation failed', { error: e.message }); }
+            try { handler(data); } catch (e) { /* swallow */  }
         }
         // Also emit to global event bus if available
         if (global.eventBus) {

@@ -75,7 +75,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             try {
                 const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
                 this.battleService = new HeadyBattleService({ gateway: this._gateway });
-            } catch (_) { logger.error('Operation failed', { error: _.message }); }
+            } catch (_) { }
         }
     }
 
@@ -300,7 +300,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                             avgScore >= PSI_SQ ? 'marginal' : 'non_deterministic',
                     };
                 }
-            } catch (_) { // Fall through to local hash-based MC  logger.error('Operation failed', { error: _.message }); }
+            } catch (_) { // Fall through to local hash-based MC  }
         }
 
         // Fallback: structural hash-based MC (no real AI calls)

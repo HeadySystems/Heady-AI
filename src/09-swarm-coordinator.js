@@ -476,7 +476,7 @@ class SwarmMessageBus extends EventEmitter {
 
     if (allSubs.size > 0) {
       for (const handler of allSubs) {
-        try { handler(envelope); } catch (err) { /* isolate subscriber errors */  logger.error('Operation failed', { error: err.message }); }
+        try { handler(envelope); } catch (err) { /* isolate subscriber errors */  }
       }
     } else {
       // Queue for late subscribers
@@ -502,7 +502,7 @@ class SwarmMessageBus extends EventEmitter {
     const queued = this._queues.get(topic) ?? [];
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
-        try { handler(env); } catch (err) { /* structured-logger: emit error */  logger.error('Operation failed', { error: err.message }); }
+        try { handler(env); } catch (err) { /* structured-logger: emit error */  }
       }
     }
     this._queues.delete(topic);

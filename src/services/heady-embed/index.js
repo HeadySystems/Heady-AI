@@ -131,7 +131,7 @@ class HeadyEmbed extends EventEmitter {
       try {
         await this._warmUp();
       } catch (err) { // Warm-up failure is non-fatal
-        this.emit('warn', { message: `Warm-up failed: ${err.message  logger.error('Operation failed', { error: err.message }); }` });
+        this.emit('warn', { message: `Warm-up failed: ${err.message}` });
       }
     }
 

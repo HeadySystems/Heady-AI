@@ -437,7 +437,7 @@ export class MCPMetaServerProxy extends EventEmitter {
     if (!server) return;
 
     // Close connection
-    try { await server.client.close?.(); } catch (_) { logger.error('Operation failed', { error: _.message }); }
+    try { await server.client.close?.(); } catch (_) { }
 
     // Remove all tools from this server
     for (const [qualifiedName, sId] of this._routingTable) {

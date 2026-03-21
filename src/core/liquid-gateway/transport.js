@@ -235,7 +235,7 @@ export class SSETransport extends EventEmitter {
 
     try {
       connection.res.end();
-    } catch (_) { /* already closed */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* already closed */  }
 
     this.connections.delete(connectionId);
     this.emit('sse:disconnected', { connectionId, userId: connection.userId });
@@ -392,7 +392,7 @@ export class WebSocketTransport extends EventEmitter {
     session.state = 'closing';
     try {
       session.ws.close(code, reason);
-    } catch (_) { /* already closed */  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { /* already closed */  }
 
     this._cleanup(sessionId);
   }

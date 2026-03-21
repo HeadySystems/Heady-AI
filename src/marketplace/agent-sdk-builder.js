@@ -56,7 +56,7 @@ function getEventBus() {
 function emit(event, payload) {
   try {
     getEventBus().emit(event, { ...payload, timestamp: Date.now() });
-  } catch (_) { // Swallow — SDK builder must not crash on listener failures  logger.error('Operation failed', { error: _.message }); }
+  } catch (_) { // Swallow — SDK builder must not crash on listener failures  }
 }
 
 // ─── Built-in Agent Definitions ─────────────────────────────────────────────
@@ -408,7 +408,7 @@ function getAgentCatalog() {
       sourceAvailable = true;
       sourceHash = info.hash;
       sourceSize = info.size;
-    } catch (_) { // Source not available — still list in catalog but mark unavailable  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { // Source not available — still list in catalog but mark unavailable  }
 
     catalog.push({
       agentKey,

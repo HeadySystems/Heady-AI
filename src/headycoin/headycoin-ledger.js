@@ -98,7 +98,7 @@ function recordTransaction(type, from, to, amount, metadata = {}) {
     try {
         fs.appendFileSync(LEDGER_FILE, JSON.stringify(entry) + "\n");
     } catch (err) { // Fallback async
-        fs.appendFile(LEDGER_FILE, JSON.stringify(entry) + "\n", () => {  logger.error('Operation failed', { error: err.message }); });
+        fs.appendFile(LEDGER_FILE, JSON.stringify(entry) + "\n", () => { });
     }
 
     return entry;

@@ -130,7 +130,7 @@ function decayScore(timestamp) {
 // ─── Persistence ─────────────────────────────────────────────────
 function ensureDir(filePath) {
   const dir = path.dirname(filePath);
-  try { fs.mkdirSync(dir, { recursive: true }); } catch (e) { /* exists */  logger.error('Operation failed', { error: e.message }); }
+  try { fs.mkdirSync(dir, { recursive: true }); } catch (e) { /* exists */  }
 }
 
 function loadJSON(filePath, fallback) {

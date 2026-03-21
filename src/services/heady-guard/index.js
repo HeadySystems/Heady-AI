@@ -40,7 +40,7 @@ function _writeAudit(entry) {
   if (_auditStream) {
     try {
       _auditStream.write(JSON.stringify(entry) + '\n');
-    } catch (err) { // Non-fatal  logger.error('Operation failed', { error: err.message }); }
+    } catch (err) { // Non-fatal  }
   }
 }
 
@@ -365,7 +365,7 @@ function middleware(opts = {}) {
 
       return next();
     } catch (err) { // Guard failure should not block the request — log and pass through
-      console.error(`[HeadyGuard] Middleware error: ${err.message  logger.error('Operation failed', { error: err.message }); }`);
+      console.error(`[HeadyGuard] Middleware error: ${err.message}`);
       req.guardResult = null;
       return next();
     }

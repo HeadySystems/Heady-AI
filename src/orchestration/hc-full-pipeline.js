@@ -275,7 +275,7 @@ class HCFullPipeline extends EventEmitter {
                             stage.status = STATUS.FAILED;
                             stage.error = retryErr.message;
                             stage.finishedAt = new Date().toISOString();
-                            this.emit("stage:failed", { runId, stage: stage.name, error: retryErr.message, selfHealRetryFailed: true  logger.error('Operation failed', { error: retryErr.message }); });
+                            this.emit("stage:failed", { runId, stage: stage.name, error: retryErr.message, selfHealRetryFailed: true });
                         }
                     }
 

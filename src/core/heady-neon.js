@@ -32,7 +32,7 @@ class NeonDB {
       if (this.connection && this.connection.end) {
         this.connection.end();
       }
-    } catch (err) { // ignore  logger.error('Operation failed', { error: err.message }); }
+    } catch (err) { // ignore  }
     this.connection = null;
   }
 }

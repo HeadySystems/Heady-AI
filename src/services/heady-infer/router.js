@@ -97,7 +97,7 @@ class TaskRouter extends EventEmitter {
           const chain = this._parseRouteList(rule.route);
           return { chain, taskType, reason: 'custom_rule' };
         }
-      } catch (_) { logger.error('Operation failed', { error: _.message }); }
+      } catch (_) { }
     }
 
     // 3. Matrix lookup
@@ -152,7 +152,7 @@ class TaskRouter extends EventEmitter {
         // At 75%: skip first (expensive primary), use fallbacks
         return routeList.slice(1).length > 0 ? routeList.slice(1) : routeList;
       }
-    } catch (_) { logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { }
     return routeList;
   }
 

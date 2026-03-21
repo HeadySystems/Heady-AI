@@ -787,7 +787,7 @@ class UsageMeter extends EventEmitter {
           timestamp: new Date(),
         });
       } catch (err) { // Don't let DB failures block requests
-        console.error('[UsageMeter] Event log write failed:', err.message);  logger.error('Operation failed', { error: err.message }); }
+        console.error('[UsageMeter] Event log write failed:', err.message);
     });
   }
 }

@@ -7,7 +7,7 @@ const logger = console;
 "use strict";
 
 let TERMINAL_STATES;
-try { TERMINAL_STATES = require("../memory/memory-receipts").TERMINAL_STATES; } catch (_) { /* graceful */  logger.error('Operation failed', { error: _.message }); }
+try { TERMINAL_STATES = require("../memory/memory-receipts").TERMINAL_STATES; } catch (_) { /* graceful */  }
 if (!TERMINAL_STATES) TERMINAL_STATES = new Set(["success", "failure", "timeout", "cancelled", "skipped"]);
 
 const PHASES = Object.freeze(["A", "B", "C", "D", "E", "F"]);

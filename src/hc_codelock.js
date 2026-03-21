@@ -77,7 +77,7 @@ function loadLockState() {
         'package.json',
         'package-lock.json'
       ],
-      lockLevel: 'full' // full | protected-only | audit-only  logger.error('Operation failed', { error: e.message }); };
+      lockLevel: 'full' // full | protected-only | audit-only };
     saveLockState(defaultState);
     return defaultState;
   }
@@ -375,7 +375,7 @@ function snapshotHashes() {
           hashes[relPath] = hashFile(fullPath);
         }
       }
-    } catch (e) { /* skip */  logger.error('Operation failed', { error: e.message }); }
+    } catch (e) { /* skip */  }
   }
 
   walkDir(HEADY_ROOT);
@@ -425,7 +425,7 @@ function detectChanges() {
           }
         }
       }
-    } catch (e) { /* skip */  logger.error('Operation failed', { error: e.message }); }
+    } catch (e) { /* skip */  }
   }
 
   walkDir(HEADY_ROOT);
@@ -508,7 +508,7 @@ function appendAudit(action, details = {}) {
   };
   try {
     fs.appendFileSync(AUDIT_FILE, JSON.stringify(entry) + '\n');
-  } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
+  } catch (e) { /* ignore */  }
 }
 
 function getAuditLog(limit = 50) {
@@ -533,7 +533,7 @@ function getStatus() {
   try {
     const h = JSON.parse(fs.readFileSync(HASHES_FILE, 'utf8'));
     hashStatus = `${h.totalFiles} files hashed at ${h.timestamp}`;
-  } catch (e) { /* no snapshot */  logger.error('Operation failed', { error: e.message }); }
+  } catch (e) { /* no snapshot */  }
 
   return {
     locked: state.locked,

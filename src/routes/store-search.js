@@ -223,12 +223,12 @@ function extractJSON(content) {
         const parsed = JSON.parse(content);
         if (parsed.products?.length > 0) return parsed;
     } catch (e) { // Extract JSON from fenced code or mixed text
-        const jsonMatch = content.match(/\{[\s\S]*\  logger.error('Operation failed', { error: e.message }); }/);
+        const jsonMatch = content.match(/\{[\s\S]*\ }/);
         if (jsonMatch) {
             try {
                 const parsed = JSON.parse(jsonMatch[0]);
                 if (parsed.products?.length > 0) return parsed;
-            } catch (e2) { /* fall through */  logger.error('Operation failed', { error: e2.message }); }
+            } catch (e2) { /* fall through */  }
         }
     }
     return null;

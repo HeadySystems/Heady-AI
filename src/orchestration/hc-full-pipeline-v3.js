@@ -263,7 +263,7 @@ class HCFullPipeline extends EventEmitter {
         runState: state,
       });
     } catch (cogErr) { // Cognitive layer failure is non-fatal — log and continue
-      this.emit('cognitive:warn', { stageName, error: cogErr.message  logger.error('Operation failed', { error: cogErr.message }); });
+      this.emit('cognitive:warn', { stageName, error: cogErr.message });
     }
 
     // Stage execution with phi-backoff retries

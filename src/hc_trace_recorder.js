@@ -340,7 +340,7 @@ class TraceRecorder extends EventEmitter {
           runId: meta.meta?.runId,
           filepath: fp,
         });
-      } catch (e) { // skip malformed files  logger.error('Operation failed', { error: e.message }); }
+      } catch (e) { // skip malformed files  }
     }
     return traces;
   }

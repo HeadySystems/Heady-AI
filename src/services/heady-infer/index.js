@@ -314,7 +314,7 @@ class HeadyInfer extends EventEmitter {
       } catch (err) { // Don't continue failover on budget errors
         if (err.code === 'BUDGET_EXCEEDED') throw err;
 
-        this._log('warn', `[${requestId  logger.error('Operation failed', { error: err.message }); }] Provider ${provider}/${model} failed: ${err.message}`);
+        this._log('warn', `[${requestId}] Provider ${provider}/${model} failed: ${err.message}`);
         errors.push({ provider, model: model || 'default', error: err.message, code: err.code });
 
         const taskType = request.taskType || 'general';

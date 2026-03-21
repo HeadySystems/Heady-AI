@@ -29,7 +29,7 @@ function getEngine() {
         _engine = new CSLEngine({ dim: 1536, normalizeInputs: true });
         logger.logNodeActivity('CSL', '  ✓ CSL Engine singleton: ACTIVE (1536-dim, phi-thresholds)');
     } catch (err) { // Fallback: lightweight compatibility shim
-        logger.logNodeActivity('CSL', `  ⚠ CSL Engine unavailable, using shim: ${err.message  logger.error('Operation failed', { error: err.message }); }`);
+        logger.logNodeActivity('CSL', `  ⚠ CSL Engine unavailable, using shim: ${err.message}`);
         _engine = {
             AND(a, b) { return cosine(a, b); },
             OR(a, b) { return normalize(add(a, b)); },

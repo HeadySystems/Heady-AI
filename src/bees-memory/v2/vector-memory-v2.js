@@ -630,7 +630,7 @@ class VectorMemoryV2 {
       try {
         vector = await this._embedFn(content);
       } catch (err) { // Fall back to a deterministic hash-based pseudo-vector
-        vector = this._hashVector(content);  logger.error('Operation failed', { error: err.message }); }
+        vector = this._hashVector(content);
     } else {
       // No embed function — use hash-based pseudo-vector
       vector = this._hashVector(content);

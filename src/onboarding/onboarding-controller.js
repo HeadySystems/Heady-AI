@@ -550,7 +550,7 @@ export class OnboardingController extends EventEmitter {
       await this._redis.rPush(key, JSON.stringify(event));
       await this._redis.expire(key, PROGRESS_TTL_SECONDS);
     } catch (err) { // Analytics failures should never break the onboarding flow
-      this._logger.warn({ err, userId, stepName, eventType  logger.error('Operation failed', { error: err.message }); },
+      this._logger.warn({ err, userId, stepName, eventType },
         '[Onboarding] Analytics event failed to record');
     }
   }

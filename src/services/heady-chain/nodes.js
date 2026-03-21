@@ -179,7 +179,7 @@ async function executeLLMNode(nodeConfig, state, context) {
     response = result.body;
   } catch (err) { // In development/test without HeadyInfer, generate a mock response
     if (process.env.NODE_ENV === 'test' || process.env.HEADY_INFER_MOCK === 'true') {
-      const mockText = `[MOCK LLM RESPONSE for: ${messages[messages.length - 1]?.content?.slice(0, 50)  logger.error('Operation failed', { error: err.message }); }...]`;
+      const mockText = `[MOCK LLM RESPONSE for: ${messages[messages.length - 1]?.content?.slice(0, 50)}...]`;
       const newState = setPath(state, outputKey, mockText);
       return { state: newState };
     }

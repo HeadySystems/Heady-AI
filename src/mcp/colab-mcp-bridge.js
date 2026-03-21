@@ -222,7 +222,7 @@ async function callTool(name, args) {
                     // Persist to vector memory
                     try {
                         learner.learn(`[Research:${analyzeType}] ${(args.content || '').substring(0, 200)}`, 'interaction', { type: 'research', mode: analyzeType });
-                    } catch (e) { /* non-critical */  logger.error('Operation failed', { error: e.message }); }
+                    } catch (e) { /* non-critical */  }
                     return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
                 } catch (err) {
                     return { content: [{ type: 'text', text: `Perplexity Error: ${err.message}` }], isError: true };

@@ -193,7 +193,7 @@ class StructuredLogger {
 
     // Write to all transports
     for (const transport of this.transports) {
-      try { transport.write(entry); } catch (_) { /* transport failure should not crash */  logger.error('Operation failed', { error: _.message }); }
+      try { transport.write(entry); } catch (_) { /* transport failure should not crash */  }
     }
 
     // Store in ring buffer

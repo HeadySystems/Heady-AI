@@ -236,7 +236,7 @@ export class SelfHealingMesh {
       record.state = SERVICE_STATE.QUARANTINED;
       record.quarantinedAt = Date.now();
       const backoff = phiBackoff(record.respawnAttempts);
-      this._emit('service.respawn.failed', { serviceId: record.id, error: err.message, retryMs: backoff  logger.error('Operation failed', { error: err.message }); });
+      this._emit('service.respawn.failed', { serviceId: record.id, error: err.message, retryMs: backoff });
     }
   }
 

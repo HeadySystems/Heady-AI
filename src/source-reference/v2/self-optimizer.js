@@ -371,7 +371,7 @@ function startContinuousLoop(vectorMem) {
                 heartbeat.lastErrorAt = Date.now();
                 heartbeat.status = "error";
 
-                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors  logger.error('Operation failed', { error: err.message }); } consecutive): ${err.message}`);
+                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors} consecutive): ${err.message}`);
                 audit({ type: "optimization:error", error: err.message, consecutive: heartbeat.consecutiveErrors });
 
                 // Auto-recovery: exponential backoff

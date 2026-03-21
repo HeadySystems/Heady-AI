@@ -56,7 +56,7 @@ function getEventBus() {
 function emit(event, payload) {
   try {
     getEventBus().emit(event, { ...payload, timestamp: Date.now() });
-  } catch (_) { // Swallow emit errors — marketplace must not crash on listener failures  logger.error('Operation failed', { error: _.message }); }
+  } catch (_) { // Swallow emit errors — marketplace must not crash on listener failures  }
 }
 
 // ─── Validation Helpers ─────────────────────────────────────────────────────

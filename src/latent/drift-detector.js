@@ -413,7 +413,7 @@ class DriftDetector extends EventEmitter {
         }
       } catch (err) { // Log scan error without crashing.
         if (process.env.NODE_ENV !== 'test') {
-          console.warn(`[DriftDetector] Scan error for ${componentId  logger.error('Operation failed', { error: err.message }); }: ${err.message}`);
+          console.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
         }
       }
     }

@@ -1268,7 +1268,7 @@ class MistakeAnalysisEngine extends EventEmitter {
         .flat()
         .filter(Boolean);
     } catch (err) { // Non-fatal: historical retrieval failure degrades gracefully
-      this.emit('error', { stage: 'retrieveHistorical', error: err.message  logger.error('Operation failed', { error: err.message }); });
+      this.emit('error', { stage: 'retrieveHistorical', error: err.message });
       return [];
     }
   }
@@ -1363,7 +1363,7 @@ class MistakeAnalysisEngine extends EventEmitter {
       this._wisdomStore.set('anti_regression.recon_checks',  reconRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.trial_warnings', trialRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.csl_gates',      gateRules.map(r => r.gate));
-    } catch (_) { // Non-fatal: degraded persistence  logger.error('Operation failed', { error: _.message }); }
+    } catch (_) { // Non-fatal: degraded persistence  }
 
     return reconRules.length + trialRules.length + testRules.length + gateRules.length;
   }

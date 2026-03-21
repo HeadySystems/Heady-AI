@@ -188,7 +188,7 @@ class RedisSlidingWindowStore {
       );
     } catch (err) { // Redis error — fall back to conservative estimate
       console.error('[RATE-LIMITER] Redis error, applying conservative limit:', err.message);
-      throw err;  logger.error('Operation failed', { error: err.message }); }
+      throw err;
 
     return {
       count:     Number(count),
@@ -331,7 +331,7 @@ class AdvancedRateLimiter {
       } catch (err) { // Redis failure — degrade gracefully
         this._fallbackMode = true;
         console.error('[RATE-LIMITER] Store error:', err.message);
-        return this._fallbackResponse(tier, limit);  logger.error('Operation failed', { error: err.message }); }
+        return this._fallbackResponse(tier, limit);
     }
 
     if (!result) return this._fallbackResponse(tier, limit);

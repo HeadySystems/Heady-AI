@@ -265,7 +265,7 @@ class SecretRotationManager {
       try {
         await this.rotate(secretId);
       } catch (e) { // Log but don't throw — timer callback
-        this._audit(secretId, 'SCHEDULED_ROTATION_FAILED', { error: e.message  logger.error('Operation failed', { error: e.message }); });
+        this._audit(secretId, 'SCHEDULED_ROTATION_FAILED', { error: e.message });
       }
     }, entry.rotationInterval);
 

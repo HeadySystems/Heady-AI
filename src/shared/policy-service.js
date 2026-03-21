@@ -8,8 +8,8 @@ const logger = console;
  * PolicyService — Centralized provider for Policy and Budget Engines.
  */
 
-let PolicyEngine = null; try { PolicyEngine = require("./policy-engine"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
-let BudgetService = null; try { BudgetService = require("./services/budget-service"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let PolicyEngine = null; try { PolicyEngine = require("./policy-engine"); } catch (e) { /* graceful */  }
+let BudgetService = null; try { BudgetService = require("./services/budget-service"); } catch (e) { /* graceful */  }
 
 // Initialize singletons
 const budgetService = new BudgetService();

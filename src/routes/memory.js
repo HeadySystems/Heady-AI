@@ -527,7 +527,7 @@ async function upsertToQdrant(memory, vector) {
             }],
         });
     } catch (err) { // Qdrant write is best-effort, don't fail the memory process
-        logger.logError('HCFP', `Qdrant upsert failed for ${memory.id  logger.error('Operation failed', { error: err.message }); }`, err);
+        logger.logError('HCFP', `Qdrant upsert failed for ${memory.id}`, err);
     }
 }
 

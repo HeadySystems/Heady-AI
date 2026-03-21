@@ -377,7 +377,7 @@ export class VectorMemoryOptimizer extends EventEmitter {
       return result.rows;
     } catch (err) { // pg_stat_statements not installed — graceful degradation
       if (err.message.includes('does not exist')) {
-        return [];  logger.error('Operation failed', { error: err.message }); }
+        return [];
       throw err;
     }
   }

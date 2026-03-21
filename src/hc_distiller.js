@@ -272,7 +272,7 @@ class HeadyDistiller extends EventEmitter {
         const parsed = yaml.load(raw);
         fileConfig = parsed?.distiller || parsed || {};
       }
-    } catch (e) { // config file is optional  logger.error('Operation failed', { error: e.message }); }
+    } catch (e) { // config file is optional  }
 
     return {
       ...fileConfig,

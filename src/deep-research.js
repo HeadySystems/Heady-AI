@@ -218,7 +218,7 @@ Synthesis:`;
       });
       return result.text;
     } catch (err) { // Fallback: return the best single result
-      return successful[0].text;  logger.error('Operation failed', { error: err.message }); }
+      return successful[0].text;
   }
 
   // ─── Confidence scoring ────────────────────────────────────────────────────

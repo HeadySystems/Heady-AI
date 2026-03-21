@@ -96,7 +96,7 @@ function createVectorAugmentedMiddleware(vectorMem) {
                 return origJson(data);
             };
         } catch (err) { // Don't block the request if vector memory fails
-            logger.warn("  ⚠ VectorPipeline: augment failed:", err.message);  logger.error('Operation failed', { error: err.message }); }
+            logger.warn("  ⚠ VectorPipeline: augment failed:", err.message);
 
         next();
     };

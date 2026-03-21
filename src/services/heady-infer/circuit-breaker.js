@@ -242,7 +242,7 @@ class CircuitBreakerManager extends EventEmitter {
       );
       if (shouldTrip) {
         circuit.onFailure(err);
-        this.emit('failure', providerId, err);  logger.error('Operation failed', { error: err.message }); }
+        this.emit('failure', providerId, err);
       throw err;
     }
   }

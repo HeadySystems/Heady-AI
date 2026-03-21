@@ -94,7 +94,7 @@ const { FIB, PSI, PHI, phiBackoff, phiScale } = phiMath;
 let express = null;
 try {
   express = require('express');
-} catch (e) { // Express will be required later if router is needed  logger.error('Operation failed', { error: e.message }); }
+} catch (e) { // Express will be required later if router is needed  }
 
 const expressRouter = express ? express.Router() : null;
 
@@ -575,7 +575,7 @@ function startLearningCycle() {
           })),
           errorStats: errorLearning.getStats(),
         };
-      } catch (e) { /* error learning not available */  logger.error('Operation failed', { error: e.message }); }
+      } catch (e) { /* error learning not available */  }
 
       const result = await submitJob('learning', currentMode, {
         cycle: runtimeState.learning.learningCycles,
@@ -612,7 +612,7 @@ function startLearningCycle() {
               });
             }
           }
-        } catch (e) { /* error learning feedback optional */  logger.error('Operation failed', { error: e.message }); }
+        } catch (e) { /* error learning feedback optional */  }
       }
     } catch (err) {
       logger.error('Learning cycle failed', { error: err.message });

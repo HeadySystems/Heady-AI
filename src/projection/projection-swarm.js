@@ -253,7 +253,7 @@ class ProjectionSwarm extends EventEmitter {
         // Audit
         const auditDir = path.dirname(AUDIT_PATH);
         if (!fs.existsSync(auditDir)) {
-            try { fs.mkdirSync(auditDir, { recursive: true }); } catch (_) { logger.error('Operation failed', { error: _.message }); }
+            try { fs.mkdirSync(auditDir, { recursive: true }); } catch (_) { }
         }
 
         logger.info('[ProjectionSwarm] Initialized — PHI-based scheduler, CSL-gated priority');
@@ -807,7 +807,7 @@ class ProjectionSwarm extends EventEmitter {
         try {
             const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
             fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-        } catch (_) { // Non-fatal — audit failure does not stop projection  logger.error('Operation failed', { error: _.message }); }
+        } catch (_) { // Non-fatal — audit failure does not stop projection  }
     }
 }
 

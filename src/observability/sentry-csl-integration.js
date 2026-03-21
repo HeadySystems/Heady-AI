@@ -100,7 +100,7 @@ class SentryCslIntegration {
       this._initialized = true;
     } catch (err) { // Sentry not installed — operate in dry-run mode
       console.warn('[SentryCsl] @sentry/node not available — dry-run mode');
-      this._initialized = true;  logger.error('Operation failed', { error: err.message }); }
+      this._initialized = true;
 
     return this;
   }

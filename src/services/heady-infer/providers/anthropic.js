@@ -140,7 +140,7 @@ class AnthropicProvider extends BaseProvider {
                 inputTokens = evt.message.usage.input_tokens || 0;
                 model       = evt.message.model || model;
               }
-            } catch (_) { /* ignore parse errors on stream */  logger.error('Operation failed', { error: _.message }); }
+            } catch (_) { /* ignore parse errors on stream */  }
           }
         });
 

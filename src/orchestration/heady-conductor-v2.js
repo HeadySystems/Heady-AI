@@ -352,7 +352,7 @@ class HeadyConductor extends EventEmitter {
                 error: err.message,
                 durationMs,
                 priority,
-                failedAt: Date.now(),  logger.error('Operation failed', { error: err.message }); };
+                failedAt: Date.now(), };
             this._appendExecutionLog(failEntry);
             this.emit('task:failed', failEntry);
             this._emitTelemetry('task_failed', failEntry);

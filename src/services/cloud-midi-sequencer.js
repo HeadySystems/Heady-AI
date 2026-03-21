@@ -157,7 +157,7 @@ class MasterClock {
 
     _emit(event, data) {
         for (const cb of this.subscribers) {
-            try { cb(event, data); } catch (e) { /* non-blocking */  logger.error('Operation failed', { error: e.message }); }
+            try { cb(event, data); } catch (e) { /* non-blocking */  }
         }
     }
 }
@@ -466,7 +466,7 @@ class SequencerTransport {
                         data: this.sequencer.getClientBundle(clientId),
                     });
             }
-        } catch (e) { /* ignore malformed messages */  logger.error('Operation failed', { error: e.message }); }
+        } catch (e) { /* ignore malformed messages */  }
         return null;
     }
 }

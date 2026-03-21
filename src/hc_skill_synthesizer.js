@@ -116,7 +116,7 @@ class SkillSynthesizer {
 
         // Collect step names
         allStepNames.push(...tools);
-      } catch (e) { // skip unloadable traces  logger.error('Operation failed', { error: e.message }); }
+      } catch (e) { // skip unloadable traces  }
     }
 
     // Find most common tool sequence (majority vote)

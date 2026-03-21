@@ -146,7 +146,7 @@ export async function arenaGate(winner, opts = {}) {
       return {
         promoted:    false,
         risk:        tier,
-        reason:      `HeadySoul veto function threw: ${err.message  logger.error('Operation failed', { error: err.message }); }`,
+        reason:      `HeadySoul veto function threw: ${err.message}`,
         vetoReason:  'veto_function_error',
         classification,
       };
@@ -182,7 +182,7 @@ export async function arenaGate(winner, opts = {}) {
           return {
             promoted:  false,
             risk:      tier,
-            reason:    `Notification failed — cannot request approval: ${err.message  logger.error('Operation failed', { error: err.message }); }`,
+            reason:    `Notification failed — cannot request approval: ${err.message}`,
             classification,
           };
         }

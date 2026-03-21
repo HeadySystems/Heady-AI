@@ -33,7 +33,7 @@ const path         = require('path');
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  }
 
 const {
   PHI,
@@ -55,7 +55,7 @@ const {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {Object} Canonical 21-stage pipeline definition from single source of truth. */
-let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json'); } catch (e) { /* graceful */  }
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 3 — STAGE CONSTANTS

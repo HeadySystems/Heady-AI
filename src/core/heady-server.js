@@ -376,7 +376,7 @@ class HeadyServer {
       try {
         await handler(err, req, res);
         if (res.writableEnded) return;
-      } catch (_) { /* ignore */  logger.error('Operation failed', { error: _.message }); }
+      } catch (_) { /* ignore */  }
     }
 
     if (!res.writableEnded) {

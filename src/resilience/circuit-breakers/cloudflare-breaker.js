@@ -100,7 +100,7 @@ class CloudflareAIBreaker extends EventEmitter {
         return result;
       } catch (err) { // If circuit is OPEN or max retries exhausted, try origin
         if (err.message.includes('Circuit breaker') || attempt === this._maxRetries) {
-          return this._fallbackToOrigin(model, inputs, err);  logger.error('Operation failed', { error: err.message }); }
+          return this._fallbackToOrigin(model, inputs, err);
       }
     }
   }

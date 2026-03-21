@@ -69,7 +69,7 @@ const landingPageBuilder = createBee('landing-page-builder', {
                 return { dir: outputDir, rendered: false, reason: `No site config for ${hostname}` };
             } catch (err) { // Fallback: list existing files
                 try {
-                    return { dir: outputDir, files: fs.readdirSync(outputDir), rendered: false, error: err.message  logger.error('Operation failed', { error: err.message }); };
+                    return { dir: outputDir, files: fs.readdirSync(outputDir), rendered: false, error: err.message };
                 } catch {
                     return { dir: outputDir, rendered: false, error: err.message };
                 }
