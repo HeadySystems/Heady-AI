@@ -34,6 +34,16 @@ const sessions = new Map();
 
 // ── Server request handler ────────────────────────────────────
 const server = http.createServer((req, res) => {
+  // ── Security headers (every response) ──────────────────────
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(self)');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.sentry.io https://api.stripe.com; frame-src https://js.stripe.com;");
+
+  // ── CORS ────────────────────────────────────────────────────
   const origin = req.headers.origin;
   if (origin && _isHeadyOrigin(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
@@ -68,7 +78,7 @@ const server = http.createServer((req, res) => {
     }
     if (url.pathname === '/sitemap.xml') {
       res.writeHead(200, { 'Content-Type': 'application/xml', 'Cache-Control': 'public, max-age=86400' });
-      return res.end(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://${host}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n  <url><loc>https://${host}/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n  <url><loc>https://${host}/terms</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n</urlset>`);
+      return res.end(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://${host}/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n  <url><loc>https://${host}/pricing</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n  <url><loc>https://${host}/privacy</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n  <url><loc>https://${host}/terms</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>\n</urlset>`);
     }
     if (url.pathname === '/favicon.ico') {
       res.writeHead(204); return res.end();
@@ -95,6 +105,7 @@ const server = http.createServer((req, res) => {
     if (url.pathname === '/onboarding') return html(res, renderOnboarding(site, host));
     if (url.pathname === '/terms')      return html(res, renderLegalPage(site, host, 'terms'));
     if (url.pathname === '/privacy')    return html(res, renderLegalPage(site, host, 'privacy'));
+    if (url.pathname === '/pricing')    return html(res, renderPricingPage(site, host));
 
     // ── Default: site homepage ────────────────────────
     return html(res, renderSite(site, host));
