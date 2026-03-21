@@ -13,8 +13,8 @@ const {
   NAVIGATION_MAP,
   getDomainByHost,
   isAllowedOrigin,
-} = require('../../shared/heady-domains');
-const { CSL_THRESHOLDS, PSI } = require('../../shared/phi-math');
+} = require('../../src/shared/heady-domains');
+const { CSL_THRESHOLDS, PSI } = require('../../src/shared/phi-math');
 
 let passed = 0;
 let total = 0;

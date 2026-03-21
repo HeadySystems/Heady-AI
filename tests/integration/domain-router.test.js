@@ -7,8 +7,8 @@
 
 const assert = require('assert');
 const { verifyRoute, initiateAuthHandoff, getNavigationManifest, logRoute } = require('../../services/domain-router/index');
-const { CSL_THRESHOLDS } = require('../../shared/phi-math');
-const { HEADY_DOMAINS } = require('../../shared/heady-domains');
+const { CSL_THRESHOLDS } = require('../../src/shared/phi-math');
+const { HEADY_DOMAINS } = require('../../src/shared/heady-domains');
 
 let passed = 0;
 let total = 0;

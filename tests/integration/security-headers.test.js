@@ -7,8 +7,8 @@
 
 const assert = require('assert');
 const { securityHeadersMiddleware, buildCSPSources, HSTS_MAX_AGE } = require('../../src/security/security-headers');
-const { HEADY_DOMAINS, ADMIN_SUBDOMAINS } = require('../../shared/heady-domains');
-const { fib } = require('../../shared/phi-math');
+const { HEADY_DOMAINS, ADMIN_SUBDOMAINS } = require('../../src/shared/heady-domains');
+const { fib } = require('../../src/shared/phi-math');
 
 let passed = 0;
 let total = 0;
