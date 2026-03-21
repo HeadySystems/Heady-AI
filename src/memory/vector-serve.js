@@ -7,6 +7,9 @@
  * Cloudflare Workers → GET /api/vector-serve?domain=X&path=Y → returns HTML
  * Deploy via POST /api/vector-serve/deploy → stores content in vector memory
  */
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('vector-serve');
+
 const logger = console;
 
 
@@ -42,7 +45,7 @@ class VectorServe {
                 res.setHeader('Cache-Control', 'public, max-age=300');
                 res.send(result.content);
             } catch (err) {
-                this.logger.error?.(`[VectorServe] serve error: ${err.message}`) || console.error(err);
+                this.logger.error?.(`[VectorServe] serve error: ${err.message}`) || logger.error(err);
                 res.status(500).json({ error: 'vector-serve failed', detail: err.message });
             }
         });
@@ -58,7 +61,7 @@ class VectorServe {
                 const result = await this.deploy(domain, urlPath || '/', content, contentType);
                 res.json(result);
             } catch (err) {
-                this.logger.error?.(`[VectorServe] deploy error: ${err.message}`) || console.error(err);
+                this.logger.error?.(`[VectorServe] deploy error: ${err.message}`) || logger.error(err);
                 res.status(500).json({ error: 'deploy failed', detail: err.message });
             }
         });

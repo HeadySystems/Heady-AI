@@ -3,6 +3,9 @@
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('story-driver');
+
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
@@ -76,8 +79,8 @@ class StoryDriver extends EventEmitter {
   _defaultLogger() {
     return {
       info: (...a) => { },  // Silent by default in story driver
-      warn: (...a) => console.error('[StoryDriver:WARN]', ...a),
-      error: (...a) => console.error('[StoryDriver:ERROR]', ...a),
+      warn: (...a) => logger.error('[StoryDriver:WARN]', ...a),
+      error: (...a) => logger.error('[StoryDriver:ERROR]', ...a),
     };
   }
 

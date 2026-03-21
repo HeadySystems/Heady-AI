@@ -17,6 +17,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('request-sanitizer');
+
 
 // ─── XSS Patterns ────────────────────────────────────────────────────────────
 
@@ -416,7 +419,7 @@ function requestSanitizer(opts = {}) {
 
       if (allViolations.length > 0) {
         // Log all violations
-        console.warn('[SANITIZER] Violations detected:', {
+        logger.warn('[SANITIZER] Violations detected:', {
           path:       req.path,
           method:     req.method,
           ip:         req.ip,

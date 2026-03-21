@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('pipeline');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
@@ -231,7 +234,7 @@ function loadBuiltinStages() {
       const mod = require(path);
       registerStage(name, mod.run, priority, parallel);
     } catch (err) {
-      console.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
+      logger.error(`[HeadyGuard] Failed to load stage "${name}": ${err.message}`);
     }
   }
 }

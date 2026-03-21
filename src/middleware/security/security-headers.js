@@ -21,6 +21,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('security-headers');
+
 const logger = console;
 
 const crypto = require('crypto');
@@ -343,7 +346,7 @@ function cspViolationHandler(opts = {}) {
     }
 
     // Default: log to stderr
-    console.warn('[CSP-VIOLATION]', JSON.stringify(violation));
+    logger.warn('[CSP-VIOLATION]', JSON.stringify(violation));
 
     res.status(204).end();
   };

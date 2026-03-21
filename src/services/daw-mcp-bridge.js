@@ -27,7 +27,7 @@ const logger = require("../utils/logger");
 // ═══ Configuration ═══
 const CONFIG = {
     // Remote Script connection
-    remoteHost: process.env.DAW_REMOTE_HOST || "127.0.0.1",
+    remoteHost: process.env.DAW_REMOTE_HOST || process.env.REMOTE_HOST || '0.0.0.0',
     remotePort: parseInt(process.env.DAW_REMOTE_PORT) || 11411,
     // UDP port for low-latency MIDI data
     udpPort: parseInt(process.env.DAW_UDP_PORT) || 11412,

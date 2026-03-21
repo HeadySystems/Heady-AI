@@ -12,6 +12,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('embedding-provider');
+
 
 const {
   normalize,
@@ -417,7 +420,7 @@ class EmbeddingProvider {
         this._stats.failures += 1;
         // Log and try next backend.
         if (process.env.NODE_ENV !== 'test') {
-          console.warn(`[EmbeddingProvider] Backend "${backend}" failed: ${err.message}. Falling back.`);
+          logger.warn(`[EmbeddingProvider] Backend "${backend}" failed: ${err.message}. Falling back.`);
         }
       }
     }

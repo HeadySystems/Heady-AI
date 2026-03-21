@@ -1,3 +1,6 @@
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('durable-agent-state');
+
 const logger = console;
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
@@ -373,7 +376,7 @@ export class DurableAgentState {
    * @param {Error} error
    */
   async webSocketError(ws, error) {
-    console.error('[DurableAgentState] WebSocket error:', error);
+    logger.error('[DurableAgentState] WebSocket error:', error);
     const att = ws.deserializeAttachment();
     if (att?.socketId) {
       this.activeSockets.delete(att.socketId);
@@ -420,7 +423,7 @@ export class DurableAgentState {
       }
 
       default:
-        console.warn('[DurableAgentState] unknown alarm intent:', intent);
+        logger.warn('[DurableAgentState] unknown alarm intent:', intent);
     }
   }
 
@@ -544,7 +547,7 @@ export class DurableAgentState {
 
       await this._transitionLifecycle('active');
     } catch (err) {
-      console.error('[DurableAgentState] chat error:', err);
+      logger.error('[DurableAgentState] chat error:', err);
       ws.send(wsOut({ type: 'error', content: 'Inference failed', requestId: msg.requestId }));
       await this._transitionLifecycle('active');
     }
@@ -682,7 +685,7 @@ export class DurableAgentState {
       this.state.storage.sql.exec(SCHEMA_SQL);
       this.dbInitialized = true;
     } catch (err) {
-      console.error('[DurableAgentState] schema init error:', err);
+      logger.error('[DurableAgentState] schema init error:', err);
     }
   }
 
@@ -753,7 +756,7 @@ export class DurableAgentState {
    */
   async _transitionLifecycle(to) {
     if (!canTransition(this.lifecycle, to)) {
-      console.warn(`[DurableAgentState] invalid transition: ${this.lifecycle} → ${to}`);
+      logger.warn(`[DurableAgentState] invalid transition: ${this.lifecycle} → ${to}`);
       return;
     }
     this.lifecycle = to;

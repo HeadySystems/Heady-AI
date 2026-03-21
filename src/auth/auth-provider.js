@@ -17,6 +17,8 @@ import argon2 from 'argon2';
 import speakeasy from 'speakeasy';
 import qrcode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('auth-provider');
 
 const randomBytes = promisify(crypto.randomBytes);
 
@@ -165,7 +167,7 @@ export class AuthProvider {
       this._privateKey = crypto.createPrivateKey(privateKey);
       this._publicKey = crypto.createPublicKey(publicKey);
 
-      console.warn(
+      logger.warn(
         '[HeadyAuth] Generated ephemeral RS256 key pair. ' +
         'Set config.jwt.privateKey and config.jwt.publicKey in production.'
       );

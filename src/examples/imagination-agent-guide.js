@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('imagination-agent-guide');
+
 const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -178,7 +181,7 @@ async function manuallyCombinePrimitives(primitiveIdA, primitiveIdB, operator = 
   const primB = imagination.primitives.get(primitiveIdB);
   
   if (!primA || !primB) {
-    console.error('[Agent] Primitives not found');
+    logger.error('[Agent] Primitives not found');
     return null;
   }
   
@@ -274,7 +277,7 @@ async function selectBestConcept(conceptIds) {
 async function provideFeedback(conceptId, success, notes = '') {
   const concept = imagination.concepts.get(conceptId);
   if (!concept) {
-    console.error('[Agent] Concept not found');
+    logger.error('[Agent] Concept not found');
     return;
   }
   

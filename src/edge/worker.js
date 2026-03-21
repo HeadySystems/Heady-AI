@@ -18,6 +18,9 @@
  *   - VECTORIZE: Cloudflare Vectorize index
  *   - AI: Workers AI binding
  *   - KV: heady-cache namespace
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('worker');
+
  *   - DO: HeadySession Durable Object
  *   - RATE_LIMITER: Rate limiting binding
  * 
@@ -121,7 +124,7 @@ function edgeLog(level, data) {
   };
   // Structured JSON to Cloudflare Workers logs
   if (level === 'error') {
-    console.error(JSON.stringify(entry));
+    logger.error(JSON.stringify(entry));
   } else {
     logger.info(JSON.stringify(entry));
   }

@@ -24,6 +24,8 @@ const logger = console;
 import { execSync, spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('heady-swarm');
 
 const PHI = 1.6180339887;
 const PSI = 0.6180339887;
@@ -124,10 +126,10 @@ class HeadySwarm {
         tls: this.redisUrl.startsWith('rediss://') ? {} : undefined,
       });
       this.redis.on('error', (err) => {
-        console.error('[HeadySwarm] Redis error:', err.message);
+        logger.error('[HeadySwarm] Redis error:', err.message);
       });
     } catch (e) {
-      console.warn('[HeadySwarm] Redis unavailable, using memory-only routes');
+      logger.warn('[HeadySwarm] Redis unavailable, using memory-only routes');
     }
   }
 
@@ -172,7 +174,7 @@ class HeadySwarm {
       // Fallback to next route
       const remainingRoutes = routes.filter(r => r !== route.channel);
       if (remainingRoutes.length > 0) {
-        console.warn(`[HeadySwarm] Fallback: ${route.label} failed, trying next route`);
+        logger.warn(`[HeadySwarm] Fallback: ${route.label} failed, trying next route`);
         return this.execute(actionType, { ...payload, _excludeRoutes: [route.channel] });
       }
 
@@ -488,7 +490,7 @@ class HeadySwarm {
     cb.lastFailure = Date.now();
     if (cb.failures >= this.cbThreshold) {
       cb.state = 'open';
-      console.warn(`[HeadySwarm] ⚠️ Circuit OPEN for ${route.label} (${cb.failures} failures)`);
+      logger.warn(`[HeadySwarm] ⚠️ Circuit OPEN for ${route.label} (${cb.failures} failures)`);
     }
   }
 
@@ -597,7 +599,7 @@ Actions:
     }
     logger.info(JSON.stringify(result, null, 2));
   } catch (err) {
-    console.error(`[HeadySwarm] ❌ ${err.message}`);
+    logger.error(`[HeadySwarm] ❌ ${err.message}`);
     process.exit(1);
   } finally {
     await swarm.shutdown();

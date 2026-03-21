@@ -40,6 +40,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('heady-event-bus');
+
 const logger = console;
 
 const EventEmitter = require('events');
@@ -243,7 +246,7 @@ class HeadyEventBus extends EventEmitter {
       this._stats.errors++;
       this._deadLetterEvent(topic, event, err.message);
       this._logger.error?.(`[EventBus] Delivery error on topic ${topic}: ${err.message}`) ||
-        console.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
+        logger.error(`[EventBus] Delivery error on topic ${topic}: ${err.message}`);
     }
 
     // Bridge to Redis (non-blocking)

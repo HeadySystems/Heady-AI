@@ -233,7 +233,7 @@ class RateLimiterService {
   }
 
   _handleRequest(req, res) {
-    const url = new URL(req.url, `http://${process.env.HOST || "localhost"}:${PORT}`);
+    const url = new URL(req.url, `http://${process.env.HOST || '0.0.0.0'}:${PORT}`);
 
     if (req.method === 'GET' && url.pathname === '/health') {
       return this._respondJson(res, 200, this.health.getStatus());

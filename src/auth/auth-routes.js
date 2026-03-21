@@ -28,6 +28,8 @@
  */
 
 import { Router } from 'express';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('auth-routes');
 import { body, param, query, validationResult } from 'express-validator';
 import { AuthError, HeadyError } from './auth-provider.js';
 import { PermissionError } from './permission-manager.js';
@@ -200,7 +202,7 @@ export function createAuthRouter({
       });
     }
 
-    console.error('[HeadyAuth] Unhandled error:', err);
+    logger.error('[HeadyAuth] Unhandled error:', err);
     return res.status(500).json({
       error: 'An unexpected error occurred.',
       code: 'INTERNAL_ERROR',
@@ -450,7 +452,7 @@ export function createAuthRouter({
             : `${config.frontendUrl}/dashboard`
         );
       } catch (err) {
-        console.error('[OAuth Callback Error]', err.message);
+        logger.error('[OAuth Callback Error]', err.message);
         return res.redirect(
           `${config.frontendUrl}/auth/error?code=${encodeURIComponent(err.code || 'oauth_error')}`
         );
@@ -517,7 +519,7 @@ export function createAuthRouter({
             subject: 'Reset your Heady password',
             templateId: 'reset_password',
             variables: { resetUrl, displayName: result.user.display_name || result.user.username },
-          }).catch((e) => console.error('[HeadyAuth] Failed to send reset email:', e.message));
+          }).catch((e) => logger.error('[HeadyAuth] Failed to send reset email:', e.message));
         }
 
         // Always respond the same (timing-safe via constant message)

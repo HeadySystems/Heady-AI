@@ -37,7 +37,7 @@ class GistStore {
     this.token = opts.token || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
     this.owner = opts.owner || process.env.GITHUB_ACTOR || 'heady-systems';
     if (!this.token) {
-      console.warn('[GistStore] No GITHUB_TOKEN — writes will fail, reads of public gists still work');
+      logger.warn('[GistStore] No GITHUB_TOKEN — writes will fail, reads of public gists still work');
     }
     // In-memory index: gistId → { description, files[], updatedAt }
     this._index = new Map();
@@ -85,7 +85,7 @@ class GistStore {
         lastErr = err;
         if (i < RETRY_DELAYS_MS.length) {
           const delay = RETRY_DELAYS_MS[i];
-          console.warn(`[GistStore] ${label} attempt ${i + 1} failed, retry in ${delay}ms — ${err.message}`);
+          logger.warn(`[GistStore] ${label} attempt ${i + 1} failed, retry in ${delay}ms — ${err.message}`);
           await new Promise(r => setTimeout(r, delay));
         }
       }

@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('routes');
+
 
 /**
  * HeadyEmbed Express Router
@@ -379,7 +382,7 @@ function createRouter(embedService) {
   // -------------------------------------------------------------------------
 
   router.use((err, req, res, next) => {
-    console.error('[HeadyEmbed Router Error]', err);
+    logger.error('[HeadyEmbed Router Error]', err);
     if (res.headersSent) return next(err);
     return res.status(422).json({ error: err.message || 'Internal error' });
   });

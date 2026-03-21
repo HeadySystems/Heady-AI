@@ -379,7 +379,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 180,
   },
   'infra.postgresUrl': {
-    value: process.env.DATABASE_URL || 'postgresql://localhost:5432/heady',
+    value: process.env.DATABASE_URL || process.env.DATABASE_URL || 'postgresql://${process.env.DB_HOST || "db"}:5432/heady',
     type: 'string',
     secret: true,
     description: 'PostgreSQL connection URL (Cloud SQL in production).',

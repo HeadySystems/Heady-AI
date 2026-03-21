@@ -8,6 +8,9 @@
  *   const { validateEnvironment } = require('./src/config/env-schema');
  *   validateEnvironment(); // throws if critical vars missing
  */
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('env-schema');
+
 const logger = console;
 
 
@@ -97,9 +100,9 @@ function validateEnvironment(options = {}) {
 
     // Log warnings
     if (!silent && warnings.length > 0) {
-        console.warn(`\n🔧 Environment Validation (${warnings.length} warnings):`);
-        warnings.forEach(w => console.warn(`  ${w}`));
-        console.warn('');
+        logger.warn(`\n🔧 Environment Validation (${warnings.length} warnings):`);
+        warnings.forEach(w => logger.warn(`  ${w}`));
+        logger.warn('');
     }
 
     const total = ENV_SCHEMA.critical.length + ENV_SCHEMA.required.length + ENV_SCHEMA.optional.length;

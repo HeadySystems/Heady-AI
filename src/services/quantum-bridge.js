@@ -51,7 +51,7 @@ class QuantumBridge {
                 // Accept internal requests (no token required for localhost dev)
                 const isLocal = request.headers.host && (
                     request.headers.host.startsWith('localhost') ||
-                    request.headers.host.startsWith('127.0.0.1')
+                    request.headers.host.startsWith(process.env.REMOTE_HOST || '0.0.0.0')
                 );
 
                 if (!isLocal && !token) {

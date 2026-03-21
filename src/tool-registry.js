@@ -3,6 +3,9 @@
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('tool-registry');
+
 
 // ─── ToolRegistry ─────────────────────────────────────────────────────────────
 
@@ -27,9 +30,9 @@ class ToolRegistry {
 
   _defaultLogger() {
     return {
-      info:  (...a) => console.error('[ToolRegistry:INFO]',  ...a),
-      warn:  (...a) => console.error('[ToolRegistry:WARN]',  ...a),
-      error: (...a) => console.error('[ToolRegistry:ERROR]', ...a),
+      info:  (...a) => logger.error('[ToolRegistry:INFO]',  ...a),
+      warn:  (...a) => logger.error('[ToolRegistry:WARN]',  ...a),
+      error: (...a) => logger.error('[ToolRegistry:ERROR]', ...a),
     };
   }
 

@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('subsystem-routes');
+
 const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -40,12 +43,12 @@ try {
   BeeFactory = require('../bees/bee-factory.js');
   SwarmCoordinator = require('../bees/swarm-coordinator.js');
 } catch (err) {
-  console.warn('[SubsystemRoutes] Bee/Swarm modules not loaded:', err.message);
+  logger.warn('[SubsystemRoutes] Bee/Swarm modules not loaded:', err.message);
 }
 try {
   registerComputeProviders = require('../hc_pipeline.js').registerComputeProviders;
 } catch (err) {
-  console.warn('[SubsystemRoutes] Pipeline compute registration not available:', err.message);
+  logger.warn('[SubsystemRoutes] Pipeline compute registration not available:', err.message);
 }
 
 // ── Liquid Nodes (Core Vector Space Infrastructure) ──
@@ -56,7 +59,7 @@ const _liquidNodesReady = import('../core/liquid-nodes/index.js').then(mod => {
   HealthMonitor = mod.HealthMonitor;
   ColabRuntimeManager = mod.ColabRuntimeManager;
 }).catch(err => {
-  console.warn('[SubsystemRoutes] Liquid Nodes modules not loaded:', err.message);
+  logger.warn('[SubsystemRoutes] Liquid Nodes modules not loaded:', err.message);
 });
 
 // ── Subsystem Singletons ──
@@ -83,7 +86,7 @@ async function initializeSubsystems() {
     results.colab = true;
     logger.info('[SubsystemRoutes] Colab Runtime Cluster initialized (3 runtimes: Cortex, Synapse, Reflex)');
   } catch (err) {
-    console.warn('[SubsystemRoutes] Colab cluster init failed:', err.message);
+    logger.warn('[SubsystemRoutes] Colab cluster init failed:', err.message);
   }
 
   // 2. Initialize Bee Factory (17 swarms, up to 10,000 bees)
@@ -97,7 +100,7 @@ async function initializeSubsystems() {
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Bee Factory init failed:', err.message);
+    logger.warn('[SubsystemRoutes] Bee Factory init failed:', err.message);
   }
 
   // 3. Initialize Swarm Coordinator
@@ -111,7 +114,7 @@ async function initializeSubsystems() {
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Swarm Coordinator init failed:', err.message);
+    logger.warn('[SubsystemRoutes] Swarm Coordinator init failed:', err.message);
   }
 
   // 4. Pre-load Universal Prompt (warm the cache)
@@ -120,7 +123,7 @@ async function initializeSubsystems() {
     results.prompt = true;
     logger.info(`[SubsystemRoutes] Universal Agent Prompt loaded (hash: ${getPromptHash()})`);
   } catch (err) {
-    console.warn('[SubsystemRoutes] Universal Prompt load failed:', err.message);
+    logger.warn('[SubsystemRoutes] Universal Prompt load failed:', err.message);
   }
 
   // 5. Initialize Liquid Node Registry + Vector Router + Colab Runtime Manager
@@ -149,7 +152,7 @@ async function initializeSubsystems() {
       }
     }
   } catch (err) {
-    console.warn('[SubsystemRoutes] Liquid Nodes init failed:', err.message);
+    logger.warn('[SubsystemRoutes] Liquid Nodes init failed:', err.message);
   }
 
   // 6. Register compute providers with the pipeline task executor

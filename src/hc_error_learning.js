@@ -64,8 +64,8 @@ try {
 } catch (e) {
   logger = {
     info: (msg, data) => logger.info(`[INFO] error-learning: ${msg}`, data || ''),
-    warn: (msg, data) => console.warn(`[WARN] error-learning: ${msg}`, data || ''),
-    error: (msg, data) => console.error(`[ERROR] error-learning: ${msg}`, data || ''),
+    warn: (msg, data) => logger.warn(`[WARN] error-learning: ${msg}`, data || ''),
+    error: (msg, data) => logger.error(`[ERROR] error-learning: ${msg}`, data || ''),
     debug: () => {},
   };
 }

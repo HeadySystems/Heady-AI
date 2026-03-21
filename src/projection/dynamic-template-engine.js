@@ -173,7 +173,7 @@ function enhanceSite(domain, opts = {}) {
   const registry = loadRegistry();
   const siteConfig = registry[domain];
   if (!siteConfig) {
-    console.error(`[dynamic-template-engine] Unknown domain: ${domain}`);
+    logger.error(`[dynamic-template-engine] Unknown domain: ${domain}`);
     return null;
   }
 
@@ -181,7 +181,7 @@ function enhanceSite(domain, opts = {}) {
   const slug = domainToSlug(domain, siteConfig);
   const filePath = path.join(SITES_DIR, slug, 'index.html');
   if (!fs.existsSync(filePath)) {
-    console.error(`[dynamic-template-engine] No existing site file for: ${domain} (${filePath})`);
+    logger.error(`[dynamic-template-engine] No existing site file for: ${domain} (${filePath})`);
     return null;
   }
 

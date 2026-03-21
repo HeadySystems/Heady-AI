@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('server');
+
 const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -25,8 +28,8 @@ const LOG_LEVELS = { error: 0, warn: 1, info: 2, debug: 3 };
 const currentLevel = LOG_LEVELS[config.logLevel] ?? LOG_LEVELS.info;
 
 const log = {
-  error: (...a) => currentLevel >= 0 && console.error(JSON.stringify({ ts: new Date().toISOString(), level: 'error', msg: a.join(' ') })),
-  warn:  (...a) => currentLevel >= 1 && console.warn(JSON.stringify({ ts: new Date().toISOString(),  level: 'warn',  msg: a.join(' ') })),
+  error: (...a) => currentLevel >= 0 && logger.error(JSON.stringify({ ts: new Date().toISOString(), level: 'error', msg: a.join(' ') })),
+  warn:  (...a) => currentLevel >= 1 && logger.warn(JSON.stringify({ ts: new Date().toISOString(),  level: 'warn',  msg: a.join(' ') })),
   info:  (...a) => currentLevel >= 2 && logger.info(JSON.stringify({ ts: new Date().toISOString(),   level: 'info',  msg: a.join(' ') })),
   debug: (...a) => currentLevel >= 3 && logger.info(JSON.stringify({ ts: new Date().toISOString(),   level: 'debug', msg: a.join(' ') })),
 };
@@ -164,6 +167,6 @@ if (!global.crypto) {
 }
 
 if (require.main === module) { main().catch((err) => { }
-  console.error('Fatal startup error:', err);
+  logger.error('Fatal startup error:', err);
   process.exit(1);
 });

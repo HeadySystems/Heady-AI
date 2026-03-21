@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('project-history-ingestor');
+
 const logger = console;
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
@@ -68,7 +71,7 @@ class ProjectHistoryIngestor {
                 this.stats.commits += batch.length;
             }
         } catch (err) {
-            console.error(`  ⚠ Git commit ingest failed: ${err.message}`);
+            logger.error(`  ⚠ Git commit ingest failed: ${err.message}`);
         }
     }
 

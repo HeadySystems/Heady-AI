@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('heady-event-spine');
+
 const logger = console;
 // ═══════════════════════════════════════════════════════════════════════════════
 // HeadyEventSpine — Instantaneous Push-Based Event Bus
@@ -88,7 +91,7 @@ export class HeadyEventSpine {
           }));
         }
       } catch (err) { // Log error and continue — don't crash the event loop
-        console.error('[HeadyEventSpine] Stream error:', err.message);
+        logger.error('[HeadyEventSpine] Stream error:', err.message);
         await new Promise(r => setTimeout(r, 1000)); // Brief pause on error only }
     }
   }
@@ -119,7 +122,7 @@ export class HeadyEventSpine {
       try {
         await handler(event);
       } catch (err) {
-        console.error(`[HeadyEventSpine] Handler error for ${eventType}:`, err.message);
+        logger.error(`[HeadyEventSpine] Handler error for ${eventType}:`, err.message);
       }
     }
 
@@ -128,7 +131,7 @@ export class HeadyEventSpine {
       try {
         await this._defaultHandler(event);
       } catch (err) {
-        console.error('[HeadyEventSpine] Default handler error:', err.message);
+        logger.error('[HeadyEventSpine] Default handler error:', err.message);
       }
     }
   }

@@ -37,7 +37,7 @@ function run(cmd, opts = {}) {
         return execSync(cmd, { cwd: ROOT, encoding: 'utf8', stdio: 'pipe', ...opts }).trim();
     } catch (err) {
         if (opts.allowFail) return err.stderr || err.message;
-        console.error(`  ❌ ${cmd}\n     ${err.message}`);
+        logger.error(`  ❌ ${cmd}\n     ${err.message}`);
         return null;
     }
 }
@@ -186,6 +186,6 @@ async function main() {
 }
 
 if (require.main === module) { main().catch(err => { }
-    console.error('Battle dispatch failed:', err.message);
+    logger.error('Battle dispatch failed:', err.message);
     process.exit(1);
 });

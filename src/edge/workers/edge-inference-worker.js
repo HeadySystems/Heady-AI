@@ -18,6 +18,9 @@
  * and rate limit buckets (8, 13, 21, 34, 55, 89 req/min).
  *
  * @module edge-inference-worker
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('edge-inference-worker');
+
  */
 const logger = console;
 
@@ -422,7 +425,7 @@ async function handleChat(request, env, ctx) {
       return new Response(JSON.stringify(responsePayload), { headers });
     }
   } catch (err) {
-    console.error('[chat] inference error:', err);
+    logger.error('[chat] inference error:', err);
     return errorResponse('Edge inference failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -506,7 +509,7 @@ async function handleEmbed(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    console.error('[embed] inference error:', err);
+    logger.error('[embed] inference error:', err);
     return errorResponse('Embedding generation failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -590,7 +593,7 @@ async function handleClassify(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    console.error('[classify] inference error:', err);
+    logger.error('[classify] inference error:', err);
     return errorResponse('Classification failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -688,7 +691,7 @@ async function handleRerank(request, env, ctx) {
     headers.set('X-RateLimit-Remaining', String(rl.remaining));
     return new Response(JSON.stringify(responsePayload), { headers });
   } catch (err) {
-    console.error('[rerank] inference error:', err);
+    logger.error('[rerank] inference error:', err);
     return errorResponse('Reranking failed', 502, request, 'INFERENCE_FAILED');
   }
 }
@@ -779,7 +782,7 @@ export default {
       // 404 for unknown paths
       return errorResponse(`Path ${path} not found`, 404, request, 'NOT_FOUND');
     } catch (err) {
-      console.error(`[${requestId}] unhandled error:`, err);
+      logger.error(`[${requestId}] unhandled error:`, err);
       return errorResponse('Internal server error', 500, request, 'INTERNAL_ERROR');
     }
   },

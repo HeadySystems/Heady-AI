@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('index');
+
 const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
@@ -74,7 +77,7 @@ const REMOTE_REGISTRY = {
 async function bootShell() {
     const container = document.getElementById('heady-root');
     if (!container) {
-        console.error('[HeadyShell] #heady-root not found');
+        logger.error('[HeadyShell] #heady-root not found');
         return;
     }
 
@@ -98,7 +101,7 @@ async function bootShell() {
 
         if (!remote) {
             // Fallback: render the landing page
-            console.warn(`[HeadyShell] No remote registered for "${projection.uiId}", falling back to landing`);
+            logger.warn(`[HeadyShell] No remote registered for "${projection.uiId}", falling back to landing`);
             container.innerHTML = renderFallbackUI(projection);
             return;
         }
@@ -118,7 +121,7 @@ async function bootShell() {
         logger.info(`[HeadyShell] Mounted ${projection.uiId} successfully`);
 
     } catch (error) {
-        console.error('[HeadyShell] Boot error:', error);
+        logger.error('[HeadyShell] Boot error:', error);
         container.innerHTML = renderErrorUI(error);
     }
 }

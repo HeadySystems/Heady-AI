@@ -354,7 +354,7 @@ class StructuredLogger {
    */
   debug(message, context) {
     const entry = this._formatEntry('DEBUG', message, context);
-    console.debug(JSON.stringify(entry));
+    logger.debug(JSON.stringify(entry));
   }
 
   /**
@@ -370,7 +370,7 @@ class StructuredLogger {
    */
   warn(message, context) {
     const entry = this._formatEntry('WARN', message, context);
-    console.warn(JSON.stringify(entry));
+    logger.warn(JSON.stringify(entry));
   }
 
   /**
@@ -385,7 +385,7 @@ class StructuredLogger {
         stack: error.stack,
       },
     });
-    console.error(JSON.stringify(entry));
+    logger.error(JSON.stringify(entry));
   }
 
   /**
@@ -2311,7 +2311,7 @@ export {
 // Run demo if this is the main module
 if (import.meta.url === `file://${process.argv[1]}`) {
   demo().catch((error) => {
-    console.error('Demo failed:', error);
+    logger.error('Demo failed:', error);
     process.exit(1);
   });
 }

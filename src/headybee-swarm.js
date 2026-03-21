@@ -15,6 +15,8 @@
 
 import EventEmitter from 'events';
 import crypto from 'crypto';
+import { createLogger } from './utils/logger.js';
+const logger = createLogger('headybee-swarm');
 
 // ============================================================================
 // CONSTANTS AND CONFIGURATION
@@ -1388,7 +1390,7 @@ async function demonstrateSwarm() {
     logger.info('Demonstration complete');
     logger.info('='.repeat(80) + '\n');
   } catch (error) {
-    console.error('Demonstration failed:', error);
+    logger.error('Demonstration failed:', error);
     process.exit(1);
   }
 }
@@ -1433,7 +1435,7 @@ export {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   demonstrateSwarm().catch(error => {
-    console.error('Fatal error:', error);
+    logger.error('Fatal error:', error);
     process.exit(1);
   });
 }

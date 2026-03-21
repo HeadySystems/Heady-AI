@@ -34,6 +34,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('trade-secret-vault');
+
 
 const crypto = require('crypto');
 
@@ -316,7 +319,7 @@ const TS006_COMPETITIVE = Object.freeze({
  */
 function getSecret(category, caller) {
     if (!_checkAuth(caller)) {
-        console.error(`[TRADE-SECRET-VAULT] ⛔ UNAUTHORIZED ACCESS ATTEMPT: ${caller} → ${category}`);
+        logger.error(`[TRADE-SECRET-VAULT] ⛔ UNAUTHORIZED ACCESS ATTEMPT: ${caller} → ${category}`);
         _logAccess(`UNAUTHORIZED:${category}`, caller);
         return null;
     }
@@ -335,7 +338,7 @@ function getSecret(category, caller) {
         case 'TS-005': return TS005_CALIBRATION;
         case 'TS-006': return TS006_COMPETITIVE;
         default:
-            console.warn(`[TRADE-SECRET-VAULT] Unknown category: ${category}`);
+            logger.warn(`[TRADE-SECRET-VAULT] Unknown category: ${category}`);
             return null;
     }
 }

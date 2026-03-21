@@ -18,6 +18,9 @@
  * Handles beta signups, user authorization, Stripe checkout, and usage tracking.
  * STRIPE_SECRET_KEY is loaded from environment variables ONLY.
  */
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_billing');
+
 
 const fs = require("fs");
 const path = require("path");
@@ -40,7 +43,7 @@ function loadUsers() {
       return JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
     }
   } catch (e) {
-    console.error("[hc_billing] Failed to load users:", e.message);
+    logger.error("[hc_billing] Failed to load users:", e.message);
   }
   return { users: [], metadata: { createdAt: new Date().toISOString() } };
 }
@@ -59,7 +62,7 @@ function getStripe() {
   try {
     return require("stripe")(key);
   } catch (e) {
-    console.warn("[hc_billing] Stripe not available:", e.message);
+    logger.warn("[hc_billing] Stripe not available:", e.message);
     return null;
   }
 }

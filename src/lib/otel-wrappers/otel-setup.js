@@ -5,6 +5,9 @@
  * @module otel-wrappers/otel-setup
  */
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('otel-setup');
+
 const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -131,7 +134,7 @@ function start() {
     sdk.start();
     logger.info(`[otel-setup] SDK started — service="${SERVICE_NAME}" env="${DEPLOY_ENV}" otlp="${OTLP_ENDPOINT}"`);
   } catch (err) {
-    console.error('[otel-setup] SDK start failed (telemetry disabled):', err.message);
+    logger.error('[otel-setup] SDK start failed (telemetry disabled):', err.message);
   }
 }
 
@@ -141,7 +144,7 @@ async function shutdown() {
     await sdk.shutdown();
     logger.info('[otel-setup] SDK shutdown complete');
   } catch (err) {
-    console.error('[otel-setup] SDK shutdown error:', err.message);
+    logger.error('[otel-setup] SDK shutdown error:', err.message);
   }
 }
 

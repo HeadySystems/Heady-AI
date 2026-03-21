@@ -171,7 +171,7 @@ class UmpUdpTransport extends EventEmitter {
         this.config = {
             listenPort: parseInt(opts.listenPort || process.env.UMP_LISTEN_PORT) || 11420,
             sendPort: parseInt(opts.sendPort || process.env.UMP_SEND_PORT) || 11421,
-            sendHost: opts.sendHost || process.env.UMP_SEND_HOST || "127.0.0.1",
+            sendHost: opts.sendHost || process.env.UMP_SEND_HOST || process.env.REMOTE_HOST || '0.0.0.0',
             ringBufferSize: opts.ringBufferSize || 8192,
             batchSize: opts.batchSize || 64, // Max packets per flush
             flushIntervalMs: opts.flushIntervalMs || 1, // Sub-ms flush cycle

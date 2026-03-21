@@ -940,9 +940,9 @@ export class HeadyCouncil {
       ...meta,
     };
     if (level === 'error') {
-      console.error(JSON.stringify(entry));
+      logger.error(JSON.stringify(entry));
     } else if (level === 'warn') {
-      console.warn(JSON.stringify(entry));
+      logger.warn(JSON.stringify(entry));
     } else if (process.env.LOG_LEVEL === 'debug') {
       logger.info(JSON.stringify(entry));
     }

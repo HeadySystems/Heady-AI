@@ -21,6 +21,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('deploy-script');
+
 const logger = console;
 
 const { execSync } = require('child_process');
@@ -91,7 +94,7 @@ async function main() {
                     logger.info('');
                     logger.info('  ✅ Cloud Run deploy complete!');
                 } catch (err) {
-                    console.error('  ❌ Deploy failed:', err.message);
+                    logger.error('  ❌ Deploy failed:', err.message);
                     process.exit(1);
                 }
             }
@@ -157,6 +160,6 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error('Deploy failed:', err.message);
+    logger.error('Deploy failed:', err.message);
     process.exit(1);
 });

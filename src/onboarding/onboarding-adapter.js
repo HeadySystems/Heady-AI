@@ -7,6 +7,9 @@
  * Mounted at /api/onboarding in heady-manager.js
  */
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('onboarding-adapter');
+
 
 const express = require('express');
 const crypto = require('crypto');
@@ -340,7 +343,7 @@ router.get('/steps', (req, res) => {
 // Error handler
 // ---------------------------------------------------------------------------
 router.use((err, req, res, _next) => {
-  console.error('[OnboardingAdapter] Error:', err.message);
+  logger.error('[OnboardingAdapter] Error:', err.message);
   res.status(500).json(failure('An internal error occurred. Please try again.'));
 });
 

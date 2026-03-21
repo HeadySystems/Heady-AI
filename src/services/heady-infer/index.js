@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('index');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const EventEmitter = require('events');
@@ -494,8 +497,8 @@ class HeadyInfer extends EventEmitter {
 
   _log(level, message) {
     const entry = `[HeadyInfer] [${level.toUpperCase()}] ${message}`;
-    if (level === 'error')      console.error(entry);
-    else if (level === 'warn')  console.warn(entry);
+    if (level === 'error')      logger.error(entry);
+    else if (level === 'warn')  logger.warn(entry);
     else if (this.config.logging.level !== 'silent') logger.info(entry);
     this.emit('log', { level, message, timestamp: new Date().toISOString() });
   }

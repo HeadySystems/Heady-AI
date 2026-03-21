@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('index');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -49,10 +52,10 @@ function _openAuditStream() {
   try {
     _auditStream = fs.createWriteStream(config.auditLogPath, { flags: 'a' });
     _auditStream.on('error', err => {
-      console.error(`[HeadyGuard] Audit log write error: ${err.message}`);
+      logger.error(`[HeadyGuard] Audit log write error: ${err.message}`);
     });
   } catch (err) {
-    console.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
+    logger.error(`[HeadyGuard] Cannot open audit log "${config.auditLogPath}": ${err.message}`);
   }
 }
 
@@ -302,7 +305,7 @@ async function initialize(opts = {}) {
     try {
       rules.loadFromFile(config.rulesPath);
     } catch (err) {
-      console.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
+      logger.warn(`[HeadyGuard] Rules file error: ${err.message}. Using defaults.`);
     }
   }
 
@@ -365,7 +368,7 @@ function middleware(opts = {}) {
 
       return next();
     } catch (err) { // Guard failure should not block the request — log and pass through
-      console.error(`[HeadyGuard] Middleware error: ${err.message}`);
+      logger.error(`[HeadyGuard] Middleware error: ${err.message}`);
       req.guardResult = null;
       return next();
     }

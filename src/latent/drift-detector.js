@@ -16,6 +16,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('drift-detector');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { EventEmitter } = require('events');
@@ -413,7 +416,7 @@ class DriftDetector extends EventEmitter {
         }
       } catch (err) { // Log scan error without crashing.
         if (process.env.NODE_ENV !== 'test') {
-          console.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
+          logger.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
         }
       }
     }
@@ -507,7 +510,7 @@ class DriftDetector extends EventEmitter {
         this.onHealingTrigger(monitor.componentId, coherence);
       } catch (err) {
         if (process.env.NODE_ENV !== 'test') {
-          console.error(`[DriftDetector] Healing trigger error: ${err.message}`);
+          logger.error(`[DriftDetector] Healing trigger error: ${err.message}`);
         }
       }
     }

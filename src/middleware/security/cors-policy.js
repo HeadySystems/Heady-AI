@@ -14,6 +14,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('cors-policy');
+
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
     'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
@@ -105,7 +108,7 @@ function validateOrigin(origin, opts = {}) {
   }
 
   // Dev: allow localhost
-  if (opts.allowLocalhost && (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.local'))) {
+  if (opts.allowLocalhost && (hostname === 'localhost' || hostname === process.env.REMOTE_HOST || '0.0.0.0' || hostname.endsWith('.local'))) {
     return { allowed: true, credentials: true, matchedDomain: hostname };
   }
 
@@ -228,7 +231,7 @@ function corsPolicy(opts = {}) {
 
     if (!allowed) {
       // Log blocked CORS attempt
-      console.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
+      logger.warn('[CORS] Blocked origin:', origin, 'path:', req.path);
       if (req.method === 'OPTIONS') {
         return res.status(403).json({ error: 'CORS: Origin not allowed', origin });
       }

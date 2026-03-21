@@ -123,7 +123,7 @@ class HeraldAgent {
       });
       return { success: response.ok, status: response.status };
     } catch (err) {
-      console.error(`[HERALD] Webhook dispatch failed: ${url} — ${err.message}`);
+      logger.error(`[HERALD] Webhook dispatch failed: ${url} — ${err.message}`);
       return { success: false, error: err.message };
     }
   }

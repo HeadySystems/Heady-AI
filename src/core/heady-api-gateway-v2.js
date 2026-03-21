@@ -98,7 +98,7 @@ const HEADY_DOMAINS = Object.freeze([
   'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
   'localhost',
-  '127.0.0.1',
+  process.env.REMOTE_HOST || '0.0.0.0',
 ]);
 
 // ─── Supported API versions ───────────────────────────────────────────────────

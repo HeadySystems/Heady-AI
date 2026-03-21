@@ -60,7 +60,7 @@ const config = {
   pgConnectionString:
     process.env.HEADY_CACHE_PG_URL ||
     process.env.DATABASE_URL ||
-    'postgresql://localhost:5432/heady_cache',
+    process.env.DATABASE_URL || 'postgresql://${process.env.DB_HOST || "db"}:5432/heady_cache',
 
   // Analytics retention (number of time-series points to keep)
   analyticsRetention: parseInt(

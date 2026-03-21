@@ -1,3 +1,6 @@
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_skill_executor');
+
 const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -64,7 +67,7 @@ class SkillExecutor extends EventEmitter {
       
       return true;
     } catch (error) {
-      console.error('Failed to initialize skill executor:', error);
+      logger.error('Failed to initialize skill executor:', error);
       throw error;
     }
   }

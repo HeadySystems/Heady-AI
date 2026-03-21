@@ -6,6 +6,9 @@
 // HEADY_BRAND:END
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('sentry-csl-integration');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI, PSI, FIB, CSL, POOLS } = require('../heady-phi-constants');
@@ -81,7 +84,7 @@ class SentryCslIntegration {
   async init() {
     if (this._initialized) return this;
     if (!this._dsn) {
-      console.warn('[SentryCsl] No SENTRY_DSN configured — operating in dry-run mode');
+      logger.warn('[SentryCsl] No SENTRY_DSN configured — operating in dry-run mode');
       this._initialized = true;
       return this;
     }
@@ -99,7 +102,7 @@ class SentryCslIntegration {
       });
       this._initialized = true;
     } catch (err) { // Sentry not installed — operate in dry-run mode
-      console.warn('[SentryCsl] @sentry/node not available — dry-run mode');
+      logger.warn('[SentryCsl] @sentry/node not available — dry-run mode');
       this._initialized = true;
 
     return this;

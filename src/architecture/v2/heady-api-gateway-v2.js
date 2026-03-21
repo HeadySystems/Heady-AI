@@ -72,6 +72,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('heady-api-gateway-v2');
+
 const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -98,7 +101,7 @@ const HEADY_DOMAINS = Object.freeze([
   'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
   'localhost',
-  '127.0.0.1',
+  process.env.REMOTE_HOST || '0.0.0.0',
 ]);
 
 // ─── Supported API versions ───────────────────────────────────────────────────
@@ -1003,5 +1006,5 @@ if (require.main === module) {
     };
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT',  () => shutdown('SIGINT'));
-  })().catch((err) => { console.error(err); process.exit(1); });
+  })().catch((err) => { logger.error(err); process.exit(1); });
 }

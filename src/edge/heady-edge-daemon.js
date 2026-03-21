@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('heady-edge-daemon');
+
 const logger = console;
 #!/usr/bin/env node
 /*
@@ -193,7 +196,7 @@ function initFileWatcher() {
         });
 
         watcher.on('error', (err) => {
-            console.error(`  ❌ File watcher error: ${err.message}`);
+            logger.error(`  ❌ File watcher error: ${err.message}`);
         });
 
         state.fileWatcherActive = true;

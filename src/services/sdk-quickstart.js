@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('sdk-quickstart');
+
 const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
@@ -146,9 +149,9 @@ async function cliQuickstart() {
             logger.info(`     ${name}: ${url}`);
         }
     } else {
-        console.error(`❌ Initialization failed at stage: ${result.stage}`);
-        console.error(`   Error: ${result.error}`);
-        console.error(`   Fix: ${result.remediation}`);
+        logger.error(`❌ Initialization failed at stage: ${result.stage}`);
+        logger.error(`   Error: ${result.error}`);
+        logger.error(`   Fix: ${result.remediation}`);
     }
 
     return result;

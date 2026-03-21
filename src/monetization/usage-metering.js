@@ -27,6 +27,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('usage-metering');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
@@ -262,7 +265,7 @@ class UsageMeter extends EventEmitter {
     } catch (err) {
       this.emit('error', err);
       // Fail open: allow the request but log the metering failure
-      console.error('[UsageMeter] Tracking error (fail-open):', err.message);
+      logger.error('[UsageMeter] Tracking error (fail-open):', err.message);
       return { allowed: true, error: err.message };
     }
   }
@@ -516,7 +519,7 @@ class UsageMeter extends EventEmitter {
 
       await batchReportUsage(metrics, items).catch(err => {
         flushSuccess = false;
-        console.error(`[UsageMeter] Stripe flush failed for org ${orgId}:`, err.message);
+        logger.error(`[UsageMeter] Stripe flush failed for org ${orgId}:`, err.message);
         // Re-queue failed reports
         for (const [metric, qty] of Object.entries(metrics)) {
           this._queueStripeReport(orgId, metric, qty);
@@ -763,7 +766,7 @@ class UsageMeter extends EventEmitter {
       utilization_pct: Math.round(data.utilization * 100),
       overage_usd: data.overage,
       dashboard_url: `https://app.headysystems.com/org/${org.id}/usage`,
-    }).catch(err => console.error('[UsageMeter] Alert email failed:', err.message));
+    }).catch(err => logger.error('[UsageMeter] Alert email failed:', err.message));
   }
 
   _queueStripeReport(orgId, metric, quantity) {
@@ -787,7 +790,7 @@ class UsageMeter extends EventEmitter {
           timestamp: new Date(),
         });
       } catch (err) { // Don't let DB failures block requests
-        console.error('[UsageMeter] Event log write failed:', err.message);
+        logger.error('[UsageMeter] Event log write failed:', err.message);
     });
   }
 }

@@ -129,17 +129,17 @@ async function start() {
     process.on('SIGINT', () => shutdown('SIGINT'));
 
     process.on('unhandledRejection', (reason) => {
-      console.error('[heady-cache] unhandledRejection:', reason);
+      logger.error('[heady-cache] unhandledRejection:', reason);
     });
 
     process.on('uncaughtException', (err) => {
-      console.error('[heady-cache] uncaughtException:', err);
+      logger.error('[heady-cache] uncaughtException:', err);
       process.exit(1);
     });
 
     return server;
   } catch (err) {
-    console.error('[heady-cache] startup error:', err);
+    logger.error('[heady-cache] startup error:', err);
     process.exit(1);
   }
 }

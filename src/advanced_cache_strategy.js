@@ -5,6 +5,9 @@
  * Most responses should eventually be cached with intelligent TTL
  */
 
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('advanced_cache_strategy');
+
 class AdvancedCacheStrategy {
     constructor() {
         // Multi-tier cache system
@@ -149,7 +152,7 @@ class AdvancedCacheStrategy {
                     const data = await this.fetchData(key);
                     this.put(key, data);
                 } catch (error) {
-                    console.warn(`Failed to warm cache for ${key}:`, error);
+                    logger.warn(`Failed to warm cache for ${key}:`, error);
                 }
             }
         }

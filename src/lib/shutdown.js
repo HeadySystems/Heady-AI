@@ -28,11 +28,11 @@ class ShutdownManager {
         process.on('SIGTERM', handler);
         process.on('SIGINT', handler);
         process.on('uncaughtException', (err) => {
-            console.error('[SHUTDOWN] Uncaught exception:', err.message);
+            logger.error('[SHUTDOWN] Uncaught exception:', err.message);
             this._shutdown('uncaughtException');
         });
         process.on('unhandledRejection', (reason) => {
-            console.error('[SHUTDOWN] Unhandled rejection:', reason);
+            logger.error('[SHUTDOWN] Unhandled rejection:', reason);
         });
     }
 
@@ -42,7 +42,7 @@ class ShutdownManager {
         logger.info(`[SHUTDOWN] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks, ${SHUTDOWN_TIMEOUT_MS}ms timeout)...`);
 
         const timeout = setTimeout(() => {
-            console.error('[SHUTDOWN] Timeout exceeded, forcing exit');
+            logger.error('[SHUTDOWN] Timeout exceeded, forcing exit');
             process.exit(1);
         }, SHUTDOWN_TIMEOUT_MS);
         timeout.unref();
@@ -53,7 +53,7 @@ class ShutdownManager {
                 await Promise.resolve(hook.fn());
                 logger.info(`[SHUTDOWN] Done: ${hook.name}`);
             } catch (err) {
-                console.error(`[SHUTDOWN] Error in ${hook.name}:`, err.message);
+                logger.error(`[SHUTDOWN] Error in ${hook.name}:`, err.message);
             }
         }
 

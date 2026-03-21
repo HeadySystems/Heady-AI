@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('routes');
+
 
 /**
  * HeadyVector Express Router
@@ -520,7 +523,7 @@ function createRouter(hv) {
       err.message.includes('mismatch');
 
     const statusCode = isUserError ? 400 : 500;
-    console.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
+    logger.error(`[heady-vector] ${req.method} ${req.path} error:`, err.message);
 
     return sendError(res, statusCode, err.message, {
       path: req.path,

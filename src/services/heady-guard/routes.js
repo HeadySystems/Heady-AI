@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('routes');
+
 
 /**
  * HeadyGuard — Express Router
@@ -245,7 +248,7 @@ router.use((err, req, res, _next) => {
     : err.message;
 
   if (status === 500) {
-    console.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
+    logger.error(`[HeadyGuard] Route error: ${err.stack || err.message}`);
   }
 
   return res.status(status).json({ error: 'guard_error', message });

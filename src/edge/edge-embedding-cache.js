@@ -22,6 +22,8 @@
  */
 
 import { PHI, PSI, fib, phiBackoff } from '../../shared/phi-math.js';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('edge-embedding-cache');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -286,7 +288,7 @@ export class EdgeEmbeddingCache {
         }
       } catch (err) {
         if (this.enableMetrics) this._metrics.errors++;
-        console.warn('[EdgeEmbeddingCache] KV get error:', err.message);
+        logger.warn('[EdgeEmbeddingCache] KV get error:', err.message);
       }
     }
 
@@ -325,7 +327,7 @@ export class EdgeEmbeddingCache {
     if (this.enableKv && this.kv) {
       this.kv.put(`${KV_PREFIX}${key}`, JSON.stringify(entry), { expirationTtl: ttl }).catch((err) => {
         if (this.enableMetrics) this._metrics.errors++;
-        console.warn('[EdgeEmbeddingCache] KV put error:', err.message);
+        logger.warn('[EdgeEmbeddingCache] KV put error:', err.message);
       });
     }
 
@@ -407,7 +409,7 @@ export class EdgeEmbeddingCache {
         }
       } catch (err) {
         errors += uncached.length;
-        console.error('[EdgeEmbeddingCache] warming batch error:', err);
+        logger.error('[EdgeEmbeddingCache] warming batch error:', err);
       }
     }
 

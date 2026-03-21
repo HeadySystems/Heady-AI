@@ -36,8 +36,8 @@ try {
 } catch {
   logger = {
     info: (...a) => logger.info(...a),
-    warn: (...a) => console.warn(...a),
-    error: (...a) => console.error(...a),
+    warn: (...a) => logger.warn(...a),
+    error: (...a) => logger.error(...a),
     debug: (...a) => process.env.LOG_LEVEL === 'debug' && logger.info(...a),
   };
 }

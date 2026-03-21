@@ -21,6 +21,8 @@ import { createTransport } from 'nodemailer';
 import { ImapFlow } from 'imapflow';
 import { simpleParser } from 'mailparser';
 import { HeadyError } from './auth-provider.js';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('email-client');
 
 // ─── Email Error ──────────────────────────────────────────────────────────────
 
@@ -141,7 +143,7 @@ export class SecureEmailClient {
       });
     } else {
       // Development / test mode — use ethereal
-      console.warn('[HeadyEmail] No SMTP provider configured. Using test transport.');
+      logger.warn('[HeadyEmail] No SMTP provider configured. Using test transport.');
       this._transport = createTransport({ jsonTransport: true });
     }
   }
@@ -638,7 +640,7 @@ export class SecureEmailClient {
         return await this._checkRspamd(emailData);
       }
     } catch (err) {
-      console.error('[HeadyEmail] Spam check failed:', err.message);
+      logger.error('[HeadyEmail] Spam check failed:', err.message);
     }
 
     return { isSpam: false, score: 0, reasons: [] };

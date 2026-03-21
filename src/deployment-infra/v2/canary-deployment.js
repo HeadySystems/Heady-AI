@@ -32,6 +32,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('canary-deployment');
+
 const logger = console;
 
 const { execSync, execFileSync } = require('child_process');
@@ -649,7 +652,7 @@ async function main() {
   if (args.includes('--rollback')) {
     const state = loadState();
     if (!state) {
-      console.error('No canary state found — nothing to roll back');
+      logger.error('No canary state found — nothing to roll back');
       process.exit(1);
     }
     const engine = new CanaryDeployment({ imageTag: state.imageTag });
@@ -660,7 +663,7 @@ async function main() {
 
   const imageIdx = args.indexOf('--image');
   if (imageIdx === -1 || !args[imageIdx + 1]) {
-    console.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
+    logger.error('Usage: canary-deployment.js --image IMAGE_TAG [--dry-run]');
     process.exit(1);
   }
 

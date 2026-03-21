@@ -49,7 +49,7 @@ program
 
       await scaffold(config, options);
     } catch (err) {
-      console.error(chalk.red(`\n❌ Error: ${err.message}\n`));
+      logger.error(chalk.red(`\n❌ Error: ${err.message}\n`));
       process.exit(1);
     }
   });

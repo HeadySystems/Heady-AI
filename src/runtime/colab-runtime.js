@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('colab-runtime');
+
 const logger = console;
 #!/usr/bin/env node
 /**
@@ -201,7 +204,7 @@ class ColabOrchestrator {
         const now = Date.now();
         for (const [taskId, entry] of this.activeTasks) {
             if (now - entry.startedAt > this._staleTaskTimeoutMs) {
-                console.warn(`🧹 Reaping stale task ${taskId} on ${entry.runtimeId} (${((now - entry.startedAt) / 1000).toFixed(0)}s old)`);
+                logger.warn(`🧹 Reaping stale task ${taskId} on ${entry.runtimeId} (${((now - entry.startedAt) / 1000).toFixed(0)}s old)`);
                 this.complete(taskId, { status: "reaped", reason: "stale-timeout" });
             }
         }
@@ -268,7 +271,7 @@ class ColabOrchestrator {
 
         // Circuit breaker check — don't dispatch to broken runtimes
         if (runtime._circuitBroken && runtimeId !== "colab-d") {
-            console.warn(`⚡ ${runtimeId} circuit-broken, rerouting task`);
+            logger.warn(`⚡ ${runtimeId} circuit-broken, rerouting task`);
             return this._dispatchLeastLoaded(task, [runtimeId]);
         }
         // For colab-d (dedicated), queue even if circuit-broken — no fallback
@@ -415,7 +418,7 @@ class ColabOrchestrator {
                     if (newFailures >= FIB[5]) {
                         this.runtimes[id]._circuitBroken = true;
                         this.runtimes[id]._circuitBrokenAt = Date.now();
-                        console.warn(`⚡ Circuit breaker OPEN for ${id} after ${newFailures} failures`);
+                        logger.warn(`⚡ Circuit breaker OPEN for ${id} after ${newFailures} failures`);
                     }
                 } else {
                     // Recovery: reset failure count and circuit breaker

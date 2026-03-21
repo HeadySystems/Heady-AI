@@ -14,6 +14,9 @@
  * @module otel-wrappers/shutdown.traced
  */
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('shutdown.traced');
+
 const logger = console;
 
 const { trace, context, SpanStatusCode, metrics, propagation } = require('@opentelemetry/api');
@@ -65,7 +68,7 @@ originalManager._shutdown = async function tracedShutdown(signal) {
   logger.info(`[SHUTDOWN:traced] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks)...`);
 
   const timeout = setTimeout(() => {
-    console.error('[SHUTDOWN:traced] Timeout exceeded, forcing exit');
+    logger.error('[SHUTDOWN:traced] Timeout exceeded, forcing exit');
     process.exit(1);
   }, parseInt(process.env.SHUTDOWN_TIMEOUT_MS || '15000', 10));
   timeout.unref();
@@ -102,7 +105,7 @@ originalManager._shutdown = async function tracedShutdown(signal) {
       hookSpan.setStatus({ code: SpanStatusCode.ERROR, message: err.message });
       shutdownErrorsTotal.add(1, { module: MODULE_NAME, hook: hook.name });
       shutdownHookDurationMs.record(durationMs, { module: MODULE_NAME, hook: hook.name, success: 'false' });
-      console.error(`[SHUTDOWN:traced] Error in ${hook.name}: ${err.message}`);
+      logger.error(`[SHUTDOWN:traced] Error in ${hook.name}: ${err.message}`);
     } finally {
       hookSpan.end();
     }

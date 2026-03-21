@@ -18,6 +18,9 @@
  * Universal Agent Prompt — Loader & Injector
  *
  * Loads the MAXIMUM POTENTIAL universal coding agent system prompt and provides
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('universal-agent-prompt');
+
  * structured prompt injection for all Heady agents. Every agent in the system
  * receives the universal directives, cognitive framework, and Heady-specific
  * integration context (liquid nodes, swarms, Colab runtimes, CSL gates).
@@ -104,7 +107,7 @@ function loadUniversalPrompt() {
     _promptHash = crypto.createHash("sha256").update(_cachedPrompt).digest("hex").slice(0, 16);
     return _cachedPrompt;
   } catch (err) {
-    console.error(`[universal-agent-prompt] Failed to load prompt: ${err.message}`);
+    logger.error(`[universal-agent-prompt] Failed to load prompt: ${err.message}`);
     return getFallbackPrompt();
   }
 }

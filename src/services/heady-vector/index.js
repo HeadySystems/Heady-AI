@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('index');
+
 const logger = console;
 
 /**
@@ -35,7 +38,7 @@ class HeadyVector {
     });
 
     this.pool.on('error', (err) => {
-      console.error('[heady-vector] Pool error:', err.message);
+      logger.error('[heady-vector] Pool error:', err.message);
     });
 
     // Sub-systems (initialized in start())

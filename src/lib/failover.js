@@ -20,7 +20,7 @@ class MultiCloudFailover {
             try {
                 return await this._fetch(this.primary, request);
             } catch (err) {
-                console.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
+                logger.error(`[FAILOVER] Primary (${this.primary.name}) failed:`, err.message);
                 this._primaryHealthy = false;
                 this._failoverCount++;
                 return this._fetch(this.fallback, request);

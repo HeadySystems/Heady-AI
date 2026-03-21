@@ -1,3 +1,6 @@
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_orchestrator');
+
 const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -633,7 +636,7 @@ class HeadyOrchestrator {
     if (constraints.targetLatency) {
       const currentLatency = Date.now() - workflowState.startTime;
       if (currentLatency > constraints.targetLatency) {
-        console.warn(`Latency target exceeded: ${currentLatency}ms > ${constraints.targetLatency}ms`);
+        logger.warn(`Latency target exceeded: ${currentLatency}ms > ${constraints.targetLatency}ms`);
       }
     }
   }

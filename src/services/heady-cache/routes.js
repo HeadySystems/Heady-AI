@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('routes');
+
 
 /**
  * HeadyCache Express Router
@@ -40,7 +43,7 @@ function createRouter(cache) {
   }
 
   function handleError(res, err) {
-    console.error('[heady-cache] route error:', err);
+    logger.error('[heady-cache] route error:', err);
     res.status(500).json({ error: err.message || 'Internal error' });
   }
 

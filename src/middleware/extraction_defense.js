@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('extraction_defense');
+
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.dlpExtractionDefense = void 0;
@@ -27,7 +30,7 @@ const dlpExtractionDefense = (req, res, next) => {
         const variance = calculateVariance(prompt, recentHistory);
         // If prompts are too similar and too frequent, flag as extraction attempt
         if (recentHistory.length >= MAX_SIMILAR_PROMPTS_PER_MIN && variance > 0.8) {
-            console.warn(`[SECURITY ALERT] Possible model extraction attack detected from User/IP: ${userId}`);
+            logger.warn(`[SECURITY ALERT] Possible model extraction attack detected from User/IP: ${userId}`);
             // Silently shadow-ban the user by returning generic/degraded outputs
             // or inserting an invisible cryptographic watermark.
             res.locals.isShadowBanned = true;

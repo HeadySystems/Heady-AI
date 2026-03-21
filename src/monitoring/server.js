@@ -18,6 +18,8 @@ import { join, dirname } from 'node:path';
 import { readFileSync, existsSync } from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('server');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -78,7 +80,7 @@ app.use('/api', (req, res) => {
   });
 
   proxyReq.on('error', (e) => {
-    console.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
+    logger.error(`[Dashboard] Proxy error → ${targetUrl}: ${e.message}`);
     if (!res.headersSent) {
       res.status(502).json({
         error:   'Bad Gateway',

@@ -18,6 +18,9 @@
  * HeadyRegistry :: Registry Utility Module
  * Sacred Geometry :: Organic Systems :: Breathing Interfaces
  * Flow: Files → Scan → Analyze → Optimize
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('heady_registry');
+
  */
 
 const fs = require('fs');
@@ -32,7 +35,7 @@ function loadRegistry(registryPath = REGISTRY_PATH) {
     }
     return null;
   } catch (error) {
-    console.error(`Error loading registry: ${error.message}`);
+    logger.error(`Error loading registry: ${error.message}`);
     return null;
   }
 }
@@ -42,7 +45,7 @@ function saveRegistry(registry, registryPath = REGISTRY_PATH) {
     fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2));
     return true;
   } catch (error) {
-    console.error(`Error saving registry: ${error.message}`);
+    logger.error(`Error saving registry: ${error.message}`);
     return false;
   }
 }

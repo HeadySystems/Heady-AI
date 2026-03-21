@@ -1,3 +1,5 @@
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('evolution-engine');
 /**
  * @file evolution-engine.js
  * @module heady-latent-os/engines/evolution-engine
@@ -334,7 +336,7 @@ export class EvolutionEngine {
         status:       'complete',
       };
     } catch (err) {
-      console.error(`[EvolutionEngine] Generation ${this._generation + 1} failed:`, err.message);
+      logger.error(`[EvolutionEngine] Generation ${this._generation + 1} failed:`, err.message);
 
       // Record failed generation
       this._history.push({
@@ -636,7 +638,7 @@ export class EvolutionEngine {
           blockedParams: protectedChanges.map(c => c.path),
           reason: 'neverMutate violation',
         });
-        console.warn(
+        logger.warn(
           `[EvolutionEngine] BLOCKED mutation ${mutation.id}: ` +
           `touches protected params: ${protectedChanges.map(c => c.path).join(', ')}`
         );
@@ -676,7 +678,7 @@ export class EvolutionEngine {
             regression:  applicationResult.regression,
             reason:      `Fitness regression ${(applicationResult.regression * 100).toFixed(2)}% > ${(this.rollbackThreshold * 100).toFixed(0)}% threshold`,
           });
-          console.warn(
+          logger.warn(
             `[EvolutionEngine] AUTO-ROLLBACK: ${mutation.id} ` +
             `regressed ${(applicationResult.regression * 100).toFixed(2)}%`
           );
@@ -696,7 +698,7 @@ export class EvolutionEngine {
           );
         }
       } catch (err) {
-        console.error(`[EvolutionEngine] Promotion error for ${mutation.id}:`, err.message);
+        logger.error(`[EvolutionEngine] Promotion error for ${mutation.id}:`, err.message);
         rolledBack.push({
           mutationId: mutation.id,
           reason:     `Promotion error: ${err.message}`,
@@ -737,7 +739,7 @@ export class EvolutionEngine {
 
     // Async write to JSONL log (non-blocking — fire and forget with error logging)
     this._writeHistoryLog(record).catch(err =>
-      console.error('[EvolutionEngine] History log write failed:', err.message)
+      logger.error('[EvolutionEngine] History log write failed:', err.message)
     );
 
     return record;
@@ -1147,7 +1149,7 @@ export class EvolutionEngine {
    */
   async _rollbackMutation(winner, applicationResult) {
     // In production: restores config to pre-mutation snapshot.
-    console.warn(
+    logger.warn(
       `[EvolutionEngine] Rolling back ${winner.mutation.id}: ` +
       `regression=${(applicationResult.regression * 100).toFixed(2)}%`
     );
@@ -1186,7 +1188,7 @@ export class EvolutionEngine {
   async _writeHistoryLog(record) {
     // In production: appends to logs/evolution-history.jsonl
     // Implementation delegates to file system or cloud log store.
-    // console.debug('[EvolutionEngine] Wrote history record:', record.id);
+    // logger.debug('[EvolutionEngine] Wrote history record:', record.id);
   }
 }
 

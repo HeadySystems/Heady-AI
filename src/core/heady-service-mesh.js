@@ -512,7 +512,7 @@ class HeadyServiceMesh extends EventEmitter {
 
     // Initial probe pass (non-blocking)
     this._runHealthProbes().catch((err) =>
-      console.error('[mesh] initial health probe error:', err.message)
+      logger.error('[mesh] initial health probe error:', err.message)
     );
 
     // Periodic probe
@@ -735,7 +735,7 @@ class HeadyServiceMesh extends EventEmitter {
     inst.lastHealthCheck = Date.now();
 
     if (wasHealthy) {
-      console.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
+      logger.warn(`[mesh] ${entry.name} ${inst.url} — UNHEALTHY: ${err.message}`);
       this._publish('heady:service:unhealthy', {
         name:  entry.name,
         url:   inst.url,

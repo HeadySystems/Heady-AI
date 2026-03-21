@@ -3,6 +3,9 @@
  * PROPRIETARY AND CONFIDENTIAL.
  */
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('corrections');
+
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
@@ -107,8 +110,8 @@ class Corrections extends EventEmitter {
   _defaultLogger() {
     return {
       info:  () => {},
-      warn:  (...a) => console.error('[Corrections:WARN]',  ...a),
-      error: (...a) => console.error('[Corrections:ERROR]', ...a),
+      warn:  (...a) => logger.error('[Corrections:WARN]',  ...a),
+      error: (...a) => logger.error('[Corrections:ERROR]', ...a),
     };
   }
 

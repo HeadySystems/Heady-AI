@@ -4,6 +4,9 @@
  * Uses test keys in sandbox mode, live keys in production
  */
 
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('store-checkout');
+
 const { CONFIG } = require('../config/global');
 
 async function storeCheckoutHandler(req, res) {
@@ -71,7 +74,7 @@ async function storeCheckoutHandler(req, res) {
         });
 
     } catch (err) {
-        console.error('Stripe checkout error:', err);
+        logger.error('Stripe checkout error:', err);
         res.status(500).json({ error: 'Checkout failed', message: err.message });
     }
 }

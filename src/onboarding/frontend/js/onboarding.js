@@ -8,6 +8,8 @@
 
 import { ParticleSystem } from './particles.js';
 import { BuddySetup } from './buddy-setup.js';
+import { createLogger } from '../../../utils/logger.js';
+const logger = createLogger('onboarding');
 
 /* ---- Constants ---- */
 const STAGES = [
@@ -136,14 +138,14 @@ export class OnboardingWizard {
   #initFirebase() {
     try {
       if (typeof firebase === 'undefined') {
-        console.warn('Firebase SDK not loaded — auth will use dev/demo mode.');
+        logger.warn('Firebase SDK not loaded — auth will use dev/demo mode.');
         return;
       }
       this.#firebaseApp = firebase.initializeApp(this.#firebaseConfig);
       this.#firebaseAuth = firebase.auth();
       this.#firebaseAuth.useDeviceLanguage();
     } catch (err) {
-      console.warn('Firebase init failed:', err.message);
+      logger.warn('Firebase init failed:', err.message);
     }
   }
 
@@ -330,7 +332,7 @@ export class OnboardingWizard {
       }
     } catch (err) {
       if (err.code === 'auth/popup-closed-by-user') return;
-      console.error('Auth error:', err);
+      logger.error('Auth error:', err);
       /* Dev fallback */
       this.#handleAuthSuccess({ provider: providerId, user: { displayName: 'Demo User', email: 'demo@example.com' } });
     }
@@ -403,7 +405,7 @@ export class OnboardingWizard {
         this.#handleAuthSuccess({ provider: 'password', user: { displayName: null, email } });
       }
     } catch (err) {
-      console.error('Email auth error:', err);
+      logger.error('Email auth error:', err);
       this.#toasts.show(err.message || 'Authentication failed.', 'error');
     } finally {
       if (btn) { btn.classList.remove('loading'); btn.disabled = false; }
@@ -581,7 +583,7 @@ export class OnboardingWizard {
         throw new Error(err.message || 'Failed to create identity.');
       }
     } catch (err) {
-      console.warn('Identity API unavailable, proceeding:', err.message);
+      logger.warn('Identity API unavailable, proceeding:', err.message);
       this.#sessionData.username = username;
     }
 
@@ -675,7 +677,7 @@ export class OnboardingWizard {
         body: JSON.stringify(payload),
       });
     } catch {
-      console.warn('Email API unavailable, proceeding.');
+      logger.warn('Email API unavailable, proceeding.');
     }
     this.nextStage();
   }
@@ -766,7 +768,7 @@ export class OnboardingWizard {
         body: JSON.stringify(payload),
       });
     } catch {
-      console.warn('Permissions API unavailable, proceeding.');
+      logger.warn('Permissions API unavailable, proceeding.');
     }
     this.nextStage();
   }
@@ -849,7 +851,7 @@ export class OnboardingWizard {
         this.#sessionData.apiKey = data.apiKey;
       }
     } catch {
-      console.warn('Buddy API unavailable, proceeding with mock key.');
+      logger.warn('Buddy API unavailable, proceeding with mock key.');
       this.#sessionData.apiKey = this.#generateMockApiKey();
     }
 
@@ -876,7 +878,7 @@ export class OnboardingWizard {
         body: JSON.stringify({ acknowledged: true }),
       });
     } catch {
-      console.warn('Complete API unavailable, proceeding.');
+      logger.warn('Complete API unavailable, proceeding.');
     }
 
     this.#populateSummary();

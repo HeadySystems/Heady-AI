@@ -37,6 +37,9 @@
  */
 
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('infrastructure-monitor');
+
 const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
@@ -612,7 +615,7 @@ async function main() {
 
 if (require.main === module) {
   main().catch(err => {
-    console.error(JSON.stringify({ level: 'fatal', error: err.message }));
+    logger.error(JSON.stringify({ level: 'fatal', error: err.message }));
     process.exit(1);
   });
 }

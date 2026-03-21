@@ -22,6 +22,8 @@
  */
 
 import { PHI, PSI, fib, phiFusionWeights, CSL_THRESHOLDS } from '../../shared/phi-math.js';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('edge-origin-router');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Complexity scoring weights (Sacred Geometry — Fibonacci ratios)
@@ -250,7 +252,7 @@ export class EdgeOriginRouter {
         this._counters.origin++;
       }
     } catch (primaryErr) {
-      console.warn(`[EdgeOriginRouter] primary route (${decision.primary}) failed:`, primaryErr.message);
+      logger.warn(`[EdgeOriginRouter] primary route (${decision.primary}) failed:`, primaryErr.message);
 
       if (decision.fallback) {
         fallbackUsed = true;

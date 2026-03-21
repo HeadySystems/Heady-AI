@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('store-search');
+
 const logger = console;
 /**
  * HeadyStore Search Route — /api/store/search
@@ -266,7 +269,7 @@ async function storeSearchHandler(req, res) {
                     });
                 }
             } catch (err) {
-                console.warn(`[store-search] ${provider.name} failed:`, err.message);
+                logger.warn(`[store-search] ${provider.name} failed:`, err.message);
             }
         }
 
@@ -294,7 +297,7 @@ async function storeSearchHandler(req, res) {
         });
 
     } catch (err) {
-        console.error('Store search error:', err);
+        logger.error('Store search error:', err);
         res.status(500).json({ error: 'Search failed', message: err.message });
     }
 }

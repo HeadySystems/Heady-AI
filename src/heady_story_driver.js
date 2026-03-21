@@ -1,3 +1,6 @@
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('heady_story_driver');
+
 const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
@@ -109,7 +112,7 @@ class StoryDriver {
         this.decisionHistory = lines.slice(-DECISION_ENGINE_CONFIG.maxHistorySize).map(line => JSON.parse(line));
       }
     } catch (e) {
-      console.warn('Could not load decision history:', e.message);
+      logger.warn('Could not load decision history:', e.message);
     }
   }
 

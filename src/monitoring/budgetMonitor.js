@@ -15,6 +15,9 @@
  *   const summary = await getSpendSummary(redis);
  */
 'use strict';
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('budgetMonitor');
+
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const PHI = 1.618033988749895;
@@ -105,7 +108,7 @@ export async function recordSpend(redis, event) {
   try {
     await Promise.all(ops);
   } catch (err) { // Non-blocking — spend tracking must never interrupt the inference call
-    console.error('[budgetMonitor] Redis write failed:', err.message);
+    logger.error('[budgetMonitor] Redis write failed:', err.message);
 
   return { cost, provider, month };
 }

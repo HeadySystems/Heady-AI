@@ -594,7 +594,7 @@ class FeatureGate extends EventEmitter {
     // Publish to all instances
     await this.redis.publish('heady:fg:updates', JSON.stringify({ type: 'kill', feature, active: true }));
     this.emit('kill_switch', { feature, active: true, reason });
-    console.warn(`[FeatureGate] KILL SWITCH ENABLED: ${feature} — ${reason}`);
+    logger.warn(`[FeatureGate] KILL SWITCH ENABLED: ${feature} — ${reason}`);
   }
 
   /**
@@ -914,11 +914,11 @@ class FeatureGate extends EventEmitter {
             this.emit('flag_updated', update);
           }
         } catch (err) {
-          console.error('[FeatureGate] Flag update parse error:', err.message);
+          logger.error('[FeatureGate] Flag update parse error:', err.message);
         }
       });
     } catch (err) {
-      console.warn('[FeatureGate] Could not subscribe to flag updates:', err.message);
+      logger.warn('[FeatureGate] Could not subscribe to flag updates:', err.message);
     }
   }
 

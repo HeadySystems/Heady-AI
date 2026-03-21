@@ -70,7 +70,7 @@ const DOMAIN_PROJECTIONS = {
     'headybuddy.org': { uiId: 'heady-buddy', module: 'HeadyBuddy', category: 'ai-assistant' },
 
     // Localhost development
-    'localhost': { uiId: 'antigravity', module: 'Antigravity3D', category: 'dev' },
+    'dev-local': { uiId: 'antigravity', module: 'Antigravity3D', category: 'dev' },
 };
 
 // ── Core Router ─────────────────────────────────────────────────

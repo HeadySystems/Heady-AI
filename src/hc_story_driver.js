@@ -18,6 +18,9 @@
  * ║  HEADY SYSTEMS — Story Driver                                    ║
  * ║  Sacred Geometry Architecture v1.0.0                             ║
  * ║                                                                   ║
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_story_driver');
+
  * ║  Turns system events into coherent narratives at project,        ║
  * ║  feature, incident, and experiment scopes.                       ║
  * ╚═══════════════════════════════════════════════════════════════════╝
@@ -112,7 +115,7 @@ class HCStoryDriver extends EventEmitter {
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(this.storePath, JSON.stringify(this.stories, null, 2), "utf8");
     } catch (err) {
-      console.error("StoryDriver: Failed to save stories:", err.message);
+      logger.error("StoryDriver: Failed to save stories:", err.message);
     }
   }
 

@@ -403,7 +403,7 @@ async function handleWebhook(req, res, db, emailService) {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    console.error('[Stripe Webhook] Signature verification failed:', err.message);
+    logger.error('[Stripe Webhook] Signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
@@ -413,7 +413,7 @@ async function handleWebhook(req, res, db, emailService) {
   try {
     await routeWebhookEvent(event, db, emailService);
   } catch (err) {
-    console.error(`[Stripe Webhook] Handler error for ${event.type}:`, err);
+    logger.error(`[Stripe Webhook] Handler error for ${event.type}:`, err);
     // Log to monitoring but don't re-throw — Stripe will retry on 4xx/5xx only
   }
 }
@@ -593,7 +593,7 @@ async function onPaymentSucceeded(invoice, db, emailService) {
 }
 
 async function onPaymentFailed(invoice, db, emailService) {
-  console.error(`[Stripe] Payment FAILED: invoice ${invoice.id}`);
+  logger.error(`[Stripe] Payment FAILED: invoice ${invoice.id}`);
 
   await db.invoices.update(invoice.id, { status: 'failed', failed_at: new Date() });
 
@@ -834,7 +834,7 @@ async function batchReportUsage(orgUsage, subscriptionItems) {
     if (quantity > 0 && subscriptionItems[metric]) {
       reports.push(
         reportUsage(subscriptionItems[metric], quantity)
-          .catch(err => console.error(`[Stripe] Failed to report usage for ${metric}:`, err))
+          .catch(err => logger.error(`[Stripe] Failed to report usage for ${metric}:`, err))
       );
     }
   }

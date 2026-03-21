@@ -20,6 +20,8 @@ const logger = console;
 import { randomUUID } from 'crypto';
 import crypto from 'crypto';
 import { HeadyError, AuthError } from './auth-provider.js';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('account-provisioner');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -349,12 +351,12 @@ export class AccountProvisioner {
     if (apiKeyResult.status === 'fulfilled') {
       apiKeys = apiKeyResult.value;
     } else {
-      console.error('[AccountProvisioner] API key generation failed:', apiKeyResult.reason);
+      logger.error('[AccountProvisioner] API key generation failed:', apiKeyResult.reason);
       // Retry synchronously — API keys are critical
       try {
         apiKeys = await this._generateApiKeyPair(userId);
       } catch (e) {
-        console.error('[AccountProvisioner] API key retry failed:', e.message);
+        logger.error('[AccountProvisioner] API key retry failed:', e.message);
       }
     }
 
@@ -362,7 +364,7 @@ export class AccountProvisioner {
     results.forEach((r, i) => {
       if (r.status === 'rejected' && i !== 2) {
         const tasks = ['vector-namespace', 'email-provisioning', 'api-keys', 'welcome-email'];
-        console.error(`[AccountProvisioner] ${tasks[i]} failed:`, r.reason?.message);
+        logger.error(`[AccountProvisioner] ${tasks[i]} failed:`, r.reason?.message);
       }
     });
 
@@ -500,7 +502,7 @@ export class AccountProvisioner {
       await this._provisionMailcowMailbox(username, headyEmail, userId);
     } else {
       // No email provider configured — store as placeholder
-      console.warn('[AccountProvisioner] No email provider configured. Email routing skipped.');
+      logger.warn('[AccountProvisioner] No email provider configured. Email routing skipped.');
     }
 
     // Store email provisioning record

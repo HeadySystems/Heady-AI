@@ -41,7 +41,7 @@ function loadMTLSConfig(opts = {}) {
 
     if (!hasCert || !hasKey) {
         logger.warn?.('[mTLS] Certificates not found — running in non-mTLS mode') ||
-            console.warn('[mTLS] Certificates not found');
+            logger.warn('[mTLS] Certificates not found');
         return null;
     }
 

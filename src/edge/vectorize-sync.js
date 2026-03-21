@@ -21,6 +21,8 @@ const logger = console;
 
 
 import { PHI, PSI, fib, phiBackoff } from '../../shared/phi-math.js';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('vectorize-sync');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -220,7 +222,7 @@ export class VectorizeSync {
       logger.info(`[VectorizeSync:${this.indexName}] sync complete:`, result);
       return result;
     } catch (err) {
-      console.error(`[VectorizeSync:${this.indexName}] sync failed:`, err);
+      logger.error(`[VectorizeSync:${this.indexName}] sync failed:`, err);
       await this._updateHealth({ errors: totalErrors + 1, failure: true });
       throw err;
     }
@@ -263,7 +265,7 @@ export class VectorizeSync {
         await this.vectorize.deleteByIds(batch);
         deleted += batch.length;
       } catch (err) {
-        console.error(`[VectorizeSync] deletion batch failed:`, err);
+        logger.error(`[VectorizeSync] deletion batch failed:`, err);
         errors += batch.length;
       }
     }
@@ -296,7 +298,7 @@ export class VectorizeSync {
       );
       return vectorizeResult.matches ?? [];
     } catch (err) {
-      console.warn('[VectorizeSync] Vectorize query failed, falling back to pgvector:', err.message);
+      logger.warn('[VectorizeSync] Vectorize query failed, falling back to pgvector:', err.message);
       return this._pgVectorQuery(queryVector, topK, filter);
     }
   }
@@ -482,7 +484,7 @@ export class VectorizeSync {
           if (r.updated_at > maxUpdatedAt) maxUpdatedAt = r.updated_at;
         }
       } catch (err) {
-        console.error(`[VectorizeSync] Vectorize upsert failed for batch of ${vectors.length}:`, err);
+        logger.error(`[VectorizeSync] Vectorize upsert failed for batch of ${vectors.length}:`, err);
         errors += vectors.length;
       }
     }
@@ -603,7 +605,7 @@ export function createSyncScheduledHandler(options = {}) {
     ctx.waitUntil(
       sync.runIncrementalSync({ fullResync: isFullResyncDay })
         .then((result) => logger.info('[VectorizeSync] scheduled sync complete:', result))
-        .catch((err) => console.error('[VectorizeSync] scheduled sync failed:', err)),
+        .catch((err) => logger.error('[VectorizeSync] scheduled sync failed:', err)),
     );
   };
 }

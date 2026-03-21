@@ -91,7 +91,7 @@ async function main() {
                     logger.info('');
                     logger.info('  ✅ Cloud Run deploy complete!');
                 } catch (err) {
-                    console.error('  ❌ Deploy failed:', err.message);
+                    logger.error('  ❌ Deploy failed:', err.message);
                     process.exit(1);
                 }
             }
@@ -157,6 +157,6 @@ async function main() {
 }
 
 if (require.main === module) { main().catch(err => { }
-    console.error('Deploy failed:', err.message);
+    logger.error('Deploy failed:', err.message);
     process.exit(1);
 });

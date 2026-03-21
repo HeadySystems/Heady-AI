@@ -1,3 +1,6 @@
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('learning-engine');
+
 const logger = console;
 /*
  * © 2026 Heady™ Systems Inc.
@@ -279,7 +282,7 @@ if (require.main === module) {
       }
     })
     .catch(e => {
-      console.error('Learning cycle failed:', e.message);
+      logger.error('Learning cycle failed:', e.message);
       process.exit(1);
     });
 }

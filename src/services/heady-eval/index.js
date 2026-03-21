@@ -1,4 +1,7 @@
 'use strict';
+const { createLogger } = require('../../utils/logger');
+const logger = createLogger('index');
+
 
 /**
  * HeadyEval — LLM-as-Judge Evaluation Framework
@@ -552,7 +555,7 @@ async function createService(opts = {}) {
 
   // Error handler
   app.use((err, req, res, _next) => {
-    console.error(JSON.stringify({ timestamp: new Date().toISOString(), level: 'error', service: 'heady-eval', message: 'Unhandled error', error: err.message, stack: err.stack }));
+    logger.error(JSON.stringify({ timestamp: new Date().toISOString(), level: 'error', service: 'heady-eval', message: 'Unhandled error', error: err.message, stack: err.stack }));
     res.status(err.status || 500).json({
       error: err.message || 'Internal server error',
       ...(config.isDev && { stack: err.stack }),
@@ -599,7 +602,7 @@ module.exports = {
 
 if (require.main === module) {
   createService().catch((err) => {
-    console.error('[heady-eval] Fatal startup error:', err);
+    logger.error('[heady-eval] Fatal startup error:', err);
     process.exit(1);
   });
 }

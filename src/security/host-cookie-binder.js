@@ -11,6 +11,8 @@
 
 import { PHI, PSI, phiThreshold } from '../shared/phi-math.js';
 import { createHash } from 'crypto';
+import { createLogger } from '../utils/logger.js';
+const logger = createLogger('host-cookie-binder');
 
 // ── φ-Derived Constants ──────────────────────────────────
 const CSL_THRESHOLDS = {
@@ -176,7 +178,7 @@ export function generateRelayScript(options = {}) {
       
       window.addEventListener('message', function(event) {
         if (allowedOrigins.indexOf(event.origin) === -1) {
-          console.warn('[HeadyRelay] Rejected message from unauthorized origin:', event.origin);
+          logger.warn('[HeadyRelay] Rejected message from unauthorized origin:', event.origin);
           return;
         }
         
