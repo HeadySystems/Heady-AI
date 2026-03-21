@@ -57,7 +57,7 @@ process.on('uncaughtException', (err, origin) => {
     ts: new Date().toISOString(),
   }));
   // Give logger time to flush before exit
-  setTimeout(() => process.exit(1), 500);
+  setTimeout(() => process.exit(1), typeof phiMs === 'function' ? phiMs(500) : 500);
 });
 
 process.on('unhandledRejection', (reason, promise) => {

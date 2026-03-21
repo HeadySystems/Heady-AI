@@ -101,7 +101,7 @@ let curriculum = [...DEFAULT_CURRICULUM];
 try {
     const saved = JSON.parse(fs.readFileSync(CURRICULUM_FILE, "utf-8"));
     if (Array.isArray(saved) && saved.length > 0) curriculum = saved;
-} catch { }
+} catch (err) { logger.error('Recovered from error:', err); }
 
 let learnStats = {
     totalLearned: 0,
@@ -114,7 +114,7 @@ let learnStats = {
 };
 
 function logLearn(entry) {
-    try { fs.appendFileSync(LEARN_LOG, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(LEARN_LOG, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ─── Core Learning Cycle ────────────────────────────────────────
@@ -206,7 +206,7 @@ async function runLearningCycle(vectorMem) {
     learnStats.lastTopic = topic.topic;
 
     // Save curriculum
-    try { fs.writeFileSync(CURRICULUM_FILE, JSON.stringify(curriculum, null, 2)); } catch { }
+    try { fs.writeFileSync(CURRICULUM_FILE, JSON.stringify(curriculum, null, 2)); } catch (err) { logger.error('Recovered from error:', err); }
 
     const result = {
         ok: true,
@@ -242,7 +242,7 @@ async function generateNewTopics() {
                             curriculum.push({ ...t, learned: false });
                         }
                     }
-                    try { fs.writeFileSync(CURRICULUM_FILE, JSON.stringify(curriculum, null, 2)); } catch { }
+                    try { fs.writeFileSync(CURRICULUM_FILE, JSON.stringify(curriculum, null, 2)); } catch (err) { logger.error('Recovered from error:', err); }
                     logLearn({ type: "curriculum:generated", count: newTopics.length });
                 }
             }

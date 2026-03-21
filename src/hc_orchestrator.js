@@ -382,7 +382,7 @@ class HeadyOrchestrator {
       
       // Small delay to prevent tight loops
       if (taskQueue.length > 0 && runningTasks.size === 0) {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, typeof phiMs === 'function' ? phiMs(100) : 100));
       }
     }
 
@@ -450,7 +450,7 @@ class HeadyOrchestrator {
           if (this.getAgentUsage(agentId) < agentConfig.maxConcurrent) {
             resolve();
           } else {
-            setTimeout(checkCapacity, 500);
+            setTimeout(checkCapacity, typeof phiMs === 'function' ? phiMs(500) : 500);
           }
         };
         checkCapacity();

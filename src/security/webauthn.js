@@ -27,7 +27,7 @@ class WebAuthnService {
         this._challengeTTL = opts.challengeTTL || 120000; // 2 minutes
 
         // Cleanup expired challenges every minute
-        this._cleanupTimer = setInterval(() => this._cleanupExpired(), 60000);
+        this._cleanupTimer = setInterval(() => this._cleanupExpired(), typeof phiMs === 'function' ? phiMs(60000) : 60000);
         if (this._cleanupTimer.unref) this._cleanupTimer.unref();
     }
 

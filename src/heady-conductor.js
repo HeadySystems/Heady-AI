@@ -467,7 +467,7 @@ class HeadyConductor extends EventEmitter {
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: entry.ts || new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch (err) { logger.error('Recovered from error:', err); }
         this.emit("audit", entry);
     }
 }

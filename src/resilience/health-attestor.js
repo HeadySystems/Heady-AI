@@ -135,7 +135,7 @@ class HealthAttestor extends EventEmitter {
     this._startLagSampler();
     this._broadcastTimer = setInterval(() => this._broadcastAttestation(), this.broadcastInterval);
     // Fire an immediate first attestation after a short settle delay.
-    setTimeout(() => this._broadcastAttestation(), 500);
+    setTimeout(() => this._broadcastAttestation(), typeof phiMs === 'function' ? phiMs(500) : 500);
 
     if (this.quarantineManager) {
       try {

@@ -50,7 +50,7 @@ const AROUSAL_SPIKE_PER_ERROR = 0.15;
 
 function safeOp(label, fn) {
   try { return fn(); } catch (err) { // Non-fatal — just log
-    try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch { }
+    try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch (err) { logger.error('Recovered from error:', err); }
     return null;
   }
 }

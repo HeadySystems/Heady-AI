@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 const fs = require('fs');
 const {
   PHI_TIMING
@@ -15,7 +16,7 @@ try {
   fs.mkdirSync(LOG_DIR, {
     recursive: true
   });
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 class HeadyTelemetry {
   constructor(vectorStore, learner) {
     this.vectorStore = vectorStore;

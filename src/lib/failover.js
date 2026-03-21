@@ -44,7 +44,7 @@ class MultiCloudFailover {
     async _fetch(backend, request) {
         if (!backend.url) throw new Error(`No URL configured for ${backend.name}`);
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
+        const timeout = setTimeout(() => controller.abort(), typeof phiMs === 'function' ? phiMs(10000) : 10000);
         try {
             const resp = await fetch(`${backend.url}${request.path || ''}`, {
                 method: request.method || 'GET',

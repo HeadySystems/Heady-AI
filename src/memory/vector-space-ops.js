@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -618,7 +619,7 @@ class VectorSpaceOps {
     this.started = true;
 
     // Capture initial baseline after 10s stabilization
-    setTimeout(() => this.antiSprawl.captureBaseline(), 10000);
+    setTimeout(() => this.antiSprawl.captureBaseline(), typeof phiMs === 'function' ? phiMs(10000) : 10000);
 
     // Initial perception scan — know how the world sees us from boot
     this.projectionManager.scanPerception().catch(() => {});
@@ -653,7 +654,7 @@ class VectorSpaceOps {
             targets: [...this.projectionManager.projections.keys()]
           });
         }
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }, PHI_INTERVALS.analyze));
   }
 

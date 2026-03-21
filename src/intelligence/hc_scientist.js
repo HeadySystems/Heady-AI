@@ -140,7 +140,7 @@ class HeadyScientist extends EventEmitter {
         logger.logSystem(`  🔬 HeadyScientist: STARTED (scan every ${(this.scanInterval / 1000).toFixed(1)}s)`);
 
         // Initial scan
-        setTimeout(() => this.runConsistencyScan("startup"), 5000);
+        setTimeout(() => this.runConsistencyScan("startup"), typeof phiMs === 'function' ? phiMs(5000) : 5000);
 
         // Periodic scans
         this.timer = setInterval(() => this.runConsistencyScan("scheduled"), this.scanInterval);

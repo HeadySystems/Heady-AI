@@ -98,7 +98,7 @@ function persistSession(sessionId) {
       recursive: true
     });
     fs.writeFileSync(path.join(SESSIONS_DIR, `${sessionId}.json`), JSON.stringify(session, null, 2));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 function trimSessionHistory(session) {
   if (session.history.length > MAX_SESSION_HISTORY) {
@@ -410,7 +410,7 @@ let claudeUsage = {
 };
 try {
   if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8"));
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTokens = 0) {
   // Pricing per 1M tokens (approximate as of 2025)
   const pricing = {
@@ -454,7 +454,7 @@ function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTok
   }
   try {
     fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   return cost;
 }
 
@@ -740,7 +740,7 @@ function appendRaceAudit(entry) {
   try {
     ensureDataDir();
     fs.appendFileSync(RACE_AUDIT_PATH, JSON.stringify(entry) + "\n");
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 router.post("/chat", async (req, res) => {
   const {
@@ -1193,7 +1193,7 @@ router.get("/health", (req, res) => {
     if (fs.existsSync(BRAIN_LOG_PATH)) {
       interactionCount = JSON.parse(fs.readFileSync(BRAIN_LOG_PATH, "utf8")).length;
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   res.json({
     status: "ACTIVE",
     service: "HeadyBrain",
@@ -1452,7 +1452,7 @@ router.get("/sessions", (req, res) => {
             updatedAt: data.updatedAt,
             preview: data.history?.[0]?.content?.substring(0, 100) || "(empty)"
           });
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
       }
     }
     // Include in-memory-only sessions
@@ -1468,7 +1468,7 @@ router.get("/sessions", (req, res) => {
         });
       }
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   sessionList.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
   res.json({
     ok: true,
@@ -1502,7 +1502,7 @@ router.delete("/sessions/:id", (req, res) => {
   try {
     const diskPath = path.join(SESSIONS_DIR, `${sid}.json`);
     if (fs.existsSync(diskPath)) fs.unlinkSync(diskPath);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   res.json({
     ok: true,
     deleted: sid,

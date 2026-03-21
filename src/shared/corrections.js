@@ -195,7 +195,7 @@ function recordInteraction(input, analysis, vectorMemory) {
     // Persist
     try {
         fs.writeFileSync(BEHAVIOR_STORE, JSON.stringify(behaviorModel, null, 2));
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     // Audit trail
     const auditEntry = {
@@ -207,7 +207,7 @@ function recordInteraction(input, analysis, vectorMemory) {
     };
     try {
         fs.appendFileSync(CORRECTIONS_LOG, JSON.stringify(auditEntry) + "\n");
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     // Store in vector memory for pattern detection
     if (vectorMemory && typeof vectorMemory.ingestMemory === "function") {

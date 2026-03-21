@@ -41,7 +41,7 @@ class HealthProbes {
                 const start = Date.now();
                 const result = await Promise.race([
                     check.checkFn(),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000)),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), typeof phiMs === 'function' ? phiMs(5000) : 5000)),
                 ]);
                 results[name] = { status: 'healthy', latencyMs: Date.now() - start, ...result };
                 check.lastResult = 'healthy';

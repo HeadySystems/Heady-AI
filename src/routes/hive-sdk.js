@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -31,7 +32,7 @@ try {
   const brainModule = require(path.join(__dirname, "brain"));
   // The brain module exports a router, but the chat functions are module-level
   // We need to call the brain API internally via HTTP for proper routing
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 
 // Internal brain dispatch — calls the real /api/brain/chat endpoint
 const http = require("http");

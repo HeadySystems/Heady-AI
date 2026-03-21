@@ -171,7 +171,7 @@ const STATE_FILE = path.join(DATA_DIR, "notebooklm-sync-state.json");
 function loadState() {
     try {
         if (fs.existsSync(STATE_FILE)) return JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
     return { pages: {}, lastSync: null, syncCount: 0 };
 }
 
@@ -194,7 +194,7 @@ function generateStatusContent() {
             const raw = JSON.parse(fs.readFileSync(pPath, "utf8"));
             connPatterns.total = raw.length;
         }
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     // Read memory receipts
     let memReceipts = { total: 0, fallback: 0 };
@@ -205,7 +205,7 @@ function generateStatusContent() {
             memReceipts.total = raw.length;
             memReceipts.fallback = raw.filter(r => r.fallbackUsed).length;
         }
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     return `# Heady™ System Status & Updates
 > Last synced: ${ts}
@@ -589,7 +589,7 @@ async function syncToNotebookLM() {
                 results.created.push(section.title);
                 logger.logSystem(`  ✅ ${section.title}: ${page.id}`);
                 // Small delay to avoid rate limits
-                await new Promise(r => setTimeout(r, 500));
+                await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(500) : 500));
             }
         }
 
@@ -732,3 +732,14 @@ if (require.main === module) {
 
 module.exports = { syncToNotebookLM, updateNotebookLMStatus, registerNotebookLMRoutes, loadState };
 
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

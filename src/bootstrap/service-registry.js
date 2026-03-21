@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
  * ∞ Service Registry — Phase 7 Bootstrap
  * Extracted from heady-manager.js lines 1267-1510
@@ -63,7 +64,7 @@ module.exports = function mountServices(app, {
   // SSE Streaming
   try {
     require('../routes/sse-streaming')(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Service Route Registration (Phase 2 Liquid)
   const {
@@ -93,13 +94,13 @@ module.exports = function mountServices(app, {
   } catch {
     try {
       app.use('/api', require('../routes/config-api'));
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
   }
 
   // Pipeline API
   try {
     app.use('/api/pipeline', require('../routes/pipeline-api'));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Buddy Route (pillar)
   try {
@@ -130,13 +131,13 @@ module.exports = function mountServices(app, {
     if (cfManager) {
       require('../hc_cloudflare').registerCloudflareRoutes(app, cfManager);
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Upstash Redis
   try {
     const upstash = require('../services/upstash-redis');
     upstash.redisRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Liquid State + IDE Bridge + Projection Engine + Governance + Domain Router + UI Registry + LLM Router
   const autoServices = [['../services/liquid-state-manager', s => {
@@ -155,7 +156,7 @@ module.exports = function mountServices(app, {
     const s = require('../services/autonomous-scheduler');
     s.start();
     s.schedulerRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   try {
     const {
       igniteSwarm,
@@ -167,10 +168,10 @@ module.exports = function mountServices(app, {
       enableEmbedder: true
     });
     swarmIgnitionRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   try {
     require('../bees/headybee-template-registry').registerRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   try {
     const {
       consensus,
@@ -178,7 +179,7 @@ module.exports = function mountServices(app, {
     } = require('../orchestration/swarm-consensus');
     consensus.startStaleCheck();
     registerConsensusRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Redis pool shutdown
   try {
@@ -187,17 +188,17 @@ module.exports = function mountServices(app, {
     } = require('../lifecycle/graceful-shutdown');
     const rp = require('../utils/redis-pool');
     onShutdown('redis-pool', () => rp.close());
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Provider analytics
   try {
     app.use('/api/providers', require('../routes/provider-analytics'));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Models API
   try {
     app.use('/api', require('../routes/models-api'));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Aloha Protocol
   try {
@@ -207,5 +208,5 @@ module.exports = function mountServices(app, {
       resourceManager: _engines?.resourceManager,
       patternEngine: _engines?.patternEngine
     });
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 };

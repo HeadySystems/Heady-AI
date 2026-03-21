@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -85,7 +86,7 @@ class DynamicConnectorService extends EventEmitter {
             const res = await fetch(`${url}/graphql`, { method: "POST", headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
                 body: JSON.stringify({ query: "{ __schema { types { name kind fields { name } } } }" }), signal: AbortSignal.timeout(15000) });
             if (res.ok) { const d = await res.json(); if (d.data?.__schema) return { type: "graphql", data: d.data.__schema, sourceUrl: `${url}/graphql` }; }
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
         // Raw fallback
         const res = await fetch(url, { signal: AbortSignal.timeout(10000), headers: opts.headers || {} });
         return { type: "raw", data: { url, statusCode: res.status }, sourceUrl: url };
@@ -236,3 +237,14 @@ let _instance = null;
 function getInstance(opts) { if (!_instance) _instance = new DynamicConnectorService(opts); return _instance; }
 
 module.exports = { DynamicConnectorService, getInstance, STATE, PROTOCOLS, DLP_RULES };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

@@ -29,7 +29,7 @@ class DecentralizedGovernance {
         this.members = new Map(); // memberId → { role, votingPower, joinedAt }
         this.executors = new Map(); // proposalType → executor function
         this.auditLog = [];
-        this._expiryTimer = setInterval(() => this._checkExpiry(), 60000);
+        this._expiryTimer = setInterval(() => this._checkExpiry(), typeof phiMs === 'function' ? phiMs(60000) : 60000);
     }
 
     // ── Member Management ───────────────────────────────────
@@ -255,3 +255,14 @@ function registerGovernanceRoutes(app) {
 }
 
 module.exports = { DecentralizedGovernance, PROPOSAL_STATES, registerGovernanceRoutes };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

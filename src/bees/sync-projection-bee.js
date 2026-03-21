@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 "use strict";
 
 const fs = require("fs");
@@ -61,7 +62,7 @@ function computeRAMStateHash() {
         stateComponents.push(fs.readFileSync(path.join(sharedDir, f), "utf8"));
       }
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   return crypto.createHash("sha256").update(stateComponents.join("\n---STATE-BOUNDARY---\n")).digest("hex");
 }
 
@@ -152,7 +153,7 @@ function injectTemplatesIntoHFSpaces() {
     // Also project to dev folder (services/heady-web/sites/)
     try {
       renderer.projectToDevFolder();
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
   } catch (e) {
     results.push({
       space: "all",
@@ -169,7 +170,7 @@ function generateFullPage(rendered, template) {
   if (renderer && template) {
     try {
       return renderer.renderSiteToHTML(template);
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
   }
   const {
     name,

@@ -100,7 +100,7 @@ const HEADY_DOMAINS = Object.freeze([
   'headybot.com',      'www.headybot.com',
   'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
-  'localhost',
+  '0.0.0.0',
   process.env.REMOTE_HOST || '0.0.0.0',
 ]);
 

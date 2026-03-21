@@ -816,7 +816,7 @@ class TaskDecompositionEngine extends EventEmitter {
           pct:       Math.round((doneCount / result.subtasks.length) * 100),
         });
 
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(100) : 100));
       }
     };
 

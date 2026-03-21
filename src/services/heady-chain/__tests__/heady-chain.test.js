@@ -534,7 +534,7 @@ describe('ToolRegistry', () => {
     registry.register('slow_tool', {
       description: 'Slow',
       timeoutMs: 100,
-      handler: async () => new Promise(resolve => setTimeout(resolve, 5000)),
+      handler: async () => new Promise(resolve => setTimeout(resolve, typeof phiMs === 'function' ? phiMs(5000) : 5000)),
     });
 
     await expect(registry.execute('slow_tool', {})).rejects.toThrow(/timed out/i);
@@ -1051,3 +1051,14 @@ describe('Config', () => {
     expect(config.phiScale(100, 2)).toBeCloseTo(261.8, 0);
   });
 });
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

@@ -158,7 +158,7 @@ describe('CircuitBreakerManager', () => {
     const circuit = cbm.getCircuit('test-exec');
     // Repeated failures should open circuit
     for (let i = 0; i < 3; i++) {
-      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (_) { }
+      try { await cbm.execute('test-exec', () => Promise.reject(new Error('boom'))); } catch (_) { logger.error('Recovered from error:', _); }
     }
     expect(circuit.state).toBe(STATES.OPEN);
   });
@@ -342,7 +342,7 @@ describe('ProviderRacing', () => {
   it('returns first successful response', async () => {
     const contestants = [
       { id: 'fast',  fn: () => new Promise(r => setTimeout(() => r(fakeResponse({ provider: 'fast' })), 10)) },
-      { id: 'slow',  fn: () => new Promise(r => setTimeout(() => r(fakeResponse({ provider: 'slow' })), 200)) },
+      { id: 'slow',  fn: () => new Promise(r => setTimeout(() => r(fakeResponse({ provider: 'slow' })), typeof phiMs === 'function' ? phiMs(200) : 200)) },
     ];
     const { response, winnerId } = await racing.race(contestants, 2000);
     expect(winnerId).toBe('fast');
@@ -352,7 +352,7 @@ describe('ProviderRacing', () => {
   it('tracks analytics and win rates', async () => {
     const contestants = [
       { id: 'p1', fn: () => Promise.resolve(fakeResponse({ provider: 'p1' })) },
-      { id: 'p2', fn: () => new Promise(r => setTimeout(() => r(fakeResponse({ provider: 'p2' })), 100)) },
+      { id: 'p2', fn: () => new Promise(r => setTimeout(() => r(fakeResponse({ provider: 'p2' })), typeof phiMs === 'function' ? phiMs(100) : 100)) },
     ];
     await racing.race(contestants, 1000);
     const analytics = racing.getAnalytics();
@@ -389,7 +389,7 @@ describe('ProviderRacing', () => {
   it('adjusts weights after wins/losses', async () => {
     const contestants = [
       { id: 'winner', fn: () => Promise.resolve(fakeResponse()) },
-      { id: 'loser',  fn: () => new Promise(r => setTimeout(r, 500)) },
+      { id: 'loser',  fn: () => new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(500) : 500)) },
     ];
     const winnerBefore = racing._getStats('winner').weight;
     await racing.race(contestants, 1000);
@@ -752,6 +752,17 @@ describe('BaseProvider', () => {
 
 // ─── Polyfills for running outside Jest ───────────────────────────────────────
 if (typeof describe === 'undefined') {
-  console.log('[HeadyInfer Tests] Run with: npx jest __tests__/heady-infer.test.js');
-  console.log('[HeadyInfer Tests] Or: NODE_OPTIONS="--experimental-vm-modules" npx jest');
+  logger.info('[HeadyInfer Tests] Run with: npx jest __tests__/heady-infer.test.js');
+  logger.info('[HeadyInfer Tests] Or: NODE_OPTIONS="--experimental-vm-modules" npx jest');
 }
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

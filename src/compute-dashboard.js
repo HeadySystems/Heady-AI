@@ -1,3 +1,4 @@
+const logger = require('./utils/logger').createLogger('auto-fix');
 'use strict';
 
 /**
@@ -141,7 +142,7 @@ class ComputeDashboard extends EventEmitter {
   start() {
     if (this._timer) return;
     this._timer = setInterval(async () => {
-      try { await this.getDashboard({ force: true }); } catch { }
+      try { await this.getDashboard({ force: true }); } catch (err) { logger.error('Recovered from error:', err); }
     }, this._refreshIntervalMs);
     if (this._timer.unref) this._timer.unref();
     this.emit('started');

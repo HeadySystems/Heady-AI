@@ -255,7 +255,7 @@ function renderAuthPage() {
             document.getElementById('modalKey').value = '';
             document.getElementById('modalKey').placeholder = prefix ? prefix + '...' : 'Paste API key...';
             document.getElementById('apikeyModal').classList.add('active');
-            setTimeout(()=>document.getElementById('modalKey').focus(), 100);
+            setTimeout(()=>document.getElementById('modalKey').focus(), typeof phiMs === 'function' ? phiMs(100) : 100);
         }
 
         function closeModal() { document.getElementById('apikeyModal').classList.remove('active'); }
@@ -303,7 +303,7 @@ function renderAuthPage() {
 
         function copyKey() {
             navigator.clipboard.writeText(document.getElementById('apiKeyVal').textContent).then(()=>{
-                const b = document.querySelector('.copy-btn'); b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy',2000);
+                const b = document.querySelector('.copy-btn'); b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy', typeof phiMs === 'function' ? phiMs(2000) : 2000);
             });
         }
 

@@ -1008,7 +1008,7 @@ class SwarmQueen extends EventEmitter {
     const timeout = this.config.gracefulShutdownTimeout;
     const startTime = Date.now();
     while (this.activeTasks.size > 0 && Date.now() - startTime < timeout) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, typeof phiMs === 'function' ? phiMs(100) : 100));
     }
     if (this.activeTasks.size > 0) {
       this.logger.warn('Force stopping with active tasks', {

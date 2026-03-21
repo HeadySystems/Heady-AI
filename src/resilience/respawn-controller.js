@@ -321,7 +321,7 @@ class RespawnController extends EventEmitter {
       serviceId
     }, 'No restartFn provided to RespawnController — no actual restart performed');
     // Simulate async restart.
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, typeof phiMs === 'function' ? phiMs(100) : 100));
   }
 
   // -------------------------------------------------------------------------

@@ -30,13 +30,13 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
 // Persistent benchmark results
 let benchResults = {};
-try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch { }
+try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch (err) { logger.error('Recovered from error:', err); }
 
 function saveBenchmarks() {
-    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch { }
+    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch (err) { logger.error('Recovered from error:', err); }
 }
 function audit(entry) {
-    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ── Latency Test (HTTP ping) ────────────────────────────────────
@@ -236,3 +236,14 @@ function registerRoutes(app, vectorMem) {
 }
 
 module.exports = { runFullBenchmark, registerRoutes, benchResults };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

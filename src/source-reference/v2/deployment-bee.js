@@ -1,3 +1,4 @@
+const logger = require('../../utils/logger').createLogger('auto-fix');
 const path = require('path');
 const domain = 'deployment';
 const description = 'RAM-first deployment: template injection → git push → HF Spaces → Cloud Run → post-deploy verification';
@@ -98,12 +99,12 @@ function getWork(ctx = {}) {
           execSync(`git init`, {
             cwd: spaceDir
           });
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
         try {
           execSync(`git remote add origin ${remoteUrl}`, {
             cwd: spaceDir
           });
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
         execSync('git add -A', {
           cwd: spaceDir
         });
@@ -111,7 +112,7 @@ function getWork(ctx = {}) {
           execSync('git commit -m "[sync-projection] auto-inject templates"', {
             cwd: spaceDir
           });
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
         // Note: HF push requires HF_TOKEN in env for auth
         results.push({
           space: spaceName,

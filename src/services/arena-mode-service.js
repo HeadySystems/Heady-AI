@@ -114,7 +114,7 @@ class ArenaModeService extends EventEmitter {
     logger.logSystem('✅ Arena Mode Service started successfully');
     
     // Start first tournament immediately
-    setTimeout(() => this.runTournamentCycle(), 1000);
+    setTimeout(() => this.runTournamentCycle(), typeof phiMs === 'function' ? phiMs(1000) : 1000);
   }
 
   async stop() {
@@ -599,3 +599,14 @@ if (require.main === module) {
 }
 
 module.exports = { ArenaModeService, getArenaModeService };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

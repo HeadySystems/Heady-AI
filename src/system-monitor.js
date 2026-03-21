@@ -72,10 +72,10 @@ class SystemMonitor extends EventEmitter {
         lag = Date.now() - start;
         this._currentLag = lag;
         if (!this._running) return;
-        setTimeout(measure, 1000).unref?.();
+        setTimeout(measure, typeof phiMs === 'function' ? phiMs(1000) : 1000).unref?.();
       });
     };
-    setTimeout(measure, 1000).unref?.();
+    setTimeout(measure, typeof phiMs === 'function' ? phiMs(1000) : 1000).unref?.();
     this._currentLag = 0;
     return null;
   }

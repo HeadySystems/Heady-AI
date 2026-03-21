@@ -179,8 +179,8 @@ class LiquidNode extends EventEmitter {
     this.state = NODE_STATES.READY;
     this.emit('stateChange', { nodeId: this.id, state: this.state });
 
-    this._heartbeatInterval = setInterval(() => this._heartbeat(), 3000);
-    this._poolCheckInterval = setInterval(() => this._checkPoolMigration(), 3000);
+    this._heartbeatInterval = setInterval(() => this._heartbeat(), typeof phiMs === 'function' ? phiMs(3000) : 3000);
+    this._poolCheckInterval = setInterval(() => this._checkPoolMigration(), typeof phiMs === 'function' ? phiMs(3000) : 3000);
 
     logger.info('node_initialized', { nodeId: this.id, type: this.type, pool: this.pool });
     return this;

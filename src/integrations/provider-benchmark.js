@@ -33,11 +33,11 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, {
 let benchResults = {};
 try {
   benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8"));
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 function saveBenchmarks() {
   try {
     fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 function audit(entry) {
   try {
@@ -45,7 +45,7 @@ function audit(entry) {
       ...entry,
       ts: new Date().toISOString()
     }) + "\n");
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ── Latency Test (HTTP ping) ────────────────────────────────────

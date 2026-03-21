@@ -122,40 +122,40 @@ const POOL_PRIORITY = {
 let extraTasks = [];
 try {
   extraTasks = require('./auto-flow-200-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let nonprofitTasks = [];
 try {
   nonprofitTasks = require('./nonprofit-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let buddyTasks = [];
 try {
   buddyTasks = require('./buddy-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let long814Tasks = [];
 try {
   long814Tasks = require('./long814-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let headyosTasks = [];
 try {
   headyosTasks = require('./headyos-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let orchProtocolTasks = [];
 try {
   orchProtocolTasks = require('./orchestration-protocol-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let phase5Tasks = [];
 try {
   phase5Tasks = require('./phase5-hardening-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 let downloadsTasks = [];
 try {
   downloadsTasks = require('./downloads-extracted-tasks.json').tasks || [];
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 // ─── AUDIT-DISCOVERED FIXES — tasks generated from deep audit 2026-03-19 ─────
 let auditFixTasks = [];
 try {
   auditFixTasks = require('./audit-fix-tasks.json');
-} catch (e) {}
+} catch (e) { logger.error('Recovered from error:', e); }
 const TASK_CATALOG = [...extraTasks, ...nonprofitTasks, ...buddyTasks, ...long814Tasks, ...headyosTasks, ...orchProtocolTasks, ...phase5Tasks, ...downloadsTasks, ...auditFixTasks,
 // ═══ LEARNING (20) — Targeted system learning ═══════════════════════════
 {

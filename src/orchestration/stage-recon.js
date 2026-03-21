@@ -532,7 +532,7 @@ async function scanServiceHealth(rootDir) {
     for (let i = 0; i < services.length; i += batchSize) {
       const batch = services.slice(i, i + batchSize);
       const probes = batch.map(svc => {
-        const probeUrl = svc.url || `http://localhost:${svc.port || 8080}/health`;
+        const probeUrl = svc.url || `http://0.0.0.0:${svc.port || 8080}/health`;
         return httpGet(probeUrl, Math.round(PHI * 1000)) // φ×1000 ≈ 1618ms per probe
         .then(res => ({
           name: svc.name,

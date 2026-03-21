@@ -255,7 +255,7 @@ class SystemMonitor extends EventEmitter {
       try {
         const report = await Promise.race([
           reporter(),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000)),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), typeof phiMs === 'function' ? phiMs(3000) : 3000)),
         ]);
         results.push({ name, healthy: report.healthy !== false, details: report.details || null });
       } catch (err) {

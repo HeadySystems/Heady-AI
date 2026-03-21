@@ -79,7 +79,7 @@ class SandboxExecutor {
         } finally {
             execution.finishedAt = new Date().toISOString();
             // Cleanup sandbox directory
-            try { rmSync(sandboxDir, { recursive: true, force: true }); } catch { }
+            try { rmSync(sandboxDir, { recursive: true, force: true }); } catch (err) { logger.error('Recovered from error:', err); }
         }
 
         this.executions.push(execution);

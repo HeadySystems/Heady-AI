@@ -170,7 +170,7 @@ class ConnectorManager extends EventEmitter {
     try {
       const result = await Promise.race([
         entry.connector.health(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('health timeout')), 5000)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('health timeout')), typeof phiMs === 'function' ? phiMs(5000) : 5000)),
       ]);
 
       entry.lastHealthAt = new Date().toISOString();

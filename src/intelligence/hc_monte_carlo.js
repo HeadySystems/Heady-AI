@@ -44,7 +44,7 @@ class MCGlobal extends EventEmitter {
     startAutoRun() {
         if (this._running) return;
         this._running = true;
-        this._timer = setInterval(() => { this._cycleCount++; this.emit("cycle", { cycle: this._cycleCount, ts: Date.now() }); }, 60000);
+        this._timer = setInterval(() => { this._cycleCount++; this.emit("cycle", { cycle: this._cycleCount, ts: Date.now() }); }, typeof phiMs === 'function' ? phiMs(60000) : 60000);
     }
 
     stopAutoRun() { if (this._timer) { clearInterval(this._timer); this._timer = null; } this._running = false; }

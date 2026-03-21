@@ -63,11 +63,11 @@ let registry = {
 };
 try {
   registry = JSON.parse(fs.readFileSync(REG_FILE, "utf-8"));
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 function save() {
   try {
     fs.writeFileSync(REG_FILE, JSON.stringify(registry, null, 2));
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 function audit(entry) {
   try {
@@ -75,7 +75,7 @@ function audit(entry) {
       ...entry,
       ts: new Date().toISOString()
     }) + "\n");
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 function setEntry(key, data) {
   registry.entries[key] = {
@@ -206,7 +206,7 @@ function scanDataFile(name, filePath) {
       entries,
       modified: stat.mtime.toISOString()
     });
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ── Incremental Targeted Scan ───────────────────────────────────
@@ -372,7 +372,7 @@ function registerRoutes(app, vectorMem) {
           }
         }).catch(() => {});
       }
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     setTimeout(adaptiveScan, scanInterval);
   };
   // Full populate on startup (2s), then start adaptive loop

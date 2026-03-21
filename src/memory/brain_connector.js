@@ -48,7 +48,7 @@ class BrainConnector extends EventEmitter {
     for (const [id, ep] of this.endpoints) {
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 5000);
+        const timeout = setTimeout(() => controller.abort(), typeof phiMs === 'function' ? phiMs(5000) : 5000);
         const res = await fetch(`${ep.url}/health`, {
           signal: controller.signal
         });

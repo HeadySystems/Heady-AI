@@ -1,3 +1,4 @@
+const logger = require('./utils/logger').createLogger('auto-fix');
 'use strict';
 
 const { PHI_TIMING } = require('./shared/phi-math');
@@ -174,7 +175,7 @@ class VectorFederation extends EventEmitter {
     if (this._syncTimers.has(peerId)) return;
     const timer = setInterval(async () => {
       if (this._syncStrategy === SYNC_STRATEGIES.PULL) {
-        try { await this.pullFromPeer(peerId); } catch { }
+        try { await this.pullFromPeer(peerId); } catch (err) { logger.error('Recovered from error:', err); }
       }
     }, this._syncIntervalMs);
     if (timer.unref) timer.unref();
@@ -200,7 +201,7 @@ class VectorFederation extends EventEmitter {
       try {
         const local = await this._localMemory.search(query, { topK });
         results.push(...(local || []).map(r => ({ ...r, node: this.nodeId, source: 'local' })));
-      } catch { }
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
 
     // Peer search

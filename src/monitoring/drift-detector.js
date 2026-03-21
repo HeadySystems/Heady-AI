@@ -28,9 +28,9 @@ const EventEmitter = require('events');
 
 // ─── Optional dependencies ────────────────────────────────────────────────────
 let pg, redis, axios;
-try { pg    = require('pg');       } catch {}
-try { redis = require('ioredis');  } catch {}
-try { axios = require('axios');    } catch {}
+try { pg    = require('pg');       } catch (err) { logger.error('Recovered from error:', err); }
+try { redis = require('ioredis');  } catch (err) { logger.error('Recovered from error:', err); }
+try { axios = require('axios');    } catch (err) { logger.error('Recovered from error:', err); }
 
 // =============================================================================
 // Constants
@@ -576,7 +576,7 @@ class DriftDetector extends EventEmitter {
         try {
           this._baseline = JSON.parse(cached);
           return;
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
       }
     }
 

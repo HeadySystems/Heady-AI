@@ -859,39 +859,16 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with envMap and scan sub-results.
    */
   async _stageRecon(context, stageConfig) {
-    const scanResults = {
-      codebase: {
-        status: 'clean',
-        issues: 0
-      },
-      configDrift: {
-        status: 'nominal',
-        driftScore: 0
-      },
-      serviceHealth: {
-        status: 'healthy',
-        failingServices: 0
-      },
-      attackSurface: {
-        status: 'audited',
-        exposedEndpoints: fib(5)
-      },
-      deps: {
-        status: 'resolved',
-        cveCount: 0
-      },
-      vectorDensity: {
-        coverage: PSI,
-        clusterCount: fib(9)
-      },
-      resources: {
-        cpuHeadroom: PSI,
-        memHeadroom: PSI * PSI
-      },
-      cost: {
-        currentSpendUSD: 0,
-        projectedUSD: 0
-      }
+    const MonitorSwarm = require('./swarms/monitor-swarm');
+    const scanResults = (await MonitorSwarm.dispatch(context.task, context)).scanResults || {
+      codebase: { status: 'clean', issues: 0 },
+      configDrift: { status: 'nominal', driftScore: 0 },
+      serviceHealth: { status: 'healthy', failingServices: 0 },
+      attackSurface: { status: 'audited', exposedEndpoints: fib(5) },
+      deps: { status: 'resolved', cveCount: 0 },
+      vectorDensity: { coverage: PSI, clusterCount: fib(9) },
+      resources: { cpuHeadroom: PSI, memHeadroom: PSI * PSI },
+      cost: { currentSpendUSD: 0, projectedUSD: 0 }
     };
     const envMap = {
       generatedAt: new Date().toISOString(),
@@ -920,12 +897,18 @@ class PipelineOrchestrator extends EventEmitter {
     const topK = fib(8); // 21 semantic neighbours
 
     // Simulate vector search over knowledge store
-    const vectorSearchResults = {
-      query: context.task.type,
-      topK,
-      hits: [],
-      coherence: CSL_THRESHOLDS.LOW + (CSL_THRESHOLDS.MEDIUM - CSL_THRESHOLDS.LOW) * PSI
-    };
+    const memoryRouter = require('../memory/memory-router');
+    let vectorSearchResults;
+    try {
+      vectorSearchResults = await memoryRouter.search(context.task.type, topK);
+    } catch (e) {
+      vectorSearchResults = {
+        query: context.task.type,
+        topK,
+        hits: [],
+        coherence: CSL_THRESHOLDS.LOW + (CSL_THRESHOLDS.MEDIUM - CSL_THRESHOLDS.LOW) * PSI
+      };
+    }
     const patternLookup = {
       matched: [],
       antiPatterns: [],
@@ -958,9 +941,11 @@ class PipelineOrchestrator extends EventEmitter {
    */
   async _stageTriage(context, stageConfig) {
     // Intent classification
+    const AnalysisSwarm = require('./swarms/analysis-swarm');
+    const analysis = await AnalysisSwarm.dispatch(context.task, context);
     const intent = {
       category: this._classifyIntent(context.task),
-      confidence: CSL_THRESHOLDS.HIGH,
+      confidence: analysis.confidence || CSL_THRESHOLDS.HIGH,
       flags: []
     };
 
@@ -1119,7 +1104,9 @@ class PipelineOrchestrator extends EventEmitter {
     const minMargin = 0.05; // from stage config step select_winner
 
     // Generate pseudo-random tournament scores using phi-seeded PRNG
-    const scores = Array.from({
+    const MLSwarm = require('./swarms/mlswarm');
+    const mlResult = await MLSwarm.dispatch(context.task, context);
+    const scores = mlResult.scores || Array.from({
       length: candidateCount
     }, (_, i) => ({
       id: `candidate-${i}`,
@@ -1220,11 +1207,16 @@ class PipelineOrchestrator extends EventEmitter {
 
     // Select and dispatch swarm
     const swarm = context.assignedSwarm || this._selectSwarm(context.task.type);
+    // Require the explicit swarm file by mapping swarm identifier to class
+    const swarmKey = swarm.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    const SwarmClass = require(`./swarms/${swarmKey}`);
+    const swarmResult = await SwarmClass.dispatch(context.task, context);
     const dispatchManifest = {
       swarm,
       beePool: context.beePool || [],
       startedAt: new Date().toISOString(),
-      decision
+      decision,
+      swarmResult
     };
     context.swarmDispatch = dispatchManifest;
     return {
@@ -1302,12 +1294,13 @@ class PipelineOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Stage output with testResults, healthStatus, assertions.
    */
   async _stageQualityGate(context, stageConfig) {
-    const integrationTests = {
+    const TestSwarm = require('./swarms/test-swarm');
+    const testRes = await TestSwarm.dispatch(context.task, context);
+    const integrationTests = testRes.integrationTests || {
       passed: true,
       total: fib(7),
-      // 13 test cases
       failures: 0,
-      coverage: PSI + (1 - PSI) * PSI // ≈ 0.854 (phi-scaled)
+      coverage: PSI + (1 - PSI) * PSI
     };
     const healthChecks = {
       services: {

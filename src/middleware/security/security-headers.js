@@ -342,7 +342,7 @@ function cspViolationHandler(opts = {}) {
 
     // Call optional handler
     if (typeof opts.onViolation === 'function') {
-      try { opts.onViolation(violation, req); } catch {}
+      try { opts.onViolation(violation, req); } catch (err) { logger.error('Recovered from error:', err); }
     }
 
     // Default: log to stderr

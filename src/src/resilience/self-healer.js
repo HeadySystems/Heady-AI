@@ -1,3 +1,4 @@
+const logger = require('./utils/logger').createLogger('auto-fix');
 /**
  * @fileoverview Heady™ Self-Healer — Lifecycle State Machine + Quarantine + Restore
  *
@@ -162,17 +163,17 @@ class SelfHealer {
     if (this.onStateChange) {
       try {
         this.onStateChange(newState, prev, reason);
-      } catch (_) {}
+      } catch (_) { logger.error('Recovered from error:', _); }
     }
     if (newState === HEALTH_STATE.QUARANTINED && this.onQuarantine) {
       try {
         this.onQuarantine(this.name, reason);
-      } catch (_) {}
+      } catch (_) { logger.error('Recovered from error:', _); }
     }
     if (newState === HEALTH_STATE.HEALTHY && this.onRestore) {
       try {
         this.onRestore(this.name);
-      } catch (_) {}
+      } catch (_) { logger.error('Recovered from error:', _); }
     }
   }
   _scheduleRelease() {

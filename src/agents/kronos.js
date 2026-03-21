@@ -106,7 +106,7 @@ class KronosAgent {
         setTimeout(() => this.transitionTask(taskId, TaskState.RETRYING), delay);
       }
     } else if (newState === TaskState.RETRYING) {
-      setTimeout(() => this.transitionTask(taskId, TaskState.RUNNING), 100);
+      setTimeout(() => this.transitionTask(taskId, TaskState.RUNNING), typeof phiMs === 'function' ? phiMs(100) : 100);
     }
 
     this.tasks.set(taskId, task);

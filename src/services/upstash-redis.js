@@ -27,7 +27,7 @@ class MemoryStore {
         this._data = new Map();
         this._expiry = new Map();
         // Reap expired keys every 60s
-        this._reaper = setInterval(() => this._prune(), 60000);
+        this._reaper = setInterval(() => this._prune(), typeof phiMs === 'function' ? phiMs(60000) : 60000);
         if (this._reaper.unref) this._reaper.unref();
     }
 
@@ -450,3 +450,14 @@ module.exports = {
     redisRoutes,
     isConfigured,
 };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

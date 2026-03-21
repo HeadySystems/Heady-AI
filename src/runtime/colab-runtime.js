@@ -193,7 +193,7 @@ class ColabOrchestrator {
         }
 
         // Stale task reaper — runs every SURGE (11090ms)
-        this._staleReaper = setInterval(() => this._reapStaleTasks(), 11090);
+        this._staleReaper = setInterval(() => this._reapStaleTasks(), typeof phiMs === 'function' ? phiMs(11090) : 11090);
     }
 
     /**
@@ -360,7 +360,7 @@ class ColabOrchestrator {
             }
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(), 5000);
+                const timeout = setTimeout(() => controller.abort(), typeof phiMs === 'function' ? phiMs(5000) : 5000);
                 const res = await fetch(`${endpoint}${runtime.healthEndpoint}`, {
                     signal: controller.signal,
                 });

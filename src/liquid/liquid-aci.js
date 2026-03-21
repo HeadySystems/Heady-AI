@@ -318,7 +318,7 @@ class LiquidACI extends EventEmitter {
     } finally {
       try {
         fs.unlinkSync(tmpFile);
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
   }
 

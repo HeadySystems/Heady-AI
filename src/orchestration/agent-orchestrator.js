@@ -281,13 +281,13 @@ class AgentOrchestrator extends EventEmitter {
             try {
                 const prunedCount = await this.vectorMem.pruneOldest(100);
                 this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
-            } catch (e) { }
+            } catch (e) { logger.error('Recovered from error:', e); }
         }
     }
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch (err) { logger.error('Recovered from error:', err); }
         this.emit("audit", entry);
     }
 
@@ -400,7 +400,7 @@ class AgentOrchestrator extends EventEmitter {
                         content: `STATIC REFUSAL TRIGGERED:\nAction: ${task.action}\nPayload: ${JSON.stringify(payload)}\nReason: Ill-typed arguments.`,
                         metadata: { type: "static_refusal", severity: "CRITICAL", ts: validation.ts }
                     }).catch(() => { });
-                } catch (e) { }
+                } catch (e) { logger.error('Recovered from error:', e); }
             }
 
             this._audit({ type: "security:static_refusal", action: task.action, reason: errorMsg });
@@ -496,7 +496,7 @@ class AgentOrchestrator extends EventEmitter {
                         };
                         await this.vectorMem.ingestMemory(ingestionPayload);
                     }
-                } catch { }
+                } catch (err) { logger.error('Recovered from error:', err); }
             }
 
             const taskRecord = {

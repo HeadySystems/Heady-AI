@@ -224,14 +224,14 @@ async function scenarioCircuitBreaker(log) {
     const isOpen = cb.isOpen ? cb.isOpen() : (cb.state === 'OPEN' || cb.state === 'open');
 
     // Wait for half-open / reset
-    await new Promise(r => setTimeout(r, 150));
+    await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(150) : 150));
 
     // Attempt recovery
     let recovered = false;
     try {
       await cb.execute(() => Promise.resolve('ok'));
       recovered = true;
-    } catch (_) { }
+    } catch (_) { logger.error('Recovered from error:', _); }
 
     result.status   = STATUS.PASS;
     result.details  = { failCount, wasOpen: isOpen, recovered };

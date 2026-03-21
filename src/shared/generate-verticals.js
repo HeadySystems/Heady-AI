@@ -486,7 +486,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
     try {
       const r = await fetch(API + '/api/auth/verify', { credentials: 'include' });
       if(r.ok) { const d = await r.json(); tok = 'cookie'; updateUI(d); return; }
-    } catch{}
+    } catch (err) { logger.error('Recovered from error:', err); }
     tok = null;
     silentAuth();
   }
@@ -524,7 +524,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
   // 3D vector prereq indicator
   window.headyVectorScan = function() {
     const ind = document.getElementById('vec-ind');
-    if(ind) { ind.style.display = 'block'; setTimeout(() => ind.style.display = 'none', 1500); }
+    if(ind) { ind.style.display = 'block'; setTimeout(() => ind.style.display = 'none', typeof phiMs === 'function' ? phiMs(1500) : 1500); }
   };
 
   // Login form handler

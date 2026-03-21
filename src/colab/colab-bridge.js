@@ -637,7 +637,7 @@ class ColabBridge {
       if (runtime.ws) {
         try {
           runtime.ws.destroy();
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
       }
     }
     if (this.server) {

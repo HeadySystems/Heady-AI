@@ -302,7 +302,7 @@ class LiquidSandbox extends EventEmitter {
     } finally {
       try {
         fs.unlinkSync(tmpFile);
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
   }
 
@@ -401,25 +401,25 @@ class LiquidSandbox extends EventEmitter {
         stdio: 'pipe'
       });
       available.push('wasm');
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     try {
       execSync('docker --version', {
         stdio: 'pipe'
       });
       available.push('docker');
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     try {
       execSync('docker info --format "{{.Runtimes}}" 2>/dev/null | grep runsc', {
         stdio: 'pipe'
       });
       available.push('gvisor');
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     try {
       execSync('which firecracker', {
         stdio: 'pipe'
       });
       available.push('firecracker');
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     return available;
   }
   _findAvailableTier(requestedTier) {
@@ -443,14 +443,14 @@ class LiquidSandbox extends EventEmitter {
     if (instance._process) {
       try {
         instance._process.kill('SIGTERM');
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
     if (instance.containerId) {
       try {
         execSync(`docker rm -f ${instance.containerId}`, {
           stdio: 'pipe'
         });
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
     this._instances.delete(instanceId);
   }

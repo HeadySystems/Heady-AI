@@ -393,7 +393,7 @@ class AdvancedRateLimiter {
       try {
         const tier = await this._getTier(tenantId, apiKey);
         if (tier && this._tiers[tier]) return tier;
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
 
     return DEFAULT_TIER;

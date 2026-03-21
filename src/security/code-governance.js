@@ -17,7 +17,7 @@ try {
   if (!fs.existsSync(auditDir)) fs.mkdirSync(auditDir, {
     recursive: true
   });
-} catch {}
+} catch (err) { logger.error('Recovered from error:', err); }
 
 // ──────────────────────────────────────────────────────────────────
 // Load governance config
@@ -59,7 +59,7 @@ function audit(entry) {
       configHash: _configHash
     });
     fs.appendFileSync(AUDIT_LOG, line + "\n");
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ──────────────────────────────────────────────────────────────────
@@ -511,7 +511,7 @@ function generateEvidenceSnapshot() {
       recursive: true
     });
     fs.appendFileSync(evidenceLog, JSON.stringify(snapshot) + "\n");
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   audit({
     action: "PATENT_EVIDENCE_SNAPSHOT",
     composite: compositeHash,

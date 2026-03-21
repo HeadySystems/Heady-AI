@@ -1,5 +1,6 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
- * Safe operation wrapper — replaces all `try { ... } catch { }` patterns.
+ * Safe operation wrapper — replaces all `try { ... } catch (err) { logger.error('Recovered from error:', err); }` patterns.
  * Logs the error, increments counters, and returns a fallback value.
  *
  * @param {string} context - Where this error happened (e.g., 'brain.js:loadConfig')

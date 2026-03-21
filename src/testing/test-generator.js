@@ -120,7 +120,7 @@ function edgeCaseTests(name, isAsync) {
 // ---------------------------------------------------------------------------
 function asyncBehaviorTests(name) {
   return [
-    renderIt(`${name}: returns a Promise`, `async () => {\n    const p = subject.${name}();\n    expect(p).toBeInstanceOf(Promise);\n    try { await p; } catch (_) { }\n  }`),
+    renderIt(`${name}: returns a Promise`, `async () => {\n    const p = subject.${name}();\n    expect(p).toBeInstanceOf(Promise);\n    try { await p; } catch (_) { logger.error('Recovered from error:', _); }\n  }`),
     renderIt(`${name}: resolves without unhandled rejection`, `async () => {\n    await expect(subject.${name}()).resolves.toBeDefined().catch(() => {});\n  }`),
   ];
 }

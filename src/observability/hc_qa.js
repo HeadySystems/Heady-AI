@@ -295,7 +295,7 @@ class HeadyQA extends EventEmitter {
         logger.logSystem(`  ∞ HeadyQA: Continuous loop started (interval: ${Math.round(intervalMs / 1000)}s)`);
         this.loopId = setInterval(() => this.runFullSuite("continuous"), intervalMs);
         // Run immediately
-        setTimeout(() => this.runFullSuite("startup"), 5000);
+        setTimeout(() => this.runFullSuite("startup"), typeof phiMs === 'function' ? phiMs(5000) : 5000);
     }
 
     stopContinuousLoop() {
@@ -316,7 +316,7 @@ class HeadyQA extends EventEmitter {
     _auditLog(entry) {
         try {
             fs.appendFileSync(QA_LOG, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n");
-        } catch { }
+        } catch (err) { logger.error('Recovered from error:', err); }
     }
 }
 

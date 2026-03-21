@@ -461,7 +461,7 @@ export class StreamableHTTPTransport extends BaseTransport {
             this._handleIncoming(evt.data);
             try {
               lastResult = deserializeMessage(evt.data);
-            } catch (_) {}
+            } catch (_) { logger.error('Recovered from error:', _); }
           }
         }
       }
@@ -615,7 +615,7 @@ export class LegacySSETransport extends BaseTransport {
     this._connected = false;
     try {
       await this._sseReader?.cancel();
-    } catch (_) {}
+    } catch (_) { logger.error('Recovered from error:', _); }
     this._sseReader = null;
     this.emit('disconnected', {});
   }

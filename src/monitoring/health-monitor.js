@@ -32,11 +32,11 @@ const sleep = promisify(setTimeout);
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;
-try { express    = require('express');    } catch {}
-try { promClient = require('prom-client'); } catch {}
-try { pg         = require('pg');          } catch {}
-try { redis      = require('ioredis');     } catch {}
-try { axios      = require('axios');       } catch {}
+try { express    = require('express');    } catch (err) { logger.error('Recovered from error:', err); }
+try { promClient = require('prom-client'); } catch (err) { logger.error('Recovered from error:', err); }
+try { pg         = require('pg');          } catch (err) { logger.error('Recovered from error:', err); }
+try { redis      = require('ioredis');     } catch (err) { logger.error('Recovered from error:', err); }
+try { axios      = require('axios');       } catch (err) { logger.error('Recovered from error:', err); }
 
 // =============================================================================
 // Sacred Geometry Weighted Scoring

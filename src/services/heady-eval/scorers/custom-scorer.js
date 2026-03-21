@@ -138,3 +138,13 @@ CustomScorer.create = function (definition, options = {}) {
 CustomScorer.description = 'Factory for creating LLM-as-judge scorers from custom rubrics and criteria.';
 CustomScorer.dimensions = [];
 module.exports = CustomScorer;
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

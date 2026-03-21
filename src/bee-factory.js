@@ -103,7 +103,7 @@ function createBee(domain, config = {}) {
       validated = false;
       try {
         logger.warn(`Worker ${i} in '${domain}' is not callable`);
-      } catch {}
+      } catch (err) { logger.error('Recovered from error:', err); }
     }
   }
 

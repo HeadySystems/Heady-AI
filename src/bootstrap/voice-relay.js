@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
  * ∞ Voice Relay — Phase 9 Bootstrap
  * Extracted from heady-manager.js lines 1588-1732
@@ -29,8 +30,8 @@ module.exports = function mountVoiceRelay(app, { logger }) {
         const staleThreshold = Date.now() - 3600000;
         voiceSessions.forEach((session, id) => {
             if (session.lastActivity < staleThreshold) {
-                if (session.sender) try { session.sender.close(); } catch { }
-                session.receivers.forEach(r => { try { r.close(); } catch { } });
+                if (session.sender) try { session.sender.close(); } catch (err) { logger.error('Recovered from error:', err); }
+                session.receivers.forEach(r => { try { r.close(); } catch (err) { logger.error('Recovered from error:', err); } });
                 voiceSessions.delete(id);
             }
         });

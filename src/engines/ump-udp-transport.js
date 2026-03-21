@@ -222,7 +222,7 @@ class UmpUdpTransport extends EventEmitter {
         this._txSocket.on("error", (err) => logger.error(`[UMP-UDP] TX error: ${err.message}`));
         try {
             this._txSocket.setSendBufferSize(this.config.sndBufSize);
-        } catch {}
+        } catch (err) { logger.error('Recovered from error:', err); }
 
         // Start flush cycle
         this._flushTimer = setInterval(() => this._flushTx(), this.config.flushIntervalMs);

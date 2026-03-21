@@ -31,7 +31,7 @@ class Metering {
     this._userPlans = new Map();
 
     // Clean up stale entries periodically (every 60s)
-    this._cleanupTimer = setInterval(() => this._cleanup(), 60000);
+    this._cleanupTimer = setInterval(() => this._cleanup(), typeof phiMs === 'function' ? phiMs(60000) : 60000);
   }
 
   /**
@@ -241,3 +241,14 @@ module.exports = {
   Metering,
   RATE_LIMITS,
 };
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

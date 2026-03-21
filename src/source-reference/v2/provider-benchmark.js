@@ -30,13 +30,13 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
 // Persistent benchmark results
 let benchResults = {};
-try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch { }
+try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch (err) { logger.error('Recovered from error:', err); }
 
 function saveBenchmarks() {
-    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch { }
+    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch (err) { logger.error('Recovered from error:', err); }
 }
 function audit(entry) {
-    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch (err) { logger.error('Recovered from error:', err); }
 }
 
 // ── Latency Test (HTTP ping) ────────────────────────────────────

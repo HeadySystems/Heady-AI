@@ -6,7 +6,7 @@ const logger = {
   logNodeActivity: (node, msg) => {
     try {
       _logger.info(`[${node}] ${msg}`);
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
   }
 };
 const domain = "templates";
@@ -134,13 +134,13 @@ function generateAuthGate(siteName, accent, domain) {
 function heady_auth(provider){
   var g=document.getElementById('heady-auth-gate');
   g.style.opacity='0';
-  setTimeout(function(){g.style.display='none';},500);
-  try{sessionStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));}catch (e) { }
+  setTimeout(function(){g.style.display='none';}, typeof phiMs === 'function' ? phiMs(500) : 500);
+  try{sessionStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));}catch (e) { logger.error('Recovered from error:', e); }
   fetch('/api/auth/session',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:provider,site:'${domain}'})}).catch(function(){});
 }
 (function(){
   var s=sessionStorage.getItem('heady_auth_session');
-  if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch (e) { }}
+  if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch (e) { logger.error('Recovered from error:', e); }}
 })();
 <\\/script>`;
 }

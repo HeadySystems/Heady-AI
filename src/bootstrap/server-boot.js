@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
  * ∞ Server Boot — Phase 10 Bootstrap
  * Extracted from heady-manager.js lines 1629-1831
@@ -68,7 +69,7 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
                 if (role === 'receiver' && msg.type === 'command' && session.sender && session.sender.readyState === 1) {
                     session.sender.send(JSON.stringify(msg));
                 }
-            } catch { }
+            } catch (err) { logger.error('Recovered from error:', err); }
         });
 
         ws.on('close', () => {

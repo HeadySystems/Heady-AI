@@ -499,7 +499,7 @@ class HeadyAuth extends EventEmitter {
             if (fs.existsSync(this.sessionsPath)) {
                 return JSON.parse(fs.readFileSync(this.sessionsPath, "utf8"));
             }
-        } catch { }
+        } catch (err) { logger.error('Recovered from error:', err); }
         return {};
     }
 
@@ -507,7 +507,7 @@ class HeadyAuth extends EventEmitter {
         try {
             if (!fs.existsSync(this.dataDir)) fs.mkdirSync(this.dataDir, { recursive: true });
             fs.writeFileSync(this.sessionsPath, JSON.stringify(this.sessions, null, 2));
-        } catch { }
+        } catch (err) { logger.error('Recovered from error:', err); }
     }
 
     _cleanupExpired() {
@@ -533,7 +533,7 @@ class HeadyAuth extends EventEmitter {
                 ...details,
             }) + "\n";
             fs.appendFileSync(this.auditPath, entry);
-        } catch { }
+        } catch (err) { logger.error('Recovered from error:', err); }
         this.emit("auth:event", { action, ...details });
     }
 

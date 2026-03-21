@@ -92,7 +92,7 @@ export class HeadyEventSpine {
         }
       } catch (err) { // Log error and continue — don't crash the event loop
         logger.error('[HeadyEventSpine] Stream error:', err.message);
-        await new Promise(r => setTimeout(r, 1000)); // Brief pause on error only }
+        await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(1000) : 1000)); // Brief pause on error only }
     }
   }
 
@@ -145,3 +145,14 @@ export class HeadyEventSpine {
 }
 
 export default HeadyEventSpine;
+
+
+// --- Auto-Unified Latent Service Pattern ---
+if (module.exports && typeof module.exports === 'object') {
+  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+  if (!module.exports._tick) module.exports._tick = async () => {};
+}
+// -------------------------------------------

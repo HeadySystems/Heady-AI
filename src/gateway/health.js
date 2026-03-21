@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 import os from 'os';
 import fs from 'fs';
 import path from 'path';
@@ -70,7 +71,7 @@ function setupHealthRoutes(app) {
     else res.status(503).json({ status: 'starting' });
   });
 
-  setTimeout(() => { startupComplete = true; }, 35000);
+  setTimeout(() => { startupComplete = true; }, typeof phiMs === 'function' ? phiMs(35000) : 35000);
 }
 
 async function checkMemoryStore() {

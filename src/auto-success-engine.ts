@@ -543,7 +543,7 @@ export class AutoSuccessEngine {
 
     // 7. npm audit
     const t7 = Date.now();
-    const npmAudit = safeExec('npm audit --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); console.log(d.metadata?.vulnerabilities?.critical||0)" 2>/dev/null', this.rootDir);
+    const npmAudit = safeExec('npm audit --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); logger.info(d.metadata?.vulnerabilities?.critical||0)" 2>/dev/null', this.rootDir);
     results.push({
       task: 'npm_audit_critical',
       passed: (parseInt(npmAudit.stdout) || 0) === 0,
@@ -1678,7 +1678,7 @@ export class AutoSuccessEngine {
 
     // 4. Waste detection — find unused dependencies
     const t4c2 = Date.now();
-    const depcheck = safeExec('npx -y depcheck --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); console.log(Object.keys(d.dependencies||{}).length)" 2>/dev/null', this.rootDir);
+    const depcheck = safeExec('npx -y depcheck --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); logger.info(Object.keys(d.dependencies||{}).length)" 2>/dev/null', this.rootDir);
     results.push({
       task: 'waste_detection',
       passed: true,

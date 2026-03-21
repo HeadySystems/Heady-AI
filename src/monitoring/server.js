@@ -7,7 +7,7 @@ const logger = console;
  *
  * Environment variables:
  *   DASHBOARD_PORT     — HTTP port for this server     (default 3850)
- *   PROJECTION_SERVICE — Upstream projection service   (default http://localhost:3849)
+ *   PROJECTION_SERVICE — Upstream projection service   (default http://0.0.0.0:3849)
  */
 
 import express from 'express';

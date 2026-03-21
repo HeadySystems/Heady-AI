@@ -161,7 +161,7 @@ async function probeProjection(targetId) {
 
     try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 8000);
+        const timeout = setTimeout(() => controller.abort(), typeof phiMs === 'function' ? phiMs(8000) : 8000);
         const res = await fetch(url, { signal: controller.signal });
         clearTimeout(timeout);
         const status = res.status;

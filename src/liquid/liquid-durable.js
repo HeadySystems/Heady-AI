@@ -101,7 +101,7 @@ class LiquidDurable extends EventEmitter {
           recursive: true
         });
       }
-    } catch {}
+    } catch (err) { logger.error('Recovered from error:', err); }
     this._metrics = {
       workflowsStarted: 0,
       workflowsCompleted: 0,

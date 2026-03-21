@@ -78,8 +78,8 @@ class LiquidMesh extends EventEmitter {
   }
 
   async start() {
-    this._healthInterval = setInterval(() => this._aggregateHealth(), 3000);
-    this._scaleInterval = setInterval(() => this._autoScale(), 3000);
+    this._healthInterval = setInterval(() => this._aggregateHealth(), typeof phiMs === 'function' ? phiMs(3000) : 3000);
+    this._scaleInterval = setInterval(() => this._autoScale(), typeof phiMs === 'function' ? phiMs(3000) : 3000);
     logger.info('mesh_started');
     this.emit('started');
   }

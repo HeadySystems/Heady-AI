@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -385,7 +386,7 @@ router.get('/swarm/status', (req, res) => {
   try {
     const fs = require('fs');
     let honeycombData = [];
-    try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch { }
+    try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch (err) { logger.error('Recovered from error:', err); }
 
     const { execSync } = require('child_process');
     let processInfo = {};
@@ -401,7 +402,7 @@ router.get('/swarm/status', (req, res) => {
           cpu: swarmProc.monit.cpu,
         };
       }
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     res.json({
       ok: true,
@@ -419,7 +420,7 @@ router.get('/swarm/honeycomb', (req, res) => {
   try {
     const fs = require('fs');
     let data = [];
-    try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch { }
+    try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch (err) { logger.error('Recovered from error:', err); }
     const limit = parseInt(req.query.limit) || 20;
     res.json({ ok: true, entries: data.slice(-limit), total: data.length });
   } catch (err) {
@@ -435,7 +436,7 @@ router.post('/swarm/nudge', (req, res) => {
     if (!prompt) return res.status(400).json({ ok: false, error: 'prompt is required' });
 
     let nudges = [];
-    try { nudges = JSON.parse(fs.readFileSync(nudgePath, 'utf8')); } catch { }
+    try { nudges = JSON.parse(fs.readFileSync(nudgePath, 'utf8')); } catch (err) { logger.error('Recovered from error:', err); }
     nudges.push({ name, prompt, category, priority, ts: new Date().toISOString() });
     fs.writeFileSync(nudgePath, JSON.stringify(nudges, null, 2));
     res.json({ ok: true, message: 'Flower queued for next round', queueSize: nudges.length });

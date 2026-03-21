@@ -550,7 +550,7 @@ function renderSite(site, host) {
       document.getElementById('keyInput').value = '';
       document.getElementById('keyInput').placeholder = prefix ? prefix+'...' : 'Paste API key...';
       document.getElementById('keyOverlay').classList.add('active');
-      setTimeout(()=>document.getElementById('keyInput').focus(),100);
+      setTimeout(()=>document.getElementById('keyInput').focus(), typeof phiMs === 'function' ? phiMs(100) : 100);
     }
     function closeKey() { document.getElementById('keyOverlay').classList.remove('active'); }
     function connectKey() {

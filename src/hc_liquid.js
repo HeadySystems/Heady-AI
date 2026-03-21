@@ -253,7 +253,7 @@ class LiquidTopology extends EventEmitter {
     while (Date.now() < deadline) {
       const active = Array.from(this.nodes.values()).reduce((s, n) => s + n.activeTasks, 0);
       if (active === 0) break;
-      await new Promise(r => setTimeout(r, 100));
+      await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(100) : 100));
     }
     for (const node of this.nodes.values()) {
       node.state = NODE_STATES.OFFLINE;

@@ -96,7 +96,7 @@ function _auditWrite(record) {
       _ts: new Date().toISOString()
     }) + '\n';
     fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-  } catch (_) {}
+  } catch (_) { logger.error('Recovered from error:', _); }
 }
 
 // ─── Pub/Sub Message Decoder ─────────────────────────────────────────────────

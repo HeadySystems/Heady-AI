@@ -79,7 +79,7 @@ function resolveSiteBySlug(slug) {
         };
       }
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   return null;
 }
 
@@ -94,7 +94,7 @@ function getNavItems(site) {
     if (fs.existsSync(USER_SITES_PATH)) {
       Object.assign(allSites, JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8")));
     }
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   const items = [];
   for (const [domain, cfg] of Object.entries(allSites)) {
     const slug = domain.replace(/\.(com|org|io)$/, "");

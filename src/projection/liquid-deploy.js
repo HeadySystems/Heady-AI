@@ -283,7 +283,7 @@ class LiquidDeploy extends EventEmitter {
     try {
       const res = await Promise.race([
         headyFetch(url, { method: 'HEAD' }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000)),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), typeof phiMs === 'function' ? phiMs(5000) : 5000)),
       ]);
       return res.ok || res.status < 500;
     } catch {

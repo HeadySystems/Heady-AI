@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
  * ∞ Inline Routes — Phase 8 Bootstrap
  * Extracted from heady-manager.js
@@ -110,7 +111,7 @@ module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfMan
             app.get('/api/introspection', (req, res) => res.json(selfAwareness.getSystemIntrospection()));
             app.get('/api/branding', (req, res) => res.json(selfAwareness.getBrandingReport()));
         }
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     try {
         const hp = require('../shared/heady-principles');
@@ -118,10 +119,10 @@ module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfMan
             node: 'heady-principles', constants: { PHI: hp.PHI, BASE: hp.BASE, LOG_BASE: hp.LOG_BASE },
             designTokens: hp.designTokens(8), capacity: hp.capacityParams('medium'), fibonacci: hp.FIB.slice(0, 13),
         }));
-    } catch { }
+    } catch (err) { logger.error('Recovered from error:', err); }
 
     // Sentry error handler + global error handler + 404
-    try { const sentry = require('../services/sentry'); app.use(sentry.errorHandler()); } catch { }
+    try { const sentry = require('../services/sentry'); app.use(sentry.errorHandler()); } catch (err) { logger.error('Recovered from error:', err); }
 
     app.use((err, req, res, _next) => {
         const status = err.status || 500;

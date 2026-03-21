@@ -65,7 +65,7 @@ class BuddyWatchdog extends EventEmitter {
 
         this._intervalId = setInterval(() => this._check(), WATCHDOG_INTERVAL_MS);
         // Initial check after 2 seconds
-        setTimeout(() => this._check(), 2000);
+        setTimeout(() => this._check(), typeof phiMs === 'function' ? phiMs(2000) : 2000);
     }
 
     /**

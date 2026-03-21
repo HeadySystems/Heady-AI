@@ -608,7 +608,7 @@ class SwarmMessageBus extends EventEmitter {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
         try {
           handler(env);
-        } catch (_) {}
+        } catch (_) { logger.error('Recovered from error:', _); }
       }
     }
     this._queues.delete(topic);
@@ -780,7 +780,7 @@ class SwarmCoordinator extends EventEmitter {
     // Wait for active tasks to complete (max 30s)
     const deadline = Date.now() + PHI_TIMING.CYCLE;
     while (this._activeTotalCount() > 0 && Date.now() < deadline) {
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(500) : 500));
     }
     this._initialized = false;
     this.emit('coordinator:shutdown', {

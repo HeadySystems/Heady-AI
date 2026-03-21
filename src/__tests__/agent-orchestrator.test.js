@@ -76,7 +76,7 @@ describe('AgentOrchestrator', () => {
         orch.submit({ type: 'default', payload: { label: 'high' }, priority: 10 });
 
         // Wait for both tasks to complete
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(100) : 100));
 
         // High priority should have been picked first
         assert.equal(order[0], 'high');
@@ -120,7 +120,7 @@ describe('AgentOrchestrator', () => {
     it('task timeout triggers retry then failure', async () => {
         orch.registerAgent({
             id: 'slow',
-            execute: async () => new Promise(r => setTimeout(r, 5000)),
+            execute: async () => new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(5000) : 5000)),
         });
 
         await assert.rejects(
@@ -215,7 +215,7 @@ describe('AgentOrchestrator', () => {
         resolveHang({ abandoned: true }); // Resolve hanging promise to clean up
 
         // Wait for backup agent to pick it up
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise(r => setTimeout(r, typeof phiMs === 'function' ? phiMs(100) : 100));
         const task = orch.getTask(taskId);
         // Task should have been reassigned (status may be complete or pending)
         assert.ok(task);

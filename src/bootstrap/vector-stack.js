@@ -1,3 +1,4 @@
+const logger = require('../utils/logger').createLogger('auto-fix');
 /**
  * ∞ Vector Stack — Phase 4 Bootstrap
  * Extracted from heady-manager.js lines 447-907
@@ -166,7 +167,7 @@ module.exports = function mountVectorStack(app, {
   try {
     const brainRoutes = require('../routes/brain');
     if (brainRoutes.setMemoryWrapper) brainRoutes.setMemoryWrapper(vectorMemory);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // HeadyCorrections
   const corrections = require('../corrections');
@@ -199,7 +200,7 @@ module.exports = function mountVectorStack(app, {
   try {
     require('../security/code-governance').loadConfig();
     require('../security/code-governance').registerRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   const conductor = getConductor();
   const secretRotation = new SecretRotation();
   const autoHeal = new AutoHeal(conductor);
@@ -231,7 +232,7 @@ module.exports = function mountVectorStack(app, {
   try {
     const redisHealth = require('../routes/redis-health');
     if (redisHealth.getClient && redisHealth.getClient()) buddy.setRedis(redisHealth.getClient());
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
   buddy.registerRoutes(app);
   const watchdog = new BuddyWatchdog(buddy);
   watchdog.registerRoutes(app);
@@ -299,7 +300,7 @@ module.exports = function mountVectorStack(app, {
       VectorServe
     } = require('../vector-serve');
     new VectorServe(vectorMemory, logger).wireRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Cross-Device Sync
   try {
@@ -308,21 +309,21 @@ module.exports = function mountVectorStack(app, {
     } = require('../cross-device-sync');
     const syncHub = new CrossDeviceSyncHub();
     syncHub.registerRoutes(app);
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // System Monitor
   try {
     const sysMonitor = require('../system-monitor');
     sysMonitor.registerRoutes(app);
     sysMonitor.start();
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Continuous Learning
   try {
     const learningEngine = require('../continuous-learning');
     learningEngine.registerRoutes(app);
     app.locals.vectorMemory = vectorMemory;
-  } catch {}
+  } catch (err) { logger.error('Recovered from error:', err); }
 
   // Self-Optimizer
   const selfOptimizer = require('../self-optimizer');
