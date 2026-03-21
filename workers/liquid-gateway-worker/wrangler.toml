@@ -1,14 +1,15 @@
 name = "liquid-gateway-worker"
 main = "src/index.ts"
 compatibility_date = "2026-03-08"
-account_id = "8b1fa38f282c691423c6399247d53323"
+# account_id — set via CF_ACCOUNT_ID env var or wrangler.toml local override
+# account_id = "CF_ACCOUNT_ID"
 
 [vars]
 HEADY_ENV = "production"
 WORKER_NAME = "liquid-gateway-worker"
 HEADY_VERSION = "4.0.0"
 BACKEND_ORIGIN = "https://manager.headysystems.com"
-FIREBASE_API_KEY = "AIzaSyBLTu0h9Q09Cr05_3_Zj_3yent5cO3iaHE"
+# FIREBASE_API_KEY — set via wrangler secret put FIREBASE_API_KEY
 
 [env.production]
 routes = [

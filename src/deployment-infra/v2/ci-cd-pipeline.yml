@@ -101,16 +101,16 @@ jobs:
 
       # SAST — static analysis for common vulnerabilities
       - name: CodeQL Analysis Setup
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           queries: security-extended
 
       - name: CodeQL Auto-Build
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
 
       - name: CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: /language:javascript-typescript
 
@@ -225,7 +225,7 @@ jobs:
       # Authenticate to GCP using Workload Identity Federation (no service account key)
       - name: Authenticate to GCP
         id: auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v4
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
@@ -251,7 +251,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           driver-opts: image=moby/buildkit:master
 
@@ -284,7 +284,7 @@ jobs:
 
       - name: Upload Trivy SARIF
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results.sarif
           category: trivy-container
@@ -292,7 +292,7 @@ jobs:
       # Image signing with Cosign (software supply chain)
       - name: Sign image
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@v4
         with:
           cosign-release: 'v2.2.4'
 
@@ -323,13 +323,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v4
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v4
 
       # Deploy new revision with NO traffic (canary handles traffic split)
       - name: Deploy to Cloud Run (no traffic)
@@ -419,13 +419,13 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v4
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v4
 
       - name: Run canary deployment
         env:
@@ -460,13 +460,13 @@ jobs:
 
     steps:
       - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v4
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Setup Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v4
 
       - name: Promote to 100%
         run: |
@@ -509,7 +509,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Deploy Cloudflare Worker
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -23,6 +23,27 @@ function getAllowedOrigin(origin: string | null): string {
 
 const PHI = 1.6180339887;
 
+const ALLOWED_ORIGINS = new Set([
+    'https://headyme.com', 'https://app.headyme.com',
+    'https://headysystems.com', 'https://manager.headysystems.com', 'https://dashboard.headysystems.com',
+    'https://headyconnection.org', 'https://app.headyconnection.org',
+    'https://headymcp.com', 'https://api.headymcp.com',
+    'https://headyio.com', 'https://api.headyio.com',
+    'https://headybuddy.org', 'https://app.headybuddy.org',
+    'https://1ime1.com', 'https://app.1ime1.com',
+    'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
+]);
+
+function corsHeaders(origin: string | undefined): Record<string, string> {
+    const allowed = origin && ALLOWED_ORIGINS.has(origin) ? origin : '';
+    return {
+        'Access-Control-Allow-Origin': allowed,
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Device, X-Heady-Workspace',
+        'Vary': 'Origin',
+    };
+}
+
 /** HeadyBrain Chat API — serves buddy widget across all Heady sites */
 const SYSTEM_PROMPT = `You are HeadyBrain, the AI reasoning engine powering the Heady ecosystem.
 You are warm, concise, and technically knowledgeable. You help users with:
@@ -60,6 +81,7 @@ function getSmartResponse(message: string): string {
 }
 
 export async function POST(request: NextRequest) {
+    const origin = request.headers.get('origin') ?? undefined;
     try {
         const body = await request.json();
         const message = body.message || body.text || '';

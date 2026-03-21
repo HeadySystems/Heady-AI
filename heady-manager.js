@@ -102,7 +102,13 @@ function preloadPersistentMemory() {
 // Preload memory at startup
 preloadPersistentMemory();
 // Load remote resources config
-const remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
+let remoteConfig;
+try {
+  remoteConfig = yaml.load(fs.readFileSync('./configs/remote-resources.yaml', 'utf8'));
+} catch (err) {
+  logger.warn(`Failed to load remote-resources.yaml: ${err.message} — using empty config`);
+  remoteConfig = { services: {}, critical_only: true };
+}
 
 // Handle remote resources
 function checkRemoteService(service) {

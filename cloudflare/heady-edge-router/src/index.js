@@ -143,6 +143,17 @@ function handleHealthCheck(env) {
 
 // ─── CORS Handling ─────────────────────────────────────────────────
 
+const ALLOWED_ORIGINS = new Set([
+  'https://headyme.com', 'https://app.headyme.com',
+  'https://headysystems.com', 'https://manager.headysystems.com', 'https://dashboard.headysystems.com',
+  'https://headyconnection.org', 'https://app.headyconnection.org',
+  'https://headymcp.com', 'https://api.headymcp.com',
+  'https://headyio.com', 'https://api.headyio.com',
+  'https://headybuddy.org', 'https://app.headybuddy.org',
+  'https://1ime1.com', 'https://app.1ime1.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
+]);
+
 function handleCors(request, env) {
   const origin = request.headers.get('Origin') || '';
   const allowedOrigins = env.CORS_ORIGINS || 'https://headysystems.com,https://headyio.com,https://headyconnection.org,https://headyconnection.com,https://headybuddy.org,https://headymcp.com,https://admin.headysystems.com';
@@ -153,6 +164,7 @@ function handleCors(request, env) {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Request-Id',
     'Access-Control-Max-Age': '86400',
     'Access-Control-Expose-Headers': 'X-Heady-Request-Id, X-Heady-Edge-Version',
+    'Vary': 'Origin',
   };
 
   if (request.method === 'OPTIONS') {

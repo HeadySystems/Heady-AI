@@ -31,6 +31,17 @@ const logger = createLogger('subsystem-routes');
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
+// Structured logger — emits JSON in production, readable text in dev
+const LOG_JSON = process.env.NODE_ENV === 'production';
+const log = {
+  info: (msg, meta = {}) => LOG_JSON
+    ? process.stdout.write(JSON.stringify({ level: 'info', module: 'SubsystemRoutes', msg, ...meta, ts: Date.now() }) + '\n')
+    : console.info(`[SubsystemRoutes] ${msg}`),
+  warn: (msg, meta = {}) => LOG_JSON
+    ? process.stdout.write(JSON.stringify({ level: 'warn', module: 'SubsystemRoutes', msg, ...meta, ts: Date.now() }) + '\n')
+    : console.warn(`[SubsystemRoutes] ${msg}`),
+};
+
 const { ColabRuntimeCluster } = require('../colab/colab-runtime-nodes.js');
 const { loadUniversalPrompt, buildAgentPrompt, buildCompactDirective,
         getPromptHash, CSL_GATES, ARCHETYPES, COLAB_RUNTIMES,

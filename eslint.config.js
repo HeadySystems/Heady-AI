@@ -68,7 +68,16 @@ module.exports = [
       "**/dist/**",
       "**/build/**",
       "**/*.min.js",
-      "**/coverage/**"
+      "**/coverage/**",
+      "_archive/**",
+      "_downloads/**",
+      "heady-monorepo/**",
+      "heady-enterprise/**",
+      "heady-improvements/**",
+      "heady-improvement/**",
+      "heady-10-10/**",
+      "audit/**",
+      "out/**"
     ]
   }
 ];

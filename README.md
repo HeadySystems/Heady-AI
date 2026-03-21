@@ -18,7 +18,7 @@
 
 This bundle turns the attached Heady directives and configuration seeds into a production-oriented monorepo with Cloudflare edge workers, Cloud Run services, shared runtime packages, pgvector migrations, deployment workflows, and operational runbooks. Internal source material comes from the attached workspace directives, HCFullPipeline definitions, and cognitive configuration.
 
-## 🚀 System Status: 100% FULLY FUNCTIONAL
+## System Status: 100% FULLY FUNCTIONAL
 
 Cloudflare Vectorize supports up to 5 million vectors per index and up to 1536 dimensions, which makes it a strong edge retrieval layer while origin pgvector remains the authoritative memory plane ([Cloudflare Vectorize](https://blog.cloudflare.com/building-vectorize-a-distributed-vector-database-on-cloudflare-developer-platform/)).
 
@@ -108,12 +108,21 @@ ingest → plan → execute-major-phase → recover → finalize
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/api/health` | GET | Health check |
+| `/api/pulse` | GET | System pulse with layer info |
 | `/api/system/status` | GET | Full system status |
 | `/api/pipeline/run` | POST | Trigger pipeline run |
 | `/api/pipeline/state` | GET | Current state |
+| `/api/nodes` | GET | List all AI nodes |
 | `/api/supervisor/status` | GET | All agent statuses |
 | `/api/brain/status` | GET | Brain + ORS |
-| `/api/registry` | GET | Component registry |
+| `/api/registry` | GET | Full HeadyRegistry catalog |
+| `/api/registry/component/:id` | GET | Lookup a specific component |
+| `/api/registry/environments` | GET | List all environments |
+| `/api/registry/docs` | GET | List registered documents |
+| `/api/registry/notebooks` | GET | List registered notebooks |
+| `/api/registry/patterns` | GET | List architecture patterns |
+| `/api/registry/workflows` | GET | List workflows |
+| `/api/registry/ai-nodes` | GET | List AI nodes from registry |
 
 Full reference: `public/api-docs.html` or `/api-docs.html` on the running system.
 

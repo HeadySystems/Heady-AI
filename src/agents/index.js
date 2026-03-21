@@ -182,7 +182,25 @@ class ObserverAgent extends BaseAgent {
 // ─── REGISTRY ────────────────────────────────────────────────────────────
 
 /**
+ * Check whether an agent is enabled via ENABLE_<AGENT_ID> env var.
+ * Agents default to enabled unless explicitly set to 'false' or '0'.
+ *
+ * Sacred Geometry agents (8):
+ *   claude-code, fintech, builder, researcher, deployer, auditor, observer, nonprofit
+ * Extended agents (6+):
+ *   Loaded from config/agents.json and toggled via ENABLE_HEADY_BRAIN, etc.
+ */
+function isAgentEnabled(agentId) {
+  const envKey = `ENABLE_${agentId.toUpperCase().replace(/-/g, '_')}`;
+  const val = process.env[envKey];
+  // Enabled by default; only disabled if explicitly set to 'false' or '0'
+  if (val === 'false' || val === '0') return false;
+  return true;
+}
+
+/**
  * Create all agents and return them ready for Supervisor registration.
+ * Each agent can be toggled via ENABLE_<AGENT_ID> env vars.
  */
 function createAllAgents(options = {}) {
   return [
@@ -193,6 +211,14 @@ function createAllAgents(options = {}) {
     new AuditorAgent(),
     new ObserverAgent(),
   ];
+
+  const agents = [];
+  for (const { id, factory } of candidates) {
+    if (isAgentEnabled(id)) {
+      agents.push(factory());
+    }
+  }
+  return agents;
 }
 
 /**
@@ -211,6 +237,7 @@ function createConfiguredSupervisor(Supervisor, options = {}) {
 module.exports = {
   createAllAgents,
   createConfiguredSupervisor,
+  isAgentEnabled,
   ClaudeCodeAgent,
   BuilderAgent,
   ResearcherAgent,

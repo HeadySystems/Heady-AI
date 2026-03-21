@@ -14,12 +14,16 @@ const PHI = 1.6180339887;
 
 const CLOUD_RUN_ORIGIN = 'https://heady-manager-609590223909.us-central1.run.app';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Service',
-  'Access-Control-Max-Age': '86400',
-};
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Service',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+  };
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -27,7 +31,7 @@ export default {
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: corsHeaders(request) });
     }
 
     // Health check
@@ -41,7 +45,7 @@ export default {
         capabilities: ['kernel', 'runtime', 'scheduler', 'memory'],
         region: request.cf?.colo ?? 'unknown',
         timestamp: new Date().toISOString(),
-      }, { headers: CORS_HEADERS });
+      }, { headers: corsHeaders(request) });
     }
 
     // API routes → proxy to Cloud Run
@@ -58,7 +62,7 @@ export default {
       try {
         const response = await fetch(proxyRequest);
         const newHeaders = new Headers(response.headers);
-        Object.entries(CORS_HEADERS).forEach(([k, v]) => newHeaders.set(k, v));
+        Object.entries(corsHeaders(request)).forEach(([k, v]) => newHeaders.set(k, v));
         return new Response(response.body, {
           status: response.status,
           headers: newHeaders,
@@ -66,7 +70,7 @@ export default {
       } catch (err) {
         return Response.json(
           { error: 'Origin unreachable', detail: err.message },
-          { status: 502, headers: CORS_HEADERS }
+          { status: 502, headers: corsHeaders(request) }
         );
       }
     }
@@ -90,7 +94,7 @@ export default {
       } catch (err) {
         return Response.json(
           { error: 'MCP origin unreachable' },
-          { status: 502, headers: CORS_HEADERS }
+          { status: 502, headers: corsHeaders(request) }
         );
       }
     }
@@ -100,7 +104,7 @@ export default {
       headers: {
         'Content-Type': 'text/html;charset=utf-8',
         'Cache-Control': 'public, max-age=3600',
-        ...CORS_HEADERS,
+        ...corsHeaders(request),
       },
     });
   },

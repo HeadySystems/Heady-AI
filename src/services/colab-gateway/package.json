@@ -14,5 +14,5 @@
   "author": "Eric Haywood <eric@headyconnection.org>",
   "license": "UNLICENSED",
   "private": true,
-  "engines": { "node": ">=20.0.0" }
+  "engines": { "node": ">=22.0.0" }
 }

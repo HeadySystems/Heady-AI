@@ -8,10 +8,10 @@
     "test": "node ../../tests/unit/notification.test.js"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.1.0",
     "nats": "^2.19.0"
   },
   "author": "Eric Haywood <eric@headysystems.com>",

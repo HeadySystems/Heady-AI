@@ -10,6 +10,23 @@
  * vinci canvas, pulse API, and service stubs.
  */
 
+/* ── Heady CORS whitelist (no wildcards) ── */
+const HEADY_ALLOWED_ORIGINS = new Set([
+  "https://headyme.com", "https://www.headyme.com",
+  "https://headysystems.com", "https://www.headysystems.com",
+  "https://heady-ai.com", "https://www.heady-ai.com",
+  "https://headyos.com", "https://www.headyos.com",
+  "https://headyconnection.org", "https://www.headyconnection.org",
+  "https://headyconnection.com", "https://www.headyconnection.com",
+  "https://headyex.com", "https://www.headyex.com",
+  "https://headyfinance.com", "https://www.headyfinance.com",
+  "https://admin.headysystems.com",
+]);
+function _headyCorsOrigin(req) {
+  const o = (req && req.headers && req.headers.origin) || (req && req.headers && req.headers.get && req.headers.get("origin")) || "";
+  return HEADY_ALLOWED_ORIGINS.has(o) ? o : "https://headyme.com";
+}
+
 const path = require("path");
 const fs = require("fs");
 const logger = require("../utils/logger");
@@ -493,7 +510,7 @@ function registerServiceRoutes(app, deps = {}) {
             if (fs.existsSync(fp)) {
                 try {
                     const data = JSON.parse(fs.readFileSync(fp, "utf8"));
-                    res.setHeader("Access-Control-Allow-Origin", "*");
+                    res.setHeader("Access-Control-Allow-Origin", _headyCorsOrigin(req));
                     return res.json(data);
                 } catch (err) {
                     return res.status(500).json({ ok: false, error: "Parse error" });
@@ -505,7 +522,7 @@ function registerServiceRoutes(app, deps = {}) {
 
     // ─── Auto-Success API (live task completion data for frontends) ────
     app.get("/api/auto-success/status", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", _headyCorsOrigin(req));
         if (autoSuccessEngine) {
             return res.json(autoSuccessEngine.getStatus());
         }
@@ -513,7 +530,7 @@ function registerServiceRoutes(app, deps = {}) {
     });
 
     app.get("/api/auto-success/history", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", _headyCorsOrigin(req));
         const limit = parseInt(req.query.limit) || 50;
         if (autoSuccessEngine) {
             return res.json({ ok: true, tasks: autoSuccessEngine.getHistory(limit) });
@@ -522,7 +539,7 @@ function registerServiceRoutes(app, deps = {}) {
     });
 
     app.get("/api/auto-success/tasks", (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", _headyCorsOrigin(req));
         const category = req.query.category || null;
         if (autoSuccessEngine) {
             return res.json({ ok: true, tasks: autoSuccessEngine.getTaskCatalog(category) });

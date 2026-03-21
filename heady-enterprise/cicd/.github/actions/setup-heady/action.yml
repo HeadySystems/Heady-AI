@@ -65,7 +65,7 @@ runs:
 
     # ── 2. pnpm (must precede Node setup for cache path) ───────
     - name: Setup pnpm ${{ inputs.pnpm-version }}
-      uses: pnpm/action-setup@v3
+      uses: pnpm/action-setup@v4
       with:
         version: ${{ inputs.pnpm-version }}
         # Do not run install here; we handle it explicitly below

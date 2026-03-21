@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: "22"
   TURBO_TOKEN:  ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM:   ${{ secrets.TURBO_TEAM }}
 
@@ -50,7 +50,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: npm run lint
@@ -86,7 +86,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Restore Turborepo cache
         uses: actions/cache@v4
@@ -140,7 +140,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Restore Turborepo cache
         uses: actions/cache@v4

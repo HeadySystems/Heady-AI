@@ -33,6 +33,8 @@ class HeadyMCPServer {
         return this.handleToolCall(params, id);
       case 'ping':
         return this.jsonRpcResponse(id, { status: 'ok', uptime: Date.now() - this.startTime });
+      case 'health':
+        return this.handleHealth(id);
       default:
         return this.jsonRpcError(id, -32601, `Method not found: ${method}`);
     }
@@ -51,6 +53,19 @@ class HeadyMCPServer {
         totalServices: this.manifest.total_services,
         categories: this.manifest.categories,
       },
+    });
+  }
+
+  handleHealth(id) {
+    const uptimeMs = Date.now() - this.startTime;
+    return this.jsonRpcResponse(id, {
+      status: 'healthy',
+      uptime: uptimeMs,
+      uptimeHuman: `${Math.floor(uptimeMs / 1000)}s`,
+      version: this.manifest.version,
+      totalTools: this.manifest.total_services,
+      memoryUsage: process.memoryUsage().heapUsed,
+      timestamp: new Date().toISOString(),
     });
   }
 

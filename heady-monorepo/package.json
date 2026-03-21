@@ -25,7 +25,7 @@
     "vector-memory", "pgvector", "circuit-breaker"
   ],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "start": "node heady-manager.js",
@@ -57,7 +57,7 @@
     "@modelcontextprotocol/sdk": "^1.0.1",
     "@octokit/auth-app": "^8.2.0",
     "@octokit/rest": "^21.0.0",
-    "express": "^4.21.2",
+    "express": "^5.1.0",
     "cors": "^2.8.5",
     "helmet": "^8.0.0",
     "compression": "^1.7.4",

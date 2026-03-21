@@ -19,6 +19,11 @@ services:
     retry_backoff_ms: 1000
     critical: true
     tags: [llm, inference]
+    circuit_breaker:
+      failure_threshold: 5
+      success_threshold: 3
+      timeout_ms: 60000
+      reset_timeout_ms: 89000
 
   openai:
     url: "https://api.openai.com/v1"
@@ -27,6 +32,11 @@ services:
     retry_backoff_ms: 1000
     critical: true
     tags: [llm, inference, embeddings]
+    circuit_breaker:
+      failure_threshold: 5
+      success_threshold: 3
+      timeout_ms: 120000
+      reset_timeout_ms: 89000
 
   google_ai:
     url: "https://generativelanguage.googleapis.com/v1beta"
@@ -35,6 +45,14 @@ services:
     retry_backoff_ms: 1000
     critical: false
     tags: [llm, inference]
+
+  vertex_ai:
+    url: "https://${VERTEX_AI_REGION:-us-central1}-aiplatform.googleapis.com/v1"
+    timeout_ms: 60000
+    retry_attempts: 3
+    retry_backoff_ms: 1000
+    critical: false
+    tags: [llm, inference, google]
 
   groq:
     url: "https://api.groq.com/openai/v1"
@@ -84,6 +102,11 @@ services:
     retry_backoff_ms: 1000
     critical: false
     tags: [payments, integration]
+    circuit_breaker:
+      failure_threshold: 3
+      success_threshold: 2
+      timeout_ms: 15000
+      reset_timeout_ms: 55000
 
   cloudflare:
     url: "https://api.cloudflare.com/client/v4"
@@ -130,7 +153,7 @@ services:
 databases:
   primary:
     type: postgresql
-    host: "${DB_HOST:-localhost}"
+    host: "${DB_HOST}"
     port: 5432
     database: headydb
     pool:
@@ -156,7 +179,10 @@ databases:
 
   cache:
     type: redis
-    url: "${REDIS_URL:-redis://localhost:6379}"
+    url: "${REDIS_URL}"
+    tls:
+      enabled: true
+      reject_unauthorized: true
     pool:
       min: 2
       max: 10
@@ -214,8 +240,8 @@ health_checks:
       expected_status: 200
     - name: postgres
       type: pg_isready
-      host: "${DB_HOST:-localhost}"
+      host: "${DB_HOST}"
       port: 5432
     - name: redis
       type: redis_ping
-      url: "${REDIS_URL:-redis://localhost:6379}"
+      url: "${REDIS_URL}"

@@ -37,8 +37,8 @@ const STAGE_PATHS: Record<OnboardingStage, string> = {
   [OnboardingStage.CREATE_ACCOUNT]: '/onboarding/create-account',
   [OnboardingStage.EMAIL_CONFIG]: '/onboarding/email-config',
   [OnboardingStage.PERMISSIONS]: '/onboarding/permissions',
-  [OnboardingStage.BUDDY_SETUP]: '/onboarding/buddy-setup',
-  [OnboardingStage.COMPLETE]: '/onboarding/complete',
+  [OnboardingStage.BUDDY_SETUP]: '/onboarding/buddy',
+  [OnboardingStage.COMPLETE]: '/dashboard',
 };
 
 // Paths that bypass onboarding guard

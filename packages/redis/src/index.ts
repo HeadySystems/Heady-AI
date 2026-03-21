@@ -5,6 +5,7 @@ export interface RedisPoolConfig {
   port?: number;
   password?: string;
   db?: number;
+  tls?: boolean;
   cluster?: boolean;
   clusterNodes?: {
     host: string;
@@ -39,16 +40,17 @@ export class HeadyRedisPool {
         },
         clusterRetryStrategy: times => Math.min(100 * times, 2000)
       });
-      this.logger.info('Redis Cluster pool initialized');
+      this.logger.info('Redis Cluster pool initialized', useTls ? '(TLS)' : '(plain)');
     } else {
       this.pool = new Redis({
         host: config.host || "0.0.0.0",
         port: config.port || 6379,
         password: config.password,
         db: config.db || 0,
-        ...poolConfig
+        ...poolConfig,
+        ...tlsOpts
       });
-      this.logger.info('Redis standalone pool initialized');
+      this.logger.info('Redis standalone pool initialized', useTls ? '(TLS)' : '(plain)');
     }
     this.setupMonitoring();
   }

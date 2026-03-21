@@ -1,3 +1,20 @@
+/* ── Heady CORS whitelist (no wildcards) ── */
+const HEADY_ALLOWED_ORIGINS = new Set([
+  "https://headyme.com", "https://www.headyme.com",
+  "https://headysystems.com", "https://www.headysystems.com",
+  "https://heady-ai.com", "https://www.heady-ai.com",
+  "https://headyos.com", "https://www.headyos.com",
+  "https://headyconnection.org", "https://www.headyconnection.org",
+  "https://headyconnection.com", "https://www.headyconnection.com",
+  "https://headyex.com", "https://www.headyex.com",
+  "https://headyfinance.com", "https://www.headyfinance.com",
+  "https://admin.headysystems.com",
+]);
+function _headyCorsOrigin(req) {
+  const o = (req && req.headers && req.headers.origin) || (req && req.headers && req.headers.get && req.headers.get("origin")) || "";
+  return HEADY_ALLOWED_ORIGINS.has(o) ? o : "https://headyme.com";
+}
+
 import { Hono } from 'hono'
 
 const app = new Hono()
@@ -283,7 +300,7 @@ app.get('/sse', (c) => {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': _headyCorsOrigin(req),
             'X-Heady-Client-Id': clientId,
         },
     })
@@ -393,7 +410,7 @@ app.options('*', (c) => {
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': _headyCorsOrigin(req),
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },

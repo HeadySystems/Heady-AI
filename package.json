@@ -4,7 +4,7 @@
   "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {

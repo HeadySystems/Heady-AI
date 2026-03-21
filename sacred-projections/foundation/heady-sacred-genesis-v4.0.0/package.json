@@ -16,6 +16,6 @@
     "bundle:summary": "node scripts/bundle-summary.js"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   }
 }

@@ -15,7 +15,7 @@ concurrency:
 
 env:
   NODE_ENV: test
-  NODE_VERSION: "20"
+  NODE_VERSION: "22"
 
 jobs:
   lint:
@@ -33,7 +33,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Lint check
         run: npm run lint:check
@@ -87,7 +87,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Create test environment
         run: |
@@ -133,7 +133,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build
         run: npm run build --if-present

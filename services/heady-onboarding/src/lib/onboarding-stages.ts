@@ -58,8 +58,8 @@ export const ONBOARDING_STAGES: StageConfig[] = [
     index: 3,
     title: 'Customize HeadyBuddy',
     description: 'Personalize your AI companion — themes, contexts, and quick-switch profiles',
-    path: '/onboarding/buddy-setup',
-    apiEndpoint: '/api/onboarding/buddy-setup',
+    path: '/onboarding/buddy',
+    apiEndpoint: '/api/onboarding/buddy',
     requiredFields: ['buddyName', 'theme'],
     estimatedSeconds: Math.round(30 * PHI ** 3), // ~127s
     canGoBack: true,
@@ -69,7 +69,7 @@ export const ONBOARDING_STAGES: StageConfig[] = [
     index: 4,
     title: 'Welcome to Heady™',
     description: 'Your workspace is ready — API key available in Settings',
-    path: '/onboarding/complete',
+    path: '/dashboard',
     apiEndpoint: '/api/onboarding/complete',
     requiredFields: [],
     estimatedSeconds: Math.round(30 / PHI), // ~19s

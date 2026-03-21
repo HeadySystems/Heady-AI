@@ -1,5 +1,5 @@
 # Heady™ Cloudflare Workers Configuration v6.0
-# Account: 8b1fa38f282c691423c6399247d53323
+# Account: set via CLOUDFLARE_ACCOUNT_ID env var
 # Edge AI inference, routing, and caching
 # 
 # @author Eric Haywood — HeadySystems Inc.
@@ -11,7 +11,8 @@
 name = "heady-edge"
 main = "src/edge/worker.js"
 compatibility_date = "2026-03-01"
-account_id = "8b1fa38f282c691423c6399247d53323"
+# account_id — set via CF_ACCOUNT_ID env var or wrangler.toml local override
+# account_id = "CF_ACCOUNT_ID"
 
 # Workers settings
 workers_dev = false

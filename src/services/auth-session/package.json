@@ -8,10 +8,10 @@
     "test": "node ../../tests/unit/auth-session.test.js"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^5.1.0",
     "firebase-admin": "^12.0.0"
   },
   "author": "Eric Haywood <eric@headysystems.com>",

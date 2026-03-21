@@ -681,7 +681,9 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '')
 function corsMiddleware(req, res, next) {
   const origin = req.headers.origin || '';
   if (ALLOWED_ORIGINS.includes(origin) || process.env.NODE_ENV !== 'production') {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');

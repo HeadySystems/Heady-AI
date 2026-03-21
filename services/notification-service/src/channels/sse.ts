@@ -60,6 +60,7 @@ export class SSEChannelHandler {
       'Connection': 'keep-alive',
       'Access-Control-Allow-Origin': origin && HEADY_ALLOWED_ORIGINS.has(origin) ? origin : 'null',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Vary': 'Origin',
       'X-Accel-Buffering': 'no'
     });
 

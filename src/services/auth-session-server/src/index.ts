@@ -34,7 +34,7 @@ const config: AuthServerConfig = {
   jwtAlgorithm: 'RS256',
   jwtPublicKeyPath: process.env.JWT_PUBLIC_KEY_PATH ?? '/run/secrets/jwt-public.pem',
   jwtPrivateKeyPath: process.env.JWT_PRIVATE_KEY_PATH ?? '/run/secrets/jwt-private.pem',
-  redisUrl: process.env.REDIS_URL ?? 'redis://redis:6379',
+  redisUrl: process.env.REDIS_URL ?? 'rediss://redis:6379',
   postgresUrl: process.env.DATABASE_URL ?? 'postgresql://heady:heady@pgbouncer:6432/heady_auth',
   corsOrigins: (process.env.CORS_ORIGINS ?? '').split(',').filter(Boolean),
   rateLimitWindowMs: FIB[8] * 1000,

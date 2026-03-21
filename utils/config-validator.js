@@ -85,7 +85,7 @@ function load() {
 
     // ─── Redis (Agent Communication Bus) ───
     redis: {
-      url: optional("REDIS_URL", "redis://localhost:6379"),
+      url: optional("REDIS_URL", "rediss://localhost:6379"),
       pool: {
         min: intVar("REDIS_POOL_MIN", 2, 1, 50),
         max: intVar("REDIS_POOL_MAX", 13, 2, 100),

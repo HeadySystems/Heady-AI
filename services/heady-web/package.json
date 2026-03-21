@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "author": "HeadySystems Inc. <dev@headysystems.com>",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {

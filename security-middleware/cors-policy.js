@@ -26,8 +26,9 @@ const FIRST_PARTY_DOMAINS = [
   'headyconnection.org',
   'headyapi.com',
   'headybot.com',
-  'headyos.com',
   'headyio.com',
+  'heady-ai.com',
+  '1ime1.com',
 ];
 
 // Third-party domains — allowed but no credentials
@@ -198,9 +199,13 @@ function corsPolicy(opts = {}) {
     // Check for route-level override
     const routeOverride = routeRegistry.find(req.path);
 
-    // Handle public API (no credentials)
+    // Handle public API — validate origin even for public routes
     if (routeOverride?.allowAll) {
-      res.set('Access-Control-Allow-Origin', '*');
+      const { allowed: pubAllowed } = validateOrigin(origin, { additionalDomains, allowLocalhost });
+      if (pubAllowed) {
+        res.set('Access-Control-Allow-Origin', origin);
+        res.set('Vary', 'Origin');
+      }
       res.set('Access-Control-Allow-Methods', (routeOverride.methods || ALLOWED_METHODS).join(', '));
       res.set('Access-Control-Allow-Headers', allowedHeadersStr);
       res.set('Access-Control-Expose-Headers', (routeOverride.exposedHeaders || exposedHeaders).join(', '));
@@ -268,7 +273,12 @@ function corsPolicy(opts = {}) {
  */
 function publicCors(methods = ['GET', 'POST']) {
   return (req, res, next) => {
-    res.set('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin;
+    const { allowed } = validateOrigin(origin, { allowLocalhost: process.env.NODE_ENV !== 'production' });
+    if (allowed) {
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Vary', 'Origin');
+    }
     res.set('Access-Control-Allow-Methods', methods.join(', '));
     res.set('Access-Control-Allow-Headers', ALLOWED_HEADERS.join(', '));
     res.set('Access-Control-Expose-Headers', EXPOSED_HEADERS.join(', '));
