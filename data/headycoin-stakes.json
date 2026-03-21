@@ -526,5 +526,53 @@
     "status": "active",
     "rewardsClaimed": 0,
     "lastRewardCheck": "2026-03-21T13:44:56.665Z"
+  },
+  {
+    "id": "stake_1774101034839_oipo",
+    "walletAddress": "hdy_usr_b8faf4d95e2c555d",
+    "amount": 100,
+    "tier": "SHORT",
+    "apy": 0.05,
+    "stakedAt": "2026-03-21T13:50:34.839Z",
+    "unlocksAt": "2026-04-20T13:50:34.839Z",
+    "status": "active",
+    "rewardsClaimed": 0,
+    "lastRewardCheck": "2026-03-21T13:50:34.839Z"
+  },
+  {
+    "id": "stake_1774101034845_lmko",
+    "walletAddress": "hdy_usr_0c30591888822970",
+    "amount": 100,
+    "tier": "SHORT",
+    "apy": 0.05,
+    "stakedAt": "2026-03-21T13:50:34.845Z",
+    "unlocksAt": "2026-04-20T13:50:34.845Z",
+    "status": "active",
+    "rewardsClaimed": 0,
+    "lastRewardCheck": "2026-03-21T13:50:34.845Z"
+  },
+  {
+    "id": "stake_1774101034849_x0ad",
+    "walletAddress": "hdy_usr_cf1fe775b82381c3",
+    "amount": 100,
+    "tier": "SHORT",
+    "apy": 0.05,
+    "stakedAt": "2026-03-21T13:50:34.849Z",
+    "unlocksAt": "2026-04-20T13:50:34.849Z",
+    "status": "active",
+    "rewardsClaimed": 0,
+    "lastRewardCheck": "2026-03-21T13:50:34.849Z"
+  },
+  {
+    "id": "stake_1774101034850_0dhl",
+    "walletAddress": "hdy_usr_cf1fe775b82381c3",
+    "amount": 200,
+    "tier": "MEDIUM",
+    "apy": 0.1,
+    "stakedAt": "2026-03-21T13:50:34.850Z",
+    "unlocksAt": "2026-06-19T13:50:34.850Z",
+    "status": "active",
+    "rewardsClaimed": 0,
+    "lastRewardCheck": "2026-03-21T13:50:34.850Z"
   }
 ]
