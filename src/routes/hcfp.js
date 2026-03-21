@@ -377,6 +377,96 @@ router.post('/auto-success/stop', (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// HCFP RUNNER + EVENT BRIDGE ROUTES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const { hcfpRunner, hcfpBridge } = require('../bootstrap/hcfp-bootstrap');
+
+/**
+ * GET /hcfp-runner/status — HCFPRunner status
+ */
+router.get('/hcfp-runner/status', (req, res) => {
+  if (!hcfpRunner) {
+    return res.status(503).json({ ok: false, error: 'HCFPRunner not loaded' });
+  }
+  try {
+    const status = typeof hcfpRunner.getStatus === 'function' ? hcfpRunner.getStatus() : { available: true };
+    res.json({ ok: true, runner: status, ts: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+/**
+ * POST /hcfp-runner/run — Trigger a pipeline run via HCFPRunner
+ */
+router.post('/hcfp-runner/run', async (req, res) => {
+  if (!hcfpRunner) {
+    return res.status(503).json({ ok: false, error: 'HCFPRunner not loaded' });
+  }
+  try {
+    const task = req.body?.task || 'manual-api-trigger';
+    const result = await hcfpRunner.run(task);
+    res.json({ ok: true, runId: result?.id, status: result?.status, ts: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+/**
+ * GET /hcfp-bridge/status — HCFPEventBridge status
+ */
+router.get('/hcfp-bridge/status', (req, res) => {
+  if (!hcfpBridge) {
+    return res.status(503).json({ ok: false, error: 'HCFPEventBridge not loaded' });
+  }
+  res.json({ ok: true, bridge: hcfpBridge.getStatus(), ts: new Date().toISOString() });
+});
+
+/**
+ * POST /hcfp-bridge/trigger — Manually trigger autonomous pipeline cycle
+ */
+router.post('/hcfp-bridge/trigger', async (req, res) => {
+  if (!hcfpRunner) {
+    return res.status(503).json({ ok: false, error: 'HCFPRunner not loaded' });
+  }
+  try {
+    const task = req.body?.task || 'manual-bridge-trigger';
+    const result = await hcfpRunner.run(task);
+    res.json({ ok: true, runId: result?.id, status: result?.status, ts: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+/**
+ * GET /integration/overview — Full integration status across all systems
+ */
+router.get('/integration/overview', (req, res) => {
+  const engineHealth = engine.health();
+  const schedulerHealth = scheduler.health();
+  const bridgeStatus = hcfpBridge ? hcfpBridge.getStatus() : null;
+
+  res.json({
+    ok: true,
+    service: 'heady-integration-overview',
+    systems: {
+      pipelineEngine: { status: 'active', runs: engineHealth.totalRuns },
+      autoSuccessScheduler: { status: schedulerHealth.running ? 'running' : 'stopped', cycles: schedulerHealth.cycleCount, tasks: schedulerHealth.tasks?.total || 0 },
+      hcfpRunner: { status: hcfpRunner ? 'loaded' : 'not_loaded' },
+      hcfpBridge: { status: bridgeStatus ? (bridgeStatus.running ? 'running' : 'stopped') : 'not_loaded', cycles: bridgeStatus?.cycleCount || 0 },
+      eventBus: { status: global.eventBus ? 'active' : 'not_available' },
+    },
+    wiring: {
+      autoSuccess_to_pipeline: hcfpBridge ? 'wired' : 'disconnected',
+      pipeline_to_autoSuccess: hcfpBridge ? 'wired' : 'disconnected',
+      autonomous_trigger: bridgeStatus?.running ? `active (${bridgeStatus.triggerIntervalMs}ms)` : 'inactive',
+    },
+    ts: new Date().toISOString(),
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // SWARM ROUTES (Preserved from original)
 // ═══════════════════════════════════════════════════════════════════════════════
 

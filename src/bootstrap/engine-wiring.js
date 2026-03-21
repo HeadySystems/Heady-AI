@@ -587,12 +587,12 @@ function wireEngines(app, deps = {}) {
     try {
         let HCFPRunnerCtor;
         try {
-            const hcfpMod = require("../../../orchestration/hcfp-runner");
-            HCFPRunnerCtor = hcfpMod.default || hcfpMod.HCFPRunner || hcfpMod;
+            const hcfpMod = require("../../orchestration/hcfp-runner");
+            HCFPRunnerCtor = hcfpMod.HCFPRunner || hcfpMod.default || hcfpMod;
         } catch { /* try alternate path */ }
         if (!HCFPRunnerCtor) {
-            const hcfpMod = require("../../orchestration/hcfp-runner");
-            HCFPRunnerCtor = hcfpMod.default || hcfpMod.HCFPRunner || hcfpMod;
+            const hcfpMod = require("../../../orchestration/hcfp-runner");
+            HCFPRunnerCtor = hcfpMod.HCFPRunner || hcfpMod.default || hcfpMod;
         }
 
         const { HCFPEventBridge } = require("../orchestration/hcfp-event-bridge");

@@ -24,7 +24,7 @@ const CONSUMER_GROUP = 'hcfp-consumers';
  * This is the correct model for latent-space instantaneous delivery.
  * NEVER use setInterval, setTimeout-based polling, or sleep loops.
  */
-export class HeadyEventSpine {
+class HeadyEventSpine {
   constructor(redisClient) {
     this.redis = redisClient;
     this.streamKey = STREAM_KEY;
@@ -144,15 +144,12 @@ export class HeadyEventSpine {
   }
 }
 
-export default HeadyEventSpine;
-
+module.exports = { HeadyEventSpine };
 
 // --- Auto-Unified Latent Service Pattern ---
-if (module.exports && typeof module.exports === 'object') {
-  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
-  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
-  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
-  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
-  if (!module.exports._tick) module.exports._tick = async () => {};
-}
+if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
+if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
+if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
+if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
+if (!module.exports._tick) module.exports._tick = async () => {};
 // -------------------------------------------

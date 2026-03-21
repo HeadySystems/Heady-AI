@@ -837,6 +837,92 @@ claude_code:
     server: mcp-servers/heady-mcp-server.js
     tools: 52
 
+# ─── EXTERNAL CORE SERVICES (v9.0 — Integrated Repos) ────────────────────
+external_services:
+  - name: headyapi-core
+    role: Unified API Gateway
+    type: web
+    skills: [api-gateway, rate-limiting, auth, intelligent-routing]
+    tools: [express, helmet]
+    endpoint: http://api-core.headysystems.com:3370
+    healthCheck: /health
+    criticality: high
+    owner: system
+    repo: HeadyMe/headyapi-core
+    slos:
+      availability: 99.9
+      latencyP99Ms: 500
+
+  - name: headymcp-core
+    role: Master Control Program
+    type: web
+    skills: [mcp-tools, autonomous-orchestration, zero-latency-dispatch]
+    tools: [express, mcp-protocol]
+    endpoint: http://mcp-core.headysystems.com:3371
+    healthCheck: /health
+    criticality: critical
+    owner: system
+    repo: HeadyMe/headymcp-core
+    slos:
+      availability: 99.9
+      latencyP99Ms: 300
+
+  - name: headyos-core
+    role: Latent Operating System
+    type: web
+    skills: [continuous-reasoning, latent-computation, os-services]
+    tools: [express, phi-math]
+    endpoint: http://os-core.headysystems.com:3372
+    healthCheck: /health
+    criticality: critical
+    owner: system
+    repo: HeadyMe/headyos-core
+    slos:
+      availability: 99.9
+      latencyP99Ms: 1000
+
+  - name: headybot-core
+    role: Bot Framework & Swarm Intelligence
+    type: web
+    skills: [bot-orchestration, swarm-intelligence, autonomous-agents]
+    tools: [express, event-emitter]
+    endpoint: http://bot-core.headysystems.com:3373
+    healthCheck: /health
+    criticality: high
+    owner: system
+    repo: HeadyMe/headybot-core
+    slos:
+      availability: 99.0
+      latencyP99Ms: 2000
+
+  - name: headyme-core
+    role: Personal AI Cloud Hub
+    type: web
+    skills: [command-center, personal-ai, digital-life-management]
+    tools: [express, static-serving]
+    endpoint: http://me-core.headysystems.com:3374
+    healthCheck: /health
+    criticality: high
+    owner: system
+    repo: HeadyMe/headyme-core
+    slos:
+      availability: 99.0
+      latencyP99Ms: 2000
+
+  - name: headyapi
+    role: Web Frontend & API Proxy
+    type: web
+    skills: [static-serving, api-proxy, frontend-delivery]
+    tools: [node-http, node-https]
+    endpoint: http://api.headysystems.com:3375
+    healthCheck: /health
+    criticality: high
+    owner: system
+    repo: HeadyMe/headyapi
+    slos:
+      availability: 99.5
+      latencyP99Ms: 1000
+
 # ─── HEADY VAULT ──────────────────────────────────────────────────────────
 vault:
   name: HeadyVault

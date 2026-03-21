@@ -94,6 +94,12 @@ const SERVICE_CATALOG = Object.freeze({
   'asset-pipeline':          { port: 3367, domain: 'operations',     pool: 'cold', description: 'Static asset processing pipeline' },
   'auth-session-server':     { port: 3368, domain: 'security',       pool: 'hot',  description: 'httpOnly cookie session server' },
   'heady-midi':              { port: 3369, domain: 'creative',       pool: 'cold', description: 'MIDI event processing and music generation' },
+  'headyapi-core':           { port: 3370, domain: 'interface',      pool: 'hot',  description: 'Unified API Gateway with intelligent routing' },
+  'headymcp-core':           { port: 3371, domain: 'orchestration',  pool: 'hot',  description: 'Master Control Program: 31 MCP tools, autonomous dispatch' },
+  'headyos-core':            { port: 3372, domain: 'orchestration',  pool: 'hot',  description: 'Latent OS layer for continuous AI reasoning' },
+  'headybot-core':           { port: 3373, domain: 'agents',         pool: 'warm', description: 'Bot framework with swarm intelligence orchestration' },
+  'headyme-core':            { port: 3374, domain: 'interface',      pool: 'warm', description: 'Personal AI cloud hub — command center for digital life' },
+  'headyapi':                { port: 3375, domain: 'interface',      pool: 'hot',  description: 'Web frontend delivery & API gateway proxy' },
 });
 
 /**

@@ -195,6 +195,61 @@ probes:
     interval: 300
     criticality: medium
 
+# ─── EXTERNAL CORE SERVICE PROBES ─────────────────────────────────────────
+  - name: headyapi-core
+    type: http
+    url: http://localhost:3370/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 2000
+    interval: 120
+    criticality: high
+
+  - name: headymcp-core
+    type: http
+    url: http://localhost:3371/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 2000
+    interval: 120
+    criticality: critical
+
+  - name: headyos-core
+    type: http
+    url: http://localhost:3372/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 2000
+    interval: 120
+    criticality: critical
+
+  - name: headybot-core
+    type: http
+    url: http://localhost:3373/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 3000
+    interval: 120
+    criticality: high
+
+  - name: headyme-core
+    type: http
+    url: http://localhost:3374/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 3000
+    interval: 120
+    criticality: high
+
+  - name: headyapi
+    type: http
+    url: http://localhost:3375/health
+    method: GET
+    expectedStatus: 200
+    maxLatencyMs: 2000
+    interval: 120
+    criticality: high
+
 # ─── READINESS SCORING ───────────────────────────────────────────────────
 scoring:
   description: >
