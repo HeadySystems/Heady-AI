@@ -88,7 +88,8 @@ function findBuildableProjects(baseDir, depth = 2) {
         }
       });
     } catch (err) {
-      // Skip inaccessible directories
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
   }
   scan(baseDir, 0);

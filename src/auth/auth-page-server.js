@@ -36,7 +36,7 @@ function setSessionCookie(res, token) {
 }
 
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
 
   // CORS — restrict to known Heady domains only
   const origin = req.headers.origin;

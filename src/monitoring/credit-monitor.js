@@ -29,7 +29,9 @@ const PROVIDERS = {
                         const data = await res.json();
                         return { available: true, balance: data.remaining_credits || null, usage: data };
                     }
-                } catch { /* fall through */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
             // Fallback: just verify key works
             try {

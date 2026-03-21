@@ -85,7 +85,10 @@ class DynamicConnectorService extends EventEmitter {
             const res = await fetch(`${url}/graphql`, { method: "POST", headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
                 body: JSON.stringify({ query: "{ __schema { types { name kind fields { name } } } }" }), signal: AbortSignal.timeout(15000) });
             if (res.ok) { const d = await res.json(); if (d.data?.__schema) return { type: "graphql", data: d.data.__schema, sourceUrl: `${url}/graphql` }; }
-        } catch {}
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         // Raw fallback
         const res = await fetch(url, { signal: AbortSignal.timeout(10000), headers: opts.headers || {} });
         return { type: "raw", data: { url, statusCode: res.status }, sourceUrl: url };

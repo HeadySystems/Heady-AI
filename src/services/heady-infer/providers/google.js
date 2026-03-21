@@ -229,7 +229,10 @@ class GoogleProvider extends BaseProvider {
                 inputTokens  = meta.promptTokenCount     || inputTokens;
                 outputTokens = meta.candidatesTokenCount || outputTokens;
               }
-            } catch (_) {}
+            } catch (_) {
+              const logger = require('../../../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         });
 

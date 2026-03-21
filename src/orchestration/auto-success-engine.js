@@ -120,7 +120,10 @@ const codeQualityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       tools = deps.filter(d => ['knip', 'ts-prune', 'deadfile', 'unimported'].includes(d));
-    } catch { /* no package.json */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('dead_code_detection', tools.length > 0 ? 'pass' : 'warn', { toolsInstalled: tools }, start));
   }),
 
@@ -130,7 +133,10 @@ const codeQualityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       hasMadge = deps.includes('madge') || deps.includes('dpdm');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('import_cycle_detection', hasMadge ? 'pass' : 'warn', { cycleDetectorInstalled: hasMadge }, start));
   }),
 
@@ -149,7 +155,10 @@ const codeQualityTasks = {
         };
         walk(srcDir);
       }
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = fileCount < 233 ? 'pass' : fileCount < 610 ? 'warn' : 'fail';
     resolve(taskResult('complexity_scoring', status, { fileCount, threshold: 233 }, start));
   }),
@@ -160,7 +169,10 @@ const codeQualityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       hasJscpd = deps.includes('jscpd') || deps.includes('copy-paste');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('duplication_scanning', 'pass', { tool: hasJscpd ? 'jscpd' : 'none', configured: hasJscpd }, start));
   }),
 
@@ -178,7 +190,10 @@ const codeQualityTasks = {
     try {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       configured = !!(pkg.eslintConfig || pkg['@typescript-eslint/naming-convention']);
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('naming_convention_audit', 'pass', { configured, auditedAt: new Date().toISOString() }, start));
   }),
 
@@ -205,7 +220,10 @@ const codeQualityTasks = {
         };
         walk(distDir);
       }
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const limitBytes = 1597 * 1024;  // fib(17) = 1597 KB
     const status = distSize === 0 ? 'warn' : distSize < limitBytes ? 'pass' : 'fail';
     resolve(taskResult('bundle_size_tracking', status, { distSizeBytes: distSize, limitBytes, limitKB: 1597 }, start));
@@ -220,7 +238,10 @@ const codeQualityTasks = {
       try {
         const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
         coveragePct = summary.total && summary.total.lines ? summary.total.lines.pct : null;
-      } catch { /* no summary */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     const threshold = PSI * 100;  // 61.8% minimum
     const status = coveragePct === null ? 'warn' : coveragePct >= threshold ? 'pass' : 'fail';
@@ -255,7 +276,10 @@ const codeQualityTasks = {
       totalDeps = Object.keys(deps).length;
       // Count deps pinned to old major versions as a proxy
       outdatedCount = Object.values(deps).filter(v => /^[0-9]/.test(v) && parseInt(v) < 2).length;
-    } catch { /* no package.json */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const ratio = totalDeps > 0 ? (totalDeps - outdatedCount) / totalDeps : 1;
     const status = ratio >= PSI ? 'pass' : 'warn';
     resolve(taskResult('dependency_freshness', status, { totalDeps, outdatedCount, freshnessRatio: ratio }, start));
@@ -268,7 +292,10 @@ const codeQualityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       secTools = deps.filter(d => ['helmet', 'express-rate-limit', 'cors', 'csurf', 'bcrypt', 'argon2', 'jsonwebtoken'].includes(d));
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('security_pattern_detection', 'pass', { securityToolsFound: secTools }, start));
   })
 };
@@ -291,7 +318,10 @@ const securityTasks = {
       try {
         const content = fs.readFileSync(path.join(process.cwd(), '.gitignore'), 'utf8');
         hasEnvInGitignore = content.includes('.env');
-      } catch { /* skip */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     resolve(taskResult('secret_detection', hasEnvInGitignore ? 'pass' : 'warn',
       { gitignoreFound: hasGitignore, envIgnored: hasEnvInGitignore }, start));
@@ -309,7 +339,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       corsConfigured = deps.includes('cors');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('cors_validation', 'pass', { corsPackageInstalled: corsConfigured }, start));
   }),
 
@@ -319,7 +352,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       helmetInstalled = deps.includes('helmet');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('csp_verification', helmetInstalled ? 'pass' : 'warn', { helmetInstalled, cspNote: 'Use helmet for CSP headers' }, start));
   }),
 
@@ -330,7 +366,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       jwtInstalled = deps.includes('jsonwebtoken') || deps.includes('jose') || deps.includes('@auth/core');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     // Token expiry default recommendation: 3600s (1h), phi-scaled: 6854s ≈ phiTimeout(4)
     const recommendedExpiryMs = 6854000;
     resolve(taskResult('auth_token_expiry', jwtInstalled ? 'pass' : 'warn',
@@ -362,7 +401,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       safeDeps = deps.filter(d => ['pg', 'mysql2', 'better-sqlite3', 'knex', 'prisma', 'sequelize', 'drizzle-orm'].includes(d));
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('sql_injection_scan', 'pass', { safeOrmLibraries: safeDeps, parameterizedQueriesSupported: safeDeps.length > 0 }, start));
   }),
 
@@ -372,7 +414,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       sanitizerFound = deps.some(d => ['dompurify', 'sanitize-html', 'xss', 'isomorphic-dompurify'].includes(d));
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('xss_pattern_scan', 'pass', { xssSanitizerFound: sanitizerFound }, start));
   }),
 
@@ -399,7 +444,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       rateLimitInstalled = deps.some(d => ['express-rate-limit', 'rate-limiter-flexible', 'bottleneck', '@upstash/ratelimit'].includes(d));
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('rate_limit_verify', rateLimitInstalled ? 'pass' : 'warn', { rateLimitInstalled }, start));
   }),
 
@@ -416,7 +464,10 @@ const securityTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       helmetInstalled = deps.includes('helmet');
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const requiredHeaders = ['X-Content-Type-Options', 'X-Frame-Options', 'Strict-Transport-Security', 'X-XSS-Protection'];
     resolve(taskResult('security_header_check', helmetInstalled ? 'pass' : 'warn',
       { helmetInstalled, requiredHeaders, note: helmetInstalled ? 'Helmet manages security headers' : 'Install helmet' }, start));
@@ -729,7 +780,10 @@ const complianceTasks = {
     try {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       license = pkg.license || null;
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const permissive = ['MIT', 'Apache-2.0', 'BSD-2-Clause', 'BSD-3-Clause', 'ISC', 'CC0-1.0'];
     const compatible = license ? permissive.includes(license) : false;
     resolve(taskResult('license_compatibility', license ? (compatible ? 'pass' : 'warn') : 'warn', { license, permissive: compatible }, start));
@@ -764,7 +818,10 @@ const complianceTasks = {
     try {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       packageVersion = pkg.version || null;
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('api_versioning', 'pass', { versionedApi, packageVersion, semverCompliant: !!packageVersion }, start));
   }),
 
@@ -844,7 +901,10 @@ const complianceTasks = {
       const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
       const deps = Object.keys({ ...(pkg.devDependencies || {}), ...(pkg.dependencies || {}) });
       hasA11yDep = deps.some(d => ['axe-core', '@axe-core/playwright', 'jest-axe', 'pa11y'].includes(d));
-    } catch { /* skip */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     resolve(taskResult('accessibility_check', 'pass', { a11yToolFound: hasA11yDep, wcagLevel: 'AA', standard: 'WCAG 2.1' }, start));
   })
 };
@@ -1127,7 +1187,7 @@ const infrastructureTasks = {
     const domainConfigured = !!(process.env.HEADY_DOMAIN || process.env.APP_DOMAIN || process.env.DOMAIN);
     resolve(taskResult('dns_record_validation', 'pass', {
       domainConfigured,
-      domain: process.env.HEADY_DOMAIN || process.env.APP_DOMAIN || 'localhost'
+      domain: process.env.HEADY_DOMAIN || process.env.APP_DOMAIN || '0.0.0.0'
     }, start));
   }),
 
@@ -1185,7 +1245,10 @@ const infrastructureTasks = {
     const hasDir = (() => { try { return fs.existsSync(migrationsDir); } catch { return false; } })();
     let migrationCount = 0;
     if (hasDir) {
-      try { migrationCount = fs.readdirSync(migrationsDir).length; } catch { /* skip */ }
+      try { migrationCount = fs.readdirSync(migrationsDir).length; } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     resolve(taskResult('db_migration_status', 'pass', {
       migrationsDir,
@@ -1200,7 +1263,10 @@ const infrastructureTasks = {
     try {
       const stats = fs.statfsSync ? fs.statfsSync(process.cwd()) : null;
       if (stats) freeMB = (stats.bfree * stats.bsize) / 1024 / 1024;
-    } catch { /* skip on non-Linux */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const minFreeGB = 1;  // 1 GB minimum
     const freeGB = freeMB / 1024;
     const status = freeGB > 5 ? 'pass' : freeGB > 1 ? 'warn' : 'fail';
@@ -1211,7 +1277,10 @@ const infrastructureTasks = {
     const logDir = path.join(process.cwd(), 'logs');
     const hasLogDir = (() => { try { return fs.existsSync(logDir); } catch { return false; } })();
     let logFiles = 0;
-    if (hasLogDir) { try { logFiles = fs.readdirSync(logDir).length; } catch { /* skip */ } }
+    if (hasLogDir) { try { logFiles = fs.readdirSync(logDir).length; } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    } }
     const maxLogFiles = 21;  // fib(8)
     resolve(taskResult('log_rotation', logFiles < maxLogFiles ? 'pass' : 'warn', {
       hasLogDir,

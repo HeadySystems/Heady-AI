@@ -238,7 +238,10 @@ class MidiEventBus extends EventEmitter {
                 ...(msg.agent ? { agent: msg.agent } : {}),
             };
             fs.appendFile(MIDI_LOG, JSON.stringify(entry) + "\n", () => { });
-        } catch { /* never crash the bus */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 

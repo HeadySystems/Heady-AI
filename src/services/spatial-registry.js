@@ -151,7 +151,9 @@ class SpatialRegistry {
             try {
                 const { registerRoutes: registerBridgeRoutes } = require("../services/redis-sync-bridge");
                 registerBridgeRoutes(app, this.redisSyncBridge);
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // ── CSL API — Continuous Semantic Logic Gates ──

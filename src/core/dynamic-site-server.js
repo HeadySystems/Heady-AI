@@ -895,7 +895,7 @@ function renderOnboarding(site, host) {
 
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 

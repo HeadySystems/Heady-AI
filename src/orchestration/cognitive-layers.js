@@ -39,7 +39,10 @@ const EventEmitter = require('events');
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch(e) { /* graceful */ }
+let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch(e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const {
   PHI,

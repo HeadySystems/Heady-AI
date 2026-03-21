@@ -292,7 +292,10 @@ class AuthProviderBee {
     // ─── Event emission ─────────────────────────────────────────────
     _emit(event, data) {
         if (this.eventBus) {
-            try { this.eventBus.emit(event, data); } catch (e) { /* swallow */ }
+            try { this.eventBus.emit(event, data); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 

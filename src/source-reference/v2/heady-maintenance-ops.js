@@ -54,8 +54,8 @@ function findStaleProjectionReferences(files, rootDir) {
             if (/service-worker/i.test(content) || /cloudflared.*tunnel/i.test(content) || /gcloud.*deprecated/i.test(content)) {
                 flagged.push(relPath);
             }
-        } catch {
-            // ignore unreadable files
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }
     return flagged;

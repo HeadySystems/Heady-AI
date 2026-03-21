@@ -257,12 +257,15 @@ function persist(manifestId) {
             text: `HCFP Pipeline ${manifest.id}\nPriority: ${manifest.priority}\n${summary}`,
             metadata: { type: "hcfp-pipeline", manifest_id: manifest.id, task_count: manifest.tasks.length },
         };
-        fetch("https://127.0.0.1:3301/api/memory/store", {
+        fetch(`${process.env.HEADY_MANAGER_URL || "https://0.0.0.0:3301"}/api/memory/store`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(embedPayload),
         }).catch(() => { /* never block pipeline on embedding failures */ });
-    } catch { /* embedding is best-effort, never crash pipeline */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return { ok: true, step: "persist", manifest_id: manifestId, summary: manifestSchema.summarize(manifest) };
 }
@@ -314,7 +317,10 @@ function persistManifestEvent(manifest, event) {
             ...manifestSchema.summarize(manifest),
         };
         fs.appendFile(PIPELINE_LOG, JSON.stringify(entry) + "\n", () => { });
-    } catch { /* never crash */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 module.exports = {

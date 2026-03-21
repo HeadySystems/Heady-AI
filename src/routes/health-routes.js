@@ -119,12 +119,18 @@ router.get('/full', async (req, res) => {
     let resilienceStatus = null;
     try {
         resilienceStatus = require('../resilience').getResilienceStatus();
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     let introspection = null;
     try {
         introspection = require('../self-awareness').getSystemIntrospection();
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     res.json({
         service: 'heady-manager',

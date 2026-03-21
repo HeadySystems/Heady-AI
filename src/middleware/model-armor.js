@@ -194,8 +194,8 @@ function createModelArmorMiddleware(opts = {}) {
         if (result.piiFindings.length > 0) {
             try {
                 req.body = JSON.parse(result.text);
-            } catch {
-                // If not valid JSON after redaction, keep original
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
 

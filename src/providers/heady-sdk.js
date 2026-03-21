@@ -35,7 +35,10 @@ const { budgetService } = require("../shared/policy-service");
 // Usage tracking
 const USAGE_PATH = path.join(__dirname, "../../data/headyjules-usage.json");
 let claudeUsage = { totalCost: 0, requests: 0, byModel: {}, byOrg: {}, history: [] };
-try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch { }
+try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTokens = 0) {
     const pricing = {
@@ -57,7 +60,10 @@ function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTok
         budgetService.recordUsage('ORG', orgName, cost, { model, inputTokens, outputTokens }).catch(() => { });
     }
 
-    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch { }
+    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     return cost;
 }
 

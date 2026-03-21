@@ -118,7 +118,9 @@ async function ingestRepoChanges(context) {
   try {
     const { execSync } = require("child_process");
     gitStatus = execSync("git status --porcelain", { cwd: repoRoot, encoding: "utf8" }).trim();
-  } catch { /* git not available */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   return {
     task: "ingest_repo_changes",
@@ -388,7 +390,9 @@ async function eodAssertionProtocol(context) {
   try {
     const raw = fs.readFileSync(historyFile, "utf8").trim();
     history = raw ? raw.split("\n").map(l => JSON.parse(l)) : [];
-  } catch { /* first run */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   // Log today's protocol run
   const entry = {
@@ -426,7 +430,9 @@ async function dynamicFocusShift(context) {
   try {
     const raw = fs.readFileSync(historyFile, "utf8").trim();
     history = raw ? raw.split("\n").map(l => JSON.parse(l)) : [];
-  } catch { /* no history yet */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   // Pattern detection: if 3+ consecutive runs show same friction or low revenue focus
   const recentRuns = history.slice(-3);
@@ -493,7 +499,9 @@ async function randomOptimizerCycle(context) {
   // Load decay state
   const decayFile = path.join(optDir, "priority-decay.json");
   let decayState = {};
-  try { decayState = JSON.parse(fs.readFileSync(decayFile, "utf8")); } catch { /* fresh */ }
+  try { decayState = JSON.parse(fs.readFileSync(decayFile, "utf8")); } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   // Apply decay: recently-run tasks get reduced priority
   const pool = improvements.map(imp => {

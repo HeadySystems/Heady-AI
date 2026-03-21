@@ -146,7 +146,10 @@ export async function detectTransport(endpoint) {
       if (response.status === 404 || response.status === 405) {
         return TransportId.SSE;
       }
-    } catch (_) { /* fall through */ }
+    } catch (_) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 
     // Default to SSE for HTTP if detection fails
     return TransportId.SSE;
@@ -432,7 +435,10 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.id) this._lastEventId = evt.id;
           if (evt.data) {
             this._handleIncoming(evt.data);
-            try { lastResult = deserializeMessage(evt.data); } catch (_) {}
+            try { lastResult = deserializeMessage(evt.data); } catch (_) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         }
       }
@@ -570,7 +576,10 @@ export class LegacySSETransport extends BaseTransport {
    */
   async close() {
     this._connected = false;
-    try { await this._sseReader?.cancel(); } catch (_) {}
+    try { await this._sseReader?.cancel(); } catch (_) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
     this._sseReader = null;
     this.emit('disconnected', {});
   }

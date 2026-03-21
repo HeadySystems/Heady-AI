@@ -70,7 +70,8 @@ class PatentTracker {
             }
           }
         } catch (err) {
-          // Silent — registry file may be malformed
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
       }
     }

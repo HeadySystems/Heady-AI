@@ -762,7 +762,10 @@ class HybridPipeline extends EventEmitter {
             try {
                 await this._autoSuccessEngine.runCycle();
                 autoSuccessMetrics = this._autoSuccessEngine.getLastCycleResults?.() || [];
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // 5. Build final result

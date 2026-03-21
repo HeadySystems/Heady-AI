@@ -313,7 +313,10 @@ class EmbeddingCache extends EventEmitter {
 
     try {
       fs.mkdirSync(dir, { recursive: true });
-    } catch (_) { /* ok */ }
+    } catch (_) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 
     const tmpPath = `${this._persistPath}.tmp`;
     const stream = fs.createWriteStream(tmpPath, { flags: 'w', encoding: 'utf8' });
@@ -370,7 +373,10 @@ class EmbeddingCache extends EventEmitter {
           if (entry.e !== null && now > entry.e) return;
           this.set(entry.k, entry.v);
           loaded++;
-        } catch (_) { /* skip corrupt lines */ }
+        } catch (_) {
+          const logger = require('../../utils/logger');
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
       });
       rl.on('close', resolve);
       rl.on('error', reject);

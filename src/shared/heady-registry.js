@@ -31,7 +31,9 @@
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const REG_FILE = path.join(__dirname, "..", "data", "heady-registry.json");
 const REG_AUDIT = path.join(__dirname, "..", "data", "registry-audit.jsonl");
@@ -50,11 +52,17 @@ function confidenceFromAge(ageMs) {
 
 // ── Registry Store ──────────────────────────────────────────────
 let registry = { entries: {}, meta: { created: Date.now(), scanCount: 0, lastScan: null } };
-try { registry = JSON.parse(fs.readFileSync(REG_FILE, "utf-8")); } catch { }
+try { registry = JSON.parse(fs.readFileSync(REG_FILE, "utf-8")); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
-function save() { try { fs.writeFileSync(REG_FILE, JSON.stringify(registry, null, 2)); } catch { } }
+function save() { try { fs.writeFileSync(REG_FILE, JSON.stringify(registry, null, 2)); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+} }
 function audit(entry) {
-    try { fs.appendFileSync(REG_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(REG_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 function setEntry(key, data) {
@@ -153,7 +161,9 @@ function scanDataFile(name, filePath) {
             status: "present", size: stat.size, entries,
             modified: stat.mtime.toISOString(),
         });
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── Incremental Targeted Scan ───────────────────────────────────
@@ -190,7 +200,7 @@ async function incrementalScan() {
 
 // ── Full Registry Population (initial or on-demand) ─────────────
 async function fullPopulate() {
-    const BASE = "https://127.0.0.1:3301";
+    const BASE = process.env.HEADY_MANAGER_URL || "https://0.0.0.0:3301";
     const endpoints = [
         "pulse", "compute/dashboard", "orchestrator/agents", "orchestrator/nodes",
         "optimize/status", "optimize/skills", "optimize/connectors",
@@ -320,7 +330,9 @@ function registerRoutes(app, vectorMem) {
                     metadata: { type: "registry_state", ...summary.byConfidence, scanInterval },
                 }).catch(() => { });
             }
-        } catch { }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         setTimeout(adaptiveScan, scanInterval);
     };
     // Full populate on startup (2s), then start adaptive loop

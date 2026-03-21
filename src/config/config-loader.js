@@ -377,7 +377,10 @@ class ConfigLoader extends EventEmitter {
    * Stop hot reload watchers.
    */
   stopWatchers() {
-    for (const w of this._watchers) { try { w.close(); } catch { /* ignore */ } }
+    for (const w of this._watchers) { try { w.close(); } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    } }
     this._watchers = [];
   }
 
@@ -459,7 +462,10 @@ class ConfigLoader extends EventEmitter {
       try {
         const w = fs.watch(filePath, () => this._onFileChange(filePath));
         this._watchers.push(w);
-      } catch { /* watch not available in this env */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 

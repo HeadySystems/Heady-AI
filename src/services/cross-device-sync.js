@@ -260,7 +260,10 @@ class CrossDeviceSync {
     emit(event, data) {
         const handlers = this.eventHandlers.get(event) || [];
         for (const handler of handlers) {
-            try { handler(data); } catch (e) { /* swallow */ }
+            try { handler(data); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         // Also emit to global event bus if available
         if (global.eventBus) {

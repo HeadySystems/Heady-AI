@@ -373,7 +373,10 @@ class ConnectionPool extends EventEmitter {
     conn.state = ConnectionState.DRAINING;
     try {
       await conn.client?.close?.();
-    } catch (_) { /* ignore */ }
+    } catch (_) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
     conn.state = ConnectionState.CLOSED;
     this._connections.delete(connId);
     this._idle = this._idle.filter(id => id !== connId);

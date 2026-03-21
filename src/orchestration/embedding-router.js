@@ -114,7 +114,7 @@ const PROVIDER_DEFAULTS = [
   },
   {
     id:       EMBEDDING_PROVIDERS.OLLAMA,
-    baseUrl:  'http://localhost:11434/api',
+    baseUrl:  process.env.OLLAMA_BASE_URL ? `${process.env.OLLAMA_BASE_URL}/api` : 'http://0.0.0.0:11434/api',
     model:    'nomic-embed-text',
     actualDim: 768,
     maxTokens: fib(12) * fib(6),          // 144×8 = 1152

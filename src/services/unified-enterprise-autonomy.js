@@ -616,7 +616,9 @@ class UnifiedEnterpriseAutonomyService {
                     });
                 }
             }
-        } catch { /* root scan failed — non-fatal */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         const trackedCandidates = candidates.filter((c) => c.tracked);
         const localCandidates = candidates.filter((c) => !c.tracked);
@@ -705,7 +707,9 @@ class UnifiedEnterpriseAutonomyService {
                 if (fs.statSync(fullPath).isDirectory()) {
                     this._pruneEmptyDirsRecursive(fullPath, pruned);
                 }
-            } catch { /* skip */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Re-read after pruning children
@@ -719,7 +723,9 @@ class UnifiedEnterpriseAutonomyService {
                     pruned.push(relPath);
                 }
             }
-        } catch { /* skip */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     getSourceOfTruthStatus() {

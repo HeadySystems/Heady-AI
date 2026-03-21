@@ -182,7 +182,10 @@ class LocalProvider extends BaseProvider {
                 inputTokens  = evt.prompt_eval_count || 0;
                 outputTokens = evt.eval_count         || 0;
               }
-            } catch (_) {}
+            } catch (_) {
+              const logger = require('../../../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         });
 

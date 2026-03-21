@@ -131,7 +131,9 @@ function _auditWrite(record) {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
         fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-    } catch (_) {}
+    } catch (_) {
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -162,7 +164,9 @@ function integrateConductor(conductor, projectionManager, projectionSwarm) {
             if (conductor.groupHits) {
                 conductor.groupHits['projection'] = conductor.groupHits['projection'] || 0;
             }
-        } catch (_) {}
+        } catch (_) {
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
     }
 
     // ── 3. Lifecycle: Conductor events → Swarm actions ────────────────────────

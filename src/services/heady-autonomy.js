@@ -280,7 +280,7 @@ class HeadyAutonomy extends EventEmitter {
                 }
             }
         } catch (err) {
-            // Non-critical — continue
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 
@@ -315,7 +315,7 @@ class HeadyAutonomy extends EventEmitter {
                 }
             }
         } catch (err) {
-            // Non-critical
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 
@@ -330,7 +330,7 @@ class HeadyAutonomy extends EventEmitter {
                 }
             }
         } catch (err) {
-            // Non-critical
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 
@@ -355,7 +355,7 @@ class HeadyAutonomy extends EventEmitter {
                 }
             }
         } catch (err) {
-            // Non-critical
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 
@@ -375,7 +375,7 @@ class HeadyAutonomy extends EventEmitter {
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(stateFile, JSON.stringify(state, null, 2));
         } catch (err) {
-            // Non-critical
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 
@@ -388,7 +388,7 @@ class HeadyAutonomy extends EventEmitter {
                 logger.logSystem(`🔄 Restored learning state (${state.stats.memoriesGathered} memories gathered)`);
             }
         } catch (err) {
-            // Non-critical
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
         }
     }
 

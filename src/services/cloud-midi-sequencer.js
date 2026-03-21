@@ -156,7 +156,10 @@ class MasterClock {
 
     _emit(event, data) {
         for (const cb of this.subscribers) {
-            try { cb(event, data); } catch (e) { /* non-blocking */ }
+            try { cb(event, data); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 }
@@ -465,7 +468,10 @@ class SequencerTransport {
                         data: this.sequencer.getClientBundle(clientId),
                     });
             }
-        } catch (e) { /* ignore malformed messages */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return null;
     }
 }

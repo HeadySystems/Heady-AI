@@ -189,7 +189,10 @@ function generateBridgeHTML(sessionValid, userInfo) {
         type: 'HEADY_BRIDGE_READY',
         timestamp: Date.now(),
       }, '*');
-    } catch (_bridgeErr) { /* cross-origin — expected */ }
+    } catch (_bridgeErr) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _bridgeErr.message, stack: _bridgeErr.stack });
+    }
   }
 })();
 </script>

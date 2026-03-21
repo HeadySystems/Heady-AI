@@ -281,7 +281,9 @@ class LiquidHooks extends EventEmitter {
             result.modifiedPayload = modified;
             resolve(result);
             return;
-          } catch {}
+          } catch (e) {
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
         }
 
         resolve(new HookResult(hook.id, HOOK_RESULTS.ALLOW, output));

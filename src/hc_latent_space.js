@@ -243,7 +243,9 @@ function getStatus() {
   try {
     const stat = fs.statSync(OPS_LOG_FILE);
     opsLogSize = stat.size;
-  } catch (e) { /* no log yet */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   return {
     l0_ring_buffer: { entries: ringBuffer.filter(Boolean).length, capacity: RING_BUFFER_SIZE },

@@ -116,7 +116,8 @@ function appendLog(state, level, message, detail) {
     try {
         fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
     } catch (_) {
-        // log file write failure is non-fatal
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 }
 

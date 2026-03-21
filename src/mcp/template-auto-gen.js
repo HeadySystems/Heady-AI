@@ -71,7 +71,10 @@ function checkForTemplate(toolName, args) {
                 source: 'scenario-config',
             };
         }
-    } catch { /* no scenarios file */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return { found: false };
 }
@@ -205,8 +208,9 @@ async function withTemplateAutoGen(originalCallTool, toolName, args) {
                 swarms: templateResult?.swarms?.length || 0,
             };
             result.content[0].text = JSON.stringify(parsed, null, 2);
-        } catch {
-            // Non-JSON response, skip metadata injection
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
     }
 

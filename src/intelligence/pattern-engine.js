@@ -199,7 +199,10 @@ class PatternStore {
       const data = JSON.stringify([...this.patterns.values()], null, 2);
       fs.mkdirSync(path.dirname(this.persistPath), { recursive: true });
       fs.writeFileSync(this.persistPath, data, 'utf8');
-    } catch { /* non-fatal */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   _load() {
@@ -207,7 +210,10 @@ class PatternStore {
       const raw  = fs.readFileSync(this.persistPath, 'utf8');
       const list = JSON.parse(raw);
       for (const p of list) this.patterns.set(p.id, p);
-    } catch { /* no prior state */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 }
 
@@ -425,7 +431,10 @@ class PatternEngine extends EventEmitter {
       try {
         const results = await this._vectorMemory.search(query, k);
         return results.map(r => this.store.get(r.id)).filter(Boolean);
-      } catch { /* fall through */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Fallback: keyword match on recommendation text

@@ -223,7 +223,10 @@ class HeadyRedisPool {
 
         // Close all connections
         for (const client of this.pool) {
-            try { await client.quit(); } catch (e) { /* ignore */ }
+            try { await client.quit(); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         this.pool = [];
         this.available = [];
@@ -267,7 +270,10 @@ class HeadyRedisPool {
             const idx = this.pool.indexOf(client);
             if (idx < 0) continue;
 
-            try { await client.quit(); } catch (e) { /* ignore */ }
+            try { await client.quit(); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
 
             const availIdx = this.available.indexOf(client);
             if (availIdx >= 0) this.available.splice(availIdx, 1);

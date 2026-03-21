@@ -68,7 +68,10 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
                 if (role === 'receiver' && msg.type === 'command' && session.sender && session.sender.readyState === 1) {
                     session.sender.send(JSON.stringify(msg));
                 }
-            } catch { }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         });
 
         ws.on('close', () => {

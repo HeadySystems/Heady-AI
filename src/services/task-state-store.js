@@ -113,8 +113,8 @@ class TaskStateStore {
                 if (filters.since && new Date(data.updatedAt) < new Date(filters.since)) continue;
 
                 results.push(data);
-            } catch {
-                // Skip corrupt files
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
 
@@ -154,8 +154,8 @@ class TaskStateStore {
                     fs.unlinkSync(path.join(this.stateDir, file));
                     cleaned++;
                 }
-            } catch {
-                // Skip corrupt files
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
 

@@ -322,8 +322,9 @@ class PgStore {
         CREATE INDEX IF NOT EXISTS heady_cache_vec_idx
         ON heady_cache USING ivfflat (vector vector_cosine_ops) WITH (lists = 100)
       `);
-    } catch {
-      // pgvector might not be installed or no data yet — skip
+    } catch (e) {
+      const logger = require('../../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 

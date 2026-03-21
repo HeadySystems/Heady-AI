@@ -248,7 +248,10 @@ const CODE_QUALITY = {
           }
         }
       }
-    } catch { /* directory may not be readable in all envs */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     if (count > 21) { // fib(8)
       return warn('deadCodeDetection', 'CODE_QUALITY', { markerCount: count },
         `Found ${count} dead-code markers — review recommended`, Date.now() - t0);
@@ -511,7 +514,10 @@ const CODE_QUALITY = {
           }
         }
       }
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = hits === 0 ? 'pass' : hits <= 5 ? 'warn' : 'fail';
     return taskResult('securitySensitivePatternDetection', 'CODE_QUALITY', status,
       { hits },
@@ -719,7 +725,10 @@ const SECURITY = {
           if (m) hits += m.length;
         }
       }
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = hits === 0 ? 'pass' : hits <= 3 ? 'warn' : 'fail';
     return taskResult('sqlInjectionPatternScan', 'SECURITY', status,
       { hits }, `SQL injection pattern hits: ${hits}`, Date.now() - t0);
@@ -743,7 +752,10 @@ const SECURITY = {
           if (m) hits += m.length;
         }
       }
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = hits === 0 ? 'pass' : hits <= 5 ? 'warn' : 'fail';
     return taskResult('xssPatternScan', 'SECURITY', status,
       { hits }, `XSS pattern hits: ${hits}`, Date.now() - t0);
@@ -767,7 +779,10 @@ const SECURITY = {
           if (m) hits += m.length;
         }
       }
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = hits === 0 ? 'pass' : 'warn';
     return taskResult('ssrfPatternScan', 'SECURITY', status,
       { hits }, `SSRF pattern hits (unvalidated URL from request): ${hits}`, Date.now() - t0);
@@ -789,7 +804,10 @@ const SECURITY = {
         const traversals = (src.match(/\.\.\//g) || []).length;
         hits += traversals > 5 ? 1 : 0; // threshold: >5 traversals in a single file
       }
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     const status = hits === 0 ? 'pass' : 'warn';
     return taskResult('pathTraversalDetection', 'SECURITY', status,
       { suspiciousFiles: hits },
@@ -840,7 +858,10 @@ const SECURITY = {
             if (m) hits += m.length;
           }
         }
-      } catch { /* ignore */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     const status = hits === 0 ? 'pass' : hits <= 3 ? 'warn' : 'fail';
     return taskResult('permissionEscalationDetection', 'SECURITY', status,
@@ -976,7 +997,10 @@ const PERFORMANCE = {
     try {
       const v8 = require('v8');
       heapStats = v8.getHeapStatistics();
-    } catch { /* v8 may not be available */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     if (!heapStats) {
       return warn('garbageCollectionFrequency', 'PERFORMANCE', null,
         'v8.getHeapStatistics() unavailable', Date.now() - t0);
@@ -1148,7 +1172,7 @@ const AVAILABILITY = {
    */
   async healthProbeExecution() {
     const t0    = Date.now();
-    const probeUrl = process.env.HEALTH_PROBE_URL || 'http://localhost:3000/health';
+    const probeUrl = process.env.HEALTH_PROBE_URL || 'http://0.0.0.0:3000/health';
     try {
       const { statusCode, durationMs } = await withTimeout(httpGet(probeUrl, 3000), 3500);
       const status = statusCode === 200 ? 'pass' : statusCode < 500 ? 'warn' : 'fail';

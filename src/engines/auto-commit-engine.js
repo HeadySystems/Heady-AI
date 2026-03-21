@@ -87,7 +87,7 @@ class AutoCommitEngine extends EventEmitter {
                     }
                 }
             } catch (_) {
-                // corrupt lock file, remove it
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
             fs.unlinkSync(LOCK_FILE);
         }
@@ -96,7 +96,9 @@ class AutoCommitEngine extends EventEmitter {
         const indexLock = path.join(this.repoRoot, ".git", "index.lock");
         if (fs.existsSync(indexLock)) {
             this._log("warn", "Removing stale .git/index.lock");
-            try { fs.unlinkSync(indexLock); } catch (err) { /* structured-logger: emit error */ }
+            try { fs.unlinkSync(indexLock); } catch (err) {
+              logger.error('Unexpected error', { error: err.message, stack: err.stack });
+            }
         }
 
         // Write our PID as the lock
@@ -112,7 +114,9 @@ class AutoCommitEngine extends EventEmitter {
                     fs.unlinkSync(LOCK_FILE);
                 }
             }
-        } catch (err) { /* structured-logger: emit error */ }
+        } catch (err) {
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
+        }
     }
 
     // ── Git helpers ──────────────────────────────────────────────────────
@@ -296,7 +300,9 @@ class AutoCommitEngine extends EventEmitter {
             try {
                 const status = this._exec("git status --porcelain");
                 pendingCount = status.split("\n").filter(Boolean).length;
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (err) {
+              logger.error('Unexpected error', { error: err.message, stack: err.stack });
+            }
         }
 
         return {

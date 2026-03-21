@@ -103,8 +103,8 @@ const ALLOWED_ORIGINS = [
   'https://heady-ai.com',
   'https://app.heady-ai.com',
   'https://headyconnection.org',
-  'http://localhost:3000',
-  'http://localhost:5173',
+  'http://0.0.0.0:3000',
+  'http://0.0.0.0:5173',
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -283,8 +283,9 @@ async function kvCacheGet(kv, cacheKey) {
 async function kvCachePut(kv, cacheKey, value, ttlSeconds) {
   try {
     await kv.put(cacheKey, JSON.stringify(value), { expirationTtl: ttlSeconds });
-  } catch {
-    // cache write failure is non-fatal
+  } catch (e) {
+    const logger = require('../../utils/logger');
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
   }
 }
 

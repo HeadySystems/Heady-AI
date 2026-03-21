@@ -411,7 +411,10 @@ class ClaudeCodeAgent {
             engine: result.engine,
           };
         }
-      } catch { /* gateway unavailable */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
       // Absolute fallback
       return {

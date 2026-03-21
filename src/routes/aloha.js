@@ -24,9 +24,15 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
 
     // Load protocol configs
     let alohaProtocol = null, deOptProtocol = null, stabilityFirst = null;
-    try { alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8')); } catch { }
-    try { deOptProtocol = yaml.load(fs.readFileSync('./configs/de-optimization-protocol.yaml', 'utf8')); } catch { }
-    try { stabilityFirst = yaml.load(fs.readFileSync('./configs/stability-first.yaml', 'utf8')); } catch { }
+    try { alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8')); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
+    try { deOptProtocol = yaml.load(fs.readFileSync('./configs/de-optimization-protocol.yaml', 'utf8')); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
+    try { stabilityFirst = yaml.load(fs.readFileSync('./configs/stability-first.yaml', 'utf8')); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     const alohaState = {
         mode: "aloha",
@@ -111,7 +117,9 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
             logger.logError('HCFP', 'Emergency stability mode activated - multiple crashes detected', new Error('crash_threshold'));
 
             if (resourceManager && !resourceManager.safeMode) {
-                try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch { }
+                try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
             if (continuousPipeline.running) {
                 continuousPipeline.running = false;
@@ -121,9 +129,15 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
                     storyDriver.ingestSystemEvent({ type: "PIPELINE_EMERGENCY_SHUTDOWN", refs: { reason: "aloha_emergency_stability", crashCount: recentCrashes.length }, source: "aloha_protocol" });
                 }
             }
-            if (mcGlobal && typeof mcGlobal.stopAutoRun === 'function') { try { mcGlobal.stopAutoRun(); } catch { } }
-            if (improvementScheduler && typeof improvementScheduler.pause === 'function') { try { improvementScheduler.pause(); } catch { } }
-            if (patternEngine && typeof patternEngine.pause === 'function') { try { patternEngine.pause(); } catch { } }
+            if (mcGlobal && typeof mcGlobal.stopAutoRun === 'function') { try { mcGlobal.stopAutoRun(); } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            } }
+            if (improvementScheduler && typeof improvementScheduler.pause === 'function') { try { improvementScheduler.pause(); } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            } }
+            if (patternEngine && typeof patternEngine.pause === 'function') { try { patternEngine.pause(); } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            } }
         }
 
         res.json({

@@ -203,7 +203,9 @@ class HeadyConductor extends EventEmitter {
                         ? await this.vectorMem.getZoneForQuery(queryText)
                         : null;
                     if (zoneInfo) vectorZone = zoneInfo;
-                } catch { /* zone routing optional */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
 
@@ -467,7 +469,9 @@ class HeadyConductor extends EventEmitter {
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: entry.ts || new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         this.emit("audit", entry);
     }
 }

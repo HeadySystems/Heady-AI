@@ -376,7 +376,9 @@ class HeadyServer {
       try {
         await handler(err, req, res);
         if (res.writableEnded) return;
-      } catch (_) { /* ignore */ }
+      } catch (_) {
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
 
     if (!res.writableEnded) {

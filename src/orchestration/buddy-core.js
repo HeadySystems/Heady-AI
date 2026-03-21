@@ -425,7 +425,9 @@ class DeterministicErrorInterceptor {
             if (fs.existsSync(rulesPath)) {
                 this.learnedRules = JSON.parse(fs.readFileSync(rulesPath, "utf-8"));
             }
-        } catch { /* no persisted rules yet */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     _persistLearnedRules() {

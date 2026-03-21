@@ -224,8 +224,9 @@ class HCFullPipeline extends EventEmitter {
                             stage.metrics.selfHealed = true;
                             this.emit("stage:completed", { runId, stage: stage.name, result: retryResult, selfHealed: true });
                             continue; // Move to next stage
-                        } catch {
-                            // Self-heal retry failed — fall through to rollback
+                        } catch (e) {
+                          const logger = require('../../utils/logger');
+                          logger.error('Unexpected error', { error: e.message, stack: e.stack });
                         }
                     }
 
@@ -321,7 +322,10 @@ class HCFullPipeline extends EventEmitter {
                 if (typeof this.vectorMemory.queryWithRelationships === 'function') {
                     graphContext = await this.vectorMemory.queryWithRelationships(stimulus, 3);
                 }
-            } catch { /* vector memory unavailable — proceed without context */ }
+            } catch (e) {
+              const logger = require('../../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Phase F: Inject retrieved context into the run for all downstream stages
@@ -451,7 +455,10 @@ class HCFullPipeline extends EventEmitter {
             try {
                 const buddyAssessment = await this.buddyMetacognition.assessConfidence();
                 run._buddyConfidence = buddyAssessment;
-            } catch { /* non-critical */ }
+            } catch (e) {
+              const logger = require('../../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         return {
@@ -548,7 +555,10 @@ class HCFullPipeline extends EventEmitter {
                     });
                     return true;
                 }
-            } catch { /* vector memory unavailable */ }
+            } catch (e) {
+              const logger = require('../../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // 2. Check if the error interceptor has a pre-emptive rule
@@ -578,7 +588,10 @@ class HCFullPipeline extends EventEmitter {
                         runId: run.id,
                     },
                 });
-            } catch { /* best-effort */ }
+            } catch (e) {
+              const logger = require('../../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         this.selfHealStats.failures++;

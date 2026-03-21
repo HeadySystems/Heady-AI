@@ -559,7 +559,10 @@ Actions:
   try {
     const { config: loadEnv } = await import('dotenv');
     loadEnv({ path: path.join(__dirname, '../../.env') });
-  } catch (e) { /* dotenv optional */ }
+  } catch (e) {
+    const logger = require('../utils/logger');
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   const swarm = getSwarm();
 

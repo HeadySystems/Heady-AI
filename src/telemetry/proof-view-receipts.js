@@ -155,7 +155,10 @@ function getTodaySummary() {
             totalCost += cost;
             const prov = r.cost?.provider || "unknown";
             providers[prov] = (providers[prov] || 0) + 1;
-        } catch { /* skip */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     return {

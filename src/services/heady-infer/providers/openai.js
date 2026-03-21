@@ -111,7 +111,10 @@ class OpenAIProvider extends BaseProvider {
                 promptTokens     = evt.usage.prompt_tokens     || 0;
                 completionTokens = evt.usage.completion_tokens || 0;
               }
-            } catch (_) {}
+            } catch (_) {
+              const logger = require('../../../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         });
 

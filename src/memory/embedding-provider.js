@@ -18,7 +18,7 @@ class EmbeddingProvider {
         this.providers = {
             local: {
                 enabled: opts.localEnabled !== false,
-                endpoint: opts.localEndpoint || "http://127.0.0.1:11434/api/embeddings",
+                endpoint: opts.localEndpoint || process.env.OLLAMA_BASE_URL ? `${process.env.OLLAMA_BASE_URL}/api/embeddings` : "http://0.0.0.0:11434/api/embeddings",
                 model: opts.localModel || "nomic-embed-text",
                 dims: 768,
             },

@@ -48,7 +48,9 @@
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
-let logger = null; try { logger = require('../../utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('../../utils/logger'); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // ── Constants ──────────────────────────────────────────────────────
 
@@ -139,7 +141,9 @@ class OrchestrationHealthDashboard extends EventEmitter {
                     logger.info(`[HealthDashboard] Loaded swarm matrix from ${p}`);
                     return raw;
                 }
-            } catch { /* continue */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         logger.warn('[HealthDashboard] HeadySwarmMatrix.json not found — swarm reconciliation disabled');

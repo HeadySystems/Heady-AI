@@ -192,7 +192,10 @@ class StructuredLogger {
 
     // Write to all transports
     for (const transport of this.transports) {
-      try { transport.write(entry); } catch (_) { /* transport failure should not crash */ }
+      try { transport.write(entry); } catch (_) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
 
     // Store in ring buffer

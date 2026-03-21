@@ -189,8 +189,8 @@ class DeepResearchEngine {
                         }
                     }
                 }
-            } catch {
-                // Individual stage timeout — continue to next
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
 
             // If we have enough results, we can stop early
@@ -207,8 +207,8 @@ class DeepResearchEngine {
                     results.push(sr.value);
                 }
             }
-        } catch {
-            // Best-effort final collection
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
 
         return results;

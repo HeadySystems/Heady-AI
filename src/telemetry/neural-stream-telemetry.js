@@ -492,7 +492,10 @@ class TelemetryInterceptor {
     _alert(alertObj) {
         const fullAlert = { ...alertObj, timestamp: new Date().toISOString() };
         for (const listener of this._alertListeners) {
-            try { listener(fullAlert); } catch (_) { /* swallow */ }
+            try { listener(fullAlert); } catch (_) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
         }
     }
 

@@ -166,7 +166,10 @@ class StdioAdapter {
           const msg = JSON.parse(line);
           const pending = this._pendingResponses.get(msg.id);
           if (pending) { pending.resolve(msg); this._pendingResponses.delete(msg.id); }
-        } catch { /* skip non-JSON lines */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     });
     return this;

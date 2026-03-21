@@ -258,7 +258,9 @@ class LiquidSandbox extends EventEmitter {
       instance.exitCode = e.status || 1;
       return { exitCode: instance.exitCode, stdout: e.stdout || '', stderr: e.stderr || e.message };
     } finally {
-      try { fs.unlinkSync(tmpFile); } catch {}
+      try { fs.unlinkSync(tmpFile); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 
@@ -324,10 +326,18 @@ class LiquidSandbox extends EventEmitter {
   _detectAvailableTiers() {
     const available = ['native']; // always available
 
-    try { execSync('which node', { stdio: 'pipe' }); available.push('wasm'); } catch {}
-    try { execSync('docker --version', { stdio: 'pipe' }); available.push('docker'); } catch {}
-    try { execSync('docker info --format "{{.Runtimes}}" 2>/dev/null | grep runsc', { stdio: 'pipe' }); available.push('gvisor'); } catch {}
-    try { execSync('which firecracker', { stdio: 'pipe' }); available.push('firecracker'); } catch {}
+    try { execSync('which node', { stdio: 'pipe' }); available.push('wasm'); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
+    try { execSync('docker --version', { stdio: 'pipe' }); available.push('docker'); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
+    try { execSync('docker info --format "{{.Runtimes}}" 2>/dev/null | grep runsc', { stdio: 'pipe' }); available.push('gvisor'); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
+    try { execSync('which firecracker', { stdio: 'pipe' }); available.push('firecracker'); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return available;
   }
@@ -352,11 +362,15 @@ class LiquidSandbox extends EventEmitter {
     if (!instance) return;
 
     if (instance._process) {
-      try { instance._process.kill('SIGTERM'); } catch {}
+      try { instance._process.kill('SIGTERM'); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     if (instance.containerId) {
-      try { execSync(`docker rm -f ${instance.containerId}`, { stdio: 'pipe' }); } catch {}
+      try { execSync(`docker rm -f ${instance.containerId}`, { stdio: 'pipe' }); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     this._instances.delete(instanceId);

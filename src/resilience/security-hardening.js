@@ -298,7 +298,9 @@ function promptInjectionGuard() {
                     if (inner.injected) {
                         return { injected: true, layer: 'L5-base64-obfuscated', pattern: inner.pattern };
                     }
-                } catch { /* not valid base64, skip */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
 

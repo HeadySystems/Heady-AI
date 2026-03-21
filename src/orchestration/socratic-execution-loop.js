@@ -458,7 +458,10 @@ class SocraticLoop {
         if (report && typeof report.confidence === 'number') {
           ctx.cslConfidence = report.confidence;
         }
-      } catch { /* self-awareness unavailable */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     ctx.confidenceThreshold = ctx.confidenceThreshold !== undefined

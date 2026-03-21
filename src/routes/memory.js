@@ -475,14 +475,18 @@ function persistMemory(memory, vector) {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         // Store memory AND its vector embedding together so they survive restarts
         fs.appendFileSync(MEMORY_FILE, JSON.stringify({ ...memory, _vector: vector }) + "\n");
-    } catch { /* non-critical */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 function persistAudit(entry) {
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         fs.appendFileSync(AUDIT_FILE, JSON.stringify(entry) + "\n");
-    } catch { /* non-critical */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── Qdrant HTTP client ──
@@ -603,11 +607,15 @@ function detectTags(text) {
                     vectors.set(data.id, vec || generateEmbedding(data.content));
                     stats.gained++;
                     stats.totalProcessed++;
-                } catch { /* skip malformed lines */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
             logger.logSystem(`  ∞ HeadyMemory: loaded ${memories.size} memories from disk`);
         }
-    } catch { /* no persisted data yet */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 })();
 
 module.exports = router;

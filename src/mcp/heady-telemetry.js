@@ -28,7 +28,10 @@ const METRICS_FILE = path.join(LOG_DIR, 'system-metrics.jsonl');
 const OPTIMIZATION_FILE = path.join(LOG_DIR, 'optimizations.jsonl');
 
 // Ensure log directory exists
-try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch { }
+try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 class HeadyTelemetry {
     constructor(vectorStore, learner) {
@@ -321,7 +324,10 @@ class HeadyTelemetry {
     _appendLog(file, entry) {
         try {
             fs.appendFileSync(file, JSON.stringify(entry) + '\n');
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     destroy() {

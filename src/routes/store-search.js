@@ -228,7 +228,10 @@ function extractJSON(content) {
             try {
                 const parsed = JSON.parse(jsonMatch[0]);
                 if (parsed.products?.length > 0) return parsed;
-            } catch (e2) { /* fall through */ }
+            } catch (e2) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e2.message, stack: e2.stack });
+            }
         }
     }
     return null;

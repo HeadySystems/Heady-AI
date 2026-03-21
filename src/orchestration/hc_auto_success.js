@@ -42,7 +42,9 @@ const EventEmitter = require("events");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const HISTORY_PATH = path.join(__dirname, "..", "data", "auto-success-tasks.json");
 const AUDIT_PATH = path.join(__dirname, "..", "data", "auto-success-audit.json");
@@ -107,24 +109,42 @@ const POOL_PRIORITY = { hot: 0, warm: 1, cold: 2 };
 
 // ─── TASK CATALOG (fib(12) = 144 tasks × fib(7) = 13 categories) ────────────
 let extraTasks = [];
-try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) { }
+try { extraTasks = require('./auto-flow-200-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let nonprofitTasks = [];
-try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) { }
+try { nonprofitTasks = require('./nonprofit-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let buddyTasks = [];
-try { buddyTasks = require('./buddy-tasks.json'); } catch (e) { }
+try { buddyTasks = require('./buddy-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let long814Tasks = [];
-try { long814Tasks = require('./long814-tasks.json'); } catch (e) { }
+try { long814Tasks = require('./long814-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let headyosTasks = [];
-try { headyosTasks = require('./headyos-tasks.json'); } catch (e) { }
+try { headyosTasks = require('./headyos-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let orchProtocolTasks = [];
-try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) { }
+try { orchProtocolTasks = require('./orchestration-protocol-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let phase5Tasks = [];
-try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) { }
+try { phase5Tasks = require('./phase5-hardening-tasks.json'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 let downloadsTasks = [];
-try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) { }
+try { downloadsTasks = require('./downloads-extracted-tasks.json').tasks || []; } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 // ─── FULL-SPECTRUM OPTIMIZATION TASKS (15-layer audit) ───────────────────────
 let fullSpectrumTasks = [];
-try { fullSpectrumTasks = require('./full-spectrum-auto-success-tasks.json').tasks || []; } catch (e) { }
+try { fullSpectrumTasks = require('./full-spectrum-auto-success-tasks.json').tasks || []; } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 const TASK_CATALOG = [
     ...extraTasks,
     ...nonprofitTasks,
@@ -859,7 +879,9 @@ class AutoSuccessEngine extends EventEmitter {
 
         // ═══ AUTO-COMMIT/PUSH/DEPLOY — Permanent pipeline automation ════════
         try {
-            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch(e) { /* graceful */ }
+            let autoCommitDeploy = null; try { autoCommitDeploy = require("./auto-commit-deploy"); } catch(e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
             autoCommitDeploy.start();
             logger.logSystem("  ∞ AutoCommitDeploy: WIRED — event-driven auto-commit/push/deploy");
         } catch (e) {
@@ -930,7 +952,9 @@ class AutoSuccessEngine extends EventEmitter {
                     refs: { trigger, totalReactions: this.reactionCount, totalSucceeded: this.totalSucceeded, reactionDurationMs },
                     source: "auto_success_reactor",
                 });
-            } catch { /* story driver may not accept */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Feed to eventBus — but don't trigger self (prevent infinite loop)
@@ -1018,7 +1042,9 @@ class AutoSuccessEngine extends EventEmitter {
                             severity: "low",
                             suggestedImprovements: ["Review task implementation", "Check resource availability"],
                         });
-                    } catch { /* self-critique may not accept */ }
+                    } catch (e) {
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                    }
                 }
             }
         }
@@ -1072,7 +1098,9 @@ class AutoSuccessEngine extends EventEmitter {
                         tags: ["auto_success", task.cat, terminalState],
                     });
                 }
-            } catch { /* pattern engine may not accept */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Record in history
@@ -1142,7 +1170,9 @@ class AutoSuccessEngine extends EventEmitter {
             if (registryWork && registryWork.length > 0) {
                 coreWorkers = registryWork;
             }
-        } catch { /* registry not available */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         // Method 2: Fallback to direct require if registry didn't have it
         if (coreWorkers.length === 0) {
@@ -1159,9 +1189,13 @@ class AutoSuccessEngine extends EventEmitter {
                             coreWorkers = bee.getWork({ tasks, engine: this });
                             break;
                         }
-                    } catch { /* try next */ }
+                    } catch (e) {
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                    }
                 }
-            } catch { /* ok */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Dynamic workers: each task description becomes its own worker
@@ -1242,7 +1276,9 @@ class AutoSuccessEngine extends EventEmitter {
                     }),
                 };
                 vectorMemory.add(`bee:${beeDomain}:reaction:${this.reactionCount}`, learning);
-            } catch { /* vector memory write absorbed */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // ─── EMIT EVENT — other subsystems react to this domain's work ──
@@ -1322,7 +1358,9 @@ class AutoSuccessEngine extends EventEmitter {
             if (fs.existsSync(TRIAL_LEDGER_PATH)) {
                 return JSON.parse(fs.readFileSync(TRIAL_LEDGER_PATH, 'utf8'));
             }
-        } catch { /* ok */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return [];
     }
 
@@ -1331,7 +1369,9 @@ class AutoSuccessEngine extends EventEmitter {
             const dir = path.dirname(TRIAL_LEDGER_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(TRIAL_LEDGER_PATH, JSON.stringify(this._trialLedger.slice(-MAX_TRIAL_ENTRIES), null, 2));
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     getTrialLedger(opts = {}) {
@@ -1367,7 +1407,9 @@ class AutoSuccessEngine extends EventEmitter {
             if (fs.existsSync(AUDIT_PATH)) {
                 return JSON.parse(fs.readFileSync(AUDIT_PATH, 'utf8'));
             }
-        } catch { /* ok */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return [];
     }
 
@@ -1376,7 +1418,9 @@ class AutoSuccessEngine extends EventEmitter {
             const dir = path.dirname(AUDIT_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(AUDIT_PATH, JSON.stringify((this._auditTrail || []).slice(-MAX_AUDIT), null, 2));
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     getAuditTrail(opts = {}) {

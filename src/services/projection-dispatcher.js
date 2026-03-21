@@ -234,7 +234,9 @@ class ProjectionDispatcher extends EventEmitter {
             try {
                 const { registerConsensusRoutes } = require("../orchestration/swarm-consensus");
                 registerConsensusRoutes(app);
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Digital Presence

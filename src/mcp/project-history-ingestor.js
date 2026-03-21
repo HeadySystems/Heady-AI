@@ -108,7 +108,10 @@ class ProjectHistoryIngestor {
                     { subtype: 'file_structure', directory: dir }
                 );
                 this.stats.files += files.length;
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
@@ -142,9 +145,15 @@ class ProjectHistoryIngestor {
                             { subtype: 'documentation', file: path.relative(PROJECT_ROOT, file) }
                         );
                         this.stats.docs++;
-                    } catch { /* non-fatal */ }
+                    } catch (e) {
+                      const logger = require('../utils/logger');
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                    }
                 }
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
@@ -187,7 +196,10 @@ class ProjectHistoryIngestor {
                 'pattern',
                 { subtype: 'branches', count: branches.length }
             );
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 

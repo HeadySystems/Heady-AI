@@ -81,7 +81,10 @@ class DriftDetector {
                     if (prevHash && prevHash !== newHash) {
                         drifts.push({ file: filePath, prevHash, newHash });
                     }
-                } catch { /* skip unreadable files */ }
+                } catch (e) {
+                  const logger = require('../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         } catch (err) {
             return { error: err.message, drifts: [] };

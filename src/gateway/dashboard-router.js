@@ -57,7 +57,8 @@ function setupDashboardRoutes(app) {
         rateLimit: p.rateLimit,
       }));
     } catch (e) {
-      // config may not exist in test environments
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     const internalServices = [

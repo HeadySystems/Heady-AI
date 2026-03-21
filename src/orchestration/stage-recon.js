@@ -373,7 +373,10 @@ async function scanConfigDrift(rootDir) {
             configFiles.push(path.join(dirPath, entry));
           }
         }
-      } catch { /* skip unreadable dirs */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     result.totalConfigFiles = configFiles.length;
@@ -421,7 +424,10 @@ async function scanConfigDrift(rootDir) {
         if (pkgNodeEnv && envNodeEnv && envNodeEnv !== pkgNodeEnv) {
           result.envMismatches.push({ key: 'NODE_ENV', config: pkgNodeEnv, env: envNodeEnv });
         }
-      } catch { /* ignore parse errors */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Apply CSL gate — drift score compared to CONFIG_DRIFT_THRESHOLD (PSI)
@@ -494,7 +500,10 @@ async function scanServiceHealth(rootDir) {
             })).filter(s => s.url).slice(0, 25);
             break;
           }
-        } catch { /* try next path */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 
@@ -504,7 +513,7 @@ async function scanServiceHealth(rootDir) {
       const localNames = ['api', 'worker', 'gateway', 'auth', 'metrics', 'admin'];
       services = localPorts.map((port, i) => ({
         name: localNames[i] || `service-${port}`,
-        url:  `http://localhost:${port}/health`,
+        url:  `http://0.0.0.0:${port}/health`,
       }));
     }
 
@@ -513,7 +522,7 @@ async function scanServiceHealth(rootDir) {
     for (let i = 0; i < services.length; i += batchSize) {
       const batch   = services.slice(i, i + batchSize);
       const probes  = batch.map(svc => {
-        const probeUrl = svc.url || `http://localhost:${svc.port || 8080}/health`;
+        const probeUrl = svc.url || `http://0.0.0.0:${svc.port || 8080}/health`;
         return httpGet(probeUrl, Math.round(PHI * 1000)) // φ×1000 ≈ 1618ms per probe
           .then(res => ({
             name:       svc.name,
@@ -712,7 +721,10 @@ async function scanDependencyFreshness(rootDir) {
         result.high      = vulns.high      || 0;
         result.moderate  = vulns.moderate  || 0;
         result.vulnerable = result.critical + result.high + result.moderate;
-      } catch { /* non-JSON output is expected when no vulnerabilities */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // 2. Check outdated packages
@@ -721,7 +733,10 @@ async function scanDependencyFreshness(rootDir) {
       try {
         const outdated = JSON.parse(outdatedRaw);
         result.outdated = Object.keys(outdated).length;
-      } catch { /* npm outdated exits non-zero if any packages are outdated */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // 3. Check package-lock.json age as a proxy for last dependency update
@@ -804,7 +819,10 @@ async function scanVectorMemory(rootDir) {
     for (const mp of metaPaths) {
       const raw = tryRead(mp);
       if (raw) {
-        try { meta = JSON.parse(raw); break; } catch { /* try next */ }
+        try { meta = JSON.parse(raw); break; } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 
@@ -957,7 +975,10 @@ async function scanResourceUtilization(rootDir) {
         if (crMetrics.cpuUtil   !== undefined) result.avgCpuUtilization = crMetrics.cpuUtil;
         if (crMetrics.memUtil   !== undefined) result.avgMemUtilization = crMetrics.memUtil;
         if (crMetrics.diskUtil  !== undefined) result.diskUtilization   = crMetrics.diskUtil;
-      } catch { /* ignore */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Scoring — penalise for HIGH/CRITICAL pressure bands
@@ -1027,7 +1048,10 @@ async function scanCostTrajectory(rootDir) {
     for (const bp of budgetPaths) {
       const raw = tryRead(bp);
       if (raw) {
-        try { budgetConfig = JSON.parse(raw); break; } catch { /* try next */ }
+        try { budgetConfig = JSON.parse(raw); break; } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 
@@ -1048,7 +1072,10 @@ async function scanCostTrajectory(rootDir) {
     for (const clp of costLogPaths) {
       const raw = tryRead(clp);
       if (raw) {
-        try { costData = JSON.parse(raw); break; } catch { /* try next */ }
+        try { costData = JSON.parse(raw); break; } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 

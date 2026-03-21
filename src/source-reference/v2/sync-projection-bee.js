@@ -69,7 +69,10 @@ function computeRAMStateHash() {
                 stateComponents.push(fs.readFileSync(path.join(sharedDir, f), "utf8"));
             }
         }
-    } catch { }
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return crypto.createHash("sha256")
         .update(stateComponents.join("\n---STATE-BOUNDARY---\n"))

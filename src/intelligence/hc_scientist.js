@@ -354,7 +354,9 @@ class HeadyScientist extends EventEmitter {
                     });
                 }
             }
-        } catch { /* runtime check optional */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     // ─── Drift Response ───────────────────────────────────────────────
@@ -449,7 +451,9 @@ class HeadyScientist extends EventEmitter {
                 this.lastChainHash = state.lastChainHash || "GENESIS";
                 this.proofChain = state.proofChain || [];
             }
-        } catch { /* fresh start */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     _saveState() {
@@ -466,7 +470,9 @@ class HeadyScientist extends EventEmitter {
                     lastSave: new Date().toISOString(),
                 }, null, 2)
             );
-        } catch { /* silent */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     // ─── Status ───────────────────────────────────────────────────────

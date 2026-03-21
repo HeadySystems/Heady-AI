@@ -352,7 +352,9 @@ function wireEngines(app, deps = {}) {
                 conductorModule.bindAutoSuccess(engines.autoSuccessEngine);
                 logger.logNodeActivity("CONDUCTOR", "    → Auto-Success ↔ Conductor: WIRED");
             }
-        } catch { /* conductor bind optional */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         logger.logNodeActivity("CONDUCTOR", "  ∞ Auto-Success Engine: LOADED (ALL tasks, 9 categories, dynamic parallel — no batching)");
         logger.logNodeActivity("CONDUCTOR", "    → Endpoints: /api/auto-success/health, /status, /tasks, /history, /force-cycle");
@@ -452,7 +454,9 @@ function wireEngines(app, deps = {}) {
                         "https://headyme.com",
                         "https://headysystems.com",
                     ]);
-                } catch { /* non-critical */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             });
         }
 
@@ -461,7 +465,9 @@ function wireEngines(app, deps = {}) {
         setInterval(async () => {
             try {
                 await engines.bees.blastRegistry({ trigger: 'heartbeat', periodic: true });
-            } catch { /* heartbeat is non-critical */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }, PHI_5_MS);
         logger.logNodeActivity("CONDUCTOR", `    → Swarm heartbeat: every ${Math.round(PHI_5_MS / 1000)}s (φ⁵)`);
 

@@ -28,7 +28,9 @@ const AUDIT_LOG = path.join(__dirname, "../../data/code-governance-audit.jsonl")
 
 // Ensure audit log dir exists
 const auditDir = path.dirname(AUDIT_LOG);
-try { if (!fs.existsSync(auditDir)) fs.mkdirSync(auditDir, { recursive: true }); } catch { }
+try { if (!fs.existsSync(auditDir)) fs.mkdirSync(auditDir, { recursive: true }); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // ──────────────────────────────────────────────────────────────────
 // Load governance config
@@ -64,7 +66,9 @@ function audit(entry) {
             configHash: _configHash,
         });
         fs.appendFileSync(AUDIT_LOG, line + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ──────────────────────────────────────────────────────────────────
@@ -410,7 +414,9 @@ function generateEvidenceSnapshot() {
         const dir = path.dirname(evidenceLog);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         fs.appendFileSync(evidenceLog, JSON.stringify(snapshot) + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     audit({ action: "PATENT_EVIDENCE_SNAPSHOT", composite: compositeHash, files: allFiles.length });
     return snapshot;

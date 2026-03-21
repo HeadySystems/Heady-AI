@@ -253,8 +253,9 @@ class InputValidator {
           hostname === '169.254.169.254') {
         threats.push(`SSRF: Blocked cloud metadata endpoint in field "${key}"`);
       }
-    } catch {
-      // Not a valid URL — not an SSRF threat
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     return threats;
   }

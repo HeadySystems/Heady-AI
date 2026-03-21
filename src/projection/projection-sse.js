@@ -314,7 +314,9 @@ class SSEManager extends EventEmitter {
             try {
                 client.stopHeartbeat();
                 client.res.end();
-            } catch (_) {}
+            } catch (_) {
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
         }
         this._clients.clear();
         logger.info('[SSE] All clients closed');
@@ -392,7 +394,9 @@ function createSSERouter(projectionManager) {
                         res.write(_formatSSEEvent(version, t, all[t]));
                     }
                 }
-            } catch (_) {}
+            } catch (_) {
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
         }
 
         logger.info({ clientId, types }, '[SSE] Client connected');

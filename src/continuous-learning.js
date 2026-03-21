@@ -26,7 +26,9 @@ try {
   const ep = require('./embedding-provider');
   createEmbeddingProvider = ep.createEmbeddingProvider || ep.create ||
     (typeof ep === 'function' ? ep : null);
-} catch (_) { /* graceful degradation */ }
+} catch (_) {
+  logger.error('Unexpected error', { error: _.message, stack: _.stack });
+}
 
 if (!createEmbeddingProvider) {
   // Fallback: lightweight keyword-hash embedding (no external API needed)

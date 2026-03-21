@@ -62,7 +62,9 @@ const TOOLS = [
         const entry = { id: `mem-${Date.now()}`, content, tags, createdAt: new Date().toISOString() };
         const file = path.join(memDir, 'store.json');
         let store = [];
-        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* new store */ }
+        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         store.push(entry);
         fs.writeFileSync(file, JSON.stringify(store, null, 2));
         return { stored: true, id: entry.id };
@@ -72,7 +74,9 @@ const TOOLS = [
         if (!query) throw new Error('query required for search action');
         const file = path.join(memDir, 'store.json');
         let store = [];
-        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* empty */ }
+        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         const lower = query.toLowerCase();
         const results = store
           .filter((e) => e.content && e.content.toLowerCase().includes(lower))
@@ -83,7 +87,9 @@ const TOOLS = [
       if (action === 'list') {
         const file = path.join(memDir, 'store.json');
         let store = [];
-        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* empty */ }
+        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return { entries: store.slice(0, limit), total: store.length };
       }
 
@@ -91,7 +97,9 @@ const TOOLS = [
         if (!id) throw new Error('id required for delete action');
         const file = path.join(memDir, 'store.json');
         let store = [];
-        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* empty */ }
+        try { store = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         const filtered = store.filter((e) => e.id !== id);
         fs.writeFileSync(file, JSON.stringify(filtered, null, 2));
         return { deleted: store.length - filtered.length };
@@ -308,7 +316,9 @@ const TOOLS = [
         const hasSrc = fs.existsSync(path.join(resolvedTarget, 'src'));
         const hasTests = fs.existsSync(path.join(resolvedTarget, 'test')) || fs.existsSync(path.join(resolvedTarget, '__tests__'));
         let pkg = {};
-        try { pkg = JSON.parse(fs.readFileSync(path.join(resolvedTarget, 'package.json'), 'utf8')); } catch { /* ok */ }
+        try { pkg = JSON.parse(fs.readFileSync(path.join(resolvedTarget, 'package.json'), 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         return {
           type, target: resolvedTarget,
@@ -332,10 +342,14 @@ const TOOLS = [
               if (e.isDirectory()) countLines(path.join(dir, e.name), d + 1);
               else if (e.name.endsWith('.js')) {
                 jsFiles++;
-                try { totalLines += fs.readFileSync(path.join(dir, e.name), 'utf8').split('\n').length; } catch { /* ok */ }
+                try { totalLines += fs.readFileSync(path.join(dir, e.name), 'utf8').split('\n').length; } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
               }
             });
-          } catch { /* ok */ }
+          } catch (e) {
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
         }
         countLines(resolvedTarget);
         return { type, target: resolvedTarget, jsFiles, totalLines, avgLinesPerFile: jsFiles > 0 ? Math.round(totalLines / jsFiles) : 0 };
@@ -860,7 +874,9 @@ const TOOLS = [
       const execAsync = promisify(execFile);
 
       let pkg = {};
-      try { pkg = JSON.parse(fs.readFileSync(path.join(target, 'package.json'), 'utf8')); } catch { /* ok */ }
+      try { pkg = JSON.parse(fs.readFileSync(path.join(target, 'package.json'), 'utf8')); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
       if (!pkg.scripts?.test) {
         return { suite, status: 'skipped', reason: 'no test script in package.json' };
@@ -1077,13 +1093,17 @@ const TOOLS = [
 
       if (action === 'get') {
         let config = {};
-        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch { /* empty */ }
+        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return { action, key, value: key ? config[key] : undefined, found: key ? key in config : false };
       }
 
       if (action === 'set') {
         let config = {};
-        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch { /* empty */ }
+        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         config[key] = value;
         fs.writeFileSync(filePath, JSON.stringify(config, null, 2));
         return { action, key, value, written: true };
@@ -1091,7 +1111,9 @@ const TOOLS = [
 
       if (action === 'list') {
         let config = {};
-        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch { /* empty */ }
+        try { config = JSON.parse(fs.readFileSync(filePath, 'utf8')); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         return { action, keys: Object.keys(config), count: Object.keys(config).length };
       }
 
@@ -1188,7 +1210,9 @@ const TOOLS = [
             if (['node_modules', '.git'].includes(e.name)) return;
             if (e.isDirectory()) walk(path.join(dir, e.name), d + 1);
             else if (e.name.endsWith('.js')) jsFiles++;
-          }); } catch { /* ok */ }
+          }); } catch (e) {
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
         };
         walk(resolvedSource);
         return { action, source: resolvedSource, jsFiles, format, timestamp: new Date().toISOString() };
@@ -1251,7 +1275,9 @@ const TOOLS = [
       let budget = { providers: {}, totalTokens: 0, totalCostUSD: 0, lastUpdated: null };
       try {
         budget = JSON.parse(fs.readFileSync(budgetFile, 'utf8'));
-      } catch { /* fresh budget */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
       if (action === 'record') {
         if (!budget.providers[provider]) budget.providers[provider] = { tokens: 0, costUSD: 0 };

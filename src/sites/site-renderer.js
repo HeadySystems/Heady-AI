@@ -39,7 +39,9 @@ function resolveSite(hostname) {
         return { ...userSites[canonical], domain: canonical, type: "custom" };
       }
     }
-  } catch { /* corrupted user-sites.json — ignore */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   // Fallback
   return { ...registry.preconfigured["headyme.com"], domain: "headyme.com", type: "fallback" };
@@ -65,7 +67,9 @@ function resolveSiteBySlug(slug) {
         if (cfg.slug === slug) return { ...cfg, domain: d, type: "custom" };
       }
     }
-  } catch { }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
   return null;
 }
 
@@ -78,7 +82,9 @@ function getNavItems(site) {
     if (fs.existsSync(USER_SITES_PATH)) {
       Object.assign(allSites, JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8")));
     }
-  } catch { }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   const items = [];
   for (const [domain, cfg] of Object.entries(allSites)) {

@@ -135,8 +135,9 @@ class RedisSyncBridge {
                 const ttlSec = Math.ceil((ttlMs || this.ttlMs) / 1000);
                 await this.redisClient.set(key, serialized, 'EX', ttlSec);
                 return;
-            } catch {
-                // Fall through to in-memory
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
         await this.cache.set(key, serialized, ttlMs);
@@ -154,7 +155,10 @@ class RedisSyncBridge {
             try {
                 const raw = await this.redisClient.get(key);
                 if (raw) { this._stats.hits++; return JSON.parse(raw); }
-            } catch { /* fall through */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         const raw = await this.cache.get(key);
@@ -185,7 +189,10 @@ class RedisSyncBridge {
             try {
                 await this.redisClient.publish(channel, serialized);
                 return;
-            } catch { /* fall through */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         await this.cache.publish(channel, serialized);
     }
@@ -203,7 +210,10 @@ class RedisSyncBridge {
     async removeBlock(id) {
         const key = this._key(id);
         if (this.mode === 'redis' && this.redisClient) {
-            try { await this.redisClient.del(key); } catch { /* ignore */ }
+            try { await this.redisClient.del(key); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         await this.cache.del(key);
     }
@@ -216,7 +226,10 @@ class RedisSyncBridge {
             try {
                 const keys = await this.redisClient.keys(`${this.prefix}*`);
                 if (keys.length > 0) await this.redisClient.del(...keys);
-            } catch { /* ignore */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         await this.cache.flush();
     }

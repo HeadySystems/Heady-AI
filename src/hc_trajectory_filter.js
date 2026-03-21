@@ -269,7 +269,8 @@ class TrajectoryFilter {
           const entries = traceLoader(summary.traceId);
           this.extractTips(entries, summary);
         } catch (e) {
-          // skip traces that fail to load
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
         }
       }
     }

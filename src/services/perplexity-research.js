@@ -112,7 +112,9 @@ class PerplexityResearchService {
                     inputTokens: data.usage?.prompt_tokens || 0,
                     outputTokens: data.usage?.completion_tokens || 0,
                 });
-            } catch (e) { /* non-critical */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // Persist to 3D vector memory if available

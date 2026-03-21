@@ -80,7 +80,9 @@ function persistSession(sessionId) {
     try {
         if (!fs.existsSync(SESSIONS_DIR)) fs.mkdirSync(SESSIONS_DIR, { recursive: true });
         fs.writeFileSync(path.join(SESSIONS_DIR, `${sessionId}.json`), JSON.stringify(session, null, 2));
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 function trimSessionHistory(session) {
@@ -368,7 +370,9 @@ const { budgetService } = require("../shared/policy-service");
 // Usage tracking paths
 const USAGE_PATH = path.join(__dirname, "../../data/headyjules-usage.json");
 let claudeUsage = { totalCost: 0, requests: 0, byModel: {}, byOrg: {}, history: [] };
-try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch { }
+try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTokens = 0) {
     // Pricing per 1M tokens (approximate as of 2025)
@@ -392,7 +396,9 @@ function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTok
         budgetService.recordUsage('ORG', orgName, cost, { model, inputTokens, outputTokens }).catch(() => { });
     }
 
-    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch { }
+    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     return cost;
 }
 
@@ -635,7 +641,9 @@ function appendRaceAudit(entry) {
     try {
         ensureDataDir();
         fs.appendFileSync(RACE_AUDIT_PATH, JSON.stringify(entry) + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 router.post("/chat", async (req, res) => {
@@ -976,7 +984,7 @@ router.post("/search", async (req, res) => {
             }
         }
     } catch (err) {
-        // Non-critical
+      logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
 
     res.json({
@@ -999,7 +1007,9 @@ router.get("/health", (req, res) => {
         if (fs.existsSync(BRAIN_LOG_PATH)) {
             interactionCount = JSON.parse(fs.readFileSync(BRAIN_LOG_PATH, "utf8")).length;
         }
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     res.json({
         status: "ACTIVE",
@@ -1166,7 +1176,9 @@ router.get("/sessions", (req, res) => {
                         updatedAt: data.updatedAt,
                         preview: data.history?.[0]?.content?.substring(0, 100) || "(empty)",
                     });
-                } catch { }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
         // Include in-memory-only sessions
@@ -1182,7 +1194,9 @@ router.get("/sessions", (req, res) => {
                 });
             }
         }
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     sessionList.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
     res.json({ ok: true, sessions: sessionList, total: sessionList.length, ts: new Date().toISOString() });
 });
@@ -1208,7 +1222,9 @@ router.delete("/sessions/:id", (req, res) => {
     try {
         const diskPath = path.join(SESSIONS_DIR, `${sid}.json`);
         if (fs.existsSync(diskPath)) fs.unlinkSync(diskPath);
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     res.json({ ok: true, deleted: sid, ts: new Date().toISOString() });
 });
 

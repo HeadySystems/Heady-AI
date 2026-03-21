@@ -370,7 +370,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 44,
   },
   'infra.redisUrl': {
-    value: process.env.REDIS_URL || 'redis://localhost:6379',
+    value: process.env.REDIS_URL || 'redis://0.0.0.0:6379',
     type: 'string',
     secret: true,
     description: 'Redis connection URL (Cloud Memorystore in production).',
@@ -378,7 +378,7 @@ const DEFAULTS = Object.freeze({
     sourceLine: 180,
   },
   'infra.postgresUrl': {
-    value: process.env.DATABASE_URL || 'postgresql://localhost:5432/heady',
+    value: process.env.DATABASE_URL || 'postgresql://0.0.0.0:5432/heady',
     type: 'string',
     secret: true,
     description: 'PostgreSQL connection URL (Cloud SQL in production).',
@@ -851,8 +851,9 @@ class ConfigServer extends EventEmitter {
           this.emit('config:file:reloaded');
         }
       });
-    } catch {
-      // File may not exist yet in dev — that's fine
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 
@@ -879,7 +880,10 @@ class ConfigServer extends EventEmitter {
     const handlers = this._watchers.get(key);
     if (handlers) {
       for (const fn of handlers) {
-        try { fn(newVal, oldVal, key); } catch { /* swallow watcher errors */ }
+        try { fn(newVal, oldVal, key); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
   }

@@ -22,7 +22,10 @@ router.get('/status', (_req, res) => {
             const relay = require('../bootstrap/voice-relay');
             if (typeof relay.getStatus === 'function') relayStatus = relay.getStatus();
             else relayStatus.active = true;
-        } catch { /* voice relay not booted */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         res.json({ ok: true, data: relayStatus });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
@@ -42,7 +45,10 @@ router.post('/tts', async (req, res) => {
             if (typeof ttsProvider.textToSpeech === 'function') {
                 audioUrl = await ttsProvider.textToSpeech(text, { voice, format });
             }
-        } catch { /* TTS provider not available */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         if (!audioUrl) {
             return res.status(503).json({
@@ -70,7 +76,10 @@ router.post('/stt', async (req, res) => {
             if (typeof sttProvider.speechToText === 'function') {
                 transcription = await sttProvider.speechToText(audioUrl, { language });
             }
-        } catch { /* STT provider not available */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         if (!transcription) {
             return res.status(503).json({

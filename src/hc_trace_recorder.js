@@ -340,7 +340,8 @@ class TraceRecorder extends EventEmitter {
           filepath: fp,
         });
       } catch (e) {
-        // skip malformed files
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
     return traces;

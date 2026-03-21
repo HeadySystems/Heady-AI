@@ -525,8 +525,9 @@ class HeadyCache {
           this._matcher.removeFromIndex(ns, key, entry.key);
         }
         evicted++;
-      } catch {
-        // best-effort
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
     if (evicted > 0) this._analytics.recordEviction(evicted);
@@ -539,8 +540,9 @@ class HeadyCache {
         const bytes = typeof this._store.byteSize === 'function'
           ? (await Promise.resolve(this._store.byteSize())) : 0;
         this._analytics.updateSize(entries, bytes);
-      } catch {
-        // non-fatal
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     });
   }

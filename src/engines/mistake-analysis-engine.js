@@ -1364,7 +1364,8 @@ class MistakeAnalysisEngine extends EventEmitter {
       this._wisdomStore.set('anti_regression.trial_warnings', trialRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.csl_gates',      gateRules.map(r => r.gate));
     } catch (_) {
-      // Non-fatal: degraded persistence
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 
     return reconRules.length + trialRules.length + testRules.length + gateRules.length;

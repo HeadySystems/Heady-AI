@@ -137,7 +137,9 @@ class BuildLearningEngine extends EventEmitter {
         this._patterns = {}; // Learned patterns
 
         // Ensure data directory exists
-        try { fs.mkdirSync(this._dataDir, { recursive: true }); } catch (_) { }
+        try { fs.mkdirSync(this._dataDir, { recursive: true }); } catch (_) {
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
 
         // Load existing learning data
         this._loadPatterns();

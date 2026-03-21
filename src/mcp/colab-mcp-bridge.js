@@ -221,7 +221,10 @@ async function callTool(name, args) {
                     // Persist to vector memory
                     try {
                         learner.learn(`[Research:${analyzeType}] ${(args.content || '').substring(0, 200)}`, 'interaction', { type: 'research', mode: analyzeType });
-                    } catch (e) { /* non-critical */ }
+                    } catch (e) {
+                      const logger = require('../utils/logger');
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                    }
                     return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
                 } catch (err) {
                     return { content: [{ type: 'text', text: `Perplexity Error: ${err.message}` }], isError: true };
@@ -589,7 +592,7 @@ function jsonRes(res, code, data) {
 // ══════════════════════════════════════════════════════════════════
 function startHTTPServer() {
     const server = http.createServer(async (req, res) => {
-        const url = new URL(req.url, `http://localhost:${PORT}`);
+        const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
 
         // CORS preflight
         if (req.method === 'OPTIONS') {
@@ -684,11 +687,11 @@ function startHTTPServer() {
     server.listen(PORT, async () => {
         console.log(`\n  🐝 Heady™ MCP Multi-Transport Bridge`);
         console.log(`  ════════════════════════════════════`);
-        console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
-        console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
-        console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);
-        console.log(`  📡 WebSocket : ws://localhost:${PORT}`);
-        console.log(`  📡 Health    : http://localhost:${PORT}/health`);
+        console.log(`  📡 HTTP REST : http://0.0.0.0:${PORT}/mcp/tools`);
+        console.log(`  📡 JSON-RPC  : http://0.0.0.0:${PORT}/mcp/rpc`);
+        console.log(`  📡 SSE       : http://0.0.0.0:${PORT}/sse`);
+        console.log(`  📡 WebSocket : ws://0.0.0.0:${PORT}`);
+        console.log(`  📡 Health    : http://0.0.0.0:${PORT}/health`);
         console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
         console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
 

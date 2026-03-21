@@ -159,7 +159,10 @@ class SecretsManager {
                 savedAt: new Date().toISOString(),
             }, null, 2);
             fs.writeFileSync(STATE_FILE, this._encrypt(plaintext));
-        } catch { /* non-blocking */ }
+        } catch (e) {
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     /**
@@ -173,7 +176,10 @@ class SecretsManager {
                 const data = JSON.parse(decrypted);
                 if (data.rotationLog) this._rotationLog = data.rotationLog;
             }
-        } catch { /* non-blocking */ }
+        } catch (e) {
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 

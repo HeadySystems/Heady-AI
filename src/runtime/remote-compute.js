@@ -45,7 +45,9 @@ const stats = {
 function audit(entry) {
     try {
         fs.appendFileSync(DISPATCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 function incStat(provider, action) {

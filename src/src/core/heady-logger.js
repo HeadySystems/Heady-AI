@@ -141,7 +141,8 @@ class HeadyLogger {
           ts:        Date.now(),
         });
       } catch (_) {
-        // rotation handler must not crash the logger
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
   }

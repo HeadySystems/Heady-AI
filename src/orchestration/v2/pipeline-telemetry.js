@@ -42,7 +42,9 @@ const { PHI_TIMING } = require('../../shared/phi-math');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-let logger = null; try { logger = require('../../utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('../../utils/logger'); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // ── Constants ──────────────────────────────────────────────────────
 
@@ -178,7 +180,9 @@ class AsyncLogWriter {
         try {
             const dir = path.dirname(this._filePath);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     append(line) {

@@ -31,11 +31,26 @@ const sleep = promisify(setTimeout);
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;
-try { express    = require('express');    } catch {}
-try { promClient = require('prom-client'); } catch {}
-try { pg         = require('pg');          } catch {}
-try { redis      = require('ioredis');     } catch {}
-try { axios      = require('axios');       } catch {}
+try { express    = require('express');    } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { promClient = require('prom-client'); } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { pg         = require('pg');          } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { redis      = require('ioredis');     } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { axios      = require('axios');       } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // =============================================================================
 // Sacred Geometry Weighted Scoring

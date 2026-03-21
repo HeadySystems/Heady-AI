@@ -151,7 +151,7 @@ async function bootVault() {
                     projectedKeys.push(envVar);
                 }
             } catch (e) {
-                // Credential not found in vault — skip silently
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }
 

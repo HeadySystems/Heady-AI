@@ -272,7 +272,8 @@ class HeadyDistiller extends EventEmitter {
         fileConfig = parsed?.distiller || parsed || {};
       }
     } catch (e) {
-      // config file is optional
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     return {

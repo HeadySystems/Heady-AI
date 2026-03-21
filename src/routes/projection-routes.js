@@ -11,13 +11,19 @@ const path = require("path");
 let projectionEngine = null;
 try {
   projectionEngine = require(path.join(__dirname, "..", "onboarding", "ui-projection-engine"));
-} catch { /* will use fallback */ }
+} catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // Try to load projection manager
 let projectionManager = null;
 try {
   projectionManager = require(path.join(__dirname, "..", "projection", "projection-manager"));
-} catch { /* will use fallback */ }
+} catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // Default workspace layout for new users
 const DEFAULT_PROJECTION = {

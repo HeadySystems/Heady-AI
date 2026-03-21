@@ -430,7 +430,9 @@ class SecureKeyVault {
                         scopes: r.metadata.scopes || [],
                         expiresAt: r.metadata.expiresAt,
                     });
-                } catch { /* wrong passphrase or corrupted — skip */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
         this.indexLoaded = true;

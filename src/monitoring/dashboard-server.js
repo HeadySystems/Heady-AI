@@ -359,7 +359,9 @@ class DashboardServer {
                     clearInterval(this.collectionInterval);
                     // Close all SSE connections
                     for (const client of this.sse.clients) {
-                        try { client.end(); } catch { /* ignore */ }
+                        try { client.end(); } catch (e) {
+                          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                        }
                     }
                     this.sse.clients.clear();
                     if (this.server) {

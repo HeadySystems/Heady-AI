@@ -96,7 +96,10 @@ class TaskRouter extends EventEmitter {
           const chain = this._parseRouteList(rule.route);
           return { chain, taskType, reason: 'custom_rule' };
         }
-      } catch (_) {}
+      } catch (_) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
 
     // 3. Matrix lookup
@@ -151,7 +154,10 @@ class TaskRouter extends EventEmitter {
         // At 75%: skip first (expensive primary), use fallbacks
         return routeList.slice(1).length > 0 ? routeList.slice(1) : routeList;
       }
-    } catch (_) {}
+    } catch (_) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
     return routeList;
   }
 

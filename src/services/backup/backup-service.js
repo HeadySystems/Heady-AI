@@ -347,8 +347,8 @@ class BackupService {
       try {
         await fs.promises.unlink(backup.filePath);
         logger.info({ message: 'Old backup removed', backupId: backup.id, type });
-      } catch {
-        // File may already be deleted
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
   }

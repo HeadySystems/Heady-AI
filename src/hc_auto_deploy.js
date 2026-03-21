@@ -91,7 +91,9 @@ function loadConfig() {
 // ─── Logging ──────────────────────────────────────────────────────
 const LOG_DIR = path.join(HEADY_ROOT, 'logs');
 function ensureLogDir() {
-  try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) { /* exists */ }
+  try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 }
 
 function log(level, message, data = null) {
@@ -115,7 +117,9 @@ function log(level, message, data = null) {
   ensureLogDir();
   try {
     fs.appendFileSync(path.join(LOG_DIR, 'auto-deploy.log'), line + '\n');
-  } catch (e) { /* ignore file log errors */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 }
 
 // ─── Git Operations ───────────────────────────────────────────────
@@ -419,9 +423,15 @@ function getStatus() {
   const config = loadConfig();
   let branch = 'unknown', changes = false, conflicts = false, lastCommit = '';
   try { branch = getCurrentBranch(); } catch (e) { branch = `error: ${e.message.substring(0, 50)}`; }
-  try { changes = hasUncommittedChanges(); } catch (e) { /* ignore */ }
-  try { conflicts = hasMergeConflicts(); } catch (e) { /* ignore */ }
-  try { lastCommit = getLastCommitMessage(); } catch (e) { /* ignore */ }
+  try { changes = hasUncommittedChanges(); } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
+  try { conflicts = hasMergeConflicts(); } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
+  try { lastCommit = getLastCommitMessage(); } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   // Read recent deploy records
   let recentDeploys = [];
@@ -434,7 +444,9 @@ function getStatus() {
         catch (e) { return { file: f, error: 'parse error' }; }
       });
     }
-  } catch (e) { /* no records */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   return {
     autoDeployEnabled: config.autoDeployEnabled,

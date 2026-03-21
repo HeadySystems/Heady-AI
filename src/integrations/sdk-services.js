@@ -23,7 +23,9 @@ const AUDIT = path.join(__dirname, "..", "data", "sdk-services-audit.jsonl");
 function audit(entry) {
     try {
         fs.appendFileSync(AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── SSE Event Hub ───────────────────────────────────────────────
@@ -43,12 +45,16 @@ function loadSessions() {
     try {
         const data = JSON.parse(fs.readFileSync(SESSION_FILE, "utf-8"));
         Object.entries(data).forEach(([k, v]) => sessions.set(k, v));
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 function saveSessions() {
     try {
         fs.writeFileSync(SESSION_FILE, JSON.stringify(Object.fromEntries(sessions), null, 2));
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 loadSessions();
 

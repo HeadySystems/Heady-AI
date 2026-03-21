@@ -228,7 +228,10 @@ class StoryStore {
     try {
       fs.mkdirSync(path.dirname(this.persistPath), { recursive: true });
       fs.appendFileSync(this.persistPath, JSON.stringify(entry) + '\n', 'utf8');
-    } catch { /* non-fatal */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   _loadFromDisk() {
@@ -238,9 +241,15 @@ class StoryStore {
       // Load last maxEntries lines
       const start = Math.max(0, lines.length - this.maxEntries);
       for (const line of lines.slice(start)) {
-        try { this._entries.push(JSON.parse(line)); } catch { /* skip corrupt */ }
+        try { this._entries.push(JSON.parse(line)); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
-    } catch { /* no prior state */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 }
 
@@ -428,7 +437,10 @@ class StoryDriver extends EventEmitter {
       try {
         const results = await this._vectorMemory.searchText(query, k);
         return results.map(r => this._findById(r.id)).filter(Boolean);
-      } catch { /* fall through */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Fallback: keyword search

@@ -52,7 +52,10 @@ async function syncCrossDeviceContext(ctx) {
   const memoryPath = path.join(ROOT, '.heady-memory', 'immediate_context.json');
   let context = {};
   if (fs.existsSync(memoryPath)) {
-    try { context = JSON.parse(fs.readFileSync(memoryPath, 'utf8')); } catch {}
+    try { context = JSON.parse(fs.readFileSync(memoryPath, 'utf8')); } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
   return {
     task: 'sync_cross_device_context',
@@ -106,7 +109,10 @@ async function ingestSecurityLogs(ctx) {
     try {
       const content = fs.readFileSync(auditLog, 'utf8');
       recentEntries = content.split('\n').filter(Boolean).length;
-    } catch {}
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
   return { task: 'ingest_security_logs', status: 'completed', auditLogEntries: recentEntries };
 }
@@ -123,7 +129,10 @@ async function retrieve3dVectorContext(ctx) {
     if (fs.existsSync(full)) {
       try {
         totalVectors += fs.readFileSync(full, 'utf8').split('\n').filter(Boolean).length;
-      } catch {}
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
   const completeness = totalVectors > 0 ? Math.min(1.0, totalVectors / 1000) : 0;
@@ -249,7 +258,10 @@ async function computeParallelGroups(ctx) {
 async function spawnTrialSandbox(ctx) {
   const sandboxId = `sandbox_${Date.now()}_${crypto.randomBytes(3).toString('hex')}`;
   const sandboxDir = path.join('/tmp', 'heady-sandboxes', sandboxId);
-  try { fs.mkdirSync(sandboxDir, { recursive: true }); } catch {}
+  try { fs.mkdirSync(sandboxDir, { recursive: true }); } catch (e) {
+    const logger = require('../utils/logger');
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
   return {
     task: 'spawn_trial_sandbox', status: 'completed',
     sandboxId, path: sandboxDir, isolationLevel: 'DIRECTORY',
@@ -473,7 +485,10 @@ async function scanOptimizationOps(ctx) {
       const pkg = JSON.parse(fs.readFileSync(pkgJson, 'utf8'));
       const depCount = Object.keys(pkg.dependencies || {}).length;
       if (depCount > 100) opportunities.push({ type: 'dependency_bloat', count: depCount, suggestion: 'Audit unused deps' });
-    } catch {}
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
   return { task: 'scan_optimization_ops', status: 'completed', opportunities, opportunityCount: opportunities.length };
 }

@@ -82,7 +82,9 @@ router.post('/send', (req, res) => {
       for (const client of targets) {
         try {
           client.write(`data: ${JSON.stringify(notification)}\n\n`);
-        } catch (e) { /* client disconnected */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 

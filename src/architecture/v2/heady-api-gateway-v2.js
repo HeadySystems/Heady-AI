@@ -96,8 +96,7 @@ const HEADY_DOMAINS = Object.freeze([
   'headybot.com',      'www.headybot.com',
   'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
-  'localhost',
-  '127.0.0.1',
+  '0.0.0.0',
 ]);
 
 // ─── Supported API versions ───────────────────────────────────────────────────
@@ -295,7 +294,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
   get mesh() {
     if (!this._mesh) {
       try { this._mesh = require('./heady-service-mesh').getServiceMesh(); }
-      catch { /* optional dependency */ }
+      catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return this._mesh;
   }
@@ -303,7 +305,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
   get obs() {
     if (!this._obs) {
       try { this._obs = require('./heady-observability').getObservability({ service: this._opts.serviceName }); }
-      catch { /* optional dependency */ }
+      catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return this._obs;
   }
@@ -311,7 +316,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
   get cfg() {
     if (!this._cfg) {
       try { this._cfg = require('./heady-config-server').getConfigServer(); }
-      catch { /* optional dependency */ }
+      catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return this._cfg;
   }
@@ -319,7 +327,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
   get bus() {
     if (!this._bus) {
       try { this._bus = require('./heady-event-bus').getEventBus(); }
-      catch { /* optional dependency */ }
+      catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return this._bus;
   }
@@ -395,7 +406,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
     if (!this._server) return;
     // Drain SSE clients
     for (const [, res] of this._sseClients) {
-      try { res.end(); } catch { /* ignore */ }
+      try { res.end(); } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     this._sseClients.clear();
     this._rateLimiter.stop();
@@ -694,7 +708,10 @@ class HeadyApiGatewayV2 extends EventEmitter {
       const sendEvent = (event, data) => {
         try {
           res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-        } catch { /* client disconnected */ }
+        } catch (e) {
+          const logger = require('../../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       };
 
       sendEvent('connected', { runId, traceId, ts: Date.now() });

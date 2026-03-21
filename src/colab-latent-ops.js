@@ -95,7 +95,7 @@ let express = null;
 try {
   express = require('express');
 } catch (e) {
-  // Express will be required later if router is needed
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
 }
 
 const expressRouter = express ? express.Router() : null;
@@ -577,7 +577,9 @@ function startLearningCycle() {
           })),
           errorStats: errorLearning.getStats(),
         };
-      } catch (e) { /* error learning not available */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
       const result = await submitJob('learning', currentMode, {
         cycle: runtimeState.learning.learningCycles,
@@ -614,7 +616,9 @@ function startLearningCycle() {
               });
             }
           }
-        } catch (e) { /* error learning feedback optional */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     } catch (err) {
       logger.error('Learning cycle failed', { error: err.message });
@@ -884,7 +888,7 @@ def handle_inference_job(payload: Dict[str, Any]) -> Dict[str, Any]:
         pass
 
     # Fallback: call HeadyBrain HTTP endpoint if available
-    endpoint = payload.get('endpoint', 'http://localhost:3300/api/brain/infer')
+    endpoint = payload.get('endpoint', 'http://0.0.0.0:3300/api/brain/infer')
     try:
         import requests
         resp = requests.post(endpoint, json={'input': input_data, 'model': model_name}, timeout=30)

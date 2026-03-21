@@ -405,7 +405,9 @@ async function indexDirectory(dirPath, options = {}) {
             const content = fs.readFileSync(fullPath, 'utf8');
             const result = await indexArtifact(content, 'auto', { filename: file, path: fullPath });
             results.push(result);
-        } catch { /* skip unreadable files */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     logger.info(`[VTE] Indexed ${results.length} files from ${dirPath}`);

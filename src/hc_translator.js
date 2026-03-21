@@ -188,7 +188,10 @@ const httpAdapter = {
   decode(req) {
     let body = req.body;
     if (typeof body === 'string') {
-      try { body = JSON.parse(body); } catch (e) { /* keep string */ }
+      try { body = JSON.parse(body); } catch (e) {
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return createMessage({
       id: req.headers?.['x-heady-message-id'] || undefined,
@@ -220,7 +223,10 @@ const httpAdapter = {
         res.on('data', chunk => { data += chunk; });
         res.on('end', () => {
           let parsed = data;
-          try { parsed = JSON.parse(data); } catch (e) { /* keep string */ }
+          try { parsed = JSON.parse(data); } catch (e) {
+            const logger = require('./utils/logger');
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
           resolve({ status: res.statusCode, body: parsed, protocol: 'http' });
         });
       });
@@ -402,7 +408,10 @@ const midiAdapter = {
             operation: parsed.o || 'sysex_data',
             payload: parsed.p
           });
-        } catch (e) { /* fall through */ }
+        } catch (e) {
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
       return createMessage({
         source: { protocol: 'midi', endpoint: 'sysex' },
@@ -564,7 +573,10 @@ class HeadyTranslator extends EventEmitter {
         if (result === false) {
           return { success: false, error: 'Blocked by middleware', message };
         }
-      } catch (e) { /* middleware errors are non-fatal */ }
+      } catch (e) {
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Get target adapter
@@ -616,7 +628,10 @@ class HeadyTranslator extends EventEmitter {
 
     // Run middleware (post-translate)
     for (const mw of this._middleware) {
-      try { await mw(message, 'post'); } catch (e) { /* non-fatal */ }
+      try { await mw(message, 'post'); } catch (e) {
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     this.emit('translated', { message, encoded, from: sourceProto, to: targetProto });

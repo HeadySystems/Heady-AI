@@ -555,7 +555,9 @@ class LiquidAllocator extends EventEmitter {
                 totalFlows: this.totalFlows,
                 ts: new Date().toISOString(),
             }, null, 2));
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 

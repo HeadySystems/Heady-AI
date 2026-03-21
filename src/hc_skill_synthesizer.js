@@ -116,7 +116,8 @@ class SkillSynthesizer {
         // Collect step names
         allStepNames.push(...tools);
       } catch (e) {
-        // skip unloadable traces
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
 

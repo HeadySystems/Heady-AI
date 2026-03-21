@@ -467,7 +467,9 @@ function hydrateFromLog() {
                 aggregates.totalCalls++;
                 if (data.latencyMs) aggregates.latencyBuckets.push(data.latencyMs);
 
-            } catch { /* skip malformed lines */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         // Trim latency buckets
         if (aggregates.latencyBuckets.length > 1000) {

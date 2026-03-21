@@ -46,8 +46,8 @@ function persistSourceOfTruthState() {
             services: Array.from(serviceTruth.values()),
             updatedAt: new Date().toISOString(),
         }, null, 2));
-    } catch {
-        // non-critical persistence path
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }
 
@@ -69,8 +69,8 @@ function hydrateSourceOfTruthState() {
             }
         }
         lastRealtimePoll = saved?.lastRealtimePoll || saved?.updatedAt || null;
-    } catch {
-        // non-critical hydration path
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }
 function getOpenAIKey() { return process.env.OPENAI_API_KEY || ""; }
@@ -666,7 +666,9 @@ function persistObservation(entry) {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         const line = JSON.stringify({ ...entry, persisted: true }) + "\n";
         fs.appendFileSync(path.join(DATA_DIR, "lens-observations.jsonl"), line);
-    } catch { /* non-critical */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 module.exports = router;

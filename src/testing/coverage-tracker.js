@@ -124,7 +124,7 @@ function scoreTestAlignment(sourceNames, testDescriptions) {
         totalScore += result.score;
         comparisons++;
       } catch (_) {
-        // dimension mismatch etc. — skip
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
       }
     }
   }
@@ -211,7 +211,9 @@ class CoverageTracker {
           const srcNames    = extractSourceIntent(srcContent);
           const testDescs   = extractTestDescriptions(testContent);
           alignmentScore    = scoreTestAlignment(srcNames, testDescs);
-        } catch (_) { /* best-effort */ }
+        } catch (_) {
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
       }
 
       records.push({

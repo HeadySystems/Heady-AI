@@ -40,7 +40,8 @@ function _writeAudit(entry) {
     try {
       _auditStream.write(JSON.stringify(entry) + '\n');
     } catch (err) {
-      // Non-fatal
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: err.message, stack: err.stack });
     }
   }
 }

@@ -69,7 +69,10 @@ function computeRAMStateHash() {
                 stateComponents.push(fs.readFileSync(path.join(sharedDir, f), "utf8"));
             }
         }
-    } catch { }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return crypto.createHash("sha256")
         .update(stateComponents.join("\n---STATE-BOUNDARY---\n"))
@@ -149,7 +152,10 @@ function injectTemplatesIntoHFSpaces() {
         }
 
         // Also project to dev folder (services/heady-web/sites/)
-        try { renderer.projectToDevFolder(); } catch { }
+        try { renderer.projectToDevFolder(); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
     } catch (e) {
         results.push({ space: "all", injected: false, error: e.message });
@@ -161,7 +167,10 @@ function injectTemplatesIntoHFSpaces() {
 function generateFullPage(rendered, template) {
     const renderer = getSiteRenderer();
     if (renderer && template) {
-        try { return renderer.renderSiteToHTML(template); } catch { }
+        try { return renderer.renderSiteToHTML(template); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
     // Fallback to minimal template
     const { name, tagline, accent, nav, authGate, cardHTML, statsHTML, sacredGeometry } = rendered;

@@ -75,8 +75,8 @@ class QuantumBridge {
                                 return;
                             }
                         }
-                    } catch {
-                        // Malformed token — allow through for now (graceful degradation)
+                    } catch (e) {
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
                     }
                 }
 

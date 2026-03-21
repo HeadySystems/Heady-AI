@@ -181,7 +181,10 @@ async function embed(text, model = 'text-embedding-3-small') {
                 model: result.model || model,
             };
         }
-    } catch { /* gateway failed, fall through to direct */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Fallback to direct HeadyCompute if gateway fails
     const client = getClient();

@@ -26,7 +26,9 @@ global.midiBus = midiBus;
 // Remote resources config
 let remoteConfig = { services: {} };
 try { remoteConfig = yaml.load(fs.readFileSync(path.join(__dirname, '../../configs/remote-resources.yaml'), 'utf8')) || remoteConfig; }
-catch { /* remote-resources.yaml not found — using defaults */ }
+catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 if (remoteConfig.critical_only) {
     logger.logNodeActivity("CONDUCTOR", 'Running in local-first mode (non-critical remote calls disabled)');

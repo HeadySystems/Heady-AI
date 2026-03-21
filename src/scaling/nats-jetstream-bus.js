@@ -305,7 +305,10 @@ class NATSJetStreamBus {
     async close() {
         this._connected = false;
         for (const [name, sub] of this._subscribers) {
-            try { sub.unsubscribe(); } catch { /* ignore */ }
+            try { sub.unsubscribe(); } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
         this._subscribers.clear();
         if (this._nc) {

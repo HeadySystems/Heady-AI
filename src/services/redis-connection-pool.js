@@ -218,7 +218,9 @@ class RedisConnectionPool {
         this.stats.totalDestroyed++;
         try {
             conn.destroy();
-        } catch (e) { /* ignore */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     _recordAcquire(startTime) {

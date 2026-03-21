@@ -507,7 +507,10 @@ class HCFullPipeline extends EventEmitter {
                 if (typeof this.vectorMemory.queryWithRelationships === 'function') {
                     graphContext = await this.vectorMemory.queryWithRelationships(stimulus, 3);
                 }
-            } catch { /* vector memory unavailable — proceed without context */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         run._vectorContext = vectorContext || [];
@@ -625,7 +628,10 @@ class HCFullPipeline extends EventEmitter {
         if (this.buddyMetacognition && typeof this.buddyMetacognition.assessConfidence === 'function') {
             try {
                 run._buddyConfidence = await this.buddyMetacognition.assessConfidence();
-            } catch { /* non-critical */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         return {
@@ -722,7 +728,10 @@ class HCFullPipeline extends EventEmitter {
                     });
                     return true;
                 }
-            } catch { /* vector memory unavailable */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         if (this.errorInterceptor) {
@@ -823,7 +832,10 @@ class HCFullPipeline extends EventEmitter {
                     monteCarloResult: this._getStageResult(run, 'MONTE_CARLO'),
                     selfHealStats: { ...this.selfHealStats },
                 });
-            } catch { /* non-critical */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 

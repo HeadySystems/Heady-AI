@@ -13,7 +13,9 @@
  * Every dispatch is logged to the cognitive telemetry audit trail.
  */
 const EventEmitter = require("events");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // ─── Service Catalog ─────────────────────────────────────────────────
 // Maps every service to its API endpoint and semantic capabilities.
@@ -107,7 +109,7 @@ class HeadyServiceDispatcher extends EventEmitter {
         this.catalog = { ...SERVICE_CATALOG };
         this.dispatchLog = [];
         this.totalDispatches = 0;
-        this.managerUrl = opts.managerUrl || "https://127.0.0.1:3301";
+        this.managerUrl = opts.managerUrl || process.env.HEADY_MANAGER_URL || "https://0.0.0.0:3301";
     }
 
     /**

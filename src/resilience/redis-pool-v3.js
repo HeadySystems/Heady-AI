@@ -38,7 +38,7 @@ class RedisPoolV3 extends EventEmitter {
   constructor(config = {}) {
     super();
     this.config = {
-      host: config.host || process.env.REDIS_HOST || '127.0.0.1',
+      host: config.host || process.env.REDIS_HOST || '0.0.0.0',
       port: parseInt(config.port || process.env.REDIS_PORT || '6379', 10),
       password: config.password || process.env.REDIS_PASSWORD || undefined,
       db: parseInt(config.db || process.env.REDIS_DB || '0', 10),
@@ -322,7 +322,10 @@ class RedisPoolV3 extends EventEmitter {
     try {
       if (typeof conn.disconnect === 'function') conn.disconnect();
       else if (typeof conn.destroy === 'function') conn.destroy();
-    } catch { /* ignore */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   _recordLatency(startTime) {

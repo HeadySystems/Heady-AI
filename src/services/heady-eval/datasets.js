@@ -108,7 +108,10 @@ async function loadCSV(filePath) {
             });
             // Parse metadata column if present
             if (typeof obj.metadata === 'string' && obj.metadata) {
-              try { obj.metadata = JSON.parse(obj.metadata); } catch { /* keep string */ }
+              try { obj.metadata = JSON.parse(obj.metadata); } catch (e) {
+                const logger = require('../../utils/logger');
+                logger.error('Unexpected error', { error: e.message, stack: e.stack });
+              }
             }
             return obj;
           });
@@ -309,7 +312,10 @@ class DatasetManager {
   _ensureDir() {
     try {
       fs.mkdirSync(this.storageDir, { recursive: true });
-    } catch {}
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   /**
@@ -391,7 +397,10 @@ class DatasetManager {
           createdAt: raw.createdAt,
           file,
         });
-      } catch {}
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return datasets;
   }
@@ -413,7 +422,10 @@ class DatasetManager {
           this._cache.set(dataset.id, dataset);
           return dataset;
         }
-      } catch {}
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return null;
   }

@@ -59,11 +59,17 @@ function createLatentOS(opts = {}) {
 
     // Cross-wire events
     pipeline.on && pipeline.on('stored', (entry) => {
-        try { spatialMapper.add && spatialMapper.add(entry.key, entry.vector); } catch (_) {}
+        try { spatialMapper.add && spatialMapper.add(entry.key, entry.vector); } catch (_) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
     });
 
     awareness.on && awareness.on('drift-detected', (data) => {
-        try { driftDetector.onDriftSignal && driftDetector.onDriftSignal(data); } catch (_) {}
+        try { driftDetector.onDriftSignal && driftDetector.onDriftSignal(data); } catch (_) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
     });
 
     function shutdown() {

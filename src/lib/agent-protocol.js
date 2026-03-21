@@ -16,7 +16,7 @@ class AgentProtocolAdapter {
         return {
             name: this.agentId,
             description: 'Heady™ Sovereign AI Agent',
-            url: process.env.AGENT_URL || `http://localhost:${process.env.PORT || 3000}`,
+            url: process.env.AGENT_URL || `http://0.0.0.0:${process.env.PORT || 3000}`,
             version: this.protocolVersion,
             capabilities: {
                 streaming: true,

@@ -150,7 +150,10 @@ router.get("/swarm/status", (req, res) => {
     try {
         const fs = require("fs");
         let honeycombData = [];
-        try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch { }
+        try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         // Read PM2 process status for hcfp-auto-success
         const { execSync } = require("child_process");
@@ -167,7 +170,10 @@ router.get("/swarm/status", (req, res) => {
                     cpu: swarmProc.monit.cpu,
                 };
             }
-        } catch { }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         res.json({
             ok: true,
@@ -185,7 +191,10 @@ router.get("/swarm/honeycomb", (req, res) => {
     try {
         const fs = require("fs");
         let data = [];
-        try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch { }
+        try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, "utf8")); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         const limit = parseInt(req.query.limit) || 20;
         res.json({ ok: true, entries: data.slice(-limit), total: data.length });
     } catch (err) {
@@ -202,7 +211,10 @@ router.post("/swarm/nudge", (req, res) => {
         if (!prompt) return res.status(400).json({ ok: false, error: "prompt is required" });
 
         let nudges = [];
-        try { nudges = JSON.parse(fs.readFileSync(nudgePath, "utf8")); } catch { }
+        try { nudges = JSON.parse(fs.readFileSync(nudgePath, "utf8")); } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         nudges.push({ name, prompt, category, priority, ts: new Date().toISOString() });
         fs.writeFileSync(nudgePath, JSON.stringify(nudges, null, 2));
         res.json({ ok: true, message: "Flower queued for next round", queueSize: nudges.length });

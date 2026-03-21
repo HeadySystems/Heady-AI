@@ -203,7 +203,10 @@ class CognitiveFusion {
             patterns: patterns.slice(0, 3).map(p => p.content),
           });
         }
-      } catch { /* non-critical */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     return { confidence: 0.75, insights, warnings, layer: 'owl_wisdom' };
@@ -286,7 +289,10 @@ class CognitiveFusion {
             topScore: memories[0].score,
           });
         }
-      } catch { /* non-critical */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     return { confidence: 0.8, insights, layer: 'elephant_memory' };

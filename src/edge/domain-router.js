@@ -41,7 +41,7 @@ const DOMAIN_REGISTRY = {
     role:        'primary_app',
     description: 'HeadyMe flagship application — AI-powered wellness and sovereignty platform',
     service:     'headyme-app',
-    upstream:    'http://localhost:3000',
+    upstream:    process.env.HEADYME_SERVICE_URL || 'http://0.0.0.0:3000',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 100 },
@@ -53,7 +53,7 @@ const DOMAIN_REGISTRY = {
     role:        'platform_root',
     description: 'HeadySystems corporate platform and admin hub',
     service:     'headysystems-admin',
-    upstream:    'http://localhost:3001',
+    upstream:    process.env.HEADYSYSTEMS_SERVICE_URL || 'http://0.0.0.0:3001',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 50 },
@@ -65,7 +65,7 @@ const DOMAIN_REGISTRY = {
     role:        'mcp_gateway',
     description: 'Model Context Protocol gateway for AI tool integrations',
     service:     'mcp-server',
-    upstream:    'http://localhost:3002',
+    upstream:    process.env.HEADYMCP_SERVICE_URL || 'http://0.0.0.0:3002',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 200 },
@@ -77,7 +77,7 @@ const DOMAIN_REGISTRY = {
     role:        'companion_ai',
     description: 'HeadyBuddy conversational AI companion',
     service:     'headybuddy-service',
-    upstream:    'http://localhost:3003',
+    upstream:    process.env.HEADYBUDDY_SERVICE_URL || 'http://0.0.0.0:3003',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 150 },
@@ -89,7 +89,7 @@ const DOMAIN_REGISTRY = {
     role:        'community',
     description: 'HeadyConnection community and networking platform',
     service:     'headyconnection-service',
-    upstream:    'http://localhost:3004',
+    upstream:    process.env.HEADYCONNECTION_SERVICE_URL || 'http://0.0.0.0:3004',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 100 },
@@ -101,7 +101,7 @@ const DOMAIN_REGISTRY = {
     role:        'api_hub',
     description: 'HeadyIO developer API hub and integration platform',
     service:     'headyio-api',
-    upstream:    'http://localhost:3005',
+    upstream:    process.env.HEADYIO_SERVICE_URL || 'http://0.0.0.0:3005',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 500 },
@@ -113,7 +113,7 @@ const DOMAIN_REGISTRY = {
     role:        'bot_platform',
     description: 'HeadyBot automation and workflow orchestration platform',
     service:     'headybot-service',
-    upstream:    'http://localhost:3006',
+    upstream:    process.env.HEADYBOT_SERVICE_URL || 'http://0.0.0.0:3006',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 200 },
@@ -125,7 +125,7 @@ const DOMAIN_REGISTRY = {
     role:        'public_api',
     description: 'Public REST/GraphQL API for external integrations',
     service:     'heady-public-api',
-    upstream:    'http://localhost:3007',
+    upstream:    process.env.HEADYAPI_SERVICE_URL || 'http://0.0.0.0:3007',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 1000 },
@@ -137,7 +137,7 @@ const DOMAIN_REGISTRY = {
     role:        'ai_gateway',
     description: 'HeadyAI inference and model gateway',
     service:     'inference-gateway',
-    upstream:    'http://localhost:3008',
+    upstream:    process.env.HEADYAI_SERVICE_URL || 'http://0.0.0.0:3008',
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 300 },
@@ -275,7 +275,10 @@ class HealthMonitor extends EventEmitter {
     try {
       const res = await this._httpGet(url, this.timeoutMs);
       status    = res.statusCode >= 200 && res.statusCode < 400 ? 'healthy' : 'degraded';
-    } catch { /* unhealthy */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     const prev = this._status.get(domain)?.status;
     const curr = { status, lastCheckedAt: Date.now(), latencyMs: Date.now() - start };

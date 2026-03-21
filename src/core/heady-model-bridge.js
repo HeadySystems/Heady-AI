@@ -7,7 +7,8 @@ let providerConnector = null;
 try {
   providerConnector = require('../integrations/provider-connector');
 } catch (err) {
-  // provider-connector not available
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: err.message, stack: err.stack });
 }
 
 class ModelBridge {

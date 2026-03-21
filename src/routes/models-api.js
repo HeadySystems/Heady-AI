@@ -84,7 +84,9 @@ try {
                     { model, provider: 'heady-brain', latency_ms: latency, tokens_in: Math.ceil(lastMessage.length / 4), tokens_out: Math.ceil(replyContent.length / 4), arena_nodes: arena.nodes === 'all' ? 20 : arena.nodes?.length || 1, tier: config.tier, source_endpoint: '/api/v1/chat/completions' }
                 );
                 audit_hash = audit.sha256_hash;
-            } catch { /* telemetry module not loaded */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
 
             res.json({
                 id: 'chatcmpl-heady-' + Date.now().toString(36),

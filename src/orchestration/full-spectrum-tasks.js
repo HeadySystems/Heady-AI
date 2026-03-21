@@ -120,7 +120,10 @@ const LAYER_2_TASKS = [
         const yaml = require('js-yaml');
         const data = yaml.load(fs.readFileSync(path.join(ROOT, 'configs/hcfullpipeline.yaml'), 'utf8'));
         stageCount = data?.pipeline?.stages?.length || 0;
-      } catch {}
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
       return { success: valid && stageCount >= 22, result: { valid, stageCount }, learnings: [`Pipeline has ${stageCount} stages`] };
     }
   },
@@ -214,7 +217,10 @@ const LAYER_4_TASKS = [
       try {
         const content = fs.readFileSync(path.join(ROOT, 'src/services/governance-engine.js'), 'utf8');
         hasKillSwitch = content.includes('kill') || content.includes('flatten') || content.includes('sever');
-      } catch {}
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
       return { success: lines > 100 && hasKillSwitch, result: { lines, hasKillSwitch }, learnings: [] };
     }
   },

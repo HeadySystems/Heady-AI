@@ -393,7 +393,10 @@ class AdvancedRateLimiter {
       try {
         const tier = await this._getTier(tenantId, apiKey);
         if (tier && this._tiers[tier]) return tier;
-      } catch {}
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     return DEFAULT_TIER;

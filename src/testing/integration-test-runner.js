@@ -231,7 +231,9 @@ async function scenarioCircuitBreaker(log) {
     try {
       await cb.execute(() => Promise.resolve('ok'));
       recovered = true;
-    } catch (_) {}
+    } catch (_) {
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 
     result.status   = STATUS.PASS;
     result.details  = { failCount, wasOpen: isOpen, recovered };

@@ -144,7 +144,7 @@ async function getDashboard(orchestrator) {
 
     // Check remote nodes
     const remoteNodes = await Promise.allSettled([
-        checkRemoteNode("heady-manager", "https://127.0.0.1:3301/api/pulse"),
+        checkRemoteNode("heady-manager", process.env.HEADY_MANAGER_URL ? `${process.env.HEADY_MANAGER_URL}/api/pulse` : "https://0.0.0.0:3301/api/pulse"),
         checkRemoteNode("heady-edge", "https://headysystems.com/api/health", 8000),
     ]);
 

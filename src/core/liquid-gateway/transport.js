@@ -234,7 +234,10 @@ export class SSETransport extends EventEmitter {
 
     try {
       connection.res.end();
-    } catch (_) { /* already closed */ }
+    } catch (_) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 
     this.connections.delete(connectionId);
     this.emit('sse:disconnected', { connectionId, userId: connection.userId });
@@ -391,7 +394,10 @@ export class WebSocketTransport extends EventEmitter {
     session.state = 'closing';
     try {
       session.ws.close(code, reason);
-    } catch (_) { /* already closed */ }
+    } catch (_) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
 
     this._cleanup(sessionId);
   }

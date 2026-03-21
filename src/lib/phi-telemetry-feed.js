@@ -291,7 +291,7 @@ class PhiTelemetryFeed {
                 this._prevNetworkStats = { rx: rxBytes, tx: txBytes };
             }
         } catch (_) {
-            // Network stats not available on this platform; silently skip
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
         }
     }
 

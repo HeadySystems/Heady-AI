@@ -50,7 +50,10 @@ const AROUSAL_SPIKE_PER_ERROR = 0.15;
 function safeOp(label, fn) {
   try { return fn(); } catch (err) {
     // Non-fatal — just log
-    try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch { }
+    try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     return null;
   }
 }
@@ -251,7 +254,10 @@ class EpisodicMemoryManager {
           metadata: { type: 'decision_episode', ...ep },
           namespace: this.EPISODE_NS,
         });
-      } catch { /* non-fatal */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 
@@ -537,7 +543,10 @@ class DeterministicErrorInterceptorV2 {
           interception.phase3.matchedResolution = results[0];
           interception.phase3.confidence = results[0].score;
         }
-      } catch { /* best-effort */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     const errorKey = `${interception.error.name}:${interception.context.source}`;
@@ -598,7 +607,10 @@ class DeterministicErrorInterceptorV2 {
           content: `Error resolution: ${rule.errorMessage} → ${rule.resolution}. Constraint: ${rule.constraintViolation}. Module: ${rule.failedModule}.`,
           metadata: { type: 'error_resolution', ruleId: rule.id, errorKey: rule.errorKey, constraintViolation: rule.constraintViolation },
         });
-      } catch { /* non-fatal */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     this._persistLearnedRules();
@@ -661,7 +673,10 @@ class TaskLockManager {
         const result = await this._redisClient.set(key, val, 'NX', 'PX', ttlMs);
         if (result === 'OK') { this.stats.acquired++; return true; }
         this.stats.collisions++; return false;
-      } catch { /* fall through */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     const existing = this._locks.get(key);
     if (existing && existing.expiresAt > Date.now()) { this.stats.collisions++; return false; }
@@ -678,7 +693,10 @@ class TaskLockManager {
         const cur = await this._redisClient.get(key);
         if (cur && JSON.parse(cur).agentId === agentId) { await this._redisClient.del(key); this.stats.released++; return true; }
         return false;
-      } catch { /* fall through */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     const existing = this._locks.get(key);
     if (existing?.agentId === agentId) { this._locks.delete(key); this.stats.released++; return true; }

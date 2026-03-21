@@ -36,7 +36,9 @@ const logger = require('../utils/logger');
 let vault = null;
 try {
     vault = require('./secure-key-vault').vault;
-} catch { /* vault not loaded yet */ }
+} catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // ── Device Registry ─────────────────────────────────────────────
 const devices = new Map();
@@ -178,7 +180,9 @@ class CrossDeviceFS {
     }
 
     _cleanupTempKey(keyPath) {
-        if (keyPath) try { fs.unlinkSync(keyPath); } catch { /* ok */ }
+        if (keyPath) try { fs.unlinkSync(keyPath); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     async remoteExec(deviceName, command) {

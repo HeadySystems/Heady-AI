@@ -250,8 +250,8 @@ class DawMcpBridge extends EventEmitter {
             logger.logSystem(`[DAW-MCP] Reconnecting (attempt ${this._reconnectAttempts})...`);
             try {
                 await this._connectToRemoteScript();
-            } catch {
-                // Will retry via close handler
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
             }
         }, this.config.reconnectIntervalMs);
     }

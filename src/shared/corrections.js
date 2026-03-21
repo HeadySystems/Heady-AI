@@ -23,7 +23,9 @@
 
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const CORRECTIONS_LOG = path.join(__dirname, "..", "data", "corrections-audit.jsonl");
 const BEHAVIOR_STORE = path.join(__dirname, "..", "data", "behavior-patterns.json");
@@ -195,7 +197,9 @@ function recordInteraction(input, analysis, vectorMemory) {
     // Persist
     try {
         fs.writeFileSync(BEHAVIOR_STORE, JSON.stringify(behaviorModel, null, 2));
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Audit trail
     const auditEntry = {
@@ -207,7 +211,9 @@ function recordInteraction(input, analysis, vectorMemory) {
     };
     try {
         fs.appendFileSync(CORRECTIONS_LOG, JSON.stringify(auditEntry) + "\n");
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Store in vector memory for pattern detection
     if (vectorMemory && typeof vectorMemory.ingestMemory === "function") {

@@ -12,7 +12,9 @@
  */
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const VERTICALS_PATH = path.join(__dirname, "verticals.json");
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "verticals");
@@ -399,7 +401,9 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
     try {
       const r = await fetch(API + '/api/auth/verify', { credentials: 'include' });
       if(r.ok) { const d = await r.json(); tok = 'cookie'; updateUI(d); return; }
-    } catch{}
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     tok = null;
     silentAuth();
   }
@@ -419,7 +423,9 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
         tok = 'cookie';  // Token set as httpOnly cookie by server
         updateUI({ valid: true, tier: d.tier, method: d.method, warp: d.warp });
       }
-    } catch(e) { /* graceful degradation */ }
+    } catch(e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   function updateUI(session) {

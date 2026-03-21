@@ -537,7 +537,10 @@ class LiquidOrchestrator extends EventEmitter {
 
     try {
       await this._dispatchToBee(bee, task, provider, routeStart, task._priorityScore || 0);
-    } catch (_) { /* error already emitted */ }
+    } catch (_) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
+    }
   }
 
   // ─── Priority Scoring ────────────────────────────────────────────────────────

@@ -16,7 +16,9 @@ const ERROR_LOG = path.join(__dirname, '..', '..', 'data', 'error-audit.jsonl');
 const errorCounts = new Map();
 
 /**
- * Safe operation wrapper — replaces all `try { ... } catch { }` patterns.
+ * Safe operation wrapper — replaces all `try { ... } catch (e) {
+   logger.error('Unexpected error', { error: e.message, stack: e.stack });
+ }` patterns.
  * Logs the error, increments counters, and returns a fallback value.
  *
  * @param {string} context - Where this error happened (e.g., 'brain.js:loadConfig')
@@ -72,8 +74,8 @@ function trackError(context, err, opts = {}) {
         const dir = path.dirname(ERROR_LOG);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         fs.appendFileSync(ERROR_LOG, JSON.stringify(entry) + '\n');
-    } catch {
-        // This is the ONE place we allow a silent catch — can't log a logging failure
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }
 

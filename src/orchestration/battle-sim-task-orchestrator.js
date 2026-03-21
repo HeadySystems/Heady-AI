@@ -74,7 +74,10 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             try {
                 const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
                 this.battleService = new HeadyBattleService({ gateway: this._gateway });
-            } catch (_) { }
+            } catch (_) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
         }
     }
 
@@ -300,7 +303,8 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                     };
                 }
             } catch (_) {
-                // Fall through to local hash-based MC
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
             }
         }
 

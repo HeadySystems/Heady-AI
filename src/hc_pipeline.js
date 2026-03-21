@@ -139,7 +139,7 @@ function appendLog(state, level, message, detail) {
   try {
     fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
   } catch (_) {
-    // log file write failure is non-fatal
+    logger.error('Unexpected error', { error: _.message, stack: _.stack });
   }
 }
 
@@ -328,7 +328,7 @@ function saveTaskCache() {
     if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
     fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
   } catch (_) {
-    // non-fatal
+    logger.error('Unexpected error', { error: _.message, stack: _.stack });
   }
 }
 
@@ -888,7 +888,9 @@ class HCFullPipeline extends EventEmitter {
                 taskResult.status === "completed",
                 taskResult.status === "completed" ? 85 : 40
               );
-            } catch (_) { /* non-fatal */ }
+            } catch (_) {
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         }
       }
@@ -903,7 +905,9 @@ class HCFullPipeline extends EventEmitter {
             this._patternEngine.observeLatency(`pipeline:${stageId}`, stageMs, {
               tags: ["pipeline", "stage_timing", stageId],
             });
-          } catch (_) { /* non-fatal */ }
+          } catch (_) {
+            logger.error('Unexpected error', { error: _.message, stack: _.stack });
+          }
         }
         // Per-task observations
         const tasks = stage.tasks || {};
@@ -913,7 +917,9 @@ class HCFullPipeline extends EventEmitter {
               this._patternEngine.observeError(`pipeline:${taskName}`, "task_failed", {
                 tags: ["pipeline", "task_failure", taskName],
               });
-            } catch (_) { /* non-fatal */ }
+            } catch (_) {
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         }
       }
@@ -960,7 +966,9 @@ class HCFullPipeline extends EventEmitter {
           after: `${m.completedTasks} completed, ${m.failedTasks} failed, ${m.cachedTasks} cached in ${m.elapsedMs}ms`,
           status: this.state.status === RunStatus.COMPLETED ? "applied" : "needs_review",
         });
-      } catch (_) { /* non-fatal */ }
+      } catch (_) {
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
   }
 

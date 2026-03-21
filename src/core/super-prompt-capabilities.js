@@ -54,7 +54,10 @@ export class HeadyAutoContext {
           this.#scheduleRescan();
         });
         this.#watchers.push(watcher);
-      } catch { /* dir may not support recursive watch */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Initial scan
@@ -80,7 +83,10 @@ export class HeadyAutoContext {
         const hash = createHash('sha256').update(content).digest('hex').slice(0, 16);
         this.#vectorStore.set(filePath, { vector, hash, indexedAt: Date.now() });
         indexed++;
-      } catch { /* skip unreadable files */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     return { indexed, totalVectors: this.#vectorStore.size };

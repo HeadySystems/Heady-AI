@@ -624,7 +624,10 @@ class BeeFactoryV2 extends EventEmitter {
                     findings.push({ file: fullPath, pattern: patterns.find(p => entry.name.includes(p)), size: fs.statSync(fullPath).size });
                   }
                 }
-              } catch { /* permission denied */ }
+              } catch (e) {
+                const logger = require('../../utils/logger');
+                logger.error('Unexpected error', { error: e.message, stack: e.stack });
+              }
             };
             walk(targetDir);
             return { scanned: targetDir, findings, count: findings.length, ts: Date.now() };
@@ -960,7 +963,10 @@ class BeeFactoryV2 extends EventEmitter {
   _callHook(hookName, ...args) {
     const fn = this._hooks[hookName];
     if (typeof fn === 'function') {
-      try { fn(...args); } catch { /* hooks must not crash the factory */ }
+      try { fn(...args); } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     this.emit(`hook:${hookName}`, { hookName, args });
   }
@@ -1048,7 +1054,10 @@ ${workerNames.map(name => `        /**
 module.exports = { domain, description, priority, getWork };
 `;
 
-    try { fs.writeFileSync(filePath, code, 'utf8'); } catch { /* non-fatal */ }
+    try { fs.writeFileSync(filePath, code, 'utf8'); } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 }
 

@@ -338,7 +338,10 @@ function cspViolationHandler(opts = {}) {
 
     // Call optional handler
     if (typeof opts.onViolation === 'function') {
-      try { opts.onViolation(violation, req); } catch {}
+      try { opts.onViolation(violation, req); } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Default: log to stderr

@@ -11,8 +11,12 @@ const logger = require('../utils/logger');
 let nodemailer = null;
 let imaps = null;
 
-try { nodemailer = require('nodemailer'); } catch (_e) {}
-try { imaps = require('imap-simple'); } catch (_e) {}
+try { nodemailer = require('nodemailer'); } catch (_e) {
+  logger.error('Unexpected error', { error: _e.message, stack: _e.stack });
+}
+try { imaps = require('imap-simple'); } catch (_e) {
+  logger.error('Unexpected error', { error: _e.message, stack: _e.stack });
+}
 
 // ── Configuration ──────────────────────────────────────────────
 

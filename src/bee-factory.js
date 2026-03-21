@@ -99,7 +99,9 @@ function createBee(domain, config = {}) {
         const w = workers[i];
         if (typeof w !== 'function' && (typeof w !== 'object' || typeof w.fn !== 'function')) {
             validated = false;
-            try { logger.warn(`Worker ${i} in '${domain}' is not callable`); } catch { }
+            try { logger.warn(`Worker ${i} in '${domain}' is not callable`); } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
@@ -142,7 +144,9 @@ function createBee(domain, config = {}) {
     try {
         const registry = require('./registry');
         registry.registry.set(domain, entry);
-    } catch { /* registry not loaded yet */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Persist to disk if requested — creates a real bee file
     if (persist) {
@@ -188,7 +192,9 @@ function spawnBee(name, work, priority = 0.8) {
     try {
         const registry = require('./registry');
         registry.registry.set(id, entry);
-    } catch { /* registry not loaded yet */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return entry;
 }
@@ -422,7 +428,9 @@ function createFromTemplate(template, config = {}) {
                                         });
                                     }
                                 }
-                            } catch { /* permission denied or missing dir */ }
+                            } catch (e) {
+                              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                            }
                         };
                         walk(targetDir);
 
@@ -637,7 +645,9 @@ function dissolveBee(domain) {
     try {
         const registry = require('./registry');
         registry.registry.delete(domain);
-    } catch { /* fine */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 /**
@@ -676,7 +686,9 @@ module.exports = { domain, description, priority, getWork };
 
     try {
         fs.writeFileSync(filePath, code, 'utf8');
-    } catch { /* non-fatal */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // Export everything — Heady™ can create any bee, anywhere, instantly

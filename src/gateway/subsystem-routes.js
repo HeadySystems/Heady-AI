@@ -461,7 +461,10 @@ function setupSubsystemRoutes(app) {
 async function shutdownSubsystems() {
   if (colabRuntimeManager) {
     for (const rt of colabRuntimeManager.getAllRuntimes()) {
-      try { await colabRuntimeManager.terminate(rt.id); } catch { /* ignore */ }
+      try { await colabRuntimeManager.terminate(rt.id); } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     console.log('[SubsystemRoutes] Colab runtime manager shut down');
   }

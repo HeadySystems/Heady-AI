@@ -138,7 +138,10 @@ class Runner extends EventEmitter {
   _ensureDir() {
     try {
       fs.mkdirSync(this.checkpointsDir, { recursive: true });
-    } catch {}
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   /**
@@ -338,13 +341,19 @@ class Runner extends EventEmitter {
   async _saveCheckpoint(runId, data) {
     try {
       fs.writeFileSync(this._checkpointPath(runId), JSON.stringify(data), 'utf-8');
-    } catch {}
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   _deleteCheckpoint(runId) {
     try {
       fs.unlinkSync(this._checkpointPath(runId));
-    } catch {}
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   // ─── Cost estimation ────────────────────────────────────────────────────

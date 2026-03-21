@@ -262,7 +262,9 @@ class LiquidACI extends EventEmitter {
     } catch (e) {
       return { valid: false, error: (e.stderr || e.message || 'Unknown lint error').split('\n')[0] };
     } finally {
-      try { fs.unlinkSync(tmpFile); } catch {}
+      try { fs.unlinkSync(tmpFile); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 

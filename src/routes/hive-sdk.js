@@ -29,7 +29,10 @@ try {
     const brainModule = require(path.join(__dirname, "brain"));
     // The brain module exports a router, but the chat functions are module-level
     // We need to call the brain API internally via HTTP for proper routing
-} catch { }
+} catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // Internal brain dispatch — calls the real /api/brain/chat endpoint
 const http = require("http");

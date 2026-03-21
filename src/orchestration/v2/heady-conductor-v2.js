@@ -34,7 +34,9 @@
 const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
 const crypto = require('crypto');
-let logger = null; try { logger = require('../../utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('../../utils/logger'); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 const HEARTBEAT_INTERVAL_MS = Math.round(PHI * 5000); // ~8.09s — golden-ratio cadence
@@ -595,7 +597,9 @@ class HeadyConductor extends EventEmitter {
         if (this._telemetry && typeof this._telemetry.record === 'function') {
             try {
                 this._telemetry.record({ source: 'conductor', type, data, ts: Date.now() });
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 }

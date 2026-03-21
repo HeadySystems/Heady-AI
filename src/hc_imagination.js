@@ -202,7 +202,8 @@ class ImaginationEngine {
     try {
       await fs.mkdir(cacheDir, { recursive: true });
     } catch (e) {
-      // Directory may already exist
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     
     // Load persisted state
@@ -225,7 +226,8 @@ class ImaginationEngine {
         this.primitives.set(p.id, p);
       }
     } catch (e) {
-      // No existing primitives
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 
@@ -244,7 +246,8 @@ class ImaginationEngine {
         this.concepts.set(c.id, c);
       }
     } catch (e) {
-      // No existing concepts
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 
@@ -263,7 +266,8 @@ class ImaginationEngine {
         this.experiments.set(e.id, e);
       }
     } catch (e) {
-      // No existing experiments
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 
@@ -281,7 +285,8 @@ class ImaginationEngine {
         this.ipPackages.set(p.id, p);
       }
     } catch (e) {
-      // No existing IP packages
+      const logger = require('./utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 

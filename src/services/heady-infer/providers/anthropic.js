@@ -139,7 +139,10 @@ class AnthropicProvider extends BaseProvider {
                 inputTokens = evt.message.usage.input_tokens || 0;
                 model       = evt.message.model || model;
               }
-            } catch (_) { /* ignore parse errors on stream */ }
+            } catch (_) {
+              const logger = require('../../../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
           }
         });
 

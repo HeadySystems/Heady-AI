@@ -25,7 +25,9 @@
 const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const AUDIT_PATH = path.join(__dirname, "..", "data", "agent-orchestrator-audit.jsonl");
 const PHI = 1.6180339887;
@@ -281,13 +283,17 @@ class AgentOrchestrator extends EventEmitter {
             try {
                 const prunedCount = await this.vectorMem.pruneOldest(100);
                 this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
-            } catch (e) { }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         this.emit("audit", entry);
     }
 
@@ -400,7 +406,9 @@ class AgentOrchestrator extends EventEmitter {
                         content: `STATIC REFUSAL TRIGGERED:\nAction: ${task.action}\nPayload: ${JSON.stringify(payload)}\nReason: Ill-typed arguments.`,
                         metadata: { type: "static_refusal", severity: "CRITICAL", ts: validation.ts }
                     }).catch(() => { });
-                } catch (e) { }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
 
             this._audit({ type: "security:static_refusal", action: task.action, reason: errorMsg });
@@ -496,7 +504,9 @@ class AgentOrchestrator extends EventEmitter {
                         };
                         await this.vectorMem.ingestMemory(ingestionPayload);
                     }
-                } catch { }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
 
             const taskRecord = {

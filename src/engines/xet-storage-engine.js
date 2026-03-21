@@ -29,8 +29,12 @@
 
 const fs = require('fs');
 const path = require('path');
-let fetch = null; try { fetch = require('../core/heady-fetch'); } catch(e) { /* graceful */ }
-let logger = null; try { logger = require("../utils/logger"); } catch(e) { /* graceful */ }
+let fetch = null; try { fetch = require('../core/heady-fetch'); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+let logger = null; try { logger = require("../utils/logger"); } catch(e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 class XetStorageEngine {
     constructor(opts = {}) {

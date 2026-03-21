@@ -31,7 +31,9 @@
 
 const logger = require("./utils/logger");
 let vectorMemory = null;
-try { vectorMemory = require('./vector-memory'); } catch { /* loaded later */ }
+try { vectorMemory = require('./vector-memory'); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const PHI = 1.6180339887;
 
@@ -176,7 +178,9 @@ async function ingestTelemetry(event) {
                 content: `[TELEMETRY] ${entry.type}: ${entry.summary}`,
                 metadata: { type: 'self_telemetry', severity: entry.severity, category: entry.type },
             });
-        } catch { /* best-effort */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 
@@ -224,7 +228,9 @@ async function assessSystemState(context = '') {
                 `system health assessment for: ${context}`, 3,
                 { type: 'self_telemetry' },
             );
-        } catch { /* best-effort */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     // Generate recommendations

@@ -902,8 +902,9 @@ class VectorMemoryV2 {
         namespace.nsw.insert(key, vec);
         namespace.bm25.index(key, text || JSON.stringify(metadata));
         count++;
-      } catch {
-        /* skip malformed lines */
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
 

@@ -156,7 +156,10 @@ function _persistSession(session) {
             path.join(SESSIONS_DIR, `${session.id}.json`),
             JSON.stringify(session, null, 2)
         );
-    } catch { /* non-critical */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ─── Routes ──────────────────────────────────────────────────────────

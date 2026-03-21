@@ -458,7 +458,10 @@ class ProjectionManager {
             try {
                 vectorMemory.add('perception:latest', perception);
                 vectorMemory.add(`perception:${Date.now()}`, perception);
-            } catch { /* absorbed */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         // ─── EMIT PERCEPTION EVENT ─────────────────────────────────
@@ -515,7 +518,10 @@ class VectorSpaceOps {
         try {
             const { AutoSuccessEngine } = require('./hc_auto_success');
             this.autoSuccess = new AutoSuccessEngine();
-        } catch { /* auto-success not available yet */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         this._intervals = [];
         this.started = false;
@@ -565,7 +571,10 @@ class VectorSpaceOps {
                         targets: [...this.projectionManager.projections.keys()],
                     });
                 }
-            } catch { }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }, PHI_INTERVALS.analyze));
     }
 

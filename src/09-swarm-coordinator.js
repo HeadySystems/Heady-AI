@@ -476,7 +476,10 @@ class SwarmMessageBus extends EventEmitter {
 
     if (allSubs.size > 0) {
       for (const handler of allSubs) {
-        try { handler(envelope); } catch (err) { /* isolate subscriber errors */ }
+        try { handler(envelope); } catch (err) {
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
+        }
       }
     } else {
       // Queue for late subscribers
@@ -502,7 +505,10 @@ class SwarmMessageBus extends EventEmitter {
     const queued = this._queues.get(topic) ?? [];
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
-        try { handler(env); } catch (err) { /* structured-logger: emit error */ }
+        try { handler(env); } catch (err) {
+          const logger = require('./utils/logger');
+          logger.error('Unexpected error', { error: err.message, stack: err.stack });
+        }
       }
     }
     this._queues.delete(topic);

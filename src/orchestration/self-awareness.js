@@ -612,7 +612,10 @@ class HeadySelfAwareness extends EventEmitter {
     };
     this.emit('escalation:heady_soul', escalation);
     if (typeof this._onEscalate === 'function') {
-      try { this._onEscalate(escalation); } catch (_) { /* absorb */ }
+      try { this._onEscalate(escalation); } catch (_) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
   }
 

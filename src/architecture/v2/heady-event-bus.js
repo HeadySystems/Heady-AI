@@ -385,7 +385,10 @@ class HeadyEventBus extends EventEmitter {
       try {
         this.emit(topic, dl.event);
         retried++;
-      } catch { /* still failing — leave in DLQ */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return retried;
   }
@@ -534,8 +537,14 @@ class HeadyEventBus extends EventEmitter {
    */
   async destroy() {
     if (this._subClient) {
-      try { await this._subClient.unsubscribe(); } catch { /* best-effort */ }
-      try { this._subClient.disconnect(); } catch { /* best-effort */ }
+      try { await this._subClient.unsubscribe(); } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
+      try { this._subClient.disconnect(); } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     this.removeAllListeners();
     this._replayBuffers.clear();

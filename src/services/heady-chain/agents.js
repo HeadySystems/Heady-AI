@@ -447,7 +447,10 @@ class ConversationalAgent {
           let fnArgs = {};
           try {
             fnArgs = typeof tc.function?.arguments === 'string' ? JSON.parse(tc.function.arguments) : tc.input || {};
-          } catch {}
+          } catch (e) {
+            const logger = require('../../utils/logger');
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
 
           let toolResult;
           try {

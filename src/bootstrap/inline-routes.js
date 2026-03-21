@@ -110,7 +110,9 @@ module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfMan
             app.get('/api/introspection', (req, res) => res.json(selfAwareness.getSystemIntrospection()));
             app.get('/api/branding', (req, res) => res.json(selfAwareness.getBrandingReport()));
         }
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     try {
         const hp = require('../shared/heady-principles');
@@ -118,10 +120,14 @@ module.exports = function mountInlineRoutes(app, { logger, secretsManager, cfMan
             node: 'heady-principles', constants: { PHI: hp.PHI, BASE: hp.BASE, LOG_BASE: hp.LOG_BASE },
             designTokens: hp.designTokens(8), capacity: hp.capacityParams('medium'), fibonacci: hp.FIB.slice(0, 13),
         }));
-    } catch { }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Sentry error handler + global error handler + 404
-    try { const sentry = require('../services/sentry'); app.use(sentry.errorHandler()); } catch { }
+    try { const sentry = require('../services/sentry'); app.use(sentry.errorHandler()); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     app.use((err, req, res, _next) => {
         const status = err.status || 500;

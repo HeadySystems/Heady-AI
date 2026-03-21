@@ -287,7 +287,10 @@ function _closeWS(ws, code, reason) {
         if (ws.readyState === 1 /* OPEN */) {
             ws.close(code, reason);
         }
-    } catch { /* already closed */ }
+    } catch (e) {
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ─── Exports ─────────────────────────────────────────────────────────────────

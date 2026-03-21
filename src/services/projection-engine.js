@@ -250,7 +250,10 @@ function _loadRegistry() {
         if (fs.existsSync(REGISTRY_PATH)) {
             return JSON.parse(fs.readFileSync(REGISTRY_PATH, 'utf8'));
         }
-    } catch { /* ignore parse errors */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     return null;
 }
 

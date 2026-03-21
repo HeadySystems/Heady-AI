@@ -134,7 +134,8 @@ function saveTaskCache() {
         if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
         fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
     } catch (_) {
-        // non-fatal
+      const logger = require('../../utils/logger');
+      logger.error('Unexpected error', { error: _.message, stack: _.stack });
     }
 }
 

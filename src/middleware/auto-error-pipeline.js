@@ -47,8 +47,9 @@ function autoErrorPipeline(err, req, res, next) {
                 userAgent: (req.headers?.["user-agent"] || "").substring(0, 100),
             },
         });
-    } catch {
-        // Never let the error pipeline itself crash the request
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 
     // Pass the error down so Express sends the actual response
@@ -82,7 +83,10 @@ function notFoundCapture(req, res, next) {
                     method: req.method,
                 },
             });
-        } catch { /* non-critical */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
     next();
 }

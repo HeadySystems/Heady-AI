@@ -1183,7 +1183,10 @@ class HCFullPipeline extends EventEmitter {
             { type: 'prevention_rule', stage: rule.trigger, runId: state.runId },
           ).catch(() => null);
         }
-      } catch { /* non-critical */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     return {
@@ -1269,7 +1272,10 @@ class HCFullPipeline extends EventEmitter {
             { type: 'research_finding', runId: state.runId, value: finding.value },
           ).catch(() => null);
         }
-      } catch { /* non-critical */ }
+      } catch (e) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Simulate external search results (in production, would call search APIs)
@@ -1445,7 +1451,10 @@ class HCFullPipeline extends EventEmitter {
 
         return true;
       }
-    } catch { /* self-heal failure is non-fatal */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     return false;
   }
@@ -1468,7 +1477,10 @@ class HCFullPipeline extends EventEmitter {
       this.on(event, (data) => {
         try {
           this.selfAwareness.ingestTelemetry?.(event, data);
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       });
     }
   }
@@ -1682,7 +1694,10 @@ class HCFullPipeline extends EventEmitter {
   }
 
   async _safeCall(fn) {
-    try { return await fn(); } catch { /* swallow */ }
+    try { return await fn(); } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 }
 

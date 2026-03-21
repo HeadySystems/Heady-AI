@@ -141,7 +141,10 @@ class ComputeDashboard extends EventEmitter {
   start() {
     if (this._timer) return;
     this._timer = setInterval(async () => {
-      try { await this.getDashboard({ force: true }); } catch { }
+      try { await this.getDashboard({ force: true }); } catch (e) {
+        const logger = require('./utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }, this._refreshIntervalMs);
     if (this._timer.unref) this._timer.unref();
     this.emit('started');

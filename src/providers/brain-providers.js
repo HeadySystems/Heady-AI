@@ -67,7 +67,7 @@ async function chatViaOllama(message, system, temperature, max_tokens) {
 
     return new Promise((resolve, reject) => {
         const req = http.request({
-            hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
+            hostname: process.env.HEADY_LOCAL_HOST || "0.0.0.0", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
             headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
             timeout: PHI_TIMING.CYCLE,
         }, (res) => {

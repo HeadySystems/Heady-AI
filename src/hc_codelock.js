@@ -377,7 +377,9 @@ function snapshotHashes() {
           hashes[relPath] = hashFile(fullPath);
         }
       }
-    } catch (e) { /* skip */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   walkDir(HEADY_ROOT);
@@ -427,7 +429,9 @@ function detectChanges() {
           }
         }
       }
-    } catch (e) { /* skip */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   walkDir(HEADY_ROOT);
@@ -510,7 +514,9 @@ function appendAudit(action, details = {}) {
   };
   try {
     fs.appendFileSync(AUDIT_FILE, JSON.stringify(entry) + '\n');
-  } catch (e) { /* ignore */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 }
 
 function getAuditLog(limit = 50) {
@@ -535,7 +541,9 @@ function getStatus() {
   try {
     const h = JSON.parse(fs.readFileSync(HASHES_FILE, 'utf8'));
     hashStatus = `${h.totalFiles} files hashed at ${h.timestamp}`;
-  } catch (e) { /* no snapshot */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   return {
     locked: state.locked,

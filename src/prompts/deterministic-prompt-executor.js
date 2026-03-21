@@ -348,7 +348,10 @@ class DeterministicPromptExecutor {
     _emit(event, data) {
         const listeners = this._listeners.get(event) || [];
         for (const cb of listeners) {
-            try { cb(data); } catch (_) { /* fire-and-forget */ }
+            try { cb(data); } catch (_) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: _.message, stack: _.stack });
+            }
         }
     }
 }

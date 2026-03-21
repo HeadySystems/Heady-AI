@@ -71,10 +71,19 @@ function getWork(ctx = {}) {
             try {
                 // Push space content to HF via git
                 const remoteUrl = `https://huggingface.co/spaces/${repoUrl}`;
-                try { execSync(`git init`, { cwd: spaceDir }); } catch { }
-                try { execSync(`git remote add origin ${remoteUrl}`, { cwd: spaceDir }); } catch { }
+                try { execSync(`git init`, { cwd: spaceDir }); } catch (e) {
+                  const logger = require('../../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
+                try { execSync(`git remote add origin ${remoteUrl}`, { cwd: spaceDir }); } catch (e) {
+                  const logger = require('../../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
                 execSync('git add -A', { cwd: spaceDir });
-                try { execSync('git commit -m "[sync-projection] auto-inject templates"', { cwd: spaceDir }); } catch { }
+                try { execSync('git commit -m "[sync-projection] auto-inject templates"', { cwd: spaceDir }); } catch (e) {
+                  const logger = require('../../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
                 // Note: HF push requires HF_TOKEN in env for auth
                 results.push({ space: spaceName, repo: repoUrl, pushed: true });
             } catch (err) {

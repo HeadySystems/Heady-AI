@@ -30,13 +30,19 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
 // Persistent benchmark results
 let benchResults = {};
-try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch { }
+try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 function saveBenchmarks() {
-    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch { }
+    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 function audit(entry) {
-    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── Latency Test (HTTP ping) ────────────────────────────────────
@@ -142,7 +148,7 @@ async function benchmarkHeadyJules() {
 
 async function benchmarkLocal() {
     const start = Date.now();
-    const ping = await httpPing("https://127.0.0.1:3301/api/pulse");
+    const ping = await httpPing(`${process.env.HEADY_MANAGER_URL || "https://0.0.0.0:3301"}/api/pulse`);
     return {
         provider: "local-manager", ok: ping.ok, pingLatency: ping.latency,
         totalLatency: Date.now() - start,

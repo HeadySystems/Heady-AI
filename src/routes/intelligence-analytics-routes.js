@@ -44,7 +44,10 @@ router.get('/providers', async (_req, res) => {
             const modelRouter = require('../services/model-router');
             if (typeof modelRouter.getProviderStats === 'function') providerStats = modelRouter.getProviderStats();
             else if (typeof modelRouter.getStats === 'function') providerStats = modelRouter.getStats();
-        } catch { /* model-router not loaded */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         res.json({ ok: true, data: providerStats });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
@@ -59,7 +62,10 @@ router.get('/embeddings', async (_req, res) => {
             const embedder = require('../services/continuous-embedder');
             if (typeof embedder.getStats === 'function') embeddingStats = embedder.getStats();
             else if (typeof embedder.getMetrics === 'function') embeddingStats = embedder.getMetrics();
-        } catch { /* embedder not loaded */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
         res.json({ ok: true, data: embeddingStats });
     } catch (err) {
         res.status(500).json({ ok: false, error: err.message });
@@ -81,7 +87,10 @@ router.get('/overview', async (_req, res) => {
         try {
             const { getAllCacheMetrics } = require('../resilience/cache');
             overview.cacheMetrics = getAllCacheMetrics();
-        } catch { /* cache not loaded */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         res.json({ ok: true, data: overview });
     } catch (err) {

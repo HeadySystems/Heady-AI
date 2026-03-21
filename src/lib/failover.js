@@ -34,7 +34,10 @@ class MultiCloudFailover {
                 this._primaryHealthy = true;
                 console.log(`[FAILOVER] Primary recovered, routing restored`);
                 return this._fetch(this.primary, request);
-            } catch { /* still down */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         return this._fetch(this.fallback, request);

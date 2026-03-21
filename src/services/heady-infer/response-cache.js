@@ -176,7 +176,10 @@ class ResponseCache extends EventEmitter {
         const key = this.buildKey(request);
         this.set(key, response, response.model || request.model);
         warmed++;
-      } catch (_) {}
+      } catch (_) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
     return warmed;
   }

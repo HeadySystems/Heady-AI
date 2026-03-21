@@ -86,7 +86,7 @@ function loadConfig() {
       environment: process.env.PINECONE_ENVIRONMENT || 'production',
     },
     postgres: {
-      host: process.env.NEON_HOST || 'localhost',
+      host: process.env.NEON_HOST || '0.0.0.0',
       port: parseInt(process.env.NEON_PORT || '5432'),
       database: process.env.NEON_DATABASE || 'heady',
       user: process.env.NEON_USER || 'postgres',
@@ -94,7 +94,7 @@ function loadConfig() {
       ssl: process.env.NEON_SSL === 'true',
     },
     redis: {
-      url: process.env.UPSTASH_REDIS_URL || 'http://localhost:6379',
+      url: process.env.UPSTASH_REDIS_URL || 'redis://0.0.0.0:6379',
       token: process.env.UPSTASH_REDIS_TOKEN || '',
     },
     sentry: {

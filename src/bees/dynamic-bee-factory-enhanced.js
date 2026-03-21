@@ -282,7 +282,10 @@ class DissolutionModule {
         try {
           fs.unlinkSync(filePath);
           diskDeleted = true;
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 
@@ -792,7 +795,10 @@ class DynamicBeeFactory {
                       });
                     }
                   }
-                } catch { /* permission denied */ }
+                } catch (e) {
+                  const logger = require('../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
               };
               walk(scanPath, 0);
               return { scanned: scanPath, findings, count: findings.length, ts: Date.now() };
@@ -957,7 +963,10 @@ ${workerNames.map(n => `    async () => ({ bee: domain, action: '${n}', status: 
 module.exports = { domain, description, priority, getWork };
 `;
 
-    try { fs.writeFileSync(filePath, code, 'utf8'); } catch { /* non-fatal */ }
+    try { fs.writeFileSync(filePath, code, 'utf8'); } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   // ── Listing & Status ──────────────────────────────────────────────────────

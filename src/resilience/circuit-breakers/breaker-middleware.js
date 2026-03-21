@@ -59,7 +59,10 @@ function serviceForUrl(urlString) {
     for (const [host, service] of Object.entries(HOST_TO_SERVICE)) {
       if (hostname === host || hostname.endsWith(`.${host}`)) return service;
     }
-  } catch { /* malformed URL */ }
+  } catch (e) {
+    const logger = require('../../utils/logger');
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
   return null;
 }
 
@@ -111,7 +114,10 @@ function circuitStateHeaders() {
         const breaker = registry.get(service);
         res.setHeader('X-Circuit-Service', service);
         res.setHeader('X-Circuit-State',   breaker.state);
-      } catch { /* unknown service — skip */ }
+      } catch (e) {
+        const logger = require('../../utils/logger');
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     next();
   };

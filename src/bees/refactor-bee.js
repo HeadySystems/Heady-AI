@@ -29,7 +29,10 @@ function getWork(ctx = {}) {
             let moduleCount = 0;
             try {
                 moduleCount = fs.readdirSync(srcDir).filter(f => f.endsWith('.js')).length;
-            } catch { /* ok */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
             const learning = {
                 type: 'architecture-scan', moduleCount,
                 insight: `${moduleCount} source modules — any could be refactored for better vector space integration`,
@@ -48,7 +51,10 @@ function getWork(ctx = {}) {
             let beeCount = 0;
             try {
                 beeCount = fs.readdirSync(beesDir).filter(f => f.endsWith('-bee.js')).length;
-            } catch { /* ok */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
             return {
                 bee: domain, action: 'swarm-learning',
                 beeCount, insight: `${beeCount} bees in swarm — each one is both a worker and a learner`,

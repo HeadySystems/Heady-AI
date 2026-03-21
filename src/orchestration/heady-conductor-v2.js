@@ -595,7 +595,9 @@ class HeadyConductor extends EventEmitter {
         if (this._telemetry && typeof this._telemetry.record === 'function') {
             try {
                 this._telemetry.record({ source: 'conductor', type, data, ts: Date.now() });
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 }

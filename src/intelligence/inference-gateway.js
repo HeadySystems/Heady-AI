@@ -227,7 +227,10 @@ async function* streamToSSE(stream, requestId) {
                           ?? parsed.candidates?.[0]?.content?.parts?.[0]?.text
                           ?? '';
               if (delta) yield { requestId, delta, done: false };
-            } catch { /* skip malformed */ }
+            } catch (e) {
+              const logger = require('../utils/logger');
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
           }
         }
       }

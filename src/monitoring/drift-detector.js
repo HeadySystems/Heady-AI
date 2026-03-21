@@ -27,9 +27,18 @@ const EventEmitter = require('events');
 
 // ─── Optional dependencies ────────────────────────────────────────────────────
 let pg, redis, axios;
-try { pg    = require('pg');       } catch {}
-try { redis = require('ioredis');  } catch {}
-try { axios = require('axios');    } catch {}
+try { pg    = require('pg');       } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { redis = require('ioredis');  } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
+try { axios = require('axios');    } catch (e) {
+  const logger = require('../utils/logger');
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 // =============================================================================
 // Constants
@@ -575,7 +584,10 @@ class DriftDetector extends EventEmitter {
         try {
           this._baseline = JSON.parse(cached);
           return;
-        } catch {}
+        } catch (e) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     }
 

@@ -16,7 +16,10 @@ function loadContexts() {
     if (fs.existsSync(CONTEXT_STORE_PATH)) {
       return JSON.parse(fs.readFileSync(CONTEXT_STORE_PATH, "utf8"));
     }
-  } catch { /* ignore */ }
+  } catch (e) {
+    const logger = require('../utils/logger');
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
   return {};
 }
 

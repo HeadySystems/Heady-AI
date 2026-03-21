@@ -417,7 +417,10 @@ class VectorPipeline extends EventEmitter {
       item.stageTimes.acknowledge = Date.now() - t0;
       item.stageTimes.totalMs = Date.now() - item.enqueuedAt;
       if (this.onAcknowledge) {
-        try { this.onAcknowledge(item); } catch (_) { /* ignore */ }
+        try { this.onAcknowledge(item); } catch (_) {
+          const logger = require('../utils/logger');
+          logger.error('Unexpected error', { error: _.message, stack: _.stack });
+        }
       }
       item.resolve(item);
       this._pipelineMetrics.totalAcknowledged += 1;

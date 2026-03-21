@@ -434,7 +434,10 @@ function getPackageVersion() {
 function persistEvent(event) {
     try {
         fs.appendFileSync(ERROR_LOG, JSON.stringify(event) + "\n");
-    } catch { /* never crash the hot path */ }
+    } catch (e) {
+      const logger = require('../utils/logger');
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 /**

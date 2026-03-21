@@ -96,7 +96,9 @@ function log(level, msg) {
         const dir = path.dirname(CONFIG.logFile);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         fs.appendFileSync(CONFIG.logFile, line + "\n");
-    } catch { /* best-effort */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── Utility: exec with fallback ─────────────────────────────────
@@ -130,7 +132,9 @@ function killProcess(pid, reason) {
                 execSync(`kill -0 ${pid} 2>/dev/null`, { timeout: 2000 });
                 log("ACTION", `PID ${pid} still alive, sending SIGKILL`);
                 execSync(`kill -9 ${pid}`, { timeout: 5000 });
-            } catch { /* already dead — good */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }, 10_000);
 
         const entry = {
@@ -368,13 +372,17 @@ function cleanCoreDumps() {
                     results.deleted++;
                     results.freedBytes += stat.size;
                     log("CLEANUP", `Deleted core dump: ${f} (${(stat.size / 1024 / 1024).toFixed(1)}MB)`);
-                } catch { /* skip if locked */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
         if (results.deleted > 0) {
             log("CLEANUP", `Cleaned ${results.deleted} core dumps, freed ${(results.freedBytes / 1024 / 1024).toFixed(1)}MB`);
         }
-    } catch { /* directory not readable */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
     return results;
 }
 

@@ -629,7 +629,10 @@ class TaskDecompositionEngine extends EventEmitter {
     if (this._embedFn && subtask.description) {
       try {
         queryEmbedding = await this._embedFn(subtask.description);
-      } catch (_) { /* fall through to domain matching */ }
+      } catch (_) {
+        const logger = require('../utils/logger');
+        logger.error('Unexpected error', { error: _.message, stack: _.stack });
+      }
     }
 
     // Score against known capabilities
