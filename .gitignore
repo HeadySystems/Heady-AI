@@ -20,7 +20,6 @@ hc_pipeline.log
 # IDE
 .idea/
 .vscode/
-.vscode/settings.local.json
 *.swp
 *.swo
 
@@ -40,10 +39,6 @@ venv/
 .pytest_cache/
 *.egg-info/
 .ipynb_checkpoints/
-<<<<<<< HEAD
-*.ipynb_checkpoints/
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 
 # Data (raw and external, to avoid huge files in git)
 data/raw/
@@ -62,33 +57,25 @@ windsurf-next/
 notebooks/personal/*
 !notebooks/personal/.gitkeep
 
-<<<<<<< HEAD
 # Notebooks with embedded secrets
 _archive/misc/heady_brain_gpu.ipynb
 _archive/misc/heady_unified_os.ipynb
-Heady-pre-production-9f2f0642-main/_archive/misc/heady_brain_gpu.ipynb
-Heady-pre-production-9f2f0642-main/_archive/misc/heady_unified_os.ipynb
 Heady-pre-production-9f2f0642-main/
 
-# Secrets
-=======
 # Secrets — CRITICAL: never commit these
 .heady/.shit
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 .heady/memory.db
 .heady/*.db
 *.db
 .heady/.heady/
 
-<<<<<<< HEAD
 # HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
 .heady/gcp-*.json
 .heady/vault-seed.js
 
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
-# Files exceeding GitHub LFS 2GB per-file limit
-AndroidSDK/system-images/**/*.img
+# AndroidSDK & Ventoy — large binaries, local-only
+AndroidSDK/
+ventoy/
 
 # Deploy packages (temp build artifacts)
 deploy-package-*/
@@ -97,18 +84,12 @@ offline-packages/
 # Local Netlify folder
 .netlify
 
-<<<<<<< HEAD
 # Security — sensitive files
-=======
-# Security — sensitive files (added by deep scan remediation)
-.env.hybrid
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 *.pid
 *.bak
 audit_logs.jsonl
 .heady_deploy_log.jsonl
 *.jsonl
-<<<<<<< HEAD
 *.shit
 .shit
 
@@ -117,7 +98,6 @@ in/
 
 # Node
 node_modules/
-logs/auto-commit.log
 package-lock.json
 
 # Rebuild artifacts
@@ -130,7 +110,6 @@ infrastructure/infrastructure/db_data/
 *.dll
 *.so
 *.dylib
-cloudflared.exe
 
 # Large binary installers (local audit only, not pushed)
 archive/tool-installers/*.deb
@@ -177,21 +156,7 @@ core.*
 .secrets
 .vault-token
 *.zip
-<<<<<<< HEAD
-=======
-.shit
-# HeadyVault — SA keys, vault seeds, GCP credentials (NEVER commit)
-.heady/gcp-*.json
-.heady/vault-seed.js
-.heady_cache/
-hc_pipeline.log
-package-lock.json
->>>>>>> hc-testing/dependabot/docker/node-25-slim
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 logs/resource-events.jsonl
-=======
->>>>>>> production/main
 
 !.env.example
 !.env.template
