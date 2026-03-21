@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Auth Flow Bee ═══
  *

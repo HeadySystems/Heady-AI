@@ -3,7 +3,7 @@ const { createLogger } = require('../utils/logger');
 const logger = createLogger('heady-edge-daemon');
 
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */

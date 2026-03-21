@@ -1,6 +1,6 @@
 const logger = console;
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  * Pipeline Infrastructure — CircuitBreaker, WorkerPool, TaskCache.
  * Extracted from hc_pipeline.js for maintainability.
  */

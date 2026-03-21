@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Domain Slicer — Per-Domain File Extraction ═══
@@ -107,7 +107,7 @@ ${(siteConfig.stats || []).map(s => `| ${s.label} | ${s.value} |`).join('\n')}
 
 ---
 
-**© 2026 Heady™Systems Inc..** All Rights Reserved.
+**© 2026 Heady™Systems Inc.** All Rights Reserved.
 
 Built with Sacred Geometry · Powered by the Heady™ Latent OS
 `;
@@ -115,7 +115,7 @@ Built with Sacred Geometry · Powered by the Heady™ Latent OS
 
 function generateIndexJs(domain, siteConfig) {
     return `/*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * ${siteConfig.name} — Standalone Server
  * Projected from the Heady™ Latent OS
  */
@@ -224,10 +224,10 @@ jobs:
 function generateLicense() {
     return `PROPRIETARY LICENSE
 
-© 2026 Heady™Systems Inc.. All Rights Reserved.
+© 2026 Heady™Systems Inc. All Rights Reserved.
 
 This software and associated documentation files (the "Software") are the
-proprietary property of Heady™Systems Inc.. You are granted a limited,
+proprietary property of Heady™Systems Inc. You are granted a limited,
 non-exclusive, non-transferable license to use the Software for evaluation
 and development purposes only.
 

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * Bee Worker Registry — Auto-discovers and registers all
  * blast-compatible worker modules in src/bees/.
