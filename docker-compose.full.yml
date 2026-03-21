@@ -29,7 +29,7 @@ services:
       - PORT=3300
       - HEADY_TARGET=CloudOnly
       - HEADY_VERSION=3.0.0
-      - DATABASE_URL=postgresql://heady:heady_secret@heady-postgres:5432/heady
+      - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=redis://heady-redis:6379
       - OLLAMA_HOST=http://heady-ollama:11434
     volumes:
@@ -56,9 +56,9 @@ services:
     image: pgvector/pgvector:pg16
     container_name: heady-postgres
     environment:
-      - POSTGRES_DB=heady
-      - POSTGRES_USER=heady
-      - POSTGRES_PASSWORD=heady_secret
+      - POSTGRES_DB=${POSTGRES_DB:-heady}
+      - POSTGRES_USER=${POSTGRES_USER:-heady}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
     volumes:
       - heady-postgres:/var/lib/postgresql/data

@@ -43,7 +43,6 @@ const fs = require('fs');
 const path = require("path");
 const fetch = globalThis.fetch || require('node-fetch');
 const { createAppAuth } = require('@octokit/auth-app');
-const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 const { getLogger } = require('./src/services/structured-logger');
 
@@ -391,7 +390,7 @@ const coreApi = require('./services/core-api');
 app.use("/api", coreApi);
 
 // ─── Swagger UI Setup ─────────────────────────────────────────────────
-const swaggerDocument = YAML.load('./docs/api/openapi.yaml');
+const swaggerDocument = yaml.load(fs.readFileSync('./docs/api/openapi.yaml', 'utf8'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // ─── Imagination Routes ────────────────────────────────────────────

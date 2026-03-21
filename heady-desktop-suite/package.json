@@ -7,38 +7,14 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "build:web": "cross-env APP_TARGET=HeadyWeb electron-builder --mac --win --linux",
-    "build:buddy": "cross-env APP_TARGET=HeadyBuddy electron-builder --mac --win --linux",
-    "build:ide": "cross-env APP_TARGET=HeadyAI-IDE electron-builder --mac --win --linux",
+    "build:web": "cross-env APP_TARGET=HeadyWeb electron-builder --config electron-builder.js --mac --win --linux",
+    "build:buddy": "cross-env APP_TARGET=HeadyBuddy electron-builder --config electron-builder.js --mac --win --linux",
+    "build:ide": "cross-env APP_TARGET=HeadyAI-IDE electron-builder --config electron-builder.js --mac --win --linux",
     "build:all": "npm run build:web && npm run build:buddy && npm run build:ide"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "electron": "^29.1.5",
     "electron-builder": "^24.13.3"
-  },
-  "build": {
-    "productName": "${env.APP_TARGET}",
-    "appId": "com.headysystems.${env.APP_TARGET}",
-    "files": [
-      "main.js",
-      "package.json",
-      "assets/**/*"
-    ],
-    "directories": {
-      "output": "dist/${env.APP_TARGET}"
-    },
-    "win": {
-      "icon": "assets/icon.png",
-      "target": "nsis"
-    },
-    "mac": {
-      "icon": "assets/icon.png",
-      "target": "zip"
-    },
-    "linux": {
-      "icon": "assets/icon.png",
-      "target": "AppImage"
-    }
   }
 }

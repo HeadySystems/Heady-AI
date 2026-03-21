@@ -74,31 +74,21 @@
     "uuid": "^13.0.0",
     "winston": "^3.19.0",
     "ws": "^8.18.0",
-    "yaml": "^2.8.2",
-    "yamljs": "^0.3.0"
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^22.8.0",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
     "@typescript-eslint/parser": "^8.57.0",
     "concurrently": "^9.1.2",
-<<<<<<< HEAD
     "eslint": "^10.0.3",
     "jest": "^30.3.0",
-    "jest-transform-yaml": "^1.2.0",
-=======
-    "eslint": "^9.18.0",
-    "jest": "^29.7.0",
->>>>>>> heady-testing/dependabot/npm_and_yarn/HeadyAI-IDE/npm_and_yarn-1917cb0876
     "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
     "supertest": "^7.2.2",
-    "vitest": "^4.1.0",
-    "yaml-jest": "^1.2.0"
+    "vitest": "^4.1.0"
   },
-  "overrides": {
-    "flatted": "^3.4.2"
-  },
+
   "offline": {
     "nodeModulesPath": "./offline-packages/node_modules",
     "pythonPackagesPath": "./offline-packages/python-libs"
@@ -110,6 +100,7 @@
   "author": "HeadySystems Inc.",
   "license": "UNLICENSED",
   "overrides": {
+    "flatted": "^3.4.2",
     "protobufjs": ">=7.4.0",
     "undici": ">=7.5.0",
     "fast-xml-parser": ">=4.5.1"
