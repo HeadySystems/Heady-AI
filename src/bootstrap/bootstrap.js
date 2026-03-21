@@ -87,7 +87,8 @@ async function phaseConfig() {
   const cfgPath = path.resolve(__dirname, '../../configs/system.yaml');
   let cfg;
   if (fs.existsSync(cfgPath)) {
-    cfg = yaml.load(fs.readFileSync(cfgPath, 'utf8'));
+    const raw = await fs.promises.readFile(cfgPath, 'utf8');
+    cfg = yaml.load(raw);
   } else {
     log.warn('system.yaml not found — using default config', {
       cfgPath
@@ -528,6 +529,31 @@ function _registerSignalHandlers() {
  *
  * @returns {Promise<void>}
  */
+/**
+ * Pre-validate that all lazy-loaded phase modules exist before boot.
+ * Prevents cryptic MODULE_NOT_FOUND errors mid-boot.
+ */
+function validateDependencies() {
+  const required = [
+    '../core/heady-logger',
+    '../core/event-bus',
+    '../memory/vector-memory',
+    '../csl/csl-engine',
+    '../orchestration/heady-conductor',
+    '../pipeline/pipeline-core',
+    '../auto-success/auto-success-engine',
+  ];
+  const missing = [];
+  for (const mod of required) {
+    try { require.resolve(mod); } catch { missing.push(mod); }
+  }
+  if (missing.length > 0) {
+    log.error('Boot aborted — missing required modules', { missing });
+    throw new Error(`Missing modules: ${missing.join(', ')}`);
+  }
+  log.debug('Dependency pre-validation passed', { count: required.length });
+}
+
 async function boot() {
   _registerSignalHandlers();
   const bootStart = Date.now();

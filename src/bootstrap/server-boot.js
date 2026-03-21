@@ -22,7 +22,7 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
             key: fs.readFileSync(path.join(certDir, 'server.key')),
             cert: fs.readFileSync(path.join(certDir, 'server.crt')),
             ca: fs.existsSync(path.join(certDir, 'ca.crt')) ? fs.readFileSync(path.join(certDir, 'ca.crt')) : undefined,
-            requestCert: true, rejectUnauthorized: false,
+            requestCert: true, rejectUnauthorized: process.env.MTLS_REJECT_UNAUTHORIZED !== 'false',
         }, app);
         logger.logNodeActivity("BUILDER", "  🔒 mTLS/HTTPS Server Configured");
     } else {

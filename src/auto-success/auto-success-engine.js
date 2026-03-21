@@ -169,6 +169,16 @@ async function runCategory(category, ctx) {
       semantic: result.score,
       spatial: PSI
     });
+
+    if (!result.ok) {
+      bus.emit('alert', {
+        type:     'auto_success_task_failed',
+        data:     { category, taskIndex: i, key: result.key, detail: result.detail },
+        temporal: PSI,
+        semantic: result.score,
+        spatial:  PSI,
+      });
+    }
   }
   const avgScore = totalScore / TASKS_PER_CATEGORY;
   const ok = failCount === 0;

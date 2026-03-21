@@ -28,7 +28,7 @@ const config = {
     idleTimeoutMillis: parseInt(process.env.PG_IDLE_TIMEOUT, 10) || PHI_TIMING.CYCLE,
     connectionTimeoutMillis: parseInt(process.env.PG_CONNECT_TIMEOUT, 10) || 5000,
     statementTimeout: parseInt(process.env.PG_STATEMENT_TIMEOUT, 10) || PHI_TIMING.CYCLE,
-    ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: process.env.PG_SSL_REJECT_UNAUTHORIZED !== 'false' } : false,
   },
 
   // Vector dimensions supported
