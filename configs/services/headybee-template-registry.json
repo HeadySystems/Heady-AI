@@ -1,26 +1,5 @@
 {
-  "version": "1.0.0",
-  "templates": {
-    "default": {
-      "name": "Default HeadyBee Template",
-      "type": "worker",
-      "phi_interval": 1618,
-      "max_retries": 5,
-      "capabilities": ["process", "analyze", "report"]
-    },
-    "scout": {
-      "name": "Scout Bee",
-      "type": "scout",
-      "phi_interval": 2618,
-      "max_retries": 8,
-      "capabilities": ["scan", "discover", "report"]
-    },
-    "builder": {
-      "name": "Builder Bee",
-      "type": "builder",
-      "phi_interval": 4236,
-      "max_retries": 3,
-      "capabilities": ["create", "modify", "validate"]
-    }
-  }
+  "registry": "HeadyBee Templates",
+  "version": "1.0",
+  "templates": {}
 }

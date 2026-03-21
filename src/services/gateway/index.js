@@ -4,8 +4,7 @@
  */
 'use strict';
 const express = require('express');
-const { createLogger } = require('../../utils/logger');
-const logger = createLogger('gateway');
+const logger = require('../../utils/logger');
 const crypto = require('crypto');
 
 class GatewayService {
@@ -27,6 +26,34 @@ class GatewayService {
       res.setHeader('x-trace-id', req.traceId);
       next();
     });
+
+    // 1. Observability and correlation context
+    let headyContextModule;
+    try {
+      headyContextModule = require('../../../middleware').headyAutoContext;
+    } catch (e) {
+      logger.warn('Could not load observability middleware: ' + e.message);
+    }
+    
+    if (headyContextModule) {
+      const HeadyAutoContextClass = headyContextModule.default || headyContextModule.HeadyAutoContext;
+      if (HeadyAutoContextClass) {
+        const observabilityCtx = new HeadyAutoContextClass({ serviceName: this.name });
+        this.app.use(observabilityCtx.middleware());
+      }
+    }
+
+    // 2. Semantic vector-memory context enrichment
+    try {
+      const { getAutoContext } = require('../heady-auto-context');
+      const autoContext = getAutoContext({ workspaceRoot: process.cwd(), serviceName: this.name });
+      if (autoContext && typeof autoContext.createExpressMiddleware === 'function') {
+        this.app.use(autoContext.createExpressMiddleware());
+        logger.info('Wired HeadyAutoContext vector enrichment into Gateway');
+      }
+    } catch (err) {
+      logger.warn('Could not wire Vector HeadyAutoContext into Gateway: ' + err.message);
+    }
   }
 
   setupRoutes() {

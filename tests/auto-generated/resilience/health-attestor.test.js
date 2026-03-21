@@ -77,8 +77,9 @@ try {
 
     classify(score) {
       const result = CSL.ternary_gate(score, 0.75, 0.4, PHI);
-      if (result.state.match(/resonate|pass/i))  return 'healthy';
-      if (result.state.match(/repel|reject|fail/i)) return 'critical';
+      const stateStr = result && result.state ? String(result.state) : String(result);
+      if (stateStr.match(/resonate|pass/i))  return 'healthy';
+      if (stateStr.match(/repel|reject|fail/i)) return 'critical';
       return 'degraded';
     }
 

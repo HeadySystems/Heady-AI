@@ -2,29 +2,29 @@
   "hdy_treasury_0000000000000000": {
     "address": "hdy_treasury_0000000000000000",
     "label": "TREASURY",
-    "balance": 92400000,
+    "balance": 98700000,
     "created": "2026-03-07T07:37:46.192Z",
     "type": "system",
-    "transactionCount": 44,
-    "lastActivity": "2026-03-21T14:34:13.777Z"
+    "transactionCount": 47,
+    "lastActivity": "2026-03-21T15:48:02.831Z"
   },
   "hdy_staking_0000000000000000": {
     "address": "hdy_staking_0000000000000000",
     "label": "STAKING_POOL",
-    "balance": 22000,
+    "balance": 23500,
     "created": "2026-03-07T07:37:46.192Z",
     "type": "system",
-    "transactionCount": 176,
-    "lastActivity": "2026-03-21T14:34:14.073Z"
+    "transactionCount": 188,
+    "lastActivity": "2026-03-21T15:48:03.184Z"
   },
   "hdy_burn_000000000000000000": {
     "address": "hdy_burn_000000000000000000",
     "label": "BURN_ADDRESS",
-    "balance": 13200,
+    "balance": 14100,
     "created": "2026-03-07T07:37:46.192Z",
     "type": "system",
-    "transactionCount": 44,
-    "lastActivity": "2026-03-21T14:34:13.947Z"
+    "transactionCount": 47,
+    "lastActivity": "2026-03-21T15:48:03.030Z"
   },
   "hdy_usr_06164dca1d455bcd": {
     "address": "hdy_usr_06164dca1d455bcd",
@@ -8077,5 +8077,554 @@
     "type": "user",
     "transactionCount": 3,
     "lastActivity": "2026-03-21T14:34:14.070Z"
+  },
+  "hdy_usr_0a6c3782fa2f3141": {
+    "address": "hdy_usr_0a6c3782fa2f3141",
+    "label": "Test 1",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.424Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_a275eade764c2082": {
+    "address": "hdy_usr_a275eade764c2082",
+    "label": "Test 2",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.429Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_3ffecbe1252b855d": {
+    "address": "hdy_usr_3ffecbe1252b855d",
+    "label": "Retrieval Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.436Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_4c041f2db978617e": {
+    "address": "hdy_usr_4c041f2db978617e",
+    "label": "Balance Test",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:45:37.444Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:45:37.464Z"
+  },
+  "hdy_usr_792570d1fdc3d762": {
+    "address": "hdy_usr_792570d1fdc3d762",
+    "label": "Exists Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.474Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_713bc15a98f91807": {
+    "address": "hdy_usr_713bc15a98f91807",
+    "label": "Mint Test",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:45:37.634Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.654Z"
+  },
+  "hdy_usr_45af987d221eb04d": {
+    "address": "hdy_usr_45af987d221eb04d",
+    "label": "Negative Mint",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.677Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_b37426c5c59e83d1": {
+    "address": "hdy_usr_b37426c5c59e83d1",
+    "label": "Sender",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:45:37.700Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:45:37.747Z"
+  },
+  "hdy_usr_90f24bd31e6388a2": {
+    "address": "hdy_usr_90f24bd31e6388a2",
+    "label": "Receiver",
+    "owner": "anonymous",
+    "balance": 200,
+    "created": "2026-03-21T15:45:37.707Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.752Z"
+  },
+  "hdy_usr_869bf065c623bceb": {
+    "address": "hdy_usr_869bf065c623bceb",
+    "label": "Poor Sender",
+    "owner": "anonymous",
+    "balance": 50,
+    "created": "2026-03-21T15:45:37.764Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.776Z"
+  },
+  "hdy_usr_171d90555d47fa60": {
+    "address": "hdy_usr_171d90555d47fa60",
+    "label": "Would-be Receiver",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.769Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_671539d76e3dbe2a": {
+    "address": "hdy_usr_671539d76e3dbe2a",
+    "label": "Self",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:45:37.789Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.796Z"
+  },
+  "hdy_usr_e771afc16343a84d": {
+    "address": "hdy_usr_e771afc16343a84d",
+    "label": "Burn Test",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:45:37.802Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:45:37.819Z"
+  },
+  "hdy_usr_4761b5e11e913869": {
+    "address": "hdy_usr_4761b5e11e913869",
+    "label": "Miner",
+    "owner": "anonymous",
+    "balance": 0.5,
+    "created": "2026-03-21T15:45:37.833Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.840Z"
+  },
+  "hdy_usr_f478678edbb97514": {
+    "address": "hdy_usr_f478678edbb97514",
+    "label": "Staker",
+    "owner": "anonymous",
+    "balance": 400,
+    "created": "2026-03-21T15:45:37.852Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:45:37.866Z"
+  },
+  "hdy_usr_71ee88a01bd4ea8b": {
+    "address": "hdy_usr_71ee88a01bd4ea8b",
+    "label": "Poor Staker",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:45:37.889Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_b027a0a7a7464a7b": {
+    "address": "hdy_usr_b027a0a7a7464a7b",
+    "label": "Small Staker",
+    "owner": "anonymous",
+    "balance": 5,
+    "created": "2026-03-21T15:45:37.897Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:45:37.905Z"
+  },
+  "hdy_usr_6d0947adef2ec8a2": {
+    "address": "hdy_usr_6d0947adef2ec8a2",
+    "label": "Early Unstaker",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:45:37.910Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:45:37.927Z"
+  },
+  "hdy_usr_d449e787f2097db2": {
+    "address": "hdy_usr_d449e787f2097db2",
+    "label": "Multi Staker",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:45:37.941Z",
+    "type": "user",
+    "transactionCount": 3,
+    "lastActivity": "2026-03-21T15:45:37.986Z"
+  },
+  "hdy_usr_fc6a3ee0ef597deb": {
+    "address": "hdy_usr_fc6a3ee0ef597deb",
+    "label": "Test 1",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.496Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_82022c26045ca96a": {
+    "address": "hdy_usr_82022c26045ca96a",
+    "label": "Test 2",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.500Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_505bb855eb88c448": {
+    "address": "hdy_usr_505bb855eb88c448",
+    "label": "Retrieval Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.507Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_3d6b2c5ba292b126": {
+    "address": "hdy_usr_3d6b2c5ba292b126",
+    "label": "Balance Test",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:46:29.514Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:46:29.524Z"
+  },
+  "hdy_usr_0f417aa7677442df": {
+    "address": "hdy_usr_0f417aa7677442df",
+    "label": "Exists Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.532Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_37e0391762fe0ae6": {
+    "address": "hdy_usr_37e0391762fe0ae6",
+    "label": "Mint Test",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:46:29.626Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.632Z"
+  },
+  "hdy_usr_d12d74f24e2c4b06": {
+    "address": "hdy_usr_d12d74f24e2c4b06",
+    "label": "Negative Mint",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.640Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_d5b8f74c3063978f": {
+    "address": "hdy_usr_d5b8f74c3063978f",
+    "label": "Sender",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:46:29.651Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:46:29.673Z"
+  },
+  "hdy_usr_5bcadd5c509abdd2": {
+    "address": "hdy_usr_5bcadd5c509abdd2",
+    "label": "Receiver",
+    "owner": "anonymous",
+    "balance": 200,
+    "created": "2026-03-21T15:46:29.655Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.678Z"
+  },
+  "hdy_usr_772f9355ebf49119": {
+    "address": "hdy_usr_772f9355ebf49119",
+    "label": "Poor Sender",
+    "owner": "anonymous",
+    "balance": 50,
+    "created": "2026-03-21T15:46:29.689Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.701Z"
+  },
+  "hdy_usr_f1c5641abecbd24f": {
+    "address": "hdy_usr_f1c5641abecbd24f",
+    "label": "Would-be Receiver",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.694Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_9ec1731760e640ee": {
+    "address": "hdy_usr_9ec1731760e640ee",
+    "label": "Self",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:46:29.716Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.726Z"
+  },
+  "hdy_usr_6a2bd39cc345436d": {
+    "address": "hdy_usr_6a2bd39cc345436d",
+    "label": "Burn Test",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:46:29.732Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:46:29.747Z"
+  },
+  "hdy_usr_d1a4df12a0971827": {
+    "address": "hdy_usr_d1a4df12a0971827",
+    "label": "Miner",
+    "owner": "anonymous",
+    "balance": 0.5,
+    "created": "2026-03-21T15:46:29.760Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.768Z"
+  },
+  "hdy_usr_0a29e060db23cb20": {
+    "address": "hdy_usr_0a29e060db23cb20",
+    "label": "Staker",
+    "owner": "anonymous",
+    "balance": 400,
+    "created": "2026-03-21T15:46:29.797Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:46:29.820Z"
+  },
+  "hdy_usr_9d3625d1286e5368": {
+    "address": "hdy_usr_9d3625d1286e5368",
+    "label": "Poor Staker",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:46:29.838Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_e1c28fde576f758b": {
+    "address": "hdy_usr_e1c28fde576f758b",
+    "label": "Small Staker",
+    "owner": "anonymous",
+    "balance": 5,
+    "created": "2026-03-21T15:46:29.848Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:46:29.856Z"
+  },
+  "hdy_usr_ef5bc4d8c2f030d8": {
+    "address": "hdy_usr_ef5bc4d8c2f030d8",
+    "label": "Early Unstaker",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:46:29.862Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:46:29.877Z"
+  },
+  "hdy_usr_b2080152ae300a5f": {
+    "address": "hdy_usr_b2080152ae300a5f",
+    "label": "Multi Staker",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:46:29.893Z",
+    "type": "user",
+    "transactionCount": 3,
+    "lastActivity": "2026-03-21T15:46:29.923Z"
+  },
+  "hdy_usr_994ca81066bccc42": {
+    "address": "hdy_usr_994ca81066bccc42",
+    "label": "Test 1",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.705Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_6a83fee1db40b9f9": {
+    "address": "hdy_usr_6a83fee1db40b9f9",
+    "label": "Test 2",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.718Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_d76c352e4a026f20": {
+    "address": "hdy_usr_d76c352e4a026f20",
+    "label": "Retrieval Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.753Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_25898812562e6d4c": {
+    "address": "hdy_usr_25898812562e6d4c",
+    "label": "Balance Test",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:48:02.761Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:48:02.775Z"
+  },
+  "hdy_usr_447da621e133b04b": {
+    "address": "hdy_usr_447da621e133b04b",
+    "label": "Exists Test",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.784Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_fb688e9a669e522f": {
+    "address": "hdy_usr_fb688e9a669e522f",
+    "label": "Mint Test",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:48:02.891Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:02.904Z"
+  },
+  "hdy_usr_cd4ce17ecd43898c": {
+    "address": "hdy_usr_cd4ce17ecd43898c",
+    "label": "Negative Mint",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.914Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_0a417c306525d13c": {
+    "address": "hdy_usr_0a417c306525d13c",
+    "label": "Sender",
+    "owner": "anonymous",
+    "balance": 300,
+    "created": "2026-03-21T15:48:02.927Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:48:02.950Z"
+  },
+  "hdy_usr_55b1748d0de571cf": {
+    "address": "hdy_usr_55b1748d0de571cf",
+    "label": "Receiver",
+    "owner": "anonymous",
+    "balance": 200,
+    "created": "2026-03-21T15:48:02.932Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:02.955Z"
+  },
+  "hdy_usr_75f1b67e846d775c": {
+    "address": "hdy_usr_75f1b67e846d775c",
+    "label": "Poor Sender",
+    "owner": "anonymous",
+    "balance": 50,
+    "created": "2026-03-21T15:48:02.964Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:02.976Z"
+  },
+  "hdy_usr_4c4016f7c96fd463": {
+    "address": "hdy_usr_4c4016f7c96fd463",
+    "label": "Would-be Receiver",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:02.969Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_c10f8ddbd0bb5f14": {
+    "address": "hdy_usr_c10f8ddbd0bb5f14",
+    "label": "Self",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:48:02.991Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:03.000Z"
+  },
+  "hdy_usr_10976e0001953048": {
+    "address": "hdy_usr_10976e0001953048",
+    "label": "Burn Test",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:48:03.006Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:48:03.025Z"
+  },
+  "hdy_usr_2a7e34fb504470ee": {
+    "address": "hdy_usr_2a7e34fb504470ee",
+    "label": "Miner",
+    "owner": "anonymous",
+    "balance": 0.5,
+    "created": "2026-03-21T15:48:03.038Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:03.051Z"
+  },
+  "hdy_usr_320acf3452c08f65": {
+    "address": "hdy_usr_320acf3452c08f65",
+    "label": "Staker",
+    "owner": "anonymous",
+    "balance": 400,
+    "created": "2026-03-21T15:48:03.071Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:48:03.086Z"
+  },
+  "hdy_usr_061d699a1966868f": {
+    "address": "hdy_usr_061d699a1966868f",
+    "label": "Poor Staker",
+    "owner": "anonymous",
+    "balance": 0,
+    "created": "2026-03-21T15:48:03.102Z",
+    "type": "user",
+    "transactionCount": 0
+  },
+  "hdy_usr_e9642f4b9359bd85": {
+    "address": "hdy_usr_e9642f4b9359bd85",
+    "label": "Small Staker",
+    "owner": "anonymous",
+    "balance": 5,
+    "created": "2026-03-21T15:48:03.110Z",
+    "type": "user",
+    "transactionCount": 1,
+    "lastActivity": "2026-03-21T15:48:03.116Z"
+  },
+  "hdy_usr_2c7da6416483d798": {
+    "address": "hdy_usr_2c7da6416483d798",
+    "label": "Early Unstaker",
+    "owner": "anonymous",
+    "balance": 100,
+    "created": "2026-03-21T15:48:03.122Z",
+    "type": "user",
+    "transactionCount": 2,
+    "lastActivity": "2026-03-21T15:48:03.136Z"
+  },
+  "hdy_usr_cad1a3e5f4ab5693": {
+    "address": "hdy_usr_cad1a3e5f4ab5693",
+    "label": "Multi Staker",
+    "owner": "anonymous",
+    "balance": 700,
+    "created": "2026-03-21T15:48:03.150Z",
+    "type": "user",
+    "transactionCount": 3,
+    "lastActivity": "2026-03-21T15:48:03.180Z"
   }
 }

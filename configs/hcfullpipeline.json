@@ -1081,9 +1081,7 @@
       "story_driver.recordStageEntry"
     ],
     "onStageComplete": [
-=======
       "telemetry.stageComplete",
->>>>>>> hc-testing/dependabot/docker/node-25-slim
       "story_driver.record",
       "mc_scheduler.feedStageTiming",
       "pattern_engine.feedTaskTiming"

@@ -24,4 +24,7 @@ logger.logBuild = (msg, ...args) => logger.info({ component: 'build' }, msg, ...
 logger.logPipeline = (msg, ...args) => logger.info({ component: 'pipeline' }, msg, ...args);
 logger.logLearn = (msg, ...args) => logger.info({ component: 'learning' }, msg, ...args);
 
+// Add backward capability for components expecting createLogger
+logger.createLogger = (name) => logger.child({ name });
+
 module.exports = logger;
