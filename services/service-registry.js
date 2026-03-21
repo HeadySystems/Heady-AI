@@ -3,8 +3,10 @@
 // © 2026 HeadySystems Inc. — Eric Haywood, Founder
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { PHI, PSI, PSI3, FIB, CSL_THRESHOLDS, cslGate, cosineSimilarity } from '../shared/phi-math-v2.js';
-import { textToEmbedding } from '../shared/csl-engine-v2.js';
+'use strict';
+
+const { PHI, PSI, PSI3, FIB, CSL_THRESHOLDS, cslGate, cosineSimilarity } = require('../shared/phi-math-v2.js');
+const { textToEmbedding } = require('../shared/csl-engine-v2.js');
 
 const SERVICE_GROUPS = Object.freeze({
   Inference:     { start: 3310, services: ['HeadyInfer', 'HeadyEmbed', 'HeadyEval', 'HeadyPrompt', 'HeadyClassify', 'HeadyNER', 'HeadySummarize', 'HeadyTranslate', 'HeadyVision', 'HeadySpeech'] },
@@ -20,26 +22,23 @@ const SERVICE_GROUPS = Object.freeze({
 });
 
 class ServiceRegistry {
-  #services;
-  #embeddings;
-
   constructor() {
-    this.#services = new Map();
-    this.#embeddings = new Map();
-    this.#initialize();
+    this._services = new Map();
+    this._embeddings = new Map();
+    this._initialize();
   }
 
   register(name, port, group, metadata = {}) {
     const entry = { name, port, group, status: 'registered', metadata, registeredAt: Date.now() };
-    this.#services.set(name, entry);
-    this.#embeddings.set(name, textToEmbedding('service:' + name + ':' + group));
+    this._services.set(name, entry);
+    this._embeddings.set(name, textToEmbedding('service:' + name + ':' + group));
     return entry;
   }
 
   discover(query) {
     const queryEmb = textToEmbedding(query);
-    const scored = Array.from(this.#services.entries()).map(([name, svc]) => {
-      const emb = this.#embeddings.get(name);
+    const scored = Array.from(this._services.entries()).map(([name, svc]) => {
+      const emb = this._embeddings.get(name);
       const score = emb ? cosineSimilarity(queryEmb, emb) : 0;
       return { name, ...svc, score };
     });
@@ -52,7 +51,7 @@ class ServiceRegistry {
     for (const [group, config] of Object.entries(SERVICE_GROUPS)) {
       map[group] = config.services.map((name, i) => ({
         name, port: config.start + i, group,
-        status: this.#services.get(name)?.status || 'unknown',
+        status: this._services.get(name)?.status || 'unknown',
       }));
     }
     return map;
@@ -61,7 +60,7 @@ class ServiceRegistry {
   getGroupHealth(group) {
     const config = SERVICE_GROUPS[group];
     if (!config) return null;
-    const services = config.services.map(name => this.#services.get(name)).filter(Boolean);
+    const services = config.services.map(name => this._services.get(name)).filter(Boolean);
     const healthy = services.filter(s => s.status === 'registered').length;
     return { group, healthy, total: config.services.length, score: healthy / config.services.length };
   }
@@ -71,11 +70,11 @@ class ServiceRegistry {
     return results[0] || null;
   }
 
-  getService(name) { return this.#services.get(name) || null; }
-  getAllServices() { return Array.from(this.#services.values()); }
-  getServiceCount() { return this.#services.size; }
+  getService(name) { return this._services.get(name) || null; }
+  getAllServices() { return Array.from(this._services.values()); }
+  getServiceCount() { return this._services.size; }
 
-  #initialize() {
+  _initialize() {
     for (const [group, config] of Object.entries(SERVICE_GROUPS)) {
       config.services.forEach((name, i) => {
         this.register(name, config.start + i, group);
@@ -84,5 +83,4 @@ class ServiceRegistry {
   }
 }
 
-export { ServiceRegistry, SERVICE_GROUPS };
-export default ServiceRegistry;
+module.exports = { ServiceRegistry, SERVICE_GROUPS };

@@ -3,25 +3,23 @@
 // © 2026 HeadySystems Inc. — Eric Haywood, Founder
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { PHI, PSI, PSI3, FIB, CSL_THRESHOLDS, cslGate, sha256 } from '../shared/phi-math-v2.js';
+'use strict';
+
+const { PHI, PSI, PSI3, FIB, CSL_THRESHOLDS, cslGate, sha256 } = require('../shared/phi-math-v2.js');
 
 class ServiceMesh {
-  #topology;
-  #connections;
-  #maxConnections;
-
   constructor() {
-    this.#topology = new Map();
-    this.#connections = new Map();
-    this.#maxConnections = FIB[16];
+    this._topology = new Map();
+    this._connections = new Map();
+    this._maxConnections = FIB[16];
   }
 
   route(from, to, payload = {}) {
     const key = from + '->' + to;
-    const conn = this.#connections.get(key) || { count: 0, errors: 0 };
+    const conn = this._connections.get(key) || { count: 0, errors: 0 };
     conn.count++;
     conn.lastUsed = Date.now();
-    this.#connections.set(key, conn);
+    this._connections.set(key, conn);
 
     const errorRate = conn.count > 0 ? conn.errors / conn.count : 0;
     const health = 1 - errorRate;
@@ -36,15 +34,15 @@ class ServiceMesh {
 
   getTopology() {
     return {
-      nodes: Array.from(this.#topology.keys()),
-      connections: Array.from(this.#connections.entries()).map(([key, conn]) => ({
+      nodes: Array.from(this._topology.keys()),
+      connections: Array.from(this._connections.entries()).map(([key, conn]) => ({
         route: key, count: conn.count, errors: conn.errors, lastUsed: conn.lastUsed,
       })),
     };
   }
 
   injectSidecar(serviceName) {
-    this.#topology.set(serviceName, {
+    this._topology.set(serviceName, {
       sidecar: true, injectedAt: Date.now(),
       mtls: true, circuitBreaker: true,
     });
@@ -53,7 +51,7 @@ class ServiceMesh {
 
   getTrafficMatrix() {
     const matrix = {};
-    for (const [key, conn] of this.#connections) {
+    for (const [key, conn] of this._connections) {
       const [from, to] = key.split('->');
       if (!matrix[from]) matrix[from] = {};
       matrix[from][to] = { count: conn.count, errors: conn.errors };
@@ -62,5 +60,4 @@ class ServiceMesh {
   }
 }
 
-export { ServiceMesh };
-export default ServiceMesh;
+module.exports = { ServiceMesh };
