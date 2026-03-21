@@ -569,9 +569,17 @@ class APIServer {
 
       try {
         // Add CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        const origin = req.headers.origin;
+        const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : ['http://localhost:3000', 'https://headysystems.com'];
+        
+        if (!origin || ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.headysystems.com')) {
+          res.setHeader('Access-Control-Allow-Origin', origin || '*');
+        } else {
+          res.setHeader('Access-Control-Allow-Origin', 'null');
+        }
+        
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, sentry-trace, baggage');
         res.setHeader('Content-Type', 'application/json');
 
         if (req.method === 'OPTIONS') {
