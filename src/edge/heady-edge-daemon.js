@@ -1,7 +1,7 @@
+#!/usr/bin/env node
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('heady-edge-daemon');
 
-#!/usr/bin/env node
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.

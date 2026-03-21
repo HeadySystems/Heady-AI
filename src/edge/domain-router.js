@@ -129,7 +129,7 @@ const DOMAIN_REGISTRY = {
     healthPath:  '/health',
     ssl:         'cloudflare',
     rateLimit:   { windowMs: 60_000, max: 1000 },
-    headers:     { 'X-Heady-Domain': 'headyapi', 'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS },
+    headers:     { 'X-Heady-Domain': 'headyapi', 'Access-Control-Allow-Origin': 'null' }, // HEADY: Use _isHeadyOrigin() for dynamic CORS
   },
   'heady-ai.com': {
     domain:      'heady-ai.com',
