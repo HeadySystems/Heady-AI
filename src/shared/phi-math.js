@@ -451,10 +451,60 @@ function cslBlend(weightHigh, weightLow, cosScore, tau = CSL_THRESHOLDS.MEDIUM) 
   const alpha = _sigmoid((cosScore - tau) / PSI);
   return alpha * weightHigh + (1 - alpha) * weightLow;
 }
-function adaptiveTemperature(entropy, maxEntropy) {
+function cslAdaptiveTemperature(entropy, maxEntropy) {
   if (maxEntropy <= 0) return PSI;
   const ratio = Math.min(1, Math.max(0, entropy / maxEntropy));
   return PSI + ratio * (1 - PSI);
+}
+// Alias for backwards compatibility
+const adaptiveTemperature = cslAdaptiveTemperature;
+
+/**
+ * CSL Ternary gate — classifies a score into Resonant, Neutral, or Repellent
+ * based on phi-harmonic thresholds.
+ *
+ * @param {number} score - Input score in [0, 1]
+ * @param {number} [tauHigh=CSL_THRESHOLDS.HIGH]
+ * @param {number} [tauLow=CSL_THRESHOLDS.LOW]
+ * @returns {'Resonant'|'Neutral'|'Repellent'}
+ */
+function cslTernary(score, tauHigh = CSL_THRESHOLDS.HIGH, tauLow = CSL_THRESHOLDS.LOW) {
+  if (score >= tauHigh) return 'Resonant';
+  if (score <= tauLow) return 'Repellent';
+  return 'Neutral';
+}
+
+/**
+ * CSL Risk Gate — Multi-feature risk assessment using phi-fusion priorities.
+ *
+ * @param {Object.<string, number>} features - Map of risk factors to [0,1]
+ * @returns {'SAFE'|'WARNING'|'CRITICAL'}
+ */
+function cslRiskGate(features) {
+  const score = phiPriorityScore(features);
+  if (score >= ALERT_THRESHOLDS.critical) return 'CRITICAL';
+  if (score >= ALERT_THRESHOLDS.warning) return 'WARNING';
+  return 'SAFE';
+}
+
+/**
+ * CSL Consensus — Multi-model agreement scoring.
+ * Returns the highest ratio of agreement among outputs.
+ *
+ * @param {any[]} modelOutputs - Array of discrete model outputs
+ * @returns {number} Agreement score in [0, 1]
+ */
+function cslConsensus(modelOutputs) {
+  if (!Array.isArray(modelOutputs) || modelOutputs.length === 0) return 0;
+  const counts = new Map();
+  let maxCount = 0;
+  for (const out of modelOutputs) {
+    const val = typeof out === 'object' ? JSON.stringify(out) : String(out);
+    const count = (counts.get(val) || 0) + 1;
+    counts.set(val, count);
+    if (count > maxCount) maxCount = count;
+  }
+  return maxCount / modelOutputs.length;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -946,6 +996,10 @@ module.exports = {
   phiMultiSplit,
   cslGate,
   cslBlend,
+  cslTernary,
+  cslAdaptiveTemperature,
+  cslRiskGate,
+  cslConsensus,
   adaptiveTemperature,
   phiMs,
   PHI_TIMING,
