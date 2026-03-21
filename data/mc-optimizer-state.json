@@ -9,7 +9,7 @@
     "local-ryzen": 0
   },
   "baseRates": {
-    "test-scenario": 0.5574
+    "test-scenario": 0.5505
   },
   "totalBatches": 0,
   "history": [
@@ -428,7 +428,33 @@
         "async": true
       },
       "runAt": 1774101511260
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 81,
+        "failureRate": 0.19,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 81,
+          "partial": 0,
+          "failure": 19
+        },
+        "confidenceBounds": {
+          "lower": 0.1251465399270426,
+          "upper": 0.27779024070807856
+        },
+        "seed": 280077191,
+        "baseRateUsed": 0.85,
+        "simulationMs": 1,
+        "async": true
+      },
+      "runAt": 1774101570440
     }
   ],
-  "savedAt": "2026-03-21T13:58:31.261Z"
+  "savedAt": "2026-03-21T13:59:30.441Z"
 }
