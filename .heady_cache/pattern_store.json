@@ -3,5 +3,53 @@
   "metadata": {
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
-  }
+  },
+  "lastUpdated": "2026-03-21T00:10:01.279Z",
+  "version": 1,
+  "phi": 1.618033988749895,
+  "resourcePatterns": [],
+  "gitVelocity": "HIGH",
+  "commitCount24h": 234,
+  "topTopics": [
+    {
+      "word": "chore(auto)",
+      "count": 222
+    },
+    {
+      "word": "[tier=significant]",
+      "count": 214
+    },
+    {
+      "word": "auto-commit.log",
+      "count": 212
+    },
+    {
+      "word": "pattern_store.json",
+      "count": 17
+    },
+    {
+      "word": "hcfp-auto",
+      "count": 12
+    },
+    {
+      "word": "file(s)",
+      "count": 12
+    },
+    {
+      "word": "changed",
+      "count": 12
+    },
+    {
+      "word": "resource-events.jsonl",
+      "count": 8
+    },
+    {
+      "word": "[tier=trivial]",
+      "count": 7
+    },
+    {
+      "word": "index.html",
+      "count": 6
+    }
+  ]
 }
