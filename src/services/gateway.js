@@ -1,152 +1,52 @@
-'use strict';
-
 /**
- * HeadyGateway — Unified API Gateway for all Heady™ Native Services
- * Routes requests to the appropriate service based on path prefix.
- * Sacred Geometry Architecture v3.0.0
+ * Gateway Service
+ * Implements the Latent Service Pattern
  */
+'use strict';
+const { createLogger } = require('../utils/logger');
+const { phiMs } = require('../shared/phi-math');
+const logger = createLogger('gateway');
 
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const compression = require('compression');
+class GatewayService {
+  constructor() {
+    this.name = 'gateway';
+    this.status = 'dormant';
+    this._metrics = { requests: 0, errors: 0 };
+    this._interval = null;
+  }
 
-const { getLogger } = require('./structured-logger');
+  async start() {
+    if (this.status === 'active') return this;
+    this.status = 'active';
+    this._interval = setInterval(() => this._tick(), phiMs(1000));
+    if (this._interval.unref) this._interval.unref();
+    logger.info({}, 'Gateway service started');
+    return this;
+  }
 
-const log = getLogger('heady-gateway');
-const PHI = 1.618033988749895;
+  async stop() {
+    this.status = 'dormant';
+    if (this._interval) clearInterval(this._interval);
+    logger.info({}, 'Gateway service stopped');
+  }
 
-// Service imports
-const embedRoutes = require('./heady-embed/routes');
-const inferRoutes = require('./heady-infer/routes');
-const vectorRoutes = require('./heady-vector/routes');
-const chainRoutes = require('./heady-chain/routes');
-const cacheRoutes = require('./heady-cache/routes');
-const guardRoutes = require('./heady-guard/routes');
-const evalRoutes = require('./heady-eval/routes');
+  health() {
+    return { name: this.name, status: this.status, metrics: this._metrics };
+  }
 
-const PORT = parseInt(process.env.HEADY_GATEWAY_PORT || '3100', 10);
+  metrics() {
+    return { ...this._metrics };
+  }
 
-const SERVICES = [
-  { name: 'HeadyEmbed',  prefix: '/embed',  port: 3101, status: 'unknown' },
-  { name: 'HeadyInfer',  prefix: '/infer',  port: 3102, status: 'unknown' },
-  { name: 'HeadyVector', prefix: '/vector', port: 3103, status: 'unknown' },
-  { name: 'HeadyChain',  prefix: '/chain',  port: 3104, status: 'unknown' },
-  { name: 'HeadyCache',  prefix: '/cache',  port: 3105, status: 'unknown' },
-  { name: 'HeadyGuard',  prefix: '/guard',  port: 3106, status: 'unknown' },
-  { name: 'HeadyEval',   prefix: '/eval',   port: 3107, status: 'unknown' },
-];
-
-function createGateway() {
-  const app = express();
-
-  // Middleware
-  app.use(helmet());
-  app.use(cors());
-  app.use(compression());
-  app.use(express.json({ limit: '50mb' }));
-
-  // Request logging
-  app.use((req, res, next) => {
-    const start = Date.now();
-    res.on('finish', () => {
-      const duration = Date.now() - start;
-      log.info('request', { method: req.method, url: req.originalUrl, status: res.statusCode, durationMs: duration });
-    });
-    next();
-  });
-
-  // Service routes
-  app.use('/api/v1/embed', embedRoutes);
-  app.use('/api/v1/infer', inferRoutes);
-  app.use('/api/v1/vector', vectorRoutes);
-  app.use('/api/v1/chain', chainRoutes);
-  app.use('/api/v1/cache', cacheRoutes);
-  app.use('/api/v1/guard', guardRoutes);
-  app.use('/api/v1/eval', evalRoutes);
-
-  // Gateway health
-  app.get('/health', (req, res) => {
-    const uptime = process.uptime();
-    const memory = process.memoryUsage();
-    res.json({
-      status: 'healthy',
-      service: 'HeadyGateway',
-      version: '1.0.0',
-      architecture: 'Sacred Geometry v3.0.0',
-      phi: PHI,
-      uptime: `${Math.floor(uptime)}s`,
-      memory: {
-        heapUsed: `${Math.round(memory.heapUsed / 1024 / 1024)}MB`,
-        heapTotal: `${Math.round(memory.heapTotal / 1024 / 1024)}MB`,
-        rss: `${Math.round(memory.rss / 1024 / 1024)}MB`,
-      },
-      services: SERVICES,
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // Service registry
-  app.get('/services', (req, res) => {
-    res.json({
-      gateway: { port: PORT, version: '1.0.0' },
-      services: SERVICES.map(s => ({
-        name: s.name,
-        prefix: `/api/v1${s.prefix}`,
-        standalone_port: s.port,
-        health: `/api/v1${s.prefix}/health`,
-      })),
-    });
-  });
-
-  // 404 handler
-  app.use((req, res) => {
-    res.status(404).json({
-      error: 'Not Found',
-      message: `Route ${req.method} ${req.originalUrl} not found`,
-      available_prefixes: SERVICES.map(s => `/api/v1${s.prefix}`),
-    });
-  });
-
-  // Error handler
-  app.use((err, req, res, _next) => {
-    log.error('request error', { error: err.message });
-    res.status(err.status || 500).json({
-      error: err.message || 'Internal Server Error',
-      service: 'HeadyGateway',
-    });
-  });
-
-  return app;
+  async _tick() {
+    // Background connection maintenance
+  }
+  
+  async route(req) {
+    if (this.status !== 'active') throw new Error('Gateway is dormant');
+    this._metrics.requests++;
+    return { routed: true, target: 'swarm-orchestrator' };
+  }
 }
 
-// Start if run directly
-if (require.main === module) {
-  const app = createGateway();
-  const server = app.listen(PORT, () => {
-    log.info('started', {
-      port: PORT,
-      version: '3.0.0',
-      phi: PHI,
-      services: SERVICES.map(s => ({ name: s.name, prefix: `/api/v1${s.prefix}`, port: s.port })),
-    });
-  });
-
-  // Graceful shutdown
-  const shutdown = (signal) => {
-    log.info('shutting down', { signal });
-    server.close(() => {
-      log.info('all connections closed');
-      process.exit(0);
-    });
-    setTimeout(() => {
-      log.error('forced shutdown after timeout');
-      process.exit(1);
-    }, 10000);
-  };
-
-  process.on('SIGTERM', () => shutdown('SIGTERM'));
-  process.on('SIGINT', () => shutdown('SIGINT'));
-}
-
-module.exports = { createGateway };
+module.exports = new GatewayService();
