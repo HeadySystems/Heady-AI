@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
-  "version": "4.1.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
+  "version": "5.0.0",
+  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=22.0.0"
@@ -89,7 +89,6 @@
     "supertest": "^7.2.2",
     "vitest": "^4.1.0"
   },
-
   "offline": {
     "nodeModulesPath": "./offline-packages/node_modules",
     "pythonPackagesPath": "./offline-packages/python-libs"
@@ -104,6 +103,24 @@
     "flatted": "^3.4.2",
     "protobufjs": ">=7.4.0",
     "undici": ">=7.5.0",
-    "fast-xml-parser": ">=4.5.1"
+    "fast-xml-parser": ">=4.5.1",
+    "hono": ">=4.12.7",
+    "@hono/node-server": ">=1.19.10",
+    "effect": ">=3.20.0",
+    "langsmith": ">=0.4.6",
+    "lodash": ">=4.17.23"
+  },
+  "pnpm": {
+    "overrides": {
+      "flatted": "^3.4.2",
+      "protobufjs": ">=7.4.0",
+      "undici": ">=7.5.0",
+      "fast-xml-parser": ">=4.5.1",
+      "hono": ">=4.12.7",
+      "@hono/node-server": ">=1.19.10",
+      "effect": ">=3.20.0",
+      "langsmith": ">=0.4.6",
+      "lodash": ">=4.17.23"
+    }
   }
 }

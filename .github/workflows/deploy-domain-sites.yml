@@ -1,0 +1,117 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Domain Sites — Cloud Run Deployment                     ║
+# ║  Deploys the dynamic-site-server serving all 9+ branded domains ║
+# ║  Uses single Cloud Run service with Host-header routing         ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+name: Deploy Domain Sites
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/core/site-registry.js'
+      - 'src/core/site-renderer.js'
+      - 'src/core/dynamic-site-server.js'
+      - 'src/core/content-sections.js'
+      - 'src/core/auth-providers.js'
+      - 'assets/**'
+      - 'Dockerfile'
+
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deploy even without path changes'
+        type: boolean
+        default: false
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
+  SERVICE: headyme-site
+  IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/heady/headyme-site
+
+jobs:
+  deploy-sites:
+    name: 'Deploy Dynamic Site Server'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            --build-arg NODE_ENV=production \
+            -t "$IMAGE:${{ github.sha }}" \
+            -t "$IMAGE:latest" \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE \
+            --image "$IMAGE:${{ github.sha }}" \
+            --region $REGION \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 512Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 8 \
+            --concurrency 250 \
+            --timeout 60s \
+            --set-env-vars "\
+              NODE_ENV=production,\
+              HEADY_ENV=production,\
+              HEADY_VERSION=${{ github.sha }},\
+              SENTRY_DSN=${{ secrets.SENTRY_DSN }},\
+              PORT=8080" \
+            --labels "app=heady-sites,env=production"
+
+      - name: Verify deployment
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE \
+            --region $REGION \
+            --format='value(status.url)')
+          echo "Service URL: $SERVICE_URL"
+
+          # Health check
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Host: headyme.com" \
+            "$SERVICE_URL/health" --max-time 15)
+
+          if [ "$STATUS" = "200" ]; then
+            echo "✓ Health check passed (HTTP $STATUS)"
+          else
+            echo "::warning::Health check returned HTTP $STATUS"
+          fi
+
+          # Test domain rendering
+          for domain in headyme.com headysystems.com headyconnection.org headybuddy.org headymcp.com headyio.com headybot.com headyapi.com heady-ai.com; do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Host: $domain" \
+              "$SERVICE_URL/" --max-time 10)
+            echo "  $domain: HTTP $CODE"
+          done
