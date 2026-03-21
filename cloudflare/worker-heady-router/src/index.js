@@ -37,6 +37,8 @@ const DOMAIN_MODULES = {
   'www.headybot.com': 'bot-automation',
   'heady-ai.com': 'ai-assistant',
   'www.heady-ai.com': 'ai-assistant',
+  'headyai.com': 'ai-assistant',
+  'www.headyai.com': 'ai-assistant',
   'headyos.com': 'os-portal',
   'www.headyos.com': 'os-portal',
   'headyex.com': 'executive-hub',

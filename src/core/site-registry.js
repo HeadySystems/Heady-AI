@@ -10,8 +10,8 @@ const HEADY_ALLOWED_ORIGINS = new Set([
   'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
   'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
   'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-  'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-  'https://headyfinance.com', 'https://admin.headysystems.com',
+  'https://headybee.co', 'https://heady-ai.com', 'https://headyai.com',
+  'https://headyex.com', 'https://headyfinance.com', 'https://admin.headysystems.com',
   'https://auth.headysystems.com', 'https://api.headysystems.com',
 ]);
 const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
@@ -153,6 +153,21 @@ const SITES = {
     showAuth: false,
   },
   'heady-ai.com': {
+    brand: 'HeadyAI',
+    tagline: 'The Intelligence Hub',
+    subtitle: 'Multi-model AI playground — route tasks to Claude, Gemini, GPT-4o, Groq, and Perplexity through one unified interface.',
+    color: '#a855f7',
+    accent: '#c084fc',
+    icon: 'Σ',
+    heroServices: [
+      { icon: '🧠', name: 'Models', desc: '5+ providers, auto-failover routing' },
+      { icon: '🎓', name: 'Training', desc: 'Fine-tune on your data' },
+      { icon: '⚡', name: 'Inference', desc: 'Sub-100ms edge inference' },
+      { icon: '🌐', name: 'Edge AI', desc: 'Cloudflare Workers AI native' },
+    ],
+    showAuth: true,
+  },
+  'headyai.com': {
     brand: 'HeadyAI',
     tagline: 'The Intelligence Hub',
     subtitle: 'Multi-model AI playground — route tasks to Claude, Gemini, GPT-4o, Groq, and Perplexity through one unified interface.',
