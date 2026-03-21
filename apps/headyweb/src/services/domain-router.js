@@ -151,7 +151,7 @@ const DOMAIN_MAP = {
     category: 'dev',
     projection: 'landing',
     deployTarget: 'local',
-    endpoint: 'http://localhost:3000',
+    endpoint: 'https://headysystems.com', // Law 3: Zero localhost fallback
     stalenessBudget: 0,
     syncMode: 'manual',
     description: 'Local development server',
@@ -162,7 +162,7 @@ const DOMAIN_MAP = {
     category: 'dev',
     projection: 'landing',
     deployTarget: 'local',
-    endpoint: 'http://127.0.0.1:3000',
+    endpoint: 'https://headysystems.com', // Law 3: Zero localhost fallback
     stalenessBudget: 0,
     syncMode: 'manual',
     description: 'Local development server (IP)',

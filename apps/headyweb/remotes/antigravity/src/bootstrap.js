@@ -9,7 +9,7 @@ import('./mount').then(({ mount }) => {
   const container = document.getElementById('heady-root') || document.body;
   mount(container, {
     autoMount: true,
-    domain: typeof window !== 'undefined' ? window.location.hostname : 'localhost',
+    domain: typeof window !== 'undefined' ? window.location.hostname : 'headyme.com',
     theme: 'dark',
   });
 }).catch((err) => {

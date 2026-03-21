@@ -93,15 +93,15 @@ class HeadyNavigator {
     // Setup API connections for each module
     async setupAPIs() {
         const baseUrls = {
-            development: 'http://localhost:3100',
-            studio: 'http://localhost:8080',
-            music: 'http://localhost:8081',
-            education: 'http://localhost:8082',
-            cloud: 'http://localhost:8083'
+            development: window.HEADY_API_DEV || 'https://api.headysystems.com',
+            studio: window.HEADY_API_STUDIO || 'https://studio.headysystems.com',
+            music: window.HEADY_API_MUSIC || 'https://music.headysystems.com',
+            education: window.HEADY_API_EDU || 'https://edu.headysystems.com',
+            cloud: window.HEADY_API_CLOUD || 'https://cloud.headysystems.com'
         };
 
         for (const [moduleId, config] of Object.entries(this.modules)) {
-            const baseUrl = baseUrls[moduleId] || 'http://localhost:3100';
+            const baseUrl = baseUrls[moduleId] || 'https://api.headysystems.com';
             
             this.apis.set(moduleId, {
                 async call(endpoint, options = {}) {
