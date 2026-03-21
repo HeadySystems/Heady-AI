@@ -3,3 +3,9 @@ packages:
   - services/*
   - workers/*
   - apps/*
+
+catalog:
+  typescript: ^5.4.5
+  eslint: ^10.0.3
+  vitest: ^4.1.0
+  pino: ^10.3.1
