@@ -107,6 +107,32 @@ function phiBackoff(attempt, baseMs = 800) {
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// Compatibility aliases (match dist/index.js exports)
+// ═══════════════════════════════════════════════════════════════════
+
+/** Compute the nth Fibonacci number (1-indexed; fib(0)=0). */
+function fib(n) {
+  if (n <= 0) return 0;
+  if (n <= 2) return 1;
+  let a = 1, b = 1;
+  for (let i = 3; i <= n; i++) { const next = a + b; a = b; b = next; }
+  return b;
+}
+
+const CSL_BANDS = {
+  DORMANT_MAX: 0.236068,
+  LOW_MAX:     PSI2,       // 0.381966
+  MODERATE_MAX: PSI + 0.000001, // 0.618034
+  HIGH_MAX:    0.854102,
+  CRITICAL_MAX: 1,
+};
+
+function phiBackoffMs(attempt, baseMs = 1000, maxMs = fib(15) * 100) {
+  const delay = baseMs * Math.pow(PHI, Math.max(0, attempt));
+  return Math.round(Math.min(delay, maxMs));
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // Module Exports
 // ═══════════════════════════════════════════════════════════════════
 

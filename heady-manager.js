@@ -2168,7 +2168,9 @@ try {
   if (secretsManager) {
     const { registerSecretsRoutes } = require("./src/hc_secrets_manager");
     registerSecretsRoutes(app);
-    secretsManager.startMonitor(60_000); // check every 60s
+    if (typeof secretsManager.startMonitor === 'function') {
+      secretsManager.startMonitor(60_000); // check every 60s
+    }
   }
   if (cfManager) {
     const { registerCloudflareRoutes } = require("./src/hc_cloudflare");
@@ -3167,9 +3169,13 @@ if (colabLatentOps && typeof colabLatentOps.connect === 'function') {
 }
 
 try {
-  const { startBrandingMonitor } = require('./src/self-awareness');
-  startBrandingMonitor();
-  log.info("Branding Monitor: STARTED");
+  const selfAwareness = require('./src/self-awareness');
+  if (typeof selfAwareness.startBrandingMonitor === 'function') {
+    selfAwareness.startBrandingMonitor();
+    log.info("Branding Monitor: STARTED");
+  } else {
+    log.info("Branding Monitor: skipped (not exported from self-awareness module)");
+  }
 } catch (err) {
   log.warn("Branding Monitor not loaded", { errorMessage: err.message });
 }

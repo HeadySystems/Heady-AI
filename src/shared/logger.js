@@ -26,7 +26,8 @@
  * Wraps ColorfulLogger so every service uses structured, tagged output.
  */
 
-const ColorfulLogger = require('../hc_colorful_logger');
+const path = require('path');
+const ColorfulLogger = require(path.resolve(__dirname, '../hc_colorful_logger'));
 
 /**
  * Create a logger instance tagged with a module name.

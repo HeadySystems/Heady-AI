@@ -17,11 +17,16 @@
 const {
   PHI,
   PSI,
-  FIB,
-  CSL_GATES,
-  phiBackoff,
-  phiScale,
+  fib,
+  CSL_BANDS,
+  phiBackoffMs,
 } = require('../packages/phi-math');
+
+// Compatibility shims: build FIB array and CSL_GATES from available exports
+const FIB = Array.from({ length: 20 }, (_, i) => fib(i));
+const CSL_GATES = { include: CSL_BANDS.LOW_MAX }; // 0.381966
+const phiBackoff = phiBackoffMs;
+const phiScale = (value, power) => value * Math.pow(PHI, power);
 const { createLogger } = require('../packages/structured-logger');
 const { HeadySwarm } = require('../packages/heady-bee');
 const latent = require('./hc_latent_space');

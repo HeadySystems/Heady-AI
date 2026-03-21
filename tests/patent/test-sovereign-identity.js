@@ -151,7 +151,7 @@ test('IdentityAttestor computeProof differs by key', () => {
 
 test('IdentityAttestor verifyProof success', () => {
   const attestor  = new IdentityAttestor();
-  const apiKey    = 'sk-test-key-abcdef12345';
+  const apiKey    = process.env.TEST_API_KEY || 'test-fixture-key-not-real';
   const { challengeId, nonce } = attestor.issueChallenge('user1', 'openai');
   const challenge = attestor._challenges.get(challengeId);
   const proof     = IdentityAttestor.computeProof(apiKey, challenge);
@@ -283,7 +283,7 @@ test('SovereignIdentityManager setPreferredModel', () => {
 
 test('SovereignIdentityManager ZK proof challenge-verify roundtrip', () => {
   const mgr    = new SovereignIdentityManager();
-  const apiKey = 'sk-test-1234567890';
+  const apiKey = process.env.TEST_API_KEY || 'test-fixture-key-not-real';
   const { challengeId, nonce } = mgr.challengeKeyOwnership('user1', 'anthropic');
   const challenge = mgr.getAttestor()._challenges.get(challengeId);
   const proof     = IdentityAttestor.computeProof(apiKey, challenge);

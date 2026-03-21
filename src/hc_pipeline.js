@@ -417,12 +417,17 @@ async function executeTask(taskName, context) {
   if (handler) {
     return await handler(context);
   }
-  // Default: simulated task execution with success
+  // No registered handler — emit warning and return stub status
+  const msg = `No handler registered for task '${taskName}' — returning stub result`;
+  if (global.eventBus) {
+    global.eventBus.emit('pipeline:unhandled-task', { task: taskName, timestamp: Date.now() });
+  }
   return {
     task: taskName,
-    status: "completed",
-    result: `Task '${taskName}' executed (default handler)`,
+    status: "stub",
+    result: msg,
     durationMs: 0,
+    _isStub: true,
   };
 }
 

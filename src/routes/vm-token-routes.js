@@ -14,10 +14,6 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 const express = require('express');
-const router = express.Router();
-const { createAppAuth } = require('@octokit/auth-app');
-
-const express = require('../core/heady-server');
 const { createAppAuth } = require("@octokit/auth-app");
 
 function createVmTokenRoutes(secretsManager) {
