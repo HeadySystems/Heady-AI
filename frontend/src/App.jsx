@@ -125,13 +125,21 @@ export default function App() {
           </div>
         </div>
       </main>
-      <div style={{ textAlign: "center", marginTop: 24 }}>
+      <div style={{ textAlign: "center", marginTop: 24, display: "flex", gap: 12, justifyContent: "center" }}>
         <button
           onClick={() => setView('workspace')}
           className="px-6 py-2 bg-purple-900/50 border border-purple-700/50 rounded-xl text-sm text-purple-300 hover:bg-purple-800/50 transition-colors"
         >
           Open Workspace View →
         </button>
+        <a
+          href="https://web.headysystems.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-2 bg-cyan-900/50 border border-cyan-700/50 rounded-xl text-sm text-cyan-300 hover:bg-cyan-800/50 transition-colors inline-block"
+        >
+          Open HeadyAI-IDE →
+        </a>
       </div>
       </div>
     </div>
