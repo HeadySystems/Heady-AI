@@ -75,7 +75,8 @@ const server = http.createServer(async (req, res) => {
   if (parsed.pathname === '/pulse') {
     const services = discoverServices();
     const results = await Promise.all(services.filter(s => s.port).map(async s => {
-      const result = await checkHealth(`http://localhost:${s.port}/health`);
+      const hostName = process.env.HEADY_INTERNAL_HOST || s.name;
+      const result = await checkHealth(`http://${hostName}:${s.port}/health`);
       return {
         ...s,
         ...result
