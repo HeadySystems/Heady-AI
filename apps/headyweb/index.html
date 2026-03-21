@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <title>HeadyWeb — Intelligent Dashboard</title>
-    <meta name="description" content="HeadyWeb is the command center for the Heady AI ecosystem — real-time system status, AI nodes, and workspace management.">
+    <title>HeadyWeb — Comet + Chromium Fusion Browser</title>
+    <meta name="description" content="HeadyWeb: dual-engine browser fusing Chromium Beta stability with Comet experimental AI features.">
     <meta name="theme-color" content="#0EA5E9">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,20 +19,17 @@
             --bg: #07070d; --surface: #0f0f18; --surface-2: #161625; --surface-3: #1e1e32;
             --text: #e8e8f0; --text-muted: #7878a0; --border: #252540;
             --success: #22c55e; --warning: #f59e0b; --error: #ef4444;
+            --tab-rail-w: 240px; --ai-sidebar-w: 320px;
         }
+        html, body { height: 100%; overflow: hidden; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg); color: var(--text);
-            line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+            background: var(--bg); color: var(--text); line-height: 1.5;
         }
 
-        /* ── Sacred Geometry Background ── */
-        .sacred-bg {
-            position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .sacred-bg canvas { width: 100%; height: 100%; opacity: 0.06; }
-
-        /* ── Ambient Glow ── */
+        /* ── Sacred Geometry BG ── */
+        .sacred-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .sacred-bg canvas { width: 100%; height: 100%; opacity: 0.05; }
         body::before {
             content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
             background:
@@ -42,237 +38,251 @@
                 radial-gradient(ellipse 40% 30% at 50% 50%, #8B5CF608, transparent);
         }
 
-        /* ── Layout ── */
-        .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+        /* ── App Layout ── */
+        #app { display: flex; height: 100vh; position: relative; z-index: 1; }
 
-        /* ── Sidebar ── */
-        .sidebar {
-            width: 260px; min-height: 100vh; background: var(--surface);
-            border-right: 1px solid var(--border); padding: 24px 16px;
-            display: flex; flex-direction: column; gap: 8px;
-            position: fixed; left: 0; top: 0; bottom: 0; z-index: 10;
+        /* ── Vertical Tab Rail (Chromium Beta) ── */
+        .tab-rail {
+            width: var(--tab-rail-w); min-width: 52px; background: var(--surface);
+            border-right: 1px solid var(--border); display: flex; flex-direction: column;
+            transition: width 0.25s ease; overflow: hidden; flex-shrink: 0;
         }
-        .sidebar-logo {
-            display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 24px;
+        .tab-rail.collapsed { width: 52px; }
+        .tab-rail-header {
+            display: flex; align-items: center; gap: 8px; padding: 12px;
+            border-bottom: 1px solid var(--border);
         }
-        .logo-hex {
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-        }
+        .logo-hex { width: 28px; height: 28px; flex-shrink: 0; }
         .logo-hex svg { width: 100%; height: 100%; }
-        .sidebar-logo h1 {
-            font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em;
+        .tab-rail-header h1 {
+            font-size: 0.95rem; font-weight: 800; white-space: nowrap; overflow: hidden;
             background: linear-gradient(135deg, var(--g1), var(--g2));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 14px; border-radius: 10px; cursor: pointer;
-            color: var(--text-muted); font-size: 0.9rem; font-weight: 500;
-            transition: all 0.2s; border: 1px solid transparent;
-            text-decoration: none;
+        .tab-rail.collapsed .tab-rail-header h1,
+        .tab-rail.collapsed .workspace-label,
+        .tab-rail.collapsed .tab-title,
+        .tab-rail.collapsed .tab-close,
+        .tab-rail.collapsed .group-label { display: none; }
+        .collapse-btn {
+            margin-left: auto; width: 24px; height: 24px; border: none; border-radius: 6px;
+            background: var(--surface-2); color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+            transition: all 0.2s; flex-shrink: 0;
         }
-        .nav-item:hover { background: var(--surface-2); color: var(--text); }
-        .nav-item.active {
-            background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(99,102,241,0.1));
-            border-color: rgba(14,165,233,0.2); color: var(--text);
+        .collapse-btn:hover { background: var(--surface-3); color: var(--text); }
+
+        /* Workspace selector */
+        .workspace-selector {
+            padding: 8px 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
         }
-        .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-        .nav-divider { height: 1px; background: var(--border); margin: 12px 0; }
-        .sidebar-footer { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
-        .sidebar-footer a {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px; border-radius: 10px; font-size: 0.85rem;
-            color: var(--text-muted); text-decoration: none; transition: all 0.2s;
+        .workspace-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--g1); flex-shrink: 0; }
+        .workspace-label { font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+
+        /* Tab list */
+        .tab-list { flex: 1; overflow-y: auto; padding: 6px; }
+        .tab-list::-webkit-scrollbar { width: 3px; }
+        .tab-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* Tab group */
+        .tab-group { margin-bottom: 4px; }
+        .group-header {
+            display: flex; align-items: center; gap: 6px; padding: 4px 8px;
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--text-muted); cursor: pointer;
+            border-radius: 6px; transition: background 0.2s;
         }
-        .sidebar-footer a:hover { background: var(--surface-2); color: var(--accent2); }
+        .group-header:hover { background: var(--surface-2); }
+        .group-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .group-header .chevron { font-size: 10px; margin-left: auto; transition: transform 0.2s; }
+        .tab-group.collapsed-group .chevron { transform: rotate(-90deg); }
+        .tab-group.collapsed-group .group-tabs { display: none; }
+
+        /* Individual tab */
+        .tab-item {
+            display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+            border-radius: 8px; cursor: pointer; font-size: 0.82rem;
+            transition: all 0.15s; border: 1px solid transparent; position: relative;
+        }
+        .tab-item:hover { background: var(--surface-2); }
+        .tab-item.active {
+            background: linear-gradient(135deg, rgba(14,165,233,0.1), rgba(99,102,241,0.08));
+            border-color: rgba(14,165,233,0.2);
+        }
+        .tab-favicon { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; background: var(--surface-3);
+            display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .tab-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tab-close {
+            width: 18px; height: 18px; border: none; border-radius: 4px; background: transparent;
+            color: var(--text-muted); cursor: pointer; font-size: 12px; opacity: 0;
+            display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+        }
+        .tab-item:hover .tab-close { opacity: 1; }
+        .tab-close:hover { background: var(--error); color: white; }
+
+        .new-tab-btn {
+            display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+            margin: 4px 6px; border-radius: 8px; cursor: pointer; font-size: 0.82rem;
+            color: var(--text-muted); transition: all 0.15s; border: 1px dashed var(--border);
+        }
+        .new-tab-btn:hover { background: var(--surface-2); color: var(--accent); border-color: var(--accent); }
 
         /* ── Main Content ── */
-        .main { flex: 1; margin-left: 260px; padding: 32px; }
+        .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
-        /* ── Header ── */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 32px;
+        /* Nav bar */
+        .nav-bar {
+            display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+            background: rgba(15,15,24,0.85); backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
         }
-        .header h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
-        .header-actions { display: flex; gap: 12px; align-items: center; }
-        .status-pill {
-            display: flex; align-items: center; gap: 8px;
-            padding: 6px 14px; border-radius: 100px;
-            background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.2);
-            font-size: 0.8rem; font-weight: 600; color: var(--success);
+        .nav-btn {
+            width: 32px; height: 32px; border: none; border-radius: 8px;
+            background: transparent; color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+            transition: all 0.15s;
         }
-        .status-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: var(--success); animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .btn-primary {
-            padding: 8px 20px; border-radius: 10px; font-weight: 600; font-size: 0.85rem;
-            background: linear-gradient(135deg, var(--g1), var(--g2)); color: white;
-            border: none; cursor: pointer; transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(14,165,233,0.2); text-decoration: none;
-        }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 25px rgba(14,165,233,0.35); }
+        .nav-btn:hover { background: var(--surface-2); color: var(--text); }
 
-        /* ── Stats Grid ── */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px; margin-bottom: 32px;
+        /* Omnibox */
+        .omnibox {
+            flex: 1; height: 36px; border-radius: 18px; border: 1px solid var(--border);
+            background: var(--surface-2); padding: 0 16px; color: var(--text);
+            font-size: 0.85rem; font-family: inherit; outline: none; transition: all 0.2s;
         }
-        .stat-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 20px; position: relative; overflow: hidden;
-            transition: all 0.3s;
+        .omnibox:focus { border-color: var(--g1); box-shadow: 0 0 0 2px rgba(14,165,233,0.15); }
+        .omnibox::placeholder { color: var(--text-muted); }
+
+        /* Engine pill */
+        .engine-pill {
+            display: flex; align-items: center; gap: 6px; padding: 4px 12px;
+            border-radius: 100px; font-size: 0.72rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; border: 1px solid var(--border);
+            background: var(--surface-2); color: var(--text-muted); text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
-        .stat-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, var(--g1), var(--g2)); opacity: 0;
-            transition: opacity 0.3s;
+        .engine-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+        .engine-pill.chromium .dot { background: var(--g1); }
+        .engine-pill.comet .dot { background: var(--g3); }
+        .engine-pill.auto .dot { background: var(--accent2); }
+        .engine-pill:hover { border-color: var(--g1); color: var(--text); }
+
+        /* AI toggle */
+        .ai-toggle {
+            width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--surface-2); color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 16px;
+            transition: all 0.2s;
         }
-        .stat-card:hover { border-color: rgba(14,165,233,0.3); transform: translateY(-2px); }
-        .stat-card:hover::before { opacity: 1; }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-        .stat-value {
-            font-size: 1.8rem; font-weight: 900; letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text), var(--text-muted));
+        .ai-toggle:hover, .ai-toggle.active { background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(14,165,233,0.1)); border-color: var(--g3); color: var(--g3); }
+
+        /* Split-view btn */
+        .split-btn { font-size: 14px; }
+
+        /* Content area */
+        .content-area { flex: 1; position: relative; display: flex; }
+        .webview-pane { flex: 1; position: relative; background: white; }
+        .webview-pane webview, .webview-pane iframe { width: 100%; height: 100%; border: none; }
+
+        /* New tab page */
+        .ntp {
+            width: 100%; height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: var(--bg);
+            gap: 28px; padding: 48px;
+        }
+        .ntp-logo { font-size: 3rem; opacity: 0.8; animation: breathe 4s ease-in-out infinite; }
+        @keyframes breathe { 0%,100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.06); opacity: 1; } }
+        .ntp h2 {
+            font-size: 1.4rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--g1), var(--g2), var(--g3));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .stat-card.highlight .stat-value {
-            background: linear-gradient(135deg, var(--g1), var(--g2));
+        .ntp p { color: var(--text-muted); font-size: 0.9rem; max-width: 420px; text-align: center; }
+        .ntp-shortcuts { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+        .shortcut {
+            width: 90px; padding: 14px 8px; border-radius: 12px; background: var(--surface);
+            border: 1px solid var(--border); text-align: center; cursor: pointer;
+            transition: all 0.2s; text-decoration: none; color: var(--text);
+        }
+        .shortcut:hover { border-color: var(--g1); transform: translateY(-2px); }
+        .shortcut-icon { font-size: 1.5rem; margin-bottom: 6px; }
+        .shortcut-label { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* ── AI Sidebar (Comet) ── */
+        .ai-sidebar {
+            width: 0; background: var(--surface); border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow: hidden; transition: width 0.25s ease;
+            flex-shrink: 0;
+        }
+        .ai-sidebar.open { width: var(--ai-sidebar-w); }
+        .ai-sidebar-header {
+            display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .ai-sidebar-header h3 {
+            font-size: 0.9rem; font-weight: 700; flex: 1;
+            background: linear-gradient(135deg, var(--g3), var(--g1));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .stat-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+        .ai-sidebar-close {
+            width: 24px; height: 24px; border: none; border-radius: 6px;
+            background: var(--surface-2); color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .ai-sidebar-close:hover { color: var(--text); }
 
-        /* ── Panels ── */
-        .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
-        .panel {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 24px; transition: all 0.3s;
+        .ai-sidebar-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        .ai-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 14px; transition: all 0.2s;
         }
-        .panel:hover { border-color: rgba(14,165,233,0.2); }
-        .panel-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px;
-        }
-        .panel-title { font-size: 0.95rem; font-weight: 700; }
-        .panel-badge {
-            font-size: 0.7rem; padding: 3px 10px; border-radius: 100px;
-            background: rgba(14,165,233,0.1); color: var(--accent); font-weight: 600;
-        }
+        .ai-card:hover { border-color: rgba(139,92,246,0.3); }
+        .ai-card h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .ai-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
-        /* ── Nodes Grid ── */
-        .nodes-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .node-item {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 12px; border-radius: 10px;
-            background: var(--surface-2); border: 1px solid transparent;
-            transition: all 0.2s; font-size: 0.85rem;
+        .ai-chat-input {
+            display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--border);
         }
-        .node-item:hover { border-color: var(--border); background: var(--surface-3); }
-        .node-dot {
-            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        .ai-chat-input input {
+            flex: 1; height: 36px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--surface-2); padding: 0 12px; color: var(--text);
+            font-size: 0.82rem; font-family: inherit; outline: none;
         }
-        .node-dot.active { background: var(--success); box-shadow: 0 0 8px rgba(34,197,94,0.4); }
-        .node-dot.idle { background: var(--warning); }
-        .node-dot.standby { background: var(--text-muted); }
-        .node-name { font-weight: 500; flex: 1; }
-        .node-status { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-
-        /* ── Services List ── */
-        .services-list { display: flex; flex-direction: column; gap: 8px; }
-        .service-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 14px; border-radius: 10px;
-            background: var(--surface-2); transition: all 0.2s;
+        .ai-chat-input input:focus { border-color: var(--g3); }
+        .ai-chat-send {
+            width: 36px; height: 36px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, var(--g3), var(--g1)); color: white;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; transition: transform 0.15s;
         }
-        .service-item:hover { background: var(--surface-3); }
-        .service-icon {
-            width: 32px; height: 32px; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem;
-        }
-        .service-info { flex: 1; }
-        .service-name { font-size: 0.85rem; font-weight: 600; }
-        .service-url { font-size: 0.7rem; color: var(--text-muted); font-family: 'SF Mono', monospace; }
-        .service-status {
-            font-size: 0.7rem; padding: 3px 10px; border-radius: 100px;
-            font-weight: 600;
-        }
-        .service-status.live {
-            background: rgba(34,197,94,0.1); color: var(--success);
-        }
-        .service-status.pending {
-            background: rgba(245,158,11,0.1); color: var(--warning);
-        }
-
-        /* ── Activity Panel (full width) ── */
-        .panel-full {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 24px; margin-bottom: 32px;
-        }
-        .activity-list { display: flex; flex-direction: column; gap: 12px; }
-        .activity-item {
-            display: flex; align-items: flex-start; gap: 14px;
-            padding: 14px; border-radius: 12px; background: var(--surface-2);
-        }
-        .activity-time { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; min-width: 60px; padding-top: 2px; }
-        .activity-content { flex: 1; }
-        .activity-title { font-size: 0.85rem; font-weight: 600; }
-        .activity-desc { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+        .ai-chat-send:hover { transform: scale(1.08); }
 
         /* ── Micro-animations ── */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .stat-card { animation: fadeInUp 0.5s ease-out backwards; }
-        .stat-card:nth-child(1) { animation-delay: 0.05s; }
-        .stat-card:nth-child(2) { animation-delay: 0.1s; }
-        .stat-card:nth-child(3) { animation-delay: 0.15s; }
-        .stat-card:nth-child(4) { animation-delay: 0.2s; }
-        .stat-card:nth-child(5) { animation-delay: 0.25s; }
-        .panel { animation: fadeInUp 0.6s ease-out backwards; animation-delay: 0.3s; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* ── Responsive ── */
-        @media (max-width: 1024px) {
-            .sidebar { width: 72px; padding: 16px 8px; }
-            .sidebar-logo h1, .nav-item span, .sidebar-footer span { display: none; }
-            .nav-item { justify-content: center; padding: 12px; }
-            .main { margin-left: 72px; }
-            .panels { grid-template-columns: 1fr; }
+        @media (max-width: 900px) {
+            .tab-rail { width: 52px; }
+            .tab-rail .tab-rail-header h1, .tab-rail .workspace-label,
+            .tab-rail .tab-title, .tab-rail .tab-close, .tab-rail .group-label { display: none; }
+            .ai-sidebar.open { width: 260px; }
         }
-        @media (max-width: 640px) {
-            .sidebar { display: none; }
-            .main { margin-left: 0; padding: 16px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .nodes-grid { grid-template-columns: 1fr; }
+        @media (max-width: 600px) {
+            .tab-rail { display: none; }
+            .ai-sidebar.open { width: 100%; position: absolute; right: 0; top: 0; bottom: 0; z-index: 50; }
         }
-
-        /* ── Loading shimmer ── */
-        .shimmer {
-            background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
-            background-size: 200% 100%; animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer { to { background-position: -200% 0; } }
-
-        /* ── Glassmorphic overlay for onboarding link ── */
-        .onboarding-banner {
-            background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(139,92,246,0.08));
-            border: 1px solid rgba(14,165,233,0.15); border-radius: 14px;
-            padding: 20px 24px; margin-bottom: 32px;
-            display: flex; align-items: center; justify-content: space-between;
-            backdrop-filter: blur(20px);
-        }
-        .onboarding-banner-text h3 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
-        .onboarding-banner-text p { font-size: 0.85rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
 <div class="sacred-bg"><canvas id="sacred-canvas"></canvas></div>
 
-<div class="app">
-    <!-- Sidebar -->
-    <nav class="sidebar">
-        <div class="sidebar-logo">
+<div id="app">
+    <!-- ── Vertical Tab Rail (Chromium Beta) ── -->
+    <aside class="tab-rail" id="tab-rail">
+        <div class="tab-rail-header">
             <div class="logo-hex">
                 <svg viewBox="0 0 40 40" fill="none">
                     <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="#0EA5E9" stroke-width="2"/>
@@ -280,879 +290,356 @@
                 </svg>
             </div>
             <h1>HeadyWeb</h1>
+            <button class="collapse-btn" id="collapse-rail" title="Toggle sidebar">◀</button>
         </div>
 
-        <a class="nav-item active" href="#" data-view="dashboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            <span>Dashboard</span>
-        </a>
-        <a class="nav-item" href="#" data-view="nodes">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
-            <span>AI Nodes</span>
-        </a>
-        <a class="nav-item" href="#" data-view="services">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            <span>Services</span>
-        </a>
-        <a class="nav-item" href="#" data-view="vectors">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
-            <span>Vectors</span>
-        </a>
-
-        <div class="nav-divider"></div>
-
-        <a class="nav-item" href="https://heady-onboarding-609590223909.us-east1.run.app/login" target="_blank">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Account</span>
-        </a>
-        <a class="nav-item" href="https://headysystems.com" target="_blank">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            <span>HeadySystems</span>
-        </a>
-
-        <div class="sidebar-footer">
-            <a href="https://headyme.com" target="_blank">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
-                <span>headyme.com</span>
-            </a>
+        <div class="workspace-selector" id="workspace-selector">
+            <span class="workspace-dot" id="ws-dot"></span>
+            <span class="workspace-label" id="ws-label">Default Workspace</span>
         </div>
-    </nav>
 
-    <!-- Main -->
-    <main class="main">
-        <!-- Header -->
-        <div class="header">
-            <h2 id="page-title">Command Center</h2>
-            <div class="header-actions">
-                <div class="status-pill" id="system-status">
-                    <span class="status-dot"></span>
-                    <span id="status-text">Connecting...</span>
+        <div class="tab-list" id="tab-list">
+            <!-- Tab groups and tabs rendered by JS -->
+        </div>
+
+        <div class="new-tab-btn" id="new-tab-btn">
+            <span>＋</span>
+            <span class="tab-title">New Tab</span>
+        </div>
+    </aside>
+
+    <!-- ── Main Content ── -->
+    <div class="main-content">
+        <!-- Navigation / Omnibox -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="nav-back" title="Back">←</button>
+            <button class="nav-btn" id="nav-forward" title="Forward">→</button>
+            <button class="nav-btn" id="nav-refresh" title="Reload">↻</button>
+            <input type="text" class="omnibox" id="omnibox" placeholder="Search or enter URL  ·  @heady for AI search" autocomplete="off">
+            <button class="nav-btn" id="nav-home" title="Home">⌂</button>
+            <div class="engine-pill auto" id="engine-pill" title="Click to switch engine">
+                <span class="dot"></span>
+                <span id="engine-label">Auto</span>
+            </div>
+            <button class="nav-btn split-btn" id="split-btn" title="Split view">⧉</button>
+            <button class="ai-toggle" id="ai-toggle" title="Toggle AI assistant">✦</button>
+        </div>
+
+        <!-- Web Content -->
+        <div class="content-area" id="content-area">
+            <div class="webview-pane" id="pane-1">
+                <div class="ntp" id="ntp">
+                    <div class="ntp-logo">🌐</div>
+                    <h2>HeadyWeb</h2>
+                    <p>Chromium Beta stability meets Comet experimental intelligence — your dual-engine browser.</p>
+                    <div class="ntp-shortcuts">
+                        <a class="shortcut" data-url="https://headysystems.com"><div class="shortcut-icon">🏛️</div><div class="shortcut-label">HeadySystems</div></a>
+                        <a class="shortcut" data-url="https://headyme.com"><div class="shortcut-icon">🛡️</div><div class="shortcut-label">headyme.com</div></a>
+                        <a class="shortcut" data-url="https://headyos.com"><div class="shortcut-icon">🖥️</div><div class="shortcut-label">HeadyOS</div></a>
+                        <a class="shortcut" data-url="https://headybuddy.org"><div class="shortcut-icon">🤖</div><div class="shortcut-label">HeadyBuddy</div></a>
+                    </div>
                 </div>
-                <a href="https://heady-onboarding-609590223909.us-east1.run.app/onboarding" class="btn-primary" target="_blank">Start Onboarding</a>
             </div>
         </div>
+    </div>
 
-        <!-- Onboarding Banner -->
-        <div class="onboarding-banner" id="onboarding-banner">
-            <div class="onboarding-banner-text">
-                <h3>Get your @headyme.com identity</h3>
-                <p>Complete the 5-stage onboarding to claim your username, configure email, and set up HeadyBuddy.</p>
-            </div>
-            <a href="https://heady-onboarding-609590223909.us-east1.run.app/login" class="btn-primary" target="_blank">Sign In →</a>
+    <!-- ── AI Sidebar (Comet) ── -->
+    <aside class="ai-sidebar" id="ai-sidebar">
+        <div class="ai-sidebar-header">
+            <span>✦</span>
+            <h3>Heady AI</h3>
+            <button class="ai-sidebar-close" id="ai-sidebar-close">✕</button>
         </div>
-
-        <!-- Stats -->
-        <div class="stats-grid" id="stats-grid">
-            <div class="stat-card highlight">
-                <div class="stat-label">AI Nodes</div>
-                <div class="stat-value" id="stat-nodes">20</div>
-                <div class="stat-sub">Active swarm capacity</div>
+        <div class="ai-sidebar-body" id="ai-sidebar-body">
+            <div class="ai-card">
+                <h4>📄 Page Summary</h4>
+                <p id="ai-summary">Navigate to a page to get an AI-powered summary of its content.</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Services</div>
-                <div class="stat-value" id="stat-services">—</div>
-                <div class="stat-sub">Cloud Run + Cloudflare</div>
+            <div class="ai-card">
+                <h4>💡 Suggestions</h4>
+                <p>Ask me anything about the current page, or type <strong>@heady</strong> in the omnibox for deep search.</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Uptime</div>
-                <div class="stat-value" id="stat-uptime">—</div>
-                <div class="stat-sub" id="stat-uptime-sub">System availability</div>
+            <div class="ai-card">
+                <h4>⚡ Quick Actions</h4>
+                <p>Summarize · Translate · Extract Data · Find Sources · Draft Response</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Vectors</div>
-                <div class="stat-value" id="stat-vectors">—</div>
-                <div class="stat-sub">Semantic memory entries</div>
-            </div>
-            <div class="stat-card highlight">
-                <div class="stat-label">Patents</div>
-                <div class="stat-value">60+</div>
-                <div class="stat-sub">Provisional filings</div>
-            </div>
+            <div id="ai-chat-log" style="display:flex;flex-direction:column;gap:8px;"></div>
         </div>
-
-        <!-- Panels -->
-        <div class="panels">
-            <!-- Nodes Panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">AI Node Status</div>
-                    <span class="panel-badge">20 Nodes</span>
-                </div>
-                <div class="nodes-grid" id="nodes-grid"></div>
-            </div>
-
-            <!-- Services Panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">Live Services</div>
-                    <span class="panel-badge">Cloud Run</span>
-                </div>
-                <div class="services-list" id="services-list"></div>
-            </div>
+        <div class="ai-chat-input">
+            <input type="text" id="ai-input" placeholder="Ask Heady AI…">
+            <button class="ai-chat-send" id="ai-send">↑</button>
         </div>
-
-        <!-- Activity -->
-        <div class="panel-full">
-            <div class="panel-header">
-                <div class="panel-title">Recent Activity</div>
-                <span class="panel-badge">Live</span>
-            </div>
-            <div class="activity-list" id="activity-list"></div>
-        </div>
-    </main>
+    </aside>
 </div>
 
 <script>
 (function() {
     'use strict';
 
-    // ── Config ──────────────────────────────────────────
-    const API_BASE = 'https://heady-onboarding-609590223909.us-east1.run.app';
-    const ONBOARDING_URL = API_BASE + '/login';
-    const CLOUD_RUN_SERVICES = [
-        { name: 'Onboarding + Auth', url: API_BASE, icon: '🔐', healthPath: '/api/health' },
-        { name: 'HeadyAI IDE', url: 'https://heady-ide-bf4q4zywhq-ue.a.run.app', icon: '💻', healthPath: '/api/health' },
-    ];
+    // ── State ──
+    const state = {
+        tabs: [{ id: 't0', title: 'New Tab', url: '', group: 'default', favicon: '🌐' }],
+        activeTab: 't0',
+        groups: [
+            { id: 'default', label: 'Browsing', color: '#0EA5E9', collapsed: false },
+        ],
+        workspaces: [
+            { id: 'ws1', label: 'Default Workspace', color: '#0EA5E9' },
+            { id: 'ws2', label: 'Research', color: '#8B5CF6' },
+            { id: 'ws3', label: 'Development', color: '#22c55e' },
+        ],
+        activeWorkspace: 'ws1',
+        engine: 'auto', // auto | chromium | comet
+        aiOpen: false,
+        splitView: false,
+        nextId: 1,
+    };
 
-    const AI_NODES = [
-        'HeadyBrain', 'HeadyBattle', 'HeadyMC', 'HeadyDecomp',
-        'HeadySim', 'HeadyGuard', 'HeadyVinci', 'HeadyBuddy',
-        'HeadyCoder', 'HeadyResearcher', 'HeadyTrader', 'HeadySoul',
-        'HeadyChain', 'HeadyGate', 'HeadyLens', 'HeadyPool',
-        'HeadyEval', 'HeadySandbox', 'HeadyCouncil', 'HeadyOrchestrator',
-    ];
+    // ── DOM refs ──
+    const $ = id => document.getElementById(id);
+    const tabRail = $('tab-rail');
+    const tabList = $('tab-list');
+    const omnibox = $('omnibox');
+    const contentArea = $('content-area');
+    const aiSidebar = $('ai-sidebar');
+    const enginePill = $('engine-pill');
+    const engineLabel = $('engine-label');
+    const wsLabel = $('ws-label');
+    const wsDot = $('ws-dot');
 
-    // ── Render Nodes ────────────────────────────────────
-    function renderNodes() {
-        const grid = document.getElementById('nodes-grid');
-        grid.innerHTML = AI_NODES.map((name, i) => {
-            const statuses = ['active', 'active', 'active', 'idle', 'standby'];
-            const status = statuses[i % statuses.length];
-            const labels = { active: 'Active', idle: 'Idle', standby: 'Standby' };
-            return `<div class="node-item">
-                <span class="node-dot ${status}"></span>
-                <span class="node-name">${name}</span>
-                <span class="node-status">${labels[status]}</span>
-            </div>`;
-        }).join('');
-    }
+    // ── Tab Rail collapse ──
+    $('collapse-rail').addEventListener('click', () => {
+        tabRail.classList.toggle('collapsed');
+        $('collapse-rail').textContent = tabRail.classList.contains('collapsed') ? '▶' : '◀';
+    });
 
-    // ── Render Services ─────────────────────────────────
-    function renderServices() {
-        const list = document.getElementById('services-list');
-        const cfServices = [
-            { name: 'headyme.com', url: 'headyme.com', icon: '🌐', status: 'live' },
-            { name: 'headyos.com', url: 'headyos.com', icon: '🖥️', status: 'live' },
-            { name: 'headysystems.com', url: 'headysystems.com', icon: '🏛️', status: 'live' },
-            { name: 'headybuddy.org', url: 'headybuddy.org', icon: '🤖', status: 'live' },
-        ];
+    // ── Workspace selector ──
+    $('workspace-selector').addEventListener('click', () => {
+        const idx = state.workspaces.findIndex(w => w.id === state.activeWorkspace);
+        const next = state.workspaces[(idx + 1) % state.workspaces.length];
+        state.activeWorkspace = next.id;
+        wsLabel.textContent = next.label;
+        wsDot.style.background = next.color;
+    });
 
-        const allServices = [
-            ...CLOUD_RUN_SERVICES.map(s => ({ ...s, status: 'pending' })),
-            ...cfServices,
-        ];
-
-        list.innerHTML = allServices.map(s => `<div class="service-item" data-url="${s.url || ''}">
-            <div class="service-icon">${s.icon}</div>
-            <div class="service-info">
-                <div class="service-name">${s.name}</div>
-                <div class="service-url">${s.url ? new URL(s.url.startsWith('http') ? s.url : 'https://' + s.url).hostname : ''}</div>
-            </div>
-            <span class="service-status ${s.status}">${s.status === 'live' ? '● Live' : '◌ Checking'}</span>
-        </div>`).join('');
-
-        document.getElementById('stat-services').textContent = allServices.length;
-    }
-
-    // ── Health Checks ───────────────────────────────────
-    async function checkServiceHealth(service) {
-        try {
-            const url = service.url + (service.healthPath || '/api/health');
-            const res = await fetch(url, { mode: 'cors', signal: AbortSignal.timeout(8000) });
-            if (res.ok) {
-                const data = await res.json();
-                return { ...service, status: 'live', data };
-            }
-            return { ...service, status: 'live', data: null };
-        } catch {
-            return { ...service, status: 'pending', data: null };
-        }
-    }
-
-    async function runHealthChecks() {
-        const results = await Promise.allSettled(
-            CLOUD_RUN_SERVICES.map(s => checkServiceHealth(s))
-        );
-
-        let allLive = true;
-        results.forEach(r => {
-            if (r.status === 'fulfilled') {
-                const svc = r.value;
-                // Update the service item in the list
-                const items = document.querySelectorAll('.service-item');
-                items.forEach(item => {
-                    if (item.dataset.url === svc.url) {
-                        const badge = item.querySelector('.service-status');
-                        badge.className = 'service-status ' + svc.status;
-                        badge.textContent = svc.status === 'live' ? '● Live' : '◌ Down';
-                    }
+    // ── Render tabs ──
+    function renderTabs() {
+        tabList.innerHTML = '';
+        for (const group of state.groups) {
+            const grpEl = document.createElement('div');
+            grpEl.className = 'tab-group' + (group.collapsed ? ' collapsed-group' : '');
+            grpEl.innerHTML = `<div class="group-header" data-gid="${group.id}">
+                <span class="group-dot" style="background:${group.color}"></span>
+                <span class="group-label">${group.label}</span>
+                <span class="chevron">▼</span>
+            </div><div class="group-tabs"></div>`;
+            const tabsContainer = grpEl.querySelector('.group-tabs');
+            state.tabs.filter(t => t.group === group.id).forEach(tab => {
+                const el = document.createElement('div');
+                el.className = 'tab-item' + (tab.id === state.activeTab ? ' active' : '');
+                el.innerHTML = `<span class="tab-favicon">${tab.favicon}</span>
+                    <span class="tab-title">${tab.title}</span>
+                    <button class="tab-close" data-tid="${tab.id}">✕</button>`;
+                el.addEventListener('click', e => {
+                    if (e.target.classList.contains('tab-close')) { closeTab(tab.id); return; }
+                    switchTab(tab.id);
                 });
+                tabsContainer.appendChild(el);
+            });
+            grpEl.querySelector('.group-header').addEventListener('click', () => {
+                group.collapsed = !group.collapsed;
+                renderTabs();
+            });
+            tabList.appendChild(grpEl);
+        }
+    }
 
-                // Extract uptime and vectors from health data
-                if (svc.data) {
-                    if (svc.data.uptime) {
-                        const hours = Math.floor(svc.data.uptime / 3600);
-                        const mins = Math.floor((svc.data.uptime % 3600) / 60);
-                        document.getElementById('stat-uptime').textContent =
-                            hours > 0 ? hours + 'h ' + mins + 'm' : mins + 'm';
-                    }
-                    if (typeof svc.data.vectors === 'number') {
-                        document.getElementById('stat-vectors').textContent = svc.data.vectors.toLocaleString();
-                    }
-                }
-                if (svc.status !== 'live') allLive = false;
-            } else {
-                allLive = false;
+    function switchTab(id) {
+        state.activeTab = id;
+        const tab = state.tabs.find(t => t.id === id);
+        if (tab) omnibox.value = tab.url;
+        renderTabs();
+        renderContent();
+    }
+
+    function closeTab(id) {
+        if (state.tabs.length <= 1) return;
+        state.tabs = state.tabs.filter(t => t.id !== id);
+        if (state.activeTab === id) state.activeTab = state.tabs[0].id;
+        renderTabs();
+        renderContent();
+    }
+
+    function createTab(url, title) {
+        const id = 't' + (state.nextId++);
+        state.tabs.push({ id, title: title || 'New Tab', url: url || '', group: 'default', favicon: '🌐' });
+        state.activeTab = id;
+        if (url) navigate(url);
+        renderTabs();
+        renderContent();
+    }
+
+    $('new-tab-btn').addEventListener('click', () => createTab());
+
+    // ── Navigation ──
+    function navigate(url) {
+        if (!url) return;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            if (url.startsWith('@heady ')) {
+                handleAISearch(url.slice(7));
+                return;
             }
+            url = url.includes('.') ? 'https://' + url : 'https://www.google.com/search?q=' + encodeURIComponent(url);
+        }
+        const tab = state.tabs.find(t => t.id === state.activeTab);
+        if (tab) { tab.url = url; tab.title = new URL(url).hostname; }
+        omnibox.value = url;
+        renderTabs();
+        renderContent();
+        window.electronAPI?.navigateToUrl(url);
+    }
+
+    $('nav-back').addEventListener('click', () => { window.electronAPI?.goBack?.(); });
+    $('nav-forward').addEventListener('click', () => { window.electronAPI?.goForward?.(); });
+    $('nav-refresh').addEventListener('click', () => { window.electronAPI?.reload?.(); renderContent(); });
+    $('nav-home').addEventListener('click', () => navigate('https://headysystems.com'));
+    omnibox.addEventListener('keydown', e => { if (e.key === 'Enter') navigate(omnibox.value.trim()); });
+
+    // Shortcuts
+    document.querySelectorAll('.shortcut').forEach(s => {
+        s.addEventListener('click', e => {
+            e.preventDefault();
+            navigate(s.dataset.url);
         });
+    });
 
-        // Update global status
-        const statusText = document.getElementById('status-text');
-        const statusPill = document.getElementById('system-status');
-        if (allLive) {
-            statusText.textContent = 'All Systems Operational';
-            statusPill.style.background = 'rgba(34,197,94,0.1)';
-            statusPill.style.borderColor = 'rgba(34,197,94,0.2)';
+    // ── Content rendering ──
+    function renderContent() {
+        const tab = state.tabs.find(t => t.id === state.activeTab);
+        const pane = $('pane-1');
+        if (!tab || !tab.url) {
+            pane.innerHTML = `<div class="ntp">
+                <div class="ntp-logo">🌐</div><h2>HeadyWeb</h2>
+                <p>Chromium Beta stability meets Comet experimental intelligence — your dual-engine browser.</p>
+                <div class="ntp-shortcuts">
+                    <a class="shortcut" data-url="https://headysystems.com"><div class="shortcut-icon">🏛️</div><div class="shortcut-label">HeadySystems</div></a>
+                    <a class="shortcut" data-url="https://headyme.com"><div class="shortcut-icon">🛡️</div><div class="shortcut-label">headyme.com</div></a>
+                    <a class="shortcut" data-url="https://headyos.com"><div class="shortcut-icon">🖥️</div><div class="shortcut-label">HeadyOS</div></a>
+                    <a class="shortcut" data-url="https://headybuddy.org"><div class="shortcut-icon">🤖</div><div class="shortcut-label">HeadyBuddy</div></a>
+                </div></div>`;
+            pane.querySelectorAll('.shortcut').forEach(s => {
+                s.addEventListener('click', e => { e.preventDefault(); navigate(s.dataset.url); });
+            });
         } else {
-            statusText.textContent = 'Partial — Some Services Warming';
-            statusPill.style.background = 'rgba(245,158,11,0.1)';
-            statusPill.style.borderColor = 'rgba(245,158,11,0.2)';
-            statusPill.querySelector('.status-dot').style.background = 'var(--warning)';
+            // In Electron use <webview>, in browser fallback to iframe
+            if (typeof window.electronAPI !== 'undefined') {
+                pane.innerHTML = `<webview src="${tab.url}" style="width:100%;height:100%;border:none;"></webview>`;
+            } else {
+                pane.innerHTML = `<iframe src="${tab.url}" style="width:100%;height:100%;border:none;" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>`;
+            }
         }
     }
 
-    // ── Activity Feed ───────────────────────────────────
-    function renderActivity() {
-        const now = new Date();
-        const activities = [
-            { time: '00:00', title: 'System Health Check', desc: 'All Cloud Run services verified operational' },
-            { time: formatTime(new Date(now - 3600000)), title: 'HeadyBuddy Widget Deployed', desc: 'Latest buddy-widget.js pushed to CDN via Cloudflare' },
-            { time: formatTime(new Date(now - 7200000)), title: 'Vector Memory Indexed', desc: 'Workspace vectors re-indexed with cosine similarity search' },
-            { time: formatTime(new Date(now - 14400000)), title: 'OAuth Mesh Updated', desc: '28 providers configured in federated auth gate' },
-            { time: formatTime(new Date(now - 28800000)), title: 'Onboarding Pipeline Ready', desc: '5-stage wizard deployed: Account → Email → Permissions → Buddy → Complete' },
-        ];
-        activities[0].time = formatTime(now);
+    // ── Engine switching ──
+    const engines = ['auto', 'chromium', 'comet'];
+    enginePill.addEventListener('click', () => {
+        const idx = engines.indexOf(state.engine);
+        state.engine = engines[(idx + 1) % engines.length];
+        engineLabel.textContent = state.engine.charAt(0).toUpperCase() + state.engine.slice(1);
+        enginePill.className = 'engine-pill ' + state.engine;
+    });
 
-        document.getElementById('activity-list').innerHTML = activities.map(a =>
-            `<div class="activity-item">
-                <div class="activity-time">${a.time}</div>
-                <div class="activity-content">
-                    <div class="activity-title">${a.title}</div>
-                    <div class="activity-desc">${a.desc}</div>
-                </div>
-            </div>`
-        ).join('');
+    // ── AI Sidebar ──
+    function toggleAI() {
+        state.aiOpen = !state.aiOpen;
+        aiSidebar.classList.toggle('open', state.aiOpen);
+        $('ai-toggle').classList.toggle('active', state.aiOpen);
+    }
+    $('ai-toggle').addEventListener('click', toggleAI);
+    $('ai-sidebar-close').addEventListener('click', toggleAI);
+
+    function handleAISearch(query) {
+        if (!state.aiOpen) toggleAI();
+        const log = $('ai-chat-log');
+        log.innerHTML += `<div class="ai-card"><h4>🔍 Search</h4><p>${query}</p></div>`;
+        log.innerHTML += `<div class="ai-card"><h4>✦ Heady AI</h4><p>Searching across Heady ecosystem for: <strong>${query}</strong>…</p></div>`;
+        log.scrollTop = log.scrollHeight;
     }
 
-    function formatTime(d) {
-        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
+    $('ai-send').addEventListener('click', () => {
+        const input = $('ai-input');
+        if (!input.value.trim()) return;
+        handleAISearch(input.value.trim());
+        input.value = '';
+    });
+    $('ai-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') $('ai-send').click();
+    });
 
-    // ── Sacred Geometry Background ──────────────────────
+    // ── Split View ──
+    $('split-btn').addEventListener('click', () => {
+        state.splitView = !state.splitView;
+        if (state.splitView) {
+            const pane2 = document.createElement('div');
+            pane2.className = 'webview-pane';
+            pane2.id = 'pane-2';
+            pane2.style.borderLeft = '1px solid var(--border)';
+            pane2.innerHTML = `<div class="ntp"><div class="ntp-logo">⧉</div><h2>Split View</h2><p>Drag a tab here or navigate from the omnibox.</p></div>`;
+            contentArea.appendChild(pane2);
+        } else {
+            const p2 = $('pane-2');
+            if (p2) p2.remove();
+        }
+    });
+
+    // ── Electron IPC ──
+    window.electronAPI?.onNavigateToUrl?.(url => navigate(url));
+    window.electronAPI?.onToggleSacredGeometry?.(() => {
+        const c = $('sacred-canvas');
+        c.style.display = c.style.display === 'none' ? 'block' : 'none';
+    });
+    window.electronAPI?.onToggleQuantumMode?.(() => {});
+    window.electronAPI?.onToggleAIEnhancement?.(() => toggleAI());
+
+    // ── Sacred Geometry BG ──
     function initSacredGeometry() {
-        const canvas = document.getElementById('sacred-canvas');
+        const canvas = $('sacred-canvas');
         const ctx = canvas.getContext('2d');
-        let w, h, time = 0;
-
-        function resize() {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-        }
+        let w, h, t = 0;
+        function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
-
-        function drawFlowerOfLife(cx, cy, r, depth) {
-            if (depth <= 0) return;
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-            ctx.stroke();
-            if (depth > 1) {
-                for (let i = 0; i < 6; i++) {
-                    const angle = (Math.PI / 3) * i + time * 0.0003;
-                    drawFlowerOfLife(
-                        cx + r * Math.cos(angle),
-                        cy + r * Math.sin(angle),
-                        r, depth - 1
-                    );
-                }
+        function drawFlower(cx, cy, r, d) {
+            if (d <= 0) return;
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+            if (d > 1) for (let i = 0; i < 6; i++) {
+                const a = (Math.PI / 3) * i + t * 0.0003;
+                drawFlower(cx + r * Math.cos(a), cy + r * Math.sin(a), r, d - 1);
             }
         }
-
         function animate() {
             ctx.clearRect(0, 0, w, h);
-            ctx.strokeStyle = 'rgba(14, 165, 233, 0.4)';
+            ctx.strokeStyle = 'rgba(14, 165, 233, 0.35)';
             ctx.lineWidth = 0.5;
-            drawFlowerOfLife(w / 2, h / 2, 80, 2);
-
-            // Rotating hexagon
-            ctx.save();
-            ctx.translate(w / 2, h / 2);
-            ctx.rotate(time * 0.0005);
-            ctx.strokeStyle = 'rgba(139, 92, 246, 0.3)';
+            drawFlower(w / 2, h / 2, 80, 2);
+            ctx.save(); ctx.translate(w / 2, h / 2); ctx.rotate(t * 0.0005);
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.25)';
             ctx.beginPath();
             for (let i = 0; i <= 6; i++) {
-                const a = (Math.PI / 3) * i;
-                const x = 160 * Math.cos(a);
-                const y = 160 * Math.sin(a);
+                const a = (Math.PI / 3) * i, x = 160 * Math.cos(a), y = 160 * Math.sin(a);
                 i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
             }
-            ctx.stroke();
-            ctx.restore();
-
-            time++;
-            requestAnimationFrame(animate);
+            ctx.stroke(); ctx.restore();
+            t++; requestAnimationFrame(animate);
         }
         animate();
     }
 
-    // ── Navigation ──────────────────────────────────────
-    document.querySelectorAll('.nav-item[data-view]').forEach(item => {
-        item.addEventListener('click', e => {
-            e.preventDefault();
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            const view = item.dataset.view;
-            document.getElementById('page-title').textContent =
-                { dashboard: 'Command Center', nodes: 'AI Nodes', services: 'Services', vectors: 'Vector Memory' }[view] || 'Dashboard';
-        });
-    });
-
-    // ── Init ────────────────────────────────────────────
-    renderNodes();
-    renderServices();
-    renderActivity();
+    // ── Init ──
+    renderTabs();
+    renderContent();
     initSacredGeometry();
-    runHealthChecks();
-
-    // Refresh health every 60s
-    setInterval(runHealthChecks, 60000);
 })();
 </script>
-=======
-    <title>HeadyWeb - Comet + Chromium Fusion</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e, #0f0f23);
-            color: #ffffff;
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
-        
-        #app {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .headyweb-browser-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        .headyweb-tab-bar {
-            height: 40px;
-            background: linear-gradient(90deg, rgba(138, 43, 226, 0.2), rgba(30, 144, 255, 0.2));
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-        }
-        
-        .headyweb-tab {
-            width: 120px;
-            height: 30px;
-            margin: 0 5px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-        }
-        
-        .headyweb-tab:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-        
-        .headyweb-tab.active {
-            background: rgba(138, 43, 226, 0.3);
-            border: 1px solid rgba(138, 43, 226, 0.5);
-        }
-        
-        .headyweb-navigation {
-            display: flex;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 25px;
-            margin: 10px;
-            align-items: center;
-        }
-        
-        .headyweb-button {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.3), rgba(30, 144, 255, 0.3));
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 16px;
-        }
-        
-        .headyweb-button:hover {
-            transform: scale(1.1);
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.5), rgba(30, 144, 255, 0.5));
-        }
-        
-        .headyweb-url-bar {
-            flex: 1;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 0 20px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-        
-        .headyweb-url-bar::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-        
-        .headyweb-content {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .headyweb-webview {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: white;
-        }
-        
-        .headyweb-quantum-indicator {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 105, 180, 0.2);
-            border-radius: 50%;
-            border: 1px solid rgba(255, 105, 180, 0.5);
-            z-index: 1000;
-        }
-        
-        .headyweb-engine-indicator {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 16px;
-            background: rgba(138, 43, 226, 0.2);
-            border: 1px solid rgba(138, 43, 226, 0.5);
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 1000;
-        }
-        
-        .headyweb-loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 1000;
-        }
-        
-        .headyweb-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid rgba(138, 43, 226, 0.8);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .headyweb-breathing {
-            animation: breathing 4s ease-in-out infinite;
-        }
-        
-        @keyframes breathing {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-        
-        .headyweb-sacred-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            opacity: 0.1;
-            z-index: 999;
-        }
-    </style>
-</head>
-<body>
-    <div id="app">
-        <div class="headyweb-browser-window headyweb-breathing">
-            <div class="headyweb-tab-bar">
-                <div class="headyweb-tab active" data-tab="0">New Tab</div>
-                <div class="headyweb-tab" data-tab="1">+</div>
-            </div>
-            
-            <div class="headyweb-navigation">
-                <button class="headyweb-button" id="back-btn">←</button>
-                <button class="headyweb-button" id="forward-btn">→</button>
-                <button class="headyweb-button" id="refresh-btn">↻</button>
-                <input type="text" class="headyweb-url-bar" id="url-bar" placeholder="Enter URL or search..." value="https://headysystems.com">
-                <button class="headyweb-button" id="home-btn">⌂</button>
-            </div>
-            
-            <div class="headyweb-content">
-                <div class="headyweb-quantum-indicator" id="quantum-indicator">
-                    <canvas width="60" height="60"></canvas>
-                </div>
-                
-                <div class="headyweb-engine-indicator" id="engine-indicator">
-                    <span id="current-engine">Auto</span>
-                </div>
-                
-                <div class="headyweb-loading" id="loading" style="display: none;">
-                    <div class="headyweb-spinner"></div>
-                    <div>Loading with quantum acceleration...</div>
-                </div>
-                
-                <webview class="headyweb-webview" id="webview" src="https://headysystems.com"></webview>
-                
-                <div class="headyweb-sacred-overlay" id="sacred-overlay">
-                    <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0;">
-                        <!-- Sacred geometry patterns will be added here -->
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // HeadyWeb Renderer Process
-        class HeadyWebRenderer {
-            constructor() {
-                this.webview = document.getElementById('webview');
-                this.urlBar = document.getElementById('url-bar');
-                this.loading = document.getElementById('loading');
-                this.engineIndicator = document.getElementById('current-engine');
-                this.quantumIndicator = document.getElementById('quantum-indicator');
-                this.sacredOverlay = document.getElementById('sacred-overlay');
-                
-                this.currentEngine = 'auto';
-                this.quantumMode = false;
-                this.aiEnhancement = false;
-                this.sacredGeometry = true;
-                
-                this.initialize();
-            }
-            
-            initialize() {
-                this.setupEventListeners();
-                this.setupWebViewListeners();
-                this.startQuantumAnimation();
-                this.drawSacredGeometry();
-            }
-            
-            setupEventListeners() {
-                // Navigation buttons
-                document.getElementById('back-btn').addEventListener('click', () => {
-                    this.webview.goBack();
-                });
-                
-                document.getElementById('forward-btn').addEventListener('click', () => {
-                    this.webview.goForward();
-                });
-                
-                document.getElementById('refresh-btn').addEventListener('click', () => {
-                    this.webview.reload();
-                });
-                
-                document.getElementById('home-btn').addEventListener('click', () => {
-                    this.navigate('https://headysystems.com');
-                });
-                
-                // URL bar
-                this.urlBar.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        let url = this.urlBar.value.trim();
-                        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                            url = 'https://' + url;
-                        }
-                        this.navigate(url);
-                    }
-                });
-                
-                // Tab switching
-                document.querySelectorAll('.headyweb-tab').forEach(tab => {
-                    tab.addEventListener('click', (e) => {
-                        if (e.target.textContent === '+') {
-                            this.createNewTab();
-                        } else {
-                            this.switchTab(e.target);
-                        }
-                    });
-                });
-                
-                // IPC listeners
-                window.electronAPI?.onNavigateToUrl((url) => {
-                    this.navigate(url);
-                });
-                
-                window.electronAPI?.onToggleSacredGeometry(() => {
-                    this.toggleSacredGeometry();
-                });
-                
-                window.electronAPI?.onToggleQuantumMode(() => {
-                    this.toggleQuantumMode();
-                });
-                
-                window.electronAPI?.onToggleAIEnhancement(() => {
-                    this.toggleAIEnhancement();
-                });
-            }
-            
-            setupWebViewListeners() {
-                this.webview.addEventListener('did-start-loading', () => {
-                    this.showLoading();
-                });
-                
-                this.webview.addEventListener('did-finish-load', () => {
-                    this.hideLoading();
-                    this.updateURLBar();
-                });
-                
-                this.webview.addEventListener('did-fail-load', (event) => {
-                    this.hideLoading();
-                    console.error('Page load failed:', event);
-                });
-                
-                this.webview.addEventListener('page-title-updated', (event) => {
-                    document.title = `HeadyWeb - ${event.title}`;
-                });
-            }
-            
-            navigate(url) {
-                this.showLoading();
-                this.webview.src = url;
-                this.urlBar.value = url;
-                
-                // Request optimal engine
-                window.electronAPI?.navigateToUrl(url);
-            }
-            
-            showLoading() {
-                this.loading.style.display = 'block';
-            }
-            
-            hideLoading() {
-                this.loading.style.display = 'none';
-            }
-            
-            updateURLBar() {
-                this.urlBar.value = this.webview.getURL();
-            }
-            
-            switchTab(tabElement) {
-                document.querySelectorAll('.headyweb-tab').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                tabElement.classList.add('active');
-            }
-            
-            createNewTab() {
-                const tabBar = document.querySelector('.headyweb-tab-bar');
-                const newTab = document.createElement('div');
-                newTab.className = 'headyweb-tab';
-                newTab.textContent = 'New Tab';
-                newTab.dataset.tab = Date.now();
-                
-                const plusTab = tabBar.querySelector('.headyweb-tab:last-child');
-                tabBar.insertBefore(newTab, plusTab);
-                
-                newTab.addEventListener('click', (e) => {
-                    this.switchTab(e.target);
-                });
-                
-                this.switchTab(newTab);
-                this.navigate('https://headysystems.com');
-            }
-            
-            toggleSacredGeometry() {
-                this.sacredGeometry = !this.sacredGeometry;
-                this.sacredOverlay.style.display = this.sacredGeometry ? 'block' : 'none';
-            }
-            
-            toggleQuantumMode() {
-                this.quantumMode = !this.quantumMode;
-                this.quantumIndicator.style.opacity = this.quantumMode ? '1' : '0.5';
-                
-                if (this.quantumMode) {
-                    this.startQuantumAnimation();
-                }
-            }
-            
-            toggleAIEnhancement() {
-                this.aiEnhancement = !this.aiEnhancement;
-                // Apply AI enhancements to current page
-                if (this.aiEnhancement) {
-                    this.applyAIEnhancements();
-                }
-            }
-            
-            startQuantumAnimation() {
-                const canvas = this.quantumIndicator.querySelector('canvas');
-                const ctx = canvas.getContext('2d');
-                let rotation = 0;
-                
-                const animate = () => {
-                    ctx.clearRect(0, 0, 60, 60);
-                    ctx.save();
-                    ctx.translate(30, 30);
-                    ctx.rotate(rotation);
-                    
-                    // Draw Sri Yantra pattern
-                    ctx.strokeStyle = 'rgba(255, 105, 180, 0.8)';
-                    ctx.lineWidth = 1;
-                    
-                    // Draw triangles
-                    for (let i = 0; i < 9; i++) {
-                        const angle = (i * Math.PI) / 4.5;
-                        const size = 20;
-                        
-                        ctx.beginPath();
-                        if (i % 2 === 0) {
-                            // Upward triangle
-                            ctx.moveTo(0, -size);
-                            ctx.lineTo(-size * 0.866, size * 0.5);
-                            ctx.lineTo(size * 0.866, size * 0.5);
-                        } else {
-                            // Downward triangle
-                            ctx.moveTo(0, size);
-                            ctx.lineTo(-size * 0.866, -size * 0.5);
-                            ctx.lineTo(size * 0.866, -size * 0.5);
-                        }
-                        ctx.closePath();
-                        ctx.stroke();
-                    }
-                    
-                    ctx.restore();
-                    rotation += 0.01;
-                    
-                    if (this.quantumMode) {
-                        requestAnimationFrame(animate);
-                    }
-                };
-                
-                animate();
-            }
-            
-            drawSacredGeometry() {
-                const svg = this.sacredOverlay.querySelector('svg');
-                
-                // Draw flower of life pattern
-                const centerX = svg.clientWidth / 2;
-                const centerY = svg.clientHeight / 2;
-                const radius = 30;
-                
-                for (let row = -2; row <= 2; row++) {
-                    for (let col = -2; col <= 2; col++) {
-                        const x = centerX + col * radius * Math.sqrt(3);
-                        const y = centerY + row * radius * 1.5;
-                        
-                        if (Math.abs(row) + Math.abs(col) <= 2) {
-                            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                            circle.setAttribute('cx', x);
-                            circle.setAttribute('cy', y);
-                            circle.setAttribute('r', radius);
-                            circle.setAttribute('fill', 'none');
-                            circle.setAttribute('stroke', 'rgba(138, 43, 226, 0.3)');
-                            circle.setAttribute('stroke-width', '1');
-                            svg.appendChild(circle);
-                        }
-                    }
-                }
-            }
-            
-            applyAIEnhancements() {
-                // Apply AI enhancements to the current page
-                this.webview.executeJavaScript(`
-                    // Enhance images with AI
-                    const images = document.querySelectorAll('img');
-                    images.forEach(img => {
-                        img.style.filter = 'contrast(1.1) saturate(1.2)';
-                        img.style.transition = 'filter 0.3s ease';
-                    });
-                    
-                    // Enhance text readability
-                    const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6');
-                    textElements.forEach(element => {
-                        element.style.textShadow = '0 0 1px rgba(255, 255, 255, 0.1)';
-                    });
-                `);
-            }
-            
-            updateEngineIndicator(engine) {
-                this.currentEngine = engine;
-                this.engineIndicator.textContent = engine.charAt(0).toUpperCase() + engine.slice(1);
-            }
-        }
-        
-        // Initialize HeadyWeb
-        const headyWeb = new HeadyWebRenderer();
-        
-        // Expose to window for debugging
-        window.headyWeb = headyWeb;
-    </script>
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 </body>
 </html>
