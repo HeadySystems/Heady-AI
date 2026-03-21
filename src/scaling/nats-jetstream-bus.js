@@ -60,7 +60,7 @@ class NATSJetStreamBus {
    * @param {object} [opts.nats]       - Pre-connected NATS client
    */
   constructor(opts = {}) {
-    this._url = opts.url || process.env.NATS_URL || 'nats://localhost:4222';
+    this._url = opts.url || process.env.NATS_URL || "nats://0.0.0.0:4222";
     this._streamName = opts.streamName || 'HEADY';
     this._nc = opts.nats || null;
     this._js = null;

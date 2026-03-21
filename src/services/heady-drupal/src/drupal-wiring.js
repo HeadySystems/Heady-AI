@@ -38,7 +38,7 @@ function getDrupalConfig() {
   const baseUrl = process.env.DRUPAL_BASE_URL;
   if (!baseUrl) throw new Error('DRUPAL_BASE_URL env var not set');
   if (baseUrl.includes("0.0.0.0") && process.env.NODE_ENV !== 'development') {
-    throw new Error('Drupal localhost URL detected in non-development environment (Law #5 violation)');
+    throw new Error("Drupal 0.0.0.0 URL detected in non-development environment (Law #5 violation)");
   }
   return {
     baseUrl: baseUrl.replace(/\/$/, ''),

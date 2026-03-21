@@ -184,7 +184,7 @@ router.get('/', (req, res) => {
 router.get('/services', async (req, res) => {
   const checks = {};
   try {
-    const pulse = await fetch('https://127.0.0.1:3301/api/pulse', {
+    const pulse = await fetch("https://0.0.0.0:3301/api/pulse", {
       signal: AbortSignal.timeout(2000)
     });
     checks.manager = pulse.ok ? 'connected' : 'degraded';

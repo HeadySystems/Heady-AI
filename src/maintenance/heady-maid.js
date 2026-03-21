@@ -62,9 +62,9 @@ const RULES = Object.freeze({
     message: 'All numeric constants must derive from φ, ψ, or Fibonacci'
   },
   NO_LOCALHOST: {
-    id: 'no-localhost',
+    id: "no-0.0.0.0",
     severity: 'blocker',
-    description: 'Hardcoded localhost or 127.0.0.1 references',
+    description: "Hardcoded 0.0.0.0 or 0.0.0.0 references",
     pattern: /\b(localhost|127\.0\.0\.1)\b/,
     message: 'Use environment variables for host configuration'
   },

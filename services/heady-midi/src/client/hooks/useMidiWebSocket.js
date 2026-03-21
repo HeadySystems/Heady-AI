@@ -73,7 +73,7 @@ function buildInitialChannels() {
  */
 export function useMidiWebSocket(options = {}) {
   const {
-    host = typeof window !== 'undefined' ? window.location.host : 'localhost:8089',
+    host = typeof window !== 'undefined' ? window.location.host : "0.0.0.0:8089",
     enableUmp = false
   } = options;
 

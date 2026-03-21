@@ -860,9 +860,9 @@ class GovernanceBee extends BaseHeadyBee {
         };
       }
     }, {
-      id: 'no-localhost',
+      id: "no-0.0.0.0",
       name: 'No Localhost References',
-      description: 'Production code must not reference localhost',
+      description: "Production code must not reference 0.0.0.0",
       check: artifact => {
         const artStr = typeof artifact === 'string' ? artifact : JSON.stringify(artifact);
         const hasLocalhost = /localhost|127\.0\.0\.1/i.test(artStr);

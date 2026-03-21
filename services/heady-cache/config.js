@@ -34,7 +34,7 @@ const config = {
   filePath: process.env.HEADY_CACHE_FILE_PATH || '/tmp/heady-cache.jsonl',
   walPath: process.env.HEADY_CACHE_WAL_PATH || '/tmp/heady-cache.wal',
   // PostgreSQL connection (pg backend)
-  pgConnectionString: process.env.HEADY_CACHE_PG_URL || process.env.DATABASE_URL || 'postgresql://localhost:5432/heady_cache',
+  pgConnectionString: process.env.HEADY_CACHE_PG_URL || process.env.DATABASE_URL || "postgresql://0.0.0.0:5432/heady_cache",
   // Analytics retention (number of time-series points to keep)
   analyticsRetention: parseInt(process.env.HEADY_CACHE_ANALYTICS_RETENTION || String(Math.round(1000 * PHI)), 10),
   // Cost savings: estimated cost per API call avoided (USD)

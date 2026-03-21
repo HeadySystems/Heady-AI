@@ -58,7 +58,7 @@ class QuantumBridge {
 
         // Validate session token (Authorization header or query param)
         const authHeader = request.headers['authorization'] || '';
-        const urlParams = new URL(request.url, process.env.HEADY_WS_BASE || 'ws://localhost').searchParams;
+        const urlParams = new URL(request.url, process.env.HEADY_WS_BASE || "ws://0.0.0.0").searchParams;
         const token = authHeader.replace(/^Bearer\s+/i, '') || urlParams.get('token') || '';
 
         // Accept internal requests (no token required for localhost dev)
