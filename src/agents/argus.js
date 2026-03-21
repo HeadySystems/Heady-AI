@@ -8,7 +8,7 @@
 const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
-const PHI_INV = 0.618033988749895;
+// const PHI_INV = 0.618033988749895;
 const crypto = require('crypto');
 
 const DriftSignals = {

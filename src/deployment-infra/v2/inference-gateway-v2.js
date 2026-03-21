@@ -30,7 +30,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
 
 // Try to load logger — fall back to console
-let logger;
+// let logger;
 try {
   logger = require('./utils/logger');
 } catch {

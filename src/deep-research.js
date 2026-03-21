@@ -223,7 +223,7 @@ Synthesis:`;
 
   // ─── Confidence scoring ────────────────────────────────────────────────────
 
-  _scoreConfidence(analysis, results) {
+  function _scoreConfidence(analysis, results) {
     let score = 0.5; // base
     score += analysis.coverage * 0.2;
     if (analysis.consensus) score += 0.2;

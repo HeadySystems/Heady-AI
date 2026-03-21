@@ -926,7 +926,7 @@ class HeadyApiGatewayV2 extends EventEmitter {
       headyapi:     process.env.HEADY_API_URL     || 'https://heady-manager-609590223909.us-central1.run.app',
       headymcp:     process.env.HEADY_MCP_URL     || 'https://headymcp.com',
       headybuddy:   process.env.HEADY_BUDDY_URL   || 'https://headybuddy.org',
-      heady-ai:      process.env.HEADY_AI_URL      || 'https://heady-ai.com',
+      'heady-ai': process.env.HEADY_AI_URL      || 'https://heady-ai.com',
       headyio:      process.env.HEADY_IO_URL      || 'https://headyio.com',
       headybot:     process.env.HEADY_BOT_URL     || 'https://headybot.com',
       headysystems: process.env.HEADY_SYSTEMS_URL || 'https://headysystems.com',

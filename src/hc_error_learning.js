@@ -50,7 +50,7 @@ const path = require('path');
 const { EventEmitter } = require('events');
 
 // ─── Graceful dependency loading ─────────────────────────────────
-let latent, logger;
+let latent;
 
 try {
   latent = require('./hc_latent_space');

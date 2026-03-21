@@ -91,7 +91,7 @@ validateEnvironment({ strict: process.env.NODE_ENV === 'production' });
 
 // ── Phase 1: Environment + Globals ──────────────────────────────────────────
 startupState.phase = 'config-globals';
-const { app, logger, eventBus, remoteConfig, secretsManager, cfManager } =
+const { app, eventBus, remoteConfig, secretsManager, cfManager } =
   require('./src/bootstrap/config-globals');
 
 // ── Phase 2: Metrics Bootstrap ──────────────────────────────────────────────
