@@ -281,7 +281,7 @@ class AgentOrchestrator extends EventEmitter {
             try {
                 const prunedCount = await this.vectorMem.pruneOldest(100);
                 this._audit({ type: "performance:prune_context", trigger: "high_latency", prunedCount });
-            } catch (e) { }
+            } catch (e) { this._audit({ type: "error:prune_context", error: e.message }); }
         }
     }
 

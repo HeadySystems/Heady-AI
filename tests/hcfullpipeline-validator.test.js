@@ -17,15 +17,16 @@ const YAML_PATH    = path.join(ROOT, 'configs', 'hcfullpipeline.yaml');
 const JSON_PATH    = path.join(ROOT, 'configs', 'hcfullpipeline.json');
 const PHI          = 1.618033988749895;
 const PHI_INVERSE  = 1 / PHI; // ≈ 0.618
-const STAGE_COUNT  = 21;  // fib(8)
+const STAGE_COUNT  = 22;  // 21 + distiller (Stage 21)
 
-// Canonical stage IDs in order (0–20)
+// Canonical stage IDs in order (0–21)
 const CANONICAL_STAGE_IDS = [
   'channel-entry', 'recon', 'intake', 'classify', 'triage',
   'decompose', 'trial-and-error', 'orchestrate', 'monte-carlo',
   'arena', 'judge', 'approve', 'execute', 'verify',
   'self-awareness', 'self-critique', 'mistake-analysis',
   'optimization-ops', 'continuous-search', 'evolution', 'receipt',
+  'distiller',
 ];
 
 const CANONICAL_JSON_NAMES = [
@@ -394,7 +395,7 @@ describe('HCFullPipeline YAML Config Validation', () => {
         for (const id of stages) {
           if (!isNaN(id)) {
             expect(id).toBeGreaterThanOrEqual(0);
-            expect(id).toBeLessThanOrEqual(20);
+            expect(id).toBeLessThanOrEqual(21);
           }
         }
       }
@@ -556,7 +557,7 @@ describe('HCFullPipeline JSON Config Validation', () => {
       for (const [name, variant] of Object.entries(jsonConfig.variants)) {
         for (const id of variant.stages) {
           expect(id).toBeGreaterThanOrEqual(0);
-          expect(id).toBeLessThanOrEqual(20);
+          expect(id).toBeLessThanOrEqual(21);
         }
       }
     });
