@@ -400,6 +400,15 @@
       .docs-content { padding: 32px 16px; }
     }
   </style>
+    <meta property="og:title" content="HeadyOS — Documentation">
+    <meta property="og:description" content="Heady Systems: HeadyOS — Documentation. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyOS — Documentation">
+    <meta name="twitter:description" content="Heady Systems: HeadyOS — Documentation. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/docs.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"HeadyOS — Documentation","url":"https://www.heady.systems/docs.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 <body>
   <!-- Navigation -->
@@ -1107,6 +1116,27 @@
     }, { rootMargin: '-64px 0px -60% 0px', threshold: 0 });
 
     sections.forEach(s => observer.observe(s));
+  </script>
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
   </script>
 </body>
 </html>

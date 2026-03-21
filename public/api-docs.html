@@ -457,12 +457,17 @@
             }
         }
     </style>
+    <meta property="og:title" content="Heady Systems - API Documentation">
+    <meta property="og:description" content="Heady Systems: Heady Systems - API Documentation. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Heady Systems - API Documentation">
+    <meta name="twitter:description" content="Heady Systems: Heady Systems - API Documentation. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/api-docs.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Heady Systems - API Documentation","url":"https://www.heady.systems/api-docs.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 <body>
-<<<<<<< HEAD
-    <script src="/nav-component.js"></script>
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
     <div class="container">
         <!-- Navigation Bar -->
         <div class="nav-bar">
@@ -1200,13 +1205,8 @@
             <p>
                 Heady Systems API v1.0 •
                 <a href="/" class="footer-link">Home</a> •
-<<<<<<< HEAD
-                <a href="#" class="footer-link">Documentation</a> •
-                <a href="#" class="footer-link">Issues</a>
-=======
                 <a href="/documentation.html" class="footer-link">Documentation</a> •
                 <a href="https://github.com/erichards/HeadyMonorepo/issues" class="footer-link">Issues</a>
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
             </p>
             <p style="margin-top: 10px; font-size: 0.85rem;">
                 Status: <span style="color: #4ecdc4;">Operational</span> •
@@ -1304,9 +1304,27 @@
             });
         });
     </script>
-<<<<<<< HEAD
-=======
     <script src="/nav-global.js"></script>
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
+  </script>
 </body>
 </html>

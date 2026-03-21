@@ -441,6 +441,16 @@
             }
         }
     </style>
+    <meta name="description" content="Heady Systems: Integrations - Connect Everything. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:title" content="Integrations - Connect Everything">
+    <meta property="og:description" content="Heady Systems: Integrations - Connect Everything. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Integrations - Connect Everything">
+    <meta name="twitter:description" content="Heady Systems: Integrations - Connect Everything. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/integrations.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Integrations - Connect Everything","url":"https://www.heady.systems/integrations.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 <body>
     <div class="orbs-bg">
@@ -855,5 +865,42 @@
     </script>
 
     <script src="/nav-global.js"></script>
+
+    <section id="heady-static-content-expansion" style="max-width:1100px;margin:48px auto;padding:24px;border:1px solid rgba(0,255,200,.2);border-radius:14px;background:rgba(9,17,32,.82);">
+      <h2 style="margin:0 0 14px;color:#00ffc8;">Operational Context</h2>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Integrations are where Heady connects platform workflows to real business systems. This page helps teams discover available connectors, understand readiness states, and plan integration rollouts in a way that supports reliability rather than introducing fragile dependencies.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Every integration should be evaluated through an operational lens. It is not enough for a connector to authenticate once; teams need to know if it remains healthy, how it behaves under load, and what remediation paths exist when failures occur. Heady makes those considerations visible.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">By presenting integrations with status indicators and clear actions, teams can prioritize high-impact connections first. This reduces implementation churn and supports measurable progress across communication, storage, and cloud workflow categories.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Heady also supports extensibility for teams building custom integrations. Standardized patterns and documentation pathways help reduce one-off connector implementations that are hard to maintain.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">A practical rollout strategy is to start with one core workflow, verify uptime and response behavior, and then expand to adjacent systems. This phased approach keeps risk manageable while compounding value as integration coverage grows.</p>
+      <p style="line-height:1.75;margin:0 0 16px;color:rgba(240,247,255,.9);">Use the links below to continue with onboarding, integration setup, and support workflows.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <a href="/onboarding.html" style="display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,#00ffc8,#00c8ff);color:#051427;text-decoration:none;font-weight:700;">Start Onboarding</a>
+        <a href="/documentation.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Read Docs</a>
+        <a href="/contact.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Contact Team</a>
+      </div>
+    </section>
+  
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
+  </script>
 </body>
 </html>

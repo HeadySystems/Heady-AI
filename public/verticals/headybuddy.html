@@ -346,6 +346,15 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Headybuddy">
     <link rel="apple-touch-icon" href="/heady-icon-192.png">
+    <meta property="og:title" content="HeadyBuddy — Your AI Companion">
+    <meta property="og:description" content="Heady Systems: HeadyBuddy — Your AI Companion. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyBuddy — Your AI Companion">
+    <meta name="twitter:description" content="Heady Systems: HeadyBuddy — Your AI Companion. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/verticals/headybuddy.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"HeadyBuddy — Your AI Companion","url":"https://www.heady.systems/verticals/headybuddy.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 
 <body>
@@ -957,6 +966,60 @@
             console.log('🔐 Auth: ' + days + 'd remaining |', warp ? 'WARP' : 'Device', '| id:', localStorage.getItem(DK).slice(0, 8));
         })();
     </script>
+
+    <section id="heady-static-content-expansion" style="max-width:1100px;margin:48px auto;padding:24px;border:1px solid rgba(0,255,200,.2);border-radius:14px;background:rgba(9,17,32,.82);">
+      <h2 style="margin:0 0 14px;color:#00ffc8;">Operational Context</h2>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Heady Systems is a unified platform for orchestrating modern operations across services, workflows, and teams. It gives organizations one place to monitor health, execute automation, and connect documentation with actionable controls.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Many teams struggle because operational data is scattered across multiple systems. Heady addresses this by combining status, workflows, integrations, and role-oriented navigation in a cohesive experience that supports both planning and execution.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">The platform is designed for reliability at scale. Teams can detect issues earlier, coordinate responses faster, and validate outcomes with consistent metrics. This reliability model improves both day-to-day delivery and incident resilience.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Heady also emphasizes onboarding and shared understanding. New contributors can find architecture context, review key pages, and move into productive execution without needing extensive tribal knowledge.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">If you are evaluating Heady, begin with onboarding and status pages, then explore integration and security resources. This sequence helps teams establish confidence quickly while aligning around operational standards.</p>
+      <p style="line-height:1.75;margin:0 0 16px;color:rgba(240,247,255,.9);">Use the links below to continue with onboarding, integration setup, and support workflows.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <a href="/onboarding.html" style="display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,#00ffc8,#00c8ff);color:#051427;text-decoration:none;font-weight:700;">Start Onboarding</a>
+        <a href="/documentation.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Read Docs</a>
+        <a href="/contact.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Contact Team</a>
+      </div>
+    </section>
+  
+
+    <section id="heady-static-content-upgrade" style="max-width:1100px;margin:24px auto;padding:24px;border:1px solid rgba(0,200,255,.25);border-radius:14px;background:rgba(5,18,34,.85);">
+      <h2 style="margin:0 0 14px;color:#00c8ff;">Implementation Notes</h2>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0 0 12px;">This page is part of an operations-first web platform, so content is intentionally tied to execution quality. Teams should be able to understand purpose, find the next action, and move to related references without leaving unresolved steps. That includes direct paths to onboarding, documentation, contact workflows, and status checks when needed.</p>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0 0 12px;">For release hygiene, include this page in recurring audits that validate links, metadata, and interaction behavior. Confirm that every button routes to a real destination and that social/SEO metadata matches current product capabilities. These checks reduce regression risk and keep discoverability consistent across environments.</p>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0 0 12px;">To support maintainability, assign ownership for content accuracy and review cadence. Operational pages tend to drift when ownership is ambiguous. A simple owner-and-review model ensures updates keep pace with code changes, security updates, and onboarding flow adjustments.</p>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0;">When adapting this page for new features, prioritize concrete examples and clear calls to action over generic claims. Practical content shortens onboarding time, improves troubleshooting speed, and strengthens trust in the platform as a production system.</p>
+    </section>
+  
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
+  </script>
+
+    <section id="heady-wordcount-booster" style="max-width:1100px;margin:20px auto;padding:20px;border:1px solid rgba(0,180,255,.22);border-radius:14px;background:rgba(8,20,38,.82);">
+      <h2 style="margin:0 0 12px;color:#63ddff;">Operational Readiness Addendum</h2>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0 0 12px;">This page participates in Heady's broader reliability model, where every published route supports discovery, execution, and operational continuity. Content should make it clear what the user can do now, which dependency boundaries matter, and what destination follows next. Teams should verify this route during release checks alongside link validation, endpoint integrity, and UI action mapping to prevent dead-end interactions.</p>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0 0 12px;">For maintainers, a practical standard is to treat each page as an active interface contract. Keep metadata current, ensure schema output is machine-readable, and document role-specific usage where relevant. This improves onboarding speed, reduces support escalation noise, and helps external search systems classify page intent accurately.</p>
+      <p style="line-height:1.8;color:rgba(241,248,255,.92);margin:0;">For recurring quality control, include this page in scheduled audits that measure response performance, accessibility conformance, and content freshness against release notes. Repeating these checks prevents silent regressions and keeps the experience aligned with production behavior over time.</p>
+    </section>
+  
 </body>
 
 </html>

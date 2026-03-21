@@ -296,6 +296,15 @@
       .page-title { font-size: 2.4rem; }
     }
   </style>
+    <meta property="og:title" content="HeadyOS — Products">
+    <meta property="og:description" content="Heady Systems: HeadyOS — Products. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HeadyOS — Products">
+    <meta name="twitter:description" content="Heady Systems: HeadyOS — Products. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/products.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"HeadyOS — Products","url":"https://www.heady.systems/products.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 <body>
   <script src="/nav-component.js"></script>
@@ -579,5 +588,42 @@
   </footer>
 
   <script src="/heady-shell.js"></script>
+
+    <section id="heady-static-content-expansion" style="max-width:1100px;margin:48px auto;padding:24px;border:1px solid rgba(0,255,200,.2);border-radius:14px;background:rgba(9,17,32,.82);">
+      <h2 style="margin:0 0 14px;color:#00ffc8;">Operational Context</h2>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Heady Systems is a unified platform for orchestrating modern operations across services, workflows, and teams. It gives organizations one place to monitor health, execute automation, and connect documentation with actionable controls.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Many teams struggle because operational data is scattered across multiple systems. Heady addresses this by combining status, workflows, integrations, and role-oriented navigation in a cohesive experience that supports both planning and execution.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">The platform is designed for reliability at scale. Teams can detect issues earlier, coordinate responses faster, and validate outcomes with consistent metrics. This reliability model improves both day-to-day delivery and incident resilience.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">Heady also emphasizes onboarding and shared understanding. New contributors can find architecture context, review key pages, and move into productive execution without needing extensive tribal knowledge.</p>
+      <p style="line-height:1.75;margin:0 0 12px;color:rgba(240,247,255,.9);">If you are evaluating Heady, begin with onboarding and status pages, then explore integration and security resources. This sequence helps teams establish confidence quickly while aligning around operational standards.</p>
+      <p style="line-height:1.75;margin:0 0 16px;color:rgba(240,247,255,.9);">Use the links below to continue with onboarding, integration setup, and support workflows.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        <a href="/onboarding.html" style="display:inline-block;padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,#00ffc8,#00c8ff);color:#051427;text-decoration:none;font-weight:700;">Start Onboarding</a>
+        <a href="/documentation.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Read Docs</a>
+        <a href="/contact.html" style="display:inline-block;padding:10px 14px;border-radius:999px;border:1px solid rgba(0,255,200,.3);color:#dff7ff;text-decoration:none;">Contact Team</a>
+      </div>
+    </section>
+  
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -351,6 +351,16 @@
             }
         }
     </style>
+    <meta name="description" content="Heady Systems: Developer Guide - Build on HeadyOS. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:title" content="Developer Guide - Build on HeadyOS">
+    <meta property="og:description" content="Heady Systems: Developer Guide - Build on HeadyOS. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta property="og:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Developer Guide - Build on HeadyOS">
+    <meta name="twitter:description" content="Heady Systems: Developer Guide - Build on HeadyOS. Explore orchestration workflows, documentation, integrations, and operational controls.">
+    <meta name="twitter:image" content="https://www.heady.systems/assets/heady-og.svg">
+    <link rel="canonical" href="https://www.heady.systems/developer-guide.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Developer Guide - Build on HeadyOS","url":"https://www.heady.systems/developer-guide.html","isPartOf":{"@type":"WebSite","name":"Heady Systems","url":"https://www.heady.systems"}}</script>
 </head>
 <body>
     <div class="orbs-bg">
@@ -848,5 +858,26 @@ for (const result of results) {
     </footer>
 
     <script src="/nav-global.js"></script>
+
+  <script data-heady-static-wired="true">
+    (function() {
+      var rules = [
+        { pattern: /docs?/i, href: '/documentation.html' },
+        { pattern: /api/i, href: '/api-docs.html' },
+        { pattern: /configure|enable|connect/i, href: '/integrations.html' },
+        { pattern: /build|start/i, href: '/onboarding.html' },
+        { pattern: /contact|help|support/i, href: '/contact.html' },
+        { pattern: /sign in|login/i, href: '/auth.html' }
+      ];
+      document.querySelectorAll('button').forEach(function(btn) {
+        if (btn.hasAttribute('onclick') || btn.hasAttribute('form') || btn.hasAttribute('data-action')) return;
+        if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+        var text = (btn.textContent || '').trim();
+        var rule = rules.find(function(item) { return item.pattern.test(text); });
+        if (!rule) return;
+        btn.addEventListener('click', function() { window.location.href = rule.href; });
+      });
+    })();
+  </script>
 </body>
 </html>
