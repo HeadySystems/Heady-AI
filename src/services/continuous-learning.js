@@ -26,8 +26,15 @@
 
 const fs = require("fs");
 const path = require("path");
-const HeadyGateway = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "gateway"));
-const { createProviders } = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "providers"));
+let HeadyGateway, createProviders;
+try {
+  HeadyGateway = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "gateway"));
+  ({ createProviders } = require(path.join(__dirname, "..", "heady-hive-sdk", "lib", "providers")));
+} catch {
+  // heady-hive-sdk not yet built — provide graceful stubs
+  HeadyGateway = class StubGateway { constructor() {} async query() { return { text: '[SDK not available]' }; } };
+  createProviders = () => [];
+}
 const logger = require("../utils/logger");
 
 const LEARN_LOG = path.join(__dirname, "..", "data", "learning-log.jsonl");
