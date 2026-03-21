@@ -545,12 +545,13 @@ module.exports = {
 };
 
 
-// --- Auto-Unified Latent Service Pattern ---
-if (module.exports && typeof module.exports === 'object') {
-  if (!module.exports.start) module.exports.start = async () => ({ status: 'started' });
-  if (!module.exports.stop) module.exports.stop = async () => ({ status: 'stopped' });
-  if (!module.exports.health) module.exports.health = () => ({ status: 'healthy' });
-  if (!module.exports.metrics) module.exports.metrics = () => ({ usages: 0 });
-  if (!module.exports._tick) module.exports._tick = async () => {};
-}
+// --- Auto-Unified Latent Service Pattern (wired to vault singleton) ---
+module.exports.start = async () => {
+  if (vault.isUnlocked()) return { status: 'already_started' };
+  return { status: 'locked', message: 'Call vault.unlock(passphrase) to start' };
+};
+module.exports.stop = async () => { vault.lock(); return { status: 'stopped' }; };
+module.exports.health = () => vault.getHealth();
+module.exports.metrics = () => ({ credentialCount: vault.credentials.size, unlocked: vault.isUnlocked() });
+module.exports._tick = async () => {};
 // -------------------------------------------
