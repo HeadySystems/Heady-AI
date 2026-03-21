@@ -125,3 +125,5 @@ function registerRoutes(app, vectorMem) {
 }
 
 module.exports = { createVectorAugmentedMiddleware, registerRoutes, PHI, PHI_INTERVALS };
+
+}

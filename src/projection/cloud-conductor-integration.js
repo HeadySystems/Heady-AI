@@ -574,3 +574,5 @@ module.exports = {
     PUBSUB_TOPIC_MAP,
     DEFAULT_CONFIG,
 };
+
+}
