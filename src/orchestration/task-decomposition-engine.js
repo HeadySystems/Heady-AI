@@ -785,9 +785,9 @@ class TaskDecompositionEngine extends EventEmitter {
           runningSet.add(subtask.id);
 
           this._runSubtask(subtask, result).then(() => {
-            runningSet.delete(subtask.id).catch(err => { /* promise error absorbed */ });
+            runningSet.delete(subtask.id);
             if (subtask.status === SUBTASK_STATUS.COMPLETED) {
-              completedIds.add(subtask.id).catch(err => { /* promise error absorbed */ });
+              completedIds.add(subtask.id);
             } else if (subtask.critical && !this._allowPartial) {
               // Signal failure to abort remaining
               result.partial = true;
@@ -972,7 +972,7 @@ class TaskDecompositionEngine extends EventEmitter {
         ms
       );
       promise.then(
-        v => { clearTimeout(timer).catch(err => { /* promise error absorbed */ }); resolve(v); },
+        v => { clearTimeout(timer); resolve(v); },
         e => { clearTimeout(timer); reject(e); }
       );
     });

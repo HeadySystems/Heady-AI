@@ -28,7 +28,7 @@ function withSpan(name, fn, attributes = {}) {
     try {
         const result = fn(span);
         if (result && typeof result.then === 'function') {
-            return result.then(r => { span.setStatus({ code: SpanStatusCode.OK }).catch(err => { /* promise error absorbed */ }); span.end(); return r; })
+            return result.then(r => { span.setStatus({ code: SpanStatusCode.OK }); span.end(); return r; })
                 .catch(e => { span.recordException(e); span.setStatus({ code: SpanStatusCode.ERROR, message: e.message }); span.end(); throw e; });
         }
         span.setStatus({ code: SpanStatusCode.OK });

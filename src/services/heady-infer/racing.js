@@ -175,15 +175,15 @@ class ProviderRacing extends EventEmitter {
             const latency = Date.now() - contStart;
             if (settled) {
               // We lost the race — record as loss
-              this._recordLoss(id).catch(err => { /* promise error absorbed */ });
+              this._recordLoss(id);
             } else {
               // We won!
-              this._recordWin(id, latency).catch(err => { /* promise error absorbed */ });
+              this._recordWin(id, latency);
               // Record losses for others
               for (const other of selected) {
-                if (other.id !== id) this._recordLoss(other.id).catch(err => { /* promise error absorbed */ });
+                if (other.id !== id) this._recordLoss(other.id);
               }
-              finish(response, id).catch(err => { /* promise error absorbed */ });
+              finish(response, id);
             }
           })
           .catch((err) => {

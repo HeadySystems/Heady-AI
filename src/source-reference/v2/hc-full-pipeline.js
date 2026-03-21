@@ -74,7 +74,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Stage ${stage} completed (${metrics?.durationMs || 0}ms)`,
                 data: { runId, stage, durationMs: metrics?.durationMs },
                 severity: 'info',
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('stage:failed', ({ runId, stage, error }) => {
@@ -83,7 +83,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Stage ${stage} FAILED: ${error}`,
                 data: { runId, stage, error },
                 severity: 'error',
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('self-heal:match', ({ runId, stage, confidence }) => {
@@ -92,7 +92,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Self-healed stage ${stage} (confidence: ${confidence})`,
                 data: { runId, stage, confidence },
                 severity: 'info',
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('run:completed', ({ runId }) => {
@@ -101,7 +101,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Pipeline run ${runId.substring(0, 8)} completed`,
                 data: { runId },
                 severity: 'info',
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('run:failed', ({ runId, error }) => {
@@ -110,7 +110,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Pipeline run ${runId.substring(0, 8)} FAILED: ${error}`,
                 data: { runId, error },
                 severity: 'error',
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
     }
 

@@ -91,19 +91,19 @@ function wrapMethod(instance, methodName, fn) {
         return result.then(
           (val) => { finish(true, null); return val; },
           (err) => { finish(false, err); return Promise.reject(err); }
-        ).catch(err => { /* promise error absorbed */ });
+        );
       }
-      finish(true, null).catch(err => { /* promise error absorbed */ });
+      finish(true, null);
       return result;
     } catch (err) {
-      finish(false, err).catch(err => { /* promise error absorbed */ });
+      finish(false, err);
       throw err;
     }
   };
 }
 
 // ─── Load original module ─────────────────────────────────────────────────────
-const OriginalAgentProtocolAdapter = require('../agent-protocol').catch(err => { /* promise error absorbed */ });
+const OriginalAgentProtocolAdapter = require('../agent-protocol');
 
 // ─── Traced subclass ──────────────────────────────────────────────────────────
 class TracedAgentProtocolAdapter extends OriginalAgentProtocolAdapter {

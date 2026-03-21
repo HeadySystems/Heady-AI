@@ -103,12 +103,12 @@ class Pimit {
           .then(resolve, reject)
           .finally(() => {
             this._active--;
-            if (this._queue.length > 0) this._queue.shift()().catch(err => { /* promise error absorbed */ });
-          }}).catch(err => { /* promise error absorbed */ });
+            if (this._queue.length > 0) this._queue.shift()();
+          });
       };
-      if (this._active < this._limit) task().catch(err => { /* promise error absorbed */ });
-      else this._queue.push(task).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
+      if (this._active < this._limit) task();
+      else this._queue.push(task);
+    });
   }
 }
 

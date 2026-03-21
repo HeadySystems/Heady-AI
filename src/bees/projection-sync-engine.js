@@ -192,15 +192,15 @@ class SyncLock {
     const existing = this._locks.get(key) || Promise.resolve();
     let release;
     const next = new Promise(res => { release = res; });
-    this._locks.set(key, existing.then(() => next)).catch(err => { /* promise error absorbed */ });
+    this._locks.set(key, existing.then(() => next));
 
     await existing;
     try {
-      return await fn().catch(err => { /* promise error absorbed */ });
+      return await fn();
     } finally {
-      release().catch(err => { /* promise error absorbed */ });
+      release();
       // Clean up if no one else is waiting
-      if (this._locks.get(key) === next) this._locks.delete(key).catch(err => { /* promise error absorbed */ });
+      if (this._locks.get(key) === next) this._locks.delete(key);
     }
   }
 

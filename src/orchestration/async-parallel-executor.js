@@ -114,11 +114,11 @@ class AsyncParallelExecutor extends EventEmitter {
 
             this._executeWithRetry(task, results)
               .then((result) => {
-                status.set(taskId, 'completed').catch(err => { /* promise error absorbed */ });
-                results.set(taskId, result).catch(err => { /* promise error absorbed */ });
+                status.set(taskId, 'completed');
+                results.set(taskId, result);
                 this.running--;
                 this.completed++;
-                this.emit('task:completed', { taskId }}).catch(err => { /* promise error absorbed */ });
+                this.emit('task:completed', { taskId });
               })
               .catch((taskErr) => {
                 status.set(taskId, 'failed');

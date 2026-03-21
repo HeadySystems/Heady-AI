@@ -190,10 +190,10 @@ const TIERS = {
 
 // ─── API KEY MANAGEMENT ──────────────────────────────────────────────
 let keys = {};
-try { keys = JSON.parse(fs.readFileSync(KEYS_FILE, "utf-8")); } catch { }
+try { keys = JSON.parse(fs.readFileSync(KEYS_FILE, "utf-8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 function _saveKeys() {
-    try { fs.writeFileSync(KEYS_FILE, JSON.stringify(keys, null, 2)); } catch { }
+    try { fs.writeFileSync(KEYS_FILE, JSON.stringify(keys, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function generateApiKey(tier, meta = {}) {
@@ -352,10 +352,10 @@ function tierMiddleware(req, res, next) {
 
 // ─── EMAIL INVITATIONS ───────────────────────────────────────────────
 let invitations = [];
-try { invitations = JSON.parse(fs.readFileSync(INVITES_FILE, "utf-8")); } catch { }
+try { invitations = JSON.parse(fs.readFileSync(INVITES_FILE, "utf-8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 function _saveInvitations() {
-    try { fs.writeFileSync(INVITES_FILE, JSON.stringify(invitations, null, 2)); } catch { }
+    try { fs.writeFileSync(INVITES_FILE, JSON.stringify(invitations, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function createInvitation(email, tier = "pro", meta = {}) {
@@ -439,10 +439,10 @@ function sendInvitationEmail(invite) {
 
 // ─── ENTERPRISE INQUIRIES ────────────────────────────────────────────
 let inquiries = [];
-try { inquiries = JSON.parse(fs.readFileSync(INQUIRIES_FILE, "utf-8")); } catch { }
+try { inquiries = JSON.parse(fs.readFileSync(INQUIRIES_FILE, "utf-8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 function _saveInquiries() {
-    try { fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(inquiries, null, 2)); } catch { }
+    try { fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(inquiries, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function createInquiry(data) {

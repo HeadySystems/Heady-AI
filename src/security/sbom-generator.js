@@ -142,19 +142,19 @@ function getSecuritySummary() {
 function createServer(port = 3393) {
   return import('http').then(({ default: http }) => {
     const server = http.createServer(async (req, res) => {
-      const url = new URL(req.url, `http://${req.headers.host}`).catch(err => { /* promise error absorbed */ });
+      const url = new URL(req.url, `http://${req.headers.host}`);
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }}).catch(err => { /* promise error absorbed */ });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }});
 
-      if (url.pathname === '/sbom/dependency' && req.method === 'POST') respond(201, registerDependency(await readBody())).catch(err => { /* promise error absorbed */ });
-      else if (url.pathname === '/sbom/license-check' && req.method === 'GET') respond(200, checkLicenseCompliance(url.searchParams.get('dep'))).catch(err => { /* promise error absorbed */ });
+      if (url.pathname === '/sbom/dependency' && req.method === 'POST') respond(201, registerDependency(await readBody()));
+      else if (url.pathname === '/sbom/license-check' && req.method === 'GET') respond(200, checkLicenseCompliance(url.searchParams.get('dep')));
       else if (url.pathname === '/sbom/vulnerability' && req.method === 'POST') { const b = await readBody(); respond(201, reportVulnerability(b.dependency, b)); }
-      else if (url.pathname === '/sbom/generate' && req.method === 'GET') respond(200, generateSbom(url.searchParams.get('format'))).catch(err => { /* promise error absorbed */ });
-      else if (url.pathname === '/sbom/summary' && req.method === 'GET') respond(200, getSecuritySummary()).catch(err => { /* promise error absorbed */ });
-      else if (url.pathname === '/health') respond(200, { service: 'sbom-generator', status: 'healthy', dependencies: dependencies.size, vulnerabilities: vulnerabilities.size, metrics }}).catch(err => { /* promise error absorbed */ });
-      else respond(404, { error: 'not_found' }}).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
-    server.listen(port).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/sbom/generate' && req.method === 'GET') respond(200, generateSbom(url.searchParams.get('format')));
+      else if (url.pathname === '/sbom/summary' && req.method === 'GET') respond(200, getSecuritySummary());
+      else if (url.pathname === '/health') respond(200, { service: 'sbom-generator', status: 'healthy', dependencies: dependencies.size, vulnerabilities: vulnerabilities.size, metrics }});
+      else respond(404, { error: 'not_found' }});
+    }});
+    server.listen(port);
     return server;
   });
 }

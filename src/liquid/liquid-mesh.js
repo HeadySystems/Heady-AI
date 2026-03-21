@@ -204,18 +204,18 @@ class LiquidMesh extends EventEmitter {
 
     const promises = candidates.map(({ node, score }) =>
       node.executeTask(task).then(result => ({ ...result, raceScore: score }))
-    ).catch(err => { /* promise error absorbed */ });
+    );
 
     // First valid result wins
-    const results = await Promise.allSettled(promises).catch(err => { /* promise error absorbed */ });
+    const results = await Promise.allSettled(promises);
     const winners = results
       .filter(r => r.status === 'fulfilled' && r.value.success)
       .map(r => r.value)
-      .sort((a, b) => a.latencyMs - b.latencyMs).catch(err => { /* promise error absorbed */ });
+      .sort((a, b) => a.latencyMs - b.latencyMs);
 
     if (winners.length > 0) {
       const winner = winners[0];
-      logger.info('race_winner', { raceId, nodeId: winner.nodeId, latencyMs: winner.latencyMs }}).catch(err => { /* promise error absorbed */ });
+      logger.info('race_winner', { raceId, nodeId: winner.nodeId, latencyMs: winner.latencyMs });
       return winner;
     }
 

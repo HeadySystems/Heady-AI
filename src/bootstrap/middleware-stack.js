@@ -53,7 +53,7 @@ module.exports = function mountMiddleware(app, { logger, remoteConfig }) {
 
     app.use((req, res, next) => {
         if (!EdgeContextCache.lastScanTime || (Date.now() - EdgeContextCache.lastScanTime > 300000)) {
-            EdgeContextCache.triggerAsyncScan(process.cwd()).catch(() => { });
+            EdgeContextCache.triggerAsyncScan(process.cwd()).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
         req.edgeContext = EdgeContextCache.getOptimalContext();
         next();

@@ -481,7 +481,7 @@ class ProjectionManager {
                 // Debounce: only scan if last scan was >10 seconds ago
                 const lastTs = this._perception.ts;
                 if (lastTs && Date.now() - new Date(lastTs).getTime() < 10_000) return;
-                this.scanPerception().catch(() => { });
+                this.scanPerception().catch((e) => { /* absorbed: */ console.error(e.message); });
             });
         }
     }
@@ -533,7 +533,7 @@ class VectorSpaceOps {
         setTimeout(() => this.antiSprawl.captureBaseline(), 10000);
 
         // Initial perception scan — know how the world sees us from boot
-        this.projectionManager.scanPerception().catch(() => { });
+        this.projectionManager.scanPerception().catch((e) => { /* absorbed: */ console.error(e.message); });
         this.projectionManager.wireEventBus(global.eventBus);
 
         // PHI-timed security scans
@@ -565,7 +565,7 @@ class VectorSpaceOps {
                         targets: [...this.projectionManager.projections.keys()],
                     });
                 }
-            } catch { }
+            } catch(e) { /* absorbed: */ console.error(e.message); }
         }, PHI_INTERVALS.analyze));
     }
 

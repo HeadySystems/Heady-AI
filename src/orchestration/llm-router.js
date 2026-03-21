@@ -461,21 +461,21 @@ class LLMRouter extends EventEmitter {
     // Fire all contestants in parallel
     const settled = await Promise.allSettled(
       contestants.map(m => this._execute(m, request).then(r => ({ modelId: m.modelId, result: r })))
-    ).catch(err => { /* promise error absorbed */ });
+    );
 
     // Collect successful responses
     const responses = settled
       .filter(s => s.status === 'fulfilled')
-      .map(s => s.value).catch(err => { /* promise error absorbed */ });
+      .map(s => s.value);
 
     if (responses.length === 0) {
-      throw new Error('LLMRouter.arenaMode: all contestants failed').catch(err => { /* promise error absorbed */ });
+      throw new Error('LLMRouter.arenaMode: all contestants failed');
     }
 
     // CSL-score each response content against task intent vector
     const scored = responses.map(({ modelId, result }) => {
       const content  = result.choices?.[0]?.message?.content ?? '';
-      const respVec  = _seededVec(content.slice(0, fib(8)), CAP_VEC_DIM).catch(err => { /* promise error absorbed */ });
+      const respVec  = _seededVec(content.slice(0, fib(8)), CAP_VEC_DIM);
       const score    = cslAND(taskVec, respVec);
       return { modelId, result, content, score };
     });

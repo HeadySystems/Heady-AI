@@ -385,7 +385,7 @@ router.get('/swarm/status', (req, res) => {
   try {
     const fs = require('fs');
     let honeycombData = [];
-    try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch { }
+    try { honeycombData = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     const { execSync } = require('child_process');
     let processInfo = {};
@@ -401,7 +401,7 @@ router.get('/swarm/status', (req, res) => {
           cpu: swarmProc.monit.cpu,
         };
       }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     res.json({
       ok: true,
@@ -419,7 +419,7 @@ router.get('/swarm/honeycomb', (req, res) => {
   try {
     const fs = require('fs');
     let data = [];
-    try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch { }
+    try { data = JSON.parse(fs.readFileSync(HONEYCOMB_PATH, 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
     const limit = parseInt(req.query.limit) || 20;
     res.json({ ok: true, entries: data.slice(-limit), total: data.length });
   } catch (err) {
@@ -435,7 +435,7 @@ router.post('/swarm/nudge', (req, res) => {
     if (!prompt) return res.status(400).json({ ok: false, error: 'prompt is required' });
 
     let nudges = [];
-    try { nudges = JSON.parse(fs.readFileSync(nudgePath, 'utf8')); } catch { }
+    try { nudges = JSON.parse(fs.readFileSync(nudgePath, 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
     nudges.push({ name, prompt, category, priority, ts: new Date().toISOString() });
     fs.writeFileSync(nudgePath, JSON.stringify(nudges, null, 2));
     res.json({ ok: true, message: 'Flower queued for next round', queueSize: nudges.length });

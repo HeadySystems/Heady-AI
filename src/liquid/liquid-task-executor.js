@@ -184,7 +184,7 @@ class LiquidTaskExecutor extends EventEmitter {
         // Wait for at least one to finish
         const settled = await Promise.race(promises.map(p =>
           p.then(r => {
-            this.activeTasks.delete(r.taskId).catch(err => { /* promise error absorbed */ });
+            this.activeTasks.delete(r.taskId);
             if (r.success) {
               completed.add(r.taskId);
               results.set(r.taskId, r.result);
@@ -312,7 +312,7 @@ class LiquidTaskExecutor extends EventEmitter {
 
       node.executeTask(task)
         .then(result => {
-          clearTimeout(timer).catch(err => { /* promise error absorbed */ });
+          clearTimeout(timer);
           resolve(result);
         })
         .catch(err => {

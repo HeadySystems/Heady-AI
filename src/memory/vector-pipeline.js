@@ -90,7 +90,7 @@ function createVectorAugmentedMiddleware(vectorMem) {
                         vectorMem.ingestMemory({
                             content: `Q: ${query.substring(0, 500)}\nA: ${String(responseText).substring(0, 1000)}`,
                             metadata: { type: "brain_qa", endpoint: req.path, augmented: !!relevantContext },
-                        }).catch(() => { });
+                        }).catch((e) => { /* absorbed: */ console.error(e.message); });
                     }
                 }
                 return origJson(data);

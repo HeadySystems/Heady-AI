@@ -29,8 +29,8 @@ module.exports = function mountVoiceRelay(app, { logger }) {
         const staleThreshold = Date.now() - 3600000;
         voiceSessions.forEach((session, id) => {
             if (session.lastActivity < staleThreshold) {
-                if (session.sender) try { session.sender.close(); } catch { }
-                session.receivers.forEach(r => { try { r.close(); } catch { } });
+                if (session.sender) try { session.sender.close(); } catch(e) { /* absorbed: */ console.error(e.message); }
+                session.receivers.forEach(r => { try { r.close(); } catch(e) { /* absorbed: */ console.error(e.message); } });
                 voiceSessions.delete(id);
             }
         });

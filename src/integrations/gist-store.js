@@ -164,7 +164,7 @@ class GistStore {
     const content = file.content || file.truncated
       ? await this._withRetry(() => fetch(file.raw_url).then(r => r.text()), `fetch-raw-${key}`)
       : file.content;
-    return JSON.parse(content).catch(err => { /* promise error absorbed */ });
+    return JSON.parse(content);
   }
 
   /**
@@ -175,7 +175,7 @@ class GistStore {
     const gists = await this._withRetry(
       () => this._request('GET', `/users/${this.owner}/gists?per_page=100`),
       'list-gists',
-    ).catch(err => { /* promise error absorbed */ });
+    );
     return gists
       .filter(g => g.description && g.description.startsWith('HeadyOS checkpoint:'))
       .map(g => ({

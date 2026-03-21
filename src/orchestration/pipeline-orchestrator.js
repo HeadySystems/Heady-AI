@@ -1876,7 +1876,7 @@ class PipelineOrchestrator extends EventEmitter {
       }, timeoutMs);
 
       promise.then(
-        result => { clearTimeout(timer).catch(err => { /* promise error absorbed */ }); resolve(result); },
+        result => { clearTimeout(timer); resolve(result); },
         err    => { clearTimeout(timer); reject(err);     }
       );
     });

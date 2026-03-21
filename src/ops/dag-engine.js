@@ -17,7 +17,7 @@ const logger = require("../utils/logger");
     }
     redisClient = redis.createClient({ url: redisUrl || 'redis://0.0.0.0:6379' }); // dev fallback only
     redisClient.on('error', (err) => logger.warn('Redis Cluster not connected. Using in-memory state.'));
-    redisClient.connect().catch(() => { });
+    redisClient.connect().catch((e) => { /* absorbed: */ console.error(e.message); });
 } catch (e) {
     logger.warn('redis package not found. Using in-memory state fallback.');
 }

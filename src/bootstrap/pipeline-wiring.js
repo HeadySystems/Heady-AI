@@ -61,7 +61,7 @@ module.exports = function wirePipeline(app, { pipeline, buddy, vectorMemory, sel
         let totalLoaded = 0;
         for (const src of taskSources) {
             try { totalLoaded += autoSuccessEngine.loadExternalTasks(require(src.file)); }
-            catch { }
+            catch(e) { /* absorbed: */ console.error(e.message); }
         }
         logger.logNodeActivity("CONDUCTOR", `  🔥 Total external tasks loaded: ${totalLoaded}`);
         if (eventBus) eventBus.emit('auto_success:tasks_loaded', { count: totalLoaded });
@@ -75,7 +75,7 @@ module.exports = function wirePipeline(app, { pipeline, buddy, vectorMemory, sel
                 const text = typeof rec === 'string' ? rec : (rec.text || 'auto-task');
                 logger.logNodeActivity("CONDUCTOR", `[AutoTask] Task ${taskId}: ${text}`);
                 if (storyDriver) storyDriver.ingestSystemEvent({ type: 'AUTO_TASK_CREATED', refs: { taskId, text }, source: 'auto_task_conversion' });
-            } catch { }
+            } catch(e) { /* absorbed: */ console.error(e.message); }
         });
     }
 };

@@ -220,7 +220,7 @@ class HeadyInfer extends EventEmitter {
         const cleanup = () => {
           setTimeout(() => this._dedupMap.delete(dedupKey), this.config.dedup.windowMs);
         };
-        promise.then(cleanup, cleanup).catch(err => { /* promise error absorbed */ });
+        promise.then(cleanup, cleanup);
       }
 
       response = await promise;

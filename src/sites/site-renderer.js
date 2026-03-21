@@ -65,7 +65,7 @@ function resolveSiteBySlug(slug) {
         if (cfg.slug === slug) return { ...cfg, domain: d, type: "custom" };
       }
     }
-  } catch { }
+  } catch(e) { /* absorbed: */ console.error(e.message); }
   return null;
 }
 
@@ -78,7 +78,7 @@ function getNavItems(site) {
     if (fs.existsSync(USER_SITES_PATH)) {
       Object.assign(allSites, JSON.parse(fs.readFileSync(USER_SITES_PATH, "utf8")));
     }
-  } catch { }
+  } catch(e) { /* absorbed: */ console.error(e.message); }
 
   const items = [];
   for (const [domain, cfg] of Object.entries(allSites)) {

@@ -40,7 +40,7 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
     } catch (err) { logger.logNodeActivity("CONDUCTOR", `  ⚠ Enterprise Ops not loaded: ${err.message}`); }
 
     // SSE Streaming
-    try { require('../routes/sse-streaming')(app); } catch { }
+    try { require('../routes/sse-streaming')(app); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Service Route Registration (Phase 2 Liquid)
     const { registerServiceRoutes } = require('./service-routes');
@@ -56,11 +56,11 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
 
     // Core API
     try { app.use('/api', require('../services/core-api')); } catch {
-        try { app.use('/api', require('../routes/config-api')); } catch { }
+        try { app.use('/api', require('../routes/config-api')); } catch(e) { /* absorbed: */ console.error(e.message); }
     }
 
     // Pipeline API
-    try { app.use('/api/pipeline', require('../routes/pipeline-api')); } catch { }
+    try { app.use('/api/pipeline', require('../routes/pipeline-api')); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Buddy Route (pillar)
     try {
@@ -76,13 +76,13 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
     try {
         if (secretsManager) { require('../hc_secrets_manager').registerSecretsRoutes(app); secretsManager.startMonitor(60000); }
         if (cfManager) { require('../hc_cloudflare').registerCloudflareRoutes(app, cfManager); }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Upstash Redis
     try {
         const upstash = require('../services/upstash-redis');
         upstash.redisRoutes(app);
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Liquid State + IDE Bridge + Projection Engine + Governance + Domain Router + UI Registry + LLM Router
     const autoServices = [
@@ -100,20 +100,20 @@ module.exports = function mountServices(app, { logger, authEngine, vectorMemory,
     }
 
     // Autonomous Scheduler + Swarm Ignition + Bee Templates + Consensus
-    try { const s = require('../services/autonomous-scheduler'); s.start(); s.schedulerRoutes(app); } catch { }
-    try { const { igniteSwarm, swarmIgnitionRoutes } = require('../orchestration/swarm-ignition'); igniteSwarm({ enablePruner: true, enableTester: true, enableEmbedder: true }); swarmIgnitionRoutes(app); } catch { }
-    try { require('../bees/headybee-template-registry').registerRoutes(app); } catch { }
-    try { const { consensus, registerConsensusRoutes } = require('../orchestration/swarm-consensus'); consensus.startStaleCheck(); registerConsensusRoutes(app); } catch { }
+    try { const s = require('../services/autonomous-scheduler'); s.start(); s.schedulerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { const { igniteSwarm, swarmIgnitionRoutes } = require('../orchestration/swarm-ignition'); igniteSwarm({ enablePruner: true, enableTester: true, enableEmbedder: true }); swarmIgnitionRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { require('../bees/headybee-template-registry').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { const { consensus, registerConsensusRoutes } = require('../orchestration/swarm-consensus'); consensus.startStaleCheck(); registerConsensusRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Redis pool shutdown
-    try { const { onShutdown } = require('../lifecycle/graceful-shutdown'); const rp = require('../utils/redis-pool'); onShutdown('redis-pool', () => rp.close()); } catch { }
+    try { const { onShutdown } = require('../lifecycle/graceful-shutdown'); const rp = require('../utils/redis-pool'); onShutdown('redis-pool', () => rp.close()); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Provider analytics
-    try { app.use('/api/providers', require('../routes/provider-analytics')); } catch { }
+    try { app.use('/api/providers', require('../routes/provider-analytics')); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Models API
-    try { app.use('/api', require('../routes/models-api')); } catch { }
+    try { app.use('/api', require('../routes/models-api')); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Aloha Protocol
-    try { require('../routes/aloha')(app, { selfCritiqueEngine: _engines?.selfCritiqueEngine, storyDriver: _engines?.storyDriver, resourceManager: _engines?.resourceManager, patternEngine: _engines?.patternEngine }); } catch { }
+    try { require('../routes/aloha')(app, { selfCritiqueEngine: _engines?.selfCritiqueEngine, storyDriver: _engines?.storyDriver, resourceManager: _engines?.resourceManager, patternEngine: _engines?.patternEngine }); } catch(e) { /* absorbed: */ console.error(e.message); }
 };

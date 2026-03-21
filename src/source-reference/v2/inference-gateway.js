@@ -313,7 +313,7 @@ class InferenceGateway extends EventEmitter {
                 .then(result => {
                     result.gatewayLatencyMs = Date.now() - start;
                     result.raceWinner = true;
-                    this._recordSuccess(provider).catch(err => { /* promise error absorbed */ });
+                    this._recordSuccess(provider);
                     return result;
                 })
                 .catch(err => {
@@ -343,11 +343,11 @@ class InferenceGateway extends EventEmitter {
                 PROVIDERS[provider].complete(messages, { ...opts, tier: 'quality' })
                     .then(result => ({ ...result, provider }))
             )
-        ).catch(err => { /* promise error absorbed */ });
+        );
 
         return results
             .filter(r => r.status === 'fulfilled')
-            .map(r => r.value).catch(err => { /* promise error absorbed */ });
+            .map(r => r.value);
     }
 
     // Circuit breaker helpers

@@ -140,8 +140,8 @@ function withTimeout(fn, timeoutMs) {
       .then(result => {
         if (!settled) {
           settled = true;
-          clearTimeout(timer).catch(err => { /* promise error absorbed */ });
-          resolve(result).catch(err => { /* promise error absorbed */ });
+          clearTimeout(timer);
+          resolve(result);
         }
       })
       .catch(err => {

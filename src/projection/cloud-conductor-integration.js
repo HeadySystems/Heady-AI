@@ -566,7 +566,7 @@ if (require.main === module) {
 
     const app = createCloudConductorService();
     app.start().then(server => {
-        logger.info(`[CloudConductor] Service started on port ${server.address()?.port}`).catch(err => { /* promise error absorbed */ });
+        logger.info(`[CloudConductor] Service started on port ${server.address()?.port}`);
     }).catch(err => {
         logger.error({ err: err.message }, '[CloudConductor] Fatal startup error');
         process.exit(1);

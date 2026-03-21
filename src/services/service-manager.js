@@ -573,20 +573,20 @@ if (require.main === module) {
   const manager = getServiceManager();
 
   manager.start().then(() => {
-    logger.logSystem('🎛️ Service Manager started - All services running continuously').catch(err => { /* promise error absorbed */ });
+    logger.logSystem('🎛️ Service Manager started - All services running continuously');
 
     // Graceful shutdown
     process.on('SIGINT', async () => {
-      logger.logSystem('\n🛑 Shutting down Service Manager...').catch(err => { /* promise error absorbed */ });
-      await manager.stop().catch(err => { /* promise error absorbed */ });
-      process.exit(0).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
+      logger.logSystem('\n🛑 Shutting down Service Manager...');
+      await manager.stop();
+      process.exit(0);
+    });
 
     process.on('SIGTERM', async () => {
-      logger.logSystem('\n🛑 Shutting down Service Manager...').catch(err => { /* promise error absorbed */ });
-      await manager.stop().catch(err => { /* promise error absorbed */ });
-      process.exit(0).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
+      logger.logSystem('\n🛑 Shutting down Service Manager...');
+      await manager.stop();
+      process.exit(0);
+    });
 
     // Status reporting
     setInterval(() => {

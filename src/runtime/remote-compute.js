@@ -45,7 +45,7 @@ const stats = {
 function audit(entry) {
     try {
         fs.appendFileSync(DISPATCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n");
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function incStat(provider, action) {

@@ -211,16 +211,16 @@ class HeadyEventBus extends EventEmitter {
     for (const [pattern, handlers] of this._wildcardHandlers) {
       if (this._matchesPattern(pattern, event)) {
         for (const handler of handlers) {
-          wildcardPromises.push(Promise.resolve().then(() => handler(event, ...args))).catch(err => { /* promise error absorbed */ });
+          wildcardPromises.push(Promise.resolve().then(() => handler(event, ...args)));
         }
       }
     }
 
     const listenerPromises = listeners.map(fn =>
       Promise.resolve().then(() => fn(...args))
-    ).catch(err => { /* promise error absorbed */ });
+    );
 
-    return Promise.allSettled([...listenerPromises, ...wildcardPromises]).catch(err => { /* promise error absorbed */ });
+    return Promise.allSettled([...listenerPromises, ...wildcardPromises]);
   }
 
   /**

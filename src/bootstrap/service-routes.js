@@ -78,7 +78,7 @@ function registerServiceRoutes(app, deps = {}) {
                     logger.logNodeActivity("CONDUCTOR", `  🌐 Edge Cache: ${result.edgeCachePush.sitesInKV} sites pushed to Cloudflare KV`);
                 }
             } else {
-                logger.logNodeActivity("CONDUCTOR", `  ⚠ Auto-Projection: ${result.error}`).catch(err => { /* promise error absorbed */ });
+                logger.logNodeActivity("CONDUCTOR", `  ⚠ Auto-Projection: ${result.error}`);
             }
         }).catch(e => logger.logError("CONDUCTOR", `Auto-Projection error: ${e.message}`));
     } catch (err) {
@@ -221,14 +221,14 @@ function registerServiceRoutes(app, deps = {}) {
                         scanId: scan.id, perspectives: Object.keys(scan.perspectives).length,
                         score: scan.compositeScore, findings: scan.findings.length,
                         nodesInvoked: scan.nodesInvoked.length, durationMs: scan.durationMs,
-                    }}).catch(err => { /* promise error absorbed */ });
+                    });
                 }
-            }}).catch(err => { /* promise error absorbed */ });
-        }, 5000).catch(err => { /* promise error absorbed */ });
+            });
+        }, 5000);
 
-        logger.logNodeActivity("CONDUCTOR", "  ✓ HeadyDeepIntel engine: ACTIVE (10 perspectives, 10 nodes, 3D vectors)").catch(err => { /* promise error absorbed */ });
+        logger.logNodeActivity("CONDUCTOR", "  ✓ HeadyDeepIntel engine: ACTIVE (10 perspectives, 10 nodes, 3D vectors)");
     } catch (err) {
-        logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyDeepIntel not loaded: ${err.message}`).catch(err => { /* promise error absorbed */ });
+        logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyDeepIntel not loaded: ${err.message}`);
     }
 
     // ─── Liquid Component Allocation Engine ────────────────────────────
@@ -403,9 +403,9 @@ function registerServiceRoutes(app, deps = {}) {
         // Auto-connect if DATABASE_URL is present
         if (process.env.DATABASE_URL) {
             neonDb.connect().then(r => {
-                if (r.ok) logger.logNodeActivity("CONDUCTOR", "  ∞ Neon DB: CONNECTED (Scale Plan)").catch(err => { /* promise error absorbed */ });
-                else logger.logNodeActivity("CONDUCTOR", `  ⚠ Neon DB connection deferred: ${r.error}`).catch(err => { /* promise error absorbed */ });
-            }).catch(() => { });
+                if (r.ok) logger.logNodeActivity("CONDUCTOR", "  ∞ Neon DB: CONNECTED (Scale Plan)");
+                else logger.logNodeActivity("CONDUCTOR", `  ⚠ Neon DB connection deferred: ${r.error}`);
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         } else {
             logger.logNodeActivity("CONDUCTOR", "  ∞ Neon DB: LOADED (awaiting DATABASE_URL)");
         }

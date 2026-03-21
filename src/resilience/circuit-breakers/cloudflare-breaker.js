@@ -34,7 +34,7 @@ const CF_API_BASE            = 'https://api.cloudflare.com/client/v4';
 function withTimeout(promise, ms, label) {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error(`Cloudflare timeout: ${label} (${ms}ms)`)), ms);
-    promise.then(v => { clearTimeout(t).catch(err => { /* promise error absorbed */ }); resolve(v); },
+    promise.then(v => { clearTimeout(t); resolve(v); },
                  e => { clearTimeout(t); reject(e); });
   });
 }
@@ -202,14 +202,14 @@ class CloudflareKVBreaker extends EventEmitter {
         this._timeoutMs,
         `kv.get(${key})`
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   async put(key, value, { expiration, expirationTtl, metadata } = {}, nsId) {
     const url = `${this._baseUrl(nsId)}/values/${encodeURIComponent(key)}`;
-    const params = new URLSearchParams().catch(err => { /* promise error absorbed */ });
-    if (expiration)    params.set('expiration',    expiration).catch(err => { /* promise error absorbed */ });
-    if (expirationTtl) params.set('expiration_ttl', expirationTtl).catch(err => { /* promise error absorbed */ });
+    const params = new URLSearchParams();
+    if (expiration)    params.set('expiration',    expiration);
+    if (expirationTtl) params.set('expiration_ttl', expirationTtl);
 
     return this._breaker.execute(() =>
       withTimeout(
@@ -221,7 +221,7 @@ class CloudflareKVBreaker extends EventEmitter {
         this._timeoutMs,
         `kv.put(${key})`
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   async delete(key, nsId) {
@@ -234,7 +234,7 @@ class CloudflareKVBreaker extends EventEmitter {
         this._timeoutMs,
         `kv.delete(${key})`
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   async list(prefix, nsId) {
@@ -245,7 +245,7 @@ class CloudflareKVBreaker extends EventEmitter {
         this._timeoutMs,
         'kv.list'
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   snapshot() {
@@ -295,13 +295,13 @@ class CloudflareD1Breaker extends EventEmitter {
           headers: this._headers(),
           body: JSON.stringify({ sql, params }),
         }).then(async r => {
-          if (!r.ok) throw Object.assign(new Error(`D1 query ${r.status}`), { status: r.status }}).catch(err => { /* promise error absorbed */ });
-          return r.json().catch(err => { /* promise error absorbed */ });
+          if (!r.ok) throw Object.assign(new Error(`D1 query ${r.status}`), { status: r.status });
+          return r.json();
         }),
         this._timeoutMs,
         'd1.query'
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   /** Execute multiple statements in a batch. */
@@ -315,13 +315,13 @@ class CloudflareD1Breaker extends EventEmitter {
             typeof s === 'string' ? { sql: s, params: [] } : s
           )),
         }).then(async r => {
-          if (!r.ok) throw Object.assign(new Error(`D1 batch ${r.status}`), { status: r.status }}).catch(err => { /* promise error absorbed */ });
-          return r.json().catch(err => { /* promise error absorbed */ });
+          if (!r.ok) throw Object.assign(new Error(`D1 batch ${r.status}`), { status: r.status });
+          return r.json();
         }),
         this._timeoutMs,
         'd1.batch'
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
   }
 
   snapshot() {

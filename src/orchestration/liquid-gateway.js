@@ -418,19 +418,19 @@ class LiquidGateway extends EventEmitter {
     const races = candidates.map((provider, idx) =>
       this._execute(provider, request, controllers[idx].signal)
         .then(result => ({ result, winner: provider.id, idx }))
-    ).catch(err => { /* promise error absorbed */ });
+    );
 
     try {
-      const { result, winner, idx } = await Promise.any(races).catch(err => { /* promise error absorbed */ });
+      const { result, winner, idx } = await Promise.any(races);
       // Abort all losers
-      controllers.forEach((c, i) => { if (i !== idx) c.abort(); }}).catch(err => { /* promise error absorbed */ });
-      this.emit('race:winner', { winner, candidates: candidates.map(p => p.id) }}).catch(err => { /* promise error absorbed */ });
+      controllers.forEach((c, i) => { if (i !== idx) c.abort(); });
+      this.emit('race:winner', { winner, candidates: candidates.map(p => p.id) });
       return { result, winner };
     } catch (aggregateErr) {
-      this.emit('race:failed', { candidates: candidates.map(p => p.id) }}).catch(err => { /* promise error absorbed */ });
+      this.emit('race:failed', { candidates: candidates.map(p => p.id) });
       // Mark all failures
-      for (const p of candidates) p.circuitBreaker.recordFailure().catch(err => { /* promise error absorbed */ });
-      throw new Error('LiquidGateway: all race candidates failed').catch(err => { /* promise error absorbed */ });
+      for (const p of candidates) p.circuitBreaker.recordFailure();
+      throw new Error('LiquidGateway: all race candidates failed');
     }
   }
 

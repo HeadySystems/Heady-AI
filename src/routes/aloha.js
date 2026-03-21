@@ -24,9 +24,9 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
 
     // Load protocol configs
     let alohaProtocol = null, deOptProtocol = null, stabilityFirst = null;
-    try { alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8')); } catch { }
-    try { deOptProtocol = yaml.load(fs.readFileSync('./configs/de-optimization-protocol.yaml', 'utf8')); } catch { }
-    try { stabilityFirst = yaml.load(fs.readFileSync('./configs/stability-first.yaml', 'utf8')); } catch { }
+    try { alohaProtocol = yaml.load(fs.readFileSync('./configs/aloha-protocol.yaml', 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { deOptProtocol = yaml.load(fs.readFileSync('./configs/de-optimization-protocol.yaml', 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { stabilityFirst = yaml.load(fs.readFileSync('./configs/stability-first.yaml', 'utf8')); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     const alohaState = {
         mode: "aloha",
@@ -111,7 +111,7 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
             logger.logError('HCFP', 'Emergency stability mode activated - multiple crashes detected', new Error('crash_threshold'));
 
             if (resourceManager && !resourceManager.safeMode) {
-                try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch { }
+                try { resourceManager.enterSafeMode("aloha_crash_threshold"); } catch(e) { /* absorbed: */ console.error(e.message); }
             }
             if (continuousPipeline.running) {
                 continuousPipeline.running = false;
@@ -121,9 +121,9 @@ module.exports = function mountAlohaRoutes(app, deps = {}) {
                     storyDriver.ingestSystemEvent({ type: "PIPELINE_EMERGENCY_SHUTDOWN", refs: { reason: "aloha_emergency_stability", crashCount: recentCrashes.length }, source: "aloha_protocol" });
                 }
             }
-            if (mcGlobal && typeof mcGlobal.stopAutoRun === 'function') { try { mcGlobal.stopAutoRun(); } catch { } }
-            if (improvementScheduler && typeof improvementScheduler.pause === 'function') { try { improvementScheduler.pause(); } catch { } }
-            if (patternEngine && typeof patternEngine.pause === 'function') { try { patternEngine.pause(); } catch { } }
+            if (mcGlobal && typeof mcGlobal.stopAutoRun === 'function') { try { mcGlobal.stopAutoRun(); } catch(e) { /* absorbed: */ console.error(e.message); } }
+            if (improvementScheduler && typeof improvementScheduler.pause === 'function') { try { improvementScheduler.pause(); } catch(e) { /* absorbed: */ console.error(e.message); } }
+            if (patternEngine && typeof patternEngine.pause === 'function') { try { patternEngine.pause(); } catch(e) { /* absorbed: */ console.error(e.message); } }
         }
 
         res.json({

@@ -171,7 +171,7 @@ const STATE_FILE = path.join(DATA_DIR, "notebooklm-sync-state.json");
 function loadState() {
     try {
         if (fs.existsSync(STATE_FILE)) return JSON.parse(fs.readFileSync(STATE_FILE, "utf8"));
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
     return { pages: {}, lastSync: null, syncCount: 0 };
 }
 
@@ -194,7 +194,7 @@ function generateStatusContent() {
             const raw = JSON.parse(fs.readFileSync(pPath, "utf8"));
             connPatterns.total = raw.length;
         }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Read memory receipts
     let memReceipts = { total: 0, fallback: 0 };
@@ -205,7 +205,7 @@ function generateStatusContent() {
             memReceipts.total = raw.length;
             memReceipts.fallback = raw.filter(r => r.fallbackUsed).length;
         }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     return `# Heady™ System Status & Updates
 > Last synced: ${ts}

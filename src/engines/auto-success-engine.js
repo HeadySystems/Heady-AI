@@ -2891,7 +2891,7 @@ class AutoSuccessEngine extends EventEmitter {
 function createEngine(config = {}, autoStart = false) {
   const engine = new AutoSuccessEngine(config);
   if (autoStart) {
-    return engine.start().then(() => engine).catch(err => { /* promise error absorbed */ });
+    return engine.start().then(() => engine);
   }
   return engine;
 }
@@ -2904,7 +2904,7 @@ if (require.main === module) {
       verbose:             process.argv.includes('--verbose'),
       enableMonteCarlo:    true,
       enableLiquidScaling: true,
-    }}).catch(err => { /* promise error absorbed */ });
+    });
 
     engine.on('cycle:complete', ({ cycleNumber, durationMs, metrics }) => {
       logger.info(`[AutoSuccessEngine] Cycle #${cycleNumber} complete in ${durationMs}ms | health=${metrics.healthScore} pass=${metrics.pass} warn=${metrics.warn} fail=${metrics.fail}`);

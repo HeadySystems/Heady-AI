@@ -94,10 +94,10 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     }
 
     // Spatial subsystems
-    try { require('../services/spatial-embedder').registerRoutes(app); } catch { }
-    try { require('../services/octree-manager').registerRoutes(app); } catch { }
-    try { require('../services/redis-sync-bridge').registerRoutes(app); } catch { }
-    try { require('../services/buddy-system').registerRoutes(app); } catch { }
+    try { require('../services/spatial-embedder').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { require('../services/octree-manager').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { require('../services/redis-sync-bridge').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
+    try { require('../services/buddy-system').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Heady™ core services (registerRoutes pattern)
     const coreServices = [
@@ -123,7 +123,7 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     try {
         const brainRoutes = require('../routes/brain');
         if (brainRoutes.setMemoryWrapper) brainRoutes.setMemoryWrapper(vectorMemory);
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // HeadyCorrections
     const corrections = require('../corrections');
@@ -143,7 +143,7 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     const { AutoHeal } = require('../resilience/auto-heal');
     const Handshake = require('../security/handshake');
 
-    try { require('../security/code-governance').loadConfig(); require('../security/code-governance').registerRoutes(app); } catch { }
+    try { require('../security/code-governance').loadConfig(); require('../security/code-governance').registerRoutes(app); } catch(e) { /* absorbed: */ console.error(e.message); }
 
     const conductor = getConductor();
     const secretRotation = new SecretRotation();
@@ -172,7 +172,7 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     try {
         const redisHealth = require('../routes/redis-health');
         if (redisHealth.getClient && redisHealth.getClient()) buddy.setRedis(redisHealth.getClient());
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
     buddy.registerRoutes(app);
 
     const watchdog = new BuddyWatchdog(buddy);
@@ -204,28 +204,28 @@ module.exports = function mountVectorStack(app, { logger, eventBus }) {
     try {
         const { VectorServe } = require('../vector-serve');
         new VectorServe(vectorMemory, logger).wireRoutes(app);
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Cross-Device Sync
     try {
         const { CrossDeviceSyncHub } = require('../cross-device-sync');
         const syncHub = new CrossDeviceSyncHub();
         syncHub.registerRoutes(app);
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // System Monitor
     try {
         const sysMonitor = require('../system-monitor');
         sysMonitor.registerRoutes(app);
         sysMonitor.start();
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Continuous Learning
     try {
         const learningEngine = require('../continuous-learning');
         learningEngine.registerRoutes(app);
         app.locals.vectorMemory = vectorMemory;
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Self-Optimizer
     const selfOptimizer = require('../self-optimizer');

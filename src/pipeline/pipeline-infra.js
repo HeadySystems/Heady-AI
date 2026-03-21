@@ -86,19 +86,19 @@ class WorkerPool {
                 fn().then(
                     (val) => { this.running--; this._drain(); resolve(val); },
                     (err) => { this.running--; this._drain(); reject(err); }
-                ).catch(err => { /* promise error absorbed */ });
+                );
             };
             if (this.running < this.concurrency) {
-                execute().catch(err => { /* promise error absorbed */ });
+                execute();
             } else {
-                this.queue.push(execute).catch(err => { /* promise error absorbed */ });
+                this.queue.push(execute);
             }
-        }}).catch(err => { /* promise error absorbed */ });
+        });
     }
 
     _drain() {
         if (this.queue.length > 0 && this.running < this.concurrency) {
-            this.queue.shift()().catch(err => { /* promise error absorbed */ });
+            this.queue.shift()();
         }
     }
 

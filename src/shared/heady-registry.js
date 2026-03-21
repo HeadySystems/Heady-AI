@@ -50,11 +50,11 @@ function confidenceFromAge(ageMs) {
 
 // ── Registry Store ──────────────────────────────────────────────
 let registry = { entries: {}, meta: { created: Date.now(), scanCount: 0, lastScan: null } };
-try { registry = JSON.parse(fs.readFileSync(REG_FILE, "utf-8")); } catch { }
+try { registry = JSON.parse(fs.readFileSync(REG_FILE, "utf-8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
-function save() { try { fs.writeFileSync(REG_FILE, JSON.stringify(registry, null, 2)); } catch { } }
+function save() { try { fs.writeFileSync(REG_FILE, JSON.stringify(registry, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); } }
 function audit(entry) {
-    try { fs.appendFileSync(REG_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(REG_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function setEntry(key, data) {
@@ -153,7 +153,7 @@ function scanDataFile(name, filePath) {
             status: "present", size: stat.size, entries,
             modified: stat.mtime.toISOString(),
         });
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 // ── Incremental Targeted Scan ───────────────────────────────────
@@ -318,13 +318,13 @@ function registerRoutes(app, vectorMem) {
                 await vectorMem.ingestMemory({
                     content: `Registry: ${summary.totalEntries} entries, confidence=${summary.avgConfidence}, interval=${scanInterval}ms, scan #${summary.scanCount}`,
                     metadata: { type: "registry_state", ...summary.byConfidence, scanInterval },
-                }).catch(() => { });
+                }).catch((e) => { /* absorbed: */ console.error(e.message); });
             }
-        } catch { }
+        } catch(e) { /* absorbed: */ console.error(e.message); }
         setTimeout(adaptiveScan, scanInterval);
     };
     // Full populate on startup (2s), then start adaptive loop
-    setTimeout(async () => { await fullPopulate().catch(() => { }); adaptiveScan(); }, 2000);
+    setTimeout(async () => { await fullPopulate().catch((e) => { /* absorbed: */ console.error(e.message); }); adaptiveScan(); }, 2000);
 
     logger.logSystem(`  ∞ HeadyRegistry: LOADED (adaptive scan, confidence-driven, →vector memory)`);
 }

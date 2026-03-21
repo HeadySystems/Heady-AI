@@ -194,7 +194,7 @@ export function generateRelayScript(options = {}) {
               authenticated: data.authenticated || false,
               userId: data.userId || null,
               nonce: event.data.nonce
-            }, event.origin).catch(err => { /* promise error absorbed */ });
+            }, event.origin);
           })
           .catch(function() {
             event.source.postMessage({

@@ -49,7 +49,7 @@ let optState = {
     started: Date.now(),
 };
 
-try { optState = { ...optState, ...JSON.parse(fs.readFileSync(OPT_FILE, "utf-8")) }; } catch { }
+try { optState = { ...optState, ...JSON.parse(fs.readFileSync(OPT_FILE, "utf-8")) }; } catch(e) { /* absorbed: */ console.error(e.message); }
 
 // ── Heartbeat — the proof of continuous operation ───────────────
 const heartbeat = {
@@ -67,9 +67,9 @@ const heartbeat = {
     startedAt: Date.now(),
 };
 
-function save() { try { fs.writeFileSync(OPT_FILE, JSON.stringify(optState, null, 2)); } catch { } }
+function save() { try { fs.writeFileSync(OPT_FILE, JSON.stringify(optState, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); } }
 function audit(entry) {
-    try { fs.appendFileSync(OPT_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(OPT_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 // ── 1. Benchmark Analysis ───────────────────────────────────────
@@ -158,7 +158,7 @@ function discoverSkills() {
         skills: discovered,
         lastScan: new Date().toISOString(),
     };
-    try { fs.writeFileSync(path.join(SKILLS_DIR, "manifest.json"), JSON.stringify(skillManifest, null, 2)); } catch { }
+    try { fs.writeFileSync(path.join(SKILLS_DIR, "manifest.json"), JSON.stringify(skillManifest, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
     optState.skills = discovered;
     return skillManifest;
 }
@@ -252,7 +252,7 @@ async function runSystemScan() {
         const files = fs.readdirSync(dataDir);
         let totalSize = 0;
         for (const f of files) {
-            try { totalSize += fs.statSync(path.join(dataDir, f)).size; } catch { }
+            try { totalSize += fs.statSync(path.join(dataDir, f)).size; } catch(e) { /* absorbed: */ console.error(e.message); }
         }
         checks.disk = { dataFiles: files.length, dataSizeMB: +(totalSize / 1024 / 1024).toFixed(2) };
         if (totalSize > 500 * 1024 * 1024) issues.push({ severity: "medium", message: `Data dir is ${(totalSize / 1024 / 1024).toFixed(0)}MB`, check: "disk" });
@@ -263,7 +263,7 @@ async function runSystemScan() {
         const auditSize = fs.statSync(OPT_AUDIT).size;
         checks.auditLog = { sizeMB: +(auditSize / 1024 / 1024).toFixed(2) };
         if (auditSize > 50 * 1024 * 1024) issues.push({ severity: "low", message: "Audit log > 50MB, consider rotation", check: "auditLog" });
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Source file integrity — check key modules exist
     const criticalModules = ["agent-orchestrator.js", "vector-memory.js", "heady-conductor.js", "continuous-learning.js", "self-optimizer.js"];
@@ -327,7 +327,7 @@ function startContinuousLoop(vectorMem) {
                                 content: `[System Scan] ${issues.length} issues found: ${issues.map(i => i.message).join("; ")}`,
                                 metadata: { type: "system_scan", issueCount: issues.length, cycle: heartbeat.cycleCount },
                             });
-                        } catch { }
+                        } catch(e) { /* absorbed: */ console.error(e.message); }
                     }
                 }
 
@@ -361,7 +361,7 @@ function startContinuousLoop(vectorMem) {
                             content: `Optimizer proof-of-life #${heartbeat.proofOfLifeStored}: ${heartbeat.cycleCount} cycles, ${heartbeat.totalErrors} total errors, ${heartbeat.recoveries} recoveries. Learned: ${lStats.totalLearned || 0} topics. Uptime: ${Math.round((Date.now() - heartbeat.startedAt) / 1000)}s`,
                             metadata: { type: "optimizer_heartbeat", cycle: heartbeat.cycleCount },
                         });
-                    } catch { }
+                    } catch(e) { /* absorbed: */ console.error(e.message); }
                 }
 
             } catch (err) {

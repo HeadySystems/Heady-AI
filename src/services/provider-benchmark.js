@@ -30,13 +30,13 @@ if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
 // Persistent benchmark results
 let benchResults = {};
-try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch { }
+try { benchResults = JSON.parse(fs.readFileSync(BENCH_FILE, "utf-8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 function saveBenchmarks() {
-    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch { }
+    try { fs.writeFileSync(BENCH_FILE, JSON.stringify(benchResults, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 function audit(entry) {
-    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch { }
+    try { fs.appendFileSync(BENCH_AUDIT, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n"); } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 // ── Latency Test (HTTP ping) ────────────────────────────────────
@@ -207,7 +207,7 @@ async function runFullBenchmark(vectorMem) {
         await vectorMem.ingestMemory({
             content: `Provider benchmark: fastest=${report.fastest} (${sorted[0]?.totalLatency}ms). Ranking: ${report.ranking.map(r => `${r.rank}.${r.provider}(${r.totalLatency}ms)`).join(", ")}`,
             metadata: { type: "benchmark", fastest: report.fastest, ts: report.timestamp },
-        }).catch(() => { });
+        }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return report;

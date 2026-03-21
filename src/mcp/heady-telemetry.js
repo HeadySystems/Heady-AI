@@ -28,7 +28,7 @@ const METRICS_FILE = path.join(LOG_DIR, 'system-metrics.jsonl');
 const OPTIMIZATION_FILE = path.join(LOG_DIR, 'optimizations.jsonl');
 
 // Ensure log directory exists
-try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch { }
+try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 class HeadyTelemetry {
     constructor(vectorStore, learner) {

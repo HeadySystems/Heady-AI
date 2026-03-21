@@ -47,7 +47,7 @@ function createHealthzMiddleware(opts = {}) {
             service,
             checks_passed: readinessChecks.length,
             timestamp: new Date().toISOString(),
-          }}).catch(err => { /* promise error absorbed */ });
+          });
         })
         .catch(err => {
           res.status(503).json({

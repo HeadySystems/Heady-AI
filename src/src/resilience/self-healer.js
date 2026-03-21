@@ -89,7 +89,7 @@ const ISOLATION_MAX_MS      = PHI_TIMING.PHI_7;
  * healer.quarantine('OOM detected');
  *
  * // Attestation probe (call your real health-check function)
- * await healer.probe(() => fetch('/health').then(r => r.ok)).catch(err => { /* promise error absorbed */ });
+ * await healer.probe(() => fetch('/health').then(r => r.ok));
  */
 class SelfHealer {
   /**

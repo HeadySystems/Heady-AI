@@ -39,8 +39,8 @@ function withTimeout(promise, ms) {
     promise.then(
       (v) => { clearTimeout(timer); resolve(v); },
       (e) => { clearTimeout(timer); reject(e); }
-    ).catch(err => { /* promise error absorbed */ });
-  }}).catch(err => { /* promise error absorbed */ });
+    );
+  });
 }
 
 /**
@@ -48,9 +48,9 @@ function withTimeout(promise, ms) {
  */
 function measureEventLoopDelay() {
   return new Promise((resolve) => {
-    const start = Date.now().catch(err => { /* promise error absorbed */ });
-    setImmediate(() => resolve(Date.now() - start)).catch(err => { /* promise error absorbed */ });
-  }}).catch(err => { /* promise error absorbed */ });
+    const start = Date.now();
+    setImmediate(() => resolve(Date.now() - start));
+  });
 }
 
 /**

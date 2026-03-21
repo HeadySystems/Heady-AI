@@ -340,7 +340,7 @@ function _withTimeout(promise, ms, message) {
     return new Promise((resolve, reject) => {
         const timer = setTimeout(() => reject(new Error(message)), ms);
         promise
-            .then(result => { clearTimeout(timer).catch(err => { /* promise error absorbed */ }); resolve(result); })
+            .then(result => { clearTimeout(timer); resolve(result); })
             .catch(err => { clearTimeout(timer); reject(err); });
     });
 }

@@ -156,7 +156,7 @@ class HeadyCorrections extends EventEmitter {
         correctionType: correction.correctionType,
         provider: correction.provider,
         taskType: correction.taskType,
-      }).catch(() => { });
+      }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 

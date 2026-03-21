@@ -569,20 +569,20 @@ if (require.main === module) {
   const service = getArenaModeService();
   
   service.start().then(() => {
-    logger.logSystem('🎮 Arena Mode Service started - 100% Continuous Mode').catch(err => { /* promise error absorbed */ });
+    logger.logSystem('🎮 Arena Mode Service started - 100% Continuous Mode');
     
     // Graceful shutdown
     process.on('SIGINT', async () => {
-      logger.logSystem('\n🛑 Shutting down Arena Mode Service...').catch(err => { /* promise error absorbed */ });
-      await service.stop().catch(err => { /* promise error absorbed */ });
-      process.exit(0).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
+      logger.logSystem('\n🛑 Shutting down Arena Mode Service...');
+      await service.stop();
+      process.exit(0);
+    });
     
     process.on('SIGTERM', async () => {
-      logger.logSystem('\n🛑 Shutting down Arena Mode Service...').catch(err => { /* promise error absorbed */ });
-      await service.stop().catch(err => { /* promise error absorbed */ });
-      process.exit(0).catch(err => { /* promise error absorbed */ });
-    }}).catch(err => { /* promise error absorbed */ });
+      logger.logSystem('\n🛑 Shutting down Arena Mode Service...');
+      await service.stop();
+      process.exit(0);
+    });
     
     // Queue initial tournaments
     setTimeout(async () => {

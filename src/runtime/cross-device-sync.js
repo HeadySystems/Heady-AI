@@ -42,7 +42,7 @@ class CrossDeviceSyncHub extends EventEmitter {
         if (!this.vectorMemory) {
             try {
                 this.vectorMemory = require("./vector-memory");
-            } catch { }
+            } catch(e) { /* absorbed: */ console.error(e.message); }
         }
         this._persistTimer = null;
         this._persistentState = { users: {}, workspaces: {}, lastUpdatedAt: null };
@@ -149,7 +149,7 @@ class CrossDeviceSyncHub extends EventEmitter {
                     eventType,
                     ts: Date.now(),
                 },
-            }, 0.95).catch(() => { });
+            }, 0.95).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         if (global.eventBus) {
@@ -583,7 +583,7 @@ class CrossDeviceSyncHub extends EventEmitter {
             const dir = path.dirname(this.storePath);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(this.storePath, JSON.stringify(this._persistentState, null, 0));
-        } catch { }
+        } catch(e) { /* absorbed: */ console.error(e.message); }
     }
 }
 

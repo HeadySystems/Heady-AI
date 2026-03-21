@@ -194,9 +194,9 @@ class DawMcpBridge extends EventEmitter {
                 // Initial session state query
                 this._sendCommand(LOM_COMMANDS.GET_SESSION_STATE)
                     .then(state => {
-                        if (state) this._updateSessionState(state).catch(err => { /* promise error absorbed */ });
-                        this.emit("connected", this._sessionState).catch(err => { /* promise error absorbed */ });
-                        midiBus.noteOn(CHANNELS.TELEMETRY, NOTES.TASK_COMPLETE, 127, { task: "daw-handshake" }}).catch(err => { /* promise error absorbed */ });
+                        if (state) this._updateSessionState(state);
+                        this.emit("connected", this._sessionState);
+                        midiBus.noteOn(CHANNELS.TELEMETRY, NOTES.TASK_COMPLETE, 127, { task: "daw-handshake" });
                     })
                     .catch((e) => { /* absorbed: */ console.error(e.message); });
 

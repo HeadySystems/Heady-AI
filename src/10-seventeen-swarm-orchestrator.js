@@ -292,7 +292,7 @@ class Swarm {
       this._emit('task', task);
 
       this._executeTask(task).then(result => {
-        task.complete(result).catch(err => { /* promise error absorbed */ });
+        task.complete(result);
         this._stats.completed++;
         this._emit('complete', task);
         this._finishTask(task);

@@ -414,20 +414,20 @@ class HealthMonitor extends EventEmitter {
       this.config.llmEndpoints.map(url =>
         fetch(url, { signal: AbortSignal.timeout(5000) }).then(r => ({ url, ok: r.ok, status: r.status }))
       )
-    ).catch(err => { /* promise error absorbed */ });
+    );
 
     const checks = results.map((r, i) => ({
       url:       this.config.llmEndpoints[i],
       available: r.status === 'fulfilled' && r.value.ok,
-    })).catch(err => { /* promise error absorbed */ });
+    }));
 
     const available = checks.filter(c => c.available).length;
-    const score = Math.round((available / checks.length) * 100).catch(err => { /* promise error absorbed */ });
+    const score = Math.round((available / checks.length) * 100);
     return { score, status: score > 50 ? 'ok' : 'critical', detail: { checks } };
   }
 
   async _checkMemory() {
-    const totalMem = os.totalmem().catch(err => { /* promise error absorbed */ });
+    const totalMem = os.totalmem();
     const freeMem  = os.freemem();
     const usedPct  = ((totalMem - freeMem) / totalMem) * 100;
     const threshold = this.config.thresholds.memoryPct;

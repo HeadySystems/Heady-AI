@@ -126,7 +126,7 @@ class RealtimeIntelligenceEngine extends EventEmitter {
 
         // High-priority events trigger immediate flush
         if (isHighPriority) {
-            this._flush().catch(() => { });
+            this._flush().catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         return {

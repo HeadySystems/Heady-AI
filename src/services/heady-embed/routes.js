@@ -185,7 +185,7 @@ function createRouter(embedService) {
         })
         .then((embeddings) => {
           job.status = 'complete';
-          job.completedAt = Date.now().catch(err => { /* promise error absorbed */ });
+          job.completedAt = Date.now();
           job.result = {
             embeddings,
             count: embeddings.length,

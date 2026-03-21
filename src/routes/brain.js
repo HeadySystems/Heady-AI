@@ -80,7 +80,7 @@ function persistSession(sessionId) {
     try {
         if (!fs.existsSync(SESSIONS_DIR)) fs.mkdirSync(SESSIONS_DIR, { recursive: true });
         fs.writeFileSync(path.join(SESSIONS_DIR, `${sessionId}.json`), JSON.stringify(session, null, 2));
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 function trimSessionHistory(session) {
@@ -368,7 +368,7 @@ const { budgetService } = require("../shared/policy-service");
 // Usage tracking paths
 const USAGE_PATH = path.join(__dirname, "../../data/headyjules-usage.json");
 let claudeUsage = { totalCost: 0, requests: 0, byModel: {}, byOrg: {}, history: [] };
-try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch { }
+try { if (fs.existsSync(USAGE_PATH)) claudeUsage = JSON.parse(fs.readFileSync(USAGE_PATH, "utf8")); } catch(e) { /* absorbed: */ console.error(e.message); }
 
 function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTokens = 0) {
     // Pricing per 1M tokens (approximate as of 2025)
@@ -389,10 +389,10 @@ function trackClaudeUsage(model, inputTokens, outputTokens, orgName, thinkingTok
 
     // Integrate with BudgetService for unified governance
     if (budgetService) {
-        budgetService.recordUsage('ORG', orgName, cost, { model, inputTokens, outputTokens }).catch(() => { });
+        budgetService.recordUsage('ORG', orgName, cost, { model, inputTokens, outputTokens }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
-    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch { }
+    try { fs.writeFileSync(USAGE_PATH, JSON.stringify(claudeUsage, null, 2)); } catch(e) { /* absorbed: */ console.error(e.message); }
     return cost;
 }
 
@@ -635,7 +635,7 @@ function appendRaceAudit(entry) {
     try {
         ensureDataDir();
         fs.appendFileSync(RACE_AUDIT_PATH, JSON.stringify(entry) + "\n");
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 }
 
 router.post("/chat", async (req, res) => {
@@ -646,7 +646,7 @@ router.post("/chat", async (req, res) => {
     const { sessionId, session } = getOrCreateSession(session_id);
 
     logInteraction("chat", message, `[chat request at ${ts}, session: ${sessionId}]`);
-    storeInMemory(`Chat interaction: ${message}`, { type: "brain_chat", model: model || "heady-brain", session_id: sessionId, ts }).catch(() => { });
+    storeInMemory(`Chat interaction: ${message}`, { type: "brain_chat", model: model || "heady-brain", session_id: sessionId, ts }).catch((e) => { /* absorbed: */ console.error(e.message); });
 
     try {
         // ── Route through SDK Gateway with conversation history ──
@@ -673,7 +673,7 @@ router.post("/chat", async (req, res) => {
             logInteraction("chat_response", message, result.response);
             storeInMemory(`Brain response: ${(result.response || "").substring(0, 500)}`, {
                 type: "brain_response", engine: result.engine, latency: result.latency, session_id: sessionId, ts,
-            }).catch(() => { });
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
 
             // Write race audit to JSONL for the existing /race-audit endpoint
             appendRaceAudit({
@@ -999,7 +999,7 @@ router.get("/health", (req, res) => {
         if (fs.existsSync(BRAIN_LOG_PATH)) {
             interactionCount = JSON.parse(fs.readFileSync(BRAIN_LOG_PATH, "utf8")).length;
         }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     res.json({
         status: "ACTIVE",
@@ -1099,18 +1099,18 @@ router.post("/analyze", async (req, res) => {
 
         // Use HeadyPythia for analysis (fast + good at code)
         providers.push(chatViaGemini(analysisPrompt, req.body.system, 0.2, 4096)
-            .then(r => ({ ...r, source: "headypythia", latency: Date.now() - raceStart }))).catch(err => { /* promise error absorbed */ });
-        providerNames.push("headypythia").catch(err => { /* promise error absorbed */ });
+            .then(r => ({ ...r, source: "headypythia", latency: Date.now() - raceStart })));
+        providerNames.push("headypythia");
 
-        const winner = await Promise.any(providers).catch(err => { /* promise error absorbed */ });
-        const filtered = filterResponse(winner.response, { scrubProviders: true }}).catch(err => { /* promise error absorbed */ });
+        const winner = await Promise.any(providers);
+        const filtered = filterResponse(winner.response, { scrubProviders: true });
 
-        await storeInMemory(`Analysis: ${filtered.substring(0, 500)}`, { type: "analysis", source: winner.source, ts }}).catch(err => { /* promise error absorbed */ });
-        res.json({ ok: true, analysis: filtered, model: "heady-brain", type: type || "general", ts }}).catch(err => { /* promise error absorbed */ });
+        await storeInMemory(`Analysis: ${filtered.substring(0, 500)}`, { type: "analysis", source: winner.source, ts });
+        res.json({ ok: true, analysis: filtered, model: "heady-brain", type: type || "general", ts });
     } catch (err) {
-        res.status(500).json({ error: err.message, ts }}).catch(err => { /* promise error absorbed */ });
+        res.status(500).json({ error: err.message, ts });
     }
-}}).catch(err => { /* promise error absorbed */ });
+});
 
 // POST /api/brain/complete — Code/text completion
 router.post("/complete", async (req, res) => {
@@ -1166,7 +1166,7 @@ router.get("/sessions", (req, res) => {
                         updatedAt: data.updatedAt,
                         preview: data.history?.[0]?.content?.substring(0, 100) || "(empty)",
                     });
-                } catch { }
+                } catch(e) { /* absorbed: */ console.error(e.message); }
             }
         }
         // Include in-memory-only sessions
@@ -1182,7 +1182,7 @@ router.get("/sessions", (req, res) => {
                 });
             }
         }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
     sessionList.sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
     res.json({ ok: true, sessions: sessionList, total: sessionList.length, ts: new Date().toISOString() });
 });
@@ -1208,7 +1208,7 @@ router.delete("/sessions/:id", (req, res) => {
     try {
         const diskPath = path.join(SESSIONS_DIR, `${sid}.json`);
         if (fs.existsSync(diskPath)) fs.unlinkSync(diskPath);
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
     res.json({ ok: true, deleted: sid, ts: new Date().toISOString() });
 });
 

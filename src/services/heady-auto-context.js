@@ -821,7 +821,7 @@ class HeadyAutoContext extends EventEmitter {
                     }
                 }
             }
-        } catch (_) { }
+        } catch(_) { /* absorbed: */ console.error(_.message); }
 
         return sources;
     }
@@ -863,7 +863,7 @@ class HeadyAutoContext extends EventEmitter {
                         }));
                     }
                 }
-            } catch (_) { }
+            } catch(_) { /* absorbed: */ console.error(_.message); }
         }
 
         return sources;

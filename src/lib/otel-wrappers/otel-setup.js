@@ -147,8 +147,8 @@ async function shutdown() {
 // Auto-start unless OTEL_SDK_DISABLED=true
 if (process.env.OTEL_SDK_DISABLED !== 'true') {
   start();
-  process.on('SIGTERM', () => shutdown().then(() => process.exit(0))).catch(err => { /* promise error absorbed */ });
-  process.on('SIGINT',  () => shutdown().then(() => process.exit(0))).catch(err => { /* promise error absorbed */ });
+  process.on('SIGTERM', () => shutdown().then(() => process.exit(0)));
+  process.on('SIGINT',  () => shutdown().then(() => process.exit(0)));
 }
 
 module.exports = { sdk, start, shutdown, resource, compositePropagator };

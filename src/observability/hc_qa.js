@@ -316,7 +316,7 @@ class HeadyQA extends EventEmitter {
     _auditLog(entry) {
         try {
             fs.appendFileSync(QA_LOG, JSON.stringify({ ...entry, ts: new Date().toISOString() }) + "\n");
-        } catch { }
+        } catch(e) { /* absorbed: */ console.error(e.message); }
     }
 }
 

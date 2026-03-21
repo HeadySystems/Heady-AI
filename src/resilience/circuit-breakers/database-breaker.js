@@ -34,7 +34,7 @@ const BASE_RECONNECT_DELAY_MS = 500;
 function withTimeout(promise, ms, label) {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error(`DB timeout: ${label} (${ms}ms)`)), ms);
-    promise.then(v => { clearTimeout(t).catch(err => { /* promise error absorbed */ }); resolve(v); },
+    promise.then(v => { clearTimeout(t); resolve(v); },
                  e => { clearTimeout(t); reject(e); });
   });
 }

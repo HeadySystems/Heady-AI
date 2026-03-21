@@ -770,7 +770,7 @@ class BeeFactoryV2 extends EventEmitter {
                 while (queue.length > 0 && active.size < maxConcurrentBees) {
                   const bee = queue.shift();
                   active.add(bee.domain);
-                  runBee(bee).then(tick).catch(err => { /* promise error absorbed */ });
+                  runBee(bee).then(tick);
                 }
                 if (queue.length === 0 && active.size === 0) resolve();
               };

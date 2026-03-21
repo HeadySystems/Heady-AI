@@ -195,7 +195,7 @@ function recordInteraction(input, analysis, vectorMemory) {
     // Persist
     try {
         fs.writeFileSync(BEHAVIOR_STORE, JSON.stringify(behaviorModel, null, 2));
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Audit trail
     const auditEntry = {
@@ -207,14 +207,14 @@ function recordInteraction(input, analysis, vectorMemory) {
     };
     try {
         fs.appendFileSync(CORRECTIONS_LOG, JSON.stringify(auditEntry) + "\n");
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     // Store in vector memory for pattern detection
     if (vectorMemory && typeof vectorMemory.ingestMemory === "function") {
         vectorMemory.ingestMemory({
             content: `Behavioral signal: ${analysis.dominant} (intensity ${analysis.intensity.toFixed(2)}) — "${(input || "").substring(0, 200)}"`,
             metadata: { type: "behavior_signal", signal: analysis.dominant, intensity: analysis.intensity },
-        }).catch(() => { });
+        }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 }
 

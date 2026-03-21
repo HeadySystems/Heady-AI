@@ -467,7 +467,7 @@ class HeadyConductor extends EventEmitter {
 
     _audit(entry) {
         const line = JSON.stringify({ ...entry, ts: entry.ts || new Date().toISOString() });
-        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch { }
+        try { fs.appendFileSync(AUDIT_PATH, line + "\n"); } catch(e) { /* absorbed: */ console.error(e.message); }
         this.emit("audit", entry);
     }
 }
@@ -482,8 +482,8 @@ function getConductor() {
         try {
             const duckdbMem = require('./intelligence/duckdb-memory');
             duckdbMem.init().then(() => {
-                _conductor.setVectorMemory(duckdbMem).catch(err => { /* promise error absorbed */ });
-                logger.logSystem("  🧠 [Conductor] DuckDB V2 Vector Memory WIRED for zone-aware routing.").catch(err => { /* promise error absorbed */ });
+                _conductor.setVectorMemory(duckdbMem);
+                logger.logSystem("  🧠 [Conductor] DuckDB V2 Vector Memory WIRED for zone-aware routing.");
             }).catch(err => {
                 logger.warn(`  ⚠️ [Conductor] DuckDB init deferred: ${err.message}`);
             });

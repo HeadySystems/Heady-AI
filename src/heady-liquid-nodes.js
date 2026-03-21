@@ -1543,8 +1543,8 @@ class NodeOrchestrator {
                 operationId,
                 resultCount: results.length,
                 results,
-              }}).catch(err => { /* promise error absorbed */ });
-            }}).catch(err => { /* promise error absorbed */ });
+              }});
+            }});
           }
         }
       };

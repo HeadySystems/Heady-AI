@@ -97,7 +97,7 @@ function createBee(domain, config = {}) {
         const w = workers[i];
         if (typeof w !== 'function' && (typeof w !== 'object' || typeof w.fn !== 'function')) {
             validated = false;
-            try { logger.warn(`Worker ${i} in '${domain}' is not callable`); } catch { }
+            try { logger.warn(`Worker ${i} in '${domain}' is not callable`); } catch(e) { /* absorbed: */ console.error(e.message); }
         }
     }
 

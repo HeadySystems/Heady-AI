@@ -69,7 +69,7 @@ function computeRAMStateHash() {
                 stateComponents.push(fs.readFileSync(path.join(sharedDir, f), "utf8"));
             }
         }
-    } catch { }
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     return crypto.createHash("sha256")
         .update(stateComponents.join("\n---STATE-BOUNDARY---\n"))
