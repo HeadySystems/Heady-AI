@@ -252,7 +252,28 @@ class MemoryRouter {
     // Automatic tier migration runs at φ-scaled intervals
     // Hot → Warm: items past their TTL but still valuable
     // Warm → Cold: items older than warmThreshold
-    logger.debug({}, 'Migration cycle tick');
+    logger.debug({}, 'Migration cycle tick started');
+    try {
+      if (this._hot && typeof this._hot.exportStale === 'function') {
+        const staleItems = await this._hot.exportStale();
+        for (const item of staleItems) {
+            await this._setWarm(item.key, item.value, item.metadata);
+            this._metrics.migrations.hotToWarm++;
+        }
+      }
+      if (this._warm && typeof this._warm.exportOld === 'function') {
+        const oldItems = await this._warm.exportOld(TIER_TTLS[TIER.WARM]);
+        for (const item of oldItems) {
+            await this._setCold(item.key, item.value, item.metadata);
+            if (typeof this._warm.delete === 'function') {
+              await this._warm.delete(item.key);
+            }
+            this._metrics.migrations.warmToCold++;
+        }
+      }
+    } catch (err) {
+      logger.error({ error: err.message }, 'Migration cycle failed');
+    }
   }
 
   metrics() {
