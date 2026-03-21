@@ -34,7 +34,7 @@ class Database {
       if (this.db && this.db.close) {
         this.db.close();
       }
-    } catch (err) { // ignore  }
+    } catch (err) { /* ignore */ }
     this.db = null;
   }
 }

@@ -94,7 +94,7 @@ const { FIB, PSI, PHI, phiBackoff, phiScale } = phiMath;
 let express = null;
 try {
   express = require('express');
-} catch (e) { // Express will be required later if router is needed  }
+} catch (e) { /* Express will be required later if router is needed */ }
 
 const expressRouter = express ? express.Router() : null;
 

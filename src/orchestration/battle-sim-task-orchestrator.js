@@ -300,7 +300,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                             avgScore >= PSI_SQ ? 'marginal' : 'non_deterministic',
                     };
                 }
-            } catch (_) { // Fall through to local hash-based MC  }
+            } catch (_) { /* Fall through to local hash-based MC */ }
         }
 
         // Fallback: structural hash-based MC (no real AI calls)

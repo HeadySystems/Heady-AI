@@ -807,7 +807,7 @@ class ProjectionSwarm extends EventEmitter {
         try {
             const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
             fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-        } catch (_) { // Non-fatal — audit failure does not stop projection  }
+        } catch (_) { /* Non-fatal — audit failure does not stop projection */ }
     }
 }
 

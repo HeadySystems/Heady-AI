@@ -40,7 +40,7 @@ function _writeAudit(entry) {
   if (_auditStream) {
     try {
       _auditStream.write(JSON.stringify(entry) + '\n');
-    } catch (err) { // Non-fatal  }
+    } catch (err) { /* Non-fatal */ }
   }
 }
 

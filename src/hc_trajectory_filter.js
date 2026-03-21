@@ -269,7 +269,7 @@ class TrajectoryFilter {
         try {
           const entries = traceLoader(summary.traceId);
           this.extractTips(entries, summary);
-        } catch (e) { // skip traces that fail to load  }
+        } catch (e) { /* skip traces that fail to load */ }
       }
     }
 

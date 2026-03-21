@@ -123,7 +123,7 @@ function scoreTestAlignment(sourceNames, testDescriptions) {
         const result = CSL.resonance_gate(snVec, tdVec, PHI_INVERSE * 0.4);
         totalScore += result.score;
         comparisons++;
-      } catch (_) { // dimension mismatch etc. — skip  }
+      } catch (_) { /* dimension mismatch etc. — skip */ }
     }
   }
 

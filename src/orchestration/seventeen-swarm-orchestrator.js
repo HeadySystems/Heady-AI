@@ -19,7 +19,7 @@ const TAXONOMY_PATH = require('path').resolve(__dirname, '../../configs/swarm-ta
 let _swarmTaxonomy = null;
 try {
   _swarmTaxonomy = JSON.parse(require('fs').readFileSync(TAXONOMY_PATH, 'utf8'));
-} catch (e) { // taxonomy not required for core operation  }
+} catch (e) { /* taxonomy not required for core operation */ }
 
 function getSwarmTaxonomy() { return _swarmTaxonomy; }
 

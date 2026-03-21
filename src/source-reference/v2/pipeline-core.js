@@ -116,7 +116,7 @@ function appendLog(state, level, message, detail) {
     const line = `[${entry.ts}] [${level.toUpperCase()}] [${entry.stage}] ${message}`;
     try {
         fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
-    } catch (_) { // log file write failure is non-fatal  }
+    } catch (_) { /* log file write failure is non-fatal */ }
 }
 
 // ─── STOP RULE EVALUATOR ────────────────────────────────────────────────────

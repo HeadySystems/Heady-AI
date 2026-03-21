@@ -765,7 +765,7 @@
         "n": 83
       },
       "trend": "flat",
-      "improvementAttempts": 252,
+      "improvementAttempts": 254,
       "lastImproved": "2026-03-21T12:47:03.640Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -783,62 +783,5 @@
   "metadata": {
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
-  },
-  "lastUpdated": "2026-03-21T13:00:01.199Z",
-  "version": 1,
-  "phi": 1.618033988749895,
-  "resourcePatterns": [
-    {
-      "type": "RESOURCE_STABLE",
-      "confidence": 0.85,
-      "severity": "LOW",
-      "firstSeen": "2026-03-21T13:00:01.199Z",
-      "lastSeen": "2026-03-21T13:00:01.199Z",
-      "occurrences": 1
-    }
-  ],
-  "gitVelocity": "HIGH",
-  "commitCount24h": 87,
-  "topTopics": [
-    {
-      "word": "chore(auto)",
-      "count": 67
-    },
-    {
-      "word": "[tier=significant]",
-      "count": 57
-    },
-    {
-      "word": "auto-commit.log",
-      "count": 53
-    },
-    {
-      "word": "pattern_store.json",
-      "count": 28
-    },
-    {
-      "word": "hcfp-auto",
-      "count": 17
-    },
-    {
-      "word": "file(s)",
-      "count": 17
-    },
-    {
-      "word": "changed",
-      "count": 17
-    },
-    {
-      "word": "index.html",
-      "count": 12
-    },
-    {
-      "word": "resource-events.jsonl",
-      "count": 9
-    },
-    {
-      "word": "[tier=trivial]",
-      "count": 8
-    }
-  ]
+  }
 }

@@ -522,7 +522,7 @@ function getContentForDomain(domain) {
       OTHER_DOMAIN_CONTENT[domain] = dynamicContent;
       return dynamicContent;
     }
-  } catch (e) { // content-loader not available or failed — graceful degradation  }
+  } catch (e) { /* content-loader not available or failed — graceful degradation */ }
 
   return null;
 }

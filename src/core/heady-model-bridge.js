@@ -7,7 +7,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 let providerConnector = null;
 try {
   providerConnector = require('../integrations/provider-connector');
-} catch (err) { // provider-connector not available  }
+} catch (err) { /* provider-connector not available */ }
 
 class ModelBridge {
   constructor(options = {}) {

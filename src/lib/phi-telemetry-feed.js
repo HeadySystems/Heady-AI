@@ -290,7 +290,7 @@ class PhiTelemetryFeed {
             if (rxBytes > 0 || txBytes > 0) {
                 this._prevNetworkStats = { rx: rxBytes, tx: txBytes };
             }
-        } catch (_) { // Network stats not available on this platform; silently skip  }
+        } catch (_) { /* Network stats not available on this platform; silently skip */ }
     }
 
     // ══════════════════════════════════════════════════════════════════

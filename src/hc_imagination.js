@@ -202,7 +202,7 @@ class ImaginationEngine {
     const cacheDir = path.dirname(this.config.primitivesPath);
     try {
       await fs.mkdir(cacheDir, { recursive: true });
-    } catch (e) { // Directory may already exist  }
+    } catch (e) { /* Directory may already exist */ }
     
     // Load persisted state
     await this.loadPrimitives();
@@ -223,7 +223,7 @@ class ImaginationEngine {
         p.last_used = new Date(p.last_used);
         this.primitives.set(p.id, p);
       }
-    } catch (e) { // No existing primitives  }
+    } catch (e) { /* No existing primitives */ }
   }
 
   async savePrimitives() {
@@ -240,7 +240,7 @@ class ImaginationEngine {
         c.updated_at = new Date(c.updated_at);
         this.concepts.set(c.id, c);
       }
-    } catch (e) { // No existing concepts  }
+    } catch (e) { /* No existing concepts */ }
   }
 
   async saveConcepts() {
@@ -257,7 +257,7 @@ class ImaginationEngine {
         if (e.completed_at) e.completed_at = new Date(e.completed_at);
         this.experiments.set(e.id, e);
       }
-    } catch (e) { // No existing experiments  }
+    } catch (e) { /* No existing experiments */ }
   }
 
   async saveExperiments() {
@@ -273,7 +273,7 @@ class ImaginationEngine {
         p.created_at = new Date(p.created_at);
         this.ipPackages.set(p.id, p);
       }
-    } catch (e) { // No existing IP packages  }
+    } catch (e) { /* No existing IP packages */ }
   }
 
   async saveIPPackages() {

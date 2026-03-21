@@ -973,7 +973,7 @@ router.post("/search", async (req, res) => {
                 if (results.length >= (limit || 10)) break;
             }
         }
-    } catch (err) { // Non-critical  }
+    } catch (err) { /* Non-critical */ }
 
     res.json({
         ok: true,

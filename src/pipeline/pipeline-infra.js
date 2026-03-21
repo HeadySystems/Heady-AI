@@ -134,7 +134,7 @@ function saveTaskCache() {
     try {
         if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
         fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
-    } catch (_) { // non-fatal  }
+    } catch (_) { /* non-fatal */ }
 }
 
 function getTaskCacheKey(taskName, configHashes) {

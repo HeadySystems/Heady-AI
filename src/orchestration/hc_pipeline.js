@@ -160,7 +160,7 @@ function appendLog(state, level, message, detail) {
   const line = `[${entry.ts}] [${level.toUpperCase()}] [${entry.stage}] ${message}`;
   try {
     fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
-  } catch (_) { // log file write failure is non-fatal  }
+  } catch (_) { /* log file write failure is non-fatal */ }
 }
 
 // ─── STOP RULE EVALUATOR ────────────────────────────────────────────────────
@@ -347,7 +347,7 @@ function saveTaskCache() {
   try {
     if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
     fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
-  } catch (_) { // non-fatal  }
+  } catch (_) { /* non-fatal */ }
 }
 
 function getTaskCacheKey(taskName, configHashes) {
@@ -872,7 +872,7 @@ class HCFullPipeline extends EventEmitter {
 
     // ── Auto-commit + push after pipeline run ──────────────────────────
     try {
-      let { autoCommitEngine } = {}; try { { autoCommitEngine } = require("./engines/auto-commit-engine"); } catch (e) { /* graceful */  }
+      let autoCommitEngine; try { ({ autoCommitEngine } = require("../engines/auto-commit-engine")); } catch (e) { /* graceful */ }
       const commitResult = await autoCommitEngine.autoCommitAndPush({
         context: `pipeline_run:${this.state.runId}`,
       });

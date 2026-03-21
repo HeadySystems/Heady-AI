@@ -140,7 +140,7 @@ class HeadyLogger {
           threshold: LOG_ROTATION_THRESHOLD,
           ts:        Date.now(),
         });
-      } catch (_) { // rotation handler must not crash the logger  }
+      } catch (_) { /* rotation handler must not crash the logger */ }
     }
   }
 

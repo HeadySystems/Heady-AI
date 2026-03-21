@@ -96,7 +96,7 @@ try {
       if (this._broadcaster) {
         try {
           await this._broadcaster(payload);
-        } catch (err) { // graceful degradation — log and continue  }
+        } catch (err) { /* graceful degradation — log and continue */ }
       }
       return payload;
     }

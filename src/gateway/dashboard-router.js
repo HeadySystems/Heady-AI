@@ -57,7 +57,7 @@ function setupDashboardRoutes(app) {
         hasKey: !!process.env[p.envKey],
         rateLimit: p.rateLimit,
       }));
-    } catch (e) { // config may not exist in test environments  }
+    } catch (e) { /* config may not exist in test environments */ }
 
     const internalServices = [
       { id: 'heady-manager', status: 'running', port: process.env.PORT || 3301 },
