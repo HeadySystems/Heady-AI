@@ -17,6 +17,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;

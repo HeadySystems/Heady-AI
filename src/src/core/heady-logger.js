@@ -15,6 +15,7 @@
 'use strict';
 
 const { fib, PSI } = require('../../shared/phi-math');
+const logger = require('../../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

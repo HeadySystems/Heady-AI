@@ -21,6 +21,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 
 const crypto = require('crypto');
 const {
+const logger = require('../utils/logger');
   PHI, PSI, fib, phiBackoff, ALERT_THRESHOLDS,
 } = require('../../shared/phi-math');
 

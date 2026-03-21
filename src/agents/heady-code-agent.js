@@ -42,6 +42,7 @@ const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const yaml = require("js-yaml");
+const logger = require('../utils/logger');
 
 const AGENT_ID = "headyjules-code";
 const AGENT_SKILLS = [
@@ -411,7 +412,9 @@ class ClaudeCodeAgent {
             engine: result.engine,
           };
         }
-      } catch { /* gateway unavailable */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
       // Absolute fallback
       return {

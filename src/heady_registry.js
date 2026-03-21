@@ -27,6 +27,7 @@ const fs = require('fs');
 const path = require('path');
 
 const REGISTRY_PATH = 'heady-registry.json';
+const logger = require('./utils/logger');
 
 function loadRegistry(registryPath = REGISTRY_PATH) {
   try {

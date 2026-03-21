@@ -28,6 +28,7 @@ const PSI = 0.618033988749895;
 const AgentStatus = { IDLE: 'idle', BUSY: 'busy', OVERLOADED: 'overloaded', OFFLINE: 'offline' };
 const TaskStatus = { PENDING: 'pending', ASSIGNED: 'assigned', RUNNING: 'running', COMPLETED: 'completed', FAILED: 'failed', COMPENSATING: 'compensating' };
 const CircuitState = { CLOSED: 'closed', OPEN: 'open', HALF_OPEN: 'half-open' };
+const logger = require('../utils/logger');
 
 // ═══════════════════════════════════════════════════════════════════
 // Circuit Breaker

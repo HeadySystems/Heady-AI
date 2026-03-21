@@ -178,7 +178,9 @@ class AsyncLogWriter {
         try {
             const dir = path.dirname(this._filePath);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     append(line) {

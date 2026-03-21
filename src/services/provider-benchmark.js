@@ -22,6 +22,7 @@ const fs = require("fs");
 const path = require("path");
 const http = require("http");
 const https = require("https");
+const logger = require('./utils/logger');
 
 const BENCH_FILE = path.join(__dirname, "..", "data", "provider-benchmarks.json");
 const BENCH_AUDIT = path.join(__dirname, "..", "data", "benchmark-audit.jsonl");
@@ -59,7 +60,6 @@ async function benchmarkHF() {
     try {
         // HeadyModelBridge replaces HuggingFace SDK — use heady-model-bridge.chat('huggingface', ...)
         const InferenceClient = null; // Replaced by HeadyModelBridge
-        const logger = require("./utils/logger");
         const tokens = [process.env.HF_TOKEN, process.env.HF_TOKEN_2, process.env.HF_TOKEN_3].filter(Boolean);
         if (tokens.length === 0) return { provider: "hf", ok: false, error: "no tokens" };
 

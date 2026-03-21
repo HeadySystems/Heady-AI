@@ -44,6 +44,7 @@ import {
 
 /** Vector count thresholds for index type selection */
 const THRESHOLDS = {
+const logger = require('../utils/logger');
   bruteForce:     30_000,    // <30K: brute-force acceptable
   hnswPreferred:  50_000,    // 30K–50K: HNSW starts winning
   hnswRequired:   1_000_000, // 50K–1M: HNSW strongly preferred

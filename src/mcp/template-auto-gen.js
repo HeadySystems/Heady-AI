@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs');
+const logger = require('../utils/logger');
 
 // ── Import factories ─────────────────────────────────────────────
 let beeFactory;

@@ -7,6 +7,7 @@ const logger = require('./utils/logger').createLogger('auto-fix');
  */
 
 const EventEmitter = require('events');
+const logger = require('./utils/logger');
 const PHI = (1 + Math.sqrt(5)) / 2;
 
 class ComputeDashboard extends EventEmitter {

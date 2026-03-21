@@ -137,7 +137,10 @@ check('Secure Vault', () => {
                     if (Array.isArray(data)) {
                         credCount += data.filter(v => v.metadata?.type === 'credential').length;
                     }
-                } catch { /* skip */ }
+                } catch (e) {
+                  const logger = require('../../utils/logger');
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
             if (credCount > 0) {
                 pass(`${credCount} encrypted credentials in vector space`);

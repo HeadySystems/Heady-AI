@@ -203,7 +203,9 @@ class HeadyConductor extends EventEmitter {
                         ? await this.vectorMem.getZoneForQuery(queryText)
                         : null;
                     if (zoneInfo) vectorZone = zoneInfo;
-                } catch { /* zone routing optional */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         }
 

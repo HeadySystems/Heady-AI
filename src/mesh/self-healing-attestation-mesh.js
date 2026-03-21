@@ -19,6 +19,7 @@
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 const {
     resonance_gate,
     consensus_superposition,

@@ -382,7 +382,9 @@ class HeadyCreativeEngine extends EventEmitter {
                 if (flow?.allocated?.[0]) {
                     return { model, caps: MODEL_CATALOG[model]?.caps || [], liquidFlow: flow.id };
                 }
-            } catch { /* liquid not available, use default */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         return { model, caps: MODEL_CATALOG[model]?.caps || [] };

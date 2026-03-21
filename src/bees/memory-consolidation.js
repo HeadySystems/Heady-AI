@@ -39,6 +39,7 @@
  */
 
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -419,7 +420,9 @@ class WriteThrough {
       try {
         await this._vm.ingestMemory(row.namespace, row.content, row.embedding, row.metadata || {});
         count++;
-      } catch { /* skip individual failures */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return count;
   }
@@ -511,7 +514,9 @@ class ArchivalStore {
           [id, d.agentId || 'BUDDY', JSON.stringify(d), d.outcome || 'unknown', d.ts || now, now]
         );
         count++;
-      } catch { /* skip individual failures */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return count;
   }

@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -871,7 +872,7 @@ class BeeFactoryV2 extends EventEmitter {
                 while (queue.length > 0 && active.size < maxConcurrentBees) {
                   const bee = queue.shift();
                   active.add(bee.domain);
-                  runBee(bee).then(tick);
+                  runBee(bee).then(tick).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
                 }
                 if (queue.length === 0 && active.size === 0) resolve();
               };

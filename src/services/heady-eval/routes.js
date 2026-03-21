@@ -28,6 +28,7 @@ const logger = createLogger('routes');
 const { Router } = require('express');
 const { Dataset } = require('./datasets');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Input validation helpers ─────────────────────────────────────────────────
 

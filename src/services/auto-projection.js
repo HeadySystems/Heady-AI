@@ -197,7 +197,9 @@ async function _pushToEdgeCache() {
                     }
                 );
                 pushed++;
-            } catch { /* continue pushing others */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
 
         return { pushed: true, sitesInKV: pushed, namespaceId };

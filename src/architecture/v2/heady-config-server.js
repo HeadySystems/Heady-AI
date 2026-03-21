@@ -899,8 +899,8 @@ class ConfigServer extends EventEmitter {
           this.emit('config:file:reloaded');
         }
       });
-    } catch {
-      // File may not exist yet in dev — that's fine
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
   _startGcpPoll() {

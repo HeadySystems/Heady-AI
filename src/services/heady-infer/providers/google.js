@@ -5,6 +5,7 @@ const https = require('https');
 const http  = require('http');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * GoogleProvider — Gemini adapter

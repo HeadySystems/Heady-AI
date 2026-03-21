@@ -124,7 +124,9 @@ function loadState() {
         if (fs.existsSync(PROJECTION_STATE_PATH)) {
             projectionState = JSON.parse(fs.readFileSync(PROJECTION_STATE_PATH, 'utf8'));
         }
-    } catch { /* fresh start */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Ensure all targets are registered
     for (const target of PROJECTION_TARGETS) {
@@ -147,7 +149,9 @@ function saveState() {
     try {
         if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
         fs.writeFileSync(PROJECTION_STATE_PATH, JSON.stringify(projectionState, null, 2));
-    } catch { /* best effort */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ── Health Probes ───────────────────────────────────────────────

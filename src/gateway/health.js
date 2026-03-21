@@ -84,7 +84,9 @@ async function checkMemoryStore() {
       const raw = await fs.promises.readFile(indexPath, 'utf8');
       const data = JSON.parse(raw);
       memoryCount = Array.isArray(data) ? data.length : 0;
-    } catch { /* corrupt index */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
   return { accessible, memoryCount, path: storePath };
 }

@@ -11,6 +11,7 @@ const PHI = (1 + Math.sqrt(5)) / 2;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
+const logger = require('./utils/logger');
 
 const SYNC_STRATEGIES = {
   PUSH: 'push',     // Push changes to peers
@@ -212,7 +213,9 @@ class VectorFederation extends EventEmitter {
         const resp = await axios.post(`${peer.url}/api/vector/search`, { query, topK }, { timeout: Math.round(PHI ** 3 * 1000) }); // φ³×1000 ≈ 4236ms
         const peerResults = resp.data?.results || [];
         results.push(...peerResults.map(r => ({ ...r, node: peer.id, source: 'peer' })));
-      } catch { /* peer unavailable */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Deduplicate by ID, keeping highest score

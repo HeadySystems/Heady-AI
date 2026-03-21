@@ -16,6 +16,7 @@ const logger = createLogger('host-cookie-binder');
 
 // ── φ-Derived Constants ──────────────────────────────────
 const CSL_THRESHOLDS = {
+const logger = require('../utils/logger');
   CRITICAL: phiThreshold(4),
   HIGH:     phiThreshold(3),
   MEDIUM:   phiThreshold(2),

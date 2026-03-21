@@ -7,6 +7,7 @@ const {
   URL
 } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * OpenAIProvider — GPT adapter

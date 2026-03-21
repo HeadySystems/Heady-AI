@@ -20,6 +20,7 @@ const { MemoryManager, BufferMemory } = require('./memory');
 const { ChatPromptTemplate, OutputParsers, PromptTemplate } = require('./prompts');
 const { httpPost, interpolate } = require('./nodes');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Shared LLM call helper ───────────────────────────────────────────────────
 

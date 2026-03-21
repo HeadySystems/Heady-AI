@@ -28,6 +28,7 @@ const crypto = require("crypto");
 
 const USERS_PATH = path.join(__dirname, "..", ".heady", "users.json");
 const PLANS = {
+const logger = require('./utils/logger');
   explorer: { name: "Explorer", price: 0, dailyLimit: 100, stripePriceId: null },
   starter: { name: "Starter", price: 2900, dailyLimit: 2000, stripePriceId: process.env.STRIPE_PRICE_STARTER || null },
   pro: { name: "Pro", price: 9900, dailyLimit: Infinity, stripePriceId: process.env.STRIPE_PRICE_PRO || null },

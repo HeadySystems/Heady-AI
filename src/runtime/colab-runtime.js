@@ -39,6 +39,7 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597
 const RUNTIME_COUNT = parseInt(process.env.HEADY_COLAB_RUNTIME_COUNT || "4");
 
 const RUNTIMES = {
+const logger = require('../utils/logger');
     "colab-a": {
         id: "colab-a",
         role: "realtime-inference-and-projection",

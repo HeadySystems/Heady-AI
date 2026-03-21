@@ -248,6 +248,7 @@ class HeadyOrchestrator {
     
     // Initialize workflow state
     const workflowState = {
+const logger = require('./utils/logger');
       runId,
       status: 'running',
       startTime: Date.now(),

@@ -24,6 +24,7 @@ const IMPROVEMENTS_LOG = path.join(REPO_ROOT, 'logs', 'improvements.jsonl');
 
 const PHI = 1.618033988749895;
 const CSL_THRESHOLD = 0.618;
+const logger = require('../utils/logger');
 
 /**
  * Load JSON file safely

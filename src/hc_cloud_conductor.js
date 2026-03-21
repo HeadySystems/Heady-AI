@@ -135,6 +135,7 @@ class HeadyCloudConductor {
     
     // Get resource profile
     const resourceProfile = this.resourceProfiles.get(impactTier);
+const logger = require('./utils/logger');
     
     // Check quotas and budgets
     await this.checkQuotas(tenant, resourceProfile);

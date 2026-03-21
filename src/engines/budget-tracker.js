@@ -19,6 +19,7 @@ const logger = require('../utils/logger') || console;
 const EventEmitter = require('events');
 const phiMath = require('../../shared/phi-math.js');
 const {
+const logger = require('../utils/logger');
   PHI,
   PSI,
   FIB,

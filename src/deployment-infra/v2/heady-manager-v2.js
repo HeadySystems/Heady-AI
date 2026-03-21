@@ -217,6 +217,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
 startupState.phase = 'engines';
 const { wireEngines } = require('./src/bootstrap/engine-wiring');
 const { loadRegistry } = require('./src/routes/registry');
+const logger = require('../../utils/logger');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
 const _engines = wireEngines(app, {
   pipeline, loadRegistry, eventBus,
@@ -294,7 +295,9 @@ if (metricsRegistry) {
       name: 'heady_boot_duration_seconds',
       help: 'Time taken to boot the server in seconds',
     }).set(startupState.bootTimeMs / 1000);
-  } catch { /* optional */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 }
 
 // ── Graceful Shutdown ─────────────────────────────────────────────────────────
@@ -383,7 +386,9 @@ async function gracefulShutdown(signal) {
   // Step 6: Stop watchdog
   try {
     if (watchdog?.stop) watchdog.stop();
-  } catch { /* optional */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   logger.info('[Manager] Graceful shutdown complete');
   process.exit(0);

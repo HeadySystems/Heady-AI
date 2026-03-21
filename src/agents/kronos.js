@@ -12,6 +12,7 @@ const MAX_RETRIES = 5;
 const BASE_RETRY_MS = 1000;
 
 const TaskState = {
+const logger = require('../utils/logger');
   PENDING: 'pending',
   RUNNING: 'running',
   COMPLETED: 'completed',

@@ -5,6 +5,7 @@ const http  = require('http');
 const https = require('https');
 const { URL } = require('url');
 const BaseProvider = require('./base-provider');
+const logger = require('../../../utils/logger');
 
 /**
  * LocalProvider — Ollama adapter for locally-hosted models.

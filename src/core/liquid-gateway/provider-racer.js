@@ -11,6 +11,9 @@ const logger = console;
  */
 
 import { EventEmitter } from 'events';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const logger = require('../../utils/logger');
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;                 // ≈ 0.618

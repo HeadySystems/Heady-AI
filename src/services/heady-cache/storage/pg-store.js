@@ -26,6 +26,7 @@
  */
 
 const config = require('../config');
+const logger = require('../../../utils/logger');
 
 // Lazy-require pg to avoid crashing if not installed
 let pg;
@@ -322,8 +323,8 @@ class PgStore {
         CREATE INDEX IF NOT EXISTS heady_cache_vec_idx
         ON heady_cache USING ivfflat (vector vector_cosine_ops) WITH (lists = 100)
       `);
-    } catch {
-      // pgvector might not be installed or no data yet — skip
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
   }
 

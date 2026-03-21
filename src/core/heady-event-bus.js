@@ -44,6 +44,7 @@ const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─── Topic Namespace Rules ───────────────────────────────────────────────────
 
@@ -386,7 +387,9 @@ class HeadyEventBus extends EventEmitter {
       try {
         this.emit(topic, dl.event);
         retried++;
-      } catch { /* still failing — leave in DLQ */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return retried;
   }
@@ -535,8 +538,12 @@ class HeadyEventBus extends EventEmitter {
    */
   async destroy() {
     if (this._subClient) {
-      try { await this._subClient.unsubscribe(); } catch { /* best-effort */ }
-      try { this._subClient.disconnect(); } catch { /* best-effort */ }
+      try { await this._subClient.unsubscribe(); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
+      try { this._subClient.disconnect(); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     this.removeAllListeners();
     this._replayBuffers.clear();

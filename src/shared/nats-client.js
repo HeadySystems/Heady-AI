@@ -490,8 +490,8 @@ class HeadyNatsClient {
     }] of this.subscriptions) {
       try {
         sub.unsubscribe();
-      } catch {
-        // ignore
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
     this.subscriptions.clear();

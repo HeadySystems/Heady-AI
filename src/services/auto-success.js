@@ -26,7 +26,9 @@ const CATEGORY_HANDLERS = {
     if (!fs.existsSync(storePath)) fs.mkdirSync(storePath, { recursive: true });
     let count = 0;
     if (fs.existsSync(indexPath)) {
-      try { count = JSON.parse(fs.readFileSync(indexPath, 'utf8')).length; } catch { /* ok */ }
+      try { count = JSON.parse(fs.readFileSync(indexPath, 'utf8')).length; } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     return { memoryCount: count };
   },

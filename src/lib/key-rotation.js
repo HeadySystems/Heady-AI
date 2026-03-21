@@ -10,6 +10,7 @@ const crypto = require('crypto');
 
 const KEY_TTL_MS = parseInt(process.env.KEY_TTL_MS || String(24 * 60 * 60 * 1000), 10); // 24h default
 const ROTATION_WARN_MS = KEY_TTL_MS * 0.8;
+const logger = require('../utils/logger');
 
 class KeyRotationManager {
     constructor() {

@@ -32,6 +32,7 @@ const config = require('./config');
 
 /** @type {Map<string, object>} jobId -> job state */
 const jobStore = new Map();
+const logger = require('../../utils/logger');
 
 function createJob(texts, options) {
   const jobId = crypto.randomUUID();

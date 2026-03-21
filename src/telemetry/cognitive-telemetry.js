@@ -135,7 +135,9 @@ function persistAuditEntry(entry) {
         fs.appendFile(AUDIT_LOG, line, (err) => {
             if (err) logger.error("[CogTel] Audit log write error:", err.message);
         });
-    } catch { /* never crash the hot path */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 /**

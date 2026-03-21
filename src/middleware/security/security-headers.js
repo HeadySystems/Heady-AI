@@ -370,6 +370,7 @@ module.exports = {
 /*
 const express = require('express');
 const { securityHeaders, cspViolationHandler, frameOptions } = require('./security-headers');
+const logger = require('../../utils/logger');
 
 const app = express();
 

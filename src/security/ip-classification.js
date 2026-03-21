@@ -19,6 +19,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─── IP Classification Levels ─────────────────────────────────────────
 const IP_LEVELS = {

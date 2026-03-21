@@ -27,6 +27,9 @@ import { createServiceApp } from '@heady-ai/service-runtime';
             }));
             app.post('/memory/upsert', async (request) => ({ accepted: true, body: request.body }));
 
+        app.get('/health', (req, res) => {
+          res.json({ status: 'ok', service: 'heady-memory', timestamp: new Date().toISOString() });
+        });
 
         const port = Number(process.env.PORT ?? 4304);
         app.listen({ port, host: '0.0.0.0' }).then(() => {

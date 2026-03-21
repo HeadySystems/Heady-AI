@@ -17,6 +17,7 @@ const { DriftDetector } = require('./drift-detector');
 const { SpatialMapper } = require('./spatial-mapper');
 const { MemoryConsolidator } = require('./memory-consolidation');
 const { GraphRAG, KnowledgeGraph } = require('./graph-rag');
+const logger = require('../utils/logger');
 
 /**
  * Factory: create a fully wired Latent OS instance.

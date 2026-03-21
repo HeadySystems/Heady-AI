@@ -305,7 +305,9 @@ class LogFileRotator {
           await fs.unlink(fp).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
       }
-    } catch { /* best-effort */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   /** @returns {string} Current log file path */
@@ -875,7 +877,9 @@ export class MCPAuditLogger extends EventEmitter {
           try {
             const record = JSON.parse(line);
             results.push(record);
-          } catch { /* skip malformed lines */ }
+          } catch (e) {
+            logger.error('Unexpected error', { error: e.message, stack: e.stack });
+          }
         }
         if (results.length >= (query.limit ?? 100) * 10) break; // Early termination
       }

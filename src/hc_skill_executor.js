@@ -29,6 +29,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const yaml = require('js-yaml');
 const { EventEmitter } = require('events');
+const logger = require('./utils/logger');
 
 class SkillExecutor extends EventEmitter {
   constructor(options = {}) {

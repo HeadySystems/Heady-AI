@@ -143,8 +143,8 @@ export function createAuthRouter({
         req.user = authProvider.verifyAccessToken(token);
         req.tokenScopes = req.user.permissions?.scopes ?? [];
       }
-    } catch {
-      // Swallow errors — optional auth
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
     next();
   };

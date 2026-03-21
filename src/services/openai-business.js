@@ -13,6 +13,7 @@
  */
 const HeadyCompute = (() => { try { return require('headycompute') } catch (e) { return {} } })();
 const path = require('path');
+const logger = require('../utils/logger');
 const HeadyGateway = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'gateway'));
 const { createProviders } = require(path.join(__dirname, '..', '..', 'heady-hive-sdk', 'lib', 'providers'));
 
@@ -181,7 +182,9 @@ async function embed(text, model = 'text-embedding-3-small') {
                 model: result.model || model,
             };
         }
-    } catch { /* gateway failed, fall through to direct */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Fallback to direct HeadyCompute if gateway fails
     const client = getClient();

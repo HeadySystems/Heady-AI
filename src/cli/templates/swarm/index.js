@@ -11,6 +11,7 @@ const HEARTBEAT_MS = 29034; // phi^7
 const DEFAULT_TIMEOUT_MS = Math.round(5000 * PHI); // 8090ms
 const SWARM_SIZE = 13; // Fibonacci
 const POOL_SIZE = 8; // Fibonacci
+const logger = require('../../../utils/logger');
 
 async function main() {
   const swarm = [];

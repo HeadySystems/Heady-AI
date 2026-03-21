@@ -17,6 +17,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 const fs = require('fs');
 const path = require('path');
 const { MemoryStore } = require('./memory-store');
+const logger = require('../../../utils/logger');
 
 const WAL_OP_SET = 'set';
 const WAL_OP_DEL = 'del';
@@ -169,8 +170,8 @@ class FileStore {
       try {
         const rec = JSON.parse(trimmed);
         if (rec && rec.key) this._mem.set(rec.key, rec.value, rec.meta || {});
-      } catch {
-        // skip corrupt lines
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
   }
@@ -194,8 +195,8 @@ class FileStore {
           if (op.key) this._mem.delete(op.key);
           else if (op.namespace) this._mem.clear(op.namespace);
         }
-      } catch {
-        // skip corrupt WAL entries
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
   }

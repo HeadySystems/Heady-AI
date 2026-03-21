@@ -44,6 +44,7 @@ const PSI = 1 / PHI; // ≈ 0.618
 
 // CSL gate thresholds for prompt relevance filtering
 const CSL_GATES = Object.freeze({
+const logger = require('../utils/logger');
   MINIMUM: 0.500,
   LOW: 0.691,
   MEDIUM: 0.809,

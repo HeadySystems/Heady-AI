@@ -19,6 +19,7 @@ const OpenAIProvider      = require('./providers/openai');
 const GoogleProvider      = require('./providers/google');
 const GroqProvider        = require('./providers/groq');
 const LocalProvider       = require('./providers/local');
+const logger = require('../../utils/logger');
 
 /**
  * HeadyInfer — Unified multi-model inference gateway.

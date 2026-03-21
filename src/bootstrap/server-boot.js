@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 const { HeadyWebSocket } = require('../core/heady-server');
+const logger = require('../utils/logger');
 
 module.exports = function bootServer(app, { logger, voiceSessions }) {
     const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
@@ -91,5 +92,5 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
             logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.purple}Voice: ws://0.0.0.0:${PORT}/ws/voice/:id${c.reset}`);
             logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}╰────────────────────────────────────────────────────────╯${c.reset}\n`);
         });
-    });
+    }).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
 };

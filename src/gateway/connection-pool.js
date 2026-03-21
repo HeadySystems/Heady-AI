@@ -14,6 +14,7 @@
 'use strict';
 
 const { EventEmitter } = require('events');
+const logger = require('../utils/logger');
 const {
   PHI, PSI, fib, phiBackoff, phiAdaptiveInterval, CSL_THRESHOLDS,
 } = require('../../shared/phi-math');
@@ -166,7 +167,9 @@ class StdioAdapter {
           const msg = JSON.parse(line);
           const pending = this._pendingResponses.get(msg.id);
           if (pending) { pending.resolve(msg); this._pendingResponses.delete(msg.id); }
-        } catch { /* skip non-JSON lines */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
       }
     });
     return this;

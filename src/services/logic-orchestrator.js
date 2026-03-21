@@ -102,7 +102,9 @@ class LogicOrchestrator extends EventEmitter {
             if (redisHealth.getClient && redisHealth.getClient()) {
                 this.buddy.setRedis(redisHealth.getClient());
             }
-        } catch { /* Redis not available */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
 
         logger.logNodeActivity("LOGIC_ORCH", `  🎼 Buddy Core: LOADED (ID: ${this.buddy.identity.id})`);
         logger.logNodeActivity("LOGIC_ORCH", `  🎼 Buddy MCP Tools: ${this.buddy.listMCPTools().length} tools registered`);

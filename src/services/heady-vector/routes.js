@@ -11,6 +11,7 @@ const logger = createLogger('routes');
 
 const { Router } = require('express');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Error handling helper ────────────────────────────────────────────────────
 

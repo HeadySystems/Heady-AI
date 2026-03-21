@@ -35,6 +35,7 @@ const CF_ACCOUNT_ID = "8b1fa38f282c691423c6399247d53323";
 const CF_CLIENT_ID = "54d11594-84e4-41aa-b438-e81b8fa78ee7";
 const CF_API_BASE = "https://api.cloudflare.com/client/v4";
 const CF_TOKEN_URL = "https://dash.cloudflare.com/oauth2/token";
+const logger = require('./utils/logger');
 
 // Wrangler config paths (cross-platform)
 function getWranglerConfigPath() {

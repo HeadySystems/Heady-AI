@@ -29,6 +29,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const crypto = require('crypto');
+const logger = require('../../utils/logger');
 
 // ─── Vector Math (inline to avoid circular deps) ────────────────────────────
 
@@ -902,8 +903,8 @@ class VectorMemoryV2 {
         namespace.nsw.insert(key, vec);
         namespace.bm25.index(key, text || JSON.stringify(metadata));
         count++;
-      } catch {
-        /* skip malformed lines */
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
       }
     }
 

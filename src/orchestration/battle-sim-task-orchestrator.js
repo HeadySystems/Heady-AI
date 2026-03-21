@@ -14,6 +14,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
+const logger = require('../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

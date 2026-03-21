@@ -17,6 +17,7 @@ const path = require('path');
 const crypto = require('crypto');
 const readline = require('readline');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Schema validation ───────────────────────────────────────────────────────
 
@@ -109,7 +110,9 @@ async function loadCSV(filePath) {
             });
             // Parse metadata column if present
             if (typeof obj.metadata === 'string' && obj.metadata) {
-              try { obj.metadata = JSON.parse(obj.metadata); } catch { /* keep string */ }
+              try { obj.metadata = JSON.parse(obj.metadata); } catch (e) {
+                logger.error('Unexpected error', { error: e.message, stack: e.stack });
+              }
             }
             return obj;
           });

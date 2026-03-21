@@ -52,6 +52,7 @@ const PHI = 1.6180339887;
 
 // ─── Circuit-breaker states ───────────────────────────────────────────────────
 const CB_STATE = Object.freeze({
+const logger = require('../../utils/logger');
   CLOSED:    'CLOSED',    // healthy, requests flow freely
   OPEN:      'OPEN',      // tripped, requests rejected immediately
   HALF_OPEN: 'HALF_OPEN', // probe period — one request allowed through
@@ -510,7 +511,7 @@ class HeadyServiceMesh extends EventEmitter {
 
     // Periodic probe
     this._probeTimer = setInterval(
-      () => this._runHealthProbes().catch(console.error),
+      () => this._runHealthProbes().catch(err => logger.error(err.message || String(err), { error: err })),
       this._config.healthCheckIntervalMs
     );
 

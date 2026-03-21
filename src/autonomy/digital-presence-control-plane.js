@@ -8,7 +8,9 @@
 const logger = require("../utils/logger");
 const providerUsageTracker = require("../telemetry/provider-usage-tracker");
 let selfAwareness = null;
-try { selfAwareness = require("../self-awareness"); } catch { /* optional */ }
+try { selfAwareness = require("../self-awareness"); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 class DigitalPresenceControlPlane {
     constructor({ templateRegistry, maintenanceOps, vectorMemory, tracker = providerUsageTracker } = {}) {

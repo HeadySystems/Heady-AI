@@ -8,6 +8,7 @@ const { createLogger } = require('../utils/logger');
 const logger = createLogger('store-checkout');
 
 const { CONFIG } = require('../config/global');
+const logger = require('../utils/logger');
 
 async function storeCheckoutHandler(req, res) {
     try {

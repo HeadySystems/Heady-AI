@@ -11,6 +11,7 @@ const config = require('./config');
 
 // ─── Distance operator map ────────────────────────────────────────────────────
 const DISTANCE_OPS = {
+const logger = require('../../utils/logger');
   cosine: 'vector_cosine_ops',
   l2:     'vector_l2_ops',
   ip:     'vector_ip_ops',    // inner product

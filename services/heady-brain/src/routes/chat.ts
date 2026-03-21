@@ -19,7 +19,7 @@ chatRouter.post('/', async (req, res, next) => {
       model: data.model
     });
     res.json({
-      response: `Echo: ${data.message}`,
+      response: llmData.response ?? llmData.choices?.[0]?.message?.content ?? '',
       model: data.model || 'gpt-4',
       timestamp: new Date().toISOString()
     });

@@ -7,6 +7,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
+const logger = require('../utils/logger');
 
 // In-memory context store (backed by file for persistence)
 const CONTEXT_STORE_PATH = path.join(__dirname, "..", "..", ".heady", "contexts.json");
@@ -16,7 +17,9 @@ function loadContexts() {
     if (fs.existsSync(CONTEXT_STORE_PATH)) {
       return JSON.parse(fs.readFileSync(CONTEXT_STORE_PATH, "utf8"));
     }
-  } catch { /* ignore */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
   return {};
 }
 

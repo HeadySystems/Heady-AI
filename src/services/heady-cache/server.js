@@ -37,6 +37,7 @@ const cache = new HeadyCache();
 // ---------------------------------------------------------------------------
 
 const app = express();
+const logger = require('../../utils/logger');
 
 // Security & middleware — strict CORS, no wildcard
 const HEADY_ORIGINS = [

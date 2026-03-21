@@ -17,6 +17,7 @@ const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
  * Replaces boolean with continuous [0.0, 1.0] semantic values
  */
 const CSL = {
+const logger = require('../../../utils/logger');
   and: (a, b) => Math.cos(Math.acos(a) + Math.acos(b)),
   or: (a, b) => Math.min(1.0, Math.sqrt(a * a + b * b)),
   not: (a) => 1.0 - a,

@@ -13,6 +13,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
 const PHI = 1.618033988749895;
 
 const config = {
+const logger = require('../../utils/logger');
   // Service identity
   serviceName: 'heady-vector',
   version: '1.0.0',

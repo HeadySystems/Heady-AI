@@ -15,6 +15,7 @@ const PHI = 1.618033988749895;
 const HEARTBEAT_MS = 29034; // phi^7
 const DEFAULT_TIMEOUT_MS = Math.round(5000 * PHI); // 8090ms
 const DEFAULT_POOL_SIZE = 8; // Fibonacci
+const logger = require('../../../utils/logger');
 
 async function main() {
   const agent = new Agent({
@@ -48,4 +49,4 @@ async function main() {
   logger.info(`[{{PROJECT_NAME}}] Initial execution result:`, result);
 }
 
-main().catch(console.error);
+main().catch(err => logger.error(err.message || String(err), { error: err }));

@@ -244,7 +244,9 @@ class ErrorPipelineBridge extends EventEmitter {
             const dir = path.dirname(LEDGER_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.appendFileSync(LEDGER_PATH, JSON.stringify(record) + "\n");
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     /**
@@ -255,7 +257,9 @@ class ErrorPipelineBridge extends EventEmitter {
             const dir = path.dirname(ERROR_FLOWERS_PATH);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(ERROR_FLOWERS_PATH, JSON.stringify(this._pending, null, 2));
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     /**
@@ -274,7 +278,9 @@ class ErrorPipelineBridge extends EventEmitter {
                     fs.writeFileSync(ERROR_FLOWERS_PATH, "[]");
                 }
             }
-        } catch { /* non-critical */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     /**

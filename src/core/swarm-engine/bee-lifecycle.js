@@ -356,7 +356,7 @@ class HeadyBee extends EventEmitter {
       if (this.state === BEE_STATE.IDLE) {
         this._processNext();
       }
-    });
+    }).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
   }
 
   /**

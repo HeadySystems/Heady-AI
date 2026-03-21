@@ -7,6 +7,7 @@
 const logger = require('../utils/logger') || console;
 
 const SHUTDOWN_TIMEOUT_MS = parseInt(process.env.SHUTDOWN_TIMEOUT_MS || '15000', 10);
+const logger = require('../utils/logger');
 
 class ShutdownManager {
     constructor() {

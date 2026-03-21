@@ -12,6 +12,7 @@ const PHI = 1.618033988749895;
 const crypto = require('crypto');
 
 const DriftSignals = {
+const logger = require('../utils/logger');
   LATENCY: 'latency',
   ERROR_RATE: 'error_rate',
   PROVIDER_FAILOVER: 'provider_failover',

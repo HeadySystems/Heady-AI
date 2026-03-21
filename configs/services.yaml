@@ -7,6 +7,7 @@ metadata:
 spec:
   services:
     # API Gateway - PRIMARY ENTRY POINT
+    # PENDING: service not yet implemented
     - name: heady-api-gateway
       version: 3.2.0
       replicas: 3
@@ -24,6 +25,7 @@ spec:
         timeout: 5s
 
     # Cloud Orchestration
+    # PENDING: service not yet implemented
     - name: heady-cloud-orchestrator
       version: 3.2.0
       replicas: 3
@@ -35,8 +37,13 @@ spec:
         - orchestrator.headycloud.com
         - deploy.headycloud.com
         - console.headycloud.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # AI Model Router
+    # PENDING: service not yet implemented
     - name: heady-ai-router
       version: 3.2.0
       replicas: 2
@@ -49,8 +56,13 @@ spec:
         - router.heady-ai.com
         - inference.heady-ai.com
         - models.heady-ai.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # OS Runtime Layer
+    # PENDING: service not yet implemented
     - name: heady-os-kernel
       version: 3.2.0
       replicas: 2
@@ -62,6 +74,10 @@ spec:
         - kernel.headyos.com
         - runtime.headyos.com
         - scheduler.headyos.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # MCP Protocol Server
     - name: heady-mcp-server
@@ -73,6 +89,10 @@ spec:
       domains:
         - headymcp.com
         - server.headymcp.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # Conductor (Auto-Success Engine)
     - name: heady-conductor
@@ -81,8 +101,13 @@ spec:
       resources:
         cpu: 1000m
         memory: 2Gi
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # HeadyMe User Dashboard
+    # PENDING: service not yet implemented
     - name: heady-me-web
       version: 3.2.0
       replicas: 2
@@ -93,6 +118,10 @@ spec:
         - headyme.com
         - pilot.headyme.com
         - dashboard.headyme.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # HeadyBuddy AI Assistant
     - name: heady-buddy
@@ -100,8 +129,13 @@ spec:
       replicas: 2
       domains:
         - headybuddy.org
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # Developer Platform
+    # PENDING: service not yet implemented
     - name: heady-io
       version: 3.2.0
       replicas: 2
@@ -109,29 +143,57 @@ spec:
         - headyio.com
         - docs.headyio.com
         - sandbox.headyio.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # Systems Hub
+    # PENDING: service not yet implemented
     - name: heady-systems-hub
       version: 3.2.0
       replicas: 2
       domains:
         - headysystems.com
         - status.headysystems.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # Community Platform
+    # PENDING: service not yet implemented
     - name: heady-connection
       version: 3.2.0
       replicas: 2
       domains:
         - headyconnection.org
         - community.headyconnection.org
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
     # Automation Bot
+    # PENDING: service not yet implemented
     - name: heady-bot
       version: 3.2.0
       replicas: 1
       domains:
         - headybot.com
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
+
+    # Memory Service — vector search and upsert
+    - name: heady-memory
+      version: 3.2.0
+      replicas: 1
+      healthCheck:
+        path: /health
+        interval: 30s
+        timeout: 5s
 
   remotes:
     - name: headyCloudUI

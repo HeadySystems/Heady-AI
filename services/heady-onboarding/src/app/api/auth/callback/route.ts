@@ -136,6 +136,26 @@ export async function DELETE(): Promise<NextResponse> {
   return response;
 }
 
+// ── Token Validation ─────────────────────────────────────
+
+/**
+ * Server-side token structure validation.
+ * Verifies the token is a well-formed JWT (3 base64url-encoded parts
+ * with valid JSON header and payload). This does NOT verify the signature —
+ * full verification requires firebase-admin.auth().verifyIdToken().
+ */
+function validateTokenStructure(token: string): boolean {
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+  try {
+    JSON.parse(Buffer.from(parts[0], 'base64url').toString());
+    JSON.parse(Buffer.from(parts[1], 'base64url').toString());
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // ── Helpers ──────────────────────────────────────────────
 
 function generateSessionToken(uid: string): string {

@@ -33,6 +33,7 @@ const log = new ColorfulLogger({ level: "info" });
 // ─── RESOURCE TYPES & SEVERITY ─────────────────────────────────────────────
 
 const RESOURCE_TYPES = [
+const logger = require('./utils/logger');
   "CPU", "RAM", "DISK", "GPU_COMPUTE", "GPU_VRAM", "NETWORK", "LOCAL_DB",
 ];
 

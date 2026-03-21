@@ -18,6 +18,7 @@
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // Golden ratio — consistent with Heady™Systems implementations
 const PHI = 1.6180339887;

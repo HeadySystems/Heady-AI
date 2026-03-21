@@ -81,7 +81,9 @@ class ImprovementScheduler {
                         status: result.status,
                         ts: this.lastCycleTs,
                     });
-                } catch { /* pattern engine feed is non-critical */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
 
             // Feed results to self-critique
@@ -94,7 +96,9 @@ class ImprovementScheduler {
                         result: result.status || 'completed',
                         durationMs,
                     });
-                } catch { /* self-critique feed is non-critical */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
 
         } catch (err) {

@@ -18,6 +18,7 @@ const logger = console;
 
 const GRAPH_API_VERSION = 'v19.0';
 const GRAPH_BASE = `https://graph.facebook.com/${GRAPH_API_VERSION}`;
+const logger = require('../utils/logger');
 
 class FacebookGraph {
     constructor(opts = {}) {

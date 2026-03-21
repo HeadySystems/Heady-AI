@@ -22,6 +22,9 @@ app.post('/route', async (request) => ({
     request: request.body,
 }));
 app.post('/plan', async (request) => ({ steps: ['recon', 'plan', 'trial-and-error', 'execute-major-phase'], request: request.body }));
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', service: 'heady-conductor', timestamp: new Date().toISOString() });
+});
 const port = Number(process.env.PORT ?? 4306);
 app.listen({ port, host: '0.0.0.0' }).then(() => {
     app.log.info(`heady-conductor listening on ${port}`);

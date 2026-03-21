@@ -30,6 +30,7 @@ const logger = createLogger('imagination-agent-guide');
  */
 
 const { imagination } = require('../hc_imagination');
+const logger = require('../utils/logger');
 
 // ============================================================================
 // AGENT LIFECYCLE INTEGRATION

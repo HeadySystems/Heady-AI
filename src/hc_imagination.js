@@ -28,6 +28,7 @@ const logger = console;
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
+const logger = require('./utils/logger');
 
 // ============================================================================
 // DATA STRUCTURES

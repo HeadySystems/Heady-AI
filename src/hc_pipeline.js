@@ -491,12 +491,30 @@ async function executeStage(stage, state, configs, circuitBreakers) {
     );
 
     appendLog(state, "info", `Stage '${stage.name}' ${stageState.status}`, { failed, total: tasks.length });
+
+    // Emit stage:complete event for downstream consumers (event bus, telemetry, auto-success)
+    if (global.eventBus) {
+      global.eventBus.emit("stage:complete", {
+        stageId: stage.id, stageName: stage.name, runId: state.runId,
+        status: stageState.status, failed, total: tasks.length,
+        durationMs: Date.now() - new Date(stageState.startedAt).getTime(),
+        timestamp: new Date().toISOString(),
+      });
+    }
   } catch (err) {
     stageState.status = "failed";
     stageState.completedAt = new Date().toISOString();
     stageState.error = err.message;
     appendLog(state, "error", `Stage '${stage.name}' failed: ${err.message}`);
     state.errors.push({ stage: stage.id, message: err.message, severity: "high", ts: new Date().toISOString() });
+
+    // Emit stage:failed event
+    if (global.eventBus) {
+      global.eventBus.emit("stage:failed", {
+        stageId: stage.id, stageName: stage.name, runId: state.runId,
+        error: err.message, timestamp: new Date().toISOString(),
+      });
+    }
   }
 
   return stageState;
@@ -996,6 +1014,17 @@ class HCFullPipeline extends EventEmitter {
       },
     };
   }
+}
+
+// ─── REGISTER ALL STAGE HANDLERS ──────────────────────────────────────────
+// Wire real implementations for all 22 pipeline stages at boot time.
+// Without this, stages 0 and 2-20 fall through to the default stub handler.
+try {
+  const { registerAllStageHandlers } = require("./pipeline-stages/stage-handler-registry");
+  const result = registerAllStageHandlers(registerTaskHandler);
+  log.info(`Registered ${result.registered} pipeline stage task handlers`);
+} catch (err) {
+  log.warning("Stage handler registry not loaded — stages will use default handlers", { error: err.message });
 }
 
 // Singleton instance

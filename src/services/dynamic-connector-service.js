@@ -21,6 +21,7 @@ const EventEmitter = require("events");
 const crypto = require("crypto");
 const { midiBus, CHANNELS } = require("../engines/midi-event-bus");
 const { PHI_TIMING } = require("../shared/phi-math");
+const logger = require('../utils/logger');
 
 const STATE = {
     DISCOVERING: "discovering", MAPPING: "mapping", GENERATING: "generating",

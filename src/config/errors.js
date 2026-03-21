@@ -72,8 +72,8 @@ function trackError(context, err, opts = {}) {
         const dir = path.dirname(ERROR_LOG);
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         fs.appendFileSync(ERROR_LOG, JSON.stringify(entry) + '\n');
-    } catch {
-        // This is the ONE place we allow a silent catch — can't log a logging failure
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 }
 

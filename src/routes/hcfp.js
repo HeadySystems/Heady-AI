@@ -17,6 +17,7 @@ const logger = require('../utils/logger').createLogger('auto-fix');
  * @module src/routes/hcfp
  */
 const express = require('../core/heady-server');
+const logger = require('../utils/logger');
 const router = express.Router();
 
 // ─── Bootstrap: Import Real Engines ──────────────────────────────────────────

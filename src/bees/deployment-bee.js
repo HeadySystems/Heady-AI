@@ -1,5 +1,6 @@
 const logger = require('../utils/logger').createLogger('auto-fix');
 const path = require('path');
+const logger = require('../utils/logger');
 const domain = 'deployment';
 const description = 'RAM-first deployment: template injection → git push → HF Spaces → Cloud Run → post-deploy verification';
 const priority = 0.85;

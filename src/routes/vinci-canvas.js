@@ -16,6 +16,7 @@ const express = require('../core/heady-server');
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
+const logger = require('../utils/logger');
 
 const SESSIONS_DIR = path.join(__dirname, "..", "data", "canvas-sessions");
 
@@ -156,7 +157,9 @@ function _persistSession(session) {
             path.join(SESSIONS_DIR, `${session.id}.json`),
             JSON.stringify(session, null, 2)
         );
-    } catch { /* non-critical */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 }
 
 // ─── Routes ──────────────────────────────────────────────────────────

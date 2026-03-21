@@ -21,6 +21,7 @@ const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const {
+const logger = require('../utils/logger');
   PHI,
   PSI,
   PHI_SQ,

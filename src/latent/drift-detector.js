@@ -30,6 +30,7 @@ const { cosineSimilarity } = require('./vector-space-ops');
 
 /** @enum {string} */
 const AlertLevel = {
+const logger = require('../utils/logger');
   HEALTHY: 'healthy',
   WARNING: 'warning',
   CRITICAL: 'critical',

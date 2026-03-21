@@ -8,6 +8,7 @@ const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 class HeraldAgent {
   constructor(opts = {}) {

@@ -3,6 +3,7 @@ const logger = createLogger('geo_ip_guardian');
 
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
+const logger = require('../utils/logger');
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });

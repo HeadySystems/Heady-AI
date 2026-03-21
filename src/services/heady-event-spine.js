@@ -13,6 +13,7 @@ const logger = createLogger('heady-event-spine');
 
 const STREAM_KEY = 'heady:events';
 const CONSUMER_GROUP = 'hcfp-consumers';
+const logger = require('../utils/logger');
 
 /**
  * HeadyEventSpine — Event bus using Redis Streams.

@@ -20,6 +20,7 @@ const { IndexManager } = require('./indexes');
 const { SearchEngine } = require('./search');
 const { GraphRAG } = require('./graph-rag');
 const { HealthChecker } = require('./health');
+const logger = require('../../utils/logger');
 
 // ─── HeadyVector class ────────────────────────────────────────────────────────
 

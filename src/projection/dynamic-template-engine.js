@@ -11,6 +11,7 @@ const PHI = 1.618033988749895;
 const PROJECT_ROOT = path.resolve(__dirname, '../..');
 const SITES_DIR = path.join(PROJECT_ROOT, 'services/heady-web/sites');
 const REGISTRY_PATH = path.join(PROJECT_ROOT, 'src/sites/site-registry.json');
+const logger = require('../utils/logger');
 
 // ── Load Registry ───────────────────────────────────────────────────
 function loadRegistry() {

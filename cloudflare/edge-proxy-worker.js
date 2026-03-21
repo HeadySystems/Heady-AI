@@ -96,7 +96,7 @@ export default {
     const url = new URL(request.url);
     const hostname = url.hostname;
 
-    // CORS preflight
+    // CORS preflight — origin-validated, no wildcard
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: getCorsHeaders(request) });
     }

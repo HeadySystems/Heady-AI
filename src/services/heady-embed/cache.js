@@ -14,6 +14,7 @@ const path = require('path');
 const readline = require('readline');
 const EventEmitter = require('events');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Bloom Filter (simple bit-array implementation)

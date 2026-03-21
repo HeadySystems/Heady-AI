@@ -20,6 +20,7 @@ const logger = createLogger('project-history-ingestor');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const logger = require('../utils/logger');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
@@ -112,7 +113,9 @@ class ProjectHistoryIngestor {
                     { subtype: 'file_structure', directory: dir }
                 );
                 this.stats.files += files.length;
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
@@ -146,9 +149,13 @@ class ProjectHistoryIngestor {
                             { subtype: 'documentation', file: path.relative(PROJECT_ROOT, file) }
                         );
                         this.stats.docs++;
-                    } catch { /* non-fatal */ }
+                    } catch (e) {
+                      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                    }
                 }
-            } catch { /* non-fatal */ }
+            } catch (e) {
+              logger.error('Unexpected error', { error: e.message, stack: e.stack });
+            }
         }
     }
 
@@ -191,7 +198,9 @@ class ProjectHistoryIngestor {
                 'pattern',
                 { subtype: 'branches', count: branches.length }
             );
-        } catch { /* non-fatal */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 }
 

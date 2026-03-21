@@ -4,6 +4,7 @@
 // Generated: March 7, 2026
 
 const { generateMCPManifest, getService, getAllServices } = require('./mcp-service-registry');
+const logger = require('../utils/logger');
 
 const PHI = 1.618033988749895;
 
@@ -107,7 +108,9 @@ class HeadyMCPServer {
       if (toolModule.handler) {
         return await toolModule.handler(args || {});
       }
-    } catch { /* no dedicated tool file — fall through */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Try to find in mcp-tools.js handlers
     try {
@@ -117,7 +120,9 @@ class HeadyMCPServer {
       if (toolDef && toolDef.handler) {
         return await toolDef.handler(args || {});
       }
-    } catch { /* no mcp-tools match — fall through */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
 
     // Fallback stub
     return {

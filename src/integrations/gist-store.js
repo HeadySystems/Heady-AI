@@ -18,6 +18,7 @@ const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
 const MAX_FILES_PER_GIST = FIB[6]; // 13
 const RETRY_DELAYS_MS    = [FIB[8], FIB[9], FIB[10], FIB[11]].map(f => f * 100); // [2100,3400,5500,8900]ms
 const MAX_DESCRIPTION_LEN = FIB[12]; // 233 chars
+const logger = require('../utils/logger');
 
 /**
  * GistStore — GitHub Gists as a persistent KV checkpoint layer.

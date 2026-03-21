@@ -1473,7 +1473,7 @@ class NodeOrchestrator {
                 resultCount: results.length,
                 results
               });
-            });
+            }).catch(err => this.logger.error('Unhandled promise rejection', { error: err.message }));
           }
         }
       };

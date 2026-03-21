@@ -87,6 +87,7 @@ const PHI3  = PHI2 * PHI;   // ≈ 4.2360
  * @property {number} newsBlackoutMinutes  Minutes around news events to avoid entries.
  */
 const APEX_RULES = Object.freeze({
+const logger = require('../utils/logger');
     accounts: {
         '25K':  { balance: 25000,  trailingDrawdown: 1500, initialMAE: 450,  safetyNetBuffer: 100 },
         '50K':  { balance: 50000,  trailingDrawdown: 2500, initialMAE: 750,  safetyNetBuffer: 100 },

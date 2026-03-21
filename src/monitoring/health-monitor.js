@@ -29,6 +29,7 @@ const EventEmitter = require('events');
 const os = require('os');
 const { promisify } = require('util');
 const sleep = promisify(setTimeout);
+const logger = require('../utils/logger');
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;

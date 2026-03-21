@@ -15,6 +15,7 @@
 
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 const PHI = 1.6180339887;
 const PSI = 0.6180339887;
@@ -322,7 +323,9 @@ class RedisPoolV3 extends EventEmitter {
     try {
       if (typeof conn.disconnect === 'function') conn.disconnect();
       else if (typeof conn.destroy === 'function') conn.destroy();
-    } catch { /* ignore */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   _recordLatency(startTime) {

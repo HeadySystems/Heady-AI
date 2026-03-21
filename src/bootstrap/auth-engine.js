@@ -18,14 +18,16 @@ module.exports = function mountAuth(app, { logger, secretsManager, cfManager }) 
         logger.logNodeActivity("CONDUCTOR", "  🔐 HeadyAuth: LOADED (4 methods: manual, device, WARP, Google OAuth)");
     } catch (err) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyAuth not loaded: ${err.message}`);
-        // Fallback auth
+        // Fallback auth — requires both username AND password (no open-door policy)
         app.post("/api/auth/login", (req, res) => {
             const { username, password } = req.body;
+            if (!username || !password) {
+                return res.status(401).json({ error: "Username and password required" });
+            }
             if (username === "admin" && password === process.env.ADMIN_TOKEN) {
                 res.json({ success: true, token: process.env.HEADY_API_KEY, tier: "admin" });
-            } else if (username) {
-                res.json({ success: true, token: "user_token_" + Date.now(), tier: "core" });
             } else {
+                // Deny all other credentials when HeadyAuth is unavailable
                 res.status(401).json({ error: "Invalid credentials" });
             }
         });

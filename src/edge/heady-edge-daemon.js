@@ -38,6 +38,7 @@ const MONOREPO_ROOT = process.env.HEADY_DIR || path.resolve(__dirname, '..', '..
 
 // ── State ───────────────────────────────────────────────────────
 const state = {
+const logger = require('../utils/logger');
     running: false,
     startedAt: null,
     cloudConnected: false,

@@ -43,6 +43,7 @@ const log = {
 };
 
 const { ColabRuntimeCluster } = require('../colab/colab-runtime-nodes.js');
+const logger = require('../utils/logger');
 const { loadUniversalPrompt, buildAgentPrompt, buildCompactDirective,
         getPromptHash, CSL_GATES, ARCHETYPES, COLAB_RUNTIMES,
         SWARM_MATRIX } = require('../agents/universal-agent-prompt.js');
@@ -475,7 +476,9 @@ function setupSubsystemRoutes(app) {
 async function shutdownSubsystems() {
   if (colabRuntimeManager) {
     for (const rt of colabRuntimeManager.getAllRuntimes()) {
-      try { await colabRuntimeManager.terminate(rt.id); } catch { /* ignore */ }
+      try { await colabRuntimeManager.terminate(rt.id); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     logger.info('[SubsystemRoutes] Colab runtime manager shut down');
   }

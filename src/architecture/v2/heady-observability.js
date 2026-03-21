@@ -93,6 +93,7 @@ const PHI = 1.6180339887;
 
 // ─── Severity mapping: Heady™ level → Cloud Logging severity ──────────────────
 const SEVERITY = Object.freeze({
+const logger = require('../../utils/logger');
   debug:    'DEBUG',
   info:     'INFO',
   notice:   'NOTICE',

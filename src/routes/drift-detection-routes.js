@@ -11,13 +11,13 @@
 
 const { Router } = require('express');
 const { DriftDetector } = require('../drift-detector');
+const logger = require('../utils/logger');
 
 const router = Router();
 
 // ─── Singleton DriftDetector ──────────────────────────────────────────────────
 const detector = new DriftDetector({
     onEscalation: (alert) => {
-        const logger = require('../utils/logger');
         logger.error({ alert }, 'DriftDetection: CRITICAL escalation fired');
     },
 });

@@ -15,6 +15,7 @@ const logger = console;
 
 const crypto = require('crypto');
 const { PHI } = require('../shared/heady-principles');
+const logger = require('../utils/logger');
 
 const SYNC_VERSION = 'v3457890';
 const SYNC_INTERVAL_MS = Math.round(5000 * PHI); // ~8090ms — phi-based interval

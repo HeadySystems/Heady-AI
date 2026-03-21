@@ -32,6 +32,7 @@ const CLAUDE_ORGS = [
 ];
 
 const { budgetService } = require("../shared/policy-service");
+const logger = require('../utils/logger');
 
 // Usage tracking
 const USAGE_PATH = path.join(__dirname, "../../data/headyjules-usage.json");

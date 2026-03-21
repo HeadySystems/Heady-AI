@@ -35,6 +35,7 @@ const PHI = 1.618033988749895;
 // ─── Default Service Endpoints ────────────────────────────────────
 
 const DEFAULT_SERVICES = {
+const logger = require('../utils/logger');
     manager: {
         name: 'Heady™ Manager',
         url: 'https://manager.headysystems.com',

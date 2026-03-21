@@ -29,8 +29,8 @@ function setupGateway(app) {
     }
   });
 
-  // Provider status
-  app.get('/api/ai/providers', (req, res) => {
+  // Provider status — requires authentication
+  app.get('/api/ai/providers', authenticateJWT, (req, res) => {
     const providers = require('../../config/providers.json');
     res.json(providers);
   });

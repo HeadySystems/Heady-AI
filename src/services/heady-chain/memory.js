@@ -8,6 +8,7 @@
 
 const { httpPost, getPath } = require('./nodes');
 const config = require('./config');
+const logger = require('../../utils/logger');
 
 // ─── Message / Memory Item ────────────────────────────────────────────────────
 
@@ -262,7 +263,9 @@ class VectorMemory {
     this._localFallback = [];
     try {
       await httpPost(`${this.vectorUrl}/vectors/delete`, { namespace: this.namespace }, 5000);
-    } catch { /* ignore */ }
+    } catch (e) {
+      logger.error('Unexpected error', { error: e.message, stack: e.stack });
+    }
   }
 
   toJSON() {

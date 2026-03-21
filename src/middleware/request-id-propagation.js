@@ -32,6 +32,7 @@ const REQUEST_ID_RE = /^[a-zA-Z0-9_\-:.]{8,128}$/;
 
 // W3C Trace Context version
 const TRACEPARENT_VERSION = '00';
+const logger = require('../utils/logger');
 
 // ─── ID Generation ────────────────────────────────────────────────────────────
 

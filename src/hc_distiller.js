@@ -37,6 +37,7 @@ const ReplayClient = require('./hc_replay_client');
 const TrajectoryFilter = require('./hc_trajectory_filter');
 const SkillSynthesizer = require('./hc_skill_synthesizer');
 const PromptOptimizer = require('./hc_prompt_optimizer');
+const logger = require('./utils/logger');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'configs', 'distiller-config.yaml');
 

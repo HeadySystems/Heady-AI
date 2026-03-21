@@ -11,7 +11,9 @@ const logger = require("../utils/logger");
 const yaml = require('../core/heady-yaml');
 const providerUsageTracker = require("../telemetry/provider-usage-tracker");
 let selfAwareness = null;
-try { selfAwareness = require("../self-awareness"); } catch { /* optional */ }
+try { selfAwareness = require("../self-awareness"); } catch (e) {
+  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+}
 
 const PROJECT_ROOT = path.join(__dirname, "..", "..");
 const TEMPLATE_MATRIX_PATH = path.join(PROJECT_ROOT, "configs", "autonomy", "headybee-template-matrix.yaml");

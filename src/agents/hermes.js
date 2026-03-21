@@ -10,6 +10,7 @@ const logger = require('../utils/logger') || console;
 const PHI = 1.618033988749895;
 const PHI_INV = 0.618033988749895;
 const SESSION_TTL_MS = Math.round(3600000 * PHI); // ~5832s φ-scaled
+const logger = require('../utils/logger');
 
 class HermesAgent {
   constructor(opts = {}) {

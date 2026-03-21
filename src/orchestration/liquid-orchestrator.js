@@ -15,6 +15,7 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 
 const { EventEmitter } = require('events');
 const phi = require('../../shared/phi-math.js');
+const logger = require('../utils/logger');
 const {
   PHI, PSI, PHI_SQ, FIBONACCI, fib, phiBackoff,
   phiThreshold, phiFusionWeights, phiResourceWeights,

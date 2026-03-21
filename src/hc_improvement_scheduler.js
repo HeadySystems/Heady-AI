@@ -20,6 +20,7 @@ const logger = createLogger('hc_improvement_scheduler');
 const EventEmitter = require('events');
 const fs = require('fs');
 const path = require('path');
+const logger = require('./utils/logger');
 
 class ImprovementScheduler extends EventEmitter {
   constructor({

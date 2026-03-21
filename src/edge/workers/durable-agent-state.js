@@ -2,6 +2,7 @@ const { createLogger } = require('../../utils/logger');
 const logger = createLogger('durable-agent-state');
 
 const { PHI_TIMING } = require('../../shared/phi-math');
+const logger = require('../../utils/logger');
 /**
  * durable-agent-state.js
  * Heady™ Latent OS — Durable Agent State Object
@@ -527,8 +528,8 @@ export class DurableAgentState {
                   fullResponse += token;
                   ws.send(wsOut({ type: 'token', content: token, requestId: msg.requestId }));
                 }
-              } catch {
-                // Skip malformed SSE lines
+              } catch (e) {
+                logger.error('Unexpected error', { error: e.message, stack: e.stack });
               }
             }
           }
@@ -764,7 +765,9 @@ export class DurableAgentState {
     // Broadcast state change to all active sockets
     const stateMsg = wsOut({ type: 'state', data: { lifecycle: to } });
     for (const ws of this.activeSockets.values()) {
-      try { ws.send(stateMsg); } catch { /* socket may be closed */ }
+      try { ws.send(stateMsg); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 
@@ -907,7 +910,9 @@ export class DurableAgentState {
     // Notify connected sockets
     const taskMsg = wsOut({ type: 'state', data: { event: 'proactive_task_start', task } });
     for (const ws of this.activeSockets.values()) {
-      try { ws.send(taskMsg); } catch { /* socket may be closed */ }
+      try { ws.send(taskMsg); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     // Clear pending task
@@ -941,7 +946,9 @@ export class DurableAgentState {
       try {
         ws.send(expiredMsg);
         ws.close(1001, 'Session expired');
-      } catch { /* ignore */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
     this.activeSockets.clear();
   }

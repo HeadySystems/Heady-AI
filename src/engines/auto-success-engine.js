@@ -2136,7 +2136,7 @@ const INTELLIGENCE = {
 const COMPETITIVE_INTELLIGENCE = {
   async competitorRegistryFreshness() {
     const t0 = Date.now();
-    const ciPath = path.join(ROOT, 'configs', 'competitive-intelligence.yaml');
+    const ciPath = path.join(PROJECT_ROOT, 'configs', 'competitive-intelligence.yaml');
     const exists = fsExists(ciPath);
     if (!exists) return warn('competitorRegistryFreshness', 'COMPETITIVE_INTELLIGENCE', {
       exists: false
@@ -2197,7 +2197,7 @@ const COMPETITIVE_INTELLIGENCE = {
   },
   async patentImplementationCoverage() {
     const t0 = Date.now();
-    const patentRegPath = path.join(ROOT, 'configs', 'patent-registry-standardized.yaml');
+    const patentRegPath = path.join(PROJECT_ROOT, 'configs', 'patent-registry-standardized.yaml');
     const exists = fsExists(patentRegPath);
     return taskResult('patentImplementationCoverage', 'COMPETITIVE_INTELLIGENCE', exists ? 'pass' : 'warn', {
       registryExists: exists
@@ -2213,8 +2213,8 @@ const COMPETITIVE_INTELLIGENCE = {
   },
   async publicDomainPatternIntegration() {
     const t0 = Date.now();
-    const conceptsPath = path.join(ROOT, 'configs', 'concepts-index.yaml');
-    const ipPath = path.join(ROOT, 'configs', 'ip-registry.yaml');
+    const conceptsPath = path.join(PROJECT_ROOT, 'configs', 'concepts-index.yaml');
+    const ipPath = path.join(PROJECT_ROOT, 'configs', 'ip-registry.yaml');
     const both = fsExists(conceptsPath) && fsExists(ipPath);
     return taskResult('publicDomainPatternIntegration', 'COMPETITIVE_INTELLIGENCE', both ? 'pass' : 'warn', {
       conceptsIndex: fsExists(conceptsPath),

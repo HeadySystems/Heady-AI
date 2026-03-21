@@ -22,6 +22,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -458,7 +459,9 @@ class SocraticLoop {
         if (report && typeof report.confidence === 'number') {
           ctx.cslConfidence = report.confidence;
         }
-      } catch { /* self-awareness unavailable */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
 
     ctx.confidenceThreshold = ctx.confidenceThreshold !== undefined

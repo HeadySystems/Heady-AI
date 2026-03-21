@@ -27,6 +27,7 @@ const meter  = metrics.getMeter('heady.' + MODULE_NAME, '3.1.0');
 
 // ─── Metrics ──────────────────────────────────────────────────────────────────
 const shutdownHooksTotal = meter.createCounter('heady.shutdown_hooks_total', {
+const logger = require('../../utils/logger');
   description: 'Total number of shutdown hooks registered over process lifetime',
   unit: '{hooks}',
 });

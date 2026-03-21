@@ -257,7 +257,9 @@ function buildLocalGraph(targetPath, projectRoot) {
                     parseFile(resolved, depth + 1);
                 }
             }
-        } catch { /* skip unreadable files */ }
+        } catch (e) {
+          logger.error('Unexpected error', { error: e.message, stack: e.stack });
+        }
     }
 
     const absTarget = path.resolve(projectRoot, targetPath);

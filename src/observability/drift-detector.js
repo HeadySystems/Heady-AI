@@ -13,6 +13,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const logger = require('../utils/logger');
 
 class DriftDetector {
     constructor(opts = {}) {
@@ -81,7 +82,9 @@ class DriftDetector {
                     if (prevHash && prevHash !== newHash) {
                         drifts.push({ file: filePath, prevHash, newHash });
                     }
-                } catch { /* skip unreadable files */ }
+                } catch (e) {
+                  logger.error('Unexpected error', { error: e.message, stack: e.stack });
+                }
             }
         } catch (err) {
             return { error: err.message, drifts: [] };

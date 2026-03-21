@@ -459,7 +459,9 @@ class MonteCarloEngine {
   _runPipelineHooks(stageName, result) {
     const hooks = this._pipelineHooks.get(stageName) || [];
     for (const hook of hooks) {
-      try { hook(result); } catch { /* hooks must not break simulation */ }
+      try { hook(result); } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
     }
   }
 

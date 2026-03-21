@@ -41,6 +41,7 @@ const https = require('https');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const logger = require('../../utils/logger');
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
@@ -205,7 +206,9 @@ async function collectMetrics(serviceUrl) {
       metrics.requestCount = gatewayData.totalRequests;
       metrics.raw.gateway = gatewayData;
     }
-  } catch { /* Optional — gateway may not be serving */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   try {
     // Self-awareness telemetry
@@ -218,7 +221,9 @@ async function collectMetrics(serviceUrl) {
       }
     }
     metrics.raw.full = { uptime: fullData?.uptime, memory: fullData?.memory };
-  } catch { /* Optional */ }
+  } catch (e) {
+    logger.error('Unexpected error', { error: e.message, stack: e.stack });
+  }
 
   return metrics;
 }

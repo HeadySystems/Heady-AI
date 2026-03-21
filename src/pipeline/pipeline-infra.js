@@ -9,6 +9,7 @@ const fs = require("fs");
 const { PHI_TIMING } = require('../shared/phi-math');
 const path = require("path");
 const crypto = require("crypto");
+const logger = require('../utils/logger');
 
 const CACHE_DIR = path.join(__dirname, "..", "..", ".heady_cache");
 const TASK_CACHE_FILE = path.join(CACHE_DIR, "pipeline_task_cache.json");

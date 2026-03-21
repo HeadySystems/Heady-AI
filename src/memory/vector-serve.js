@@ -14,6 +14,7 @@ const logger = createLogger('vector-serve');
 
 
 const PHI = 1.618033988749895;
+const logger = require('../utils/logger');
 
 class VectorServe {
     constructor(vectorMemory, logger) {

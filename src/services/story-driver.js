@@ -13,6 +13,7 @@ const crypto = require('crypto');
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const EVENT_TYPES = Object.freeze({
+const logger = require('../utils/logger');
   ACTION_TAKEN: 'action_taken',
   DECISION_MADE: 'decision_made',
   ERROR_ENCOUNTERED: 'error_encountered',

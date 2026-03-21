@@ -47,6 +47,7 @@ const http = require('http');
 const net = require('net');
 const { EventEmitter } = require('events');
 const os = require('os');
+const logger = require('../../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -298,7 +299,7 @@ class InfrastructureMonitor extends EventEmitter {
     if (envTargets) {
       return envTargets.split(',').map(url => ({ name: url.trim(), url: url.trim() }));
     }
-    // Default: monitor localhost
+    // Default: monitor local service
     const port = process.env.PORT || '8080';
     return [
       { name: 'heady-manager', url: `http://0.0.0.0:${port}` },
@@ -434,7 +435,9 @@ class InfrastructureMonitor extends EventEmitter {
       try {
         const { data: gwData } = await fetchJson(`${target.url}/api/ai/status`, { timeoutMs: 5000 });
         if (gwData) result.gatewayStatus = gwData;
-      } catch { /* Optional */ }
+      } catch (e) {
+        logger.error('Unexpected error', { error: e.message, stack: e.stack });
+      }
 
     } catch (err) {
       result.error = err.message;

@@ -29,6 +29,7 @@ const {
   exec
 } = require('child_process');
 const phiMath = require('../../shared/phi-math.js');
+const logger = require('../utils/logger');
 const {
   PHI,
   PSI,

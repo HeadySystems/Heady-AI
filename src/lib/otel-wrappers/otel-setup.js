@@ -18,6 +18,7 @@ const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus');
 const { BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics');
 const { Resource } = require('@opentelemetry/resources');
+const logger = require('../../utils/logger');
 const {
   SEMRESATTRS_SERVICE_NAME,
   SEMRESATTRS_SERVICE_VERSION,
@@ -151,8 +152,8 @@ async function shutdown() {
 // Auto-start unless OTEL_SDK_DISABLED=true
 if (process.env.OTEL_SDK_DISABLED !== 'true') {
   start();
-  process.on('SIGTERM', () => shutdown().then(() => process.exit(0)));
-  process.on('SIGINT',  () => shutdown().then(() => process.exit(0)));
+  process.on('SIGTERM', () => shutdown().then(() => process.exit(0)).catch(err => logger.error('Unhandled promise rejection', { error: err.message })));
+  process.on('SIGINT',  () => shutdown().then(() => process.exit(0)).catch(err => logger.error('Unhandled promise rejection', { error: err.message })));
 }
 
 module.exports = { sdk, start, shutdown, resource, compositePropagator };
