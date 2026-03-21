@@ -55,7 +55,7 @@ function getWork(ctx = {}) {
                     'clip.create', 'clip.set_notes', 'clip.fire', 'scene.fire',
                     'session.get_state', 'session.get_tracks', 'session.get_routing',
                 ],
-                protocol: { host: '127.0.0.1', port: 11411, transport: 'tcp', format: 'json-newline' },
+                protocol: { host: '0.0.0.0', port: 11411, transport: 'tcp', format: 'json-newline' },
                 installPaths: {
                     mac: '~/Library/Preferences/Ableton/Live 12/User Remote Scripts/HeadyBuddy/',
                     windows: '%APPDATA%\\Ableton\\Live 12\\Preferences\\User Remote Scripts\\HeadyBuddy\\',

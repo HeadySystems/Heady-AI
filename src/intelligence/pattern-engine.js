@@ -356,7 +356,7 @@ class PatternEngine extends EventEmitter {
 
     // Store in vector memory if available
     if (this._vectorMemory && this.config.useVectorMemory) {
-      await this._vectorMemory.store(patternId, features, { type, ...record }).catch(() => {});
+      await this._vectorMemory.store(patternId, features, { type, ...record }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     // Trim store periodically

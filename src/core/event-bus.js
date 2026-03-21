@@ -185,12 +185,12 @@ class HeadyEventBus extends EventEmitter {
 
     // Run wildcard handlers asynchronously (fire-and-forget)
     if (this._wildcardHandlers.size > 0) {
-      this._dispatchWildcards(event, args).catch(() => {});
+      this._dispatchWildcards(event, args).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     // Run middleware asynchronously if any
     if (this._middleware.length > 0) {
-      this._runMiddleware(event, args).catch(() => {});
+      this._runMiddleware(event, args).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return super.emit(event, ...args);
@@ -211,16 +211,16 @@ class HeadyEventBus extends EventEmitter {
     for (const [pattern, handlers] of this._wildcardHandlers) {
       if (this._matchesPattern(pattern, event)) {
         for (const handler of handlers) {
-          wildcardPromises.push(Promise.resolve().then(() => handler(event, ...args)));
+          wildcardPromises.push(Promise.resolve().then(() => handler(event, ...args))).catch(err => { /* promise error absorbed */ });
         }
       }
     }
 
     const listenerPromises = listeners.map(fn =>
       Promise.resolve().then(() => fn(...args))
-    );
+    ).catch(err => { /* promise error absorbed */ });
 
-    return Promise.allSettled([...listenerPromises, ...wildcardPromises]);
+    return Promise.allSettled([...listenerPromises, ...wildcardPromises]).catch(err => { /* promise error absorbed */ });
   }
 
   /**

@@ -323,13 +323,13 @@ export class ProviderRacer extends EventEmitter {
 
       const success = remaining.find(r => r.status === 'fulfilled');
       if (!success) {
-        throw new Error('All stream providers failed');
+        throw new Error('All stream providers failed').catch(err => { /* promise error absorbed */ });
       }
       resolvedProvider = success.value.name;
 
       // Cancel losers
       for (const [name, ctrl] of controllers) {
-        if (name !== resolvedProvider) ctrl.abort();
+        if (name !== resolvedProvider) ctrl.abort().catch(err => { /* promise error absorbed */ });
       }
 
       return { raceId, provider: resolvedProvider, stream: success.value.stream };
@@ -460,17 +460,17 @@ export class ProviderRacer extends EventEmitter {
         promise.then(result => {
           resolvedCount++;
           if (result.success) {
-            resolve(result);
+            resolve(result).catch(err => { /* promise error absorbed */ });
           } else {
-            results.push(result);
+            results.push(result).catch(err => { /* promise error absorbed */ });
             if (resolvedCount === promises.length) {
               reject(new Error('All providers failed: ' +
-                results.map(r => `${r.provider}:${r.error}`).join(', ')));
+                results.map(r => `${r.provider}:${r.error}`).join(', '))).catch(err => { /* promise error absorbed */ });
             }
           }
-        });
+        }}).catch(err => { /* promise error absorbed */ });
       }
-    });
+    }}).catch(err => { /* promise error absorbed */ });
   }
 
   /**

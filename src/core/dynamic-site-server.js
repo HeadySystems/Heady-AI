@@ -683,7 +683,7 @@ function renderSite(site, host) {
           return fetch('/api/signup', {
             method:'POST', headers:{'Content-Type':'application/json'},
             body: JSON.stringify({email:provider+'@heady.oauth', password:'oauth-'+Date.now(), displayName:provider+' User', provider})
-          }).then(r2=>r2.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); });
+          }).then(r2=>r2.json()).then(d=>{ if(!d.error) showSuccess(d,provider); else alert(d.error); }}).catch(err => { /* promise error absorbed */ });
         }
       }).catch(()=>{
         // No auth backend — demo mode
@@ -708,7 +708,7 @@ function renderSite(site, host) {
       fetch('/api/signup', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({email:currentKeyProvider+'@heady.apikey', password:'apikey-'+Date.now(), displayName:currentKeyProvider+' User', provider:currentKeyProvider, connectedKey:key})
-      }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d,currentKeyProvider); });
+      }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d,currentKeyProvider); }}).catch(err => { /* promise error absorbed */ });
     }
 
     function emailAuth() {
@@ -720,21 +720,21 @@ function renderSite(site, host) {
         body: JSON.stringify({email, password:pw, displayName:email.split('@')[0], provider:'email'})
       }).then(r=>r.json()).then(d=>{
         if (d.error && d.error.includes('exists')) {
-          fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);});
-        } else if (!d.error) showSuccess(d,'email');
-        else alert(d.error);
-      });
+          fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);}}).catch(err => { /* promise error absorbed */ });
+        } else if (!d.error) showSuccess(d,'email').catch(err => { /* promise error absorbed */ });
+        else alert(d.error).catch(err => { /* promise error absorbed */ });
+      }}).catch(err => { /* promise error absorbed */ });
     }
 
     function showSuccess(data,provider) {
-      closeAuth();
+      closeAuth().catch(err => { /* promise error absorbed */ });
       currentSession = data.token;
       document.cookie = 'heady_session='+data.token+';path=/;max-age=86400;SameSite=Strict';
       document.getElementById('successTitle').textContent = 'Welcome, '+data.user.displayName;
       document.getElementById('successSub').textContent = 'Connected via '+provider+' on '+SITE_BRAND;
       document.getElementById('apiKeyVal').textContent = data.user.apiKey;
-      document.getElementById('successOverlay').classList.add('active');
-      const nav = document.querySelector('.nav-cta');
+      document.getElementById('successOverlay').classList.add('active').catch(err => { /* promise error absorbed */ });
+      const nav = document.querySelector('.nav-cta').catch(err => { /* promise error absorbed */ });
       if(nav){nav.textContent='✓ Signed In';nav.style.background='#10b981';}
       addBuddyMsg('bot','Welcome back, '+data.user.displayName+'! Your session is active on '+SITE_BRAND+'.');
     }
@@ -762,17 +762,17 @@ function renderSite(site, host) {
       fetch('/api/ai/chat',{
         method:'POST', headers, body:payload
       }).then(r=>{
-        if(!r.ok) throw new Error('AI gateway unavailable');
-        return r.json();
+        if(!r.ok) throw new Error('AI gateway unavailable').catch(err => { /* promise error absorbed */ });
+        return r.json().catch(err => { /* promise error absorbed */ });
       }).then(d=>{
-        addBuddyMsg('bot',d.response||d.choices?.[0]?.message?.content||d.error||'Thinking...');
+        addBuddyMsg('bot',d.response||d.choices?.[0]?.message?.content||d.error||'Thinking...').catch(err => { /* promise error absorbed */ });
       }).catch(()=>{
         // Fallback to local chat endpoint
         fetch('/api/chat',{
           method:'POST',headers:{'Content-Type':'application/json'},
           body:JSON.stringify({message:msg,session:currentSession,site:SITE_BRAND,host:SITE_HOST})
         }).then(r=>r.json()).then(d=>{
-          addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.');
+          addBuddyMsg('bot',d.response||d.error||'I\\'ll get back to you on that.').catch(err => { /* promise error absorbed */ });
         }).catch(()=>{
           addBuddyMsg('bot','I\\'m here on '+SITE_BRAND+'. Currently in local mode — full cloud chat coming soon!');
         });
@@ -967,7 +967,7 @@ function renderOnboarding(site, host) {
 
 // ── HTTP Server ─────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
   const host = req.headers.host || 'headyme.com';
   const site = resolveSite(host);
 

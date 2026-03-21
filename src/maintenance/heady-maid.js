@@ -67,7 +67,7 @@ const RULES = Object.freeze({
   NO_LOCALHOST: {
     id: 'no-localhost',
     severity: 'blocker',
-    description: 'Hardcoded localhost or 127.0.0.1 references',
+    description: 'Hardcoded localhost or 0.0.0.0 references',
     pattern: /\b(localhost|127\.0\.0\.1)\b/,
     message: 'Use environment variables for host configuration',
   },

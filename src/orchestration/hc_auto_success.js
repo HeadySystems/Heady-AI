@@ -1420,12 +1420,12 @@ class AutoSuccessEngine extends EventEmitter {
             if (!distillerUrl && process.env.NODE_ENV === 'production') {
                 throw new Error('DISTILLER_URL required in production');
             }
-            const resolvedDistillerUrl = distillerUrl || 'http://localhost:3375'; // dev fallback only
+            const resolvedDistillerUrl = distillerUrl || process.env.SERVICE_URL || 'http://0.0.0.0:3375'; // dev fallback only
             const bridgeUrl = process.env.BRIDGE_STATUS_URL;
             if (!bridgeUrl && process.env.NODE_ENV === 'production') {
                 throw new Error('BRIDGE_STATUS_URL required in production');
             }
-            const resolvedBridgeUrl = bridgeUrl || 'http://localhost:3301/api/hcfp-bridge/status'; // dev fallback only
+            const resolvedBridgeUrl = bridgeUrl || process.env.SERVICE_URL || 'http://0.0.0.0:3301/api/hcfp-bridge/status'; // dev fallback only
             try {
                 const res = await fetch(resolvedBridgeUrl, { signal: AbortSignal.timeout(3000) });
                 const body = await res.json().catch(() => ({}));

@@ -85,7 +85,7 @@ class DynamicConnectorService extends EventEmitter {
             const res = await fetch(`${url}/graphql`, { method: "POST", headers: { "Content-Type": "application/json", ...(opts.headers || {}) },
                 body: JSON.stringify({ query: "{ __schema { types { name kind fields { name } } } }" }), signal: AbortSignal.timeout(15000) });
             if (res.ok) { const d = await res.json(); if (d.data?.__schema) return { type: "graphql", data: d.data.__schema, sourceUrl: `${url}/graphql` }; }
-        } catch {}
+        } catch(e) { /* absorbed: */ console.error(e.message); }
         // Raw fallback
         const res = await fetch(url, { signal: AbortSignal.timeout(10000), headers: opts.headers || {} });
         return { type: "raw", data: { url, statusCode: res.status }, sourceUrl: url };
@@ -185,19 +185,19 @@ class DynamicConnectorService extends EventEmitter {
             const fn = (ep.operationId || `${ep.method.toLowerCase()}${ep.path}`).replace(/[^a-z0-9_]/gi, "_");
             exports.push(fn);
             if (ep.method === "GET") {
-                lines.push(`async function ${fn}(p={},creds={}){rlCheck();const q=new URLSearchParams(p).toString();return retry(()=>fetch(BASE+"${ep.path}"+(q?"?"+q:""),{method:"GET",headers:{...authHdr(creds)},signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`);
+                lines.push(`async function ${fn}(p={},creds={}){rlCheck();const q=new URLSearchParams(p).toString();return retry(()=>fetch(BASE+"${ep.path}"+(q?"?"+q:""),{method:"GET",headers:{...authHdr(creds)},signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`).catch(err => { /* promise error absorbed */ });
             } else {
-                lines.push(`async function ${fn}(p={},creds={}){rlCheck();return retry(()=>fetch(BASE+"${ep.path}",{method:"${ep.method}",headers:{"Content-Type":"application/json",...authHdr(creds)},body:JSON.stringify(p),signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`);
+                lines.push(`async function ${fn}(p={},creds={}){rlCheck();return retry(()=>fetch(BASE+"${ep.path}",{method:"${ep.method}",headers:{"Content-Type":"application/json",...authHdr(creds)},body:JSON.stringify(p),signal:AbortSignal.timeout(${PHI_TIMING.CYCLE})}).then(r=>r.json()));}`).catch(err => { /* promise error absorbed */ });
             }
         }
-        lines.push("", `module.exports={BASE,${exports.join(",")}};`);
-        return lines.join("\n");
+        lines.push("", `module.exports={BASE,${exports.join(",")}};`).catch(err => { /* promise error absorbed */ });
+        return lines.join("\n").catch(err => { /* promise error absorbed */ });
     }
 
     // ═══ Protocol Switching ═══
     switchProtocol(id, proto) {
-        const c = this._registry.get(id);
-        if (!c) throw new Error("Not found");
+        const c = this._registry.get(id).catch(err => { /* promise error absorbed */ });
+        if (!c) throw new Error("Not found").catch(err => { /* promise error absorbed */ });
         const old = c.protocol; c.protocol = proto; this._metrics.protocolSwitches++;
         return { id, from: old, to: proto };
     }

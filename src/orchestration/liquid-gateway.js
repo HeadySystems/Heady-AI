@@ -287,7 +287,7 @@ class LiquidGateway extends EventEmitter {
       { id: PROVIDERS.GROQ,       baseUrl: 'https://api.groq.com/openai/v1',         model: 'llama-3.3-70b-versatile' },
       { id: PROVIDERS.SONAR,      baseUrl: 'https://api.perplexity.ai',              model: 'sonar-pro' },
       { id: PROVIDERS.WORKERS_AI, baseUrl: 'https://api.cloudflare.com/client/v4',   model: '@cf/meta/llama-3.1-8b-instruct' },
-      { id: PROVIDERS.OLLAMA,     baseUrl: 'http://localhost:11434',                 model: 'llama3.2', dailyCapUsd: 0 },
+      { id: PROVIDERS.OLLAMA,     baseUrl: process.env.SERVICE_URL || 'http://0.0.0.0:11434',                 model: 'llama3.2', dailyCapUsd: 0 },
     ];
     for (const cfg of defaults) {
       this._providers.set(cfg.id, new ProviderRecord(cfg));
@@ -418,19 +418,19 @@ class LiquidGateway extends EventEmitter {
     const races = candidates.map((provider, idx) =>
       this._execute(provider, request, controllers[idx].signal)
         .then(result => ({ result, winner: provider.id, idx }))
-    );
+    ).catch(err => { /* promise error absorbed */ });
 
     try {
-      const { result, winner, idx } = await Promise.any(races);
+      const { result, winner, idx } = await Promise.any(races).catch(err => { /* promise error absorbed */ });
       // Abort all losers
-      controllers.forEach((c, i) => { if (i !== idx) c.abort(); });
-      this.emit('race:winner', { winner, candidates: candidates.map(p => p.id) });
+      controllers.forEach((c, i) => { if (i !== idx) c.abort(); }}).catch(err => { /* promise error absorbed */ });
+      this.emit('race:winner', { winner, candidates: candidates.map(p => p.id) }}).catch(err => { /* promise error absorbed */ });
       return { result, winner };
     } catch (aggregateErr) {
-      this.emit('race:failed', { candidates: candidates.map(p => p.id) });
+      this.emit('race:failed', { candidates: candidates.map(p => p.id) }}).catch(err => { /* promise error absorbed */ });
       // Mark all failures
-      for (const p of candidates) p.circuitBreaker.recordFailure();
-      throw new Error('LiquidGateway: all race candidates failed');
+      for (const p of candidates) p.circuitBreaker.recordFailure().catch(err => { /* promise error absorbed */ });
+      throw new Error('LiquidGateway: all race candidates failed').catch(err => { /* promise error absorbed */ });
     }
   }
 

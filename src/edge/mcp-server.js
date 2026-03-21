@@ -837,7 +837,7 @@ class MCPServer extends EventEmitter {
 
     // Notification — no response
     if (id === undefined) {
-      await this._dispatchNotification(method, params, session).catch(() => {});
+      await this._dispatchNotification(method, params, session).catch((e) => { /* absorbed: */ console.error(e.message); });
       return null;
     }
 

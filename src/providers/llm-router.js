@@ -300,7 +300,7 @@ class LLMRouter extends EventEmitter {
       connector.adapters[entry.provider]
         ?.generate(prompt, { model: entry.model, ...opts })
         .then(res => ({ entry, res, latencyMs: Date.now() - raceStart }))
-    ).filter(Boolean);
+    ).filter(Boolean).catch(err => { /* promise error absorbed */ });
 
     try {
       const winner = await Promise.race([
@@ -308,10 +308,10 @@ class LLMRouter extends EventEmitter {
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Race timeout')), this.options.raceTimeoutMs)
         ),
-      ]);
+      ]).catch(err => { /* promise error absorbed */ });
       logger.info('LLMRouter', `Race won by ${winner.entry.provider}`, {
         taskType, latencyMs: winner.latencyMs,
-      });
+      }}).catch(err => { /* promise error absorbed */ });
       return winner;
     } catch {
       return null; // fall back to sequential

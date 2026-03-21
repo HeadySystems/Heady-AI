@@ -233,7 +233,7 @@ class HealthRegistry {
 
   startAutoCheck() {
     if (this._timer) return;
-    this._timer = setInterval(() => this.check().catch(() => {}), this.checkIntervalMs);
+    this._timer = setInterval(() => this.check().catch((e) => { /* absorbed: */ console.error(e.message); }), this.checkIntervalMs);
     if (this._timer.unref) this._timer.unref();
   }
 

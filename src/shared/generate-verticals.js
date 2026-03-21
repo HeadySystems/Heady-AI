@@ -384,7 +384,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
   const params = new URLSearchParams(window.location.search);
   if(params.get('auth_token')) {
     // Send token to server to set as httpOnly cookie, then clear from URL
-    fetch(API + '/api/auth/set-session', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: params.get('auth_token') }) }).catch(function(){});
+    fetch(API + '/api/auth/set-session', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: params.get('auth_token') }) }).catch(function(e){ /* absorbed: */ console.error(e.message); });
     window.history.replaceState({}, '', window.location.pathname);
   }
 
@@ -399,7 +399,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
     try {
       const r = await fetch(API + '/api/auth/verify', { credentials: 'include' });
       if(r.ok) { const d = await r.json(); tok = 'cookie'; updateUI(d); return; }
-    } catch{}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
     tok = null;
     silentAuth();
   }
@@ -469,7 +469,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
 
   // Register service worker for PWA install
   if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').then(r => logger.logSystem('🔧 SW registered')).catch(() => {});
+    navigator.serviceWorker.register('/sw.js').then(r => logger.logSystem('🔧 SW registered')).catch((e) => { /* absorbed: */ console.error(e.message); });
   }
 })();
 </script>

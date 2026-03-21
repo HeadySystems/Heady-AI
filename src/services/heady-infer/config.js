@@ -94,7 +94,7 @@ const config = {
     },
 
     local: {
-      baseUrl:  process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+      baseUrl:  process.env.OLLAMA_BASE_URL || process.env.SERVICE_URL || 'http://0.0.0.0:11434',
       enabled:  process.env.OLLAMA_ENABLED === 'true',
       timeout:  parseInt(process.env.OLLAMA_TIMEOUT || '60000', 10),
       models: {

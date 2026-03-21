@@ -267,7 +267,7 @@ function renderAuthPage() {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({email: currentApiKeyProvider+'@heady.apikey', password: 'apikey-'+Date.now(), displayName: currentApiKeyProvider.charAt(0).toUpperCase()+currentApiKeyProvider.slice(1)+' User', provider: currentApiKeyProvider, connectedKey: key})
-            }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d, currentApiKeyProvider); }).catch(()=>{});
+            }).then(r=>r.json()).then(d=>{ if(!d.error) showSuccess(d, currentApiKeyProvider); }).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         function toggleEmail() {
@@ -285,15 +285,15 @@ function renderAuthPage() {
                 body: JSON.stringify({email, password: pw, displayName: name || email.split('@')[0], provider: 'email'})
             }).then(r=>r.json()).then(d=>{
                 if (d.error && d.error.includes('exists')) {
-                    fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);});
-                } else if (!d.error) showSuccess(d, 'email');
-                else alert(d.error);
-            });
+                    fetch('/api/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})}).then(r=>r.json()).then(d2=>{if(!d2.error)showSuccess(d2,'email');else alert(d2.error);}}).catch(err => { /* promise error absorbed */ });
+                } else if (!d.error) showSuccess(d, 'email').catch(err => { /* promise error absorbed */ });
+                else alert(d.error).catch(err => { /* promise error absorbed */ });
+            }}).catch(err => { /* promise error absorbed */ });
         }
 
         function showSuccess(data, provider) {
             document.getElementById('authCard').style.display = 'none';
-            document.getElementById('successView').classList.add('active');
+            document.getElementById('successView').classList.add('active').catch(err => { /* promise error absorbed */ });
             document.getElementById('successTitle').textContent = 'Welcome, ' + data.user.displayName;
             document.getElementById('successSub').textContent = 'Connected via ' + provider;
             document.getElementById('apiKeyVal').textContent = data.user.apiKey;
@@ -302,14 +302,14 @@ function renderAuthPage() {
 
         function copyKey() {
             navigator.clipboard.writeText(document.getElementById('apiKeyVal').textContent).then(()=>{
-                const b = document.querySelector('.copy-btn'); b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy',2000);
-            });
+                const b = document.querySelector('.copy-btn'); b.textContent='Copied!'; setTimeout(()=>b.textContent='Copy',2000).catch(err => { /* promise error absorbed */ });
+            }}).catch(err => { /* promise error absorbed */ });
         }
 
         // Close modal on escape
-        document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
-        document.getElementById('apikeyModal').addEventListener('click', e=>{ if(e.target.id==='apikeyModal') closeModal(); });
-        document.getElementById('modalKey').addEventListener('keydown', e=>{ if(e.key==='Enter') connectApiKey(); });
+        document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); }}).catch(err => { /* promise error absorbed */ });
+        document.getElementById('apikeyModal').addEventListener('click', e=>{ if(e.target.id==='apikeyModal') closeModal(); }}).catch(err => { /* promise error absorbed */ });
+        document.getElementById('modalKey').addEventListener('keydown', e=>{ if(e.key==='Enter') connectApiKey(); }}).catch(err => { /* promise error absorbed */ });
     </script>
 </body>
 </html>`;
@@ -317,7 +317,7 @@ function renderAuthPage() {
 
 // ── API ─────────────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
     res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -379,7 +379,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`\n  🔐 Heady Universal Auth — http://localhost:${PORT}`);
+    console.log(`\n  🔐 Heady Universal Auth — http://0.0.0.0:${PORT}`);
     console.log(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
 });
 

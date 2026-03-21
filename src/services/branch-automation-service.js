@@ -618,20 +618,20 @@ if (require.main === module) {
   const service = getBranchAutomationService();
 
   service.start().then(() => {
-    logger.logSystem('🔄 Branch Automation Service started - 100% Continuous Mode');
+    logger.logSystem('🔄 Branch Automation Service started - 100% Continuous Mode').catch(err => { /* promise error absorbed */ });
 
     // Graceful shutdown
     process.on('SIGINT', async () => {
-      logger.logSystem('\n🛑 Shutting down Branch Automation Service...');
-      await service.stop();
-      process.exit(0);
-    });
+      logger.logSystem('\n🛑 Shutting down Branch Automation Service...').catch(err => { /* promise error absorbed */ });
+      await service.stop().catch(err => { /* promise error absorbed */ });
+      process.exit(0).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
 
     process.on('SIGTERM', async () => {
-      logger.logSystem('\n🛑 Shutting down Branch Automation Service...');
-      await service.stop();
-      process.exit(0);
-    });
+      logger.logSystem('\n🛑 Shutting down Branch Automation Service...').catch(err => { /* promise error absorbed */ });
+      await service.stop().catch(err => { /* promise error absorbed */ });
+      process.exit(0).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
 
     // Queue initial syncs
     setTimeout(async () => {

@@ -384,7 +384,7 @@ podman build -t heady-manager:latest .
 podman run -d --name heady-manager-local --env-file .env -p 3301:3301 heady-manager:latest
 
 # Verify
-curl -4 http://127.0.0.1:3301/api/soul/health
+curl -4 http://0.0.0.0:3301/api/soul/health
 \`\`\`
 
 ### MCP Setup (for IDE integration)

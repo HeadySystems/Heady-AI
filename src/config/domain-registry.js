@@ -425,7 +425,7 @@ class DomainRegistry extends EventEmitter {
   serviceMap() {
     const map = {};
     for (const def of this._domains.values()) {
-      map[def.service] = `http://localhost:${def.upstreamPort}`;
+      map[def.service] = `http://0.0.0.0:${def.upstreamPort}`;
     }
     return map;
   }
@@ -438,7 +438,7 @@ class DomainRegistry extends EventEmitter {
     return this.all().map(def => ({
       pattern:  def.domain,
       aliases:  def.aliases,
-      upstream: `http://localhost:${def.upstreamPort}`,
+      upstream: `http://0.0.0.0:${def.upstreamPort}`,
       health:   this.getHealth(def.domain),
       options: {
         timeout:      def.routing?.timeout ?? PHI_TIMING.CYCLE,

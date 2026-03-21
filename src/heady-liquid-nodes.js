@@ -94,7 +94,7 @@ function loadConfig() {
       ssl: process.env.NEON_SSL === 'true',
     },
     redis: {
-      url: process.env.UPSTASH_REDIS_URL || 'http://localhost:6379',
+      url: process.env.UPSTASH_REDIS_URL || process.env.SERVICE_URL || 'http://0.0.0.0:6379',
       token: process.env.UPSTASH_REDIS_TOKEN || '',
     },
     sentry: {
@@ -1543,8 +1543,8 @@ class NodeOrchestrator {
                 operationId,
                 resultCount: results.length,
                 results,
-              });
-            });
+              }}).catch(err => { /* promise error absorbed */ });
+            }}).catch(err => { /* promise error absorbed */ });
           }
         }
       };

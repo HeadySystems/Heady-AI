@@ -140,20 +140,20 @@ function getEventStream(aggregateId, limit) {
 function createServer(port = 3380) {
   return import('http').then(({ default: http }) => {
     const server = http.createServer(async (req, res) => {
-      const url = new URL(req.url, `http://${req.headers.host}`);
+      const url = new URL(req.url, `http://${req.headers.host}`).catch(err => { /* promise error absorbed */ });
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }}).catch(err => { /* promise error absorbed */ });
 
-      if (url.pathname === '/cqrs/command' && req.method === 'POST') respond(200, await executeCommand(await readBody()));
-      else if (url.pathname === '/cqrs/query' && req.method === 'POST') respond(200, await executeQuery(await readBody()));
-      else if (url.pathname === '/cqrs/events' && req.method === 'GET') respond(200, getEventStream(url.searchParams.get('aggregateId')));
-      else if (url.pathname === '/cqrs/replay' && req.method === 'POST') respond(200, replayEvents((await readBody()).aggregateId));
-      else if (url.pathname === '/health') respond(200, { service: 'cqrs-manager', status: 'healthy', events: eventStore.length, projections: projections.size, metrics });
-      else respond(404, { error: 'not_found' });
-    });
-    server.listen(port);
+      if (url.pathname === '/cqrs/command' && req.method === 'POST') respond(200, await executeCommand(await readBody())).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/cqrs/query' && req.method === 'POST') respond(200, await executeQuery(await readBody())).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/cqrs/events' && req.method === 'GET') respond(200, getEventStream(url.searchParams.get('aggregateId'))).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/cqrs/replay' && req.method === 'POST') respond(200, replayEvents((await readBody()).aggregateId)).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/health') respond(200, { service: 'cqrs-manager', status: 'healthy', events: eventStore.length, projections: projections.size, metrics }}).catch(err => { /* promise error absorbed */ });
+      else respond(404, { error: 'not_found' }}).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
+    server.listen(port).catch(err => { /* promise error absorbed */ });
     return server;
-  });
+  }}).catch(err => { /* promise error absorbed */ });
 }
 
 export default { createServer, executeCommand, executeQuery, registerCommandHandler, registerQueryHandler, registerProjection, replayEvents, getEventStream };

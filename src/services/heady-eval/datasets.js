@@ -309,7 +309,7 @@ class DatasetManager {
   _ensureDir() {
     try {
       fs.mkdirSync(this.storageDir, { recursive: true });
-    } catch {}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
   }
 
   /**
@@ -391,7 +391,7 @@ class DatasetManager {
           createdAt: raw.createdAt,
           file,
         });
-      } catch {}
+      } catch(e) { /* absorbed: */ console.error(e.message); }
     }
     return datasets;
   }
@@ -413,7 +413,7 @@ class DatasetManager {
           this._cache.set(dataset.id, dataset);
           return dataset;
         }
-      } catch {}
+      } catch(e) { /* absorbed: */ console.error(e.message); }
     }
     return null;
   }

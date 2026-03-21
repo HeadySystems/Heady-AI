@@ -1276,7 +1276,7 @@ class LLMRouter {
    * @private
    */
   async _callLocal(model, prompt, opts) {
-    // const resp = await fetch(`http://localhost:11434/api/generate`, {
+    // const resp = await fetch(`http://0.0.0.0:11434/api/generate`, {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({ model, prompt, stream: false })
@@ -1319,7 +1319,7 @@ class LLMRouter {
    */
   async _embedLocal(model, texts) {
     // const results = await Promise.all(texts.map(async t => {
-    //   const resp = await fetch('http://localhost:11434/api/embeddings', {
+    //   const resp = await fetch(process.env.SERVICE_URL || 'http://0.0.0.0:11434/api/embeddings', {
     //     method: 'POST', headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify({ model, prompt: t }) });
     //   const json = await resp.json();

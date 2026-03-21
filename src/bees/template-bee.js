@@ -21,7 +21,7 @@ const path = require("path");
 // Structured logger — delegates to StructuredLogger for JSON output
 const _logger = require('../utils/logger').child('template-bee');
 const logger = {
-    logNodeActivity: (node, msg) => { try { _logger.info(`[${node}] ${msg}`); } catch { } },
+    logNodeActivity: (node, msg) => { try { _logger.info(`[${node}] ${msg}`); } catch(e) { /* absorbed: */ console.error(e.message); } },
 };
 
 const domain = "templates";
@@ -166,12 +166,12 @@ function heady_auth(provider){
   var g=document.getElementById('heady-auth-gate');
   g.style.opacity='0';
   setTimeout(function(){g.style.display='none';},500);
-  try{sessionStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));}catch(e){}
-  fetch('/api/auth/session',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:provider,site:'${domain}'})}).catch(function(){});
+  try{sessionStorage.setItem('heady_auth_session',JSON.stringify({ts:Date.now(),site:'${domain}',provider:provider}));}catch(e) { /* absorbed: */ console.error(e.message); }
+  fetch('/api/auth/session',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:provider,site:'${domain}'})}).catch(function(e){ /* absorbed: */ console.error(e.message); });
 }
 (function(){
   var s=sessionStorage.getItem('heady_auth_session');
-  if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch(e){}}
+  if(s){try{var d=JSON.parse(s);if(Date.now()-d.ts<86400000){var g=document.getElementById('heady-auth-gate');if(g){g.style.display='none';}}}catch(e) { /* absorbed: */ console.error(e.message); }}
 })();
 <\\/script>`;
 }

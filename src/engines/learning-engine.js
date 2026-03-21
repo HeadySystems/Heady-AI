@@ -268,13 +268,13 @@ module.exports = { runLearningCycle, analyzeResourcePatterns, analyzeGitPatterns
 if (require.main === module) {
   runLearningCycle()
     .then(({ learning, improvements }) => {
-      console.log(`[${learning.timestamp}] Learning cycle complete (${learning.durationMs}ms)`);
-      console.log(`  Resources: ${learning.resourceStats?.events || 0} events, avg ${learning.resourceStats?.avgUsage || 0}% usage`);
-      console.log(`  Git: ${learning.gitVelocity} velocity, ${learning.commitCount24h} commits/24h`);
-      console.log(`  Patterns: ${learning.patternsTracked} tracked, store v${learning.storeVersion}`);
-      console.log(`  Improvements: ${learning.improvementCount} suggestions`);
+      console.log(`[${learning.timestamp}] Learning cycle complete (${learning.durationMs}ms)`).catch(err => { /* promise error absorbed */ });
+      console.log(`  Resources: ${learning.resourceStats?.events || 0} events, avg ${learning.resourceStats?.avgUsage || 0}% usage`).catch(err => { /* promise error absorbed */ });
+      console.log(`  Git: ${learning.gitVelocity} velocity, ${learning.commitCount24h} commits/24h`).catch(err => { /* promise error absorbed */ });
+      console.log(`  Patterns: ${learning.patternsTracked} tracked, store v${learning.storeVersion}`).catch(err => { /* promise error absorbed */ });
+      console.log(`  Improvements: ${learning.improvementCount} suggestions`).catch(err => { /* promise error absorbed */ });
       for (const imp of improvements) {
-        console.log(`    [${imp.priority}] ${imp.area}: ${imp.suggestion}`);
+        console.log(`    [${imp.priority}] ${imp.area}: ${imp.suggestion}`).catch(err => { /* promise error absorbed */ });
       }
     })
     .catch(e => {

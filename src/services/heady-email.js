@@ -11,8 +11,8 @@ const logger = require('../utils/logger');
 let nodemailer = null;
 let imaps = null;
 
-try { nodemailer = require('nodemailer'); } catch (_e) {}
-try { imaps = require('imap-simple'); } catch (_e) {}
+try { nodemailer = require('nodemailer'); } catch(_e) { /* absorbed: */ console.error(_e.message); }
+try { imaps = require('imap-simple'); } catch(_e) { /* absorbed: */ console.error(_e.message); }
 
 // ── Configuration ──────────────────────────────────────────────
 

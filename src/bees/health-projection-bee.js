@@ -47,11 +47,11 @@ function getServices() {
   }
   // Default built-in services — URLs driven by environment variables
   const serviceDefaults = [
-    { name: 'api-gateway',       envVar: 'API_GATEWAY_URL',       devFallback: 'http://localhost:3000', critical: true  },
-    { name: 'vector-store',      envVar: 'VECTOR_STORE_URL',      devFallback: 'http://localhost:3001', critical: true  },
-    { name: 'swarm-coordinator', envVar: 'SWARM_COORDINATOR_URL', devFallback: 'http://localhost:3002', critical: true  },
-    { name: 'task-runner',       envVar: 'TASK_RUNNER_URL',       devFallback: 'http://localhost:3003', critical: false },
-    { name: 'telemetry-sink',    envVar: 'TELEMETRY_SINK_URL',    devFallback: 'http://localhost:3004', critical: false },
+    { name: 'api-gateway',       envVar: 'API_GATEWAY_URL',       devFallback: process.env.SERVICE_URL || 'http://0.0.0.0:3000', critical: true  },
+    { name: 'vector-store',      envVar: 'VECTOR_STORE_URL',      devFallback: process.env.SERVICE_URL || 'http://0.0.0.0:3001', critical: true  },
+    { name: 'swarm-coordinator', envVar: 'SWARM_COORDINATOR_URL', devFallback: process.env.SERVICE_URL || 'http://0.0.0.0:3002', critical: true  },
+    { name: 'task-runner',       envVar: 'TASK_RUNNER_URL',       devFallback: process.env.SERVICE_URL || 'http://0.0.0.0:3003', critical: false },
+    { name: 'telemetry-sink',    envVar: 'TELEMETRY_SINK_URL',    devFallback: process.env.SERVICE_URL || 'http://0.0.0.0:3004', critical: false },
   ];
 
   return serviceDefaults.map(svc => {

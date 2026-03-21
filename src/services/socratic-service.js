@@ -646,20 +646,20 @@ if (require.main === module) {
   const service = getHeadyBattleService();
   
   service.start().then(() => {
-    logger.logSystem('🤔 HeadyBattle Service started - 100% Continuous Mode');
+    logger.logSystem('🤔 HeadyBattle Service started - 100% Continuous Mode').catch(err => { /* promise error absorbed */ });
     
     // Graceful shutdown
     process.on('SIGINT', async () => {
-      logger.logSystem('\n🛑 Shutting down HeadyBattle Service...');
-      await service.stop();
-      process.exit(0);
-    });
+      logger.logSystem('\n🛑 Shutting down HeadyBattle Service...').catch(err => { /* promise error absorbed */ });
+      await service.stop().catch(err => { /* promise error absorbed */ });
+      process.exit(0).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
     
     process.on('SIGTERM', async () => {
-      logger.logSystem('\n🛑 Shutting down HeadyBattle Service...');
-      await service.stop();
-      process.exit(0);
-    });
+      logger.logSystem('\n🛑 Shutting down HeadyBattle Service...').catch(err => { /* promise error absorbed */ });
+      await service.stop().catch(err => { /* promise error absorbed */ });
+      process.exit(0).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
     
     // Example validation processing
     setInterval(async () => {

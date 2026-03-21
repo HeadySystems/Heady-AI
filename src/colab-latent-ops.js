@@ -884,7 +884,7 @@ def handle_inference_job(payload: Dict[str, Any]) -> Dict[str, Any]:
         pass
 
     # Fallback: call HeadyBrain HTTP endpoint if available
-    endpoint = payload.get('endpoint', 'http://localhost:3300/api/brain/infer')
+    endpoint = payload.get('endpoint', process.env.SERVICE_URL || 'http://0.0.0.0:3300/api/brain/infer')
     try:
         import requests
         resp = requests.post(endpoint, json={'input': input_data, 'model': model_name}, timeout=30)

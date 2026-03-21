@@ -192,15 +192,15 @@ class SyncLock {
     const existing = this._locks.get(key) || Promise.resolve();
     let release;
     const next = new Promise(res => { release = res; });
-    this._locks.set(key, existing.then(() => next));
+    this._locks.set(key, existing.then(() => next)).catch(err => { /* promise error absorbed */ });
 
     await existing;
     try {
-      return await fn();
+      return await fn().catch(err => { /* promise error absorbed */ });
     } finally {
-      release();
+      release().catch(err => { /* promise error absorbed */ });
       // Clean up if no one else is waiting
-      if (this._locks.get(key) === next) this._locks.delete(key);
+      if (this._locks.get(key) === next) this._locks.delete(key).catch(err => { /* promise error absorbed */ });
     }
   }
 
@@ -898,7 +898,7 @@ class ProjectionSyncEngine extends EventEmitter {
     } catch (pushErr) {
       // Rollback on push failure
       if (snapshotSha) {
-        await git.rollbackTo(snapshotSha).catch(() => {});
+        await git.rollbackTo(snapshotSha).catch((e) => { /* absorbed: */ console.error(e.message); });
         this.emit('sync:rollback', { projectionId, target: 'github', snapshotSha });
       }
       throw pushErr;
@@ -924,11 +924,11 @@ class ProjectionSyncEngine extends EventEmitter {
       token:    this._tokens.hf,
     });
 
-    await hf.ensureRemote().catch(() => {});
+    await hf.ensureRemote().catch((e) => { /* absorbed: */ console.error(e.message); });
 
     const snapshotSha = await hf.snapshotHead().catch(() => null);
     const commitMsg   = `chore: HF sync ${projectionId} @ ${new Date().toISOString()}`;
-    await hf.commitAll(commitMsg).catch(() => {}); // allow empty commit
+    await hf.commitAll(commitMsg).catch((e) => { /* absorbed: */ console.error(e.message); }); // allow empty commit
 
     try {
       await withRetry(() => hf.push(), {
@@ -940,7 +940,7 @@ class ProjectionSyncEngine extends EventEmitter {
       });
     } catch (pushErr) {
       if (snapshotSha) {
-        await hf.rollbackTo(snapshotSha).catch(() => {});
+        await hf.rollbackTo(snapshotSha).catch((e) => { /* absorbed: */ console.error(e.message); });
         this.emit('sync:rollback', { projectionId, target: 'hf', snapshotSha });
       }
       throw pushErr;

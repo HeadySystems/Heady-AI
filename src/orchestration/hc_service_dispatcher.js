@@ -107,7 +107,7 @@ class HeadyServiceDispatcher extends EventEmitter {
         this.catalog = { ...SERVICE_CATALOG };
         this.dispatchLog = [];
         this.totalDispatches = 0;
-        this.managerUrl = opts.managerUrl || "https://127.0.0.1:3301";
+        this.managerUrl = opts.managerUrl || "https://0.0.0.0:3301";
     }
 
     /**

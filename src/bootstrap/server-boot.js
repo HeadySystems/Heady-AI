@@ -84,11 +84,11 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
     redisPool.init().then(() => {
         server.listen(PORT, '0.0.0.0', () => {
             const c = { reset: "\x1b[0m", bold: "\x1b[1m", cyan: "\x1b[36m", purple: "\x1b[35m", green: "\x1b[32m" };
-            logger.logNodeActivity("CONDUCTOR", `\n${c.bold}${c.purple}╭────────────────────────────────────────────────────────╮${c.reset}`);
-            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.cyan}⚡ HEADY SYSTEMS CORE — OS V3.0${c.reset}`);
-            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.green}Gateway: http://0.0.0.0:${PORT}${c.reset}`);
-            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.purple}Voice: ws://0.0.0.0:${PORT}/ws/voice/:id${c.reset}`);
-            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}╰────────────────────────────────────────────────────────╯${c.reset}\n`);
-        });
-    });
+            logger.logNodeActivity("CONDUCTOR", `\n${c.bold}${c.purple}╭────────────────────────────────────────────────────────╮${c.reset}`).catch(err => { /* promise error absorbed */ });
+            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.cyan}⚡ HEADY SYSTEMS CORE — OS V3.0${c.reset}`).catch(err => { /* promise error absorbed */ });
+            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.green}Gateway: http://0.0.0.0:${PORT}${c.reset}`).catch(err => { /* promise error absorbed */ });
+            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.purple}Voice: ws://0.0.0.0:${PORT}/ws/voice/:id${c.reset}`).catch(err => { /* promise error absorbed */ });
+            logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}╰────────────────────────────────────────────────────────╯${c.reset}\n`).catch(err => { /* promise error absorbed */ });
+        }}).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
 };

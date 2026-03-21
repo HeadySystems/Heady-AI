@@ -257,7 +257,7 @@ function persist(manifestId) {
             text: `HCFP Pipeline ${manifest.id}\nPriority: ${manifest.priority}\n${summary}`,
             metadata: { type: "hcfp-pipeline", manifest_id: manifest.id, task_count: manifest.tasks.length },
         };
-        fetch("https://127.0.0.1:3301/api/memory/store", {
+        fetch("https://0.0.0.0:3301/api/memory/store", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(embedPayload),

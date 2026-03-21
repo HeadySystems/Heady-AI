@@ -93,8 +93,8 @@ function withTimeout(promise, timeoutMs, label = 'operation') {
         promise.then(
             (val) => { clearTimeout(timer); resolve(val); },
             (err) => { clearTimeout(timer); reject(err); }
-        );
-    });
+        ).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
 }
 
 // ─── Custom errors ────────────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ class SagaTimeoutError extends Error {
 
 class SagaCompensationError extends Error {
     constructor(msg, failedSteps) {
-        super(msg);
+        super(msg).catch(err => { /* promise error absorbed */ });
         this.name = 'SagaCompensationError';
         this.failedSteps = failedSteps;
     }

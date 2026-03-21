@@ -243,7 +243,7 @@ class TenantIsolation {
 
             // Meter the request for Stripe billing
             if (this.db) {
-                this.db.meterRequest(tenantId, 'api_call').catch(() => {});
+                this.db.meterRequest(tenantId, 'api_call').catch((e) => { /* absorbed: */ console.error(e.message); });
             }
 
             next();

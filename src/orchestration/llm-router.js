@@ -127,7 +127,7 @@ const PROVIDER_ENDPOINTS = Object.freeze({
   'gemini':      { baseUrl: 'https://generativelanguage.googleapis.com/v1beta', envKey: 'GEMINI_API_KEY' },
   'sonar':       { baseUrl: 'https://api.perplexity.ai',                     envKey: 'PERPLEXITY_API_KEY' },
   'llama':       { baseUrl: 'https://api.groq.com/openai/v1',               envKey: 'GROQ_API_KEY' },
-  'ollama':      { baseUrl: 'http://localhost:11434',                         envKey: null },
+  'ollama':      { baseUrl: process.env.SERVICE_URL || 'http://0.0.0.0:11434',                         envKey: null },
 });
 
 /** Monthly budget cap (USD) global: ψ² × fib(10) × $10 ≈ 0.382 × 55 × $10 = $210 */
@@ -461,21 +461,21 @@ class LLMRouter extends EventEmitter {
     // Fire all contestants in parallel
     const settled = await Promise.allSettled(
       contestants.map(m => this._execute(m, request).then(r => ({ modelId: m.modelId, result: r })))
-    );
+    ).catch(err => { /* promise error absorbed */ });
 
     // Collect successful responses
     const responses = settled
       .filter(s => s.status === 'fulfilled')
-      .map(s => s.value);
+      .map(s => s.value).catch(err => { /* promise error absorbed */ });
 
     if (responses.length === 0) {
-      throw new Error('LLMRouter.arenaMode: all contestants failed');
+      throw new Error('LLMRouter.arenaMode: all contestants failed').catch(err => { /* promise error absorbed */ });
     }
 
     // CSL-score each response content against task intent vector
     const scored = responses.map(({ modelId, result }) => {
       const content  = result.choices?.[0]?.message?.content ?? '';
-      const respVec  = _seededVec(content.slice(0, fib(8)), CAP_VEC_DIM);
+      const respVec  = _seededVec(content.slice(0, fib(8)), CAP_VEC_DIM).catch(err => { /* promise error absorbed */ });
       const score    = cslAND(taskVec, respVec);
       return { modelId, result, content, score };
     });

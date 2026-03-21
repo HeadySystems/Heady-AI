@@ -87,7 +87,7 @@ async function savePatternStoreAsync(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     await fsp.mkdir(dir, { recursive: true });
     await fsp.writeFile(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (_) {}
+  } catch(_) { /* absorbed: */ console.error(_.message); }
 }
 
 // Legacy sync version for shutdown hooks
@@ -148,10 +148,10 @@ class HCPatternEngine extends EventEmitter {
   start() {
     if (this.analysisInterval) return;
     this.analysisInterval = setInterval(() => {
-      this._runAnalysisCycle().catch(() => {});
+      this._runAnalysisCycle().catch((e) => { /* absorbed: */ console.error(e.message); });
     }, this.analysisIntervalMs);
     // Immediate first cycle (async)
-    this._runAnalysisCycle().catch(() => {});
+    this._runAnalysisCycle().catch((e) => { /* absorbed: */ console.error(e.message); });
     this.emit("engine:started");
   }
 

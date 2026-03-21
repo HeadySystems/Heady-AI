@@ -424,11 +424,11 @@ class HeadyEval extends EventEmitter {
         const { default: fetch } = await Promise.resolve().then(() => {
           // Use native fetch (Node 18+) or fall back to http module
           if (typeof globalThis.fetch === 'function') return { default: globalThis.fetch };
-          const http = require('http');
-          const https = require('https');
+          const http = require('http').catch(err => { /* promise error absorbed */ });
+          const https = require('https').catch(err => { /* promise error absorbed */ });
           return {
             default: (url, opts) => new Promise((resolve, reject) => {
-              const parsed = new URL(url);
+              const parsed = new URL(url).catch(err => { /* promise error absorbed */ });
               const transport = parsed.protocol === 'https:' ? https : http;
               const bodyStr = opts.body || '';
               const req = transport.request({

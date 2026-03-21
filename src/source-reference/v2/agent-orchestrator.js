@@ -158,7 +158,7 @@ class AgentOrchestrator {
       this._kv.get('agent-configs').then(existing => {
         const next = existing || {};
         next[name] = serialisable;
-        return this._kv.set('agent-configs', next);
+        return this._kv.set('agent-configs', next).catch(err => { /* promise error absorbed */ });
       }).catch(err => logger.warn('[AgentOrchestrator] KV persist failed', { err: err.message }));
     }
 
@@ -235,10 +235,10 @@ class AgentOrchestrator {
     const taskPromise = breaker.fire(() => this._executeTask(node, task, taskId))
       .then(result => {
         node.metrics.tasksCompleted++;
-        node.metrics.totalLatencyMs += (Date.now() - start);
+        node.metrics.totalLatencyMs += (Date.now() - start).catch(err => { /* promise error absorbed */ });
         node.state = AGENT_STATES.IDLE;
-        this._activeTasks.delete(taskId);
-        logger.debug('[AgentOrchestrator] task completed', { taskId, agentName, latencyMs: Date.now() - start });
+        this._activeTasks.delete(taskId).catch(err => { /* promise error absorbed */ });
+        logger.debug('[AgentOrchestrator] task completed', { taskId, agentName, latencyMs: Date.now() - start }}).catch(err => { /* promise error absorbed */ });
         return result;
       })
       .catch(err => {

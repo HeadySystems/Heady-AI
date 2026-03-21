@@ -1148,7 +1148,7 @@ const AVAILABILITY = {
    */
   async healthProbeExecution() {
     const t0    = Date.now();
-    const probeUrl = process.env.HEALTH_PROBE_URL || 'http://localhost:3000/health';
+    const probeUrl = process.env.HEALTH_PROBE_URL || process.env.SERVICE_URL || 'http://0.0.0.0:3000/health';
     try {
       const { statusCode, durationMs } = await withTimeout(httpGet(probeUrl, 3000), 3500);
       const status = statusCode === 200 ? 'pass' : statusCode < 500 ? 'warn' : 'fail';
@@ -2891,7 +2891,7 @@ class AutoSuccessEngine extends EventEmitter {
 function createEngine(config = {}, autoStart = false) {
   const engine = new AutoSuccessEngine(config);
   if (autoStart) {
-    return engine.start().then(() => engine);
+    return engine.start().then(() => engine).catch(err => { /* promise error absorbed */ });
   }
   return engine;
 }
@@ -2904,7 +2904,7 @@ if (require.main === module) {
       verbose:             process.argv.includes('--verbose'),
       enableMonteCarlo:    true,
       enableLiquidScaling: true,
-    });
+    }}).catch(err => { /* promise error absorbed */ });
 
     engine.on('cycle:complete', ({ cycleNumber, durationMs, metrics }) => {
       logger.info(`[AutoSuccessEngine] Cycle #${cycleNumber} complete in ${durationMs}ms | health=${metrics.healthScore} pass=${metrics.pass} warn=${metrics.warn} fail=${metrics.fail}`);

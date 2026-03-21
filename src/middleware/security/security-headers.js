@@ -338,7 +338,7 @@ function cspViolationHandler(opts = {}) {
 
     // Call optional handler
     if (typeof opts.onViolation === 'function') {
-      try { opts.onViolation(violation, req); } catch {}
+      try { opts.onViolation(violation, req); } catch(e) { /* absorbed: */ console.error(e.message); }
     }
 
     // Default: log to stderr

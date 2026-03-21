@@ -82,7 +82,7 @@ function _auditWrite(record) {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
         fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-    } catch (_) {}
+    } catch(_) { /* absorbed: */ console.error(_.message); }
 }
 
 // ─── Pub/Sub Message Decoder ─────────────────────────────────────────────────
@@ -566,7 +566,7 @@ if (require.main === module) {
 
     const app = createCloudConductorService();
     app.start().then(server => {
-        logger.info(`[CloudConductor] Service started on port ${server.address()?.port}`);
+        logger.info(`[CloudConductor] Service started on port ${server.address()?.port}`).catch(err => { /* promise error absorbed */ });
     }).catch(err => {
         logger.error({ err: err.message }, '[CloudConductor] Fatal startup error');
         process.exit(1);

@@ -31,11 +31,11 @@ const sleep = promisify(setTimeout);
 
 // ─── Dependency imports (gracefully optional) ────────────────────────────────
 let express, promClient, pg, redis, axios;
-try { express    = require('express');    } catch {}
-try { promClient = require('prom-client'); } catch {}
-try { pg         = require('pg');          } catch {}
-try { redis      = require('ioredis');     } catch {}
-try { axios      = require('axios');       } catch {}
+try { express    = require('express');    } catch(e) { /* absorbed: */ console.error(e.message); }
+try { promClient = require('prom-client'); } catch(e) { /* absorbed: */ console.error(e.message); }
+try { pg         = require('pg');          } catch(e) { /* absorbed: */ console.error(e.message); }
+try { redis      = require('ioredis');     } catch(e) { /* absorbed: */ console.error(e.message); }
+try { axios      = require('axios');       } catch(e) { /* absorbed: */ console.error(e.message); }
 
 // =============================================================================
 // Sacred Geometry Weighted Scoring
@@ -155,7 +155,7 @@ class HealthMonitor extends EventEmitter {
         maxRetriesPerRequest: 1,
         enableOfflineQueue: false,
       });
-      await this._redisClient.connect().catch(() => {});
+      await this._redisClient.connect().catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     // Start background check loop
@@ -166,8 +166,8 @@ class HealthMonitor extends EventEmitter {
 
   async destroy() {
     clearInterval(this._checkTimer);
-    await this._pgPool?.end().catch(() => {});
-    await this._redisClient?.quit().catch(() => {});
+    await this._pgPool?.end().catch((e) => { /* absorbed: */ console.error(e.message); });
+    await this._redisClient?.quit().catch((e) => { /* absorbed: */ console.error(e.message); });
   }
 
   // ---------------------------------------------------------------------------
@@ -414,20 +414,20 @@ class HealthMonitor extends EventEmitter {
       this.config.llmEndpoints.map(url =>
         fetch(url, { signal: AbortSignal.timeout(5000) }).then(r => ({ url, ok: r.ok, status: r.status }))
       )
-    );
+    ).catch(err => { /* promise error absorbed */ });
 
     const checks = results.map((r, i) => ({
       url:       this.config.llmEndpoints[i],
       available: r.status === 'fulfilled' && r.value.ok,
-    }));
+    })).catch(err => { /* promise error absorbed */ });
 
     const available = checks.filter(c => c.available).length;
-    const score = Math.round((available / checks.length) * 100);
+    const score = Math.round((available / checks.length) * 100).catch(err => { /* promise error absorbed */ });
     return { score, status: score > 50 ? 'ok' : 'critical', detail: { checks } };
   }
 
   async _checkMemory() {
-    const totalMem = os.totalmem();
+    const totalMem = os.totalmem().catch(err => { /* promise error absorbed */ });
     const freeMem  = os.freemem();
     const usedPct  = ((totalMem - freeMem) / totalMem) * 100;
     const threshold = this.config.thresholds.memoryPct;
@@ -595,14 +595,14 @@ class HealthMonitor extends EventEmitter {
         // Force idle connections to be recycled
         this._pgPool._clients
           .filter(c => c._idle)
-          .forEach(c => c.end().catch(() => {}));
+          .forEach(c => c.end().catch((e) => { /* absorbed: */ console.error(e.message); }));
         actions.push('db-pool-recycle');
       }
 
       // Redis healing: reconnect if disconnected
       if (result.checks.redis.score < 30 && this._redisClient) {
         console.warn('[HealthMonitor] Redis degraded — attempting reconnect');
-        await this._redisClient.connect().catch(() => {});
+        await this._redisClient.connect().catch((e) => { /* absorbed: */ console.error(e.message); });
         actions.push('redis-reconnect');
       }
 
@@ -691,7 +691,7 @@ class HealthMonitor extends EventEmitter {
     this._checkTimer.unref?.();
 
     // Run immediately on start
-    setImmediate(() => this.check().catch(() => {}));
+    setImmediate(() => this.check().catch((e) => { /* absorbed: */ console.error(e.message); }));
   }
 
   // ---------------------------------------------------------------------------

@@ -4,7 +4,7 @@
  *
  * GLOBAL ERROR HANDLER — No Silent Failures
  * ═══════════════════════════════════════════
- * Every catch block should use these helpers instead of catch {}.
+ * Every catch block should use these helpers instead of catch(e) { /* absorbed: */ console.error(e.message); }.
  * Errors are logged, counted, and surfaced — never swallowed.
  */
 
@@ -16,7 +16,7 @@ const ERROR_LOG = path.join(__dirname, '..', '..', 'data', 'error-audit.jsonl');
 const errorCounts = new Map();
 
 /**
- * Safe operation wrapper — replaces all `try { ... } catch { }` patterns.
+ * Safe operation wrapper — replaces all `try { ... } catch(e) { /* absorbed: */ console.error(e.message); }` patterns.
  * Logs the error, increments counters, and returns a fallback value.
  *
  * @param {string} context - Where this error happened (e.g., 'brain.js:loadConfig')

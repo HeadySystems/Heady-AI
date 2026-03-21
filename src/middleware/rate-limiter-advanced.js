@@ -256,7 +256,7 @@ class RedisSlidingWindowStore {
   }
 
   async reset(key) {
-    await this._redis.del(key, `bucket:${key}`).catch(() => {});
+    await this._redis.del(key, `bucket:${key}`).catch((e) => { /* absorbed: */ console.error(e.message); });
   }
 }
 
@@ -357,7 +357,7 @@ class AdvancedRateLimiter {
       };
 
       // Fire breach notifications async
-      this._handleBreach(breachInfo).catch(() => {});
+      this._handleBreach(breachInfo).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return {
@@ -393,7 +393,7 @@ class AdvancedRateLimiter {
       try {
         const tier = await this._getTier(tenantId, apiKey);
         if (tier && this._tiers[tier]) return tier;
-      } catch {}
+      } catch(e) { /* absorbed: */ console.error(e.message); }
     }
 
     return DEFAULT_TIER;
@@ -462,7 +462,7 @@ class AdvancedRateLimiter {
   async reset(identity = {}) {
     const keys = this._buildKeys(identity.tenantId, identity.apiKey, identity.userId, identity.ip);
     for (const key of keys) {
-      await this._store.reset(`${this._keyPrefix}${key}`).catch(() => {});
+      await this._store.reset(`${this._keyPrefix}${key}`).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 }

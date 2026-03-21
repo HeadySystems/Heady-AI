@@ -409,7 +409,7 @@ class MidiToMcpTranslator {
 
 class McpDispatcher {
   constructor(opts = {}) {
-    this._endpoint    = opts.endpoint    || 'http://localhost:3000/mcp';
+    this._endpoint    = opts.endpoint    || process.env.SERVICE_URL || 'http://0.0.0.0:3000/mcp';
     this._timeout     = opts.timeout     || 5000;
     this._headers     = opts.headers     || { 'Content-Type': 'application/json' };
     this._requestId   = 0;

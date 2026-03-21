@@ -113,7 +113,7 @@ class LiquidDurable extends EventEmitter {
       if (!fs.existsSync(this._checkpointDir)) {
         fs.mkdirSync(this._checkpointDir, { recursive: true });
       }
-    } catch {}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
 
     this._metrics = {
       workflowsStarted: 0,

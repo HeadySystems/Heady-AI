@@ -207,7 +207,7 @@ export async function withBudgetTracking(redis, meta, callFn, opts = {}) {
     if (typeof onBudgetAlert === 'function') {
       const postSummary = await getSpendSummary(redis, budgetUsd);
       if (postSummary.alertLevel !== AlertLevel.OK) {
-        onBudgetAlert(postSummary).catch(() => {});
+        onBudgetAlert(postSummary).catch((e) => { /* absorbed: */ console.error(e.message); });
       }
     }
   }

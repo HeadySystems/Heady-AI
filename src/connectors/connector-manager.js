@@ -265,7 +265,7 @@ class ConnectorManager extends EventEmitter {
     const delayMs = RECONNECT_DELAYS[Math.min(entry.reconnectAttempts - 1, RECONNECT_DELAYS.length - 1)];
     logger.debug('[ConnectorManager] scheduling reconnect', { name, delayMs });
     setTimeout(() => {
-      this._connect(name).catch(() => {});
+      this._connect(name).catch((e) => { /* absorbed: */ console.error(e.message); });
     }, delayMs);
   }
 

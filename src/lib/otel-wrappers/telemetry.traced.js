@@ -68,8 +68,8 @@ function withSpan(name, fn, attributes = {}) {
     if (result && typeof result.then === 'function') {
       return result
         .then((r) => {
-          span.setStatus({ code: SpanStatusCode.OK });
-          span.end();
+          span.setStatus({ code: SpanStatusCode.OK }}).catch(err => { /* promise error absorbed */ });
+          span.end().catch(err => { /* promise error absorbed */ });
           return r;
         })
         .catch((e) => {

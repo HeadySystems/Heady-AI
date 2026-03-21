@@ -401,7 +401,7 @@ export class StreamableHTTPTransport extends BaseTransport {
     if (this._reconnectAttempts >= this._maxReconnectAttempts) return;
     const delay = this._reconnectDelayMs * Math.pow(1.618, this._reconnectAttempts++);
     setTimeout(() => {
-      if (this._connected) this._openSSEChannel().catch(() => {});
+      if (this._connected) this._openSSEChannel().catch((e) => { /* absorbed: */ console.error(e.message); });
     }, Math.min(delay, PHI_TIMING.CYCLE));
   }
 
@@ -432,7 +432,7 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.id) this._lastEventId = evt.id;
           if (evt.data) {
             this._handleIncoming(evt.data);
-            try { lastResult = deserializeMessage(evt.data); } catch (_) {}
+            try { lastResult = deserializeMessage(evt.data); } catch(_) { /* absorbed: */ console.error(_.message); }
           }
         }
       }
@@ -454,7 +454,7 @@ export class StreamableHTTPTransport extends BaseTransport {
         'MCP-Protocol-Version': this._negotiatedVersion ?? DEFAULT_PROTOCOL_VERSION,
         ...this._headers,
       };
-      await fetch(this._url.toString(), { method: 'DELETE', headers }).catch(() => {});
+      await fetch(this._url.toString(), { method: 'DELETE', headers }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     this._sessionId = null;
     this.emit('disconnected', {});
@@ -570,7 +570,7 @@ export class LegacySSETransport extends BaseTransport {
    */
   async close() {
     this._connected = false;
-    try { await this._sseReader?.cancel(); } catch (_) {}
+    try { await this._sseReader?.cancel(); } catch(_) { /* absorbed: */ console.error(_.message); }
     this._sseReader = null;
     this.emit('disconnected', {});
   }

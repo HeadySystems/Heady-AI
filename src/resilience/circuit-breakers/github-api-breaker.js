@@ -330,7 +330,7 @@ class GitHubApiBreaker extends EventEmitter {
   _withTimeout(promise, label) {
     return new Promise((resolve, reject) => {
       const t = setTimeout(() => reject(new Error(`GitHub API timeout: ${label} (${this._timeoutMs}ms)`)), this._timeoutMs);
-      promise.then(v => { clearTimeout(t); resolve(v); }, e => { clearTimeout(t); reject(e); });
+      promise.then(v => { clearTimeout(t).catch(err => { /* promise error absorbed */ }); resolve(v); }, e => { clearTimeout(t); reject(e); });
     });
   }
 

@@ -103,8 +103,8 @@ const ALLOWED_ORIGINS = [
   'https://heady-ai.com',
   'https://app.heady-ai.com',
   'https://headyconnection.org',
-  'http://localhost:3000',
-  'http://localhost:5173',
+  process.env.SERVICE_URL || 'http://0.0.0.0:3000',
+  process.env.SERVICE_URL || 'http://0.0.0.0:5173',
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -184,7 +184,7 @@ async function checkRateLimit(kv, key, limitPerMin) {
   }
 
   // Increment — fire and forget to avoid blocking the request path
-  kv.put(windowKey, String(count + 1), { expirationTtl: 120 }).catch(() => {});
+  kv.put(windowKey, String(count + 1), { expirationTtl: 120 }).catch((e) => { /* absorbed: */ console.error(e.message); });
   return { allowed: true, remaining: limitPerMin - count - 1, resetAt: (Math.floor(Date.now() / 60_000) + 1) * 60_000 };
 }
 

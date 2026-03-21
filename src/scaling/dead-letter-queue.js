@@ -136,20 +136,20 @@ function getAnalytics() {
 function createServer(port = 3383) {
   return import('http').then(({ default: http }) => {
     const server = http.createServer(async (req, res) => {
-      const url = new URL(req.url, `http://${req.headers.host}`);
+      const url = new URL(req.url, `http://${req.headers.host}`).catch(err => { /* promise error absorbed */ });
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }}).catch(err => { /* promise error absorbed */ });
 
-      if (url.pathname === '/dlq/enqueue' && req.method === 'POST') respond(202, enqueue(await readBody()));
+      if (url.pathname === '/dlq/enqueue' && req.method === 'POST') respond(202, enqueue(await readBody())).catch(err => { /* promise error absorbed */ });
       else if (url.pathname === '/dlq/reprocess' && req.method === 'POST') { const b = await readBody(); respond(200, b.batch ? reprocessBatch(b.count) : reprocess(b.id)); }
-      else if (url.pathname === '/dlq/messages' && req.method === 'GET') respond(200, getMessages({ queue: url.searchParams.get('queue'), limit: parseInt(url.searchParams.get('limit')) || undefined }));
-      else if (url.pathname === '/dlq/quarantine' && req.method === 'GET') respond(200, getQuarantine());
-      else if (url.pathname === '/dlq/alerts' && req.method === 'GET') respond(200, getAlerts());
-      else if (url.pathname === '/dlq/analytics' && req.method === 'GET') respond(200, getAnalytics());
-      else if (url.pathname === '/dlq/purge' && req.method === 'POST') respond(200, purgeOld());
-      else if (url.pathname === '/health') respond(200, { service: 'dead-letter-queue', status: 'healthy', depth: deadLetters.length, quarantine: quarantine.length, metrics });
-      else respond(404, { error: 'not_found' });
-    });
+      else if (url.pathname === '/dlq/messages' && req.method === 'GET') respond(200, getMessages({ queue: url.searchParams.get('queue'), limit: parseInt(url.searchParams.get('limit')) || undefined })).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/dlq/quarantine' && req.method === 'GET') respond(200, getQuarantine()).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/dlq/alerts' && req.method === 'GET') respond(200, getAlerts()).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/dlq/analytics' && req.method === 'GET') respond(200, getAnalytics()).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/dlq/purge' && req.method === 'POST') respond(200, purgeOld()).catch(err => { /* promise error absorbed */ });
+      else if (url.pathname === '/health') respond(200, { service: 'dead-letter-queue', status: 'healthy', depth: deadLetters.length, quarantine: quarantine.length, metrics }}).catch(err => { /* promise error absorbed */ });
+      else respond(404, { error: 'not_found' }}).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
     server.listen(port);
     return server;
   });

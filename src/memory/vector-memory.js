@@ -176,7 +176,7 @@ class VectorMemory {
     const existed = this._store.delete(id);
     this._accessOrder = this._accessOrder.filter(x => x !== id);
     if (existed && this.persistence) {
-      this.persistence.delete(id).catch(() => {});
+      this.persistence.delete(id).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
     return existed;
   }

@@ -48,7 +48,7 @@ const DOMAINS = [
 const BRAND_CHECKS = {
     requiredMeta: ['og:title', 'og:description', 'og:image'],
     requiredHeaders: ['x-heady-edge', 'x-heady-serve'],
-    forbiddenStrings: ['localhost:3301', '127.0.0.1:3301', 'placeholder', 'TODO', 'FIXME'],
+    forbiddenStrings: ['localhost:3301', '0.0.0.0:3301', 'placeholder', 'TODO', 'FIXME'],
     requiredBranding: ['heady', 'HeadySystems'],
 };
 

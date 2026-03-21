@@ -17,7 +17,7 @@ class DistillerBee {
     const { trace_id, execution_log, judge_score } = task;
 
     try {
-      const response = await fetch(`http://localhost:${process.env.DISTILLER_PORT || 3398}/distill`, {
+      const response = await fetch(`http://0.0.0.0:${process.env.DISTILLER_PORT || 3398}/distill`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ trace_id, execution_log, judge_score }),

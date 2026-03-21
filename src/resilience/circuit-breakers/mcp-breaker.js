@@ -146,7 +146,7 @@ function withTimeout(promise, ms, toolName) {
       () => reject(new Error(`MCP tool timeout: ${toolName} (${ms}ms)`)),
       ms
     );
-    promise.then(v => { clearTimeout(t); resolve(v); },
+    promise.then(v => { clearTimeout(t).catch(err => { /* promise error absorbed */ }); resolve(v); },
                  e => { clearTimeout(t); reject(e); });
   });
 }

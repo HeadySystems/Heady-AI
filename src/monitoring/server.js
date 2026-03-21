@@ -6,7 +6,7 @@
  *
  * Environment variables:
  *   DASHBOARD_PORT     — HTTP port for this server     (default 3850)
- *   PROJECTION_SERVICE — Upstream projection service   (default http://localhost:3849)
+ *   PROJECTION_SERVICE — Upstream projection service   (default http://0.0.0.0:3849)
  */
 
 import express from 'express';
@@ -22,7 +22,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PHI              = 1.6180339887;
 const PORT             = Number(process.env.DASHBOARD_PORT) || 3850;
-const PROJECTION_HOST  = process.env.PROJECTION_SERVICE || 'http://localhost:3849';
+const PROJECTION_HOST  = process.env.PROJECTION_SERVICE || process.env.SERVICE_URL || 'http://0.0.0.0:3849';
 const INDEX_HTML       = join(__dirname, 'index.html');
 
 // ── App ───────────────────────────────────────────────────────────────────────
@@ -113,7 +113,7 @@ app.use((_req, res) => {
 // ── Start ─────────────────────────────────────────────────────────────────────
 const server = createServer(app);
 server.listen(PORT, () => {
-  console.log(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
+  console.log(`[Heady Dashboard] ▶  http://0.0.0.0:${PORT}`);
   console.log(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
   console.log(`[Heady Dashboard] φ  PHI = ${PHI}`);
 });

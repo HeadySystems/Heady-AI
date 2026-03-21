@@ -129,12 +129,12 @@ router.get('/', (req, res) => {
 router.get('/services', async (req, res) => {
     const checks = {};
     try {
-        const pulse = await fetch('https://127.0.0.1:3301/api/pulse', { signal: AbortSignal.timeout(2000) });
+        const pulse = await fetch('https://0.0.0.0:3301/api/pulse', { signal: AbortSignal.timeout(2000) });
         checks.manager = pulse.ok ? 'connected' : 'degraded';
     } catch { checks.manager = 'disconnected'; }
 
     try {
-        const headylocal = await fetch('http://127.0.0.1:11434/', { signal: AbortSignal.timeout(2000) });
+        const headylocal = await fetch('http://0.0.0.0:11434/', { signal: AbortSignal.timeout(2000) });
         checks.headylocal = headylocal.ok ? 'connected' : 'disconnected';
     } catch { checks.headylocal = 'disconnected'; }
 

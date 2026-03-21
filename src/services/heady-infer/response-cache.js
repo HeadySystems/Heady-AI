@@ -176,7 +176,7 @@ class ResponseCache extends EventEmitter {
         const key = this.buildKey(request);
         this.set(key, response, response.model || request.model);
         warmed++;
-      } catch (_) {}
+      } catch(_) { /* absorbed: */ console.error(_.message); }
     }
     return warmed;
   }

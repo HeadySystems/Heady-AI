@@ -33,7 +33,7 @@ class TelemetryEngine {
 
         // Use OTLP Exporter (can wire to Admin Citadel later or external collector)
         this.exporter = new OTLPTraceExporter({
-            url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',
+            url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || process.env.SERVICE_URL || 'http://0.0.0.0:4318/v1/traces',
         });
 
         this.provider.addSpanProcessor(new SimpleSpanProcessor(this.exporter));

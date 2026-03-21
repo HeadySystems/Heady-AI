@@ -279,7 +279,7 @@ class LogFileRotator {
 
     const ts = new Date().toISOString().replace(/[:.]/g, '-');
     const rotatedPath = path.join(this._logDir, `${this._prefix}-${ts}.jsonl`);
-    await fs.rename(this._currentFilePath, rotatedPath).catch(() => {});
+    await fs.rename(this._currentFilePath, rotatedPath).catch((e) => { /* absorbed: */ console.error(e.message); });
 
     await this._pruneOldFiles();
     this._currentFilePath = this._buildFilePath();
@@ -302,7 +302,7 @@ class LogFileRotator {
         const fp = path.join(this._logDir, file);
         const stat = await fs.stat(fp).catch(() => null);
         if (stat && stat.mtimeMs < cutoff) {
-          await fs.unlink(fp).catch(() => {});
+          await fs.unlink(fp).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
       }
     } catch { /* best-effort */ }
@@ -327,7 +327,7 @@ class LogFileRotator {
    */
   async close() {
     if (this._fileHandle) {
-      await this._fileHandle.close().catch(() => {});
+      await this._fileHandle.close().catch((e) => { /* absorbed: */ console.error(e.message); });
       this._fileHandle = null;
     }
   }

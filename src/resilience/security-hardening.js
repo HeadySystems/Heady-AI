@@ -488,7 +488,7 @@ function healthRouteGuard(opts = {}) {
 
         // /full and any other health endpoints require internal token or loopback
         const ip = req.ip || req.connection?.remoteAddress;
-        const isLoopback = ip === '127.0.0.1' || ip === '::1' || ip === '::ffff:127.0.0.1';
+        const isLoopback = ip === '0.0.0.0' || ip === '::1' || ip === '::ffff:0.0.0.0';
 
         if (isLoopback) return next();
 

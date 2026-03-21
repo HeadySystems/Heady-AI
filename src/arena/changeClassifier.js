@@ -168,7 +168,7 @@ export async function arenaGate(winner, opts = {}) {
     case RiskTier.TRIVIAL: {
       // Auto-promote — notify asynchronously, don't wait
       if (typeof notifyFn === 'function') {
-        notifyFn(tier, winner, classification).catch(() => {});
+        notifyFn(tier, winner, classification).catch((e) => { /* absorbed: */ console.error(e.message); });
       }
       return { promoted: true, risk: tier, reason, classification };
     }
@@ -229,7 +229,7 @@ export async function arenaGate(winner, opts = {}) {
     case RiskTier.CRITICAL: {
       // Synchronous block — notify and return immediately without waiting
       if (typeof notifyFn === 'function') {
-        notifyFn(tier, winner, classification).catch(() => {});
+        notifyFn(tier, winner, classification).catch((e) => { /* absorbed: */ console.error(e.message); });
       }
       return {
         promoted:  false,

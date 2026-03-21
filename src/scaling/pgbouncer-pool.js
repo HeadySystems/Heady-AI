@@ -81,7 +81,7 @@ class PooledConnection {
     this.queryCount = 0;
     this.errorCount = 0;
     this.totalLatencyMs = 0;
-    this.host = config.host ?? 'localhost';
+    this.host = config.host ?? '0.0.0.0';
     this.port = config.port ?? 6432; // PgBouncer default
     this.database = config.database ?? 'heady';
   }

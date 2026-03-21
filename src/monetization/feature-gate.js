@@ -456,8 +456,8 @@ class FeatureGate extends EventEmitter {
   async canBatch(userId, features) {
     const results = await Promise.all(
       features.map(f => this.can(userId, f).then(granted => [f, granted]))
-    );
-    return Object.fromEntries(results);
+    ).catch(err => { /* promise error absorbed */ });
+    return Object.fromEntries(results).catch(err => { /* promise error absorbed */ });
   }
 
   /**
@@ -466,9 +466,9 @@ class FeatureGate extends EventEmitter {
    * @throws {FeatureGateError}
    */
   async require(userId, feature) {
-    const granted = await this.can(userId, feature);
+    const granted = await this.can(userId, feature).catch(err => { /* promise error absorbed */ });
     if (!granted) {
-      const plan = await this._getPlan(userId);
+      const plan = await this._getPlan(userId).catch(err => { /* promise error absorbed */ });
       const def = FEATURE_DEFINITIONS[feature];
       const minPlan = def ? def.plans[0] : 'enterprise';
       throw new FeatureGateError(feature, plan, minPlan);

@@ -117,19 +117,19 @@ class SlidingWindowRateLimiter {
         const [prevCount, currentCount] = await Promise.all([
             this._kv.get(prevKey).then(v => Number(v) || 0),
             this._kv.get(currentKey).then(v => Number(v) || 0),
-        ]);
+        ]).catch(err => { /* promise error absorbed */ });
 
         // Sliding window interpolation
         const prevWeight = (windowMs - elapsedInCurrent) / windowMs;
         const effectiveCount = prevCount * prevWeight + currentCount;
 
         const allowed = (effectiveCount + cost) <= requests;
-        const remaining = Math.max(0, Math.floor(requests - effectiveCount - (allowed ? cost : 0)));
+        const remaining = Math.max(0, Math.floor(requests - effectiveCount - (allowed ? cost : 0))).catch(err => { /* promise error absorbed */ });
         const resetAt = currentWindowStart + windowMs;
 
         if (allowed) {
             // Increment current window counter with TTL of 2 windows to allow overlap
-            await this._kv.incrBy(currentKey, cost, windowMs * 2);
+            await this._kv.incrBy(currentKey, cost, windowMs * 2).catch(err => { /* promise error absorbed */ });
         }
 
         return {

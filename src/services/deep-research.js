@@ -166,17 +166,17 @@ class DeepResearchEngine {
 
             const racePromises = remaining.map(({ promise, index }) =>
                 promise.then(result => ({ result, index }))
-            );
+            ).catch(err => { /* promise error absorbed */ });
 
             const timeoutPromise = new Promise(resolve =>
                 setTimeout(() => resolve(null), stageTimeout - (Date.now() - (Date.now() - stageTimeout)))
-            );
+            ).catch(err => { /* promise error absorbed */ });
 
             try {
                 const batch = await Promise.race([
                     Promise.allSettled(racePromises),
                     new Promise(resolve => setTimeout(() => resolve("timeout"), Math.max(1, stageTimeout))),
-                ]);
+                ]).catch(err => { /* promise error absorbed */ });
 
                 if (batch === "timeout") continue;
 

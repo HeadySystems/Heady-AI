@@ -482,8 +482,8 @@ function getConductor() {
         try {
             const duckdbMem = require('./intelligence/duckdb-memory');
             duckdbMem.init().then(() => {
-                _conductor.setVectorMemory(duckdbMem);
-                logger.logSystem("  🧠 [Conductor] DuckDB V2 Vector Memory WIRED for zone-aware routing.");
+                _conductor.setVectorMemory(duckdbMem).catch(err => { /* promise error absorbed */ });
+                logger.logSystem("  🧠 [Conductor] DuckDB V2 Vector Memory WIRED for zone-aware routing.").catch(err => { /* promise error absorbed */ });
             }).catch(err => {
                 logger.warn(`  ⚠️ [Conductor] DuckDB init deferred: ${err.message}`);
             });

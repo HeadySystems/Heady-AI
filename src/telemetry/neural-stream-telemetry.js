@@ -444,7 +444,7 @@ class TelemetryInterceptor {
         // The interface is intentionally decoupled; the caller injects the actual publisher via
         // opts.poiPublisher: async (hash, payload) => void
         if (this.config.poiPublisher && typeof this.config.poiPublisher === 'function') {
-            Promise.resolve(this.config.poiPublisher(hash, payload)).catch(() => {});
+            Promise.resolve(this.config.poiPublisher(hash, payload)).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
     }
 

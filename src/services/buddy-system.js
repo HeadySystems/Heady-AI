@@ -125,7 +125,7 @@ class BuddySystem {
         this.octree.insert(id, coords.x, coords.y, coords.z, payload);
 
         // 3b. Push to Redis cache
-        this.redisBridge.pushBlock(id, { ...coords, payload }).catch(() => { });
+        this.redisBridge.pushBlock(id, { ...coords, payload }).catch((e) => { /* absorbed: */ console.error(e.message); });
 
         this._ingestionCount++;
 
@@ -133,7 +133,7 @@ class BuddySystem {
         this.redisBridge.publish('buddy:ingestion', {
             id, x: coords.x, y: coords.y, z: coords.z,
             receipt: coords.receipt,
-        }).catch(() => { });
+        }).catch((e) => { /* absorbed: */ console.error(e.message); });
 
         return { id, coords: { x: coords.x, y: coords.y, z: coords.z }, receipt: coords.receipt };
     }
@@ -213,7 +213,7 @@ class BuddySystem {
 
             if (relevance < this.minRelevance) {
                 this.octree.remove(item.id);
-                this.redisBridge.removeBlock(item.id).catch(() => { });
+                this.redisBridge.removeBlock(item.id).catch((e) => { /* absorbed: */ console.error(e.message); });
                 pruned++;
             }
         }

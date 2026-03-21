@@ -15,7 +15,7 @@ const logger = require("../utils/logger");
     if (!redisUrl && process.env.NODE_ENV === 'production') {
         throw new Error('REDIS_URL required in production');
     }
-    redisClient = redis.createClient({ url: redisUrl || 'redis://127.0.0.1:6379' }); // dev fallback only
+    redisClient = redis.createClient({ url: redisUrl || 'redis://0.0.0.0:6379' }); // dev fallback only
     redisClient.on('error', (err) => logger.warn('Redis Cluster not connected. Using in-memory state.'));
     redisClient.connect().catch(() => { });
 } catch (e) {

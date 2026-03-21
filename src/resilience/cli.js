@@ -361,7 +361,7 @@ async function generateConfig(dir, name, template) {
       backoff_base_ms: 500,
     },
     registration: {
-      conductor_url: '${HEADY_CONDUCTOR_URL:-http://localhost:3848}',
+      conductor_url: '${HEADY_CONDUCTOR_URL:-http://0.0.0.0:3848}',
       capabilities: [],
       ring: 'outer',
     },

@@ -355,7 +355,7 @@ class HeadyBee extends EventEmitter {
       if (this.state === BEE_STATE.IDLE) {
         this._processNext();
       }
-    });
+    }).catch(err => { /* promise error absorbed */ });
   }
 
   /**

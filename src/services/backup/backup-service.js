@@ -365,7 +365,7 @@ class BackupService {
   // ═══════════════════════════════════════════════════════════
 
   _handleRequest(req, res) {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
 
     if (req.method === 'GET' && url.pathname === '/health') {
       return this._respondJson(res, 200, this.health.getStatus());
@@ -378,7 +378,7 @@ class BackupService {
     if (req.method === 'POST' && url.pathname === '/backup') {
       const type = url.searchParams.get('type') || 'full';
       this.runBackup(type).then(result => {
-        this._respondJson(res, 202, result || { error: 'Backup skipped — max concurrent reached' });
+        this._respondJson(res, 202, result || { error: 'Backup skipped — max concurrent reached' }).catch(err => { /* promise error absorbed */ });
       }).catch(err => {
         this._respondJson(res, 500, { error: err.message });
       });

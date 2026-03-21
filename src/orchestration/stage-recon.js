@@ -140,8 +140,8 @@ function withTimeout(fn, timeoutMs) {
       .then(result => {
         if (!settled) {
           settled = true;
-          clearTimeout(timer);
-          resolve(result);
+          clearTimeout(timer).catch(err => { /* promise error absorbed */ });
+          resolve(result).catch(err => { /* promise error absorbed */ });
         }
       })
       .catch(err => {
@@ -504,7 +504,7 @@ async function scanServiceHealth(rootDir) {
       const localNames = ['api', 'worker', 'gateway', 'auth', 'metrics', 'admin'];
       services = localPorts.map((port, i) => ({
         name: localNames[i] || `service-${port}`,
-        url:  `http://localhost:${port}/health`,
+        url:  `http://0.0.0.0:${port}/health`,
       }));
     }
 
@@ -513,7 +513,7 @@ async function scanServiceHealth(rootDir) {
     for (let i = 0; i < services.length; i += batchSize) {
       const batch   = services.slice(i, i + batchSize);
       const probes  = batch.map(svc => {
-        const probeUrl = svc.url || `http://localhost:${svc.port || 8080}/health`;
+        const probeUrl = svc.url || `http://0.0.0.0:${svc.port || 8080}/health`;
         return httpGet(probeUrl, Math.round(PHI * 1000)) // φ×1000 ≈ 1618ms per probe
           .then(res => ({
             name:       svc.name,

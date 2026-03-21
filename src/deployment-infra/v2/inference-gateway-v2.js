@@ -504,14 +504,14 @@ class InferenceGateway extends EventEmitter {
         .complete(messages, { ...opts, tier: 'fast' }, controllers[i].signal)
         .then(result => {
           // CHANGE: Cancel all other in-flight requests on first success
-          controllers.forEach((c, j) => { if (j !== i) c.abort(); });
-          timeouts.forEach((t, j) => { if (j !== i) clearTimeout(t); });
-          clearTimeout(timeouts[i]);
+          controllers.forEach((c, j) => { if (j !== i) c.abort(); }}).catch(err => { /* promise error absorbed */ });
+          timeouts.forEach((t, j) => { if (j !== i) clearTimeout(t); }}).catch(err => { /* promise error absorbed */ });
+          clearTimeout(timeouts[i]).catch(err => { /* promise error absorbed */ });
 
           result.gatewayLatencyMs = Date.now() - start;
           result.raceWinner = true;
-          this.breakers[providerKey].recordSuccess();
-          this._recordStats(providerKey, result.usage);
+          this.breakers[providerKey].recordSuccess().catch(err => { /* promise error absorbed */ });
+          this._recordStats(providerKey, result.usage).catch(err => { /* promise error absorbed */ });
           return result;
         })
         .catch(err => {
@@ -550,22 +550,22 @@ class InferenceGateway extends EventEmitter {
         setTimeout(() => controller.abort(), ms);
         return PROVIDERS[providerKey]
           .complete(messages, { ...opts, tier: 'quality' }, controller.signal)
-          .then(result => ({ ...result, provider: providerKey }));
+          .then(result => ({ ...result, provider: providerKey })).catch(err => { /* promise error absorbed */ });
       })
-    );
+    ).catch(err => { /* promise error absorbed */ });
 
     return results
       .filter(r => r.status === 'fulfilled')
-      .map(r => r.value);
+      .map(r => r.value).catch(err => { /* promise error absorbed */ });
   }
 
   // ── Hedged request — fires backup if primary exceeds hedgeAfterMs ──────────
   // CHANGE: New method — not in original gateway.
   // Useful for latency-sensitive endpoints where P99 matters.
   async hedged(messages, opts = {}) {
-    if (!this.enableHedging) return this.complete(messages, opts);
+    if (!this.enableHedging) return this.complete(messages, opts).catch(err => { /* promise error absorbed */ });
 
-    const primary = this.selectProvider(opts);
+    const primary = this.selectProvider(opts).catch(err => { /* promise error absorbed */ });
     if (primary === null) return this.race(messages, opts);
 
     const available = this.getAvailable().filter(p => p !== primary);
@@ -583,7 +583,7 @@ class InferenceGateway extends EventEmitter {
       // Start primary
       PROVIDERS[primary].complete(messages, opts, primaryController.signal)
         .then(r => {
-          clearTimeout(primaryTimer);
+          clearTimeout(primaryTimer).catch(err => { /* promise error absorbed */ });
           clearTimeout(hedgeTimer);
           backupController.abort();
           r.gatewayLatencyMs = Date.now();
@@ -605,7 +605,7 @@ class InferenceGateway extends EventEmitter {
         const backupTimer = setTimeout(() => backupController.abort(), PROVIDERS[backup].defaultTimeoutMs);
         PROVIDERS[backup].complete(messages, opts, backupController.signal)
           .then(r => {
-            clearTimeout(backupTimer);
+            clearTimeout(backupTimer).catch(err => { /* promise error absorbed */ });
             clearTimeout(primaryTimer);
             primaryController.abort();
             r.gatewayLatencyMs = Date.now();

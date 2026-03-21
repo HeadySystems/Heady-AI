@@ -138,7 +138,7 @@ class Runner extends EventEmitter {
   _ensureDir() {
     try {
       fs.mkdirSync(this.checkpointsDir, { recursive: true });
-    } catch {}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
   }
 
   /**
@@ -338,13 +338,13 @@ class Runner extends EventEmitter {
   async _saveCheckpoint(runId, data) {
     try {
       fs.writeFileSync(this._checkpointPath(runId), JSON.stringify(data), 'utf-8');
-    } catch {}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
   }
 
   _deleteCheckpoint(runId) {
     try {
       fs.unlinkSync(this._checkpointPath(runId));
-    } catch {}
+    } catch(e) { /* absorbed: */ console.error(e.message); }
   }
 
   // ─── Cost estimation ────────────────────────────────────────────────────

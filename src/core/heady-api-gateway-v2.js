@@ -98,7 +98,7 @@ const HEADY_DOMAINS = Object.freeze([
   'heady-ai.com',       'www.heady-ai.com',
   // Dev / local
   'localhost',
-  '127.0.0.1',
+  '0.0.0.0',
 ]);
 
 // ─── Supported API versions ───────────────────────────────────────────────────
@@ -965,7 +965,7 @@ function createGateway(opts) {
 }
 
 function _resetGatewayForTests() {
-  if (_instance) _instance.stop().catch(() => {});
+  if (_instance) _instance.stop().catch((e) => { /* absorbed: */ console.error(e.message); });
   _instance = null;
 }
 

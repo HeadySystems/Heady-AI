@@ -89,7 +89,7 @@ const SEED_SERVICES = [
     name: 'headyme',
     domain: 'headyme.com',
     instances: filterInstances([
-      { url: 'http://localhost:3301', weight: 1.0, tags: ['local', 'primary'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3301', weight: 1.0, tags: ['local', 'primary'] },
       { url: 'https://heady-manager-609590223909.us-central1.run.app', weight: PHI, tags: ['cloud-run', 'primary'] },
     ]),
     healthPath: '/healthz',
@@ -100,7 +100,7 @@ const SEED_SERVICES = [
     name: 'headyapi',
     domain: 'headyapi.com',
     instances: filterInstances([
-      { url: 'http://localhost:3302', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3302', weight: 1.0, tags: ['local'] },
       { url: 'https://api.headyapi.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -111,7 +111,7 @@ const SEED_SERVICES = [
     name: 'headysystems',
     domain: 'headysystems.com',
     instances: filterInstances([
-      { url: 'http://localhost:3303', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3303', weight: 1.0, tags: ['local'] },
       { url: 'https://systems.headysystems.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -122,7 +122,7 @@ const SEED_SERVICES = [
     name: 'headyconnection',
     domain: 'headyconnection.org',
     instances: filterInstances([
-      { url: 'http://localhost:3304', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3304', weight: 1.0, tags: ['local'] },
       { url: 'https://headyconnection.org', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -133,7 +133,7 @@ const SEED_SERVICES = [
     name: 'headymcp',
     domain: 'headymcp.com',
     instances: filterInstances([
-      { url: 'http://localhost:3305', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3305', weight: 1.0, tags: ['local'] },
       { url: 'https://mcp.headymcp.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -144,7 +144,7 @@ const SEED_SERVICES = [
     name: 'headybuddy',
     domain: 'headybuddy.org',
     instances: filterInstances([
-      { url: 'http://localhost:3306', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3306', weight: 1.0, tags: ['local'] },
       { url: 'https://headybuddy.org', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -155,7 +155,7 @@ const SEED_SERVICES = [
     name: 'headyio',
     domain: 'headyio.com',
     instances: filterInstances([
-      { url: 'http://localhost:3307', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3307', weight: 1.0, tags: ['local'] },
       { url: 'https://headyio.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -166,7 +166,7 @@ const SEED_SERVICES = [
     name: 'headybot',
     domain: 'headybot.com',
     instances: filterInstances([
-      { url: 'http://localhost:3308', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3308', weight: 1.0, tags: ['local'] },
       { url: 'https://headybot.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -177,7 +177,7 @@ const SEED_SERVICES = [
     name: 'heady-ai',
     domain: 'heady-ai.com',
     instances: filterInstances([
-      { url: 'http://localhost:3309', weight: 1.0, tags: ['local'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:3309', weight: 1.0, tags: ['local'] },
       { url: 'https://heady-ai.com', weight: PHI, tags: ['production'] },
     ]),
     healthPath: '/healthz',
@@ -201,8 +201,8 @@ const SEED_SERVICES = [
     name: 'vector-store',
     domain: null,
     instances: filterInstances([
-      { url: 'http://localhost:5432', weight: 1.0, tags: ['postgres', 'pgvector'] },
-      { url: process.env.DATABASE_URL || 'http://localhost:5432', weight: PHI, tags: ['neon', 'pgvector', 'production'] },
+      { url: process.env.SERVICE_URL || 'http://0.0.0.0:5432', weight: 1.0, tags: ['postgres', 'pgvector'] },
+      { url: process.env.DATABASE_URL || process.env.SERVICE_URL || 'http://0.0.0.0:5432', weight: PHI, tags: ['neon', 'pgvector', 'production'] },
     ]),
     healthPath: null,        // TCP probe only
     version: '16.0',
@@ -212,7 +212,7 @@ const SEED_SERVICES = [
     name: 'redis',
     domain: null,
     instances: [
-      { url: 'redis://localhost:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
+      { url: process.env.REDIS_URL || 'redis://0.0.0.0:6379', weight: 1.0, tags: ['cache', 'pubsub'] },
     ],
     healthPath: null,
     version: '7.0',
@@ -858,7 +858,7 @@ class HeadyServiceMesh extends EventEmitter {
   _publish(topic, payload) {
     this.emit(topic, payload);
     if (this._eventBus && typeof this._eventBus.publish === 'function') {
-      this._eventBus.publish(topic, payload).catch(() => {});
+      this._eventBus.publish(topic, payload).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
   }
 }

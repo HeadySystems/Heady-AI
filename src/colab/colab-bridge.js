@@ -144,7 +144,7 @@ class ColabBridge {
   // ═══════════════════════════════════════════════════════════
 
   _handleHttp(req, res) {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
 
     const routes = {
       'GET /health': () => this._respondJson(res, 200, this.getHealth()),
@@ -297,7 +297,7 @@ class ColabBridge {
   // ═══════════════════════════════════════════════════════════
 
   _handleUpgrade(req, socket, head) {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
     const runtimeId = url.searchParams.get('runtime');
     const authToken = url.searchParams.get('token');
 
@@ -616,7 +616,7 @@ class ColabBridge {
     for (const [, runtime] of this.runtimes) {
       if (runtime.heartbeatTimer) clearInterval(runtime.heartbeatTimer);
       if (runtime.ws) {
-        try { runtime.ws.destroy(); } catch {}
+        try { runtime.ws.destroy(); } catch(e) { /* absorbed: */ console.error(e.message); }
       }
     }
 

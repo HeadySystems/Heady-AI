@@ -131,19 +131,19 @@ function createMiddleware(options) {
 function createServer(port = 3390) {
   return import('http').then(({ default: http }) => {
     const server = http.createServer(async (req, res) => {
-      const url = new URL(req.url, `http://${req.headers.host}`);
+      const url = new URL(req.url, `http://${req.headers.host}`).catch(err => { /* promise error absorbed */ });
       const respond = (s, b) => { res.writeHead(s, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(b)); };
-      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); });
+      const readBody = () => new Promise(r => { const c = []; req.on('data', d => c.push(d)); req.on('end', () => { try { r(JSON.parse(Buffer.concat(c).toString())); } catch { r({}); } }); }}).catch(err => { /* promise error absorbed */ });
 
       if (url.pathname === '/csp-report' && req.method === 'POST') {
-        const body = await readBody();
+        const body = await readBody().catch(err => { /* promise error absorbed */ });
         const report = body['csp-report'] || body;
-        respond(204, handleViolationReport(report, req.headers['x-forwarded-for']));
+        respond(204, handleViolationReport(report, req.headers['x-forwarded-for'])).catch(err => { /* promise error absorbed */ });
       } else if (url.pathname === '/csp/analytics' && req.method === 'GET') {
-        respond(200, getViolationAnalytics());
+        respond(200, getViolationAnalytics()).catch(err => { /* promise error absorbed */ });
       } else if (url.pathname === '/csp/headers' && req.method === 'GET') {
-        const nonce = generateNonce();
-        respond(200, buildSecurityHeaders(nonce));
+        const nonce = generateNonce().catch(err => { /* promise error absorbed */ });
+        respond(200, buildSecurityHeaders(nonce)).catch(err => { /* promise error absorbed */ });
       } else if (url.pathname === '/health') {
         respond(200, { service: 'csp-middleware', status: 'healthy', violationCount: violationReports.length });
       } else { respond(404, { error: 'not_found' }); }

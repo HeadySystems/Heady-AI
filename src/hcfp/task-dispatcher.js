@@ -72,7 +72,7 @@ const SUB_AGENTS = {
     },
     "core": {
         name: "Core Platform",
-        endpoint: process.env.HEADY_BRAIN_URL || "https://127.0.0.1:3301/api/brain/chat",
+        endpoint: process.env.HEADY_BRAIN_URL || "https://0.0.0.0:3301/api/brain/chat",
         capabilities: ["chat", "analyze", "code", "reasoning", "think", "generate"],
         keywords: [], // Default — catches everything else
     },

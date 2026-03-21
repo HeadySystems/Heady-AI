@@ -170,7 +170,7 @@ class Consumer {
 // ── Event Bus ────────────────────────────────────────────────────
 class EventBusNATS {
   constructor(config = {}) {
-    this.url = config.url ?? 'nats://localhost:4222';
+    this.url = config.url ?? process.env.NATS_URL || 'nats://0.0.0.0:4222';
     this.streams = new Map();
     this.consumers = new Map();
     this.subscriptions = new Map();

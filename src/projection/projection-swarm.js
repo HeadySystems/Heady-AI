@@ -253,7 +253,7 @@ class ProjectionSwarm extends EventEmitter {
         // Audit
         const auditDir = path.dirname(AUDIT_PATH);
         if (!fs.existsSync(auditDir)) {
-            try { fs.mkdirSync(auditDir, { recursive: true }); } catch (_) {}
+            try { fs.mkdirSync(auditDir, { recursive: true }); } catch(_) { /* absorbed: */ console.error(_.message); }
         }
 
         logger.info('[ProjectionSwarm] Initialized — PHI-based scheduler, CSL-gated priority');

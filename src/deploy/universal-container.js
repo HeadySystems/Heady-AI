@@ -34,7 +34,7 @@ ENV NODE_ENV=production
 ENV TZ=UTC
 EXPOSE ${this.#roles.get(role)?.port || CONTAINER_CONFIG.basePort}
 HEALTHCHECK --interval=${FIB[8]}s --timeout=${FIB[5]}s --retries=${FIB[4]} \\
-  CMD curl -f http://localhost:${this.#roles.get(role)?.port || CONTAINER_CONFIG.basePort}/health || exit 1
+  CMD curl -f http://0.0.0.0:${this.#roles.get(role)?.port || CONTAINER_CONFIG.basePort}/health || exit 1
 CMD ["node", "--experimental-vm-modules", "index.js"]`;
   }
 

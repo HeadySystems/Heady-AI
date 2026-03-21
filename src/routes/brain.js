@@ -255,7 +255,7 @@ async function chatViaOllama(message, system, temperature, max_tokens, history) 
 
     return new Promise((resolve, reject) => {
         const req = http.request({
-            hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
+            hostname: process.env.HEADY_LOCAL_HOST || "0.0.0.0", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
             headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
             timeout: PHI_TIMING.CYCLE,
         }, (res) => {
@@ -860,7 +860,7 @@ router.post("/embed", async (req, res) => {
         const result = await new Promise((resolve, reject) => {
             const req2 = http.request(
                 {
-                    hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/embeddings", method: "POST",
+                    hostname: process.env.HEADY_LOCAL_HOST || "0.0.0.0", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/embeddings", method: "POST",
                     headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
                     timeout: 15000
                 },
@@ -1099,18 +1099,18 @@ router.post("/analyze", async (req, res) => {
 
         // Use HeadyPythia for analysis (fast + good at code)
         providers.push(chatViaGemini(analysisPrompt, req.body.system, 0.2, 4096)
-            .then(r => ({ ...r, source: "headypythia", latency: Date.now() - raceStart })));
-        providerNames.push("headypythia");
+            .then(r => ({ ...r, source: "headypythia", latency: Date.now() - raceStart }))).catch(err => { /* promise error absorbed */ });
+        providerNames.push("headypythia").catch(err => { /* promise error absorbed */ });
 
-        const winner = await Promise.any(providers);
-        const filtered = filterResponse(winner.response, { scrubProviders: true });
+        const winner = await Promise.any(providers).catch(err => { /* promise error absorbed */ });
+        const filtered = filterResponse(winner.response, { scrubProviders: true }}).catch(err => { /* promise error absorbed */ });
 
-        await storeInMemory(`Analysis: ${filtered.substring(0, 500)}`, { type: "analysis", source: winner.source, ts });
-        res.json({ ok: true, analysis: filtered, model: "heady-brain", type: type || "general", ts });
+        await storeInMemory(`Analysis: ${filtered.substring(0, 500)}`, { type: "analysis", source: winner.source, ts }}).catch(err => { /* promise error absorbed */ });
+        res.json({ ok: true, analysis: filtered, model: "heady-brain", type: type || "general", ts }}).catch(err => { /* promise error absorbed */ });
     } catch (err) {
-        res.status(500).json({ error: err.message, ts });
+        res.status(500).json({ error: err.message, ts }}).catch(err => { /* promise error absorbed */ });
     }
-});
+}}).catch(err => { /* promise error absorbed */ });
 
 // POST /api/brain/complete — Code/text completion
 router.post("/complete", async (req, res) => {

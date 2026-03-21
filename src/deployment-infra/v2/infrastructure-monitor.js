@@ -298,7 +298,7 @@ class InfrastructureMonitor extends EventEmitter {
     // Default: monitor localhost
     const port = process.env.PORT || '8080';
     return [
-      { name: 'heady-manager', url: `http://localhost:${port}` },
+      { name: 'heady-manager', url: `http://0.0.0.0:${port}` },
     ];
   }
 

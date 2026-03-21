@@ -41,7 +41,7 @@ const config = {
   ),
 
   // HeadyEmbed service URL for computing embeddings
-  embedUrl: process.env.HEADY_EMBED_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3103'),
+  embedUrl: process.env.HEADY_EMBED_URL || (process.env.NODE_ENV === 'production' ? '' : process.env.SERVICE_URL || 'http://0.0.0.0:3103'),
 
   // Embedding dimensions (384 for all-MiniLM-L6-v2)
   embeddingDims: parseInt(process.env.HEADY_CACHE_EMBEDDING_DIMS || '384', 10),
@@ -60,7 +60,7 @@ const config = {
   pgConnectionString:
     process.env.HEADY_CACHE_PG_URL ||
     process.env.DATABASE_URL ||
-    'postgresql://localhost:5432/heady_cache',
+    process.env.DATABASE_URL || 'postgresql://0.0.0.0:5432/heady_cache',
 
   // Analytics retention (number of time-series points to keep)
   analyticsRetention: parseInt(

@@ -451,7 +451,7 @@ class HCFullPipeline extends EventEmitter {
                         source: `pipeline:${stage.name}`,
                         runId: run.id,
                         stage: stage.name,
-                    }).catch(() => {});
+                    }).catch((e) => { /* absorbed: */ console.error(e.message); });
                 }
 
                 return { status: 'failed', error: err.message };
@@ -740,7 +740,7 @@ class HCFullPipeline extends EventEmitter {
             this.vectorMemory.ingestMemory({
                 content: `Pipeline ${stage.name} failed: ${error.message}. Run: ${run.id}. Config: ${JSON.stringify(run.config)}`,
                 metadata: { type: 'pipeline_failure', stage: stage.name, errorClass: error.name, runId: run.id },
-            }).catch(() => {});
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         }
 
         this.selfHealStats.failures++;
@@ -839,7 +839,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Stage ${stage} completed (${metrics?.durationMs || 0}ms)`,
                 data: { runId, stage, durationMs: metrics?.durationMs },
                 severity: 'info',
-            }).catch(() => {});
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('stage:failed', ({ runId, stage, error }) => {
@@ -848,7 +848,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Stage ${stage} FAILED: ${error}`,
                 data: { runId, stage, error },
                 severity: 'error',
-            }).catch(() => {});
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('run:completed', ({ runId }) => {
@@ -857,7 +857,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Pipeline run ${runId.substring(0, 8)} completed`,
                 data: { runId },
                 severity: 'info',
-            }).catch(() => {});
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
 
         this.on('run:failed', ({ runId, error }) => {
@@ -866,7 +866,7 @@ class HCFullPipeline extends EventEmitter {
                 summary: `Pipeline run ${runId.substring(0, 8)} FAILED: ${error}`,
                 data: { runId, error },
                 severity: 'error',
-            }).catch(() => {});
+            }).catch((e) => { /* absorbed: */ console.error(e.message); });
         });
     }
 

@@ -447,7 +447,7 @@ class ConversationalAgent {
           let fnArgs = {};
           try {
             fnArgs = typeof tc.function?.arguments === 'string' ? JSON.parse(tc.function.arguments) : tc.input || {};
-          } catch {}
+          } catch(e) { /* absorbed: */ console.error(e.message); }
 
           let toolResult;
           try {

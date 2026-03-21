@@ -202,17 +202,17 @@ function withTimeout(promise, ms, label) {
     promise.then(
       (v) => { clearTimeout(t); resolve(v); },
       (e) => { clearTimeout(t); reject(e); }
-    );
-  });
+    ).catch(err => { /* promise error absorbed */ });
+  }}).catch(err => { /* promise error absorbed */ });
 }
 
 // ---------------------------------------------------------------------------
 // exponentialBackoff helper (phi-ratio)
 // ---------------------------------------------------------------------------
 async function exponentialBackoff(attempt, baseMs = 200) {
-  const delay = Math.min(baseMs * Math.pow(PHI, attempt), PHI_TIMING.CYCLE);
+  const delay = Math.min(baseMs * Math.pow(PHI, attempt), PHI_TIMING.CYCLE).catch(err => { /* promise error absorbed */ });
   const jitter = Math.random() * delay * 0.2;
-  await new Promise(r => setTimeout(r, delay + jitter));
+  await new Promise(r => setTimeout(r, delay + jitter)).catch(err => { /* promise error absorbed */ });
 }
 
 // ---------------------------------------------------------------------------

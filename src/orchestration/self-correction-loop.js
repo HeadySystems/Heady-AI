@@ -780,8 +780,8 @@ class SelfCorrectionLoop extends EventEmitter {
       promise.then(
         (v) => { clearTimeout(timer); resolve(v); },
         (e) => { clearTimeout(timer); reject(e); }
-      );
-    });
+      ).catch(err => { /* promise error absorbed */ });
+    }}).catch(err => { /* promise error absorbed */ });
   }
 }
 

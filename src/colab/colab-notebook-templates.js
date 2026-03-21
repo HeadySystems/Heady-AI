@@ -73,7 +73,7 @@ BATCH_SIZE = ${this.embeddingBatch}    # fib(12) = 144
 CHECKPOINT_INTERVAL = ${this.checkpointInterval}  # fib(13) = 233 seconds
 GPU_MEMORY_GB = ${this.gpuMemoryGB}    # fib(10) = 55
 HEARTBEAT_INTERVAL = ${fib(7)}        # fib(7) = 13 seconds
-HEALTH_ENDPOINT = "http://localhost:${SERVICE_PORTS.HEADY_HEALTH}/health"
+HEALTH_ENDPOINT = process.env.SERVICE_URL || "http://0.0.0.0:${SERVICE_PORTS.HEADY_HEALTH}/health"
 
 print(json.dumps({"level": "INFO", "service": "colab-alpha", "message": "setup_complete", "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU"}))`),
 
@@ -210,7 +210,7 @@ HNSW_EF_CONSTRUCTION = ${HNSW_PARAMS.EF_CONSTRUCTION}  # fib(12) = 144
 HNSW_EF_SEARCH = ${HNSW_PARAMS.EF_SEARCH}             # fib(11) = 89
 VECTOR_CACHE_SIZE = ${this.vectorCacheSize}    # fib(20) = 6765
 CHECKPOINT_INTERVAL = ${this.checkpointInterval}
-HEALTH_ENDPOINT = "http://localhost:${SERVICE_PORTS.HEADY_HEALTH}/health"
+HEALTH_ENDPOINT = process.env.SERVICE_URL || "http://0.0.0.0:${SERVICE_PORTS.HEADY_HEALTH}/health"
 
 print(json.dumps({"level": "INFO", "service": "colab-beta", "message": "setup_complete"}))`),
 

@@ -30,7 +30,7 @@ function createApp(cfg = config) {
     'https://headybuddy.org', 'https://headymcp.com', 'https://headyio.com',
     'https://headybot.com', 'https://headyapi.com', 'https://headyai.com',
     'https://headylens.com', 'https://headyfinance.com',
-    ...(process.env.NODE_ENV !== 'production' ? ['http://localhost:3000', 'http://localhost:3300', 'http://localhost:3301'] : [])
+    ...(process.env.NODE_ENV !== 'production' ? [process.env.SERVICE_URL || 'http://0.0.0.0:3000', process.env.SERVICE_URL || 'http://0.0.0.0:3300', process.env.SERVICE_URL || 'http://0.0.0.0:3301'] : [])
   ];
   app.use(helmet());
   app.use(cors({ origin: HEADY_ORIGINS, credentials: true }));

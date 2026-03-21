@@ -124,7 +124,7 @@ class PhiSampler {
 // ── Exporter ─────────────────────────────────────────────────────
 class SpanExporter {
   constructor(config = {}) {
-    this.endpoint = config.endpoint ?? 'http://localhost:4318/v1/traces';
+    this.endpoint = config.endpoint ?? process.env.SERVICE_URL || 'http://0.0.0.0:4318/v1/traces';
     this.batchSize = config.batchSize ?? FIB[8]; // 21
     this.flushIntervalMs = config.flushIntervalMs ?? FIB[5] * 1000; // 5s
     this.buffer = [];

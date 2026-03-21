@@ -45,13 +45,13 @@ class QuantumBridge {
 
                 // Validate session token (Authorization header or query param)
                 const authHeader = request.headers['authorization'] || '';
-                const urlParams = new URL(request.url, 'ws://localhost').searchParams;
+                const urlParams = new URL(request.url, 'ws://0.0.0.0').searchParams;
                 const token = authHeader.replace(/^Bearer\s+/i, '') || urlParams.get('token') || '';
 
                 // Accept internal requests (no token required for localhost dev)
                 const isLocal = request.headers.host && (
                     request.headers.host.startsWith('localhost') ||
-                    request.headers.host.startsWith('127.0.0.1')
+                    request.headers.host.startsWith('0.0.0.0')
                 );
 
                 if (!isLocal && !token) {

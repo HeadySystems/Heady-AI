@@ -24,7 +24,7 @@ class BrainConnector extends EventEmitter {
         if (!brainUrl && process.env.NODE_ENV === 'production') {
             throw new Error('BRAIN_API_URL required in production');
         }
-        this._registerEndpoint("local-brain", { url: brainUrl || "https://127.0.0.1:3301/api/brain", priority: 1 }); // dev fallback only
+        this._registerEndpoint("local-brain", { url: brainUrl || "https://0.0.0.0:3301/api/brain", priority: 1 }); // dev fallback only
 
         // Start health checker
         this._healthInterval = setInterval(() => this._runHealthChecks(), this.healthCheckInterval);

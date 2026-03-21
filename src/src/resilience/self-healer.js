@@ -89,7 +89,7 @@ const ISOLATION_MAX_MS      = PHI_TIMING.PHI_7;
  * healer.quarantine('OOM detected');
  *
  * // Attestation probe (call your real health-check function)
- * await healer.probe(() => fetch('/health').then(r => r.ok));
+ * await healer.probe(() => fetch('/health').then(r => r.ok)).catch(err => { /* promise error absorbed */ });
  */
 class SelfHealer {
   /**
@@ -152,17 +152,17 @@ class SelfHealer {
 
     if (this.onStateChange) {
       try { this.onStateChange(newState, prev, reason); }
-      catch (_) {}
+      catch(_) { /* absorbed: */ console.error(_.message); }
     }
 
     if (newState === HEALTH_STATE.QUARANTINED && this.onQuarantine) {
       try { this.onQuarantine(this.name, reason); }
-      catch (_) {}
+      catch(_) { /* absorbed: */ console.error(_.message); }
     }
 
     if (newState === HEALTH_STATE.HEALTHY && this.onRestore) {
       try { this.onRestore(this.name); }
-      catch (_) {}
+      catch(_) { /* absorbed: */ console.error(_.message); }
     }
   }
 

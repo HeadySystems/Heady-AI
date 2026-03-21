@@ -331,7 +331,7 @@ class StoryDriver extends EventEmitter {
         service:   entry.service,
         severity:  entry.severity,
         timestamp: entry.timestamp,
-      }).catch(() => {});
+      }).catch((e) => { /* absorbed: */ console.error(e.message); });
     }
 
     return entry;

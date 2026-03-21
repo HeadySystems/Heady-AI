@@ -116,7 +116,7 @@ class PgVectorAdapter {
 
     async disconnect() {
         if (this._pool && !this._pool._externalPool) {
-            await this._pool.end().catch(() => {});
+            await this._pool.end().catch((e) => { /* absorbed: */ console.error(e.message); });
         }
         this._connected = false;
     }
