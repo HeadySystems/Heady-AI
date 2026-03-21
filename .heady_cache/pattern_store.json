@@ -891,13 +891,13 @@
         "n": 97
       },
       "trend": "degrading",
-      "improvementAttempts": 256,
+      "improvementAttempts": 257,
       "lastImproved": "2026-03-21T12:47:03.640Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 14,
+        "burstCount": 7,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
