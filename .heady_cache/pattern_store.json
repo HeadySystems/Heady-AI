@@ -6,7 +6,7 @@
       "name": "resource:RAM",
       "state": "degrading",
       "createdAt": "2026-03-21T00:19:05.901Z",
-      "lastUpdated": "2026-03-21T13:09:14.269Z",
+      "lastUpdated": "2026-03-21T13:18:54.287Z",
       "observations": [
         {
           "value": 81,
@@ -880,24 +880,231 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-03-21T13:16:44.442Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-03-21T13:16:49.650Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-03-21T13:16:54.672Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 83,
+          "ts": "2026-03-21T13:16:59.689Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-03-21T13:17:04.703Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 84,
+          "ts": "2026-03-21T13:17:09.727Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-03-21T13:17:14.752Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 83,
+          "ts": "2026-03-21T13:17:19.767Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-03-21T13:17:24.788Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-03-21T13:17:29.805Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-03-21T13:17:35.085Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-03-21T13:17:40.100Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-03-21T13:17:56.529Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-03-21T13:18:01.551Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 92,
+          "ts": "2026-03-21T13:18:06.571Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-03-21T13:18:11.587Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-03-21T13:18:16.600Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-03-21T13:18:21.824Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 92,
+          "ts": "2026-03-21T13:18:26.850Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 95,
+          "ts": "2026-03-21T13:18:33.267Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 94,
+          "ts": "2026-03-21T13:18:39.306Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 94,
+          "ts": "2026-03-21T13:18:44.372Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 94,
+          "ts": "2026-03-21T13:18:54.287Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 83.27835051546391,
-        "median": 82,
-        "stddev": 4.22740755059036,
+        "mean": 84.08333333333333,
+        "median": 83,
+        "stddev": 4.607210532294882,
         "min": 78,
         "max": 96,
-        "n": 97
+        "n": 120
       },
       "trend": "degrading",
-      "improvementAttempts": 258,
+      "improvementAttempts": 262,
       "lastImproved": "2026-03-21T12:47:03.640Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 7,
+        "burstCount": 14,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -911,7 +1118,7 @@
     "created": "2026-03-20T23:20:04Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-03-21T13:15:01.534Z",
+  "lastUpdated": "2026-03-21T13:25:02.119Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -919,41 +1126,41 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-03-21T13:15:01.534Z",
-      "lastSeen": "2026-03-21T13:15:01.534Z",
+      "firstSeen": "2026-03-21T13:25:02.119Z",
+      "lastSeen": "2026-03-21T13:25:02.119Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 93,
+  "commitCount24h": 92,
   "topTopics": [
     {
       "word": "chore(auto)",
-      "count": 69
+      "count": 67
     },
     {
       "word": "[tier=significant]",
-      "count": 56
+      "count": 54
     },
     {
       "word": "auto-commit.log",
-      "count": 53
+      "count": 51
     },
     {
       "word": "pattern_store.json",
-      "count": 35
+      "count": 36
     },
     {
       "word": "hcfp-auto",
-      "count": 20
+      "count": 21
     },
     {
       "word": "file(s)",
-      "count": 20
+      "count": 21
     },
     {
       "word": "changed",
-      "count": 20
+      "count": 21
     },
     {
       "word": "index.html",
