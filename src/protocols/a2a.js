@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Agent-to-Agent (A2A) Protocol — Decentralized Agent Discovery & Communication

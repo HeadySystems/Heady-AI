@@ -213,7 +213,8 @@ scheduler.registerTask('monitoring:external-core-services', createTaskHandler('e
   for (const svc of EXTERNAL_CORE_SERVICES) {
     try {
       const start = Date.now();
-      const res = await fetch(`http://localhost:${svc.port}${svc.healthPath}`, {
+      const svcDomain = svc.name.replace(/-core$/, '');
+      const res = await fetch(`https://${svcDomain}.headysystems.com${svc.healthPath}`, {
         method: 'GET',
         signal: AbortSignal.timeout(5000)
       });

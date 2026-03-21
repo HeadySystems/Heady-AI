@@ -4,7 +4,7 @@ const logger = createLogger('colab-runtime');
 // const logger = console;
 #!/usr/bin/env node
 /**
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Heady™ Colab Runtime — 4-GPU Distributed Orchestration ═══

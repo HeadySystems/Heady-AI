@@ -1,6 +1,6 @@
 const logger = require('../utils/logger').createLogger('auto-fix');
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * src/providers/heady-sdk.js — HeadyJules SDK Smart Router
  *

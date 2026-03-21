@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Agent-to-User Interface (A2UI) Protocol — Declarative JSON UI Streaming

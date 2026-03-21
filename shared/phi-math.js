@@ -311,10 +311,11 @@ function cslBlend(wHigh, wLow, cosScore, tau = PSI) {
   return wHigh * alpha + wLow * (1 - alpha);
 }
 
-function cslAND(a, b) {
+function cslAND(a, b, threshold = 0) {
   if (!Array.isArray(a) || !Array.isArray(b) || a.length === 0 || b.length === 0) return 0;
   const len = Math.min(a.length, b.length);
-  return cosineSimilarity(a.slice(0, len), b.slice(0, len));
+  const sim = cosineSimilarity(a.slice(0, len), b.slice(0, len));
+  return sim >= threshold ? sim : 0;
 }
 
 function phiFusionScore(scores, weights) {
@@ -348,8 +349,26 @@ function normalize(v) {
 }
 
 // ─── PLACEHOLDER VECTOR ─────────────────────────────────────────────────────
-function placeholderVector(dims = 384) {
-  return new Array(dims).fill(0);
+function placeholderVector(label, dims = 384) {
+  // If called with just a number (old API), treat as dims
+  if (typeof label === 'number' && dims === 384) { dims = label; label = ''; }
+  label = String(label || '');
+  // Deterministic seed from label
+  let h = 0x811c9dc5;
+  for (let i = 0; i < label.length; i++) {
+    h ^= label.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  // Generate deterministic vector using seeded PRNG
+  const v = new Array(dims);
+  for (let i = 0; i < dims; i++) {
+    h ^= h << 13; h ^= h >> 17; h ^= h << 5;
+    v[i] = ((h >>> 0) / 0xFFFFFFFF) * 2 - 1; // range [-1, 1]
+  }
+  // Normalize to unit vector
+  const mag = Math.sqrt(v.reduce((s, x) => s + x * x, 0));
+  if (mag > 0) for (let i = 0; i < dims; i++) v[i] /= mag;
+  return v;
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
@@ -359,6 +378,7 @@ module.exports = {
   // Core constants
   PHI, PSI, PHI_SQ, PHI_CUBED, PHI_CUBE: PHI_CUBED, SQRT5, PSI_SQ,
   PSI_2, PSI_3, PSI_4, PSI_5, PSI_8, PSI_9, PSI_POWERS,
+  PSI_CUBED: PSI_3, CSL_GATE,
   // Fibonacci
   FIB: FIB_CACHE, FIB_CACHE, fib, fibCeil, fibFloor, fibSequence,
   // Timing

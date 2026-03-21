@@ -3,7 +3,7 @@ const logger = createLogger('project-history-ingestor');
 
 // const logger = console;
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * Project History Ingestor — Full Codebase Context → 3D Vector Space
  *

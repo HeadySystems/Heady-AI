@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ heady deploy — One-Command Zero-Friction Cloud Deploy ═══

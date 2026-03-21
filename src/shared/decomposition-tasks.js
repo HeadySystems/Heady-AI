@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * God Class Decomposition Tasks — Auto-Success tasks to break
  * monolithic files into blast-compatible HeadyBees work units.

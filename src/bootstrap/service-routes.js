@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Service Route Registrar — Phase 2 Liquid Architecture

@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Battle Arena — 10-Model Full Project Rebuild ═══

@@ -3,7 +3,7 @@ const logger = createLogger('sdk-quickstart');
 
 // const logger = console;
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * SDK Quickstart Module — Platform Phase 2 Assessment Item
  *

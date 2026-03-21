@@ -13,7 +13,7 @@ const logger = require('../utils/logger');
 const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
 
 /*
- * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
+ * © 2026 Heady™Systems Inc. PROPRIETARY AND CONFIDENTIAL.
  *
  * ═══ Universal Auth Page ═══
  *

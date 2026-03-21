@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * Balanced Ternary Logic Engine — Setun-Inspired {-1, 0, +1} Cognitive Filter

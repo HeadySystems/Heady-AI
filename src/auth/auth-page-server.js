@@ -1,5 +1,5 @@
 /*
- * © 2026 Heady™Systems Inc..
+ * © 2026 Heady™Systems Inc.
  * Auth Page Server — standalone dev server (native http, no Express needed).
  * Usage: node src/auth-page-server.js
  */
