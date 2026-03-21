@@ -3,7 +3,7 @@
  * Author: Eric Haywood | ESM only
  */
 import { strict as assert } from 'assert';
-import { PHI, PSI, fibonacci } from '../shared/phi-math-v2.js';
+import { PHI, PSI, fib } from '../shared/phi-math-v2.js';
 
 const SERVICE_FILES = [
   { name: 'auth-session-server', path: '../services/auth-session-server.js', port: 3310 },
@@ -43,7 +43,7 @@ async function testServiceHealth() {
 async function testPhiCompliance() {
   console.log('\n=== φ-Compliance Tests ===');
   const fibSet = new Set();
-  for (let i = 1; i <= 25; i++) fibSet.add(fibonacci(i));
+  for (let i = 1; i <= 25; i++) fibSet.add(fib(i));
 
   for (const svc of SERVICE_FILES) {
     const mod = await import(svc.path);
