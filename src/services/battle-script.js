@@ -185,7 +185,7 @@ async function main() {
     logger.info('');
 }
 
-if (require.main === module) { main().catch(err => { }
+if (require.main === module) { main().catch(err => {
     logger.error('Battle dispatch failed:', err.message);
     process.exit(1);
 });

@@ -156,7 +156,7 @@ async function main() {
     logger.info('');
 }
 
-if (require.main === module) { main().catch(err => { }
+if (require.main === module) { main().catch(err => {
     logger.error('Deploy failed:', err.message);
     process.exit(1);
 });
