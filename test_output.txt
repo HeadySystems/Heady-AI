@@ -1,0 +1,3198 @@
+
+> heady-latent-os@4.1.0 test
+> vitest run
+
+
+ RUN  v3.2.4 /home/headyme/Heady
+
+ ❯ tests/orchestration-smoke.test.js (11 tests | 10 failed) 190ms
+   × bee-factory > loads and exports BeeFactory class 85ms
+     → BeeFactory must be a class
++ actual - expected
+
++ 'undefined'
+- 'function'
+   × bee-factory > can register a swarm and spawn bees 2ms
+     → BeeFactory is not a constructor
+   ✓ swarm-coordinator > loads and exports SwarmCoordinator class 4ms
+   × liquid-node > loads and exports LiquidNode class 13ms
+     → createLogger is not a function
+   × liquid-node > computes real scoreForTask 3ms
+     → createLogger is not a function
+   × liquid-node > computes real coherence from design embedding 2ms
+     → createLogger is not a function
+   × liquid-mesh > loads and exports LiquidMesh class 4ms
+     → createLogger is not a function
+   × liquid-task-executor > loads and exports LiquidTaskExecutor and TaskDAG 4ms
+     → createLogger is not a function
+   × heady-conductor > loads and exports HeadyConductor class 37ms
+     → The expression evaluated to a falsy value:
+
+  assert.ok(mod.DOMAINS)
+
+   × heady-conductor > classifies a task into a domain with real cosine scoring 5ms
+     → conductor.classify is not a function
+   × heady-council > loads as CJS and exports HeadyCouncil class 28ms
+     → require is not defined
+ ❯ tests/production-hardening-batch7.test.js (4 tests | 4 failed) 309ms
+   × probe orchestrator hardening > uses shared structured logger instead of console output 186ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'const { getLogger } = require(\'../..…'
+   × probe orchestrator hardening > derives probe intervals and request timeouts from fibonacci helpers 45ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'const { fib } = require(\'../../src/s…'
+   × probe orchestrator hardening > logs sweep lifecycle and exports defaults for reuse 7ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'event: \'probe_sweep_started\''
+   × probe orchestrator hardening > applies bounded request timeouts to all HTTP helper paths 58ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'timeout: this.requestTimeouts.head'
+[2026-03-21 12:08:49.860 -0600] [32mINFO[39m: [36mExtracted 8 tasks from strategic report:[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+ ❯ tests/production-hardening-batch6.test.js (7 tests | 7 failed) 237ms
+   × vector federation structured warnings > defines structuredWarn helper 158ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'function structuredWarn(event, detail…'
+   × vector federation structured warnings > replaces replication and gossip console warnings with structured events 29ms
+     → expected 'const { createLogger } = require(\'..…' to contain 'vector_replication_push_failed'
+   × webpack and nginx wildcard CORS cleanup > nginx no longer emits wildcard CORS for remotes 4ms
+     → expected '# HeadyWeb Universal Shell — nginx Co…' to contain 'set $heady_allowed_origin "";'
+   × webpack and nginx wildcard CORS cleanup > webpack dev servers use env-driven allowed origin instead of wildcard 9ms
+     → expected '/**\n * HeadyWeb Universal Shell — We…' to contain 'HEADY_DEV_ALLOWED_ORIGIN'
+   × shared CORS policy wildcard removal > public API path reflects validated origin instead of wildcard 7ms
+     → expected '/**\n * Advanced CORS Policy Middlewa…' to contain 'event: \'cors_public_blocked\''
+   × shared CORS policy wildcard removal > publicCors helper validates origin instead of allowing wildcard 9ms
+     → expected '/**\n * Advanced CORS Policy Middlewa…' to contain 'function publicCors(methods = [\'GET\…'
+   × shared CORS policy wildcard removal > security middleware path re-exports the shared implementation 17ms
+     → expected '/**\n * Advanced CORS Policy Middlewa…' to be '\'use strict\';\n\nmodule.exports = r…' // Object.is equality
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  1. [dev] Launch the Heady™-Registry: Move MCP connectors to public-facing API (tool → pla...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  2. [research] Formalize the Sacred Geometry Whitepaper: Publish technical paper on mathematica...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  3. [dev] Unify versioning: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict — co...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  4. [ops] Cease repository modifications before March 5th launch — system is in optimal st...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  5. [creative] Focus on S26 Retail Experience: ensure magic out-of-the-box Aether Hand-off for ...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  6. [security] Security remediation: Complete remaining 10% of credential purge (.env.hybrid fi...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  7. [ops] Edge cache warming: Verify Aether Orchestrator binaries propagated to all CDN ed...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.861 -0600] [32mINFO[39m: [36m  8. [ops] Sovereign Auth Sync: Monitor Knox Vault bridge throughput (target: 500 reg/min s...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.850 -0600] [32mINFO[39m: [36mExtracted 8 tasks from strategic report:[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  1. [dev] Launch the Heady™-Registry: Move MCP connectors to public-facing API (tool → pla...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  2. [research] Formalize the Sacred Geometry Whitepaper: Publish technical paper on mathematica...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  3. [dev] Unify versioning: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict — co...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  4. [ops] Cease repository modifications before March 5th launch — system is in optimal st...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  5. [creative] Focus on S26 Retail Experience: ensure magic out-of-the-box Aether Hand-off for ...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  6. [security] Security remediation: Complete remaining 10% of credential purge (.env.hybrid fi...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  7. [ops] Edge cache warming: Verify Aether Orchestrator binaries propagated to all CDN ed...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:49.851 -0600] [32mINFO[39m: [36m  8. [ops] Sovereign Auth Sync: Monitor Knox Vault bridge throughput (target: 500 reg/min s...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+ ❯ tests/integration/health.test.js (3 tests | 1 failed) 644ms
+   ✓ Health Endpoint Integration > /health returns 200 with valid JSON  375ms
+   × Health Endpoint Integration > /health/live returns 200 191ms
+     → expected 404 to be 200 // Object.is equality
+   ✓ Health Endpoint Integration > /health response contains version info 64ms
+ ❯ tests/hcfullpipeline-validator.test.js (68 tests | 26 failed) 141ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > YAML config file exists and is readable 3ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > contains exactly 21 stages (fib(8)) 0ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > all canonical stage IDs are present 5ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > stage orders are sequential 0–20 1ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > every stage has a non-empty name 4ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > every stage has required field defined 1ms
+   ✓ HCFullPipeline YAML Config Validation > Schema Integrity > required stages are marked required: true 4ms
+   ✓ HCFullPipeline YAML Config Validation > Task Coverage > every stage has at least 1 task 2ms
+   ✓ HCFullPipeline YAML Config Validation > Task Coverage > channel-entry stage has vector storage scan as first task 0ms
+   ✓ HCFullPipeline YAML Config Validation > Task Coverage > receipt stage includes Ed25519 signing task 0ms
+   ✓ HCFullPipeline YAML Config Validation > Task Coverage > verify stage includes assertion and integrity tasks 1ms
+   × HCFullPipeline YAML Config Validation > Node Pool Configuration > every stage has a valid node pool assignment 45ms
+     → expected [ 'hot', 'warm', 'cold' ] to include undefined
+   × HCFullPipeline YAML Config Validation > Node Pool Configuration > user-facing stages (channel-entry, execute, approve) use hot pool 4ms
+     → expected undefined to be 'hot' // Object.is equality
+   × HCFullPipeline YAML Config Validation > Node Pool Configuration > receipt stage uses hot pool (user-facing final response) 2ms
+     → expected undefined to be 'hot' // Object.is equality
+   ✓ HCFullPipeline YAML Config Validation > Dependency DAG > dependency graph is a valid DAG (no cycles) 1ms
+   ✓ HCFullPipeline YAML Config Validation > Dependency DAG > all dependsOn references point to valid stage IDs 1ms
+   ✓ HCFullPipeline YAML Config Validation > Dependency DAG > channel-entry (stage 0) has no dependencies 0ms
+   ✓ HCFullPipeline YAML Config Validation > Dependency DAG > receipt (stage 20) depends on evolution (stage 19) 0ms
+   ✓ HCFullPipeline YAML Config Validation > Dependency DAG > stages maintain topological ordering 1ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > global retryBackoffMs uses phi-backoff [1618, 2618, 4236] 0ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > maxConcurrentTasks is fib(6) = 8 0ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > maxRetries is fib(4) = 3 0ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > CSL gate thresholds use 1/φ ≈ 0.618 0ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > phi-based timeout values are valid φ^n × 1000 0ms
+   ✓ HCFullPipeline YAML Config Validation > Phi-Compliance (Sacred Geometry) > version is 4.0.0 0ms
+   ✓ HCFullPipeline YAML Config Validation > Pipeline Variants (YAML triage paths) > FAST path includes minimum required stages 1ms
+   ✓ HCFullPipeline YAML Config Validation > Pipeline Variants (YAML triage paths) > FULL path includes all or nearly all stages 0ms
+   ✓ HCFullPipeline YAML Config Validation > Pipeline Variants (YAML triage paths) > LEARNING path includes all 21 stages 0ms
+   ✓ HCFullPipeline YAML Config Validation > Pipeline Variants (YAML triage paths) > all path stage IDs are valid (0–20) 3ms
+   ✓ HCFullPipeline YAML Config Validation > Parallel Side Lanes > system_operations lane exists 0ms
+   ✓ HCFullPipeline YAML Config Validation > Parallel Side Lanes > pqc lane exists with post-quantum crypto config 0ms
+   ✓ HCFullPipeline YAML Config Validation > Parallel Side Lanes > improvement lane exists 0ms
+   ✓ HCFullPipeline YAML Config Validation > Parallel Side Lanes > learning lane exists 0ms
+   ✓ HCFullPipeline YAML Config Validation > Stop Rule > stop rule has error_rate condition 0ms
+   ✓ HCFullPipeline YAML Config Validation > Stop Rule > stop rule has critical_alarm condition 0ms
+   ✓ HCFullPipeline YAML Config Validation > Stop Rule > stop rule has data_integrity_failure halt action 0ms
+   ✓ HCFullPipeline YAML Config Validation > Stop Rule > user_queue prioritization rules exist 0ms
+   ✓ HCFullPipeline JSON Config Validation > Schema Integrity > JSON config file exists and parses 0ms
+   ✓ HCFullPipeline JSON Config Validation > Schema Integrity > contains exactly 21 stages 0ms
+   × HCFullPipeline JSON Config Validation > Schema Integrity > all stages have sequential IDs 0–20 1ms
+     → expected 'stage_channel_entry' to be +0 // Object.is equality
+   × HCFullPipeline JSON Config Validation > Schema Integrity > all canonical stage names are present 4ms
+     → expected [ 'Channel Entry (Stage 0)', …(21) ] to include 'CHANNEL_ENTRY'
+   × HCFullPipeline JSON Config Validation > Schema Integrity > every stage has timeout, tokenBudget, and description 1ms
+     → actual value must be number or bigint, received "undefined"
+   × HCFullPipeline JSON Config Validation > Schema Integrity > every stage has outputs array 3ms
+     → expected false to be true // Object.is equality
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > token budgets are Fibonacci numbers 1ms
+     → expected false to be true // Object.is equality
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > timeouts are phi-power multiples 1ms
+     → expected false to be true // Object.is equality
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > retry backoff uses phi multiplier 2ms
+     → Cannot read properties of undefined (reading 'retryPolicy')
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > coherence threshold is 1 - 1/φ² + margin 1ms
+     → Cannot read properties of undefined (reading 'coherenceThreshold')
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > JUDGE gate weights sum to 1.00 1ms
+     → Cannot read properties of undefined (reading 'gate')
+   × HCFullPipeline JSON Config Validation > Phi-Compliance > JUDGE gate uses 0.618 (1/φ) as min pass score 2ms
+     → Cannot read properties of undefined (reading 'gate')
+   × HCFullPipeline JSON Config Validation > Pipeline Variants > FAST_PATH variant exists with valid stages 1ms
+     → Cannot read properties of undefined (reading 'FAST_PATH')
+   × HCFullPipeline JSON Config Validation > Pipeline Variants > FULL_PATH variant includes all 21 stages 1ms
+     → Cannot read properties of undefined (reading 'FULL_PATH')
+   ✓ HCFullPipeline JSON Config Validation > Pipeline Variants > ARENA_PATH variant exists 0ms
+   ✓ HCFullPipeline JSON Config Validation > Pipeline Variants > LEARNING_PATH variant exists 0ms
+   × HCFullPipeline JSON Config Validation > Pipeline Variants > all variant stage IDs are valid (0–20) 1ms
+     → Cannot convert undefined or null to object
+   × HCFullPipeline JSON Config Validation > Resource Pools > LLM token pool tiers use phi-scaling 1ms
+     → Cannot read properties of undefined (reading 'working')
+   × HCFullPipeline JSON Config Validation > Resource Pools > concurrent request limits use Fibonacci numbers 2ms
+     → expected false to be true // Object.is equality
+   ✓ HCFullPipeline JSON Config Validation > Resource Pools > bee worker pool uses Fibonacci sizing 0ms
+   ✓ HCFullPipeline JSON Config Validation > Full Auto Mode > full auto mode is enabled 0ms
+   × HCFullPipeline JSON Config Validation > Full Auto Mode > coherence floor is 0.618 (1/φ) 1ms
+     → expected undefined to be close to 0.6180339887498948, received difference is NaN, but expected 0.005
+   ✓ HCFullPipeline JSON Config Validation > Full Auto Mode > requires judge gate 0ms
+   × HCFullPipeline JSON Config Validation > Full Auto Mode > token budget thresholds follow phi-complement pattern 1ms
+     → expected undefined to be close to 0.764, received difference is NaN, but expected 0.005
+   × HCFullPipeline JSON Config Validation > Error Handling > retryable errors include TIMEOUT and RATE_LIMIT 1ms
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   × HCFullPipeline JSON Config Validation > Error Handling > fatal errors include SAFETY_VIOLATION 1ms
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+   × HCFullPipeline JSON Config Validation > Error Handling > cascade depth is fib(5) = 5 1ms
+     → expected undefined to be 5 // Object.is equality
+   ✓ YAML ↔ JSON Parity > both configs have exactly 21 stages 0ms
+   × YAML ↔ JSON Parity > stage ordering matches between YAML and JSON 4ms
+     → expected +0 to be 'stage_channel_entry' // Object.is equality
+   × YAML ↔ JSON Parity > stage names correspond between YAML (kebab-case) and JSON (SCREAMING_SNAKE) 5ms
+     → expected 'CHANNEL_ENTRY' to be 'Channel Entry (Stage 0)' // Object.is equality
+   × YAML ↔ JSON Parity > required stages match between configs 2ms
+     → expected false to be true // Object.is equality
+ ❯ tests/production-hardening-batch5.test.js (28 tests | 25 failed) 619ms
+   ✓ heady-api-gateway-v2 CORS > no longer falls back to wildcard "*" when origin is empty 3ms
+   × heady-api-gateway-v2 CORS > uses "null" instead of wildcard for missing origin 18ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to contain 'origin || \'null\''
+   × heady-api-gateway-v2 lazy singleton catches > mesh getter logs optional_dep_missing 3ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to match /optional_dep_missing.*heady-service-m…/
+   × heady-api-gateway-v2 lazy singleton catches > obs getter logs optional_dep_missing 2ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to match /optional_dep_missing.*heady-observabi…/
+   × heady-api-gateway-v2 lazy singleton catches > cfg getter logs optional_dep_missing 2ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to match /optional_dep_missing.*heady-config-se…/
+   × heady-api-gateway-v2 lazy singleton catches > bus getter logs optional_dep_missing 2ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to match /optional_dep_missing.*heady-event-bus/
+   × heady-api-gateway-v2 structured logging > startup uses structured JSON instead of console.log 6ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to contain 'gateway_v2_started'
+   × heady-api-gateway-v2 structured logging > shutdown uses structured JSON instead of console.log 4ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to contain 'gateway_v2_shutdown'
+   × heady-api-gateway-v2 structured logging > fatal error uses structured JSON instead of console.error 4ms
+     → expected '/*\n * © 2026 Heady™Systems Inc. PROP…' to contain 'gateway_v2_fatal'
+   × heady-auto-context silent catch remediation > VectorMemory import catch logs debug message 8ms
+     → expected '/**\n * ╔════════════════════════════…' to match /VectorMemory not available/
+   × heady-auto-context silent catch remediation > cosineSimilarity import catch logs debug message 3ms
+     → expected '/**\n * ╔════════════════════════════…' to match /cosineSimilarity not available/
+   × heady-auto-context silent catch remediation > watcher per-dir catch logs debug message 3ms
+     → expected '/**\n * ╔════════════════════════════…' to match /dir not watchable/
+   ✓ heady-auto-context silent catch remediation > fs.watch outer catch logs debug message 0ms
+   × heady-auto-context silent catch remediation > _gatherPriorPatterns catch logs warning 4ms
+     → expected '/**\n * ╔════════════════════════════…' to match /_gatherPriorPatterns failed/
+   × heady-auto-context silent catch remediation > _gatherDomainContext catch logs warning 2ms
+     → expected '/**\n * ╔════════════════════════════…' to match /_gatherDomainContext readdir failed/
+   × heady-cli silent catch remediation > AutoContext load catch logs structured event 3ms
+     → expected '#!/usr/bin/env node\n/**\n * Heady CL…' to match /cli_autocontext_load_failed/
+   × heady-cli silent catch remediation > domain registry read catch logs structured event 2ms
+     → expected '#!/usr/bin/env node\n/**\n * Heady CL…' to match /cli_domain_registry_read_failed/
+   × heady-cli silent catch remediation > history load catch logs structured event 4ms
+     → expected '#!/usr/bin/env node\n/**\n * Heady CL…' to match /cli_history_load_failed/
+   × heady-cli silent catch remediation > history save catch logs structured event 3ms
+     → expected '#!/usr/bin/env node\n/**\n * Heady CL…' to match /cli_history_save_failed/
+   × cli-auth silent catch remediation > loadCredentials catch logs structured event 1ms
+     → expected '#!/usr/bin/env node\n/**\n * © 2026 H…' to match /cli_credential_load_failed/
+   × projection service heartbeat catch > heartbeat catch logs instead of swallowing 1ms
+     → expected '/* © 2026-2026 HeadySystems Inc. All …' to match /Conductor heartbeat failed/
+   × site-router structured logging > defines structuredLog, structuredWarn, structuredError helpers 491ms
+     → expected '\'use strict\';\nconst { createLogger…' to contain 'function structuredLog('
+   ✓ site-router structured logging > no remaining console.log/warn/error calls (outside comments) 1ms
+   × site-router structured logging > uses structured event names for vertical router operations 6ms
+     → expected '\'use strict\';\nconst { createLogger…' to contain 'vertical_registry_not_found'
+   × onboarding auth callback hardening > has HEADY_REQUIRE_FIREBASE_ADMIN production gate 6ms
+     → expected 'import { createLogger } from \'../../…' to contain 'HEADY_REQUIRE_FIREBASE_ADMIN'
+   × onboarding auth callback hardening > returns 501 when firebase-admin is required but not wired 4ms
+     → expected 'import { createLogger } from \'../../…' to contain 'status: 501'
+   × onboarding auth callback hardening > logs auth_callback_firebase_admin_not_wired event 5ms
+     → expected 'import { createLogger } from \'../../…' to contain 'auth_callback_firebase_admin_not_wired'
+   × onboarding auth callback hardening > lookupUser catch logs structured event instead of being silent 9ms
+     → expected 'import { createLogger } from \'../../…' to contain 'lookup_user_failed'
+ ❯ tests/digital-presence-orchestrator.test.js (7 tests | 6 failed) 435ms
+   ✓ digital presence orchestrator > deterministicReceipt stable for same payload 7ms
+   × digital presence orchestrator > recommendTemplateAndWorkflow returns recommendation + workflows 17ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   × digital presence orchestrator > projection status returns deterministic coverage 7ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/configs/services/product-repos.yaml'
+   × digital presence orchestrator > scenario coverage report returns deterministic scenario summary 5ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   × digital presence orchestrator > swarm task plan generated from coverage and dispatch 16ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   × digital presence orchestrator > unified system projection includes runtime, cloud execution, and deterministic receipt 374ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/configs/services/product-repos.yaml'
+   × digital presence orchestrator > maintenance plan returns stale metadata 6ms
+     → Cannot read properties of undefined (reading 'length')
+ ❯ tests/battle-sim-orchestrator.test.js (29 tests | 1 failed) 61ms
+   ✓ Sim Pre-Flight > well-formed task gets high sim score 13ms
+   ✓ Sim Pre-Flight > empty task gets low sim score and halts 1ms
+   ✓ Sim Pre-Flight > sim can be skipped 1ms
+   ✓ Battle Racing > arena races contestants and picks winner 1ms
+   ✓ Battle Racing > battle race is skipped when no arena provided 1ms
+   × MC Sampling > deterministic input produces consistent MC metrics 18ms
+     → expected undefined to be 10 // Object.is equality
+   ✓ MC Sampling > MC can be skipped 1ms
+   ✓ Full Pipeline > all 9 stages execute in sequence 2ms
+   ✓ Full Pipeline > bee dispatch routes to correct domain 1ms
+   ✓ Full Pipeline > swarm route targets correct swarm 1ms
+   ✓ Full Pipeline > pipeline emits events 0ms
+   ✓ Continuous Action Analyzer > records actions and updates stats 1ms
+   ✓ Continuous Action Analyzer > detects drift when outputs diverge 3ms
+   ✓ Continuous Action Analyzer > learns patterns after threshold 2ms
+   ✓ Continuous Action Analyzer > records user actions 1ms
+   ✓ Continuous Action Analyzer > records environmental params 1ms
+   ✓ Continuous Action Analyzer > determinism report aggregates patterns 1ms
+   ✓ Comparison Framework > identical outputs → hashMatch + high determinism score 1ms
+   ✓ Comparison Framework > different outputs → no hashMatch + lower determinism 1ms
+   ✓ Comparison Framework > comparePipelineRuns detects self-consistency 0ms
+   ✓ Task Dispatcher Battle/Sim Routing > SUB_AGENTS includes heady-battle 1ms
+   ✓ Task Dispatcher Battle/Sim Routing > SUB_AGENTS includes heady-sims 1ms
+   ✓ Task Dispatcher Battle/Sim Routing > battle keyword routes to HeadyBattle 2ms
+   ✓ Task Dispatcher Battle/Sim Routing > simulate keyword routes to HeadySims 0ms
+   ✓ Edge Cases > stats are accurate after multiple runs 1ms
+   ✓ Edge Cases > audit log tracks all actions 0ms
+   ✓ Edge Cases > determinism report is correct 0ms
+   ✓ Edge Cases > force flag bypasses sim halt 0ms
+   ✓ Edge Cases > phi constants are golden ratio 0ms
+ ✓ tests/performance-budget.test.js (7 tests) 362ms
+   ✓ Performance Budgets (P5) > health endpoint responds within API budget  343ms
+[2026-03-21 12:08:50.485 -0600] [32mINFO[39m: [36mExtracted 8 tasks from strategic report:[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  1. [dev] Launch the Heady™-Registry: Move MCP connectors to public-facing API (tool → pla...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  2. [research] Formalize the Sacred Geometry Whitepaper: Publish technical paper on mathematica...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  3. [dev] Unify versioning: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict — co...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  4. [ops] Cease repository modifications before March 5th launch — system is in optimal st...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  5. [creative] Focus on S26 Retail Experience: ensure magic out-of-the-box Aether Hand-off for ...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  6. [security] Security remediation: Complete remaining 10% of credential purge (.env.hybrid fi...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  7. [ops] Edge cache warming: Verify Aether Orchestrator binaries propagated to all CDN ed...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:50.486 -0600] [32mINFO[39m: [36m  8. [ops] Sovereign Auth Sync: Monitor Knox Vault bridge throughput (target: 500 reg/min s...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+ ❯ tests/production-hardening-batch4.test.js (22 tests | 18 failed) 186ms
+   × Silent catch blocks — batch 4 > swarm-coordinator subscriber catch logs errors 41ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/swarm-coordinator.js'
+   × Silent catch blocks — batch 4 > infer response-cache warm catch logs errors 45ms
+     → expected '\'use strict\';\n\nconst logger = req…' to match /cache_warm_entry_failed/
+   × Silent catch blocks — batch 4 > openai provider stream parse catch logs errors 3ms
+     → expected '\'use strict\';\n\nconst logger = req…' to match /openai_stream_parse_error/
+   × Silent catch blocks — batch 4 > local provider stream parse catch logs errors 5ms
+     → expected '\'use strict\';\nconst logger = requi…' to match /local_stream_parse_error/
+   × Silent catch blocks — batch 4 > groq provider stream parse catch logs errors 2ms
+     → expected '\'use strict\';\nconst logger = requi…' to match /groq_stream_parse_error/
+   × Silent catch blocks — batch 4 > google provider stream parse catch logs errors 2ms
+     → expected '\'use strict\';\nconst logger = requi…' to match /google_stream_parse_error/
+   × Silent catch blocks — batch 4 > projection-swarm audit dir catch logs errors 51ms
+     → expected '/* © 2026-2026 HeadySystems Inc. All …' to match /swarm_audit_dir_failed/
+   × Silent catch blocks — batch 4 > cloud-conductor-integration audit write catch logs errors 1ms
+     → expected '/* © 2026-2026 HeadySystems Inc. All …' to match /cloud_conductor_audit_write_failed/
+   × Structured logging — heady-vector server > server.js uses structuredLog/structuredError instead of console.* 2ms
+     → expected '\'use strict\';\nconst { createLogger…' to match /structuredLog/
+   × Structured logging — heady-vector server > server.js emits JSON boot event 1ms
+     → expected '\'use strict\';\nconst { createLogger…' to match /listening/
+   ✓ Structured logging — heady-vector server > server.js CORS uses env-driven origins not wildcard 1ms
+   × CORS wildcard elimination — batch 4 > colab-mcp-bridge SSE uses env-driven CORS 9ms
+     → expected '// ─── HEADY CORS WHITELIST ─────────…' to match /HEADY_CORS_ORIGINS/
+   ✓ CORS wildcard elimination — batch 4 > service-routes.js does not use wildcard CORS 1ms
+   × CORS wildcard elimination — batch 4 > dynamic-site-server uses env-driven CORS 2ms
+     → expected '/*\n * © 2026 Heady™Systems Inc.\n * …' to match /HEADY_CORS_ORIGINS/
+   × CORS wildcard elimination — batch 4 > auth-page-server uses env-driven CORS 3ms
+     → expected '/*\n * © 2026 Heady™Systems Inc..\n *…' to match /HEADY_CORS_ORIGINS/
+   × CORS wildcard elimination — batch 4 > edge-worker uses static allowlist CORS 2ms
+     → expected '/**\n * © 2026-2026 HeadySystems Inc.…' to match /_edgeAllowedOrigins/
+   ✓ CORS wildcard elimination — batch 4 > domain-registry removes wildcard CORS from API config 2ms
+   ✓ CORS wildcard elimination — batch 4 > edge domain-router removes wildcard CORS header from config 2ms
+   × CORS wildcard elimination — batch 4 > sdk-services SSE uses env-driven CORS 1ms
+     → expected '/*\n * © 2026 Heady™Systems Inc..\n *…' to match /HEADY_CORS_ORIGINS/
+   × Placeholder hardening — batch 4 > respawn-controller restartService returns false (not silently true) 1ms
+     → expected 'const {\n  PhiBackoff\n} = require(\'…' to match /return false/
+   × Placeholder hardening — batch 4 > quarantine-manager logs when isolation not wired 1ms
+     → expected 'const CSL = require(\'../core/semanti…' to match /isolation not yet wired/
+   × Operator documentation — batch 4 > public-domain-health runbook exists 4ms
+     → expected false to be true // Object.is equality
+ ❯ tests/staging-test-schema.test.js (43 tests | 6 failed) 1844ms
+   ✓ Staging Schema — File Structure > src/ directory exists 6ms
+   ✓ Staging Schema — File Structure > configs/ directory exists 1ms
+   ✓ Staging Schema — File Structure > tests/ directory exists 1ms
+   ✓ Staging Schema — File Structure > scripts/ directory exists 6ms
+   ✓ Staging Schema — File Structure > package.json exists 1ms
+   ✓ Staging Schema — File Structure > Dockerfile exists 3ms
+   ✓ Staging Schema — File Structure > README.md exists 1ms
+   ✓ Staging Schema — File Structure > .gitignore exists 0ms
+   ✓ Staging Schema — File Structure > jest.config.js exists 1ms
+   ✓ Staging Schema — File Structure > hcfullpipeline.yaml exists 1ms
+   ✓ Staging Schema — File Structure > hcfullpipeline.json exists 0ms
+   ✓ Staging Schema — Config Parsing > package.json parses without errors 33ms
+   ✓ Staging Schema — Config Parsing > hcfullpipeline.json parses without errors 42ms
+   × Staging Schema — Config Parsing > tsconfig.json parses without errors 65ms
+     → expected [Function] to not throw an error but 'SyntaxError: Expected \':\' after pro…' was thrown
+   ✓ Staging Schema — Config Parsing > turbo.json parses without errors 15ms
+   ✓ Staging Schema — Config Parsing > manifest.json parses without errors 1ms
+   ✓ Staging Schema — Config Parsing > renovate.json parses without errors 1ms
+   ✓ Staging Schema — Package.json Consistency > name field is defined 1ms
+   ✓ Staging Schema — Package.json Consistency > version field matches semver 2ms
+   × Staging Schema — Package.json Consistency > engines.node requires >=20 69ms
+     → expected '>=22.0.0' to contain '20'
+   ✓ Staging Schema — Package.json Consistency > test script is defined 0ms
+   ✓ Staging Schema — Package.json Consistency > build script is defined 0ms
+   × Staging Schema — Package.json Consistency > smoke script is defined 5ms
+     → expected undefined to be defined
+   ✓ Staging Schema — Package.json Consistency > no devDependency versions use * wildcard 17ms
+   ✓ Staging Schema — Package.json Consistency > no dependency versions use * wildcard 24ms
+   × Staging Schema — Security Checks > no .env files committed (outside .gitignore examples) 1427ms
+     → expected 3 to be +0 // Object.is equality
+   ✓ Staging Schema — Security Checks > .gitignore includes node_modules 0ms
+   ✓ Staging Schema — Security Checks > .gitignore includes .env 0ms
+   ✓ Staging Schema — Security Checks > no hardcoded API keys in package.json 0ms
+   ✓ Staging Schema — Security Checks > SECURITY.md exists 0ms
+   ✓ Staging Schema — Dockerfile Validation > Dockerfile has FROM instruction 1ms
+   ✓ Staging Schema — Dockerfile Validation > Dockerfile uses node 20+ base image 0ms
+   ✓ Staging Schema — Dockerfile Validation > Dockerfile has EXPOSE instruction 0ms
+   ✓ Staging Schema — Dockerfile Validation > docker-compose.yml parses (exists) 0ms
+   ✓ Staging Schema — Import Chain Verification > core source files exist 11ms
+   ✓ Staging Schema — Import Chain Verification > require() paths in core files reference existing modules or packages 22ms
+   ✓ Staging Schema — Cross-Reference Integrity > jest.config.js roots reference existing directories 0ms
+   ✓ Staging Schema — Cross-Reference Integrity > GitHub workflows directory exists 0ms
+   × Staging Schema — Cross-Reference Integrity > promote-to-staging.yml exists 1ms
+     → expected false to be true // Object.is equality
+   × Staging Schema — Cross-Reference Integrity > CI workflow references valid Node version 1ms
+     → expected 'name: CI\non:\n  push:\n    branches:…' to match /node-version.*['"]?20/
+   ✓ Staging Schema — Test File Health > tests/ directory has at least 50 test files 36ms
+   ✓ Staging Schema — Test File Health > hcfullpipeline-validator.test.js exists 0ms
+   ✓ Staging Schema — Test File Health > no test file is empty (0 bytes) 5ms
+ ❯ tests/production-hardening-batch3.test.js (13 tests | 13 failed) 98ms
+   × production hardening — batch 3 > api-gateway uses env-driven CORS instead of wildcard 52ms
+     → expected '\'use strict\';\n\nconst pino = requi…' to match /HEADY_CORS_ORIGINS/
+   × production hardening — batch 3 > api-gateway uses structured logging instead of console.log banner 6ms
+     → expected '\'use strict\';\n\nconst pino = requi…' to match /structuredLog\(/
+   × production hardening — batch 3 > sse-streaming uses env-driven CORS instead of wildcard 5ms
+     → expected '/*\n * © 2026 Heady™Systems Inc..\n *…' to match /SSE_ALLOWED_ORIGINS/
+   × production hardening — batch 3 > compute-dashboard SSE uses env-driven CORS instead of wildcard 1ms
+     → expected '/*\n * © 2026 Heady™Systems Inc..\n *…' to match /HEADY_CORS_ORIGINS/
+   × production hardening — batch 3 > mcp-transport worker uses env-driven CORS instead of wildcard 6ms
+     → expected 'import { MCPServer, MCPRequest } from…' to match /getCorsOrigin/
+   × production hardening — batch 3 > projection-sse uses env-driven CORS instead of wildcard 2ms
+     → expected '/* © 2026-2026 HeadySystems Inc. All …' to match /HEADY_CORS_ORIGINS/
+   × production hardening — batch 3 > mcp-transport node module uses env-driven CORS instead of wildcard 3ms
+     → expected '\'use strict\';\n\nconst {\n  PHI_TIM…' to match /HEADY_CORS_ORIGINS/
+   × production hardening — batch 3 > heady-infer router emits events instead of swallowing errors 8ms
+     → expected '\'use strict\';\n\nconst logger = req…' to match /routing_error/
+   × production hardening — batch 3 > self-healer logs callback errors instead of swallowing them 2ms
+     → expected 'const logger = require(\'./utils/logg…' to match /callback_error/
+   × production hardening — batch 3 > conductor-integration logs audit and weight-inject failures 2ms
+     → expected '/* © 2026-2026 HeadySystems Inc. All …' to match /audit_write_failed/
+   × production hardening — batch 3 > cors-policy uses structured stderr instead of console.warn 1ms
+     → expected '/**\n * Advanced CORS Policy Middlewa…' to match /process\.stderr\.write.*cors_blocked/
+   × production hardening — batch 3 > heady-brain chat returns 501 Not Implemented instead of fake data 7ms
+     → expected 'import { Router, type Router as Route…' to match /501/
+   × production hardening — batch 3 > heady-brain analyze returns 501 Not Implemented instead of fake data 1ms
+     → expected 'import { Router, type Router as Route…' to match /501/
+[2026-03-21 12:08:51.421 -0600] [32mINFO[39m: [36m∞ UnifiedEnterpriseAutonomyService: STARTED[39m
+ ❯ tests/unified-enterprise-autonomy.test.js (13 tests | 5 failed) 1659ms
+   ✓ unified enterprise autonomy service > rankWorkersForQueue ranks by weighted capacity minus pressure 33ms
+   ✓ unified enterprise autonomy service > createDeterministicReceipt is stable for same payload 1ms
+   × unified enterprise autonomy service > service dispatch returns deterministic receipts and selected workers 149ms
+     → expected false to be true // Object.is equality
+   ✓ unified enterprise autonomy service > embedding plan includes deterministic receipts for collections 3ms
+   ✓ unified enterprise autonomy service > onboarding contract includes security bridge requirements 3ms
+   × unified enterprise autonomy service > platform blueprint exposes deterministic onboarding stages 4ms
+     → embedder.getContextCoverage is not a function
+   ✓ unified enterprise autonomy service > projection hygiene and source-of-truth metadata are exposed  330ms
+   × unified enterprise autonomy service > system projection snapshot includes developer platform blueprint 4ms
+     → embedder.getContextCoverage is not a function
+   ✓ unified enterprise autonomy service > projection cleanup plan identifies stale files 115ms
+   ✓ unified enterprise autonomy service > onboarding and auth flow validation checks required stages and bridge 3ms
+   × unified enterprise autonomy service > alternate paradigm directives include runtime directives 3ms
+     → embedder.getContextCoverage is not a function
+   × unified enterprise autonomy service > self-healing cycle combines hygiene, validation, and cleanup 714ms
+     → embedder.getContextCoverage is not a function
+   ✓ unified enterprise autonomy service > health endpoint includes onboarding validation 272ms
+ ❯ tests/integration/mcp.test.js (3 tests | 2 failed) 147ms
+   × MCP Gateway > Lists tools 91ms
+     → Expected values to be strictly equal:
+
+404 !== 200
+
+   ✓ MCP Gateway > 404 for unknown tool 28ms
+   × MCP Gateway > Rejects no auth 25ms
+     → Expected values to be strictly equal:
+
+404 !== 401
+
+[2026-03-21 12:08:51.625 -0600] [32mINFO[39m: [36mExtracted 8 tasks from strategic report:[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  1. [dev] Launch the Heady™-Registry: Move MCP connectors to public-facing API (tool → pla...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  2. [research] Formalize the Sacred Geometry Whitepaper: Publish technical paper on mathematica...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  3. [dev] Unify versioning: Resolve v2.1.0 (package.json) vs v3.2.0 (README) conflict — co...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  4. [ops] Cease repository modifications before March 5th launch — system is in optimal st...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  5. [creative] Focus on S26 Retail Experience: ensure magic out-of-the-box Aether Hand-off for ...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  6. [security] Security remediation: Complete remaining 10% of credential purge (.env.hybrid fi...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  7. [ops] Edge cache warming: Verify Aether Orchestrator binaries propagated to all CDN ed...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+[2026-03-21 12:08:51.626 -0600] [32mINFO[39m: [36m  8. [ops] Sovereign Auth Sync: Monitor Knox Vault bridge throughput (target: 500 reg/min s...[39m
+    [35m0[39m: "i"
+    [35m1[39m: "n"
+    [35m2[39m: "p"
+    [35m3[39m: "u"
+    [35m4[39m: "t"
+    [35m5[39m: "-"
+    [35m6[39m: "t"
+    [35m7[39m: "a"
+    [35m8[39m: "s"
+    [35m9[39m: "k"
+    [35m10[39m: "-"
+    [35m11[39m: "e"
+    [35m12[39m: "x"
+    [35m13[39m: "t"
+    [35m14[39m: "r"
+    [35m15[39m: "a"
+    [35m16[39m: "c"
+    [35m17[39m: "t"
+    [35m18[39m: "o"
+    [35m19[39m: "r"
+ ❯ tests/security/phi-math.test.js (26 tests | 5 failed) 83ms
+   ✓ Core Constants > PHI ≈ 1.618 13ms
+   ✓ Core Constants > PSI = 1/PHI ≈ 0.618 1ms
+   ✓ Core Constants > PHI² = PHI + 1 0ms
+   × Core Constants > PHI³ = 2·PHI + 1 30ms
+     → expected undefined to be close to 4.23606797749979, received difference is NaN, but expected 5e-11
+   × Core Constants > PHI_TEMPERATURE = PSI³ ≈ 0.236 19ms
+     → expected undefined to be close to 0.23606797749978975, received difference is NaN, but expected 5e-11
+   ✓ Fibonacci > first 10 values correct 1ms
+   ✓ Fibonacci > large values correct 0ms
+   × Fibonacci > negative n throws 2ms
+     → expected function to throw an error, but it didn't
+   ✓ Fibonacci > F(n+1)/F(n) converges to PHI 0ms
+   ✓ CSL Thresholds > hierarchy: MINIMUM < LOW < MEDIUM < HIGH < CRITICAL 0ms
+   ✓ CSL Thresholds > MINIMUM ≈ 0.500 0ms
+   ✓ CSL Thresholds > MEDIUM ≈ 0.809 0ms
+   ✓ CSL Thresholds > CRITICAL ≈ 0.927 0ms
+   ✓ CSL Thresholds > DEDUP ≈ 0.972 0ms
+   × CSL Gate > gates value based on cosine score 1ms
+     → expected 0.6450185623682153 to be close to 1, received difference is 0.3549814376317847, but expected 0.05
+   ✓ CSL Gate > sigmoid is bounded [0,1] 0ms
+   ✓ Phi-Backoff > increases with attempt number 0ms
+   ✓ Phi-Backoff > respects max limit 0ms
+   ✓ Phi-Fusion Weights > 2 weights sum to 1 0ms
+   ✓ Phi-Fusion Weights > 3 weights sum to 1 0ms
+   ✓ Phi-Fusion Weights > weights are descending 0ms
+   ✓ Cosine Similarity > identical vectors = 1.0 0ms
+   ✓ Cosine Similarity > orthogonal vectors ≈ 0 0ms
+   ✓ Cosine Similarity > opposite vectors = -1.0 0ms
+   ✓ Token Budgets > phi-geometric progression 0ms
+   × Pressure Levels > non-overlapping ranges 3ms
+     → expected value must be number or bigint, received "undefined"
+[2026-03-21 12:08:52.092 -0600] [33mWARN[39m (heady-fetch): [36mheadyFetch: Request failed (attempt 1/4)[39m
+ ❯ tests/sacred-geometry-sdk.test.js (20 tests | 3 failed) 116ms
+   ✓ Sacred Geometry SDK — Core Constants > PHI is the golden ratio 18ms
+   ✓ Sacred Geometry SDK — Core Constants > PHI_INV is 1/PHI 1ms
+   ✓ Sacred Geometry SDK — Core Constants > PHI_SQ is PHI squared 0ms
+   ✓ Sacred Geometry SDK — Core Constants > PHI_CUBE is PHI cubed 0ms
+   ✓ Sacred Geometry SDK — Core Constants > BASE is 13 1ms
+   ✓ Sacred Geometry SDK — Core Constants > LOG_BASE is 42 0ms
+   ✓ Sacred Geometry SDK — Core Constants > FIB is a Fibonacci sequence array 11ms
+   × Sacred Geometry SDK — Principles Module > phiScale returns phi-derived scale values 35ms
+     → expected NaN to be greater than 0
+   × Sacred Geometry SDK — Principles Module > goldenSplit divides a value by the golden ratio 26ms
+     → object is not iterable (cannot read property Symbol(Symbol.iterator))
+   ✓ Sacred Geometry SDK — Principles Module > toBase13 converts numbers to base-13 1ms
+   ✓ Sacred Geometry SDK — Principles Module > fromBase13 converts base-13 back to decimal 0ms
+   ✓ Sacred Geometry SDK — Principles Module > log42 returns logarithm base 42 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > SpatialEmbedder class is exported 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > OctreeManager class is exported 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > TemplateEngine class is exported 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > CapacityPlanner class is exported 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > spatial module is accessible 0ms
+   ✓ Sacred Geometry SDK — Sub-Module Exports > octree module is accessible 0ms
+   ✓ Sacred Geometry SDK — Design Tokens > designTokens returns an object 0ms
+   × Sacred Geometry SDK — Design Tokens > phiTiming returns timing values 17ms
+     → expected 'object' to be 'number' // Object.is equality
+ ❯ tests/buddy-core.test.js (13 tests | 4 failed) 57ms
+   ✓ BuddyCore > has valid identity 7ms
+   ✓ BuddyCore > getStatus returns valid structure 1ms
+   ✓ BuddyCore > lists MCP tools 0ms
+   ✓ BuddyCore > has error interceptor 1ms
+   ✓ BuddyCore > error interceptor has stats 1ms
+   × DeterministicErrorInterceptor > intercept processes a basic error 19ms
+     → logger.logError is not a function
+   × DeterministicErrorInterceptor > classifies timeout errors 2ms
+     → logger.logError is not a function
+   × DeterministicErrorInterceptor > classifies auth errors 2ms
+     → logger.logError is not a function
+   × DeterministicErrorInterceptor > getStats returns valid object 4ms
+     → expected 0 to be greater than 0
+   ✓ DeterministicErrorInterceptor > checkPreemptive returns null for unknown errors 0ms
+   ✓ MetacognitionEngine > assessConfidence returns valid range 1ms
+   ✓ MetacognitionEngine > has decision log 0ms
+   ✓ MetacognitionEngine > getRecentDecisions returns array 0ms
+[2026-03-21 12:08:52.633 -0600] [33mWARN[39m (heady-fetch): [36mheadyFetch: Request failed (attempt 2/4)[39m
+ ❯ tests/routing-docs-auth-pass.test.js (50 tests | 31 failed) 194ms
+   ✓ domain-router — audited public domains > module loads without throwing 2ms
+   ✓ domain-router — audited public domains > exports resolveDomain and getDomainMap 1ms
+   ✓ domain-router — audited public domains > resolveDomain(headyme.com) → uiId=antigravity 0ms
+   ✓ domain-router — audited public domains > resolveDomain(headysystems.com) → uiId=landing 0ms
+   × domain-router — audited public domains > resolveDomain(headyos.com) → uiId=heady-os 21ms
+     → expected null not to be null
+   ✓ domain-router — audited public domains > resolveDomain(headyconnection.org) → uiId=vector-explorer 9ms
+   × domain-router — audited public domains > resolveDomain(headyconnection.com) → uiId=vector-explorer 2ms
+     → expected null not to be null
+   × domain-router — audited public domains > resolveDomain(headyfinance.com) → uiId=investments 1ms
+     → expected null not to be null
+   × domain-router — audited public domains > resolveDomain(headyex.com) → uiId=exchange 1ms
+     → expected null not to be null
+   × domain-router — audited public domains > resolveDomain(admin.headysystems.com) → uiId=admin-dashboard 75ms
+     → expected null not to be null
+   × domain-router — audited public domains > getDomainMap includes all audited domains 17ms
+     → expected false to be true // Object.is equality
+   × domain-router — audited public domains > headyconnection.com does NOT resolve to headyme 1ms
+     → expected null not to be null
+   × domain-router — audited public domains > headyex.com does NOT resolve to headyme 1ms
+     → expected null not to be null
+   × domain-router — audited public domains > admin.headysystems.com does NOT resolve to headyex 1ms
+     → expected null not to be null
+   ✓ ui-registry — audited domains have UI entries > module loads without throwing 6ms
+   ✓ ui-registry — audited domains have UI entries > resolveUI(headyme.com) returns a non-null config 0ms
+   ✓ ui-registry — audited domains have UI entries > resolveUI(headysystems.com) returns a non-null config 0ms
+   × ui-registry — audited domains have UI entries > resolveUI(headyos.com) returns a non-null config 1ms
+     → expected null not to be null
+   ✓ ui-registry — audited domains have UI entries > resolveUI(headyconnection.org) returns a non-null config 0ms
+   × ui-registry — audited domains have UI entries > resolveUI(headyconnection.com) returns a non-null config 1ms
+     → expected null not to be null
+   × ui-registry — audited domains have UI entries > resolveUI(headyfinance.com) returns a non-null config 2ms
+     → expected null not to be null
+   × ui-registry — audited domains have UI entries > resolveUI(headyex.com) returns a non-null config 1ms
+     → expected null not to be null
+   × ui-registry — audited domains have UI entries > resolveUI(admin.headysystems.com) returns a non-null config 1ms
+     → expected null not to be null
+   × ui-registry — audited domains have UI entries > headyconnection.com maps to vector-explorer, not antigravity 1ms
+     → Cannot read properties of null (reading 'uiId')
+   × ui-registry — audited domains have UI entries > admin.headysystems.com maps to admin-dashboard 0ms
+     → Cannot read properties of null (reading 'uiId')
+   ✓ vertical-registry.json — structural consistency > parses without error 0ms
+   × vertical-registry.json — structural consistency > headysystems has its own config_path, not headyme/config.json 3ms
+     → expected 'headyme/config.json' not to be 'headyme/config.json' // Object.is equality
+   × vertical-registry.json — structural consistency > headyconnection canonical domain is .org, not .com 3ms
+     → expected 'headyconnection.com' to be 'headyconnection.org' // Object.is equality
+   × vertical-registry.json — structural consistency > admin.headysystems.com is listed as a headysystems alias 5ms
+     → expected [ 'www.headysystems.com', …(1) ] to include 'admin.headysystems.com'
+   ✓ vertical-registry.json — structural consistency > every vertical has a unique vertical_id 0ms
+   ✓ vertical-registry.json — structural consistency > every active vertical has a config_path 1ms
+   ✓ domain-registry.js — audited domains present > headyme.com is a registered canonical domain 0ms
+   ✓ domain-registry.js — audited domains present > headysystems.com is a registered canonical domain 0ms
+   × domain-registry.js — audited domains present > headyos.com is a registered canonical domain 1ms
+     → expected [ 'headyme.com', …(8) ] to include 'headyos.com'
+   ✓ domain-registry.js — audited domains present > headyconnection.org is a registered canonical domain 0ms
+   × domain-registry.js — audited domains present > headyfinance.com is a registered canonical domain 2ms
+     → expected [ 'headyme.com', …(8) ] to include 'headyfinance.com'
+   × domain-registry.js — audited domains present > headyex.com is a registered canonical domain 1ms
+     → expected [ 'headyme.com', …(8) ] to include 'headyex.com'
+   × domain-registry.js — audited domains present > headyconnection.com is an alias of headyconnection.org 1ms
+     → expected [ 'www.headyme.com', …(19) ] to include 'headyconnection.com'
+   ✓ domain-registry.js — audited domains present > admin.headysystems.com is an alias of headysystems.com 0ms
+   × site-router.js — default fallback emits warning > module loads without throwing 1ms
+     → expected null not to be null
+   × site-router.js — default fallback emits warning > VerticalResolver falls back with structured warning for unknown domain 1ms
+     → Cannot read properties of null (reading 'VerticalResolver')
+   × site-router.js — default fallback emits warning > VerticalResolver does NOT warn for known domains 1ms
+     → Cannot read properties of null (reading 'VerticalResolver')
+   ✓ docs discoverability — key docs exist > docs/README.md exists 0ms
+   ✓ docs discoverability — key docs exist > docs/QUICK_REFERENCE.md exists 0ms
+   × docs discoverability — key docs exist > docs/runbooks/heady-web.md exists 6ms
+     → expected false to be true // Object.is equality
+   × docs discoverability — key docs exist > docs/runbooks/heady-manager.md exists 1ms
+     → expected false to be true // Object.is equality
+   × docs discoverability — key docs exist > docs/runbooks/heady-auth.md exists 1ms
+     → expected false to be true // Object.is equality
+   ✓ docs discoverability — key docs exist > docs/runbooks/heady-memory.md exists 0ms
+   × docs discoverability — key docs exist > docs/runbooks/public-domain-health.md exists 1ms
+     → expected false to be true // Object.is equality
+   × docs discoverability — key docs exist > docs/README.md contains a domain routing section 1ms
+     → expected '# Heady Benefit Pack\n\nThis package …' to match /[Dd]omain.*[Rr]out/
+ ❯ tests/circuit-breaker.test.js (12 tests | 11 failed) 103ms
+   ✓ CircuitBreaker > starts in CLOSED state 25ms
+   × CircuitBreaker > successful execution stays CLOSED 19ms
+     → Cannot read properties of undefined (reading 'totalSuccesses')
+   × CircuitBreaker > transitions to OPEN after reaching failure threshold 17ms
+     → expected 'CLOSED' to be 'OPEN' // Object.is equality
+   × CircuitBreaker > throws CircuitOpenError when OPEN 8ms
+     → promise resolved "'ok'" instead of rejecting
+   × CircuitBreaker > uses fallback when OPEN and fallback is provided 3ms
+     → expected 'should not run' to be 'fallback-value' // Object.is equality
+   × CircuitBreaker > transitions to HALF_OPEN after resetTimeout 2ms
+     → expected 'CLOSED' to be 'OPEN' // Object.is equality
+   × CircuitBreaker > reset() returns to CLOSED state 10ms
+     → expected 'CLOSED' to be 'OPEN' // Object.is equality
+   × CircuitBreaker > getStatus() returns complete status object 1ms
+     → cb.getStatus is not a function
+   × CircuitOpenError > has correct name and isCircuitOpen flag 8ms
+     → CircuitOpenError is not a constructor
+   × Circuit Breaker Registry > getBreaker returns same instance for same name 1ms
+     → getBreaker is not a function
+   × Circuit Breaker Registry > getAllBreakers returns status for all registered breakers 2ms
+     → getAllBreakers is not a function
+   × Circuit Breaker Registry > CRITICAL_SERVICES contains expected services 3ms
+     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/integration/security-flow.test.js (9 tests | 1 failed) 171ms
+   ✓ Security Flow Integration > Security Headers > should set all security headers on response 66ms
+   ✓ Security Flow Integration > Security Headers > should set headers on all routes 9ms
+   ✓ Security Flow Integration > CORS Policy > should allow CORS for headyme.com 7ms
+   ✓ Security Flow Integration > CORS Policy > should allow CORS for headysystems.com 9ms
+   ✓ Security Flow Integration > CORS Policy > should allow CORS for www subdomain 7ms
+   ✓ Security Flow Integration > CORS Policy > should reject CORS for unknown origin 13ms
+   ✓ Security Flow Integration > CORS Policy > should reject CORS for similar-looking domains 6ms
+   ✓ Security Flow Integration > Rate Limiter > should define Fibonacci tiers 22ms
+   × Security Flow Integration > Env Validator > should validate complete environment 24ms
+     → The requested module '../utils/logger.js' does not provide an export named 'createLogger'
+ ✓ tests/hc-pipeline-circuit-breaker.test.js (7 tests) 298ms
+{"timestamp":"2026-03-21T18:08:53.244Z","level":"info","service":"test-service","traceId":"02e8ee8c-455e-4d0c-816c-6c30a1873047","message":"traffic.accepted","endpoint":"/api/sync","deviceId":"device-1","metric":"accepted"}
+{"timestamp":"2026-03-21T18:08:53.245Z","level":"warn","service":"test-service","traceId":"600dc529-c51e-4a62-8dba-81adebbde0ee","message":"traffic.rejected","endpoint":"/api/sync","deviceId":"device-2","reason":"rate_limit","metric":"rejected"}
+{"timestamp":"2026-03-21T18:08:53.245Z","level":"info","service":"test-service","traceId":"af122338-0207-4429-bfe3-c2ed905bc25c","message":"device.stale_disconnect","deviceId":"device-3","lastSeenMs":30000,"metric":"stale_disconnect"}
+{"timestamp":"2026-03-21T18:08:53.246Z","level":"info","service":"test-service","traceId":"4072b569-8498-42e5-a126-6369081029ea","message":"circuit_breaker.state_change","targetService":"edge-proxy","state":"open","errorRate":0.85,"metric":"circuit_breaker"}
+{"timestamp":"2026-03-21T18:08:53.247Z","level":"info","service":"test-svc","traceId":"b7f2e60b-02f0-4264-ae75-ceb38863d050","message":"Service registered: test-svc"}
+{"timestamp":"2026-03-21T18:08:53.247Z","level":"info","service":"svc-a","traceId":"aaeaeeda-1e76-4a38-aa78-2d3d1515127c","message":"Service registered: svc-a"}
+{"timestamp":"2026-03-21T18:08:53.247Z","level":"info","service":"svc-b","traceId":"e4d84a9c-6b97-4d30-8a09-3b578fb00f4a","message":"Service registered: svc-b"}
+{"timestamp":"2026-03-21T18:08:53.250Z","level":"info","service":"svc-ok","traceId":"c8282e8f-2a31-4dd5-ad10-6ac78ae70b5a","message":"Service registered: svc-ok"}
+{"timestamp":"2026-03-21T18:08:53.250Z","level":"info","service":"svc-fail","traceId":"7b8ec0fd-8081-4e50-ac28-fb8c47b8b03f","message":"Service registered: svc-fail"}
+{"timestamp":"2026-03-21T18:08:53.253Z","level":"info","service":"bee-svc","traceId":"31f9450d-3a63-44fa-a24e-dc37d5c77bfd","message":"Service registered: bee-svc"}
+ ❯ tests/services/orchestration.test.js (18 tests | 2 failed) 411ms
+   ✓ HeadyRedisPool > calculatePoolSize uses Little's Law with φ-factor 34ms
+   ✓ HeadyRedisPool > initializes with correct pool size 1ms
+   ✓ HeadyRedisPool > acquire returns a connection 1ms
+   ✓ HeadyRedisPool > exec runs commands via pool 1ms
+   ✓ HeadyRedisPool > hmget fetches specific fields (not HGETALL) 0ms
+   ✓ HeadyRedisPool > pipeline batches operations 1ms
+   ✓ HeadyRedisPool > getStats returns utilization metrics 1ms
+   ✓ HeadyRedisPool > handles pool exhaustion with timeout 104ms
+   ✓ HeadyRedisPool > shutdown rejects waiting requests 23ms
+   × TenantIsolation > initializes without database 116ms
+     → expected 'postgres' to be 'none' // Object.is equality
+   ✓ TenantIsolation > generates isolated redis prefix keys 0ms
+   ✓ TenantIsolation > generates isolated vector namespace keys 0ms
+   × TenantIsolation > registerTenant throws without database 12ms
+     → promise resolved "{ tenantId: 'tid-1', …(4) }" instead of rejecting
+   ✓ TenantIsolation > health returns correct service info 3ms
+   ✓ SpatialTelemetry > METRIC constants are defined 0ms
+   ✓ SpatialTelemetry > records position and produces health report 1ms
+   ✓ RedisSpatialIndex > class exports correctly 0ms
+   ✓ RedisSpatialIndex > constructor accepts redis client 46ms
+ ❯ tests/production-prime.test.js (4 tests | 4 failed) 96ms
+   × Pipeline Fail-Closed Behavior > should have no default handler that silently succeeds 61ms
+     → expected '// HEADY_BRAND:BEGIN\n// ╔═══════════…' to contain 'FAIL-CLOSED'
+   × Pipeline Fail-Closed Behavior > should include code version in cache key generation 20ms
+     → expected '// HEADY_BRAND:BEGIN\n// ╔═══════════…' to contain 'GITHUB_SHA'
+   × Widget XSS Prevention > should not use innerHTML in the buddy widget 10ms
+     → expected [ Array(1) ] to have a length of +0 but got 1
+   × CI Gate Integrity > CI workflow should not swallow failures with || true 1ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/.github/workflows/heady-consolidated-ci.yml'
+ ❯ tests/pipeline.test.js (20 tests | 20 failed) 310ms
+   × HCFullPipeline — stage execution > pipeline starts in IDLE state 197ms
+     → Cannot read properties of undefined (reading 'IDLE')
+   × HCFullPipeline — stage execution > run() returns a result with runId and stagesCompleted 29ms
+     → expected undefined to be defined
+   × HCFullPipeline — stage execution > run() moves through RUNNING → COMPLETE 2ms
+     → pipeline.on is not a function
+   × HCFullPipeline — stage execution > run() processes all sequential stages in order 1ms
+     → pipeline.on is not a function
+   × HCFullPipeline — stage execution > run() includes RECEIPT in completed stages 3ms
+     → Cannot read properties of undefined (reading 'RECEIPT')
+   × HCFullPipeline — stage execution > emergency mode skips SKIPPABLE_STAGES 1ms
+     → pipeline.on is not a function
+   × HCFullPipeline — stage execution > concurrent run() on same instance throws 59ms
+     → promise resolved "{ success: true, …(4) }" instead of rejecting
+   × HCFullPipeline — stage execution > runStage() executes a single stage with provided context 2ms
+     → Cannot read properties of undefined (reading 'INTAKE')
+   × HCFullPipeline — stage execution > runStage() throws for unknown stage name 2ms
+     → pipeline.runStage is not a function
+   × HCFullPipeline — stage execution > getStatus() reflects idle state when not running 2ms
+     → Cannot read properties of undefined (reading 'IDLE')
+   × HCFullPipeline — stage execution > Stages object contains all expected stage names 1ms
+     → Cannot read properties of undefined (reading 'INTAKE')
+   × PoolManager — acquire and release > getPoolNames() returns all expected pool names 2ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > acquire() HOT pool returns a release token 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > release() marks token as released 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > acquire and release from each named pool 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > getUtilization() returns object with pool stats 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > getUtilization(poolName) returns stats for specific pool 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > concurrent acquires up to pool concurrency all resolve 0ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > acquiring beyond capacity blocks until released 1ms
+     → PoolManager is not a constructor
+   × PoolManager — acquire and release > Pool Semaphore acquire/release cycle is balanced 1ms
+     → PoolManager is not a constructor
+ ❯ tests/integration.test.js (27 tests | 10 failed) 1874ms
+   ✓ Swarm Routing Integration > dispatch assigns workers based on queue pressure 20ms
+   × Swarm Routing Integration > dispatch returns deterministic receipts 41ms
+     → Cannot read properties of undefined (reading 'hash')
+   ✓ Swarm Routing Integration > embedding plan includes all catalog sources 25ms
+   ✓ Swarm Routing Integration > node responsibilities reflect config 2ms
+   ✓ Sync Handoff Integration > onboarding contract validates auth flow 34ms
+   × Sync Handoff Integration > developer platform blueprint returns valid structure 4ms
+     → embedder.getContextCoverage is not a function
+   × Sync Handoff Integration > system projection snapshot is deterministic 3ms
+     → embedder.getContextCoverage is not a function
+   ✓ Sync Handoff Integration > source of truth status returns repo state 37ms
+   × Edge Failure Recovery > self-healing cycle detects and reports issues 356ms
+     → embedder.getContextCoverage is not a function
+   ✓ Edge Failure Recovery > projection noise scan identifies stale artifacts  423ms
+   ✓ Edge Failure Recovery > cleanup plan is safe and bounded 166ms
+   × Edge Failure Recovery > health endpoint returns valid status 456ms
+     → expected undefined to be 'healthy' // Object.is equality
+   ✓ Structured Logger > emits structured JSON for all log levels 2ms
+   ✓ Structured Logger > tracks traffic metrics 2ms
+   ✓ Structured Logger > tracks circuit breaker state 0ms
+   ✓ Structured Logger > tracks cache hit rates 0ms
+   ✓ Structured Logger > singleton getLogger returns same instance 0ms
+   ✓ Health Registry > registers and checks individual service health 1ms
+   × Health Registry > aggregates health across multiple services 2ms
+     → expected 'unhealthy' to be 'healthy' // Object.is equality
+   × Health Registry > reports degraded when some services fail 3ms
+     → expected 'unhealthy' to be 'degraded' // Object.is equality
+   ✓ Health Registry > reports not_found for unregistered services 0ms
+   ✓ Health Registry > supports object-style health providers 0ms
+   × Projection Contracts (3D → 2D) > system projection snapshot maps to 2D UI schema 3ms
+     → embedder.getContextCoverage is not a function
+   × Projection Contracts (3D → 2D) > parallel projection rendering is deterministic 2ms
+     → embedder.getContextCoverage is not a function
+   ✓ Projection Contracts (3D → 2D) > onboarding and auth validation returns deterministic result 1ms
+   × Cross-Device Context Reconciliation > alternate paradigm directives are stable 11ms
+     → embedder.getContextCoverage is not a function
+   ✓ Cross-Device Context Reconciliation > telemetry is consistent across calls 271ms
+ ❯ tests/self-healing-pipeline.test.js (5 tests | 3 failed) 30ms
+   × HCFullPipeline > initializes with correct defaults 17ms
+     → expected undefined to deeply equal { attempts: +0, successes: +0, …(1) }
+   × HCFullPipeline > accepts errorInterceptor and vectorMemory opts 6ms
+     → expected undefined to be { intercept: [Function spy], …(1) } // Object.is equality
+   × HCFullPipeline > status includes selfHeal stats 2ms
+     → expected undefined to deeply equal { attempts: +0, successes: +0, …(1) }
+   ✓ HCFullPipeline > createRun creates a run and execute completes it 2ms
+   ✓ HCFullPipeline > emits run:created events 1ms
+[2026-03-21 12:08:53.657 -0600] [33mWARN[39m (heady-fetch): [36mheadyFetch: Request failed (attempt 3/4)[39m
+ ❯ tests/hc_liquid.test.js (19 tests | 19 failed) 87ms
+   × HeadyLiquid — Liquid Architecture Engine > COMPONENT_REGISTRY contains all 14 liquid components 27ms
+     → Cannot convert undefined or null to object
+   × HeadyLiquid — Liquid Architecture Engine > every component has required fields 3ms
+     → Cannot convert undefined or null to object
+   × HeadyLiquid — Liquid Architecture Engine > STORAGE_TOPOLOGY defines 10 data categories 1ms
+     → Cannot convert undefined or null to object
+   × HeadyLiquid — Liquid Architecture Engine > HF_SPACES_TOPOLOGY defines 3 distributed nodes 1ms
+     → Cannot convert undefined or null to object
+   × HeadyLiquid — Liquid Architecture Engine > analyzeContext produces correct labels for chat request 1ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > analyzeContext adds creative labels when creative=true 1ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > analyzeContext adds depth labels when depth=true 2ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > analyzeContext adds high-stakes label for critical urgency 1ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > analyzeContext adds background labels for background type 1ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > calculateAffinity returns 0 for unknown component 3ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > calculateAffinity scores brain highest for chat context 3ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > calculateAffinity gives always-present components a baseline 4ms
+     → analyzeContext is not a function
+   × HeadyLiquid — Liquid Architecture Engine > LiquidAllocator initializes all 14 components 2ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > allocate returns top components sorted by affinity 1ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > allocate increments totalFlows and records in flowLog 1ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > allocate emits flow:allocated event 18ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > getFlows respects limit parameter 5ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > cloud component gets cloudflare-edge presence 1ms
+     → LiquidAllocator is not a constructor
+   × HeadyLiquid — Liquid Architecture Engine > stream component gets sse-channel and websocket presences 1ms
+     → LiquidAllocator is not a constructor
+ ❯ tests/unit/health.test.js (2 tests | 2 failed) 125ms
+   × Health > GET /health → 200 ok 101ms
+     → Expected values to be strictly equal:
+
+302 !== 200
+
+   × Health > GET /health/deep → services 21ms
+     → Expected values to be strictly equal:
+
+404 !== 200
+
+ ❯ tests/output-scanner.test.js (18 tests | 1 failed) 70ms
+   ✓ OutputScanner > AWS Credentials > redacts AWS access key 20ms
+   ✓ OutputScanner > AWS Credentials > redacts AWS secret key 2ms
+   ✓ OutputScanner > JWT Tokens > redacts JWT token 1ms
+   ✓ OutputScanner > Bearer Tokens > redacts Bearer token 1ms
+   ✓ OutputScanner > Private Keys > redacts RSA private key 0ms
+   ✓ OutputScanner > Credit Cards > redacts valid Visa number 1ms
+   × OutputScanner > Credit Cards > skips invalid card number (fails Luhn) 21ms
+     → expected 'Number: [REDACTED:CARD]' not to contain '[REDACTED:CARD]'
+   ✓ OutputScanner > GitHub Tokens > redacts GitHub PAT 0ms
+   ✓ OutputScanner > Database URLs > redacts PostgreSQL connection string 1ms
+   ✓ OutputScanner > Database URLs > redacts MongoDB connection string 2ms
+   ✓ OutputScanner > Internal IPs > redacts 10.x.x.x addresses 0ms
+   ✓ OutputScanner > Internal IPs > redacts 192.168.x.x addresses 0ms
+   ✓ OutputScanner > Generic Secrets > redacts api_key assignments 0ms
+   ✓ OutputScanner > Object Output > handles and redacts object output 1ms
+   ✓ OutputScanner > Clean Output > passes through clean output unchanged 1ms
+   ✓ OutputScanner > Luhn Check > validates known good Visa 0ms
+   ✓ OutputScanner > Luhn Check > rejects invalid number 0ms
+   ✓ OutputScanner > Statistics > tracks scan statistics 15ms
+ ❯ tests/maintenance-route-hygiene.test.js (2 tests | 2 failed) 14ms
+   × maintenance hygiene routes > audits cleanup candidates 11ms
+     → argument handler must be a function
+   × maintenance hygiene routes > cleanup defaults to dry run 2ms
+     → argument handler must be a function
+ ❯ tests/heady-directive-intelligence-scan.test.js (2 tests | 1 failed) 42ms
+   ✓ heady directive intelligence scan > findDirectiveFiles captures policy/workflow/law files 9ms
+   × heady directive intelligence scan > checkSecretIgnoreCoverage validates expected secret ignore entries 30ms
+     → expected false to be true // Object.is equality
+ ❯ tests/bees.test.js (23 tests | 4 failed) 209ms
+   ✓ bee-factory > createBee produces a valid entry with domain and getWork 35ms
+   ✓ bee-factory > createBee marks invalid workers as not validated 15ms
+   ✓ bee-factory > getWork returns callable functions 15ms
+   ✓ bee-factory > worker errors are caught and returned as error objects 1ms
+   × bee-factory > spawnBee creates ephemeral bee with priority 27ms
+     → expected 'ephemeral-ephemeral-test-8f7449' to be 'ephemeral-test' // Object.is equality
+   ✓ bee-factory > createFromTemplate > health-check template produces functional bee 2ms
+   ✓ bee-factory > createFromTemplate > monitor template produces metrics and uptime workers 1ms
+   ✓ bee-factory > createFromTemplate > scanner template produces scan and report workers 1ms
+   ✓ bee-factory > createFromTemplate > alerter template checks thresholds 1ms
+   ✓ bee-factory > createFromTemplate > unknown template throws descriptive error 2ms
+   ✓ credential-bee > exports domain for registry auto-discovery 1ms
+   ✓ credential-bee > exports getWork as a function 0ms
+   ✓ credential-bee > getWork returns array of callable functions 1ms
+   ✓ credential-bee > preserves legacy workers export 2ms
+   × input-task-extractor-bee stub deleted > stub file no longer exists 5ms
+     → expected true to be false // Object.is equality
+   ✓ input-task-extractor-bee stub deleted > real input-task-extractor.js still works 4ms
+   ✓ input-task-extractor-bee stub deleted > extracting tasks from text produces valid results 1ms
+   ✓ hf-auth-3d-bees > apply-fix validates missing spaceId 0ms
+   ✓ hf-auth-3d-bees > apply-fix validates missing fixType 1ms
+   ✓ hf-auth-3d-bees > inject-single validates empty content 0ms
+   ✓ registry > getHealth returns discovery stats 0ms
+   × registry > discover finds bee modules 5ms
+     → logger.logNodeActivity is not a function
+   × registry > credential-bee is discoverable after fix 1ms
+     → logger.logNodeActivity is not a function
+ ❯ tests/unit/security-modules.test.js (20 tests | 6 failed) 366ms
+   × EnvValidator (Hardened) > should pass with all required vars present 71ms
+     → The requested module '../utils/logger.js' does not provide an export named 'createLogger'
+   × EnvValidator (Hardened) > should fail when required var is missing 22ms
+     → Cannot require() ES Module /home/headyme/Heady/src/security/env-validator-hardened.js in a cycle. (from /home/headyme/Heady/tests/unit/security-modules.test.js)
+   × EnvValidator (Hardened) > should enforce production-only vars in production 16ms
+     → Cannot require() ES Module /home/headyme/Heady/src/security/env-validator-hardened.js in a cycle. (from /home/headyme/Heady/tests/unit/security-modules.test.js)
+   × EnvValidator (Hardened) > should detect forbidden patterns in production 2ms
+     → Cannot require() ES Module /home/headyme/Heady/src/security/env-validator-hardened.js in a cycle. (from /home/headyme/Heady/tests/unit/security-modules.test.js)
+   × EnvValidator (Hardened) > should warn on weak secrets 6ms
+     → Cannot require() ES Module /home/headyme/Heady/src/security/env-validator-hardened.js in a cycle. (from /home/headyme/Heady/tests/unit/security-modules.test.js)
+   × EnvValidator (Hardened) > should include summary in result 5ms
+     → Cannot require() ES Module /home/headyme/Heady/src/security/env-validator-hardened.js in a cycle. (from /home/headyme/Heady/tests/unit/security-modules.test.js)
+   ✓ SecurityHeaders Middleware > should set X-Content-Type-Options 14ms
+   ✓ SecurityHeaders Middleware > should set X-Frame-Options to DENY 1ms
+   ✓ SecurityHeaders Middleware > should set HSTS 14ms
+   ✓ SecurityHeaders Middleware > should set Referrer-Policy 1ms
+   ✓ SecurityHeaders Middleware > should set Permissions-Policy 31ms
+   ✓ SecurityHeaders Middleware > should allow CORS for known Heady domain 1ms
+   ✓ SecurityHeaders Middleware > should not set CORS for unknown origin 1ms
+   ✓ SecurityHeaders Middleware > should call next() 0ms
+   ✓ SecurityHeaders Middleware > should define 16 Heady domains 5ms
+   ✓ SecurityHeaders Middleware > should generate CORS_ORIGINS with https:// and www variants 1ms
+   ✓ RateLimiterHardened > should define Fibonacci-stepped tiers 122ms
+   ✓ RateLimiterHardened > should create rate limiter middleware 32ms
+   ✓ RateLimiterHardened > should default to free tier 6ms
+   ✓ RateLimiterHardened > should create endpoint limiter 8ms
+ ❯ tests/unit/agents.test.js (2 tests | 2 failed) 109ms
+   × Agents > GET /api/agents → 19 agents 79ms
+     → Expected values to be strictly equal:
+
+404 !== 200
+
+   × Agents > GET /api/agents/status → all have status 21ms
+     → Expected values to be strictly equal:
+
+404 !== 200
+
+ ❯ tests/unit/phi-math-new-exports.test.js (18 tests | 7 failed) 88ms
+   ✓ PSI_SQ and PSI_CUBED constants > PSI_SQ = PSI * PSI 3ms
+   ✓ PSI_SQ and PSI_CUBED constants > PSI_SQ ≈ 0.382 0ms
+   × PSI_SQ and PSI_CUBED constants > PSI_CUBED = PSI * PSI * PSI 49ms
+     → The expression evaluated to a falsy value:
+
+  assert(Math.abs(PSI_CUBED - PSI * PSI * PSI) < 1e-15)
+
+   × PSI_SQ and PSI_CUBED constants > PSI_CUBED ≈ 0.236 4ms
+     → The expression evaluated to a falsy value:
+
+  assert(Math.abs(PSI_CUBED - 0.236) < 0.001)
+
+   ✓ phiFusionScore > returns 0 for empty array 1ms
+   ✓ phiFusionScore > returns value itself for single-element input 0ms
+   × phiFusionScore > uses phi-fusion weights when no explicit weights given 3ms
+     → The expression evaluated to a falsy value:
+
+  assert(Math.abs(phiFusionScore(values) - expected) < 1e-6)
+
+   ✓ phiFusionScore > uses explicit weights when provided 1ms
+   ✓ phiFusionScore > produces value between 0 and 1 for normalized inputs 1ms
+   ✓ cslAND > returns 1 for identical vectors 1ms
+   ✓ cslAND > returns 0 for orthogonal vectors (below MINIMUM threshold) 1ms
+   × cslAND > gates below custom threshold 3ms
+     → Expected values to be strictly equal:
++ actual - expected
+
++ 0.9888353231361112
+- 0
+   ✓ cslAND > uses CSL_THRESHOLDS.MINIMUM as default 1ms
+   × placeholderVector > produces 384-dim vector by default 9ms
+     → Expected values to be strictly equal:
+
+1 !== 384
+
+   × placeholderVector > produces unit vector (magnitude ≈ 1) 3ms
+     → The expression evaluated to a falsy value:
+
+  assert(Math.abs(mag - 1) < 1e-10)
+
+   ✓ placeholderVector > is deterministic (same seed → same vector) 0ms
+   ✓ placeholderVector > produces different vectors for different seeds 0ms
+   × placeholderVector > respects custom dimensions 2ms
+     → Expected values to be strictly equal:
+
+1 !== 128
+
+ ❯ tests/headybee-template-registry.test.js (2 tests | 2 failed) 52ms
+   × headybee template registry routes > returns templates with readiness metadata 26ms
+     → argument handler must be a function
+   × headybee template registry routes > runs optimization sweep and returns projection status 12ms
+     → argument handler must be a function
+ ❯ tests/core.test.js (41 tests | 3 failed) 5735ms
+   ✓ HeadyKV > set and get a value 2ms
+   ✓ HeadyKV > returns undefined for missing key 1ms
+   ✓ HeadyKV > has() returns true for existing key, false for missing 17ms
+   ✓ HeadyKV > delete() removes a key and returns true 1ms
+   ✓ HeadyKV > delete() returns false for non-existent key 3ms
+   ✓ HeadyKV > set() overwrites existing value 0ms
+   ✓ HeadyKV > TTL expiry: value disappears after TTL elapses 101ms
+   ✓ HeadyKV > clear() removes all entries 0ms
+   ✓ HeadyKV > incr() increments a numeric value 1ms
+   ✓ HeadyKV > LRU eviction removes least-recently-used entry 1ms
+   ✓ HeadyKV > stores and retrieves complex objects 1ms
+   ✓ HeadyKV > ttl() returns remaining TTL for a key with expiry 0ms
+   ✓ HeadyKV > getOrSet() returns existing value without calling compute fn 1ms
+   ✓ HeadyKV > getOrSet() calls compute fn and stores result when key is missing 30ms
+   ✓ heady-jwt > sign() produces a three-part JWT string 50ms
+   ✓ heady-jwt > verify() returns payload for a valid token 2ms
+   ✓ heady-jwt > verify() throws on invalid signature 8ms
+   ✓ heady-jwt > verify() throws on expired token 8ms
+   ✓ heady-jwt > sign() embeds iat and exp by default when expiresIn provided 1ms
+   ✓ heady-jwt > decode() extracts payload without verifying signature 1ms
+   ✓ heady-jwt > verify() rejects a tampered token 4ms
+   ✓ heady-crypt > hash() returns a Heady hash string 6ms
+   × heady-crypt > compare() returns true for matching password 42ms
+     → headycrypt is not defined
+   × heady-crypt > compare() returns false for wrong password 38ms
+     → headycrypt is not defined
+   ✓ heady-crypt > two hashes for same password differ (salt randomness) 19ms
+   ✓ heady-crypt > getRounds() extracts the cost factor from a stored hash 19ms
+   ✓ heady-crypt > generateToken() returns a hex string of expected length 2ms
+   ✓ heady-crypt > generateApiKey() returns a prefixed string 0ms
+   × heady-crypt > hashSync() and compareSync() work synchronously 34ms
+     → headycrypt is not defined
+   ✓ HeadyScheduler > every() schedules a repeated task and calls it 169ms
+   ✓ HeadyScheduler > once() fires exactly once after delay 201ms
+   ✓ HeadyScheduler > remove() stops a scheduled task 181ms
+   ✓ HeadyScheduler > pause() and resume() control task execution 256ms
+   ✓ HeadyScheduler > list() returns registered task names 1ms
+   ✓ HeadyScheduler > cron() schedules a task by cron expression 2ms
+   ✓ heady-fetch > fetches a real URL and returns ok response  564ms
+   ✓ heady-fetch > res.json() parses JSON body 53ms
+   ✓ heady-fetch > res.body is a string for HTML response 56ms
+   ✓ heady-fetch > returns non-ok status for 404 106ms
+   ✓ heady-fetch > POST with JSON body works 68ms
+   ✓ heady-fetch > throws or rejects for invalid URL  3678ms
+[2026-03-21 12:08:55.729 -0600] [33mWARN[39m (heady-fetch): [36mheadyFetch: Request failed (attempt 4/4)[39m
+ ❯ tests/boot-smoke.test.js (9 tests | 2 failed) 211ms
+   × Boot Smoke Tests > vector-memory loads and inits 124ms
+     → vm.init is not a function
+   ✓ Boot Smoke Tests > buddy-core loads and has expected exports 20ms
+   × Boot Smoke Tests > hc-full-pipeline loads with expected interface 3ms
+     → Cannot read properties of undefined (reading 'attempts')
+   ✓ Boot Smoke Tests > buddy-watchdog loads 1ms
+   ✓ Boot Smoke Tests > config/errors loads 1ms
+   ✓ Boot Smoke Tests > utils/logger loads 0ms
+   ✓ Boot Smoke Tests > drift-detector loads 1ms
+   ✓ Boot Smoke Tests > middleware modules load 2ms
+   ✓ Boot Smoke Tests > resilience modules load 51ms
+ ❯ tests/health-service.test.js (1 test | 1 failed) 15ms
+   × local service map exposes twelve overlay services 13ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/configs/services/local-service-map.json'
+ ❯ tests/security/input-validator.test.js (24 tests | 2 failed) 48ms
+   ✓ InputValidator > SQL Injection > detects SELECT union injection 6ms
+   ✓ InputValidator > SQL Injection > detects OR 1=1 bypass 3ms
+   ✓ InputValidator > SQL Injection > detects WAITFOR DELAY timing attack 1ms
+   × InputValidator > SQL Injection > allows normal SQL-like keywords in context 19ms
+     → expected false to be true // Object.is equality
+   ✓ InputValidator > Path Traversal > detects ../etc/passwd 1ms
+   ✓ InputValidator > Path Traversal > detects URL-encoded traversal 1ms
+   ✓ InputValidator > Path Traversal > detects null byte injection 1ms
+   ✓ InputValidator > Path Traversal > allows normal file paths 0ms
+   ✓ InputValidator > SSRF > blocks localhost URLs 1ms
+   ✓ InputValidator > SSRF > blocks 169.254 cloud metadata 1ms
+   ✓ InputValidator > SSRF > blocks internal 10.x IPs 1ms
+   ✓ InputValidator > SSRF > blocks file:// protocol 1ms
+   ✓ InputValidator > SSRF > allows external HTTPS URLs 0ms
+   ✓ InputValidator > Command Injection > detects pipe to bash 1ms
+   ✓ InputValidator > Command Injection > detects backtick execution 0ms
+   ✓ InputValidator > Command Injection > detects $() subshell 0ms
+   ✓ InputValidator > XSS > detects script tags 1ms
+   ✓ InputValidator > XSS > detects javascript: URI 0ms
+   ✓ InputValidator > XSS > detects event handler injection 0ms
+   × InputValidator > Prototype Pollution > detects __proto__ key 2ms
+     → expected true to be false // Object.is equality
+   ✓ InputValidator > Prototype Pollution > detects constructor.prototype 1ms
+   ✓ InputValidator > Size & Depth Limits > rejects oversized input 1ms
+   ✓ InputValidator > Size & Depth Limits > rejects deeply nested objects 1ms
+   ✓ InputValidator > Sanitization > removes null bytes from paths 0ms
+ ❯ tests/phi-math.test.js (26 tests | 5 failed) 68ms
+   ✓ Core Constants > PHI ≈ 1.618 3ms
+   ✓ Core Constants > PSI = 1/PHI ≈ 0.618 1ms
+   ✓ Core Constants > PHI² = PHI + 1 0ms
+   × Core Constants > PHI³ = 2·PHI + 1 47ms
+     → expected undefined to be close to 4.23606797749979, received difference is NaN, but expected 5e-11
+   × Core Constants > PHI_TEMPERATURE = PSI³ ≈ 0.236 2ms
+     → expected undefined to be close to 0.23606797749978975, received difference is NaN, but expected 5e-11
+   ✓ Fibonacci > first 10 values correct 1ms
+   ✓ Fibonacci > large values correct 0ms
+   × Fibonacci > negative n throws 1ms
+     → expected function to throw an error, but it didn't
+   ✓ Fibonacci > F(n+1)/F(n) converges to PHI 0ms
+   ✓ CSL Thresholds > hierarchy: MINIMUM < LOW < MEDIUM < HIGH < CRITICAL 1ms
+   ✓ CSL Thresholds > MINIMUM ≈ 0.500 0ms
+   ✓ CSL Thresholds > MEDIUM ≈ 0.809 0ms
+   ✓ CSL Thresholds > CRITICAL ≈ 0.927 0ms
+   ✓ CSL Thresholds > DEDUP ≈ 0.972 0ms
+   × CSL Gate > gates value based on cosine score 1ms
+     → expected 0.6450185623682153 to be close to 1, received difference is 0.3549814376317847, but expected 0.05
+   ✓ CSL Gate > sigmoid is bounded [0,1] 0ms
+   ✓ Phi-Backoff > increases with attempt number 0ms
+   ✓ Phi-Backoff > respects max limit 0ms
+   ✓ Phi-Fusion Weights > 2 weights sum to 1 1ms
+   ✓ Phi-Fusion Weights > 3 weights sum to 1 0ms
+   ✓ Phi-Fusion Weights > weights are descending 0ms
+   ✓ Cosine Similarity > identical vectors = 1.0 0ms
+   ✓ Cosine Similarity > orthogonal vectors ≈ 0 0ms
+   ✓ Cosine Similarity > opposite vectors = -1.0 0ms
+   ✓ Token Budgets > phi-geometric progression 0ms
+   × Pressure Levels > non-overlapping ranges 3ms
+     → expected value must be number or bigint, received "undefined"
+ ❯ tests/mcp/tool-registry.test.js (3 tests | 1 failed) 22ms
+   ✓ MCP Tool Registry > should list registered tools 2ms
+   ✓ MCP Tool Registry > should get a specific tool 1ms
+   × MCP Tool Registry > should return undefined for unknown tool 9ms
+     → expected null to be undefined
+ ❯ tests/vector-ops.test.js (12 tests | 7 failed) 223ms
+   ✓ Vector Operations — Dimensions > Standard embedding dimension is 384 2ms
+   × Vector Operations — Dimensions > HNSW m parameter is fib(8) = 21 112ms
+     → Expected values to be strictly equal:
+
+34 !== 21
+
+   × Vector Operations — Dimensions > HNSW ef_construction is fib(12) = 144 1ms
+     → Expected values to be strictly equal:
+
+233 !== 144
+
+   × Vector Operations — Dimensions > HNSW ef_search default is fib(11) = 89 22ms
+     → Expected values to be strictly equal:
+
+144 !== 89
+
+   ✓ Vector Operations — Cosine Similarity > Identical vectors have similarity 1.0 1ms
+   ✓ Vector Operations — Cosine Similarity > Orthogonal vectors have similarity ~0 0ms
+   × Vector Operations — Hybrid Search (RRF) > RRF k parameter is fib(10) = 55 1ms
+     → Expected values to be strictly equal:
+
+89 !== 55
+
+   ✓ Vector Operations — Hybrid Search (RRF) > RRF merges two rankings correctly 1ms
+   ✓ Vector Operations — Hybrid Search (RRF) > RRF favors documents in both rankings 9ms
+   × Vector Operations — PgBouncer Config > Pool size is fib(9) = 34 1ms
+     → Expected values to be strictly equal:
+
+55 !== 34
+
+   × Vector Operations — PgBouncer Config > Max client connections is fib(12) = 233 1ms
+     → Expected values to be strictly equal:
+
+377 !== 233
+
+   × Vector Operations — PgBouncer Config > Reserve pool is fib(7) = 13 1ms
+     → Expected values to be strictly equal:
+
+21 !== 13
+
+ ❯ tests/input-validator.test.js (24 tests | 2 failed) 46ms
+   ✓ InputValidator > SQL Injection > detects SELECT union injection 5ms
+   ✓ InputValidator > SQL Injection > detects OR 1=1 bypass 3ms
+   ✓ InputValidator > SQL Injection > detects WAITFOR DELAY timing attack 1ms
+   × InputValidator > SQL Injection > allows normal SQL-like keywords in context 20ms
+     → expected false to be true // Object.is equality
+   ✓ InputValidator > Path Traversal > detects ../etc/passwd 1ms
+   ✓ InputValidator > Path Traversal > detects URL-encoded traversal 1ms
+   ✓ InputValidator > Path Traversal > detects null byte injection 1ms
+   ✓ InputValidator > Path Traversal > allows normal file paths 0ms
+   ✓ InputValidator > SSRF > blocks localhost URLs 1ms
+   ✓ InputValidator > SSRF > blocks 169.254 cloud metadata 1ms
+   ✓ InputValidator > SSRF > blocks internal 10.x IPs 1ms
+   ✓ InputValidator > SSRF > blocks file:// protocol 0ms
+   ✓ InputValidator > SSRF > allows external HTTPS URLs 0ms
+   ✓ InputValidator > Command Injection > detects pipe to bash 1ms
+   ✓ InputValidator > Command Injection > detects backtick execution 0ms
+   ✓ InputValidator > Command Injection > detects $() subshell 0ms
+   ✓ InputValidator > XSS > detects script tags 1ms
+   ✓ InputValidator > XSS > detects javascript: URI 0ms
+   ✓ InputValidator > XSS > detects event handler injection 0ms
+   × InputValidator > Prototype Pollution > detects __proto__ key 2ms
+     → expected true to be false // Object.is equality
+   ✓ InputValidator > Prototype Pollution > detects constructor.prototype 0ms
+   ✓ InputValidator > Size & Depth Limits > rejects oversized input 1ms
+   ✓ InputValidator > Size & Depth Limits > rejects deeply nested objects 1ms
+   ✓ InputValidator > Sanitization > removes null bytes from paths 0ms
+ ❯ tests/sync/state-sync.test.js (2 tests | 2 failed) 41ms
+   × State Synchronization > should sync state across devices 32ms
+     → Command failed: pwsh ./scripts/sync-state.ps1
+/bin/sh: 1: pwsh: not found
+
+   × State Synchronization > should verify sync status 7ms
+     → Command failed: pwsh ./scripts/verify-sync.ps1
+/bin/sh: 1: pwsh: not found
+
+ ❯ tests/auto-context/auto-context.test.js (13 tests | 13 failed) 135ms
+   × HeadyAutoContext — Context Assembler > ContextEnvelope > creates a frozen, immutable context envelope 66ms
+     → Cannot convert undefined or null to object
+   × HeadyAutoContext — Context Assembler > ContextEnvelope > meetsThreshold checks CSL relevance gate 1ms
+     → ContextEnvelope is not a constructor
+   × HeadyAutoContext — Context Assembler > ContextEnvelope > flatten returns all items sorted by relevance 10ms
+     → ContextEnvelope is not a constructor
+   × HeadyAutoContext — Context Assembler > ContextEnvelope > toJSON produces serializable output 1ms
+     → ContextEnvelope is not a constructor
+   × HeadyAutoContext — Context Assembler > HeadyAutoContext > assembles context from all registered sources concurrently 1ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Assembler > HeadyAutoContext > caches assemblies within TTL 9ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Assembler > HeadyAutoContext > handles source failures with circuit breaker 16ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Assembler > HeadyAutoContext > reports health metrics 14ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Assembler > CONTEXT_WEIGHTS > sums to approximately 1.0 (φ-fusion property) 2ms
+     → Cannot read properties of undefined (reading 'reduce')
+   × HeadyAutoContext — Context Assembler > CONTEXT_WEIGHTS > weights are in descending order (φ-decay) 1ms
+     → Cannot read properties of undefined (reading 'length')
+   × HeadyAutoContext — Context Injector > contextInjector > wraps a task function with automatic context assembly 2ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Injector > contextInjector > strict mode rejects tasks with insufficient context 1ms
+     → HeadyAutoContext is not a constructor
+   × HeadyAutoContext — Context Injector > QUALITY_GATES > uses φ-harmonic threshold levels 1ms
+     → Cannot read properties of undefined (reading 'PASS')
+ ❯ tests/mcp-protocol-compliance.test.js (12 tests | 12 failed) 89ms
+   × PROTOCOL A: MCP Protocol Compliance > A01: initialize returns valid handshake 77ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A03: initialized returns acknowledged 4ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A04: tools/list returns 47 tools (42 core + 5 Drupal) 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A05: tools/list supports cursor pagination 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A06: tools/call returns content array for known tool 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A07: tools/call throws for unknown tool 0ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A08: resources/list returns 4 resources 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A14: prompts/list returns 2 prompts 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A17: ping returns status ok with uptime 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A18: unknown method returns -32601 error 0ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A19: response id matches request id 1ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+   × PROTOCOL A: MCP Protocol Compliance > A20: notification (no id) returns null 0ms
+     → Cannot find module '/home/headyme/services/heady-mcp-server/src/tools/registry'
+Require stack:
+- /home/headyme/Heady/tests/mcp-protocol-compliance.test.js
+ ❯ tests/csl-gates.test.js (1 test | 1 failed) 131ms
+   × CSL gates remain phi-aligned 116ms
+     → The expression evaluated to a falsy value:
+
+  assert.ok(CSL_GATES.boost > 0.6 && CSL_GATES.boost < 0.7)
+
+ ❯ tests/security/output-scanner.test.js (18 tests | 1 failed) 90ms
+   ✓ OutputScanner > AWS Credentials > redacts AWS access key 42ms
+   ✓ OutputScanner > AWS Credentials > redacts AWS secret key 4ms
+   ✓ OutputScanner > JWT Tokens > redacts JWT token 7ms
+   ✓ OutputScanner > Bearer Tokens > redacts Bearer token 1ms
+   ✓ OutputScanner > Private Keys > redacts RSA private key 1ms
+   ✓ OutputScanner > Credit Cards > redacts valid Visa number 5ms
+   × OutputScanner > Credit Cards > skips invalid card number (fails Luhn) 21ms
+     → expected 'Number: [REDACTED:CARD]' not to contain '[REDACTED:CARD]'
+   ✓ OutputScanner > GitHub Tokens > redacts GitHub PAT 1ms
+   ✓ OutputScanner > Database URLs > redacts PostgreSQL connection string 1ms
+   ✓ OutputScanner > Database URLs > redacts MongoDB connection string 1ms
+   ✓ OutputScanner > Internal IPs > redacts 10.x.x.x addresses 0ms
+   ✓ OutputScanner > Internal IPs > redacts 192.168.x.x addresses 0ms
+   ✓ OutputScanner > Generic Secrets > redacts api_key assignments 0ms
+   ✓ OutputScanner > Object Output > handles and redacts object output 1ms
+   ✓ OutputScanner > Clean Output > passes through clean output unchanged 1ms
+   ✓ OutputScanner > Luhn Check > validates known good Visa 0ms
+   ✓ OutputScanner > Luhn Check > rejects invalid number 0ms
+   ✓ OutputScanner > Statistics > tracks scan statistics 0ms
+ ❯ tests/csl-engine.test.js (15 tests | 1 failed) 94ms
+   ✓ CSL Engine — Core Operations > AND: identical vectors have cosine ≈ 1.0 2ms
+   ✓ CSL Engine — Core Operations > AND: different vectors have cosine < 1.0 0ms
+   ✓ CSL Engine — Core Operations > AND: is commutative (AND(a,b) = AND(b,a)) 1ms
+   ✓ CSL Engine — Core Operations > OR: superposition produces valid unit vector 1ms
+   ✓ CSL Engine — Core Operations > NOT: result is orthogonal to b (dot product ≈ 0) 1ms
+   ✓ CSL Engine — Core Operations > NOT: is idempotent (NOT(NOT(a,b),b) ≈ NOT(a,b)) 4ms
+   × CSL Engine — Core Operations > GATE: high cosine passes through (value preserved) 56ms
+     → High cosine should pass, got 0.8705950816932675
+   ✓ CSL Engine — Core Operations > GATE: low cosine blocks (value suppressed) 0ms
+   ✓ CSL Engine — Core Operations > GATE: threshold levels are phi-harmonic ordered 10ms
+   ✓ CSL Engine — Phi Constants Validation > PHI * PSI = 1.0 1ms
+   ✓ CSL Engine — Phi Constants Validation > PHI^2 = PHI + 1 0ms
+   ✓ CSL Engine — Phi Constants Validation > PSI = PHI - 1 0ms
+   ✓ CSL Engine — Phi Constants Validation > CSL thresholds are within [0, 1] 0ms
+   ✓ CSL Engine — Vector Dimensions > All vectors are 384-dimensional 12ms
+   ✓ CSL Engine — Vector Dimensions > Seeded vectors are deterministic 0ms
+ ❯ tests/self-awareness.test.js (6 tests | 6 failed) 24ms
+   × Self-Awareness — Telemetry Ingestion > ingestTelemetry accepts a valid event 16ms
+     → expected [Function] to not throw an error but 'TypeError: ingestTelemetry is not a f…' was thrown
+   × Self-Awareness — Telemetry Ingestion > ingestTelemetry handles error severity 2ms
+     → expected [Function] to not throw an error but 'TypeError: ingestTelemetry is not a f…' was thrown
+   × Self-Awareness — System Assessment > assessSystemState returns confidence and context 1ms
+     → assessSystemState is not a function
+   × Self-Awareness — System Assessment > assessSystemState works without context argument 1ms
+     → assessSystemState is not a function
+   × Self-Awareness — Branding Report > getBrandingReport returns a report object 1ms
+     → getBrandingReport is not a function
+   × Self-Awareness — System Introspection > getSystemIntrospection returns full introspection 1ms
+     → getSystemIntrospection is not a function
+ ❯ tests/exponential-backoff.test.js (4 tests | 3 failed) 37ms
+   × exponential-backoff > phiDelay clamps invalid inputs to safe values 22ms
+     → phiDelay is not a function
+   × exponential-backoff > delayTable returns deterministic non-jittered progression 1ms
+     → delayTable is not a function
+   ✓ exponential-backoff > withBackoff retries and eventually succeeds 4ms
+   × exponential-backoff > createResilientFn wraps target function 1ms
+     → createResilientFn is not a function
+ ❯ tests/http-transport-liquid-os.test.js (20 tests | 18 skipped) 133ms
+   ✓ PROTOCOL E: HTTP Transport Structure > E01: HttpTransport class exports correctly 13ms
+   ✓ PROTOCOL E: HTTP Transport Structure > E_STRUCT: HttpTransport creates Express app with expected routes 0ms
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E01_LIVE: GET /health returns 200 with status and tools
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E02_LIVE: GET /tools returns all 42 tools
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E04_LIVE: POST /mcp initialize works
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E05_LIVE: POST /mcp tools/list returns 42 tools
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E09_LIVE: GET /mcp/sse returns event-stream
+   ↓ PROTOCOL E: Live HTTP Transport (requires server) > E12_LIVE: GET /.well-known/mcp.json returns discovery doc
+   ↓ PROTOCOL G: Liquid OS Integration > G01: Liquid OS manifest loads and has correct structure
+   ↓ PROTOCOL G: Liquid OS Integration > G02: Edge layer has 10+ pages projects
+   ↓ PROTOCOL G: Liquid OS Integration > G03: Origin layer service ports are defined
+   ↓ PROTOCOL G: Liquid OS Integration > G04: Auth layer has Firebase config
+   ↓ PROTOCOL G: Liquid OS Integration > G05: CMS layer has all API routes
+   ↓ PROTOCOL G: Liquid OS Integration > G06: GitHub org reference is HeadyMe
+   ↓ PROTOCOL G: Liquid OS Integration > G07: Monitoring has Sentry DSN
+   ↓ PROTOCOL G: Liquid OS Integration > G08: Compute layer has 3 Colab A100 runtimes
+   ↓ PROTOCOL G: Liquid OS Integration > G_EXTRA: Edge gateway worker configured
+   ↓ PROTOCOL G: Liquid OS Integration > G_EXTRA: Databases configured (Neon + Upstash)
+   ↓ PROTOCOL G: Liquid OS Integration > G_EXTRA: CMS uses Drupal 11 headless
+   ↓ PROTOCOL G: Liquid OS Integration > G_EXTRA: Vertex AI configured with Gemini models
+ ❯ tests/vector-memory.test.js (13 tests | 13 failed) 58ms
+   × Vector Memory — 3D Coordinate System > to3D projects embedding to 3 dimensions 16ms
+     → vm.to3D is not a function
+   × Vector Memory — 3D Coordinate System > assignZone maps 3D coords to octant zone (0-7) 1ms
+     → vm.assignZone is not a function
+   × Vector Memory — 3D Coordinate System > dist3D computes Euclidean distance 1ms
+     → vm.dist3D is not a function
+   × Vector Memory — 3D Coordinate System > getAdjacentZones returns array of adjacent zones 1ms
+     → vm.getAdjacentZones is not a function
+   × Vector Memory — Embedding > localHashEmbed produces deterministic output 5ms
+     → vm.localHashEmbed is not a function
+   × Vector Memory — Embedding > localHashEmbed produces different embeddings for different text 1ms
+     → vm.localHashEmbed is not a function
+   × Vector Memory — Cosine Similarity > identical vectors have similarity 1 4ms
+     → vm.cosineSim is not a function
+   × Vector Memory — Cosine Similarity > orthogonal vectors have similarity 0 11ms
+     → vm.cosineSim is not a function
+   × Vector Memory — Cosine Similarity > opposite vectors have similarity -1 1ms
+     → vm.cosineSim is not a function
+   × Vector Memory — Coordinate Projections > toSpherical converts to spherical coordinates 1ms
+     → vm.toSpherical is not a function
+   × Vector Memory — Coordinate Projections > toIsometric converts to isometric projection 1ms
+     → vm.toIsometric is not a function
+   × Vector Memory — Ingest & Query > ingestMemory accepts content and returns a record 9ms
+     → vm.ingestMemory is not a function
+   × Vector Memory — Ingest & Query > queryMemory returns results array 1ms
+     → vm.queryMemory is not a function
+ ❯ tests/notification-websocket.test.js (1 test | 1 failed) 11ms
+   × websocket session validation preserves bound identity 8ms
+     → createSession is not a function
+ ❯ tests/antigravity-heady-runtime.test.js (4 tests | 2 failed) 36ms
+   ✓ antigravity heady runtime > loads policy with enforced gateway/workspace settings 2ms
+   × antigravity heady runtime > owner initiated antigravity operation is enforced through heady 29ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   × antigravity heady runtime > non-owner or non-antigravity does not hard-enforce 1ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   ✓ antigravity heady runtime > health status exposes api endpoint 1ms
+ ❯ tests/projection-maintenance-ops.test.js (3 tests | 3 failed) 154ms
+   × projection maintenance ops > detectCandidates identifies cloudflare worker and tunnel surfaces 88ms
+     → expected Promise{…} to have property "staleWorkers"
+   × projection maintenance ops > detectCandidates classifies stale service-worker.js candidates 24ms
+     → expected false to be true // Object.is equality
+   × projection maintenance ops > isProtectedPath blocks critical cloud configs from pruning 1ms
+     → isProtectedPath is not a function
+{"timestamp":"2026-03-21T18:08:58.441Z","level":"info","service":"heady-manager","traceId":"8685366a-8b96-46a3-a7f0-21b38fc4adac","message":"Persistent memory preloaded - Zero-second access enabled"}
+{"timestamp":"2026-03-21T18:08:58.460Z","level":"info","service":"heady-manager","traceId":"f06a4613-f496-4644-a316-e2a2b2ba7572","message":"Full Heady cloud connectivity enabled"}
+{"timestamp":"2026-03-21T18:08:58.460Z","level":"info","service":"heady-manager","traceId":"70e2ff69-f7a0-435f-89fd-13ab1189c570","message":"ENFORCING 100% HEADY CONNECTIVITY","criticalServicesCount":2}
+{"timestamp":"2026-03-21T18:08:58.470Z","level":"info","service":"heady-manager","traceId":"2723cec3-b9d6-4a26-b699-787c423a8910","message":"CONNECTED to service","serviceName":"anthropic","endpoint":"https://api.headysystems.com/anthropic"}
+{"timestamp":"2026-03-21T18:08:58.470Z","level":"info","service":"heady-manager","traceId":"f9381196-4707-4f1a-8f8e-459f98a57a0d","message":"CONNECTED to service","serviceName":"openai","endpoint":"https://api.headysystems.com/openai"}
+ ❯ tests/unified-liquid-system.test.js (2 tests | 2 failed) 25ms
+   × unified liquid system service > buildTemplateInjectionMap generates scenario projections 9ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+   × unified liquid system service > service projection enforces unified service plane and cloud-first projection 13ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+{"timestamp":"2026-03-21T18:08:58.525Z","level":"info","service":"heady-manager","traceId":"157cffa4-a51c-431b-9de2-43b4ad7a92be","message":"Imagination Engine: ROUTES LOADED"}
+{"timestamp":"2026-03-21T18:08:58.530Z","level":"info","service":"heady-manager","traceId":"454e9203-2b08-4556-a5bc-ed79b7e6b382","message":"Secrets Manager: LOADED","secretsCount":14}
+{"timestamp":"2026-03-21T18:08:58.530Z","level":"info","service":"heady-manager","traceId":"b94a204c-36e3-4443-af89-0e4eb2bc768c","message":"Cloudflare Manager: LOADED","tokenValid":true}
+{"ts":"2026-03-21T18:08:58.581Z","level":"warn","service":"claude","domain":"claude-routes","message":"Failed to load claude-code-agent","errorMessage":"Cannot find module '../agents/claude-code-agent'\nRequire stack:\n- /home/headyme/Heady/src/routes/claude-routes.js\n- /home/headyme/Heady/heady-manager.js\n- /home/headyme/Heady/tests/api/headybuddy-config.test.js","pid":205184,"env":"test"}
+{"ts":"2026-03-21T18:08:58.582Z","level":"warn","service":"claude","domain":"claude-routes","message":"Failed to load hc_claude_agent","errorMessage":"Cannot find module '../hc_claude_agent'\nRequire stack:\n- /home/headyme/Heady/src/routes/claude-routes.js\n- /home/headyme/Heady/heady-manager.js\n- /home/headyme/Heady/tests/api/headybuddy-config.test.js","pid":205184,"env":"test"}
+{"timestamp":"2026-03-21T18:08:58.582Z","level":"info","service":"heady-manager","traceId":"744dca4f-2f45-4ba0-91ee-81615f6388f0","message":"Claude Service: ROUTES LOADED"}
+{"timestamp":"2026-03-21T18:08:58.585Z","level":"info","service":"heady-manager","traceId":"98280caf-2246-45bb-9cd9-494c711795a3","message":"VM Token Routes: LOADED"}
+{"timestamp":"2026-03-21T18:08:58.623Z","level":"info","service":"heady-manager","traceId":"e17e9214-802c-4813-acbd-1a54ab19d237","message":"HeadyMemory + AutoContext: ROUTES LOADED"}
+{"timestamp":"2026-03-21T18:08:58.650Z","level":"warn","service":"heady-manager","traceId":"36e1175d-9aca-4948-9aa8-65dea9a969b5","message":"Pipeline engine not loaded","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.710Z","level":"warn","service":"heady-manager","traceId":"a0376125-b366-4a33-b6e0-9132155b5df0","message":"Resource Manager not loaded","errorMessage":"Unexpected token 'const'"}
+{"timestamp":"2026-03-21T18:08:58.712Z","level":"info","service":"heady-manager","traceId":"4aa6f794-fe0f-4b03-9236-41c4acb7a23a","message":"Task Scheduler: LOADED"}
+ ❯ tests/cross-device-sync.test.js (4 tests | 4 failed) 95ms
+   × cross-device sync enterprise hardening > enforces auth token when enabled 10ms
+     → hub._isAuthorized is not a function
+   × cross-device sync enterprise hardening > rejects oversized messages 2ms
+     → hub._isMessageRejected is not a function
+   × cross-device sync enterprise hardening > rate limits high-volume messages per minute 1ms
+     → hub._isMessageRejected is not a function
+   × cross-device sync enterprise hardening > registerRoutes includes sync health endpoint 78ms
+     → app.delete is not a function
+{"timestamp":"2026-03-21T18:08:58.727Z","level":"info","service":"heady-manager","traceId":"fa6deb92-15be-4a69-9b2e-e22180612be9","message":"Resource Diagnostics: LOADED"}
+{"timestamp":"2026-03-21T18:08:58.735Z","level":"warn","service":"heady-manager","traceId":"4ce81808-8400-46a6-b8f3-36c1c99b3292","message":"Monte Carlo not loaded","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.748Z","level":"warn","service":"heady-manager","traceId":"d117439e-5f28-4b04-9aee-ad6fb558d3c9","message":"Pattern Engine not loaded","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.782Z","level":"info","service":"heady-manager","traceId":"fe6fe6d9-a038-4c35-a79c-e0d668ad7457","message":"Story Driver: LOADED"}
+{"timestamp":"2026-03-21T18:08:58.814Z","level":"warn","service":"heady-manager","traceId":"16fd6bbd-1de1-401b-b7fe-2c599fbc2c14","message":"Self-Critique Engine not loaded","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.845Z","level":"warn","service":"heady-manager","traceId":"a22f6011-c8d8-4825-bf0d-2262a9739511","message":"Pipeline bind failed","errorMessage":"Cannot read properties of null (reading 'bind')"}
+{"timestamp":"2026-03-21T18:08:58.874Z","level":"warn","service":"heady-manager","traceId":"851a2a54-d69e-4553-8cbe-8d64f8133ba6","message":"Auto-Success Engine not loaded","errorMessage":"require(...).createLogger is not a function"}
+{"timestamp":"2026-03-21T18:08:58.875Z","level":"warn","service":"heady-manager","traceId":"850b7744-c358-49f5-9886-893557c9c16c","message":"Improvement Scheduler not loaded","errorMessage":"Identifier 'logger' has already been declared"}
+{"timestamp":"2026-03-21T18:08:58.877Z","level":"warn","service":"heady-manager","traceId":"760c7c96-7f6f-481e-8664-5a65c77c14ba","message":"Swarm modules not loaded (non-fatal)","errorMessage":"fib is not a function"}
+{"timestamp":"2026-03-21T18:08:58.879Z","level":"warn","service":"heady-manager","traceId":"c320471a-23bf-42cc-a7f2-336521daf34f","message":"Orchestrator module not loaded (non-fatal)","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.881Z","level":"info","service":"heady-manager","traceId":"758b510c-1c4a-4af3-b6f6-082e5fa0b634","message":"Conductor module loaded"}
+{"timestamp":"2026-03-21T18:08:58.891Z","level":"info","service":"heady-manager","traceId":"3ab400e5-233e-4a60-9e52-aa02afb1bbf2","message":"Blueprint subsystems loaded","pd04Codec":true,"spatialOrchestrator":true,"liquidArchitecture":true,"resonanceRouter":true}
+{"timestamp":"2026-03-21T18:08:58.893Z","level":"warn","service":"heady-manager","traceId":"1bb9f104-0cf6-474d-968b-0bb95230020a","message":"HCSysOrchestrator not loaded","errorMessage":"Unexpected identifier 'logger'"}
+{"timestamp":"2026-03-21T18:08:58.895Z","level":"warn","service":"heady-manager","traceId":"f99d954c-309d-4ff6-9430-1ac0d61c358e","message":"HeadyBrain API not loaded","errorMessage":"Identifier 'logger' has already been declared"}
+{"timestamp":"2026-03-21T18:08:58.916Z","level":"info","service":"heady-manager","traceId":"2ecd13cc-20a7-4cce-a1a3-113640ff5bfc","message":"Aloha Protocol: LOADED (always-on)"}
+{"timestamp":"2026-03-21T18:08:58.916Z","level":"info","service":"heady-manager","traceId":"2920d09f-d08d-4f67-9807-ab66cafce02c","message":"De-Optimization Protocol: LOADED (simplicity > speed)"}
+{"timestamp":"2026-03-21T18:08:58.916Z","level":"info","service":"heady-manager","traceId":"86d01b26-9362-4edf-a84a-ddafdaeaa9bf","message":"Stability First: LOADED (the canoe must not sink)"}
+{"timestamp":"2026-03-21T18:08:58.934Z","level":"info","service":"heady-manager","traceId":"e787061a-7316-4af5-a3ae-265a50666f23","message":"HeadyBuddy Config Routes: LOADED"}
+ ❯ tests/core/auto-success-engine.test.js (2 tests | 1 failed) 30ms
+   ✓ AutoSuccessEngine > should start and run a cycle 10ms
+   × AutoSuccessEngine > should stop cleanly 18ms
+     → engine.start is not a function
+ ❯ tests/antigravity-heady-sync.test.js (1 test | 1 failed) 16ms
+   × antigravity heady sync > generates antigravity runtime state snapshot 14ms
+     → Invalid HeadyBee registry: /home/headyme/Heady/configs/services/headybee-template-registry.json
+ ❯ tests/liquid-autonomy-blueprint-files.test.js (1 test | 1 failed) 32ms
+   × liquid autonomy blueprint files > contains terraform and max-for-live receiver assets 26ms
+     → expected false to be true // Object.is equality
+ ❯ tests/liquid-autonomy-routes.test.js (3 tests | 3 failed) 79ms
+   × liquid autonomy routes > returns blueprint with dual-pipeline configuration 70ms
+     → argument handler must be a function
+   × liquid autonomy routes > queues admin trigger in full-throttle lane 4ms
+     → argument handler must be a function
+   × liquid autonomy routes > dispatches known heartbeat jobs and rejects unknown jobs 2ms
+     → argument handler must be a function
+{"timestamp":"2026-03-21T18:08:59.489Z","level":"info","service":"heady-manager","traceId":"44579be5-89aa-4ac0-8ddc-f17742b2bf57","message":"Auth Routes: LOADED"}
+{"timestamp":"2026-03-21T18:08:59.490Z","level":"info","service":"heady-manager","traceId":"0121cf7f-e3b6-45dd-95e0-844ac5b5f451","message":"Notification Service: LOADED"}
+{"timestamp":"2026-03-21T18:08:59.491Z","level":"info","service":"heady-manager","traceId":"50c912c3-cfba-45f9-a504-bc6751619c6b","message":"Analytics Service: LOADED"}
+{"timestamp":"2026-03-21T18:08:59.495Z","level":"warn","service":"heady-manager","traceId":"6551c4fb-d082-48e8-bb43-b822b6a621c0","message":"Swarm routes not loaded","errorMessage":"Cannot find module '@heady/structured-logger'\nRequire stack:\n- /home/headyme/Heady/packages/heady-bee/index.js\n- /home/headyme/Heady/src/routes/swarm-routes.js\n- /home/headyme/Heady/heady-manager.js\n- /home/headyme/Heady/tests/api/headybuddy-config.test.js"}
+{"timestamp":"2026-03-21T18:08:59.501Z","level":"info","service":"heady-manager","traceId":"03a5960d-e606-49b7-ae2d-52f59f0ace0d","message":"Scheduler Service: LOADED"}
+ ❯ tests/headyweb-server.test.js (3 tests | 3 failed) 36ms
+   × HeadyWeb server control-plane > returns control-plane map and timeout 31ms
+     → createApp is not a function
+   × HeadyWeb server control-plane > returns 503 when auth origin is unconfigured 1ms
+     → createApp is not a function
+   × HeadyWeb server control-plane > proxies chat payload to upstream manager 1ms
+     → createApp is not a function
+{"timestamp":"2026-03-21T18:08:59.509Z","level":"info","service":"heady-manager","traceId":"da636ae7-ceb3-4cd0-82ed-e6a241c8e273","message":"Branding Monitor: skipped (not exported from self-awareness module)"}
+{"timestamp":"2026-03-21T18:08:59.512Z","level":"info","service":"heady-manager","traceId":"d4cfdce8-9478-4627-8547-3958d51193d4","message":"Auto-Sync Service: STARTED","fetchInterval":"76013ms","pushRemotes":["hc-main","hs-main","headyai","azure-main"],"running":true}
+stdout | tests/api/headybuddy-config.test.js
+{"level":"info","component":"AutoCommitDeploy","msg":"AutoCommitDeploy started","ts":"2026-03-21T18:08:59.511Z","branch":"claude/heady-platform-improvements-JhdcJ","commitIntervalMs":46979,"fetchIntervalMs":76013,"pushRemotes":["hc-main","hs-main","headyai","azure-main"]}
+
+{"timestamp":"2026-03-21T18:08:59.522Z","level":"info","service":"heady-manager","traceId":"1f6236e7-c2f1-4284-ae4c-edc4425ecb18","message":"Heady Manager v4.1.0 listening","port":3301}
+{"timestamp":"2026-03-21T18:08:59.522Z","level":"info","service":"heady-manager","traceId":"38695551-028e-4084-baf5-7865bf46635e","message":"Health check available","port":3301}
+{"timestamp":"2026-03-21T18:08:59.522Z","level":"info","service":"heady-manager","traceId":"44575bef-0297-4ffa-b845-b7aaadf97e43","message":"Environment: test"}
+[2026-03-21 12:08:58.600 -0600] [32mINFO[39m (auto-fixed): [36m[heady-memory] Consolidation started: every 6.85h[39m
+ ❯ tests/api/headybuddy-config.test.js (1 test | 1 failed) 13ms
+   × HeadyBuddy Config API > should return config data 11ms
+     → app.address is not a function
+ ❯ tests/contracts.test.js (2 tests | 2 failed) 15ms
+   × session contract exposes required fields 12ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/shared/schemas/session.json'
+   × feature flag contract preserves rollout and kill switch 1ms
+     → ENOENT: no such file or directory, open '/home/headyme/Heady/shared/schemas/feature-flag.json'
+TAP version 13
+# Subtest: runtime-critical files avoid banned runtime host contamination
+not ok 1 - runtime-critical files avoid banned runtime host contamination
+  ---
+  duration_ms: 56.45442
+  location: '/home/headyme/Heady/tests/compliance-runtime.test.js:26:34'
+  failureType: 'testCodeFailure'
+  error: 'docker-compose.yml contains banned runtime host pattern /https?:\\/\\/localhost(?::\\d+)?/i'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    # HEADY_BRAND:BEGIN
+    # ╔══════════════════════════════════════════════════════════════════╗
+    # ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+    # ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+    # ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+    # ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+    # ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+    # ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+    # ║                                                                  ║
+    # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+    # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+    # ║  FILE: docker-compose.yml                                                    ║
+    # ║  LAYER: root                                                  ║
+    # ╚══════════════════════════════════════════════════════════════════╝
+    # HEADY_BRAND:END
+    #
+    # Default compose file — starts heady-manager with persistent volumes.
+    # Usage: docker compose up -d
+    
+    services:
+      heady-manager:
+        build: .
+        ports:
+          - "3300:3300"
+        environment:
+          - NODE_ENV=production
+          - PORT=3300
+          - DATABASE_URL=${DATABASE_URL:-}
+          - REDIS_URL=${REDIS_URL:-}
+          - HEADY_API_KEY=${HEADY_API_KEY:-}
+          - ADMIN_TOKEN=${ADMIN_TOKEN:-}
+          - RENDER_API_KEY=${RENDER_API_KEY:-}
+          - HF_TOKEN=${HF_TOKEN:-}
+          - USE_HEADY_MANAGER=${USE_HEADY_MANAGER:-true}
+          - HEADY_TARGET=${HEADY_TARGET:-CloudOnly}
+        healthcheck:
+          test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
+          interval: 30s
+          timeout: 10s
+          retries: 3
+          start_period: 40s
+        hostname: heady-manager
+        networks:
+          heady-net:
+            aliases:
+              - heady-manager
+        volumes:
+          - heady-data:/app/data
+          - heady-logs:/app/logs
+          - heady-cache:/app/.cache
+        restart: unless-stopped
+        logging:
+          driver: "json-file"
+          options:
+            max-size: "10m"
+            max-file: "3"
+    
+      heady:
+        image: python:3.11-alpine
+        container_name: Heady
+        command: python3 -m http.server 8000
+        networks:
+          - heady-net
+    
+    networks:
+      heady-net:
+        driver: bridge
+    
+    volumes:
+      heady-data:
+        driver: local
+      heady-logs:
+        driver: local
+      heady-cache:
+        driver: local
+    
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/compliance-runtime.test.js:25:14)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+# Subtest: root package scripts cover local stack workflows
+not ok 2 - root package scripts cover local stack workflows
+  ---
+  duration_ms: 2.097316
+  location: '/home/headyme/Heady/tests/compliance-runtime.test.js:35:34'
+  failureType: 'testCodeFailure'
+  error: 'missing compose:up'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/compliance-runtime.test.js:33:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+TAP version 13
+# Subtest: expanded pages and contracts exist
+not ok 1 - expanded pages and contracts exist
+  ---
+  duration_ms: 15.540451
+  location: '/home/headyme/Heady/tests/expansion_assets_presence.test.js:25:34'
+  failureType: 'testCodeFailure'
+  error: 'missing /home/user/workspace/heady-system-build/apps/pricing/index.html'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/expansion_assets_presence.test.js:23:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+TAP version 13
+# Subtest: root docs and knowledge base exist
+not ok 1 - root docs and knowledge base exist
+  ---
+  duration_ms: 37.999775
+  location: '/home/headyme/Heady/tests/docs_presence.test.js:10:34'
+  failureType: 'testCodeFailure'
+  error: 'missing /home/user/workspace/heady-system-build/CHANGES.md'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/docs_presence.test.js:17:39)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+stdout | tests/pipeline-validation.test.js
+
+── PIPELINE STRUCTURE TESTS ─────────────────────────────────────────────────
+
+── PHI-TIMEOUT COMPLIANCE TESTS ─────────────────────────────────────────────
+
+── PHI-BACKOFF COMPLIANCE TESTS ─────────────────────────────────────────────
+
+── POOL SIZE TESTS ──────────────────────────────────────────────────────────
+
+── STAGE STEP TESTS ─────────────────────────────────────────────────────────
+
+── PIPELINE VARIANT TESTS ───────────────────────────────────────────────────
+
+── COGNITIVE CONFIG TESTS ───────────────────────────────────────────────────
+
+── LAW FILE TESTS ───────────────────────────────────────────────────────────
+
+── DEPRECATION MANIFEST TESTS ───────────────────────────────────────────────
+
+── CANONICAL VERSION MAP TESTS ──────────────────────────────────────────────
+
+── CROSS-FILE CONSISTENCY TESTS ─────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────
+
+FAILED TESTS:
+
+  ✗ Exactly 21 stages exist
+      Expected 21 stages, found 22
+
+22 !== 21
+ — actual: 22, expected: 21
+  ✗ Stage IDs are kebab-case (lowercase, hyphens only)
+      Stage id "stage_channel_entry" is not valid kebab-case — actual: "stage_channel_entry", expected: {}
+  ✗ Required stages have required === true
+      Required stage "channel-entry" not found — actual: undefined, expected: true
+  ✗ pipeline.stageCount matches actual stage array length
+      pipeline.stageCount=undefined but stages array has 22 entries
+
+undefined !== 22
+ — actual: undefined, expected: 22
+  ✗ Every stage timeout is a canonical φ-derived value
+      Stage "stage_orchestrate" has non-canonical timeout 120000. Allowed values: 4236, 6854, 11090, 17944, 29034, 46979 — actual: false, expected: true
+  ✗ No forbidden arbitrary timeouts appear in stage definitions
+      Stage "stage_orchestrate" uses forbidden arbitrary timeout 120000 — actual: false, expected: true
+  ✗ Total pipeline timeout (maxDuration) is φ⁹ × 1000 rounded = 76013
+      pipeline.maxDuration expected 76013, got 300000
+
+300000 !== 76013
+ — actual: 300000, expected: 76013
+  ✗ pipeline.maxDuration matches PHI_POWERS[9] = 76013
+      Expected values to be strictly equal:
+
+300000 !== 76013
+ — actual: 300000, expected: 76013
+  ✗ All per-step inline timeouts are ≤ their parent stage timeout
+      Step "scan_vector_storage" in stage "stage_channel_entry": param.timeout=5000 exceeds stage timeout 4236 — actual: 5000, expected: "≤ 4236"
+  ✗ timeouts config section phi9_pipeline_total equals 76013
+      timeouts.phi9_pipeline_total should be 76013
++ actual - expected
+
++ undefined
+- 76013 — actual: undefined, expected: 76013
+  ✗ timeouts config section phi4_medium equals 6854
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 6854 — actual: undefined, expected: 6854
+  ✗ timeouts config section phi5_introspection equals 11090
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 11090 — actual: undefined, expected: 11090
+  ✗ timeouts config section phi6_heavy equals 17944
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 17944 — actual: undefined, expected: 17944
+  ✗ timeouts config section phi7_very_heavy equals 29034
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 29034 — actual: undefined, expected: 29034
+  ✗ timeouts config section phi8_extreme equals 46979
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 46979 — actual: undefined, expected: 46979
+  ✗ retryPolicy.multiplier ≈ 1.618 (within 0.001 tolerance)
+      retryPolicy.multiplier: expected ≈1.618 (tolerance ±0.001), got undefined (diff NaN) — actual: false, expected: true
+  ✗ retryPolicy.sequence matches [1000, 1618, 2618]
+      retryPolicy.sequence expected [1000, 1618, 2618], got undefined
++ actual - expected
+
++ undefined
+- [
+-   1000,
+-   1618,
+-   2618
+- ] — actual: undefined, expected: [1000,1618,2618]
+  ✗ errorHandling.onStageFailure retryPolicy.multiplier ≈ 1.618
+      Cannot read properties of undefined (reading 'multiplier')
+  ✗ errorHandling.onStepFailure retryPolicy.sequence matches [1000, 1618, 2618]
+      Cannot read properties of undefined (reading 'sequence')
+  ✗ retryPolicy.baseMs === 1000
+      Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 1000 — actual: undefined, expected: 1000
+  ✗ retryPolicy.jitterFactor ≈ 0.382 (ψ²)
+      retryPolicy.jitterFactor: expected ≈0.382 (tolerance ±0.001), got undefined (diff NaN) — actual: false, expected: true
+  ✗ bee_workers.ttl is a Fibonacci number
+      bee_workers.ttl=300 is not in FIB: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377 — actual: false, expected: true
+  ✗ cost_usd.max is a Fibonacci number
+      cost_usd.max=10 is not in FIB: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377 — actual: false, expected: true
+  ✗ Every step has id, name, node, and action fields
+      Step "capture_trace" in stage "stage_distill" is missing or empty field: node — actual: false, expected: true
+  ✗ Every step.node references a known Heady node
+      Step "resolve_channel" in stage "stage_channel_entry" references unknown node "HeadyBuddy". Known nodes: HeadyConductor, HeadySoul, HeadyBrains, HeadyVinci, HeadyMemory, HeadyArena, HeadyBee, HeadyGovernance, HeadyGuard, HeadyHealth, HeadyDeepScan, HeadyPerplexity, HeadyAutobiographer — actual: false, expected: true
+  ✗ All step.action fields are non-empty strings
+      Step "capture_trace" in stage "stage_distill" has invalid action: undefined — actual: false, expected: true
+  ✗ Exactly 4 variants exist: fast_path, full_path, arena_path, learning_path
+      Cannot convert undefined or null to object
+  ✗ full_path contains all 21 stage numbers (0-20)
+      Cannot read properties of undefined (reading 'full_path')
+  ✗ fast_path stages are a subset of full_path stages
+      Cannot read properties of undefined (reading 'full_path')
+  ✗ arena_path stages are a subset of full_path stages
+      Cannot read properties of undefined (reading 'full_path')
+  ✗ learning_path stages are a subset of full_path stages
+      Cannot read properties of undefined (reading 'full_path')
+  ✗ All variant stage numbers are valid integers in range 0-20
+      Cannot convert undefined or null to object
+  ✗ Every variant has stages, description, riskLevel, and estimatedMs fields
+      Cannot convert undefined or null to object
+  ✗ fast_path has fewer stages than full_path (is a genuine shortcut)
+      Cannot read properties of undefined (reading 'fast_path')
+  ✗ cognitive_architecture version is "3.0.0"
+      cognitive_architecture.version expected "3.0.0", got "3.2.3"
++ actual - expected
+
++ '3.2.3'
+- '3.0.0'
+     ^ — actual: "3.2.3", expected: "3.0.0"
+  ✗ CRITICAL layers have min_confidence === 0.618
+      CRITICAL layer "owl_wisdom" min_confidence: expected ≈0.618 (tolerance ±0.001), got 0.691 (diff 0.07299999999999995) — actual: false, expected: true
+  ✗ HIGH layers have min_confidence === 0.500
+      HIGH layer "ant_task" min_confidence: expected ≈0.5 (tolerance ±0.001), got 0.691 (diff 0.19099999999999995) — actual: false, expected: true
+  ✗ Every law has a spec_file field
+      Law "1_thoroughness_over_speed" is missing or has empty spec_file field — actual: false, expected: true
+  ✗ Every law has enforcement, overridable, and description fields
+      Law "1_thoroughness_over_speed" is missing field: description — actual: false, expected: true
+  ✗ csl_thresholds section exists with MINIMUM, LOW, MEDIUM, HIGH, CRITICAL
+      csl_thresholds section is missing — actual: undefined, expected: true
+  ✗ csl_thresholds values are ordered: MINIMUM < LOW < MEDIUM < HIGH < CRITICAL
+      Cannot read properties of undefined (reading 'MINIMUM')
+  ✗ resource_allocation percentages sum to ≈ 81 (34+21+13+8+5)
+      Cannot read properties of undefined (reading 'hot_pool_pct')
+  ✗ resource_allocation values match Fibonacci-ratio percentages: 34, 21, 13, 8, 5
+      Cannot read properties of undefined (reading 'hot_pool_pct')
+  ✗ scale.auto_success_cycle_ms === 30000 (30-second heartbeat)
+      Expected values to be strictly equal:
+
+29034 !== 30000
+ — actual: 29034, expected: 30000
+  ✗ pipeline phiRef.phi matches cognitive_architecture phi_constants.phi
+      Cannot read properties of undefined (reading 'phi')
+  ✗ pipeline phiRef.psi matches cognitive_architecture phi_constants.inverse_phi
+      Cannot read properties of undefined (reading 'psi')
+  ✗ Number of stages in full_path equals total stages array length
+      Cannot read properties of undefined (reading 'full_path')
+  ✗ cognitive_architecture laws spec_file paths reference recognizable LAW files
+      Cannot read properties of undefined (reading 'startsWith')
+  ✗ pipeline cslGates MINIMUM and LOW match cognitive csl_thresholds
+      Cannot read properties of undefined (reading 'MINIMUM')
+  ✗ pipeline cslGates CRITICAL matches cognitive csl_thresholds.CRITICAL
+      Cannot read properties of undefined (reading 'CRITICAL')
+
+PIPELINE VALIDATION: 47/97 tests passed
+✗ 50 test(s) failed. Review failures above and correct config files.
+────────────────────────────────────────────────────────────────────────────────
+
+
+TAP version 13
+# Subtest: docker-compose defines all 50 services plus collector
+stdout | tests/scaling.test.js
+
+=== Scaling Pattern Tests ===
+
+not ok 1 - docker-compose defines all 50 services plus collector
+  ---
+  duration_ms: 129.585303
+  location: '/home/headyme/Heady/tests/infrastructure-artifacts.test.js:14:34'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 51
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 51
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/infrastructure-artifacts.test.js:12:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+# Subtest: CI workflow and env example exist
+ok 2 - CI workflow and env example exist
+  ---
+  duration_ms: 50.117257
+  ...
+TAP version 13
+# Subtest: service index lists 50 services with health endpoints
+not ok 1 - service index lists 50 services with health endpoints
+  ---
+  duration_ms: 57.198624
+  location: '/home/headyme/Heady/tests/service-index.test.js:14:34'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    220 !== 50
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 50
+  actual: 220
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/headyme/Heady/tests/service-index.test.js:11:10)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+TAP version 13
+# Subtest: all sites have index, robots, and sitemap artifacts
+ok 1 - all sites have index, robots, and sitemap artifacts
+  ---
+  duration_ms: 21.874358
+  ...
+# Subtest: auth relay contains origin allowlist and nonce echo
+ok 2 - auth relay contains origin allowlist and nonce echo
+  ---
+  duration_ms: 6.747565
+  ...
+stdout | tests/services.test.js
+
+=== Service Export Tests ===
+
+stdout | tests/shared.test.js
+
+=== Shared Module Tests ===
+  ✓ PHI constants verified
+
+TAP version 13
+# Subtest: auto-context bridge avoids browser storage references
+not ok 1 - auto-context bridge avoids browser storage references
+  ---
+  duration_ms: 73.777514
+  location: '/home/headyme/Heady/tests/storage_policy.test.js:10:34'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/home/user/workspace/heady-system-build/packages/auto-context/auto-context-bridge.js'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:448:20)
+    TestContext.<anonymous> (/home/headyme/Heady/tests/storage_policy.test.js:7:28)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+    processTicksAndRejections (node:internal/process/task_queues:95:5)
+  ...
+TAP version 13
+{"timestamp":"2026-03-21T18:09:06.095Z","level":"info","module":"integration-tests","msg":"Heady Integration Test Suite starting","baseUrl":"http://localhost","phi":1.618033988749895}
+{"timestamp":"2026-03-21T18:09:06.105Z","level":"info","module":"integration-tests","msg":"=== Phi-Math Integrity Tests ==="}
+{"timestamp":"2026-03-21T18:09:06.106Z","level":"info","module":"integration-tests","test":"PhiMath: Golden ratio identity φ² = φ + 1","status":"PASS","duration":0,"msg":"Test passed"}
+{"timestamp":"2026-03-21T18:09:06.106Z","level":"info","module":"integration-tests","test":"PhiMath: Conjugate identity 1/φ = φ - 1","status":"PASS","duration":0,"msg":"Test passed"}
+{"timestamp":"2026-03-21T18:09:06.107Z","level":"info","module":"integration-tests","test":"PhiMath: Fibonacci convergence","status":"PASS","duration":1,"msg":"Test passed"}
+{"timestamp":"2026-03-21T18:09:06.108Z","level":"info","module":"integration-tests","test":"PhiMath: Backoff sequence follows φ-scaling","status":"PASS","duration":1,"msg":"Test passed"}
+{"timestamp":"2026-03-21T18:09:06.116Z","level":"info","module":"integration-tests","test":"PhiMath: Service ports are in valid range","status":"PASS","duration":8,"msg":"Test passed"}
+{"timestamp":"2026-03-21T18:09:06.116Z","level":"info","module":"integration-tests","msg":"=== Service Health Tests ==="}
+{"timestamp":"2026-03-21T18:09:06.376Z","level":"error","module":"integration-tests","test":"Health: auth-session (port 3310)","status":"FAIL","duration":260,"error":"fetch failed","msg":"Test failed"}
+
+╔══════════════════════════════════════════════════════════════╗
+║  Heady™ Middleware & Security Integration Tests             ║
+╚══════════════════════════════════════════════════════════════╝
+
+  ✓ AppError.badRequest creates 400
+  ✓ AppError.unauthorized creates 401
+  ✓ AppError.tooManyRequests creates 429
+  ✓ AppError.toJSON excludes stack
+  ✓ loadConfig with JWT_SECRET succeeds
+  ✓ loadConfig without JWT_SECRET throws in production
+  ✗ validateInput accepts clean input: validateInput is not a function
+  ✗ validateInput detects XSS: validateInput is not a function
+  ✗ validateInput detects SQL injection: validateInput is not a function
+  ✗ validateInput rejects oversized input: validateInput is not a function
+  ✗ MAX_INPUT_LENGTH is fib(17) = 1597: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 1597
+  ✗ MAX_JSON_DEPTH is fib(7) = 13: Expected values to be strictly equal:
+
+undefined !== 13
+
+  ✗ MAX_ARRAY_ITEMS is fib(14) = 377: Expected values to be strictly equal:
+
+undefined !== 377
+
+  ✗ SecretManager.get returns env value: Expected values to be strictly equal:
++ actual - expected
+
++ null
+- 'test-value'
+  ✗ SecretManager.require throws on missing: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'HEADY-SECRET-MISSING'
+  ✓ withRetry succeeds on first try
+  ✓ isTransientHttpError identifies 503
+
+════════════════════════════════════════════════════════════
+  Results: 8 passed, 9 failed
+════════════════════════════════════════════════════════════
+
+TAP version 13
+TAP version 13
+TAP version 13
+ ✓ tests/unit/hc-full-pipeline-v2.test.js (25 tests) 146ms
+TAP version 13
+ ✓ tests/core-auto-success.test.js (14 tests) 710ms
+stdout | tests/buddy-system.test.js > buddy-system > passes all checks
+=== Buddy System Tests ===
+✓ Instantiation: running, zero ingestions
+✓ Ingest: id=file-1, X=-0.65, Y=0.95, Z=0.1667
+✓ Batch ingest: 3 items, total ingested=4
+✓ Spatial ordering: CSS.x > Dockerfile.x, Architecture.z > Dockerfile.z
+✓ Context query: 3 results, X=-0.5
+✓ Nearest retrieval: 2 items
+✓ Trajectory prediction: X=0.000, Y=0.550, Z=0.450
+
+stdout | tests/buddy-system.test.js > buddy-system > passes all checks
+✓ Pre-fetch: 0 blocks pushed to cache
+✓ Temporal decay: pruned=0, remaining=4
+✓ Cache stats: mode=in-memory, writes=4, hitRate=N/A
+✓ Stop: running=false
+✅ buddy-system: ALL PASS
+
+ ✓ tests/buddy-system.test.js (1 test) 216ms
+ ✓ tests/qa.test.js (4 tests) 420ms
+ ✓ tests/e2e/mcp-sse.test.js (2 tests) 814ms
+   ✓ MCP SSE End-to-End > /sse endpoint accepts connection  668ms
+ ✓ tests/resilience.test.js (32 tests) 245ms
+ ✓ tests/unit/heady-conductor-v2.test.js (21 tests) 111ms
+ ✓ tests/headycoin-core.test.js (41 tests) 798ms
+[2026-03-21 12:09:09.825 -0600] [32mINFO[39m: [36m🪙 [HeadyCoin] Performing genesis mint...[39m
+    [35mcomponent[39m: "system"
+[2026-03-21 12:09:09.897 -0600] [32mINFO[39m: [36m🪙 [HeadyCoin] Genesis complete. 2,100,000 HDY → TREASURY[39m
+    [35mcomponent[39m: "system"
+ ✓ tests/self-healing/self-healing.test.js (13 tests) 102ms
+ ✓ tests/hc-full-pipeline.test.js (31 tests) 41ms
+ ✓ tests/integration/full-pipeline.test.js (10 tests) 54ms
+ ✓ tests/headyweb/workspace-store.test.js (1 test) 66ms
+ ✓ tests/unit/monte-carlo-optimizer.test.js (9 tests) 104ms
+ ✓ tests/buddy-core.realtime.test.js (4 tests) 94ms
+ ✓ tests/realtime-intelligence.test.js (9 tests) 10ms
+ ✓ tests/packages/pd04-codec.test.js (26 tests) 87ms
+ ✓ tests/unit/task-decomposition-engine.test.js (15 tests) 93ms
+ ✓ tests/vector-projection-orchestrator.test.js (4 tests) 23ms
+ ✓ tests/shared-config.test.js (4 tests) 2519ms
+   ✓ packages/shared config > parseOrigins returns an empty list when input is not provided  620ms
+   ✓ packages/shared config > getConfig uses localhost defaults in development when CORS_ORIGINS is empty  808ms
+   ✓ packages/shared config > getConfig does not allow localhost defaults in production when CORS_ORIGINS is empty  664ms
+   ✓ packages/shared config > getConfig always prefers explicit CORS_ORIGINS values  421ms
+stdout | tests/spatial-embedder.test.js > spatial-embedder > passes all checks
+=== Spatial Embedder Tests ===
+✓ Backend code: X=-0.65 (negative = backend)
+✓ Frontend code: X=0.9833 (positive = frontend)
+✓ UI/CSS code: X=1
+✓ Temporal: recent=0.95 > old=0.1
+✓ Deprecated content: Y=0.1
+✓ Hierarchy: architectural Z=1 > literal Z=0
+✓ Receipt stable: 8c005c75f6b75535...
+✓ Batch: 2 items, Dockerfile X=-1 < CSS X=1
+✅ spatial-embedder: ALL PASS
+
+ ✓ tests/spatial-embedder.test.js (1 test) 31ms
+ ✓ tests/rate-limiter.test.js (15 tests) 88ms
+[2026-03-21 12:09:11.943 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: researcher[39m
+[2026-03-21 12:09:11.944 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: coder[39m
+[2026-03-21 12:09:11.959 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: worker-1[39m
+[2026-03-21 12:09:11.959 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: worker-2[39m
+[2026-03-21 12:09:11.959 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: worker-3[39m
+[2026-03-21 12:09:11.960 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: slow-bee[39m
+[2026-03-21 12:09:12.047 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: fail-bee[39m
+[2026-03-21 12:09:12.050 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: admin-bee[39m
+[2026-03-21 12:09:12.050 -0600] [32mINFO[39m: [36m[Conductor] ⚡ GOD MODE dispatch: admin-task[39m
+[2026-03-21 12:09:12.082 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: bee-1[39m
+[2026-03-21 12:09:12.082 -0600] [32mINFO[39m: [36m[Conductor] Registered bee: bee-2[39m
+ ✓ tests/integration/swarm-coordination.test.js (6 tests) 145ms
+ ✓ tests/packages/liquid-architecture.test.js (22 tests) 65ms
+ ✓ tests/core-pipeline-engine.test.js (15 tests) 28ms
+ ✓ tests/security/rate-limiter.test.js (15 tests) 85ms
+ ✓ tests/heady-maintenance-ops.test.js (4 tests) 59ms
+ ✓ tests/deterministic-embedding-bootstrap.test.js (2 tests) 38ms
+ ✓ tests/headybee-registry-optimizer.test.js (1 test) 10ms
+ ✓ tests/liquid-autonomy-controller.test.js (7 tests) 44ms
+ ✓ tests/security/zero-trust-sandbox.test.js (11 tests) 117ms
+ ✓ tests/packages/resonance-router.test.js (27 tests) 39ms
+ ✓ tests/deterministic-prompts.test.js (33 tests) 48ms
+ ✓ tests/security/rbac-manager.test.js (17 tests) 18ms
+ ✓ tests/packages/spatial-orchestrator.test.js (19 tests) 37ms
+stdout | tests/octree-manager.test.js > octree-manager > passes all checks
+=== Octree Manager Tests ===
+✓ Insert 5 items, size=5
+✓ Range query (backend quadrant): 3 items
+✓ Radius query (r=0.3 near center): 1 items, includes shared-config
+✓ Nearest-2 to (-0.5,0.3,0.2): [a, d]
+✓ Remove: size=4, d removed
+✓ Re-insert: replaced, size unchanged
+✓ Stats: items=4, maxDepth=6
+✓ Clear: size=0
+✓ Stress test: 100 items inserted, radius query returned 12
+✅ octree-manager: ALL PASS
+
+ ✓ tests/octree-manager.test.js (1 test) 70ms
+{"timestamp":"2026-03-21T18:09:14.031Z","level":"info","service":"liquid-state","traceId":"7d7ea1fa-4504-491e-988b-9eae0d08c6b5","message":"Registered target cloud-run as LATENT","type":"container","tier":1}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"72399427-8108-4554-be42-0effa5efffe0","message":"Registered target cloudflare-edge as LATENT","type":"network-projection","tier":1}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"6fc12b33-873d-493a-a6e5-f57066f8a877","message":"Registered target github-monorepo as LATENT","type":"code-projection","tier":1}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"f865b168-5c96-42a5-b8d9-22243c78caa8","message":"Registered target huggingface-spaces as LATENT","type":"frontend-projection","tier":2}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"0daa64a0-d271-4430-a6d1-e1f5498e246c","message":"Registered target colab-notebooks as LATENT","type":"compute-projection","tier":2}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"5d6f4837-93ce-404c-9f81-99d3f98085eb","message":"Registered target local-dev as LATENT","type":"dev-projection","tier":3}
+{"timestamp":"2026-03-21T18:09:14.033Z","level":"info","service":"liquid-state","traceId":"39d6074f-4e43-4b5c-a8f7-53f8c7fa63e6","message":"Liquid State Manager booted: 6 targets registered"}
+{"timestamp":"2026-03-21T18:09:14.038Z","level":"info","service":"liquid-state","traceId":"59049eef-1789-4914-9d21-2152a9bedab5","message":"cloud-run: LATENT → MATERIALIZING","reason":"materialize"}
+{"timestamp":"2026-03-21T18:09:14.038Z","level":"info","service":"liquid-state","traceId":"5954e433-27e7-4bc1-bd81-7e9a28a64807","message":"cloud-run: MATERIALIZING → PROJECTED","reason":"projected"}
+{"timestamp":"2026-03-21T18:09:14.041Z","level":"info","service":"liquid-state","traceId":"0357fab5-07c3-480a-be58-64abacdde988","message":"huggingface-spaces: LATENT → MATERIALIZING","reason":"materialize"}
+{"timestamp":"2026-03-21T18:09:14.042Z","level":"info","service":"liquid-state","traceId":"35db3994-385e-40b5-9a6e-49b82353add9","message":"huggingface-spaces: MATERIALIZING → PROJECTED","reason":"projected"}
+{"timestamp":"2026-03-21T18:09:14.043Z","level":"info","service":"liquid-state","traceId":"0fd00052-cd3b-455e-b749-d63a95ae60b3","message":"huggingface-spaces: PROJECTED → STALE","reason":"test"}
+{"timestamp":"2026-03-21T18:09:14.044Z","level":"info","service":"liquid-state","traceId":"d4bd63aa-72cc-4dfe-a338-b3252382218f","message":"huggingface-spaces: STALE → PRUNED","reason":"cleanup"}
+{"timestamp":"2026-03-21T18:09:14.045Z","level":"info","service":"liquid-state","traceId":"fefc0bff-d7b8-4415-b621-b96282fb554a","message":"huggingface-spaces: PRUNED → LATENT","reason":"reactivated"}
+{"timestamp":"2026-03-21T18:09:14.046Z","level":"warn","service":"liquid-state","traceId":"7ef0f755-fd14-40e7-861c-df474d5a47b4","message":"Invalid transition LATENT → PROJECTED for local-dev"}
+ ✓ tests/liquid-state-manager.test.js (7 tests) 26ms
+ ✓ tests/unit/swarm-consensus-v2.test.js (11 tests) 27ms
+ ✓ tests/e2e/grant-writing.test.js (5 tests) 44ms
+ ✓ tests/audit-logger.test.js (17 tests) 92ms
+ ✓ tests/heady-conductor-lifecycle.test.js (3 tests) 98ms
+ ✓ tests/security/audit-logger.test.js (17 tests) 31ms
+ ✓ tests/integration/liquid-node-base.test.js (1 test) 111ms
+ ✓ tests/cache-store.test.js (1 test) 8ms
+ ✓ tests/integration/infrastructure.test.js (1 test) 46ms
+ ✓ tests/rbac-manager.test.js (17 tests) 173ms
+ ✓ tests/onboarding-orchestrator.test.js (20 tests) 34ms
+ ✓ tests/unit/semantic-backpressure.test.js (6 tests) 98ms
+{"ts":"2026-03-21T18:09:15.818Z","level":"info","service":"cross-domain-auth","msg":"Relay code generated","userId":"user_1","sourceDomain":"headyme.com","expiresMs":11090}
+{"level":"info","test":"generateRelayCode returns code and nonce","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.848Z","level":"info","service":"cross-domain-auth","msg":"Relay code generated","userId":"user_2","sourceDomain":"heady-ai.com","expiresMs":11090}
+{"level":"info","test":"generateRelayCode TTL uses PHI_TIMING.PHI_5","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.848Z","level":"info","service":"cross-domain-auth","msg":"Relay code generated","userId":"user_3","sourceDomain":"headyme.com","expiresMs":11090}
+{"ts":"2026-03-21T18:09:15.849Z","level":"info","service":"cross-domain-auth","msg":"Relay code consumed","userId":"user_3","sourceDomain":"headyme.com"}
+{"level":"info","test":"consumeRelayCode succeeds with valid code and nonce","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.849Z","level":"info","service":"cross-domain-auth","msg":"Relay code generated","userId":"user_4","sourceDomain":"headyme.com","expiresMs":11090}
+{"ts":"2026-03-21T18:09:15.849Z","level":"info","service":"cross-domain-auth","msg":"Relay code consumed","userId":"user_4","sourceDomain":"headyme.com"}
+{"ts":"2026-03-21T18:09:15.849Z","level":"warn","service":"cross-domain-auth","msg":"Relay code replay attempt","userId":"user_4"}
+{"level":"info","test":"consumeRelayCode fails on second use (replay protection)","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.850Z","level":"info","service":"cross-domain-auth","msg":"Relay code generated","userId":"user_5","sourceDomain":"headyme.com","expiresMs":11090}
+{"ts":"2026-03-21T18:09:15.850Z","level":"warn","service":"cross-domain-auth","msg":"Relay code nonce mismatch","userId":"user_5"}
+{"level":"info","test":"consumeRelayCode fails with wrong nonce","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.851Z","level":"warn","service":"cross-domain-auth","msg":"Relay code not found"}
+{"level":"info","test":"consumeRelayCode fails for unknown code","status":"PASS"}
+{"level":"info","test":"checkLockout returns unlocked for new identifier","status":"PASS"}
+{"ts":"2026-03-21T18:09:15.852Z","level":"warn","service":"cross-domain-auth","msg":"Relay lockout triggered","identifier":"lockout_test_user_1774116555852","attempts":8}
+{"level":"info","test":"recordFailedAttempt triggers lockout after MAX_RELAY_ATTEMPTS","status":"PASS"}
+{"level":"info","test":"generatePKCE returns verifier, challenge, and method","status":"PASS"}
+{"level":"info","test":"generatePKCE produces unique pairs","status":"PASS"}
+{"level":"info","test":"evaluateAuthConfidence allows with all factors true","status":"PASS"}
+{"level":"info","test":"evaluateAuthConfidence denies with all factors false","status":"PASS"}
+{"level":"info","test":"evaluateAuthConfidence allows with token + fingerprint only","status":"PASS"}
+{"level":"info","test":"evaluateAuthConfidence threshold is CSL_THRESHOLDS.LOW","status":"PASS"}
+{"level":"error","test":"generateBridgeHTML returns valid HTML","status":"FAIL","error":"should include canonical domains"}
+{"level":"info","test":"generateBridgeHTML includes session status","status":"PASS"}
+{"level":"info","suite":"cross-domain-auth","passed":15,"total":16,"status":"SOME_FAIL"}
+ ✓ tests/zero-trust-sandbox.test.js (11 tests) 46ms
+ ✓ tests/unit/cross-domain-auth.test.js (1 test) 4ms
+ ✓ tests/unified-runtime-orchestrator.test.js (5 tests) 77ms
+ ✓ tests/integration/service-mesh.test.js (1 test) 83ms
+stdout | tests/heady-autocomplete.test.js
+
+📐 TaskDAGBuilder Tests
+
+🔍 VerificationEngine Tests
+
+stdout | tests/heady-autocomplete.test.js
+
+📦 ExecutionSandbox Tests
+
+ ✓ tests/projection-integrity-report.test.js (1 test) 19ms
+stdout | tests/heady-autocomplete.test.js
+
+💾 TaskStateStore Tests
+
+stdout | tests/heady-autocomplete.test.js
+
+🚀 HeadyAutoComplete Smoke Tests
+
+═══════════════════════════════════════
+  HeadyAutoComplete Test Results
+═══════════════════════════════════════
+  ✅ DAGNode creates with correct properties
+  ✅ TaskDAG adds nodes and tracks count
+  ✅ TaskDAG.getReadyNodes returns nodes with satisfied deps
+  ✅ TaskDAG.topologicalSort detects cycles
+  ✅ TaskDAG.topologicalSort returns valid order
+  ✅ TaskDAG.serialize/deserialize roundtrip
+  ✅ TaskDAG.maxParallelism calculates correctly
+  ✅ verify not_empty passes on non-empty string
+  ✅ verify not_empty fails on empty string
+  ✅ verify json_valid passes on valid JSON
+  ✅ verify json_valid fails on invalid JSON
+  ✅ verify contains passes when substring found
+  ✅ verify contains fails when substring missing
+  ✅ verify file_exists passes for existing file
+  ✅ verify file_exists fails for missing file
+  ✅ verify command passes for echo
+  ✅ verify null contract passes
+  ✅ sandbox creates an isolated directory
+  ✅ sandbox run executes function with env
+  ✅ sandbox cleanup removes directory
+  ✅ store saves and loads state
+  ✅ store merges state on update
+  ✅ store lists states
+  ✅ store deletes state
+
+  Total: 24 | ✅ Passed: 24 | ❌ Failed: 0
+═══════════════════════════════════════
+
+
+ ✓ tests/heady-autocomplete.test.js (1 test) 37ms
+ ✓ tests/integration/csl-engine-shared.test.js (1 test) 12ms
+ ✓ tests/billing.test.js (1 test) 5ms
+stdout | tests/unit/csl-engine.test.js
+
+╔══════════════════════════════════════════════════════════════╗
+║  Heady™ CSL Engine Tests                                   ║
+╚══════════════════════════════════════════════════════════════╝
+
+  ✓ CSL AND: identical vectors = 1.0
+  ✓ CSL AND: orthogonal vectors = 0.0
+  ✓ CSL AND: opposite vectors = -1.0
+  ✓ CSL AND: is commutative
+  ✓ CSL OR: produces unit vector
+  ✓ CSL NOT: result is orthogonal to gate
+  ✓ CSL NOT: is idempotent
+  ✓ sigmoid is bounded [0,1]
+
+════════════════════════════════════════════════════════════
+  Results: 8 passed, 0 failed
+════════════════════════════════════════════════════════════
+
+
+ ✓ tests/unit/csl-engine.test.js (1 test) 29ms
+{"ts":"2026-03-21T18:09:17.316Z","level":"info","service":"heady-soul","msg":"HeadySoul initializing","sessionId":"a7efc95f11aa3330e82fb7b9e9","values":["integrity","empathy","sovereignty","excellence","transparency","growth","safety","fairness"],"dimensions":377}
+{"level":"info","test":"HeadySoul initializes with correct state","status":"PASS"}
+{"level":"info","test":"HeadySoul has 8 core values","status":"PASS"}
+{"level":"info","test":"VALUES_VECTOR_DIM is fib(14) = 377","status":"PASS"}
+{"ts":"2026-03-21T18:09:17.324Z","level":"info","service":"heady-soul","msg":"HeadySoul initializing","sessionId":"fa2b618b2d0776d24e3e5e1190","values":["integrity","empathy","sovereignty","excellence","transparency","growth","safety","fairness"],"dimensions":377}
+{"ts":"2026-03-21T18:09:17.325Z","level":"info","service":"heady-soul","msg":"HeadySoul active","sessionId":"fa2b618b2d0776d24e3e5e1190"}
+{"ts":"2026-03-21T18:09:17.326Z","level":"info","service":"heady-soul","msg":"HeadySoul stopped","sessionId":"fa2b618b2d0776d24e3e5e1190"}
+{"level":"info","test":"HeadySoul.start transitions to active","status":"PASS"}
+{"ts":"2026-03-21T18:09:17.328Z","level":"info","service":"heady-soul","msg":"HeadySoul initializing","sessionId":"d63b4ac310c048c277e9bd3642","values":["integrity","empathy","sovereignty","excellence","transparency","growth","safety","fairness"],"dimensions":377}
+{"level":"info","test":"evaluateAction rejects wrong dimensions","status":"PASS"}
+{"ts":"2026-03-21T18:09:17.348Z","level":"info","service":"heady-soul","msg":"HeadySoul initializing","sessionId":"c9260aa38662b76c44ddc6408a","values":["integrity","empathy","sovereignty","excellence","transparency","growth","safety","fairness"],"dimensions":377}
+{"level":"info","test":"evaluateAction accepts correct dimensions","status":"PASS"}
+{"ts":"2026-03-21T18:09:17.353Z","level":"info","service":"heady-soul","msg":"HeadySoul initializing","sessionId":"1b4c2cdbbc09c29ca386b80357","values":["integrity","empathy","sovereignty","excellence","transparency","growth","safety","fairness"],"dimensions":377}
+{"level":"info","test":"getState returns expected shape","status":"PASS"}
+{"level":"info","suite":"heady-soul","passed":7,"total":7,"status":"ALL_PASS"}
+ ✓ tests/unit/heady-soul.test.js (1 test) 14ms
+ ✓ tests/buddy-chat-contract.test.js (5 tests) 32ms
+ ✓ tests/core/circuit-breaker.test.js (3 tests) 63ms
+ ✓ tests/domain-router.test.js (1 test) 5ms
+{"level":"info","test":"cslAND: identical vectors = 1.0","status":"PASS"}
+{"level":"info","test":"cslAND: opposite vectors ≈ -1.0","status":"PASS"}
+{"level":"info","test":"cslAND: orthogonal vectors = 0","status":"PASS"}
+{"level":"info","test":"cslAND: is commutative","status":"PASS"}
+{"level":"info","test":"cslOR: result is unit vector","status":"PASS"}
+{"level":"info","test":"cslOR: self-union is self","status":"PASS"}
+{"level":"info","test":"cslNOT: result is orthogonal to b","status":"PASS"}
+{"level":"info","test":"cslNOT: is idempotent (NOT(NOT(a,b),b) = NOT(a,b))","status":"PASS"}
+{"level":"info","test":"cslIMPLY: projection of aligned vectors","status":"PASS"}
+{"level":"info","test":"cslCONSENSUS: single vector returns itself","status":"PASS"}
+{"level":"info","test":"cslCONSENSUS: result is unit vector","status":"PASS"}
+{"level":"info","test":"cslGATE: high score passes gate","status":"PASS"}
+{"level":"info","test":"cslGATE: low score blocks gate","status":"PASS"}
+{"level":"info","test":"cslGATE: works with vectors","status":"PASS"}
+{"level":"info","test":"normalize: produces unit vector","status":"PASS"}
+{"level":"info","test":"randomUnitVector: correct dimension and unit length","status":"PASS"}
+{"level":"info","test":"phiFusionScores: single score returns itself","status":"PASS"}
+{"level":"info","test":"phiFusionScores: first score carries most weight","status":"PASS"}
+{"level":"info","test":"isCollapsed: zero vector is collapsed","status":"PASS"}
+{"level":"info","test":"isCollapsed: unit vector is not collapsed","status":"PASS"}
+{"level":"info","test":"DEFAULT_DIM is fib(14) = 377","status":"PASS"}
+{"level":"info","test":"PHI_TEMPERATURE is ψ³","status":"PASS"}
+{"level":"info","suite":"vector-space-ops","passed":22,"total":22,"status":"ALL_PASS"}
+ ✓ tests/memory-receipts.test.js (5 tests) 23ms
+ ✓ tests/unit/vector-space-ops.test.js (1 test) 5ms
+ ✓ tests/cognitive-runtime-governor.test.js (3 tests) 44ms
+ ✓ tests/unit/context-window-manager.test.js (16 tests) 103ms
+ ✓ tests/integration/phi-math-shared.test.js (1 test) 22ms
+ ✓ tests/headyweb/ide-service.test.js (1 test) 129ms
+
+╔══════════════════════════════════════════════════════════════╗
+║  Heady™ Liquid Nodes Integration Tests                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+  ✓ COMPLEXITY thresholds are φ-derived
+  ✓ RESOURCE_SPLIT sums to ~1.0
+  ✓ COMPRESSION_TRIGGERS are Fibonacci
+  ✓ scoreComplexity returns 0-1 for empty request
+  ✓ scoreComplexity increases with message length
+  ✓ routeDecision returns edge for low complexity
+  ✓ routeDecision returns origin for high complexity
+  ✓ shouldCompress at fib(8)=21 messages
+  ✓ Agent starts in INIT state
+  ✓ Agent transitions INIT → ACTIVE
+  ✓ Agent rejects invalid transition INIT → THINKING
+  ✓ Agent addMessage stores messages
+  ✓ Agent compresses history at fib(8)=21 messages
+  ✓ Agent serialize/deserialize roundtrip
+  ✓ ProviderHealth default score is ψ
+  ✓ ProviderHealth tracks success
+  ✓ routeRequest returns edge for simple query
+  ✓ PROVIDERS have φ-scaled timeouts
+
+════════════════════════════════════════════════════════════
+  Results: 18 passed, 0 failed
+════════════════════════════════════════════════════════════
+
+ ✓ tests/integration/liquid-nodes.test.js (1 test) 5ms
+{"level":"info","test":"HEADY_DOMAINS has exactly 9 entries","status":"PASS"}
+{"level":"info","test":"HEADY_DOMAINS includes all 9 canonical domains","status":"PASS"}
+{"level":"info","test":"every domain has role, pool, and csl fields","status":"PASS"}
+{"level":"info","test":"CSL gates use only canonical thresholds","status":"PASS"}
+{"level":"info","test":"pools are valid Hot/Warm/Cold","status":"PASS"}
+{"level":"info","test":"ALLOWED_ORIGINS includes https:// for each domain","status":"PASS"}
+{"level":"info","test":"ALLOWED_ORIGINS includes www variants","status":"PASS"}
+{"level":"info","test":"ALLOWED_ORIGINS includes admin subdomains","status":"PASS"}
+{"level":"info","test":"ALLOWED_ORIGINS has no http:// entries (HTTPS only)","status":"PASS"}
+{"level":"info","test":"ALLOWED_ORIGINS is frozen","status":"PASS"}
+{"level":"info","test":"getDomainByHost returns correct domain config","status":"PASS"}
+{"level":"info","test":"getDomainByHost strips www prefix","status":"PASS"}
+{"level":"info","test":"getDomainByHost returns null for unknown host","status":"PASS"}
+{"level":"info","test":"isAllowedOrigin returns true for canonical origins","status":"PASS"}
+{"level":"info","test":"isAllowedOrigin returns false for non-Heady origins","status":"PASS"}
+{"level":"info","test":"NAVIGATION_MAP has primary, secondary, and admin sections","status":"PASS"}
+{"level":"info","test":"all navigation links use HTTPS","status":"PASS"}
+{"level":"info","suite":"heady-domains","passed":17,"total":17,"status":"ALL_PASS"}
+ ✓ tests/unit/heady-domains.test.js (1 test) 5ms
+{"level":"info","test":"generateToken produces valid JWT-like structure","status":"PASS"}
+{"level":"info","test":"generateToken includes payload fields","status":"PASS"}
+{"level":"info","test":"generateToken SHORT_SESSION_MS uses PHI_TIMING.PHI_7","status":"PASS"}
+{"level":"info","test":"verifyToken succeeds for valid token","status":"PASS"}
+{"level":"info","test":"verifyToken fails for wrong secret","status":"PASS"}
+{"level":"info","test":"verifyToken fails for tampered payload","status":"PASS"}
+{"level":"info","test":"verifyToken fails for invalid structure","status":"PASS"}
+{"level":"info","test":"revokeToken prevents subsequent verification","status":"PASS"}
+{"level":"info","test":"refreshToken produces new valid token","status":"PASS"}
+{"level":"info","test":"refreshToken revokes old token","status":"PASS"}
+{"level":"info","test":"refreshToken fails for invalid token","status":"PASS"}
+{"level":"info","test":"buildCookieOptions returns httpOnly, secure, sameSite","status":"PASS"}
+{"level":"info","test":"buildCookieOptions rememberMe increases maxAge","status":"PASS"}
+{"level":"info","suite":"token-manager","passed":13,"total":13,"status":"ALL_PASS"}
+stdout | tests/unit/phi-math.test.js
+
+╔══════════════════════════════════════════════════════════════╗
+║  Heady™ φ-Math Foundation Tests                            ║
+╚══════════════════════════════════════════════════════════════╝
+
+  ✓ PHI ≈ 1.618
+  ✓ PSI ≈ 0.618
+  ✓ PHI × PSI = 1
+  ✓ PHI² = PHI + 1
+  ✓ PHI³ = 2PHI + 1
+  ✓ √5 ≈ 2.236
+  ✓ fib(0) = 0
+  ✓ fib(1) = 1
+  ✓ fib(7) = 13
+  ✓ fib(8) = 21
+  ✓ fib(12) = 144
+  ✓ fib(20) = 6765
+  ✓ fibCeil(10) = 13
+  ✓ fibFloor(10) = 8
+  ✓ PHI_TIMING.PHI_7 = 29034
+  ✓ phiMs(1) = 1618
+  ✓ phiMs(2) = 2618
+  ✓ CSL MINIMUM ≈ 0.500
+  ✓ CSL LOW ≈ 0.691
+  ✓ CSL MEDIUM ≈ 0.809
+  ✓ CSL HIGH ≈ 0.882
+  ✓ CSL CRITICAL ≈ 0.927
+  ✓ phiBackoff(0) = 1000
+  ✓ phiBackoff(1) = 1618
+  ✓ phiBackoff(2) = 2618
+  ✓ phiFusionWeights(2) sums to 1
+  ✓ phiFusionWeights(5) sums to 1
+  ✓ POOLS sum ≈ 0.81
+  ✓ JUDGE weights sum to 1
+  ✓ cosineSimilarity identical = 1
+  ✓ cosineSimilarity orthogonal = 0
+  ✓ normalize produces unit vector
+  ✓ sigmoid(0) = 0.5
+  ✓ cslGate attenuates below threshold
+  ✓ cslGate passes above threshold
+
+════════════════════════════════════════════════════════════
+  Results: 35 passed, 0 failed
+════════════════════════════════════════════════════════════
+
+
+ ✓ tests/unit/phi-math.test.js (1 test) 12ms
+{"ts":"2026-03-21T18:09:18.981Z","level":"info","service":"heady-vinci","msg":"Execution plan created","planId":"plan_638aca9efcf81ba4_1","objective":"Build system","subtasks":3,"readyCount":1}
+{"ts":"2026-03-21T18:09:18.983Z","level":"info","service":"heady-vinci","msg":"Execution plan created","planId":"plan_9e6dd43cfd592d90_1","objective":"Build","subtasks":3,"readyCount":2}
+{"ts":"2026-03-21T18:09:18.983Z","level":"info","service":"heady-vinci","msg":"Execution plan created","planId":"plan_8f7e09df2c0626a8_1","objective":"Build","subtasks":2,"readyCount":1}
+{"ts":"2026-03-21T18:09:18.984Z","level":"info","service":"async-parallel-executor","msg":"DAG execution starting","totalTasks":3,"maxConcurrency":5}
+{"ts":"2026-03-21T18:09:19.001Z","level":"info","service":"async-parallel-executor","msg":"DAG execution starting","totalTasks":2,"maxConcurrency":5}
+{"level":"info","test":"createPlan produces valid plan","status":"PASS"}
+{"level":"info","test":"getReadySubtasks returns only dependency-free tasks","status":"PASS"}
+{"level":"info","test":"markSubtaskCompleted unlocks dependents","status":"PASS"}
+{"level":"info","test":"MAX_SUBTASKS is fib(10) = 55","status":"PASS"}
+{"level":"info","test":"MAX_CONCURRENCY is fib(8) = 21","status":"PASS"}
+{"ts":"2026-03-21T18:09:19.002Z","level":"info","service":"async-parallel-executor","msg":"DAG execution complete","completed":3,"failed":0,"durationMs":18}
+{"ts":"2026-03-21T18:09:19.002Z","level":"info","service":"async-parallel-executor","msg":"DAG execution complete","completed":3,"failed":0,"durationMs":18}
+{"ts":"2026-03-21T18:09:19.002Z","level":"info","service":"async-parallel-executor","msg":"DAG execution complete","completed":3,"failed":0,"durationMs":18}
+{"level":"info","test":"executeConcurrent runs all tasks","status":"PASS"}
+{"ts":"2026-03-21T18:09:19.004Z","level":"info","service":"async-parallel-executor","msg":"DAG execution complete","completed":2,"failed":0,"durationMs":3}
+{"level":"info","test":"executeDAG respects dependencies","status":"PASS"}
+ ✓ tests/unit/heady-vinci.test.js (1 test) 16ms
+ ✓ tests/unit/token-manager.test.js (1 test) 81ms
+ ✓ tests/auth-flow.test.js (10 tests) 7ms
+ ✓ tests/swarm-intelligence.test.js (3 tests) 9ms
+{"level":"error","test":"buildCSPSources includes all 9 domains","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+{"level":"error","test":"buildCSPSources includes admin subdomains","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+stdout | tests/unit/auth-session.test.js
+
+╔══════════════════════════════════════════════════════════════╗
+║  Heady™ Auth Session Tests                                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+  ✓ Anonymous rate = fib(9) = 34
+  ✓ Authenticated rate = fib(11) = 89
+  ✓ Enterprise rate = fib(13) = 233
+  ✓ Rate window = fib(10) = 55 seconds
+  ✓ Short session TTL is φ-derived
+  ✓ All 9 domains in whitelist
+
+════════════════════════════════════════════════════════════
+  Results: 6 passed, 0 failed
+════════════════════════════════════════════════════════════
+
+
+{"level":"info","test":"HSTS_MAX_AGE is φ-derived (fib(11) × fib(12) × fib(10))","status":"PASS"}
+{"level":"error","test":"securityHeadersMiddleware sets all required headers","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+{"level":"error","test":"CSP includes auth bridge frame-src","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+{"level":"error","test":"CSP includes upgrade-insecure-requests","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+{"level":"error","test":"HSTS includes includeSubDomains and preload","status":"FAIL","error":"Cannot read properties of undefined (reading 'map')"}
+{"level":"info","suite":"security-headers-integration","passed":1,"total":7,"status":"SOME_FAIL"}
+ ✓ tests/unit/auth-session.test.js (1 test) 4ms
+ ✓ tests/integration/security-headers.test.js (1 test) 5ms
+{"level":"info","test":"constructor initializes with seed patterns","status":"PASS"}
+{"level":"info","test":"record creates fingerprint for new instruction","status":"PASS"}
+{"level":"info","test":"repeated instruction increments count and flags as repeated","status":"PASS"}
+{"level":"info","test":"automation rule created at threshold","status":"PASS"}
+{"level":"info","test":"match returns null for unknown instruction","status":"PASS"}
+{"level":"info","test":"match returns seed rule for headybuddy domain instruction","status":"PASS"}
+{"level":"info","test":"match returns seed rule for gcloud auth instruction","status":"PASS"}
+{"level":"info","test":"feedback increases confidence on success","status":"PASS"}
+{"level":"info","test":"feedback decreases confidence on failure","status":"PASS"}
+{"level":"info","test":"getStats returns learning statistics","status":"PASS"}
+{"level":"info","test":"suggestAutomation works for repeated pattern","status":"PASS"}
+{"level":"info","test":"save and load persistence works","status":"PASS"}
+{"level":"info","test":"emits pattern:repeated event","status":"PASS"}
+ ✓ tests/unit/instruction-pattern-learner.test.js (1 test) 15ms
+ ❯ tests/unit/redis-pool.test.js (16 tests | 6 failed) 31695ms
+   ✓ RedisPoolManager (src/resilience) > should create pool with defaults 217ms
+   ✓ RedisPoolManager (src/resilience) > should acquire a connection 1ms
+   ✓ RedisPoolManager (src/resilience) > should release a connection 1ms
+   ✓ RedisPoolManager (src/resilience) > should reuse released connection for waiter 0ms
+   ✓ RedisPoolManager (src/resilience) > should timeout on acquire when pool exhausted  5031ms
+   ✓ RedisPoolManager (src/resilience) > should return correct status 1ms
+   ✓ RedisPoolV3 (src/resilience) > should create pool with tier config 1ms
+   × RedisPoolV3 (src/resilience) > should initialize and pre-warm 906ms
+     → expected 0 to be greater than or equal to 1
+   × RedisPoolV3 (src/resilience) > should acquire from hot pool 5006ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × RedisPoolV3 (src/resilience) > should fall back to lower tiers 5004ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × RedisPoolV3 (src/resilience) > should perform agent handoff 5002ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ RedisPoolV3 (src/resilience) > should return health metrics  490ms
+   × RedisPoolV3 (src/resilience) > should withConnection auto-release 5011ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   × RedisPoolV3 (src/resilience) > should clean shutdown 5001ms
+     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+   ✓ phiBackoff > should increase with attempts 1ms
+   ✓ phiBackoff > should cap at 30000ms 0ms
+
+ Test Files  134 failed | 78 passed (212)
+      Tests  369 failed | 1126 passed | 18 skipped (1513)
+   Start at  12:08:48
+   Duration  33.96s (transform 10.33s, setup 16.79s, collect 35.54s, tests 60.55s, environment 264ms, prepare 85.55s)
+
