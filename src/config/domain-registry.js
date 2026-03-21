@@ -241,7 +241,7 @@ const DOMAIN_DEFINITIONS = [
     cors: { origins: ['*'], credentials: false },
     headers: {
       'X-Heady-Domain':   'headyapi',
-      'Access-Control-Allow-Origin': 'null'  // HEADY: Use _isHeadyOrigin() for dynamic CORS,
+      'Access-Control-Allow-Origin': 'null',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
       'X-API-Version':    'v4',
     },
   },
