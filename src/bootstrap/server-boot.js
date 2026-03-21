@@ -93,5 +93,5 @@ module.exports = function bootServer(app, { logger, voiceSessions }) {
             logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.purple}Voice: ws://0.0.0.0:${PORT}/ws/voice/:id${c.reset}`);
             logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}╰────────────────────────────────────────────────────────╯${c.reset}\n`);
         });
-    });
+    }).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
 };

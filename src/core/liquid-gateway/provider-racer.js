@@ -10,6 +10,9 @@
  */
 
 import { EventEmitter } from 'events';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const logger = require('../../utils/logger');
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;                 // ≈ 0.618
@@ -470,7 +473,7 @@ export class ProviderRacer extends EventEmitter {
                 results.map(r => `${r.provider}:${r.error}`).join(', ')));
             }
           }
-        });
+        }).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
       }
     });
   }

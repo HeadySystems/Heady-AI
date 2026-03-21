@@ -223,7 +223,7 @@ function registerServiceRoutes(app, deps = {}) {
                         nodesInvoked: scan.nodesInvoked.length, durationMs: scan.durationMs,
                     });
                 }
-            });
+            }).catch(err => logger.error('Unhandled promise rejection', { error: err.message }));
         }, 5000);
 
         logger.logNodeActivity("CONDUCTOR", "  ✓ HeadyDeepIntel engine: ACTIVE (10 perspectives, 10 nodes, 3D vectors)");
