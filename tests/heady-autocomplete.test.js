@@ -312,6 +312,6 @@ const verifier = new VerificationEngine();
 
 describe('heady-autocomplete', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

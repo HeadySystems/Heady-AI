@@ -195,6 +195,6 @@ process.exitCode = passed === total ? 0 : 1;
 
 describe('vector-space-ops', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

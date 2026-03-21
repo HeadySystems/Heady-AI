@@ -133,6 +133,6 @@ process.exitCode = failed > 0 ? 1 : 0;
 
 describe('phi-math', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

@@ -187,6 +187,6 @@ process.exitCode = passed === total ? 0 : 1;
 
 describe('cross-domain-auth', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

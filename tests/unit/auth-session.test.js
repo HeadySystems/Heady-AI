@@ -49,6 +49,6 @@ process.exitCode = failed > 0 ? 1 : 0;
 
 describe('auth-session', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

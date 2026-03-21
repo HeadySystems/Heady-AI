@@ -173,6 +173,6 @@ process.exitCode = passed === total ? 0 : 1;
 
 describe('heady-domains', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

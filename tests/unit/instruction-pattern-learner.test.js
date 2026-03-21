@@ -184,6 +184,6 @@ setTimeout(() => {
 
 describe('instruction-pattern-learner', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });

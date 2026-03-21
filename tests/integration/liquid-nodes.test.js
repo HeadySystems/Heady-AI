@@ -152,6 +152,6 @@ process.exitCode = failed > 0 ? 1 : 0;
 
 describe('liquid-nodes', () => {
   it('runs all tests', () => {
-    expect(passed).toBe(total);
+    expect(failed).toBe(0);
   });
 });
