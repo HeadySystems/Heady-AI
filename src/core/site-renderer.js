@@ -947,4 +947,89 @@ function renderLegalPage(site, host, type) {
 
 // ── HTTP Server ─────────────────────────────────────────────
 
-module.exports = { generateApiKey, generateSession, hashPw, normalizeHost, resolveIncomingHost, resolveSite, renderSite, renderOnboarding, renderLegalPage };
+/**
+ * Render pricing page with Stripe payment links for all Heady tiers.
+ */
+function renderPricingPage(site, host) {
+  const brandName = site?.name || 'Heady';
+  const tiers = [
+    {
+      name: 'Heady Pro',
+      price: '$29',
+      period: '/month',
+      description: 'For individuals and small teams building with AI.',
+      features: ['Full HeadyBuddy companion', '384D vector memory (10K embeddings)', 'MCP tool access (31 tools)', 'Sacred Geometry dashboard', 'Community support'],
+      link: 'https://buy.stripe.com/14AbIV00n5YEdCT4Pd87K02',
+      cta: 'Start Pro',
+      highlight: false,
+    },
+    {
+      name: 'Heady Enterprise',
+      price: '$299',
+      period: '/month',
+      description: 'For organizations deploying sovereign AI at scale.',
+      features: ['Everything in Pro', 'Unlimited vector memory', 'Custom HeadyBee swarm agents', 'Priority model routing (Claude, GPT-4o, Gemini)', 'SSO & RBAC', 'Dedicated support & SLA', 'On-premise deployment option'],
+      link: 'https://buy.stripe.com/14AaERcN90Ek8izdlJ87K01',
+      cta: 'Start Enterprise',
+      highlight: true,
+    },
+    {
+      name: 'Heady API Access',
+      price: '$21',
+      period: '/month',
+      description: 'For developers integrating Heady into their stack.',
+      features: ['RESTful & MCP API access', '100K API calls/month', 'Embedding generation endpoint', 'Webhook event streaming', 'SDK for Node.js & Python'],
+      link: 'https://buy.stripe.com/3cI5kxbJ59aQ1Ub95t87K00',
+      cta: 'Get API Access',
+      highlight: false,
+    },
+  ];
+
+  const tierCards = tiers.map(t => `
+    <div style="flex:1;min-width:280px;max-width:380px;background:${t.highlight ? 'linear-gradient(135deg,rgba(108,60,225,0.15),rgba(0,212,255,0.08))' : 'rgba(255,255,255,0.03)'};border:1px solid ${t.highlight ? 'rgba(108,60,225,0.5)' : 'rgba(255,255,255,0.08)'};border-radius:16px;padding:32px 28px;position:relative;${t.highlight ? 'transform:scale(1.03);' : ''}">
+      ${t.highlight ? '<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#6C3CE1,#00D4FF);color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px;letter-spacing:0.5px;">MOST POPULAR</div>' : ''}
+      <h3 style="font-size:22px;color:#fff;margin:0 0 8px;">${t.name}</h3>
+      <div style="margin:16px 0;"><span style="font-size:48px;font-weight:800;color:#fff;">${t.price}</span><span style="color:rgba(255,255,255,0.5);font-size:16px;">${t.period}</span></div>
+      <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.5;margin:0 0 24px;">${t.description}</p>
+      <ul style="list-style:none;padding:0;margin:0 0 28px;">
+        ${t.features.map(f => `<li style="color:rgba(255,255,255,0.8);font-size:14px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#00D4FF;margin-right:8px;">\u2713</span>${f}</li>`).join('')}
+      </ul>
+      <a href="${t.link}" target="_blank" rel="noopener" style="display:block;text-align:center;padding:14px 24px;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none;transition:all 0.2s;${t.highlight ? 'background:linear-gradient(90deg,#6C3CE1,#7C3AED);color:#fff;' : 'background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);'}">${t.cta}</a>
+    </div>
+  `).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pricing — ${brandName}</title>
+  <meta name="description" content="${brandName} pricing plans — AI-native tools powered by Sacred Geometry and Continuous Semantic Logic.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',system-ui,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh}
+    a:hover{opacity:0.9;transform:translateY(-1px)}
+  </style>
+</head>
+<body>
+  <div style="max-width:1200px;margin:0 auto;padding:60px 24px;">
+    <div style="text-align:center;margin-bottom:60px;">
+      <a href="/" style="color:rgba(255,255,255,0.5);text-decoration:none;font-size:14px;">\u2190 Back to ${brandName}</a>
+      <h1 style="font-size:48px;font-weight:800;margin:24px 0 16px;background:linear-gradient(90deg,#6C3CE1,#00D4FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Choose Your Plan</h1>
+      <p style="font-size:18px;color:rgba(255,255,255,0.6);max-width:600px;margin:0 auto;">Every plan includes the full power of Continuous Semantic Logic, Sacred Geometry orchestration, and 384D vector intelligence.</p>
+    </div>
+    <div style="display:flex;gap:24px;justify-content:center;align-items:stretch;flex-wrap:wrap;">
+      ${tierCards}
+    </div>
+    <div style="text-align:center;margin-top:48px;padding:32px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);">
+      <p style="color:rgba(255,255,255,0.5);font-size:14px;">All plans include a 14-day free trial. No credit card required to start. Enterprise annual billing available at $2,990/year.</p>
+      <p style="color:rgba(255,255,255,0.3);font-size:12px;margin-top:12px;">\u00A9 2026 HeadySystems Inc. \u2014 72+ provisional patents filed. Powered by Stripe.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+module.exports = { generateApiKey, generateSession, hashPw, normalizeHost, resolveIncomingHost, resolveSite, renderSite, renderOnboarding, renderLegalPage, renderPricingPage };
