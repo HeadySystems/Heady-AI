@@ -71,7 +71,11 @@ class RedisPoolV3 extends EventEmitter {
   async initialize() {
     if (this._initialized) return;
 
-    try { this._ioredis = require('ioredis'); } catch { this._ioredis = null; }
+    if (this.config.mockFallback) {
+      this._ioredis = null;
+    } else {
+      try { this._ioredis = require('ioredis'); } catch { this._ioredis = null; }
+    }
 
     for (let i = 0; i < POOL_TIERS.hot.min; i++) {
       try {

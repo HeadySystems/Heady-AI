@@ -87,14 +87,14 @@ describe('RedisPoolV3 (src/resilience)', () => {
   });
 
   it('should create pool with tier config', () => {
-    const pool = new RedisPoolV3();
+    const pool = new RedisPoolV3({ mockFallback: true });
     expect(pool.pools.hot).toBeDefined();
     expect(pool.pools.warm).toBeDefined();
     expect(pool.pools.cold).toBeDefined();
   });
 
   function createPool() {
-    const pool = new RedisPoolV3();
+    const pool = new RedisPoolV3({ mockFallback: true });
     pool.on('error', () => {}); // suppress unhandled EventEmitter errors in test
     return pool;
   }
