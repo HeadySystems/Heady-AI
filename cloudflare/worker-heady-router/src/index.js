@@ -33,6 +33,8 @@ const DOMAIN_MODULES = {
   'www.headyconnection.com': 'connection-hub',
   'headybuddy.org': 'buddy-portal',
   'www.headybuddy.org': 'buddy-portal',
+  'headybot.com': 'bot-automation',
+  'www.headybot.com': 'bot-automation',
   'heady-ai.com': 'ai-assistant',
   'www.heady-ai.com': 'ai-assistant',
   'headyos.com': 'os-portal',
@@ -116,6 +118,14 @@ const MODULE_BRANDS = {
     accent: '#10b981',
     ctaLabel: 'Open buddy site',
     ctaHref: 'https://headybuddy.org',
+  },
+  'bot-automation': {
+    brand: 'HeadyBot',
+    title: 'Intelligent automation agents',
+    description: 'Autonomous agent orchestration, workflow automation, and bot intelligence for the Heady ecosystem.',
+    accent: '#f97316',
+    ctaLabel: 'Open HeadyBot',
+    ctaHref: 'https://headybot.com',
   },
   'ai-assistant': {
     brand: 'HeadyAI',
