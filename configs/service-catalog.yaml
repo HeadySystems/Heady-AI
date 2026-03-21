@@ -691,6 +691,8 @@ aiProviders:
     models: [various]
     costPerMTokens: "Free (10K/day)"
     envKey: CF_ACCOUNT
+
+aiFallback:
   fallbackChain: [anthropic, groq, openai, gemini, workers-ai, colab-vllm]
   scoringFormula: "phi_weight × csl × (1/latency_ms) × (1/cost_per_call)"
 

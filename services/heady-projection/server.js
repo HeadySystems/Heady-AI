@@ -28,6 +28,15 @@ const INDEX_HTML = join(__dirname, 'index.html');
 // ── App ───────────────────────────────────────────────────────────────────────
 const app = express();
 
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
 // ── Static: serve index.html ──────────────────────────────────────────────────
 app.get('/', (_req, res) => {
   if (!existsSync(INDEX_HTML)) {

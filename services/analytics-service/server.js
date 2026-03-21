@@ -17,6 +17,15 @@ const logger = getLogger('analytics-service');
 const app = express();
 app.use(express.json());
 
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
 // ─── Health ──────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({
   service: 'analytics-service',

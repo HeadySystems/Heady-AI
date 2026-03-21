@@ -68,12 +68,28 @@ const SECURITY_HEADERS = {
   'X-Powered-By': 'Heady/' + '3.0.0',
 };
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
-  'Access-Control-Max-Age': '86400',
-};
+const HEADY_ALLOWED_ORIGINS = [
+  'https://headysystems.com', 'https://www.headysystems.com',
+  'https://headyio.com', 'https://www.headyio.com',
+  'https://headyconnection.org', 'https://www.headyconnection.org',
+  'https://headyconnection.com', 'https://www.headyconnection.com',
+  'https://headybuddy.org', 'https://www.headybuddy.org',
+  'https://headymcp.com', 'https://www.headymcp.com',
+  'https://admin.headysystems.com',
+  'https://manager.headysystems.com',
+  'https://api.headysystems.com',
+];
+
+function getCorsHeaders(request) {
+  const origin = request.headers.get('Origin') || '';
+  const allowed = HEADY_ALLOWED_ORIGINS.includes(origin) ? origin : HEADY_ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-API-Key, X-Heady-Service',
+    'Access-Control-Max-Age': '86400',
+  };
+}
 
 export default {
   async fetch(request, env, ctx) {
@@ -82,7 +98,7 @@ export default {
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: getCorsHeaders(request) });
     }
 
     // Route lookup
@@ -117,7 +133,7 @@ export default {
       for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
         responseHeaders.set(key, value);
       }
-      for (const [key, value] of Object.entries(CORS_HEADERS)) {
+      for (const [key, value] of Object.entries(getCorsHeaders(request))) {
         responseHeaders.set(key, value);
       }
 

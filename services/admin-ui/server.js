@@ -14,6 +14,15 @@ const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || '';
 const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY_HEADY || '';
 const GROQ_KEY = process.env.GROQ_API_KEY || '';
 app.use(express.json());
+
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
 app.use(express.static(join(__dirname, 'public')));
 
 // ─── Health ───
