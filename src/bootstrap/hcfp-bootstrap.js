@@ -149,6 +149,16 @@ scheduler.registerTask('security:cors-validator', createTaskHandler('cors-valida
 // ─── MONITORING Tasks ────────────────────────────────────────────────────────
 
 const HEADY_DOMAINS = ['headyme.com', 'headysystems.com', 'headyconnection.org', 'headybuddy.org', 'headymcp.com', 'headyio.com', 'headybot.com', 'headyapi.com', 'heady-ai.com', 'headylens.com', 'headyfinance.com'];
+
+// ─── External Core Services (integrated repos) ──────────────────────────────
+const EXTERNAL_CORE_SERVICES = [
+  { name: 'headyapi-core', port: 3370, healthPath: '/health' },
+  { name: 'headymcp-core', port: 3371, healthPath: '/health' },
+  { name: 'headyos-core', port: 3372, healthPath: '/health' },
+  { name: 'headybot-core', port: 3373, healthPath: '/health' },
+  { name: 'headyme-core', port: 3374, healthPath: '/health' },
+  { name: 'headyapi', port: 3375, healthPath: '/health' },
+];
 scheduler.registerTask('monitoring:domain-health', createTaskHandler('domain-health', 'MONITORING', async () => {
   const results = {};
   for (const domain of HEADY_DOMAINS) {
@@ -196,6 +206,24 @@ scheduler.registerTask('monitoring:mcp-endpoint', createTaskHandler('mcp-endpoin
 }));
 scheduler.registerTask('monitoring:pipeline-health', createTaskHandler('pipeline-health', 'MONITORING', async () => {
   return engine.health();
+}));
+
+scheduler.registerTask('monitoring:external-core-services', createTaskHandler('external-core-services', 'MONITORING', async () => {
+  const results = {};
+  for (const svc of EXTERNAL_CORE_SERVICES) {
+    try {
+      const start = Date.now();
+      const res = await fetch(`http://localhost:${svc.port}${svc.healthPath}`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(5000)
+      });
+      results[svc.name] = { status: res.status, latencyMs: Date.now() - start, healthy: res.status === 200 };
+    } catch (err) {
+      results[svc.name] = { status: 'unreachable', error: err.message, healthy: false };
+    }
+  }
+  const healthy = Object.values(results).filter(r => r.healthy).length;
+  return { services: results, healthy, total: EXTERNAL_CORE_SERVICES.length };
 }));
 
 // ─── HEALTH Tasks ────────────────────────────────────────────────────────────
@@ -321,6 +349,27 @@ scheduler.registerTask('content:placeholder-scan', createTaskHandler('placeholde
 }));
 
 // ─── INTEGRATION Tasks ───────────────────────────────────────────────────────
+
+scheduler.registerTask('integration:service-mesh-coverage', createTaskHandler('service-mesh-coverage', 'INTEGRATION', async () => {
+  // Verify all external core services are registered in the service mesh
+  try {
+    const serviceMesh = require('../../shared/service-mesh');
+    const catalog = serviceMesh.SERVICE_CATALOG || {};
+    const registered = EXTERNAL_CORE_SERVICES.filter(svc => catalog[svc.name]);
+    return {
+      totalExternal: EXTERNAL_CORE_SERVICES.length,
+      registeredInMesh: registered.length,
+      coverage: `${((registered.length / EXTERNAL_CORE_SERVICES.length) * 100).toFixed(0)}%`,
+      services: EXTERNAL_CORE_SERVICES.map(svc => ({
+        name: svc.name,
+        inMesh: !!catalog[svc.name],
+        port: svc.port,
+      })),
+    };
+  } catch {
+    return { error: 'service-mesh module not available' };
+  }
+}));
 
 scheduler.registerTask('integration:cross-site-links', createTaskHandler('cross-site-links', 'INTEGRATION', async () => {
   try {
@@ -464,6 +513,51 @@ for (const stageName of core.STAGE_NAMES) {
   engine.registerStage(stageName, defaultStageHandler(stageName));
 }
 
+// ─── Wire HCFPRunner + EventBridge ──────────────────────────────────────────
+// Connect the HCFPRunner to the global eventBus via HCFPEventBridge so
+// auto-success engine cycle completions trigger pipeline runs and vice versa.
+
+let hcfpRunner = null;
+let hcfpBridge = null;
+
+try {
+  const { HCFPRunner } = require('../../orchestration/hcfp-runner');
+  const { HCFPEventBridge } = require('../orchestration/hcfp-event-bridge');
+  const { EventEmitter } = require('events');
+
+  hcfpRunner = new HCFPRunner();
+
+  // Use global eventBus if available, otherwise create one
+  const eventBus = global.eventBus || new EventEmitter();
+  if (!global.eventBus) global.eventBus = eventBus;
+
+  hcfpBridge = new HCFPEventBridge(hcfpRunner, eventBus);
+  hcfpBridge.start();
+
+  // Wire auto-success scheduler → pipeline: on cycle complete, trigger pipeline if warranted
+  scheduler.on && scheduler.on('cycle:complete', (cycleResult) => {
+    if (cycleResult && cycleResult.coherence < core.PSI) {
+      // Low coherence — trigger pipeline run to remediate
+      eventBus.emit('pipeline:run', {
+        task: 'auto-success-remediation',
+        source: 'hcfp-bootstrap',
+        coherence: cycleResult.coherence,
+      });
+    }
+  });
+
+  // Wire pipeline completions → scheduler: feed results back
+  eventBus.on('pipeline:completed', (data) => {
+    if (data?.source === 'hcfullpipeline' || data?.source === 'hcfp-runner') {
+      scheduler.emit && scheduler.emit('pipeline:feedback', data);
+    }
+  });
+} catch (err) {
+  // Non-fatal: runner/bridge enhance but are not required for basic operation
+  const _log = console;
+  _log.warn && _log.warn(`[hcfp-bootstrap] HCFPRunner/EventBridge not loaded: ${err.message}`);
+}
+
 // ─── Export Singleton ────────────────────────────────────────────────────────
 
 module.exports = {
@@ -471,5 +565,7 @@ module.exports = {
   conductor,
   scheduler,
   system,
+  hcfpRunner,
+  hcfpBridge,
   HEADY_DOMAINS
 };

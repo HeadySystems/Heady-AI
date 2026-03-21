@@ -753,9 +753,7 @@ class HCFPRunner {
 
 // ─── EXPORTS ────────────────────────────────────────────────────────────────────
 
-export default HCFPRunner;
-
-export {
+module.exports = {
   HCFPRunner,
   HCFP_STAGES,
   STAGE_MAP,

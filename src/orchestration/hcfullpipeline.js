@@ -8,8 +8,8 @@
 // Sacred Geometry v4.0 | Liquid Latent OS
 // ═══════════════════════════════════════════════════════════════════════════════
 
-import { HeadyEventSpine } from '../services/heady-event-spine.js';
-import { TaskGraph } from './task-graph.js';
+const { HeadyEventSpine } = require('../services/heady-event-spine');
+const { TaskGraph } = require('./task-graph');
 
 const PHI = 1.618033988749895;
 
@@ -41,11 +41,12 @@ class PhiRetry {
  * All independent tasks execute in parallel simultaneously.
  * Completion is determined by the task graph reaching terminal nodes.
  */
-export class HCFullPipeline {
-  constructor({ conductorUrl, nodes, eventSpine }) {
+class HCFullPipeline {
+  constructor({ conductorUrl, nodes, eventSpine, eventBus }) {
     this.conductorUrl = conductorUrl;
     this.nodes = nodes;             // Map<nodeId, LiquidNode>
     this.eventSpine = eventSpine;   // HeadyEventSpine instance
+    this.eventBus = eventBus || global.eventBus || null; // Global event bus for auto-success integration
     this.activeGraph = new Map();   // taskId → TaskGraph
     this.stats = { ingested: 0, completed: 0, failed: 0 };
   }
@@ -169,14 +170,25 @@ export class HCFullPipeline {
     this.activeGraph.delete(taskId);
     this.stats.completed++;
 
-    await this.eventSpine.emit('task.completed', {
+    const completionData = {
       taskId,
       results,
       completedAt: new Date().toISOString(),
       durationMs: graph ? Date.now() - graph.startedAt : 0,
-    });
+    };
 
-    // Feed results to AutoSuccessEngine if available
+    await this.eventSpine.emit('task.completed', completionData);
+
+    // Emit to global eventBus so HCFPEventBridge + AutoSuccessEngine see completions
+    if (this.eventBus) {
+      this.eventBus.emit('pipeline:completed', {
+        ...completionData,
+        source: 'hcfullpipeline',
+        stats: this.getStats(),
+      });
+    }
+
+    // Feed results to AutoSuccessEngine if available as a node
     const ase = this.nodes.get('auto-success-engine');
     if (ase && typeof ase.evaluate === 'function') {
       await ase.evaluate(taskId, results);
@@ -208,4 +220,4 @@ export class HCFullPipeline {
   }
 }
 
-export default HCFullPipeline;
+module.exports = { HCFullPipeline };
