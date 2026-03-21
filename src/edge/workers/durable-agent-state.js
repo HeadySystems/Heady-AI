@@ -1,7 +1,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('durable-agent-state');
 
-const logger = console;
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * durable-agent-state.js

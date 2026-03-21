@@ -40,7 +40,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('infrastructure-monitor');
 
-const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const https = require('https');

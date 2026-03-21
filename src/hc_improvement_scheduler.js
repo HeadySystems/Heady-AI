@@ -1,7 +1,6 @@
 const { createLogger } = require('./utils/logger');
 const logger = createLogger('hc_improvement_scheduler');
 
-const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

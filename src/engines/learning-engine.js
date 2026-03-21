@@ -1,7 +1,6 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('learning-engine');
 
-const logger = console;
 /*
  * © 2026 Heady™ Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.

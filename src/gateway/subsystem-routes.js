@@ -1,7 +1,6 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('subsystem-routes');
 
-const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

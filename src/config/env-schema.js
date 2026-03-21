@@ -11,7 +11,6 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('env-schema');
 
-const logger = console;
 
 
 const ENV_SCHEMA = {

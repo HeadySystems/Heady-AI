@@ -35,7 +35,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('canary-deployment');
 
-const logger = console;
 
 const { execSync, execFileSync } = require('child_process');
 const https = require('https');

@@ -1,7 +1,6 @@
 const { createLogger } = require('./utils/logger');
 const logger = createLogger('brain_connector');
 
-const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
