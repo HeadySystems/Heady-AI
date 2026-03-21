@@ -50,9 +50,8 @@ async function pushToRepo(octokit, repoFullName, files, commitMessage, options =
         latestCommitSha = ref.object.sha;
         const { data: commit } = await octokit.git.getCommit({ owner, repo, commit_sha: latestCommitSha });
         baseTreeSha = commit.tree.sha;
-    } catch (err) {
-        // Branch might not exist or repo is empty
-        logger.warn(`Could not get ref for ${branch}: ${err.message}`);
+    } catch (err) { // Branch might not exist or repo is empty
+        logger.warn(`Could not get ref for ${branch  logger.error('Operation failed', { error: err.message }); }: ${err.message}`);
         throw err;
     }
 

@@ -12,6 +12,8 @@
  * @module heady-liquid-nodes
  * @version 3.0.0
  */
+const logger = console;
+
 
 import { Pinecone } from '@pinecone-database/pinecone';
 import { createClient } from '@upstash/redis';
@@ -94,7 +96,7 @@ function loadConfig() {
       ssl: process.env.NEON_SSL === 'true',
     },
     redis: {
-      url: process.env.UPSTASH_REDIS_URL || 'http://localhost:6379',
+      url: process.env.UPSTASH_REDIS_URL || (process.env.SERVICE_URL || 'http://0.0.0.0:6379'),
       token: process.env.UPSTASH_REDIS_TOKEN || '',
     },
     sentry: {
@@ -360,7 +362,7 @@ class StructuredLogger {
    */
   info(message, context) {
     const entry = this._formatEntry('INFO', message, context);
-    console.log(JSON.stringify(entry));
+    logger.info(JSON.stringify(entry));
   }
 
   /**
@@ -2162,10 +2164,10 @@ class HeadyLiquidNodeController {
  * Demo showcasing the Liquid Node system
  */
 async function demo() {
-  console.log('\n╔══════════════════════════════════════════════════════════════╗');
-  console.log('║  Heady Liquid Node Vector Space Controller v3.0              ║');
-  console.log('║  Sacred Geometry v4.0 — φ-Weighted Lattice Intelligence     ║');
-  console.log('╚══════════════════════════════════════════════════════════════╝\n');
+  logger.info('\n╔══════════════════════════════════════════════════════════════╗');
+  logger.info('║  Heady Liquid Node Vector Space Controller v3.0              ║');
+  logger.info('║  Sacred Geometry v4.0 — φ-Weighted Lattice Intelligence     ║');
+  logger.info('╚══════════════════════════════════════════════════════════════╝\n');
 
   // Create controller with minimal config
   const controller = new HeadyLiquidNodeController({
@@ -2183,19 +2185,19 @@ async function demo() {
   });
 
   // Initialize
-  console.log('▸ Initializing controller...');
+  logger.info('▸ Initializing controller...');
   await controller.initialize();
 
   // Display lattice topology
-  console.log('\n▸ Lattice Topology:');
+  logger.info('\n▸ Lattice Topology:');
   const topology = controller.getTopology();
-  console.log(`  • Total nodes: ${topology.statistics.totalNodes}`);
-  console.log(`  • Healthy nodes: ${topology.statistics.healthyNodes}`);
-  console.log(`  • Average load: ${topology.statistics.averageLoad.toFixed(2)}`);
-  console.log(`  • Max capacity: ${topology.statistics.maxCapacity}`);
+  logger.info(`  • Total nodes: ${topology.statistics.totalNodes}`);
+  logger.info(`  • Healthy nodes: ${topology.statistics.healthyNodes}`);
+  logger.info(`  • Average load: ${topology.statistics.averageLoad.toFixed(2)}`);
+  logger.info(`  • Max capacity: ${topology.statistics.maxCapacity}`);
 
   // Create additional nodes
-  console.log('\n▸ Creating custom nodes...');
+  logger.info('\n▸ Creating custom nodes...');
   for (let i = 0; i < 3; i++) {
     await controller.createNode({
       type: NodeType.COORDINATOR,
@@ -2205,10 +2207,10 @@ async function demo() {
   }
 
   const topology2 = controller.getTopology();
-  console.log(`  • Nodes after creation: ${topology2.statistics.totalNodes}`);
+  logger.info(`  • Nodes after creation: ${topology2.statistics.totalNodes}`);
 
   // Store memories
-  console.log('\n▸ Storing memories in vector space...');
+  logger.info('\n▸ Storing memories in vector space...');
   await controller.storeMemory(
     'task-1',
     'Analyze the system architecture and provide optimization suggestions',
@@ -2221,10 +2223,10 @@ async function demo() {
     { category: 'monitoring', priority: 'medium' }
   );
 
-  console.log('  • Memories stored successfully');
+  logger.info('  • Memories stored successfully');
 
   // Submit tasks
-  console.log('\n▸ Submitting tasks to mesh...');
+  logger.info('\n▸ Submitting tasks to mesh...');
   for (let i = 0; i < 3; i++) {
     const result = await controller.submitTask({
       type: 'analysis',
@@ -2232,11 +2234,11 @@ async function demo() {
       requiredCapacity: 10,
       description: `Task ${i + 1}`,
     });
-    console.log(`  • Task ${result.taskId} routed to ${result.targetNodeId}`);
+    logger.info(`  • Task ${result.taskId} routed to ${result.targetNodeId}`);
   }
 
   // Demonstrate parallel execution
-  console.log('\n▸ Executing parallel operations...');
+  logger.info('\n▸ Executing parallel operations...');
   const tasks = Array(3)
     .fill(null)
     .map((_, i) => ({
@@ -2246,33 +2248,33 @@ async function demo() {
     }));
 
   const parallelResult = await controller.orchestrator.parallel(tasks);
-  console.log(`  • Parallel result: ${parallelResult.successful} successful, ${parallelResult.failed} failed`);
+  logger.info(`  • Parallel result: ${parallelResult.successful} successful, ${parallelResult.failed} failed`);
 
   // Display health status
-  console.log('\n▸ Health Status:');
+  logger.info('\n▸ Health Status:');
   const health = controller.getHealthStatus();
-  console.log(
+  logger.info(
     `  • Running: ${health.isRunning} | Nodes: ${health.nodeStatuses.length} | Healthy: ${health.nodeStatuses.filter((n) => n.healthy).length}`
   );
 
   // Display updated topology
-  console.log('\n▸ Final Lattice Topology:');
+  logger.info('\n▸ Final Lattice Topology:');
   const finalTopology = controller.getTopology();
-  console.log(`  Nodes in mesh:`);
+  logger.info(`  Nodes in mesh:`);
   for (const node of finalTopology.nodes) {
     const healthStatus = node.isHealthy ? '✓' : '✗';
     const loadBar = '█'.repeat(Math.floor(node.loadPercentage / 5)) +
       '░'.repeat(20 - Math.floor(node.loadPercentage / 5));
-    console.log(
+    logger.info(
       `    ${healthStatus} ${node.id} [${node.type}] ${loadBar} ${node.loadPercentage.toFixed(0)}%`
     );
   }
 
   // Shutdown gracefully
-  console.log('\n▸ Shutting down gracefully...');
+  logger.info('\n▸ Shutting down gracefully...');
   await controller.shutdown();
 
-  console.log('\n✓ Demo completed successfully\n');
+  logger.info('\n✓ Demo completed successfully\n');
 }
 
 // Export classes and functions

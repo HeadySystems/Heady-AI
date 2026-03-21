@@ -6,6 +6,7 @@
 // HEADY_BRAND:END
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI, PSI, FIB, CSL, POOLS } = require('../heady-phi-constants');
 
@@ -97,11 +98,9 @@ class SentryCslIntegration {
         beforeSend: (event) => this._enrichEvent(event),
       });
       this._initialized = true;
-    } catch (err) {
-      // Sentry not installed — operate in dry-run mode
+    } catch (err) { // Sentry not installed — operate in dry-run mode
       console.warn('[SentryCsl] @sentry/node not available — dry-run mode');
-      this._initialized = true;
-    }
+      this._initialized = true;  logger.error('Operation failed', { error: err.message }); }
 
     return this;
   }

@@ -34,9 +34,8 @@ const HEADY_ROOT = path.resolve(__dirname, '..');
 let latent;
 try {
   latent = require('./hc_latent_space');
-} catch (e) {
-  // Graceful fallback if latent space module not available
-  latent = { record: () => { }, search: () => ({ results: [] }), wrap: (cat, desc, fn) => fn };
+} catch (e) { // Graceful fallback if latent space module not available
+  latent = { record: () => {  logger.error('Operation failed', { error: e.message }); }, search: () => ({ results: [] }), wrap: (cat, desc, fn) => fn };
 }
 
 // ─── Configuration ────────────────────────────────────────────────
@@ -91,7 +90,7 @@ function loadConfig() {
 // ─── Logging ──────────────────────────────────────────────────────
 const LOG_DIR = path.join(HEADY_ROOT, 'logs');
 function ensureLogDir() {
-  try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) { /* exists */ }
+  try { fs.mkdirSync(LOG_DIR, { recursive: true }); } catch (e) { /* exists */  logger.error('Operation failed', { error: e.message }); }
 }
 
 function log(level, message, data = null) {
@@ -115,7 +114,7 @@ function log(level, message, data = null) {
   ensureLogDir();
   try {
     fs.appendFileSync(path.join(LOG_DIR, 'auto-deploy.log'), line + '\n');
-  } catch (e) { /* ignore file log errors */ }
+  } catch (e) { /* ignore file log errors */  logger.error('Operation failed', { error: e.message }); }
 }
 
 // ─── Git Operations ───────────────────────────────────────────────
@@ -419,9 +418,9 @@ function getStatus() {
   const config = loadConfig();
   let branch = 'unknown', changes = false, conflicts = false, lastCommit = '';
   try { branch = getCurrentBranch(); } catch (e) { branch = `error: ${e.message.substring(0, 50)}`; }
-  try { changes = hasUncommittedChanges(); } catch (e) { /* ignore */ }
-  try { conflicts = hasMergeConflicts(); } catch (e) { /* ignore */ }
-  try { lastCommit = getLastCommitMessage(); } catch (e) { /* ignore */ }
+  try { changes = hasUncommittedChanges(); } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
+  try { conflicts = hasMergeConflicts(); } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
+  try { lastCommit = getLastCommitMessage(); } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
 
   // Read recent deploy records
   let recentDeploys = [];
@@ -434,7 +433,7 @@ function getStatus() {
         catch (e) { return { file: f, error: 'parse error' }; }
       });
     }
-  } catch (e) { /* no records */ }
+  } catch (e) { /* no records */  logger.error('Operation failed', { error: e.message }); }
 
   return {
     autoDeployEnabled: config.autoDeployEnabled,

@@ -87,7 +87,7 @@ class Logger {
       ...data,
     };
 
-    console.log(JSON.stringify(logEntry));
+    logger.info(JSON.stringify(logEntry));
   }
 
   error(message, data) { this.log('error', message, data); }
@@ -1312,10 +1312,10 @@ function createHealthEndpoint(swarmQueen) {
  * Run demonstration of the SwarmQueen
  */
 async function demonstrateSwarm() {
-  console.log('\n' + '='.repeat(80));
-  console.log('HeadyBee Swarm Orchestration Engine v3.0 - Demonstration');
-  console.log('Sacred Geometry v4.0 - φ-weighted distributed intelligence');
-  console.log('='.repeat(80) + '\n');
+  logger.info('\n' + '='.repeat(80));
+  logger.info('HeadyBee Swarm Orchestration Engine v3.0 - Demonstration');
+  logger.info('Sacred Geometry v4.0 - φ-weighted distributed intelligence');
+  logger.info('='.repeat(80) + '\n');
 
   try {
     // Initialize
@@ -1328,7 +1328,7 @@ async function demonstrateSwarm() {
     queen.start();
 
     // Demonstrate simple task
-    console.log('\n--- Simple Task Execution ---\n');
+    logger.info('\n--- Simple Task Execution ---\n');
     const simpleTask = {
       id: 'simple-task-001',
       type: 'code-review',
@@ -1341,10 +1341,10 @@ async function demonstrateSwarm() {
     };
 
     const simpleResult = await queen.submit(simpleTask);
-    console.log('Simple Task Result:', JSON.stringify(simpleResult, null, 2));
+    logger.info('Simple Task Result:', JSON.stringify(simpleResult, null, 2));
 
     // Demonstrate medium complexity task
-    console.log('\n--- Medium Complexity Task Execution ---\n');
+    logger.info('\n--- Medium Complexity Task Execution ---\n');
     const mediumTask = {
       id: 'medium-task-001',
       type: 'deployment',
@@ -1356,10 +1356,10 @@ async function demonstrateSwarm() {
     };
 
     const mediumResult = await queen.submit(mediumTask);
-    console.log('Medium Task Result:', JSON.stringify(mediumResult, null, 2));
+    logger.info('Medium Task Result:', JSON.stringify(mediumResult, null, 2));
 
     // Demonstrate complex task
-    console.log('\n--- Complex Task Execution ---\n');
+    logger.info('\n--- Complex Task Execution ---\n');
     const complexTask = {
       id: 'complex-task-001',
       type: 'system-migration',
@@ -1372,21 +1372,21 @@ async function demonstrateSwarm() {
     };
 
     const complexResult = await queen.submit(complexTask);
-    console.log('Complex Task Result:', JSON.stringify(complexResult, null, 2));
+    logger.info('Complex Task Result:', JSON.stringify(complexResult, null, 2));
 
     // Show swarm status
-    console.log('\n--- Swarm Status ---\n');
+    logger.info('\n--- Swarm Status ---\n');
     const status = queen.getStatus();
-    console.log(JSON.stringify(status, null, 2));
+    logger.info(JSON.stringify(status, null, 2));
 
     // Graceful shutdown
-    console.log('\n--- Graceful Shutdown ---\n');
+    logger.info('\n--- Graceful Shutdown ---\n');
     await queen.stop();
-    console.log('Swarm shut down successfully');
+    logger.info('Swarm shut down successfully');
 
-    console.log('\n' + '='.repeat(80));
-    console.log('Demonstration complete');
-    console.log('='.repeat(80) + '\n');
+    logger.info('\n' + '='.repeat(80));
+    logger.info('Demonstration complete');
+    logger.info('='.repeat(80) + '\n');
   } catch (error) {
     console.error('Demonstration failed:', error);
     process.exit(1);

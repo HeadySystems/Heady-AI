@@ -23,6 +23,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {
@@ -605,7 +606,7 @@ class FeatureGate extends EventEmitter {
     this._localFlags.delete(`kill:${feature}`);
     await this.redis.publish('heady:fg:updates', JSON.stringify({ type: 'kill', feature, active: false }));
     this.emit('kill_switch', { feature, active: false });
-    console.log(`[FeatureGate] Kill switch disabled: ${feature}`);
+    logger.info(`[FeatureGate] Kill switch disabled: ${feature}`);
   }
 
   /**
@@ -627,7 +628,7 @@ class FeatureGate extends EventEmitter {
     this.emit('rollout_updated', { feature, pct: snappedPct, requested: pct });
 
     if (snappedPct !== pct) {
-      console.log(`[FeatureGate] Rollout pct ${pct}% snapped to Fibonacci step ${snappedPct}%`);
+      logger.info(`[FeatureGate] Rollout pct ${pct}% snapped to Fibonacci step ${snappedPct}%`);
     }
   }
 
@@ -890,10 +891,10 @@ class FeatureGate extends EventEmitter {
       this._localFlags.set(`rollout:${feature}`, pct);
     }
 
-    console.log(`[FeatureGate] Loaded ${this._localFlags.size} local flags.`);
-    console.log(`[FeatureGate] Phi A/B weights: [${PHI_AB_WEIGHTS.map(w => w.toFixed(4)).join(', ')}]`);
-    console.log(`[FeatureGate] PSI split weights: [${PSI_SPLIT_WEIGHTS.map(w => w.toFixed(4)).join(', ')}]`);
-    console.log(`[FeatureGate] Fibonacci rollout steps: [${PHI_ROLLOUT_STEPS.join(', ')}]%`);
+    logger.info(`[FeatureGate] Loaded ${this._localFlags.size} local flags.`);
+    logger.info(`[FeatureGate] Phi A/B weights: [${PHI_AB_WEIGHTS.map(w => w.toFixed(4)).join(', ')}]`);
+    logger.info(`[FeatureGate] PSI split weights: [${PSI_SPLIT_WEIGHTS.map(w => w.toFixed(4)).join(', ')}]`);
+    logger.info(`[FeatureGate] Fibonacci rollout steps: [${PHI_ROLLOUT_STEPS.join(', ')}]%`);
   }
 
   async _subscribeToFlagUpdates() {

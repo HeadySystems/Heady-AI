@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -271,9 +272,7 @@ class HeadyDistiller extends EventEmitter {
         const parsed = yaml.load(raw);
         fileConfig = parsed?.distiller || parsed || {};
       }
-    } catch (e) {
-      // config file is optional
-    }
+    } catch (e) { // config file is optional  logger.error('Operation failed', { error: e.message }); }
 
     return {
       ...fileConfig,

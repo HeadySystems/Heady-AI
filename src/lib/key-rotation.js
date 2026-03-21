@@ -4,6 +4,7 @@
  * @module src/lib/key-rotation
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const crypto = require('crypto');
 
@@ -41,7 +42,7 @@ class KeyRotationManager {
         entry.createdAt = Date.now();
         entry.expiresAt = Date.now() + KEY_TTL_MS;
         entry.rotationCount++;
-        console.log(`[KEY-ROTATION] Rotated "${name}" (count: ${entry.rotationCount})`);
+        logger.info(`[KEY-ROTATION] Rotated "${name}" (count: ${entry.rotationCount})`);
         return entry;
     }
 

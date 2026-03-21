@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../utils/logger') || console;
 
 /**
  * csl-gate-engine.js
@@ -404,7 +405,7 @@ class CSLGateEngine {
    *
    * @example
    * const { drifted, similarity, delta } = engine.detectDrift(currentEmb, baselineEmb);
-   * if (drifted) console.log(`Drift detected: delta=${delta.toFixed(3)}`);
+   * if (drifted) logger.info(`Drift detected: delta=${delta.toFixed(3)}`);
    */
   detectDrift(current, baseline, threshold = this.coherenceDriftThreshold) {
     const similarity = cosineSimilarity(current, baseline);

@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * Heady™ Enterprise Test Suite — Environment Validation
  * PR 6: Unit tests for the env-schema validator
@@ -9,7 +10,7 @@ describe('Environment Schema Validator', () => {
     const originalEnv = process.env;
 
     beforeEach(() => {
-        jest.resetModules();
+        vi.resetModules();
         process.env = { ...originalEnv };
     });
 

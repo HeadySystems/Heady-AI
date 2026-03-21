@@ -218,7 +218,7 @@ class RedisConnectionPool {
         this.stats.totalDestroyed++;
         try {
             conn.destroy();
-        } catch (e) { /* ignore */ }
+        } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
     }
 
     _recordAcquire(startTime) {

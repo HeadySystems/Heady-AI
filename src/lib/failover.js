@@ -3,6 +3,7 @@
  * @module src/lib/failover
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 class MultiCloudFailover {
     constructor(opts = {}) {
@@ -32,7 +33,7 @@ class MultiCloudFailover {
             try {
                 await this._healthCheck(this.primary);
                 this._primaryHealthy = true;
-                console.log(`[FAILOVER] Primary recovered, routing restored`);
+                logger.info(`[FAILOVER] Primary recovered, routing restored`);
                 return this._fetch(this.primary, request);
             } catch { /* still down */ }
         }

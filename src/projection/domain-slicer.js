@@ -154,9 +154,9 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(\`🐝 ${siteConfig.name} running at http://localhost:\${PORT}\`);
-    console.log(\`   Domain: ${domain}\`);
-    console.log(\`   Projected from Heady™ Latent OS\`);
+    logger.info(\`🐝 ${siteConfig.name} running at http://localhost:\${PORT}\`);
+    logger.info(\`   Domain: ${domain}\`);
+    logger.info(\`   Projected from Heady™ Latent OS\`);
 });
 `;
 }

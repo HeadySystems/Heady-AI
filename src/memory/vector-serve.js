@@ -7,6 +7,8 @@
  * Cloudflare Workers → GET /api/vector-serve?domain=X&path=Y → returns HTML
  * Deploy via POST /api/vector-serve/deploy → stores content in vector memory
  */
+const logger = console;
+
 
 const PHI = 1.618033988749895;
 
@@ -108,7 +110,7 @@ class VectorServe {
         });
 
         this.logger.info?.(`[VectorServe] Routes wired: /api/vector-serve/*`) ||
-            console.log('🌐 VectorServe: Routes wired');
+            logger.info('🌐 VectorServe: Routes wired');
     }
 
     /**
@@ -190,7 +192,7 @@ class VectorServe {
         this.deployHistory.push(record);
 
         this.logger.info?.(`[VectorServe] Deployed ${domain}${path} (${content.length} bytes, v${metadata.version})`) ||
-            console.log(`🌐 Deployed: ${domain}${path} (${content.length} bytes)`);
+            logger.info(`🌐 Deployed: ${domain}${path} (${content.length} bytes)`);
 
         return record;
     }

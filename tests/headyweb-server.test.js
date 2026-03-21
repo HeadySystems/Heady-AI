@@ -1,8 +1,9 @@
+import { vi } from "vitest";
 const request = require('supertest');
 const { createApp, DEFAULT_TIMEOUT_MS } = require('../apps/headyweb/server');
 
 describe('HeadyWeb server control-plane', () => {
-    const fetchMock = jest.fn();
+    const fetchMock = vi.fn();
 
     beforeAll(() => {
         global.fetch = fetchMock;

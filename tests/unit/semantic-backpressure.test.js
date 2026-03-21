@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -8,7 +9,7 @@
 const fibSeq = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584];
 const mockFib = (n) => fibSeq[n - 1] || 1;
 
-jest.mock('../../src/shared/phi-math.js', () => ({
+vi.mock('../../src/shared/phi-math.js', () => ({
   PSI: 0.6180339887,
   PSI_2: 0.3819660113,
   PSI_3: 0.2360679775,
@@ -21,7 +22,7 @@ jest.mock('../../src/shared/phi-math.js', () => ({
   CRITICALITY_WEIGHTS: { CRITICAL_PLUS: 13, CRITICAL: 8, SHEDDABLE_PLUS: 5, SHEDDABLE: 2 },
 }), { virtual: true });
 
-jest.mock('../../src/shared/csl-engine.js', () => ({
+vi.mock('../../src/shared/csl-engine.js', () => ({
   cslAND: (a, b) => {
     // Cosine similarity mock: dot product of two Float64Arrays
     if (a instanceof Float64Array && b instanceof Float64Array) {
@@ -49,7 +50,7 @@ describe('SemanticBackpressure', () => {
   let mod;
 
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     try {
       mod = require('../../src/orchestration/semantic-backpressure');
     } catch {

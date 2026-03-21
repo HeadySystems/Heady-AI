@@ -123,7 +123,7 @@ class HeadyOrchestrator extends EventEmitter {
   _emitProgress(workflowId, update) {
     const listeners = this._progressListeners.get(workflowId) || [];
     for (const cb of listeners) {
-      try { cb(update); } catch (_) {}
+      try { cb(update); } catch (_) { logger.error('Operation failed', { error: _.message }); }
     }
     this.emit('progress', { workflowId, ...update });
   }

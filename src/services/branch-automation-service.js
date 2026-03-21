@@ -409,10 +409,9 @@ class BranchAutomationService extends EventEmitter {
         destination: sync.destination
       };
 
-    } catch (err) {
-      // Ensure we return to original branch on error
+    } catch (err) { // Ensure we return to original branch on error
       try {
-        execSync(`git checkout ${this.currentBranch}`, { encoding: 'utf8' });
+        execSync(`git checkout ${this.currentBranch  logger.error('Operation failed', { error: err.message }); }`, { encoding: 'utf8' });
       } catch (branchErr) {
         logger.error('Failed to return to original branch:', branchErr.message);
       }

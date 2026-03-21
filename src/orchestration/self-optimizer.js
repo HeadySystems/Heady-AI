@@ -26,9 +26,9 @@
  */
 
 const fs = require("fs");
-let { PHI_INTERVALS } = {}; try { { PHI_INTERVALS } = require("./vector-pipeline"); } catch(e) { /* graceful */ }
+let { PHI_INTERVALS } = {}; try { { PHI_INTERVALS } = require("./vector-pipeline"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const OPT_FILE = path.join(__dirname, "..", "data", "optimization-state.json");
 const OPT_AUDIT = path.join(__dirname, "..", "data", "optimization-audit.jsonl");
@@ -364,15 +364,14 @@ function startContinuousLoop(vectorMem) {
                     } catch { }
                 }
 
-            } catch (err) {
-                // ERROR — log it, don't silently swallow
+            } catch (err) { // ERROR — log it, don't silently swallow
                 heartbeat.consecutiveErrors++;
                 heartbeat.totalErrors++;
                 heartbeat.lastError = err.message;
                 heartbeat.lastErrorAt = Date.now();
                 heartbeat.status = "error";
 
-                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors} consecutive): ${err.message}`);
+                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors  logger.error('Operation failed', { error: err.message }); } consecutive): ${err.message}`);
                 audit({ type: "optimization:error", error: err.message, consecutive: heartbeat.consecutiveErrors });
 
                 // Auto-recovery: exponential backoff

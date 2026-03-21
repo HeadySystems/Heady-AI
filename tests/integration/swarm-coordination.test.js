@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -5,12 +6,12 @@
  * Tests HeadyConductor + SwarmConsensus working together.
  */
 
-jest.mock('../../src/shared/phi-math', () => ({
+vi.mock('../../src/shared/phi-math', () => ({
   PHI_TIMING: { CYCLE: 29034 },
 }));
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const { HeadyConductor } = require('../../src/orchestration/heady-conductor');
@@ -29,11 +30,11 @@ describe('Swarm Coordination Integration', () => {
   it('should register multiple bees and dispatch to correct one', async () => {
     const researchBee = {
       category: 'research',
-      execute: jest.fn().mockResolvedValue({ findings: ['data1'] }),
+      execute: vi.fn().mockResolvedValue({ findings: ['data1'] }),
     };
     const codingBee = {
       category: 'coding',
-      execute: jest.fn().mockResolvedValue({ code: 'function(){}' }),
+      execute: vi.fn().mockResolvedValue({ code: 'function(){}' }),
     };
 
     conductor.registerBee('researcher', researchBee);
@@ -51,9 +52,9 @@ describe('Swarm Coordination Integration', () => {
 
   it('should handle concurrent dispatches', async () => {
     // Register 3 bees so all concurrent dispatches can find an idle bee
-    conductor.registerBee('worker-1', { execute: jest.fn().mockResolvedValue({ ok: true }) });
-    conductor.registerBee('worker-2', { execute: jest.fn().mockResolvedValue({ ok: true }) });
-    conductor.registerBee('worker-3', { execute: jest.fn().mockResolvedValue({ ok: true }) });
+    conductor.registerBee('worker-1', { execute: vi.fn().mockResolvedValue({ ok: true }) });
+    conductor.registerBee('worker-2', { execute: vi.fn().mockResolvedValue({ ok: true }) });
+    conductor.registerBee('worker-3', { execute: vi.fn().mockResolvedValue({ ok: true }) });
 
     const results = await Promise.all([
       conductor.dispatch('task', { id: 1 }),
@@ -67,7 +68,7 @@ describe('Swarm Coordination Integration', () => {
 
   it('should track execution state correctly', async () => {
     const bee = {
-      execute: jest.fn().mockImplementation(() =>
+      execute: vi.fn().mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({ done: true }), 50))
       ),
     };
@@ -82,7 +83,7 @@ describe('Swarm Coordination Integration', () => {
 
   it('should handle bee failure gracefully', async () => {
     const failBee = {
-      execute: jest.fn().mockRejectedValue(new Error('bee crashed')),
+      execute: vi.fn().mockRejectedValue(new Error('bee crashed')),
     };
     conductor.registerBee('fail-bee', failBee);
 
@@ -96,10 +97,10 @@ describe('Swarm Coordination Integration', () => {
   });
 
   it('should support admin dispatch (God Mode)', async () => {
-    const bee = { execute: jest.fn().mockResolvedValue({ admin: true }) };
+    const bee = { execute: vi.fn().mockResolvedValue({ admin: true }) };
     conductor.registerBee('admin-bee', bee);
 
-    const handler = jest.fn();
+    const handler = vi.fn();
     conductor.on('admin:dispatch', handler);
 
     const result = await conductor.adminDispatch('admin-task', { urgent: true });
@@ -108,7 +109,7 @@ describe('Swarm Coordination Integration', () => {
   });
 
   it('should maintain correct status after operations', async () => {
-    const bee = { execute: jest.fn().mockResolvedValue({}) };
+    const bee = { execute: vi.fn().mockResolvedValue({}) };
     conductor.registerBee('bee-1', bee);
     conductor.registerBee('bee-2', { domain: 'other' });
 

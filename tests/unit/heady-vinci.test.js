@@ -102,5 +102,5 @@ setTimeout(() => {
     level: 'info', suite: 'heady-vinci',
     passed, total, status: passed === total ? 'ALL_PASS' : 'SOME_FAIL',
   }) + '\n');
-  process.exit(passed === total ? 0 : 1);
+  process.exitCode = passed === total ? 0 : 1;
 }, 5000);

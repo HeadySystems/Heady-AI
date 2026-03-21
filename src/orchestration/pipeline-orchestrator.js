@@ -24,6 +24,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const EventEmitter = require('events');
 const path         = require('path');
@@ -32,7 +33,7 @@ const path         = require('path');
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch(e) { /* graceful */ }
+let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const {
   PHI,
@@ -54,7 +55,7 @@ const {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** @type {Object} Canonical 21-stage pipeline definition from single source of truth. */
-let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json'); } catch(e) { /* graceful */ }
+let PIPELINE_CONFIG = null; try { PIPELINE_CONFIG = require('../../configs/hcfullpipeline.json'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 3 — STAGE CONSTANTS
@@ -268,7 +269,7 @@ function buildStageIndex(stages) {
  * @example
  * const orchestrator = new PipelineOrchestrator();
  * orchestrator.on('stage:pass', ({ stage, duration }) =>
- *   console.log(`${stage} passed in ${duration}ms`));
+ *   logger.info(`${stage} passed in ${duration}ms`));
  * const result = await orchestrator.run({ type: 'code_generation', payload: {} });
  */
 class PipelineOrchestrator extends EventEmitter {

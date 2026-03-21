@@ -671,9 +671,7 @@ try {
       console.warn(`[auto-success-catalog] Failed to load JSON task file "${file}": ${e.message}`);
     }
   }
-} catch (e) {
-  // Fallback — no dynamic loading in non-Node environments
-}
+} catch (e) { // Fallback — no dynamic loading in non-Node environments  logger.error('Operation failed', { error: e.message }); }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // EXECUTION DEFAULTS — MAX EFFORT UNLESS USER OVERRIDES

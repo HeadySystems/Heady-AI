@@ -5,6 +5,7 @@
  * From: Dropzone/10-Incoming audit manifests
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const PHI_INV = 0.618033988749895;
@@ -27,14 +28,14 @@ class HermesAgent {
   async start() {
     this.serverCard = await this._loadServerCard();
     this._gcInterval = setInterval(() => this._gcSessions(), Math.round(60000 * PHI));
-    console.log(`[HERMES] Protocol liaison active | sessions TTL=${this.sessionTTL}ms`);
+    logger.info(`[HERMES] Protocol liaison active | sessions TTL=${this.sessionTTL}ms`);
     return { status: 'active', agent: this.name, pool: this.pool };
   }
 
   async stop() {
     if (this._gcInterval) clearInterval(this._gcInterval);
     this.sessions.clear();
-    console.log('[HERMES] Shutdown complete');
+    logger.info('[HERMES] Shutdown complete');
   }
 
   /** Create or resume a session */
@@ -143,7 +144,7 @@ class HermesAgent {
     for (const [id, session] of this.sessions) {
       if (now > session.expiresAt) { this.sessions.delete(id); cleaned++; }
     }
-    if (cleaned > 0) console.log(`[HERMES] GC: removed ${cleaned} expired sessions`);
+    if (cleaned > 0) logger.info(`[HERMES] GC: removed ${cleaned} expired sessions`);
   }
 }
 

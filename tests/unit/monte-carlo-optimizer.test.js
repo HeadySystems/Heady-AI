@@ -1,18 +1,19 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
  * MonteCarloOptimizer Unit Tests (TEST-05)
  */
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 describe('MonteCarloOptimizer', () => {
   let mod;
 
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     mod = require('../../src/orchestration/monte-carlo-optimizer');
   });
 

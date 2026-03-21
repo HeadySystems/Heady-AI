@@ -22,6 +22,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const EventEmitter = require('events');
@@ -618,7 +619,7 @@ class HealthMonitor extends EventEmitter {
       this.emit('healing', { actions, result });
 
       if (actions.length > 0) {
-        console.log('[HealthMonitor] Self-healing actions applied:', actions);
+        logger.info('[HealthMonitor] Self-healing actions applied:', actions);
         await this._sendAlert({
           level:   result.status,
           message: `Self-healing triggered. Score: ${result.score}. Actions: ${actions.join(', ')}`,

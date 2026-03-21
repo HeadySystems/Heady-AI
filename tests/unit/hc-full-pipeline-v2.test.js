@@ -1,11 +1,12 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
  * HCFullPipeline v2 Unit Tests (TEST-03)
  */
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const HCFullPipeline = require('../../src/orchestration/hc-full-pipeline');
@@ -31,7 +32,7 @@ describe('HCFullPipeline', () => {
 
     it('should accept optional dependencies', () => {
       const mc = {};
-      const sa = { ingestTelemetry: jest.fn() };
+      const sa = { ingestTelemetry: vi.fn() };
       const p = new HCFullPipeline({ monteCarlo: mc, selfAwareness: sa });
       expect(p.monteCarlo).toBe(mc);
       expect(p.selfAwareness).toBe(sa);
@@ -73,7 +74,7 @@ describe('HCFullPipeline', () => {
     });
 
     it('should emit run:created event', () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       pipeline.on('run:created', handler);
       pipeline.createRun({ task: 'test' });
       expect(handler).toHaveBeenCalledWith(expect.objectContaining({
@@ -204,7 +205,7 @@ describe('HCFullPipeline', () => {
   describe('Self-Awareness Telemetry Wiring', () => {
     it('should wire telemetry when selfAwareness is provided', async () => {
       const sa = {
-        ingestTelemetry: jest.fn().mockResolvedValue(undefined),
+        ingestTelemetry: vi.fn().mockResolvedValue(undefined),
       };
       const p = new HCFullPipeline({ selfAwareness: sa });
       const run = p.createRun({ task: 'telemetry test' });
@@ -216,7 +217,7 @@ describe('HCFullPipeline', () => {
   describe('Vector Memory Integration', () => {
     it('should query vector memory in INTAKE stage', async () => {
       const mockMemory = {
-        queryMemory: jest.fn().mockResolvedValue([
+        queryMemory: vi.fn().mockResolvedValue([
           { content: 'relevant context', score: 0.9 },
         ]),
       };

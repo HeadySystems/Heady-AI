@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * HeadyCache File Store
@@ -230,9 +231,7 @@ class FileStore {
       fs.writeFileSync(this._walPath, '', 'utf8');
       this._walStream = fs.createWriteStream(this._walPath, { flags: 'a' });
       this._walOps = 0;
-    } catch (e) {
-      // Non-fatal — will retry on next compact cycle
-    }
+    } catch (e) { // Non-fatal — will retry on next compact cycle  logger.error('Operation failed', { error: e.message }); }
   }
 
   async _ensureReady() {

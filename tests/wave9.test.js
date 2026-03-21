@@ -333,4 +333,4 @@ const report = {
 };
 
 process.stdout.write(JSON.stringify(report, null, 2) + '\n');
-process.exit(failed > 0 ? 1 : 0);
+process.exitCode = failed > 0 ? 1 : 0;

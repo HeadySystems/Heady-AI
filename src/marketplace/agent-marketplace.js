@@ -23,6 +23,7 @@
  * Revenue model: 20% platform fee on all paid agent installs.
  */
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { Router } = require('express');
 const crypto = require('crypto');
@@ -55,9 +56,7 @@ function getEventBus() {
 function emit(event, payload) {
   try {
     getEventBus().emit(event, { ...payload, timestamp: Date.now() });
-  } catch (_) {
-    // Swallow emit errors — marketplace must not crash on listener failures
-  }
+  } catch (_) { // Swallow emit errors — marketplace must not crash on listener failures  logger.error('Operation failed', { error: _.message }); }
 }
 
 // ─── Validation Helpers ─────────────────────────────────────────────────────

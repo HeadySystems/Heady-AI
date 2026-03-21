@@ -191,7 +191,7 @@ describe('SemanticMatcher', () => {
 
   beforeEach(() => {
     matcher = new SemanticMatcher({
-      embedUrl: 'http://localhost:9999', // won't be called in these tests
+      embedUrl: (process.env.SERVICE_URL || 'http://0.0.0.0:9999'), // won't be called in these tests
       similarityThreshold: 0.9,
       distanceMetric: 'cosine',
       embeddingDims: dims,

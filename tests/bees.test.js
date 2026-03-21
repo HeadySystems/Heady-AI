@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * © 2026 Heady™Systems Inc..
  * Tests for Heady™Bee templates — validates the bee ecosystem after optimization.
@@ -7,8 +8,8 @@
 const originalLog = console.log;
 const originalWarn = console.warn;
 beforeAll(() => {
-    console.log = jest.fn();
-    console.warn = jest.fn();
+    console.log = vi.fn();
+    console.warn = vi.fn();
 });
 afterAll(() => {
     console.log = originalLog;

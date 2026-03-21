@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * mistake-analysis-engine.js
@@ -1126,7 +1127,7 @@ class MistakeReport {
  * @example
  * const engine = new MistakeAnalysisEngine(vectorMemory, wisdomStore);
  * const report = await engine.analyze(pipelineRun);
- * console.log(report.toMarkdown());
+ * logger.info(report.toMarkdown());
  */
 class MistakeAnalysisEngine extends EventEmitter {
   /**
@@ -1266,9 +1267,8 @@ class MistakeAnalysisEngine extends EventEmitter {
         .map(r => r.entry || r.data || r)
         .flat()
         .filter(Boolean);
-    } catch (err) {
-      // Non-fatal: historical retrieval failure degrades gracefully
-      this.emit('error', { stage: 'retrieveHistorical', error: err.message });
+    } catch (err) { // Non-fatal: historical retrieval failure degrades gracefully
+      this.emit('error', { stage: 'retrieveHistorical', error: err.message  logger.error('Operation failed', { error: err.message }); });
       return [];
     }
   }
@@ -1363,9 +1363,7 @@ class MistakeAnalysisEngine extends EventEmitter {
       this._wisdomStore.set('anti_regression.recon_checks',  reconRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.trial_warnings', trialRules.map(r => r.gate));
       this._wisdomStore.set('anti_regression.csl_gates',      gateRules.map(r => r.gate));
-    } catch (_) {
-      // Non-fatal: degraded persistence
-    }
+    } catch (_) { // Non-fatal: degraded persistence  logger.error('Operation failed', { error: _.message }); }
 
     return reconRules.length + trialRules.length + testRules.length + gateRules.length;
   }

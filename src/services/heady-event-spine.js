@@ -1,3 +1,4 @@
+const logger = console;
 // ═══════════════════════════════════════════════════════════════════════════════
 // HeadyEventSpine — Instantaneous Push-Based Event Bus
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -86,11 +87,9 @@ export class HeadyEventSpine {
             await handler(event);
           }));
         }
-      } catch (err) {
-        // Log error and continue — don't crash the event loop
+      } catch (err) { // Log error and continue — don't crash the event loop
         console.error('[HeadyEventSpine] Stream error:', err.message);
-        await new Promise(r => setTimeout(r, 1000)); // Brief pause on error only
-      }
+        await new Promise(r => setTimeout(r, 1000)); // Brief pause on error only  logger.error('Operation failed', { error: err.message }); }
     }
   }
 

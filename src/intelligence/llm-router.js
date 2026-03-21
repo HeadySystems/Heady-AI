@@ -461,7 +461,7 @@ class PerplexityAdapter extends BaseProviderAdapter {
 class LocalAdapter extends BaseProviderAdapter {
   constructor(config = {}) {
     super(PROVIDERS.LOCAL, config);
-    this.baseUrl = config.baseUrl ?? 'http://localhost:11434';
+    this.baseUrl = config.baseUrl ?? (process.env.SERVICE_URL || 'http://0.0.0.0:11434');
     this.defaultModel = 'phi3';
   }
 
@@ -1050,7 +1050,7 @@ function createRouterFromEnv(overrides = {}) {
   if (process.env.GOOGLE_API_KEY)     providers[PROVIDERS.GOOGLE]     = { apiKey: process.env.GOOGLE_API_KEY };
   if (process.env.GROQ_API_KEY)       providers[PROVIDERS.GROQ]       = { apiKey: process.env.GROQ_API_KEY };
   if (process.env.PERPLEXITY_API_KEY) providers[PROVIDERS.PERPLEXITY] = { apiKey: process.env.PERPLEXITY_API_KEY };
-  providers[PROVIDERS.LOCAL] = { baseUrl: process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434' };
+  providers[PROVIDERS.LOCAL] = { baseUrl: process.env.OLLAMA_BASE_URL ?? (process.env.SERVICE_URL || 'http://0.0.0.0:11434') };
 
   return new LLMRouter({ providers, ...overrides });
 }

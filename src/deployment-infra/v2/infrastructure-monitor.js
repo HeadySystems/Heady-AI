@@ -37,6 +37,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const https = require('https');
@@ -298,7 +299,7 @@ class InfrastructureMonitor extends EventEmitter {
     // Default: monitor localhost
     const port = process.env.PORT || '8080';
     return [
-      { name: 'heady-manager', url: `http://localhost:${port}` },
+      { name: 'heady-manager', url: `http://0.0.0.0:${port}` },
     ];
   }
 
@@ -309,7 +310,7 @@ class InfrastructureMonitor extends EventEmitter {
     this._check(); // Immediate first check
     this._timer = setInterval(() => this._check(), this.config.intervalMs);
     this._timer.unref?.();
-    console.log(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
+    logger.info(JSON.stringify({ level: 'info', msg: 'InfrastructureMonitor started', targets: this.targets.map(t => t.name), intervalMs: this.config.intervalMs }));
   }
 
   stop() {
@@ -399,7 +400,7 @@ class InfrastructureMonitor extends EventEmitter {
 
     this.history.push({ score, errorRate: 0, latencyMs: results[this.targets[0]?.name]?.latencyMs });
 
-    console.log(JSON.stringify({
+    logger.info(JSON.stringify({
       level: isCritical ? 'error' : isDegraded ? 'warn' : 'info',
       msg: 'Health check',
       score,
@@ -580,7 +581,7 @@ class InfrastructureMonitor extends EventEmitter {
       }
     });
     this._server.listen(this.config.port, () => {
-      console.log(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
+      logger.info(JSON.stringify({ level: 'info', msg: `Monitor HTTP server listening on :${this.config.port}` }));
     });
   }
 }
@@ -593,13 +594,13 @@ async function main() {
 
   if (args.includes('--once')) {
     const report = await monitor.runOnce();
-    console.log(JSON.stringify(report, null, 2));
+    logger.info(JSON.stringify(report, null, 2));
     process.exit(report.status === 'critical' ? 1 : 0);
   }
 
   if (args.includes('--report')) {
     await monitor.runOnce();
-    console.log(JSON.stringify(monitor.lastReport, null, 2));
+    logger.info(JSON.stringify(monitor.lastReport, null, 2));
     process.exit(0);
   }
 

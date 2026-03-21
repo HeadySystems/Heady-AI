@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * HeadyLiquidGateway — Provider Racer
  * 
@@ -265,7 +266,7 @@ export class ProviderRacer extends EventEmitter {
       this.activeRaces--;
       // Ensure all aborted
       for (const [, controller] of controllers) {
-        try { controller.abort(); } catch (_) { /* noop */ }
+        try { controller.abort(); } catch (_) { /* noop */  logger.error('Operation failed', { error: _.message }); }
       }
     }
   }

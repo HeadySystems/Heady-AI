@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -9,10 +10,10 @@ describe('RedisPoolManager (src/resilience)', () => {
   let RedisPoolManager;
 
   beforeEach(() => {
-    jest.resetModules();
-    jest.mock('../../src/shared/phi-math', () => ({ PHI_TIMING: { CYCLE: 29034 } }));
-    jest.mock('../../src/utils/logger', () => ({
-      info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+    vi.resetModules();
+    vi.mock('../../src/shared/phi-math', () => ({ PHI_TIMING: { CYCLE: 29034 } }));
+    vi.mock('../../src/utils/logger', () => ({
+      info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
     }));
     const mod = require('../../src/resilience/redis-pool');
     RedisPoolManager = mod.RedisPoolManager || mod;
@@ -78,9 +79,9 @@ describe('RedisPoolV3 (src/resilience)', () => {
   let RedisPoolV3;
 
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     // Force mock fallback by making ioredis unavailable
-    jest.mock('ioredis', () => { throw new Error('mocked out'); });
+    vi.mock('ioredis', () => { throw new Error('mocked out'); });
     const mod = require('../../src/resilience/redis-pool-v3');
     RedisPoolV3 = mod.RedisPoolV3;
   });

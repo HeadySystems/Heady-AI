@@ -1,23 +1,25 @@
 /**
  * Auto-generated test stub for heady-doctor
  * Generated: 2026-03-07 by Heady™ Autonomous Cycle
+ * Updated: 2026-03-21 — fixed for vitest + new module.exports
  * 
  * Service: src/services/heady-doctor.js
- * Requires manual review and expansion of test cases.
  */
+
+import { vi } from 'vitest';
 
 describe("heady-doctor", () => {
   let service;
 
   beforeAll(() => {
     // Suppress console output during tests
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "warn").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("should load without throwing", () => {
@@ -26,21 +28,19 @@ describe("heady-doctor", () => {
     }).not.toThrow();
   });
 
-  test("should export a module", () => {
+  test("should export main, check, and CHECKS", () => {
     expect(service).toBeDefined();
-    expect(typeof service === "object" || typeof service === "function").toBe(true);
+    expect(typeof service.main).toBe("function");
+    expect(typeof service.check).toBe("function");
+    expect(Array.isArray(service.CHECKS)).toBe(true);
   });
 
-  test("should have expected interface", () => {
-    // Common patterns in Heady™ services:
-    const hasRoutes = typeof service.registerRoutes === "function" 
-      || typeof service.router !== "undefined"
-      || typeof service === "function";
-    const hasClass = service.constructor && service.constructor.name !== "Object";
-    const hasBoot = typeof service.boot === "function";
-    const hasHealth = typeof service.health === "function";
-
-    // Service should expose at least one interface
-    expect(hasRoutes || hasClass || hasBoot || hasHealth || Object.keys(service).length > 0).toBe(true);
+  test("CHECKS array contains diagnostic entries", () => {
+    expect(service.CHECKS.length).toBeGreaterThan(0);
+    for (const c of service.CHECKS) {
+      expect(c.name).toBeDefined();
+      expect(typeof c.fn).toBe("function");
+    }
   });
 });
+

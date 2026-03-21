@@ -24,6 +24,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter = require('events');
@@ -34,10 +35,10 @@ try {
   logger = require('./utils/logger');
 } catch {
   logger = {
-    info: (...a) => console.log(...a),
+    info: (...a) => logger.info(...a),
     warn: (...a) => console.warn(...a),
     error: (...a) => console.error(...a),
-    debug: (...a) => process.env.LOG_LEVEL === 'debug' && console.log(...a),
+    debug: (...a) => process.env.LOG_LEVEL === 'debug' && logger.info(...a),
   };
 }
 

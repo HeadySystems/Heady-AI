@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Pipeline Core — Config loader, run state, logging, stop rules, checkpoints.
@@ -115,9 +116,7 @@ function appendLog(state, level, message, detail) {
     const line = `[${entry.ts}] [${level.toUpperCase()}] [${entry.stage}] ${message}`;
     try {
         fs.appendFileSync(PIPELINE_LOG, line + "\n", "utf8");
-    } catch (_) {
-        // log file write failure is non-fatal
-    }
+    } catch (_) { // log file write failure is non-fatal  logger.error('Operation failed', { error: _.message }); }
 }
 
 // ─── STOP RULE EVALUATOR ────────────────────────────────────────────────────

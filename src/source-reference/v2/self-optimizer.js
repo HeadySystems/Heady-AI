@@ -364,15 +364,14 @@ function startContinuousLoop(vectorMem) {
                     } catch { }
                 }
 
-            } catch (err) {
-                // ERROR — log it, don't silently swallow
+            } catch (err) { // ERROR — log it, don't silently swallow
                 heartbeat.consecutiveErrors++;
                 heartbeat.totalErrors++;
                 heartbeat.lastError = err.message;
                 heartbeat.lastErrorAt = Date.now();
                 heartbeat.status = "error";
 
-                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors} consecutive): ${err.message}`);
+                logger.error(`  ✘ Optimizer cycle error (${heartbeat.consecutiveErrors  logger.error('Operation failed', { error: err.message }); } consecutive): ${err.message}`);
                 audit({ type: "optimization:error", error: err.message, consecutive: heartbeat.consecutiveErrors });
 
                 // Auto-recovery: exponential backoff

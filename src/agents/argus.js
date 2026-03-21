@@ -5,6 +5,7 @@
  * From: Dropzone/10-Incoming audit manifests
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const PHI_INV = 0.618033988749895;
@@ -42,13 +43,13 @@ class ArgusAgent {
 
   async start() {
     this._checkInterval = setInterval(() => this._runDriftCheck(), Math.round(60000 * PHI));
-    console.log(`[ARGUS] Audit/telemetry/drift agent active | 6-signal drift detection enabled`);
+    logger.info(`[ARGUS] Audit/telemetry/drift agent active | 6-signal drift detection enabled`);
     return { status: 'active', agent: this.name };
   }
 
   async stop() {
     if (this._checkInterval) clearInterval(this._checkInterval);
-    console.log('[ARGUS] Shutdown complete');
+    logger.info('[ARGUS] Shutdown complete');
   }
 
   /** Record an audit event — tamper-evident chain */
@@ -178,7 +179,7 @@ class ArgusAgent {
         resolved: false
       };
       this.driftAlerts.push(alert);
-      console.log(`[ARGUS] Drift alert: ${alert.signal} on ${alert.service} (${alert.deviation.toFixed(2)}σ)`);
+      logger.info(`[ARGUS] Drift alert: ${alert.signal} on ${alert.service} (${alert.deviation.toFixed(2)}σ)`);
     }
   }
 
@@ -188,7 +189,7 @@ class ArgusAgent {
     for (const [key, baseline] of this.driftBaselines) {
       const age = now - baseline.setAt;
       if (age > 86400000 * PHI) { // φ-day stale baseline
-        console.log(`[ARGUS] Stale baseline warning: ${key} (${Math.round(age / 3600000)}h old)`);
+        logger.info(`[ARGUS] Stale baseline warning: ${key} (${Math.round(age / 3600000)}h old)`);
       }
     }
   }

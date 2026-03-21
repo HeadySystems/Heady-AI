@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 /**
  * self-awareness.js — HeadySelfAwareness
  * Metacognition engine for the Heady™ Sovereign AI Platform.
@@ -612,7 +613,7 @@ class HeadySelfAwareness extends EventEmitter {
     };
     this.emit('escalation:heady_soul', escalation);
     if (typeof this._onEscalate === 'function') {
-      try { this._onEscalate(escalation); } catch (_) { /* absorb */ }
+      try { this._onEscalate(escalation); } catch (_) { /* absorb */  logger.error('Operation failed', { error: _.message }); }
     }
   }
 

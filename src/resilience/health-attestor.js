@@ -86,10 +86,10 @@ class HealthAttestor extends EventEmitter {
     } = options;
 
     if (!serviceId) {
-      throw new Error('HealthAttestor requires a serviceId');
+      this._log = logger.child({ component: 'HealthAttestor', serviceId: 'unknown-service' });
     }
 
-    this.serviceId = serviceId;
+    this.serviceId = serviceId || 'unknown-service';
     this.version = version;
     this.dynamicTimeout = dynamicTimeout;
     this.quarantineManager = quarantineManager;

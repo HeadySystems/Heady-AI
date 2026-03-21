@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -268,9 +269,7 @@ class TrajectoryFilter {
         try {
           const entries = traceLoader(summary.traceId);
           this.extractTips(entries, summary);
-        } catch (e) {
-          // skip traces that fail to load
-        }
+        } catch (e) { // skip traces that fail to load  logger.error('Operation failed', { error: e.message }); }
       }
     }
 

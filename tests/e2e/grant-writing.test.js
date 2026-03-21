@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -5,8 +6,8 @@
  * Simulates a grant-writing task flowing through the full HCFullPipeline.
  */
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const HCFullPipeline = require('../../src/orchestration/hc-full-pipeline');
@@ -72,11 +73,11 @@ describe('E2E: Grant Writing Pipeline', () => {
 
   it('should enrich grant context with vector memory when available', async () => {
     const mockMemory = {
-      queryMemory: jest.fn().mockResolvedValue([
+      queryMemory: vi.fn().mockResolvedValue([
         { content: 'Previous grant for HeadyConnection tech access program', score: 0.92 },
         { content: 'HUD CDBG eligibility criteria', score: 0.87 },
       ]),
-      queryWithRelationships: jest.fn().mockResolvedValue([
+      queryWithRelationships: vi.fn().mockResolvedValue([
         { entity: 'Community Technology', relations: ['funding', 'nonprofit'] },
       ]),
     };

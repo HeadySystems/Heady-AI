@@ -1,4 +1,5 @@
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
@@ -562,7 +563,7 @@ class SubscriptionRegistry {
  * mesh.registerAgent('MUSE',  { capabilities: ['create', 'content'] });
  *
  * mesh.subscribe('JULES', 'code.review.requested', async (msg) => {
- *   console.log('JULES got review request:', msg.payload);
+ *   logger.info('JULES got review request:', msg.payload);
  * });
  *
  * // MUSE requests a code review without knowing JULES exists

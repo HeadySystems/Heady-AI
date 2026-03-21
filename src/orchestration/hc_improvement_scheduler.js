@@ -7,7 +7,7 @@
  * pattern engine and self-critique for continuous improvement.
  */
 
-let logger = null; try { logger = require('./utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('./utils/logger'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 const { PHI_TIMING } = require('../shared/phi-math');
 
 class ImprovementScheduler {

@@ -21,9 +21,10 @@
  * Usage:
  *   import { triagePortfolio, generateTriageReport, calculateDeadlines } from './src/ip/patentTracker.js';
  *   const report = generateTriageReport(myPatents);
- *   console.log(report);
+ *   logger.info(report);
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const MS_PER_DAY = 86_400_000;

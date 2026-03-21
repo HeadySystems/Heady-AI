@@ -80,6 +80,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const EventEmitter    = require('events');
@@ -914,9 +915,9 @@ if (require.main === module) {
     const traceId = obs.tracer.currentTraceId() || 'unknown';
     obs.logger.info('Trace complete', { traceId });
 
-    console.log('\n=== Prometheus metrics sample ===');
+    logger.info('\n=== Prometheus metrics sample ===');
     const output = obs.metrics.collect();
     // Print just the first 20 lines
-    console.log(output.split('\n').slice(0, 20).join('\n') + '\n...');
+    logger.info(output.split('\n').slice(0, 20).join('\n') + '\n...');
   })().catch(console.error);
 }

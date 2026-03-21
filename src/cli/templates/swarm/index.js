@@ -6,6 +6,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const { BeeAgent } = require('./agent');
 
@@ -34,14 +35,14 @@ async function main() {
     swarm.push(bee);
   }
 
-  console.log(`[{{PROJECT_NAME}}] Swarm initialized with ${swarm.length} bees`);
-  console.log(`  categories: ${JSON.stringify(getCategoryCounts(swarm))}`);
+  logger.info(`[{{PROJECT_NAME}}] Swarm initialized with ${swarm.length} bees`);
+  logger.info(`  categories: ${JSON.stringify(getCategoryCounts(swarm))}`);
 
   // Swarm heartbeat
   const interval = setInterval(() => {
     const statuses = swarm.map((b) => b.getStatus());
     const active = statuses.filter((s) => s.state === 'ready').length;
-    console.log(`[{{PROJECT_NAME}}] swarm heartbeat — ${active}/${swarm.length} bees ready`);
+    logger.info(`[{{PROJECT_NAME}}] swarm heartbeat — ${active}/${swarm.length} bees ready`);
   }, HEARTBEAT_MS);
 
   process.on('SIGINT', () => {
@@ -56,7 +57,7 @@ async function main() {
   );
 
   const succeeded = results.filter((r) => r.status === 'fulfilled').length;
-  console.log(`[{{PROJECT_NAME}}] Init complete: ${succeeded}/${swarm.length} bees succeeded`);
+  logger.info(`[{{PROJECT_NAME}}] Init complete: ${succeeded}/${swarm.length} bees succeeded`);
 }
 
 function getCategoryCounts(swarm) {

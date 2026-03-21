@@ -14430,3 +14430,1408 @@ Pushed successfully
     [35mcomponent[39m: "system"
 [2026-03-20 18:15:04.195 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:15:04.195Z] [INFO] Successfully pushed a7fadd5b4 to production/main[39m
     [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:30:02.160 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:30:02.159Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:30:02.160 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:30:02.160Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:35:01.582 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:35:01.582Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:35:01.583 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:35:01.583Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:40:01.927 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:40:01.927Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:40:01.929 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:40:01.928Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:45:01.249 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:45:01.248Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:45:01.249 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:45:01.249Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:50:01.582 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:50:01.581Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:50:01.582 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:50:01.582Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 18:55:01.904 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T00:55:01.904Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 18:55:01.905 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T00:55:01.905Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:00:01.220 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:00:01.220Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:00:01.221 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:00:01.221Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:05:01.548 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:05:01.547Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:05:01.548 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:05:01.548Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:10:01.880 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:10:01.880Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:10:01.881 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:10:01.881Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:15:01.203 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:15:01.202Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:15:01.203 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:15:01.203Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:20:01.542 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:20:01.541Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:20:01.542 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:20:01.542Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:25:01.859 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:25:01.858Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:25:01.860 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:25:01.860Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:30:01.179 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:30:01.178Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:30:01.179 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:30:01.179Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:35:01.500 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:35:01.500Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:35:01.501 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:35:01.501Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:40:01.824 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:40:01.823Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:40:01.825 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:40:01.825Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:45:01.145 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:45:01.144Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:45:01.145 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:45:01.145Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:50:01.462 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:50:01.461Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:50:01.463 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:50:01.462Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 19:55:01.788 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T01:55:01.787Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 19:55:01.789 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T01:55:01.788Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:00:02.114 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:00:02.113Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:00:02.114 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:00:02.114Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:05:01.432 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:05:01.432Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:05:01.433 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:05:01.433Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:10:01.763 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:10:01.763Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:10:01.764 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:10:01.764Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:15:02.083 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:15:02.083Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:15:02.084 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:15:02.084Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:20:01.427 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:20:01.427Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:20:01.428 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:20:01.428Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:25:01.752 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:25:01.751Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:25:01.752 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:25:01.752Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:30:02.073 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:30:02.072Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:30:02.074 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:30:02.074Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:35:01.390 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:35:01.389Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:35:01.390 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:35:01.390Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:40:01.716 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:40:01.715Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:40:01.716 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:40:01.716Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:45:02.038 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:45:02.038Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:45:02.039 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:45:02.039Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:50:01.354 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:50:01.353Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:50:01.354 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:50:01.354Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 20:55:01.676 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T02:55:01.676Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 20:55:01.677 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T02:55:01.677Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:00:01.994 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:00:01.994Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:00:01.995 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:00:01.995Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:05:01.312 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:05:01.311Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:05:01.312 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:05:01.312Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:10:01.639 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:10:01.638Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:10:01.639 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:10:01.639Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:15:01.967 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:15:01.966Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:15:01.967 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:15:01.967Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:20:01.310 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:20:01.310Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:20:01.311 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:20:01.310Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:25:01.636 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:25:01.636Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:25:01.637 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:25:01.637Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:30:01.959 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:30:01.959Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:30:01.960 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:30:01.960Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:35:01.312 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:35:01.312Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:35:01.313 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:35:01.313Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:40:01.685 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:40:01.685Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:40:01.686 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:40:01.686Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:45:02.053 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:45:02.053Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:45:02.054 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:45:02.054Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:50:01.420 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:50:01.419Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:50:01.421 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:50:01.421Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 21:55:01.761 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T03:55:01.760Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 21:55:01.761 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T03:55:01.761Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:00:02.083 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:00:02.082Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:00:02.084 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:00:02.084Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:05:01.401 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:05:01.400Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:05:01.401 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:05:01.401Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:10:01.732 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:10:01.731Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:10:01.732 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:10:01.732Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:15:02.054 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:15:02.053Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:15:02.054 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:15:02.054Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:20:01.384 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:20:01.384Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:20:01.384 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:20:01.384Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:25:01.705 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:25:01.704Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:25:01.706 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:25:01.706Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:30:02.026 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:30:02.026Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:30:02.027 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:30:02.027Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:35:01.351 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:35:01.351Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:35:01.352 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:35:01.352Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:40:01.682 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:40:01.682Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:40:01.683 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:40:01.683Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:45:02.004 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:45:02.003Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:45:02.004 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:45:02.004Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:50:01.329 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:50:01.329Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:50:01.330 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:50:01.330Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 22:55:01.648 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T04:55:01.648Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 22:55:01.649 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T04:55:01.649Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:00:01.970 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:00:01.969Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:00:01.971 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:00:01.971Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:05:01.291 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:05:01.290Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:05:01.292 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:05:01.292Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:10:01.617 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:10:01.617Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:10:01.618 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:10:01.618Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:15:01.945 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:15:01.945Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:15:01.946 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:15:01.946Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:20:01.278 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:20:01.277Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:20:01.279 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:20:01.279Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:25:01.600 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:25:01.599Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:25:01.600 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:25:01.600Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:30:01.920 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:30:01.919Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:30:01.921 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:30:01.921Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:35:01.240 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:35:01.239Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:35:01.241 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:35:01.240Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:40:01.573 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:40:01.572Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:40:01.574 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:40:01.574Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:45:01.894 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:45:01.894Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:45:01.895 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:45:01.895Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:50:01.228 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:50:01.227Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:50:01.228 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:50:01.228Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-20 23:55:01.547 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T05:55:01.547Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-20 23:55:01.548 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T05:55:01.548Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:00:01.875 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:00:01.875Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:00:01.876 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:00:01.876Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:05:01.196 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:05:01.196Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:05:01.197 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:05:01.197Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:10:01.533 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:10:01.532Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:10:01.533 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:10:01.533Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:15:01.859 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:15:01.859Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:15:01.860 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:15:01.860Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:20:01.193 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:20:01.193Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:20:01.195 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:20:01.194Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:25:01.513 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:25:01.513Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:25:01.514 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:25:01.514Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:30:01.834 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:30:01.833Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:30:01.834 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:30:01.834Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:35:01.166 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:35:01.165Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:35:01.166 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:35:01.166Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:40:01.494 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:40:01.493Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:40:01.495 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:40:01.494Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:45:01.816 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:45:01.816Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:45:01.817 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:45:01.817Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:50:01.138 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:50:01.137Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:50:01.138 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:50:01.138Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 00:55:01.456 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T06:55:01.455Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 00:55:01.456 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T06:55:01.456Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:00:01.773 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:00:01.773Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:00:01.774 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:00:01.774Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:05:02.105 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:05:02.104Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:05:02.105 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:05:02.105Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:10:01.433 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:10:01.433Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:10:01.434 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:10:01.434Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:15:01.756 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:15:01.755Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:15:01.756 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:15:01.756Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:20:02.085 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:20:02.084Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:20:02.085 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:20:02.085Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:25:01.418 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:25:01.417Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:25:01.418 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:25:01.418Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:30:01.779 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:30:01.778Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:30:01.780 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:30:01.780Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:35:02.144 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:35:02.144Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:35:02.145 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:35:02.145Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:40:01.498 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:40:01.498Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:40:01.499 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:40:01.499Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:45:01.846 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:45:01.845Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:45:01.846 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:45:01.846Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:50:01.187 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:50:01.186Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:50:01.188 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:50:01.188Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 01:55:01.593 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T07:55:01.592Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 01:55:01.593 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T07:55:01.593Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:00:01.964 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:00:01.963Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:00:01.965 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:00:01.965Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:05:01.407 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:05:01.406Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:05:01.408 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:05:01.408Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:10:01.806 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:10:01.805Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:10:01.806 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:10:01.806Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:15:02.112 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:15:02.111Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:15:02.112 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:15:02.112Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:20:01.475 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:20:01.474Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:20:01.475 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:20:01.475Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:25:01.813 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:25:01.812Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:25:01.813 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:25:01.813Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:30:02.162 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:30:02.162Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:30:02.163 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:30:02.163Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:35:01.771 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:35:01.770Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:35:01.772 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:35:01.772Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:40:01.434 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:40:01.433Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:40:01.435 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:40:01.435Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:45:01.840 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:45:01.839Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:45:01.841 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:45:01.841Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+Clean — nothing to commit
+[2026-03-21 02:50:01.247 -0600] [31mERROR[39m: [36m[auto-commit] [2026-03-21T08:50:01.247Z] [ERROR] git status failed: Command failed: git status --porcelain
+fatal: .git/index: index file smaller than expected
+[39m
+[2026-03-21 02:50:01.248 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T08:50:01.248Z] [INFO] No changes to commit. Repository is clean.[39m
+    [35mcomponent[39m: "system"
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2
+/home/headyme/Heady/src/engines/auto-commit-engine.js:85
+                        this._log("warn", `Removing stale lock from dead PID ${pid  logger.error('Operation failed', { error: _.message }); }`);
+                                                                               ^^^^^
+
+SyntaxError: Missing } in template expression
+    at wrapSafe (node:internal/modules/cjs/loader:1472:18)
+    at Module._compile (node:internal/modules/cjs/loader:1501:20)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+    at [eval]:2:32
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:118:14
+
+Node.js v20.19.2

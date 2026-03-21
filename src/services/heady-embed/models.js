@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * HeadyEmbed Model Registry & Management
@@ -195,7 +196,7 @@ class ModelManager extends EventEmitter {
     // Xenova pipelines don't have an explicit destroy, but we can dereference
     // and let GC collect. Some runtimes expose dispose().
     if (entry.pipeline && typeof entry.pipeline.dispose === 'function') {
-      try { await entry.pipeline.dispose(); } catch (_) { /* best-effort */ }
+      try { await entry.pipeline.dispose(); } catch (_) { /* best-effort */  logger.error('Operation failed', { error: _.message }); }
     }
 
     this._loaded.delete(id);
@@ -267,7 +268,7 @@ class ModelManager extends EventEmitter {
     // Ensure cache dir exists
     try {
       fs.mkdirSync(this._options.cacheDir, { recursive: true });
-    } catch (_) { /* already exists */ }
+    } catch (_) { /* already exists */  logger.error('Operation failed', { error: _.message }); }
 
     // Set HuggingFace cache env so Xenova stores models to our path
     process.env.TRANSFORMERS_CACHE = this._options.cacheDir;

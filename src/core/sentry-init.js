@@ -11,6 +11,8 @@
  * - Performance monitoring with phi-scaled sample rates
  * - Breadcrumb trail for debugging
  */
+const logger = console;
+
 
 const PSI = 0.618;
 const SENTRY_DSN = process.env.SENTRY_DSN || '';
@@ -25,7 +27,7 @@ let Sentry = null;
  */
 function initSentry() {
   if (!SENTRY_DSN) {
-    console.log('[Sentry] No SENTRY_DSN found — error monitoring disabled');
+    logger.info('[Sentry] No SENTRY_DSN found — error monitoring disabled');
     return;
   }
 
@@ -49,9 +51,9 @@ function initSentry() {
         Sentry.httpIntegration({ tracing: true }),
       ],
     });
-    console.log(`[Sentry] Initialized — release: ${RELEASE}, env: ${ENVIRONMENT}`);
+    logger.info(`[Sentry] Initialized — release: ${RELEASE}, env: ${ENVIRONMENT}`);
   } catch (err) {
-    console.log(`[Sentry] SDK not installed (npm i @sentry/node) — monitoring disabled`);
+    logger.info(`[Sentry] SDK not installed (npm i @sentry/node) — monitoring disabled`);
     Sentry = null;
   }
 }

@@ -14,6 +14,8 @@
  *
  * @module auth/account-provisioner
  */
+const logger = console;
+
 
 import { randomUUID } from 'crypto';
 import crypto from 'crypto';
@@ -413,7 +415,7 @@ export class AccountProvisioner {
       [userId, namespace, this.config.vectorDb?.provider || 'none']
     );
 
-    console.log(`[AccountProvisioner] Vector namespace "${namespace}" created for user ${userId}`);
+    logger.info(`[AccountProvisioner] Vector namespace "${namespace}" created for user ${userId}`);
     return namespace;
   }
 

@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * HeadyGuard — Pipeline Engine
@@ -111,15 +112,14 @@ async function _runStage(stageEntry, payload, pipelineCfg) {
       timeout,
     ]);
     return result;
-  } catch (err) {
-    // Stage errors are non-fatal — treated as PASS with a warning
+  } catch (err) { // Stage errors are non-fatal — treated as PASS with a warning
     return {
       stage:     stageEntry.name,
       action:    'PASS',
       riskScore: 0,
       confidence: 0,
       findings:  [],
-      meta:      { error: err.message, timedOut: err.message.includes('timed out') },
+      meta:      { error: err.message, timedOut: err.message.includes('timed out')  logger.error('Operation failed', { error: err.message }); },
     };
   }
 }

@@ -4,6 +4,7 @@
  * @module src/lib/shutdown
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const SHUTDOWN_TIMEOUT_MS = parseInt(process.env.SHUTDOWN_TIMEOUT_MS || '15000', 10);
 
@@ -38,7 +39,7 @@ class ShutdownManager {
     async _shutdown(signal) {
         if (this._shuttingDown) return;
         this._shuttingDown = true;
-        console.log(`[SHUTDOWN] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks, ${SHUTDOWN_TIMEOUT_MS}ms timeout)...`);
+        logger.info(`[SHUTDOWN] Received ${signal}, starting graceful shutdown (${this._hooks.length} hooks, ${SHUTDOWN_TIMEOUT_MS}ms timeout)...`);
 
         const timeout = setTimeout(() => {
             console.error('[SHUTDOWN] Timeout exceeded, forcing exit');
@@ -48,15 +49,15 @@ class ShutdownManager {
 
         for (const hook of this._hooks) {
             try {
-                console.log(`[SHUTDOWN] Running: ${hook.name}`);
+                logger.info(`[SHUTDOWN] Running: ${hook.name}`);
                 await Promise.resolve(hook.fn());
-                console.log(`[SHUTDOWN] Done: ${hook.name}`);
+                logger.info(`[SHUTDOWN] Done: ${hook.name}`);
             } catch (err) {
                 console.error(`[SHUTDOWN] Error in ${hook.name}:`, err.message);
             }
         }
 
-        console.log('[SHUTDOWN] All hooks complete, exiting');
+        logger.info('[SHUTDOWN] All hooks complete, exiting');
         clearTimeout(timeout);
         process.exit(0);
     }

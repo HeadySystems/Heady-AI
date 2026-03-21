@@ -1,3 +1,4 @@
+const logger = console;
 // ═══════════════════════════════════════════════════════════════════════════════
 // HeadySwarm™ — Intelligent Speed Router & Auto-Executor
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -153,7 +154,7 @@ class HeadySwarm {
       throw new Error(`[HeadySwarm] All routes circuit-broken for ${actionType}`);
     }
 
-    console.log(`[HeadySwarm] ${route.tier.icon} ${actionType} → ${route.label}`);
+    logger.info(`[HeadySwarm] ${route.tier.icon} ${actionType} → ${route.label}`);
 
     try {
       const result = await this._executeRoute(route, actionType, payload);
@@ -538,7 +539,7 @@ if (isCLI) {
   const [,, action, payloadStr] = process.argv;
 
   if (!action) {
-    console.log(`
+    logger.info(`
 HeadySwarm™ — Intelligent Speed Router
 ═══════════════════════════════════════
 Usage: node heady-swarm.js <action> [payload-json]
@@ -559,7 +560,7 @@ Actions:
   try {
     const { config: loadEnv } = await import('dotenv');
     loadEnv({ path: path.join(__dirname, '../../.env') });
-  } catch (e) { /* dotenv optional */ }
+  } catch (e) { /* dotenv optional */  logger.error('Operation failed', { error: e.message }); }
 
   const swarm = getSwarm();
 
@@ -594,7 +595,7 @@ Actions:
         result = await swarm.execute(action, payload);
       }
     }
-    console.log(JSON.stringify(result, null, 2));
+    logger.info(JSON.stringify(result, null, 2));
   } catch (err) {
     console.error(`[HeadySwarm] ❌ ${err.message}`);
     process.exit(1);

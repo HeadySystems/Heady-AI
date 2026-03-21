@@ -2,6 +2,7 @@
 // STUB — awaiting full implementation
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 class Database {
   constructor(path = ':memory:') {
@@ -14,9 +15,8 @@ class Database {
     try {
       const duckdb = require('duckdb');
       this.db = new duckdb.Database(this.path);
-    } catch (err) {
-      // DuckDB native bindings not available, using in-memory fallback
-      this.db = { type: 'in-memory' };
+    } catch (err) { // DuckDB native bindings not available, using in-memory fallback
+      this.db = { type: 'in-memory'  logger.error('Operation failed', { error: err.message }); };
     }
   }
 
@@ -34,9 +34,7 @@ class Database {
       if (this.db && this.db.close) {
         this.db.close();
       }
-    } catch (err) {
-      // ignore
-    }
+    } catch (err) { // ignore  logger.error('Operation failed', { error: err.message }); }
     this.db = null;
   }
 }

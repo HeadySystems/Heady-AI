@@ -32,6 +32,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const { execSync, execFileSync } = require('child_process');
 const https = require('https');
@@ -115,7 +116,7 @@ const STATE = Object.freeze({
 // ─── Utilities ─────────────────────────────────────────────────────────────────
 
 function log(level, msg, data = {}) {
-  console.log(JSON.stringify({
+  logger.info(JSON.stringify({
     level,
     ts: new Date().toISOString(),
     msg,
@@ -638,10 +639,10 @@ async function main() {
   if (args.includes('--status')) {
     const state = loadState();
     if (!state) {
-      console.log('No active canary deployment');
+      logger.info('No active canary deployment');
       process.exit(0);
     }
-    console.log(JSON.stringify(state, null, 2));
+    logger.info(JSON.stringify(state, null, 2));
     process.exit(0);
   }
 

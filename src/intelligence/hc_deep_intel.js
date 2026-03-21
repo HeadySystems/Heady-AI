@@ -206,9 +206,8 @@ class DeepIntelEngine extends EventEmitter {
                     { project: projectPath, perspective: perspName, finding },
                     { [perspName]: { score: finding.score, detail: finding.summary } },
                 );
-            } catch (err) {
-                // Auto-success: absorb as learning
-                scan.perspectives[perspName] = { score: 0.5, summary: `Absorbed: ${err.message}`, absorbed: true };
+            } catch (err) { // Auto-success: absorb as learning
+                scan.perspectives[perspName] = { score: 0.5, summary: `Absorbed: ${err.message  logger.error('Operation failed', { error: err.message }); }`, absorbed: true };
             }
         }
 

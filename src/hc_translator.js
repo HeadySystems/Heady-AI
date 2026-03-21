@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HeadyTranslator — Universal Protocol Translation Engine        ║
@@ -188,7 +189,7 @@ const httpAdapter = {
   decode(req) {
     let body = req.body;
     if (typeof body === 'string') {
-      try { body = JSON.parse(body); } catch (e) { /* keep string */ }
+      try { body = JSON.parse(body); } catch (e) { /* keep string */  logger.error('Operation failed', { error: e.message }); }
     }
     return createMessage({
       id: req.headers?.['x-heady-message-id'] || undefined,
@@ -220,7 +221,7 @@ const httpAdapter = {
         res.on('data', chunk => { data += chunk; });
         res.on('end', () => {
           let parsed = data;
-          try { parsed = JSON.parse(data); } catch (e) { /* keep string */ }
+          try { parsed = JSON.parse(data); } catch (e) { /* keep string */  logger.error('Operation failed', { error: e.message }); }
           resolve({ status: res.statusCode, body: parsed, protocol: 'http' });
         });
       });
@@ -296,10 +297,9 @@ const udpAdapter = {
     let parsed;
     try {
       parsed = JSON.parse(buf.toString());
-    } catch (e) {
-      // Binary payload — wrap raw bytes
+    } catch (e) { // Binary payload — wrap raw bytes
       return createMessage({
-        source: { protocol: 'udp', endpoint: rinfo ? `${rinfo.address}:${rinfo.port}` : 'unknown' },
+        source: { protocol: 'udp', endpoint: rinfo ? `${rinfo.address  logger.error('Operation failed', { error: e.message }); }:${rinfo.port}` : 'unknown' },
         operation: 'binary',
         payload: { raw: buf.toString('base64'), size: buf.length }
       });
@@ -402,7 +402,7 @@ const midiAdapter = {
             operation: parsed.o || 'sysex_data',
             payload: parsed.p
           });
-        } catch (e) { /* fall through */ }
+        } catch (e) { /* fall through */  logger.error('Operation failed', { error: e.message }); }
       }
       return createMessage({
         source: { protocol: 'midi', endpoint: 'sysex' },
@@ -564,7 +564,7 @@ class HeadyTranslator extends EventEmitter {
         if (result === false) {
           return { success: false, error: 'Blocked by middleware', message };
         }
-      } catch (e) { /* middleware errors are non-fatal */ }
+      } catch (e) { /* middleware errors are non-fatal */  logger.error('Operation failed', { error: e.message }); }
     }
 
     // Get target adapter
@@ -616,7 +616,7 @@ class HeadyTranslator extends EventEmitter {
 
     // Run middleware (post-translate)
     for (const mw of this._middleware) {
-      try { await mw(message, 'post'); } catch (e) { /* non-fatal */ }
+      try { await mw(message, 'post'); } catch (e) { /* non-fatal */  logger.error('Operation failed', { error: e.message }); }
     }
 
     this.emit('translated', { message, encoded, from: sourceProto, to: targetProto });

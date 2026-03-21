@@ -189,7 +189,7 @@ function generateBridgeHTML(sessionValid, userInfo) {
         type: 'HEADY_BRIDGE_READY',
         timestamp: Date.now(),
       }, '*');
-    } catch (_bridgeErr) { /* cross-origin — expected */ }
+    } catch (_bridgeErr) { /* cross-origin — expected */  logger.error('Operation failed', { error: _bridgeErr.message }); }
   }
 })();
 </script>

@@ -28,6 +28,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
@@ -235,7 +236,7 @@ function getWork(ctx = {}) {
  *
  * @example
  * const bee = new TradingBeeCSL({ accountType: '100K' });
- * bee.on('taskRouted', e => console.log(e.pool.name, e.task.id));
+ * bee.on('taskRouted', e => logger.info(e.pool.name, e.task.id));
  * bee.cslRouteTask({ id: 'apx-001', urgency: 0.8, importance: 0.9 });
  */
 class TradingBeeCSL extends EventEmitter {

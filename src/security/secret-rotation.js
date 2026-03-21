@@ -17,6 +17,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 const {
@@ -263,9 +264,8 @@ class SecretRotationManager {
     const timer = setTimeout(async () => {
       try {
         await this.rotate(secretId);
-      } catch (e) {
-        // Log but don't throw — timer callback
-        this._audit(secretId, 'SCHEDULED_ROTATION_FAILED', { error: e.message });
+      } catch (e) { // Log but don't throw — timer callback
+        this._audit(secretId, 'SCHEDULED_ROTATION_FAILED', { error: e.message  logger.error('Operation failed', { error: e.message }); });
       }
     }, entry.rotationInterval);
 
@@ -342,17 +342,17 @@ class GCPSecretBackend {
     // Add new secret version
     // const parent = `projects/${this.projectId}/secrets/${id}`;
     // await this.client.addSecretVersion({ parent, payload: { data: Buffer.from(value) } });
-    console.log(`[GCP] Would store secret ${id} version with status ${status}`);
+    logger.info(`[GCP] Would store secret ${id} version with status ${status}`);
   }
 
   async activate(id, value) {
     // Enable the latest version, disable previous
-    console.log(`[GCP] Would activate secret ${id}`);
+    logger.info(`[GCP] Would activate secret ${id}`);
   }
 
   async deactivate(id, value) {
     // Disable or destroy the old version
-    console.log(`[GCP] Would deactivate old version of secret ${id}`);
+    logger.info(`[GCP] Would deactivate old version of secret ${id}`);
   }
 
   async get(id) {
@@ -360,7 +360,7 @@ class GCPSecretBackend {
     // const name = `projects/${this.projectId}/secrets/${id}/versions/latest`;
     // const [version] = await this.client.accessSecretVersion({ name });
     // return version.payload.data.toString();
-    console.log(`[GCP] Would get secret ${id}`);
+    logger.info(`[GCP] Would get secret ${id}`);
     return null;
   }
 }

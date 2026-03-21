@@ -197,10 +197,8 @@ class HeadyServiceConnector {
                 }
                 if (data.error) throw new Error(data.error.message);
                 return { content: data.response || data.text || JSON.stringify(data), model, service: key };
-            } catch (err) {
-                // Try next service in fallback chain
-                continue;
-            }
+            } catch (err) { // Try next service in fallback chain
+                continue;  logger.error('Operation failed', { error: err.message }); }
         }
 
         throw new Error('All services unreachable — check your connection or API key');

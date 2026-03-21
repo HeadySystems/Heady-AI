@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  * Pipeline Infrastructure — CircuitBreaker, WorkerPool, TaskCache.
@@ -133,9 +134,7 @@ function saveTaskCache() {
     try {
         if (!fs.existsSync(CACHE_DIR)) fs.mkdirSync(CACHE_DIR, { recursive: true });
         fs.writeFileSync(TASK_CACHE_FILE, JSON.stringify(_taskCache, null, 2), "utf8");
-    } catch (_) {
-        // non-fatal
-    }
+    } catch (_) { // non-fatal  logger.error('Operation failed', { error: _.message }); }
 }
 
 function getTaskCacheKey(taskName, configHashes) {

@@ -41,12 +41,12 @@ const ALLOWED_ORIGINS = new Set([
 
 // Development origins added only if NODE_ENV !== 'production'
 const DEV_ORIGINS = new Set([
-  'http://localhost:3000',
-  'http://localhost:3370',
-  'http://localhost:3371',
-  'http://localhost:3372',
-  'http://localhost:5173',
-  'http://127.0.0.1:3000',
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3000'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3370'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3371'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3372'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:5173'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3000'),
 ]);
 
 const ALLOWED_METHODS = 'GET, POST, PUT, PATCH, DELETE, OPTIONS';

@@ -61,7 +61,7 @@ function loadMTLSConfig(opts = {}) {
     };
 
     logger.info?.('[mTLS] Configuration loaded — TLS 1.3 with mutual verification') ||
-        console.log('[mTLS] Configuration loaded');
+        logger.info('[mTLS] Configuration loaded');
 
     return config;
 }

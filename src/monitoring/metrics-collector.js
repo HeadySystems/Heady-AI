@@ -27,7 +27,7 @@ const SERVICE_ENDPOINTS = [
     { name: 'heady-eval',   port: 8087, healthPath: '/api/health' },
 ];
 
-const BASE_URL = process.env.HEADY_SERVICE_HOST || 'http://localhost';
+const BASE_URL = process.env.HEADY_SERVICE_HOST || (process.env.SERVICE_URL || 'http://0.0.0.0');
 
 class MetricsCollector extends EventEmitter {
     constructor(config = {}) {

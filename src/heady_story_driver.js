@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -87,7 +88,7 @@ class StoryDriver {
     this.ensureDirectories();
     this.loadState();
     
-    console.log('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
+    logger.info('∞ HeadyStoryDriver: Initialized - Deterministic story engine ready');
   }
 
   ensureDirectories() {

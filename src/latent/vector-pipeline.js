@@ -13,6 +13,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { EventEmitter } = require('events');
 const { normalize, fibonacciShardIndex, isValidVector, DIMS } = require('./vector-space-ops');
@@ -417,7 +418,7 @@ class VectorPipeline extends EventEmitter {
       item.stageTimes.acknowledge = Date.now() - t0;
       item.stageTimes.totalMs = Date.now() - item.enqueuedAt;
       if (this.onAcknowledge) {
-        try { this.onAcknowledge(item); } catch (_) { /* ignore */ }
+        try { this.onAcknowledge(item); } catch (_) { /* ignore */  logger.error('Operation failed', { error: _.message }); }
       }
       item.resolve(item);
       this._pipelineMetrics.totalAcknowledged += 1;

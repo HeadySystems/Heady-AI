@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -8,13 +9,13 @@
  *         priority ternary classification.
  */
 
-jest.mock('../../../src/utils/logger', () => ({
-  info:      jest.fn(),
-  warn:      jest.fn(),
-  error:     jest.fn(),
-  logSystem: jest.fn(),
-  logError:  jest.fn(),
-  child:     jest.fn().mockReturnThis(),
+vi.mock('../../../src/utils/logger', () => ({
+  info:      vi.fn(),
+  warn:      vi.fn(),
+  error:     vi.fn(),
+  logSystem: vi.fn(),
+  logError:  vi.fn(),
+  child:     vi.fn().mockReturnThis(),
 }));
 
 const { PHI, PHI_INVERSE, PhiScale } = require('../../../src/core/phi-scales');

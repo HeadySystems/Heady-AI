@@ -15,9 +15,10 @@
  * Usage:
  *   import { runAblation, formatBenchmarkMarkdown, BENCHMARK_SCENARIOS } from './src/benchmarks/cslBenchmark.js';
  *   const results = await runAblation(myTestCases, 'ambiguous_routing');
- *   console.log(formatBenchmarkMarkdown([results]));
+ *   logger.info(formatBenchmarkMarkdown([results]));
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;

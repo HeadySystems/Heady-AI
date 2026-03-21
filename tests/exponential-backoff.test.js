@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 const {
     phiDelay,
     withBackoff,
@@ -32,7 +33,7 @@ describe('exponential-backoff', () => {
     });
 
     test('createResilientFn wraps target function', async () => {
-        const fn = jest.fn(async (x) => x + 1);
+        const fn = vi.fn(async (x) => x + 1);
         const wrapped = createResilientFn(fn, { maxRetries: 0 });
 
         await expect(wrapped(2)).resolves.toBe(3);

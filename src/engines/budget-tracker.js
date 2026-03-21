@@ -14,6 +14,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const phiMath = require('../../shared/phi-math.js');
@@ -422,7 +423,7 @@ class BudgetTracker extends EventEmitter {
     }
     this._expireHeadySoulOverrides();
     if (this._verbose) {
-      console.log('[BudgetTracker] Daily counters reset at', new Date(this._dailyResetAt).toISOString());
+      logger.info('[BudgetTracker] Daily counters reset at', new Date(this._dailyResetAt).toISOString());
     }
   }
 
@@ -436,7 +437,7 @@ class BudgetTracker extends EventEmitter {
     this._monthlyResetAt = Date.now();
     this._monthlySpend = 0;
     if (this._verbose) {
-      console.log('[BudgetTracker] Monthly counter reset at', new Date(this._monthlyResetAt).toISOString());
+      logger.info('[BudgetTracker] Monthly counter reset at', new Date(this._monthlyResetAt).toISOString());
     }
   }
 
@@ -539,7 +540,7 @@ class BudgetTracker extends EventEmitter {
     this._headySoulOverrides[key] = { active: true, expiresAt };
 
     if (this._verbose) {
-      console.log(`[BudgetTracker] HeadySoul override activated for '${key}', expires at ${new Date(expiresAt).toISOString()}`);
+      logger.info(`[BudgetTracker] HeadySoul override activated for '${key}', expires at ${new Date(expiresAt).toISOString()}`);
     }
 
     return { activated: true, expiresAt, ttlMs: HEADY_SOUL_OVERRIDE_TTL_MS };

@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -26,20 +27,20 @@ function makeTask(overrides = {}) {
 /** Create a pipeline with all external deps mocked out */
 function makePipeline(opts = {}) {
   const mockLLM = {
-    route: jest.fn().mockResolvedValue({
+    route: vi.fn().mockResolvedValue({
       choices: [{ message: { content: 'mock-llm-response' } }],
       usage: { total_tokens: 10 },
     }),
   };
 
   const mockMonteCarlo = {
-    simulate: jest.fn().mockResolvedValue({ confidence: 0.95, samples: [] }),
-    assess: jest.fn().mockResolvedValue({ risk: 'low' }),
+    simulate: vi.fn().mockResolvedValue({ confidence: 0.95, samples: [] }),
+    assess: vi.fn().mockResolvedValue({ risk: 'low' }),
   };
 
   const mockConductor = {
-    route: jest.fn().mockResolvedValue({ response: 'conducted' }),
-    dispatch: jest.fn().mockResolvedValue({ response: 'dispatched' }),
+    route: vi.fn().mockResolvedValue({ response: 'conducted' }),
+    dispatch: vi.fn().mockResolvedValue({ response: 'dispatched' }),
   };
 
   return new HCFullPipeline({

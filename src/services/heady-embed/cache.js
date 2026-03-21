@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * HeadyEmbed Cache Layer
@@ -313,7 +314,7 @@ class EmbeddingCache extends EventEmitter {
 
     try {
       fs.mkdirSync(dir, { recursive: true });
-    } catch (_) { /* ok */ }
+    } catch (_) { /* ok */  logger.error('Operation failed', { error: _.message }); }
 
     const tmpPath = `${this._persistPath}.tmp`;
     const stream = fs.createWriteStream(tmpPath, { flags: 'w', encoding: 'utf8' });
@@ -370,7 +371,7 @@ class EmbeddingCache extends EventEmitter {
           if (entry.e !== null && now > entry.e) return;
           this.set(entry.k, entry.v);
           loaded++;
-        } catch (_) { /* skip corrupt lines */ }
+        } catch (_) { /* skip corrupt lines */  logger.error('Operation failed', { error: _.message }); }
       });
       rl.on('close', resolve);
       rl.on('error', reject);

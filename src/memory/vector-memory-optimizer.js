@@ -27,8 +27,10 @@
  *
  * // On-demand index check
  * const advice = await optimizer.getIndexRecommendation('vector_memories');
- * console.log(advice.recommendation, advice.action);
+ * logger.info(advice.recommendation, advice.action);
  */
+const logger = console;
+
 
 import { EventEmitter } from 'events';
 import {
@@ -373,11 +375,9 @@ export class VectorMemoryOptimizer extends EventEmitter {
       }
 
       return result.rows;
-    } catch (err) {
-      // pg_stat_statements not installed — graceful degradation
+    } catch (err) { // pg_stat_statements not installed — graceful degradation
       if (err.message.includes('does not exist')) {
-        return [];
-      }
+        return [];  logger.error('Operation failed', { error: err.message }); }
       throw err;
     }
   }

@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const https = require('https');
 const http  = require('http');
@@ -139,7 +140,7 @@ class AnthropicProvider extends BaseProvider {
                 inputTokens = evt.message.usage.input_tokens || 0;
                 model       = evt.message.model || model;
               }
-            } catch (_) { /* ignore parse errors on stream */ }
+            } catch (_) { /* ignore parse errors on stream */  logger.error('Operation failed', { error: _.message }); }
           }
         });
 

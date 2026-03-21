@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -27,7 +28,7 @@
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
-let CSL = null; try { CSL = require("../core/semantic-logic"); } catch(e) { /* graceful */ }
+let CSL = null; try { CSL = require("../core/semantic-logic"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const CONTEXT_FILE = path.join(DATA_DIR, "semantic-contexts.jsonl");
@@ -330,7 +331,7 @@ function contextualize(rawMessages, opts = {}) {
     try {
         fs.mkdirSync(DATA_DIR, { recursive: true });
         fs.appendFileSync(CONTEXT_FILE, JSON.stringify(contextEntry) + "\n");
-    } catch (e) { /* non-blocking persist */ }
+    } catch (e) { /* non-blocking persist */  logger.error('Operation failed', { error: e.message }); }
 
     return {
         ok: true,
@@ -357,7 +358,7 @@ function contextualize(rawMessages, opts = {}) {
 }
 
 // ─── Express Router (mount on /api/contextualizer) ──────────
-let express = null; try { express = require('../core/heady-server'); } catch(e) { /* graceful */ }
+let express = null; try { express = require('../core/heady-server'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 const router = express.Router();
 
 router.post("/process", (req, res) => {

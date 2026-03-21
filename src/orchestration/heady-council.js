@@ -29,6 +29,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 import {
   PHI,
@@ -943,7 +944,7 @@ export class HeadyCouncil {
     } else if (level === 'warn') {
       console.warn(JSON.stringify(entry));
     } else if (process.env.LOG_LEVEL === 'debug') {
-      console.log(JSON.stringify(entry));
+      logger.info(JSON.stringify(entry));
     }
   }
 }

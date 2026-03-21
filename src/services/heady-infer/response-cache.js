@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
@@ -176,7 +177,7 @@ class ResponseCache extends EventEmitter {
         const key = this.buildKey(request);
         this.set(key, response, response.model || request.model);
         warmed++;
-      } catch (_) {}
+      } catch (_) { logger.error('Operation failed', { error: _.message }); }
     }
     return warmed;
   }

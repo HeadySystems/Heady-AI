@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -339,9 +340,7 @@ class TraceRecorder extends EventEmitter {
           runId: meta.meta?.runId,
           filepath: fp,
         });
-      } catch (e) {
-        // skip malformed files
-      }
+      } catch (e) { // skip malformed files  logger.error('Operation failed', { error: e.message }); }
     }
     return traces;
   }

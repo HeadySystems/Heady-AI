@@ -1,4 +1,5 @@
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
@@ -81,7 +82,7 @@ const SEED_SERVICES = [
     name: 'headyme',
     domain: 'headyme.com',
     instances: [
-      { url: 'http://localhost:3301', weight: 1.0, tags: ['local', 'primary'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3301'), weight: 1.0, tags: ['local', 'primary'] },
       { url: 'https://heady-manager-609590223909.us-central1.run.app', weight: PHI, tags: ['cloud-run', 'primary'] },
     ],
     healthPath: '/healthz',
@@ -92,7 +93,7 @@ const SEED_SERVICES = [
     name: 'headyapi',
     domain: 'headyapi.com',
     instances: [
-      { url: 'http://localhost:3302', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3302'), weight: 1.0, tags: ['local'] },
       { url: 'https://api.headyapi.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -103,7 +104,7 @@ const SEED_SERVICES = [
     name: 'headysystems',
     domain: 'headysystems.com',
     instances: [
-      { url: 'http://localhost:3303', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3303'), weight: 1.0, tags: ['local'] },
       { url: 'https://systems.headysystems.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -114,7 +115,7 @@ const SEED_SERVICES = [
     name: 'headyconnection',
     domain: 'headyconnection.org',
     instances: [
-      { url: 'http://localhost:3304', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3304'), weight: 1.0, tags: ['local'] },
       { url: 'https://headyconnection.org', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -125,7 +126,7 @@ const SEED_SERVICES = [
     name: 'headymcp',
     domain: 'headymcp.com',
     instances: [
-      { url: 'http://localhost:3305', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3305'), weight: 1.0, tags: ['local'] },
       { url: 'https://mcp.headymcp.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -136,7 +137,7 @@ const SEED_SERVICES = [
     name: 'headybuddy',
     domain: 'headybuddy.org',
     instances: [
-      { url: 'http://localhost:3306', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3306'), weight: 1.0, tags: ['local'] },
       { url: 'https://headybuddy.org', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -147,7 +148,7 @@ const SEED_SERVICES = [
     name: 'headyio',
     domain: 'headyio.com',
     instances: [
-      { url: 'http://localhost:3307', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3307'), weight: 1.0, tags: ['local'] },
       { url: 'https://headyio.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -158,7 +159,7 @@ const SEED_SERVICES = [
     name: 'headybot',
     domain: 'headybot.com',
     instances: [
-      { url: 'http://localhost:3308', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3308'), weight: 1.0, tags: ['local'] },
       { url: 'https://headybot.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -169,7 +170,7 @@ const SEED_SERVICES = [
     name: 'heady-ai',
     domain: 'heady-ai.com',
     instances: [
-      { url: 'http://localhost:3309', weight: 1.0, tags: ['local'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:3309'), weight: 1.0, tags: ['local'] },
       { url: 'https://heady-ai.com', weight: PHI, tags: ['production'] },
     ],
     healthPath: '/healthz',
@@ -193,7 +194,7 @@ const SEED_SERVICES = [
     name: 'vector-store',
     domain: null,
     instances: [
-      { url: 'http://localhost:5432', weight: 1.0, tags: ['postgres', 'pgvector'] },
+      { url: (process.env.SERVICE_URL || 'http://0.0.0.0:5432'), weight: 1.0, tags: ['postgres', 'pgvector'] },
     ],
     healthPath: null,        // TCP probe only
     version: '16.0',
@@ -514,7 +515,7 @@ class HeadyServiceMesh extends EventEmitter {
     // Prevent timer from blocking process exit
     if (this._probeTimer.unref) this._probeTimer.unref();
 
-    console.log('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
+    logger.info('[mesh] started — interval', this._config.healthCheckIntervalMs, 'ms');
     this._publish('heady:service:mesh_started', { ts: Date.now() });
   }
 
@@ -555,7 +556,7 @@ class HeadyServiceMesh extends EventEmitter {
       const exists = entry.instances.find((i) => i.url === url);
       if (!exists) {
         entry.addInstance({ url, weight, tags });
-        console.log(`[mesh] added instance ${url} → ${name}`);
+        logger.info(`[mesh] added instance ${url} → ${name}`);
       }
     } else {
       const entry = new ServiceEntry(
@@ -564,7 +565,7 @@ class HeadyServiceMesh extends EventEmitter {
         this._config
       );
       this._registry.set(name, entry);
-      console.log(`[mesh] registered new service: ${name}`);
+      logger.info(`[mesh] registered new service: ${name}`);
     }
 
     this._publish('heady:service:registered', { name, url, tags, ts: Date.now() });
@@ -706,7 +707,7 @@ class HeadyServiceMesh extends EventEmitter {
         inst.cb.onSuccess();
         inst.consecutiveFails = 0;
         if (!wasHealthy) {
-          console.log(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
+          logger.info(`[mesh] ${entry.name} ${inst.url} — HEALTHY`);
           this._publish('heady:service:healthy', { name: entry.name, url: inst.url, ts: Date.now() });
         }
       } else {

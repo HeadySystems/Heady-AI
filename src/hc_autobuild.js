@@ -87,9 +87,7 @@ function findBuildableProjects(baseDir, depth = 2) {
           scan(path.join(dir, entry.name), currentDepth + 1);
         }
       });
-    } catch (err) {
-      // Skip inaccessible directories
-    }
+    } catch (err) { // Skip inaccessible directories  logger.error('Operation failed', { error: err.message }); }
   }
   scan(baseDir, 0);
   return projects;

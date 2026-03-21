@@ -16,6 +16,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 const CSLConfidenceGate = require('./csl-confidence-gate');
@@ -26,11 +27,10 @@ function getPromptManager() {
     if (!_PromptManager) {
         try {
             _PromptManager = require('./deterministic-prompt-manager').PromptManager;
-        } catch (err) {
-            // Fallback: minimal stub for environments where templates can't load
+        } catch (err) { // Fallback: minimal stub for environments where templates can't load
             _PromptManager = class StubPromptManager {
                 interpolate(id, vars) {
-                    return `[PROMPT:${id}] ` + Object.entries(vars).map(([k, v]) => `${k}=${v}`).join(', ');
+                    return `[PROMPT:${id  logger.error('Operation failed', { error: err.message }); }] ` + Object.entries(vars).map(([k, v]) => `${k}=${v}`).join(', ');
                 }
                 getPrompt(id) { return { id, variables: [], template: '', tags: [] }; }
                 listPrompts() { return []; }
@@ -348,7 +348,7 @@ class DeterministicPromptExecutor {
     _emit(event, data) {
         const listeners = this._listeners.get(event) || [];
         for (const cb of listeners) {
-            try { cb(data); } catch (_) { /* fire-and-forget */ }
+            try { cb(data); } catch (_) { /* fire-and-forget */  logger.error('Operation failed', { error: _.message }); }
         }
     }
 }

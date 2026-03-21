@@ -127,7 +127,7 @@ const PROVIDER_ENDPOINTS = Object.freeze({
   'gemini':      { baseUrl: 'https://generativelanguage.googleapis.com/v1beta', envKey: 'GEMINI_API_KEY' },
   'sonar':       { baseUrl: 'https://api.perplexity.ai',                     envKey: 'PERPLEXITY_API_KEY' },
   'llama':       { baseUrl: 'https://api.groq.com/openai/v1',               envKey: 'GROQ_API_KEY' },
-  'ollama':      { baseUrl: 'http://localhost:11434',                         envKey: null },
+  'ollama':      { baseUrl: (process.env.SERVICE_URL || 'http://0.0.0.0:11434'),                         envKey: null },
 });
 
 /** Monthly budget cap (USD) global: ψ² × fib(10) × $10 ≈ 0.382 × 55 × $10 = $210 */

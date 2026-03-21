@@ -1275,4 +1275,4 @@ process.stdout.write('\n  ' + (_failed === 0
   : `✘ ${_failed} TEST(S) FAILED`) + '\n');
 process.stdout.write('═'.repeat(64) + '\n\n');
 
-process.exit(_failed > 0 ? 1 : 0);
+process.exitCode = _failed > 0 ? 1 : 0;

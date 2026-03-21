@@ -7,6 +7,7 @@
  * instead of falling through to the marketing SPA
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const { HermesAgent } = require('../agents/hermes');
 const { KronosAgent } = require('../agents/kronos');
@@ -29,7 +30,7 @@ async function initAgents() {
     hermes.start(), kronos.start(), argus.start(),
     nexus.start(), herald.start()
   ]);
-  console.log('[API] All agents initialized');
+  logger.info('[API] All agents initialized');
 }
 
 /**
@@ -207,7 +208,7 @@ function mountOrchestrationRoutes(app) {
     res.json(card);
   });
 
-  console.log('[API] Orchestration routes mounted: /api/system/status, /api/supervisor/status, /api/brain/status, /api/registry, /api/pipeline/state, /api/nodes, /api/health, /api/tasks, /api/events, /api/audit, /api/sessions, /.well-known/mcp.json');
+  logger.info('[API] Orchestration routes mounted: /api/system/status, /api/supervisor/status, /api/brain/status, /api/registry, /api/pipeline/state, /api/nodes, /api/health, /api/tasks, /api/events, /api/audit, /api/sessions, /.well-known/mcp.json');
 }
 
 module.exports = { mountOrchestrationRoutes, initAgents, hermes, kronos, argus, nexus, herald };

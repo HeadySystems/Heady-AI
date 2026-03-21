@@ -5,6 +5,7 @@
  * From: Dropzone/10-Incoming audit manifests
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const MAX_RETRIES = 5;
@@ -35,13 +36,13 @@ class KronosAgent {
 
   async start() {
     this._expiryInterval = setInterval(() => this._expireTasks(), Math.round(30000 * PHI));
-    console.log(`[KRONOS] Task lifecycle manager active | maxRetries=${this.maxRetries}`);
+    logger.info(`[KRONOS] Task lifecycle manager active | maxRetries=${this.maxRetries}`);
     return { status: 'active', agent: this.name };
   }
 
   async stop() {
     if (this._expiryInterval) clearInterval(this._expiryInterval);
-    console.log('[KRONOS] Shutdown complete');
+    logger.info('[KRONOS] Shutdown complete');
   }
 
   /** Create a new task (SEP-1686 compliant) */
@@ -174,7 +175,7 @@ class KronosAgent {
         this._metrics.expired++;
       }
     }
-    if (expired > 0) console.log(`[KRONOS] Expired ${expired} tasks`);
+    if (expired > 0) logger.info(`[KRONOS] Expired ${expired} tasks`);
   }
 }
 

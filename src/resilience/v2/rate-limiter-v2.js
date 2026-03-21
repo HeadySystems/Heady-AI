@@ -301,9 +301,8 @@ function rateLimitMiddleware(opts = {}) {
         let result;
         try {
             result = await limiter.check(identity);
-        } catch (err) {
-            // KV failure: fail-open with a warning rather than blocking all traffic
-            logger.warn('[RateLimiter] KV error, failing open', { error: err.message, identity });
+        } catch (err) { // KV failure: fail-open with a warning rather than blocking all traffic
+            logger.warn('[RateLimiter] KV error, failing open', { error: err.message, identity  logger.error('Operation failed', { error: err.message }); });
             return next();
         }
 

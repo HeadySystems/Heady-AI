@@ -17,6 +17,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI, PHI_INV, BASE, phiScale, phiTiming } = require('../shared/heady-principles');
 
@@ -156,7 +157,7 @@ class MasterClock {
 
     _emit(event, data) {
         for (const cb of this.subscribers) {
-            try { cb(event, data); } catch (e) { /* non-blocking */ }
+            try { cb(event, data); } catch (e) { /* non-blocking */  logger.error('Operation failed', { error: e.message }); }
         }
     }
 }
@@ -465,7 +466,7 @@ class SequencerTransport {
                         data: this.sequencer.getClientBundle(clientId),
                     });
             }
-        } catch (e) { /* ignore malformed messages */ }
+        } catch (e) { /* ignore malformed messages */  logger.error('Operation failed', { error: e.message }); }
         return null;
     }
 }

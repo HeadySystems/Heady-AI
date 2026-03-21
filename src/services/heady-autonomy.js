@@ -279,9 +279,7 @@ class HeadyAutonomy extends EventEmitter {
                     }
                 }
             }
-        } catch (err) {
-            // Non-critical — continue
-        }
+        } catch (err) { // Non-critical — continue  logger.error('Operation failed', { error: err.message }); }
     }
 
     async _indexDocumentation() {
@@ -314,9 +312,7 @@ class HeadyAutonomy extends EventEmitter {
                     }
                 }
             }
-        } catch (err) {
-            // Non-critical
-        }
+        } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
     }
 
     async _buildExperience() {
@@ -329,9 +325,7 @@ class HeadyAutonomy extends EventEmitter {
                     this.stats.patternsDetected += patterns.length;
                 }
             }
-        } catch (err) {
-            // Non-critical
-        }
+        } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
     }
 
     async _checkStorageHealth() {
@@ -354,9 +348,7 @@ class HeadyAutonomy extends EventEmitter {
                     logger.warn("⚠ Vector DB health check failed — using fallback storage");
                 }
             }
-        } catch (err) {
-            // Non-critical
-        }
+        } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
     }
 
     // ═══════════════════════════════════════════
@@ -374,9 +366,7 @@ class HeadyAutonomy extends EventEmitter {
             const dir = path.dirname(stateFile);
             if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
             fs.writeFileSync(stateFile, JSON.stringify(state, null, 2));
-        } catch (err) {
-            // Non-critical
-        }
+        } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
     }
 
     _restoreLearnState() {
@@ -387,9 +377,7 @@ class HeadyAutonomy extends EventEmitter {
                 this.stats = { ...this.stats, ...state.stats };
                 logger.logSystem(`🔄 Restored learning state (${state.stats.memoriesGathered} memories gathered)`);
             }
-        } catch (err) {
-            // Non-critical
-        }
+        } catch (err) { // Non-critical  logger.error('Operation failed', { error: err.message }); }
     }
 
     // ═══════════════════════════════════════════

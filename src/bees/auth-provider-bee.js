@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * Auth Provider Bee — Universal OAuth/Auth HeadyBee Worker
  *
@@ -292,7 +293,7 @@ class AuthProviderBee {
     // ─── Event emission ─────────────────────────────────────────────
     _emit(event, data) {
         if (this.eventBus) {
-            try { this.eventBus.emit(event, data); } catch (e) { /* swallow */ }
+            try { this.eventBus.emit(event, data); } catch (e) { /* swallow */  logger.error('Operation failed', { error: e.message }); }
         }
     }
 

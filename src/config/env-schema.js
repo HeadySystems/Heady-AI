@@ -8,6 +8,8 @@
  *   const { validateEnvironment } = require('./src/config/env-schema');
  *   validateEnvironment(); // throws if critical vars missing
  */
+const logger = console;
+
 
 const ENV_SCHEMA = {
     // ── Critical (app won't function without these) ──
@@ -104,7 +106,7 @@ function validateEnvironment(options = {}) {
     const set = total - missing.critical.length - missing.required.length - missing.optional.length;
 
     if (!silent) {
-        console.log(`✅ Environment: ${set}/${total} vars set (${missing.optional.length} optional missing)`);
+        logger.info(`✅ Environment: ${set}/${total} vars set (${missing.optional.length} optional missing)`);
     }
 
     return {

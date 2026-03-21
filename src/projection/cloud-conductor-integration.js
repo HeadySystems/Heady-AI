@@ -82,7 +82,7 @@ function _auditWrite(record) {
         if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
         const line = JSON.stringify({ ...record, _ts: new Date().toISOString() }) + '\n';
         fs.appendFileSync(AUDIT_PATH, line, 'utf8');
-    } catch (_) {}
+    } catch (_) { logger.error('Operation failed', { error: _.message }); }
 }
 
 // ─── Pub/Sub Message Decoder ─────────────────────────────────────────────────
@@ -105,10 +105,8 @@ function _decodePubSubMessage(body) {
         try {
             const raw = Buffer.from(data, 'base64').toString('utf8');
             decoded = JSON.parse(raw);
-        } catch (_) {
-            // Non-JSON payload — use raw string
-            decoded = Buffer.from(data, 'base64').toString('utf8');
-        }
+        } catch (_) { // Non-JSON payload — use raw string
+            decoded = Buffer.from(data, 'base64').toString('utf8');  logger.error('Operation failed', { error: _.message }); }
     }
 
     return {
@@ -203,10 +201,9 @@ function createCloudConductorService(config = {}) {
             try {
                 const { ProjectionManager } = require('./projection-manager');
                 _manager = new ProjectionManager();
-            } catch (_) {
-                // Minimal shim for environments without projection-manager
+            } catch (_) { // Minimal shim for environments without projection-manager
                 _manager = {
-                    getStatus: () => ({ shim: true }),
+                    getStatus: () => ({ shim: true  logger.error('Operation failed', { error: _.message }); }),
                     getAllProjections: () => ({}),
                     getProjection: () => null,
                 };
@@ -220,9 +217,8 @@ function createCloudConductorService(config = {}) {
             try {
                 const HeadyConductor = require('../heady-conductor');
                 _conductor = new (HeadyConductor.HeadyConductor || HeadyConductor)();
-            } catch (_) {
-                // Minimal conductor shim
-                const { EventEmitter } = require('events');
+            } catch (_) { // Minimal conductor shim
+                const { EventEmitter  logger.error('Operation failed', { error: _.message }); } = require('events');
                 _conductor = new EventEmitter();
                 _conductor.route = async (task) => ({ serviceGroup: 'projection', weight: 0.45 });
                 _conductor.getStatus = () => ({ shim: true });
@@ -303,9 +299,8 @@ function createCloudConductorService(config = {}) {
                     description: mod.description || def.domain,
                 });
                 logger.debug({ domain: def.domain }, '[CloudConductor] Bee loaded');
-            } catch (err) {
-                // Bee module not available — register a stub so swarm is aware of it
-                logger.warn({ domain: def.domain, err: err.message },
+            } catch (err) { // Bee module not available — register a stub so swarm is aware of it
+                logger.warn({ domain: def.domain, err: err.message  logger.error('Operation failed', { error: err.message }); },
                     '[CloudConductor] Bee module not found — registering stub');
                 swarm.addBee({
                     domain: def.domain,

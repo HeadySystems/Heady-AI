@@ -13,6 +13,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
@@ -223,7 +224,7 @@ class HeadyRedisPool {
 
         // Close all connections
         for (const client of this.pool) {
-            try { await client.quit(); } catch (e) { /* ignore */ }
+            try { await client.quit(); } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
         }
         this.pool = [];
         this.available = [];
@@ -267,7 +268,7 @@ class HeadyRedisPool {
             const idx = this.pool.indexOf(client);
             if (idx < 0) continue;
 
-            try { await client.quit(); } catch (e) { /* ignore */ }
+            try { await client.quit(); } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
 
             const availIdx = this.available.indexOf(client);
             if (availIdx >= 0) this.available.splice(availIdx, 1);

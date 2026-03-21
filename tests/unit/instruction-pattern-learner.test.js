@@ -177,5 +177,5 @@ setTimeout(() => {
   // Cleanup
   try { fs.unlinkSync(TEST_STATE_FILE); } catch {}
 
-  process.exit(passed === total ? 0 : 1);
+  process.exitCode = passed === total ? 0 : 1;
 }, 5000);

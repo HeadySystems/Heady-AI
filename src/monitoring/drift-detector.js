@@ -22,6 +22,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 
@@ -292,7 +293,7 @@ class DriftDetector extends EventEmitter {
    */
   async triggerRecalibration(opts = {}) {
     const reason = opts.reason || 'manual';
-    console.log(`[DriftDetector] Recalibrating baseline (reason: ${reason})`);
+    logger.info(`[DriftDetector] Recalibrating baseline (reason: ${reason})`);
 
     if (!this._pgPool) {
       console.warn('[DriftDetector] No database available for recalibration');
@@ -329,7 +330,7 @@ class DriftDetector extends EventEmitter {
       await this._loadBaseline();
 
       this.emit('recalibrated', { reason, timestamp: new Date().toISOString() });
-      console.log('[DriftDetector] Baseline recalibration complete');
+      logger.info('[DriftDetector] Baseline recalibration complete');
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       console.error('[DriftDetector] Recalibration failed:', err.message);

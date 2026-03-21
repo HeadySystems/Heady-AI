@@ -5,6 +5,7 @@
  * HEADY_BRAND:END */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const https = require('https');
 
@@ -142,7 +143,7 @@ class GistStore {
     }
 
     this._index.set(key, { gistId: result.id, url: result.html_url, updatedAt: ts });
-    console.log(`[GistStore] ✓ checkpoint saved: ${key} → ${result.html_url}`);
+    logger.info(`[GistStore] ✓ checkpoint saved: ${key} → ${result.html_url}`);
     return { gistId: result.id, url: result.html_url, key };
   }
 
@@ -200,7 +201,7 @@ class GistStore {
     for (const [key, val] of this._index.entries()) {
       if (val.gistId === gistId) this._index.delete(key);
     }
-    console.log(`[GistStore] ✓ deleted gist ${gistId}`);
+    logger.info(`[GistStore] ✓ deleted gist ${gistId}`);
   }
 
   // ── Colab-Specific Helpers ─────────────────────────────────────────────────

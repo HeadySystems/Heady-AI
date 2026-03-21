@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * Auto-generated test stub for projection-dispatcher
  * Generated: 2026-03-07 by Heady™ Autonomous Cycle
@@ -11,13 +12,13 @@ describe("projection-dispatcher", () => {
 
   beforeAll(() => {
     // Suppress console output during tests
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "warn").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test("should load without throwing", () => {

@@ -21,7 +21,7 @@
  *
  *   // Subscribe
  *   bus.subscribe('heady:pipeline:run:completed', (event) => {
- *     console.log('Pipeline done:', event.runId);
+ *     logger.info('Pipeline done:', event.runId);
  *   });
  *
  *   // Publish
@@ -40,6 +40,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');

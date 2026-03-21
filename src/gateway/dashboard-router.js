@@ -1,3 +1,4 @@
+const logger = console;
 import os from 'os';
 import { AgentManager } from '../agents/agent-manager.js';
 import { MemoryStore } from '../memory/memory-store.js';
@@ -56,9 +57,7 @@ function setupDashboardRoutes(app) {
         hasKey: !!process.env[p.envKey],
         rateLimit: p.rateLimit,
       }));
-    } catch (e) {
-      // config may not exist in test environments
-    }
+    } catch (e) { // config may not exist in test environments  logger.error('Operation failed', { error: e.message }); }
 
     const internalServices = [
       { id: 'heady-manager', status: 'running', port: process.env.PORT || 3301 },

@@ -74,4 +74,4 @@ process.stdout.write(JSON.stringify({
   level: 'info', suite: 'heady-soul',
   passed, total, status: passed === total ? 'ALL_PASS' : 'SOME_FAIL',
 }) + '\n');
-process.exit(passed === total ? 0 : 1);
+process.exitCode = passed === total ? 0 : 1;

@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 /**
  * staging-test-schema.test.js

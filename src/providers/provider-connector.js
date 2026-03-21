@@ -510,7 +510,7 @@ class CloudflareAdapter extends BaseAdapter {
 class LocalAdapter extends BaseAdapter {
   constructor(config = {}) {
     super('local', {
-      baseUrl: config.baseUrl || process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+      baseUrl: config.baseUrl || process.env.OLLAMA_BASE_URL || (process.env.SERVICE_URL || 'http://0.0.0.0:11434'),
       ...config,
     });
     this.defaultModel      = config.defaultModel      || 'llama3';

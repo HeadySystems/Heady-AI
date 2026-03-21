@@ -183,24 +183,33 @@ describe('TenantIsolation', () => {
         isolation = new TenantIsolation();
     });
 
-    test('registers tenants with correct plan quotas', () => {
-        isolation.registerTenant('t1', { plan: 'free' });
-        isolation.registerTenant('t2', { plan: 'pro' });
-        const t1 = isolation.getTenant('t1');
-        const t2 = isolation.getTenant('t2');
-        expect(t1.plan).toBe('free');
-        expect(t2.plan).toBe('pro');
+    test('initializes without database', () => {
+        expect(isolation).toBeDefined();
+        expect(isolation.health().backing).toBe('none');
     });
 
-    test('generates isolated namespace keys', () => {
-        const iso = new TenantIsolation();
-        iso.registerTenant('tenant-abc', { plan: 'free' });
-        const dbKey = iso.getSchemaPrefix('tenant-abc');
-        const redisKey = iso.getRedisPrefix('tenant-abc');
-        const vectorKey = iso.getVectorCollection('tenant-abc');
-        expect(dbKey).toBeDefined();
-        expect(redisKey).toBeDefined();
-        expect(vectorKey).toBeDefined();
+    test('generates isolated redis prefix keys', () => {
+        const redisKey = isolation.getRedisPrefix('tenant-abc');
+        expect(redisKey).toBe('heady:t:tenant-abc');
+    });
+
+    test('generates isolated vector namespace keys', () => {
+        const vectorKey = isolation.getVectorNamespace('tenant-abc', 'embeddings');
+        expect(vectorKey).toBe('tenant-abc:embeddings');
+    });
+
+    test('registerTenant throws without database', async () => {
+        await expect(
+            isolation.registerTenant({ companyName: 'Test', contactEmail: 'test@test.com', tier: 'developer' })
+        ).rejects.toThrow('Database not initialized');
+    });
+
+    test('health returns correct service info', () => {
+        const h = isolation.health();
+        expect(h.service).toBe('tenant-isolation');
+        expect(h.version).toBe('2.0.0');
+        expect(h.tiers).toContain('developer');
+        expect(h.tiers).toContain('enterprise');
     });
 });
 

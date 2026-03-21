@@ -526,7 +526,7 @@ function generateOptimizationReport() {
     const dir = path.dirname(OPTIMIZATION_LOG);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.appendFileSync(OPTIMIZATION_LOG, JSON.stringify(report) + "\n");
-  } catch (_) { /* non-fatal */ }
+  } catch (_) { /* non-fatal */  logger.error('Operation failed', { error: _.message }); }
 
   return report;
 }

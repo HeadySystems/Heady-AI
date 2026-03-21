@@ -426,5 +426,5 @@ console.log('\n=== Claim 1: Telemetry Interception ===');
     console.log(`HS-053 Neural Telemetry: ${passed} passed, ${failed} failed`);
     console.log(`─────────────────────────────────────────`);
 
-    if (failed > 0) process.exit(1);
+    if (failed > 0) process.exitCode = 1;
 })();

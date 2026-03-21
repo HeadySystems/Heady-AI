@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -11,7 +12,7 @@ describe('EnvValidator (Hardened)', () => {
   let validateEnvironment;
 
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     // Ensure NODE_ENV is NOT production (prevents auto-exit on import)
     process.env.NODE_ENV = 'test';
     const mod = require('../../src/security/env-validator-hardened');
@@ -111,10 +112,10 @@ describe('SecurityHeaders Middleware', () => {
     return {
       req: { headers: { origin } },
       res: {
-        setHeader: jest.fn((key, val) => { headers[key] = val; }),
+        setHeader: vi.fn((key, val) => { headers[key] = val; }),
         _headers: headers,
       },
-      next: jest.fn(),
+      next: vi.fn(),
       headers,
     };
   }

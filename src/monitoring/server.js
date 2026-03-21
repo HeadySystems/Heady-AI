@@ -1,3 +1,4 @@
+const logger = console;
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 
 /**
@@ -22,7 +23,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PHI              = 1.6180339887;
 const PORT             = Number(process.env.DASHBOARD_PORT) || 3850;
-const PROJECTION_HOST  = process.env.PROJECTION_SERVICE || 'http://localhost:3849';
+const PROJECTION_HOST  = process.env.PROJECTION_SERVICE || (process.env.SERVICE_URL || 'http://0.0.0.0:3849');
 const INDEX_HTML       = join(__dirname, 'index.html');
 
 // ── App ───────────────────────────────────────────────────────────────────────
@@ -113,16 +114,16 @@ app.use((_req, res) => {
 // ── Start ─────────────────────────────────────────────────────────────────────
 const server = createServer(app);
 server.listen(PORT, () => {
-  console.log(`[Heady Dashboard] ▶  http://localhost:${PORT}`);
-  console.log(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
-  console.log(`[Heady Dashboard] φ  PHI = ${PHI}`);
+  logger.info(`[Heady Dashboard] ▶  http://0.0.0.0:${PORT}`);
+  logger.info(`[Heady Dashboard] ◎  Proxying /api/* → ${PROJECTION_HOST}`);
+  logger.info(`[Heady Dashboard] φ  PHI = ${PHI}`);
 });
 
 // ── Graceful shutdown ─────────────────────────────────────────────────────────
 function shutdown(signal) {
-  console.log(`\n[Dashboard] ${signal} received — shutting down…`);
+  logger.info(`\n[Dashboard] ${signal} received — shutting down…`);
   server.close(() => {
-    console.log('[Dashboard] HTTP server closed.');
+    logger.info('[Dashboard] HTTP server closed.');
     process.exit(0);
   });
   setTimeout(() => process.exit(1), Math.round(PHI * 3000));

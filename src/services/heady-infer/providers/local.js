@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const http  = require('http');
 const https = require('https');
@@ -13,7 +14,7 @@ const BaseProvider = require('./base-provider');
 class LocalProvider extends BaseProvider {
   constructor(config) {
     super('local', config);
-    this.baseUrl = config.baseUrl || 'http://localhost:11434';
+    this.baseUrl = config.baseUrl || (process.env.SERVICE_URL || 'http://0.0.0.0:11434');
   }
 
   _request(path, body, timeoutMs, signal) {
@@ -182,7 +183,7 @@ class LocalProvider extends BaseProvider {
                 inputTokens  = evt.prompt_eval_count || 0;
                 outputTokens = evt.eval_count         || 0;
               }
-            } catch (_) {}
+            } catch (_) { logger.error('Operation failed', { error: _.message }); }
           }
         });
 

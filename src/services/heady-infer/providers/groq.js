@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const https = require('https');
 const http  = require('http');
@@ -108,7 +109,7 @@ class GroqProvider extends BaseProvider {
                 promptTokens     = evt.x_groq.usage.prompt_tokens     || 0;
                 completionTokens = evt.x_groq.usage.completion_tokens || 0;
               }
-            } catch (_) {}
+            } catch (_) { logger.error('Operation failed', { error: _.message }); }
           }
         });
 

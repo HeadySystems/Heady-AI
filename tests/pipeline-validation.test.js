@@ -117,7 +117,7 @@ try {
 if (loadErrors.length > 0) {
   console.error('\n⛔  CONFIG LOAD FAILURES — cannot continue:\n');
   loadErrors.forEach(e => console.error('  ' + e));
-  process.exit(1);
+  process.exitCode = 1;
 }
 
 // ─── Convenience accessors ────────────────────────────────────────────────────
@@ -1104,4 +1104,4 @@ if (failed === 0) {
 
 console.log('─'.repeat(80) + '\n');
 
-process.exit(failed > 0 ? 1 : 0);
+process.exitCode = failed > 0 ? 1 : 0;

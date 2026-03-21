@@ -16,6 +16,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 const {
@@ -545,7 +546,7 @@ class AttestationMesh {
 
     _emit(event, data) {
         for (const listener of this._listeners) {
-            try { listener(event, data); } catch (_) { /* swallow listener errors */ }
+            try { listener(event, data); } catch (_) { /* swallow listener errors */  logger.error('Operation failed', { error: _.message }); }
         }
     }
 }

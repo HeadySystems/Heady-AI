@@ -320,10 +320,8 @@ class SemanticAnalyzer {
       if (this._embedder) {
         try {
           embeddings[file.path] = await this._embedder(file.content);
-        } catch (err) {
-          // Fallback: synthetic embedding from content characteristics
-          embeddings[file.path] = this._syntheticEmbedding(file);
-        }
+        } catch (err) { // Fallback: synthetic embedding from content characteristics
+          embeddings[file.path] = this._syntheticEmbedding(file);  logger.error('Operation failed', { error: err.message }); }
       } else {
         embeddings[file.path] = this._syntheticEmbedding(file);
       }

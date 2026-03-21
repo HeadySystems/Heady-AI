@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * HeadyLiquidGateway — Streaming Transport Layer
  * 
@@ -234,7 +235,7 @@ export class SSETransport extends EventEmitter {
 
     try {
       connection.res.end();
-    } catch (_) { /* already closed */ }
+    } catch (_) { /* already closed */  logger.error('Operation failed', { error: _.message }); }
 
     this.connections.delete(connectionId);
     this.emit('sse:disconnected', { connectionId, userId: connection.userId });
@@ -391,7 +392,7 @@ export class WebSocketTransport extends EventEmitter {
     session.state = 'closing';
     try {
       session.ws.close(code, reason);
-    } catch (_) { /* already closed */ }
+    } catch (_) { /* already closed */  logger.error('Operation failed', { error: _.message }); }
 
     this._cleanup(sessionId);
   }

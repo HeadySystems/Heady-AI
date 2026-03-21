@@ -342,11 +342,9 @@ export class HybridSearchEngine extends EventEmitter {
         score: parseFloat(r.bm25_score),
         source: 'bm25',
       }));
-    } catch (error) {
-      // Degrade gracefully: return empty if BM25 fails
+    } catch (error) { // Degrade gracefully: return empty if BM25 fails
       this.logger.warn('[HybridSearch] BM25 search error (degrading):', error.message);
-      return [];
-    }
+      return [];  logger.error('Operation failed', { error: error.message }); }
   }
 
   /**

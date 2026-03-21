@@ -57,8 +57,7 @@ function ensureDirs() {
 function loadLockState() {
   try {
     return JSON.parse(fs.readFileSync(LOCK_FILE, 'utf8'));
-  } catch (e) {
-    // Default: LOCKED — owner must explicitly unlock
+  } catch (e) { // Default: LOCKED — owner must explicitly unlock
     const defaultState = {
       locked: true,
       owner: 'erich',
@@ -78,8 +77,7 @@ function loadLockState() {
         'package.json',
         'package-lock.json'
       ],
-      lockLevel: 'full' // full | protected-only | audit-only
-    };
+      lockLevel: 'full' // full | protected-only | audit-only  logger.error('Operation failed', { error: e.message }); };
     saveLockState(defaultState);
     return defaultState;
   }
@@ -377,7 +375,7 @@ function snapshotHashes() {
           hashes[relPath] = hashFile(fullPath);
         }
       }
-    } catch (e) { /* skip */ }
+    } catch (e) { /* skip */  logger.error('Operation failed', { error: e.message }); }
   }
 
   walkDir(HEADY_ROOT);
@@ -427,7 +425,7 @@ function detectChanges() {
           }
         }
       }
-    } catch (e) { /* skip */ }
+    } catch (e) { /* skip */  logger.error('Operation failed', { error: e.message }); }
   }
 
   walkDir(HEADY_ROOT);
@@ -510,7 +508,7 @@ function appendAudit(action, details = {}) {
   };
   try {
     fs.appendFileSync(AUDIT_FILE, JSON.stringify(entry) + '\n');
-  } catch (e) { /* ignore */ }
+  } catch (e) { /* ignore */  logger.error('Operation failed', { error: e.message }); }
 }
 
 function getAuditLog(limit = 50) {
@@ -535,7 +533,7 @@ function getStatus() {
   try {
     const h = JSON.parse(fs.readFileSync(HASHES_FILE, 'utf8'));
     hashStatus = `${h.totalFiles} files hashed at ${h.timestamp}`;
-  } catch (e) { /* no snapshot */ }
+  } catch (e) { /* no snapshot */  logger.error('Operation failed', { error: e.message }); }
 
   return {
     locked: state.locked,

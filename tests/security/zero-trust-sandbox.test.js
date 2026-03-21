@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * Zero-Trust Sandbox Test Suite
  * ==============================
@@ -18,7 +19,7 @@ describe('ZeroTrustSandbox', () => {
   let sandbox;
 
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     sandbox = new ZeroTrustSandbox({
       toolCategories: {
         'file.read': 'file-ops',
@@ -31,8 +32,8 @@ describe('ZeroTrustSandbox', () => {
   });
 
   afterEach(() => {
-    jest.clearAllTimers();
-    jest.useRealTimers();
+    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   describe('Capability Bitmask', () => {
@@ -52,7 +53,7 @@ describe('ZeroTrustSandbox', () => {
 
   describe('Capability Checks', () => {
     test('rejects insufficient capabilities', async () => {
-      const mockConnection = { send: jest.fn() };
+      const mockConnection = { send: vi.fn() };
       await expect(sandbox.execute({
         tool: 'file.read',
         arguments: {},
@@ -65,7 +66,7 @@ describe('ZeroTrustSandbox', () => {
 
     test('allows matching capabilities', async () => {
       const mockConnection = {
-        send: jest.fn().mockResolvedValue({ result: { data: 'ok' } }),
+        send: vi.fn().mockResolvedValue({ result: { data: 'ok' } }),
       };
       const result = await sandbox.execute({
         tool: 'file.read',
@@ -80,7 +81,7 @@ describe('ZeroTrustSandbox', () => {
 
     test('FULL_ACCESS grants all capabilities', async () => {
       const mockConnection = {
-        send: jest.fn().mockResolvedValue({ result: { data: 'ok' } }),
+        send: vi.fn().mockResolvedValue({ result: { data: 'ok' } }),
       };
       const result = await sandbox.execute({
         tool: 'secrets.get',
@@ -96,7 +97,7 @@ describe('ZeroTrustSandbox', () => {
 
   describe('User Lockout', () => {
     test('locks out user after 5 violations', async () => {
-      const mockConnection = { send: jest.fn() };
+      const mockConnection = { send: vi.fn() };
 
       // Generate 5 violations
       for (let i = 0; i < 5; i++) {
@@ -137,7 +138,7 @@ describe('ZeroTrustSandbox', () => {
     test('rejects oversized output', async () => {
       const largeOutput = 'x'.repeat(DEFAULT_RESOURCE_LIMITS.maxOutputBytes + 1);
       const mockConnection = {
-        send: jest.fn().mockResolvedValue({ result: largeOutput }),
+        send: vi.fn().mockResolvedValue({ result: largeOutput }),
       };
 
       await expect(sandbox.execute({
@@ -164,7 +165,7 @@ describe('ZeroTrustSandbox', () => {
   describe('Execution Log', () => {
     test('logs successful executions', async () => {
       const mockConnection = {
-        send: jest.fn().mockResolvedValue({ result: 'ok' }),
+        send: vi.fn().mockResolvedValue({ result: 'ok' }),
       };
 
       await sandbox.execute({

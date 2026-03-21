@@ -25,6 +25,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
@@ -48,9 +49,8 @@ const AROUSAL_SPIKE_PER_ERROR = 0.15;
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function safeOp(label, fn) {
-  try { return fn(); } catch (err) {
-    // Non-fatal — just log
-    try { process.stderr.write(`[BuddyCore:safeOp:${label}] ${err.message}\n`); } catch { }
+  try { return fn(); } catch (err) { // Non-fatal — just log
+    try { process.stderr.write(`[BuddyCore:safeOp:${label  logger.error('Operation failed', { error: err.message }); }] ${err.message}\n`); } catch { }
     return null;
   }
 }

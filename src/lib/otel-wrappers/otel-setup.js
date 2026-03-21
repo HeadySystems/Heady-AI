@@ -5,6 +5,7 @@
  * @module otel-wrappers/otel-setup
  */
 'use strict';
+const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const { NodeSDK } = require('@opentelemetry/sdk-node');
@@ -34,7 +35,7 @@ const { propagation, context, trace } = require('@opentelemetry/api');
 const SERVICE_NAME    = process.env.OTEL_SERVICE_NAME    || process.env.HEADY_SERVICE_NAME || 'heady-manager';
 const SERVICE_VERSION = process.env.OTEL_SERVICE_VERSION || process.env.npm_package_version || '3.1.0';
 const DEPLOY_ENV      = process.env.OTEL_DEPLOYMENT_ENV  || process.env.NODE_ENV           || 'development';
-const OTLP_ENDPOINT   = process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4317';
+const OTLP_ENDPOINT   = process.env.OTEL_EXPORTER_OTLP_ENDPOINT || (process.env.SERVICE_URL || 'http://0.0.0.0:4317');
 const BATCH_SIZE      = parseInt(process.env.OTEL_BATCH_SIZE || '512', 10);
 const BATCH_TIMEOUT   = parseInt(process.env.OTEL_BATCH_TIMEOUT_MS || '5000', 10);
 const PROMETHEUS_PORT = parseInt(process.env.PROMETHEUS_PORT || '9464', 10);
@@ -66,7 +67,7 @@ const batchSpanProcessor = new BatchSpanProcessor(traceExporter, {
 // ─── Metrics: Prometheus (pull) + OTLP (push) ─────────────────────────────────
 const prometheusExporter = new PrometheusExporter(
   { port: PROMETHEUS_PORT, startServer: true },
-  () => console.log(`[otel-setup] Prometheus metrics at http://localhost:${PROMETHEUS_PORT}/metrics`)
+  () => logger.info(`[otel-setup] Prometheus metrics at http://0.0.0.0:${PROMETHEUS_PORT}/metrics`)
 );
 
 const otlpMetricExporter = new OTLPMetricExporter({ url: OTLP_ENDPOINT });
@@ -128,7 +129,7 @@ function start() {
   _started = true;
   try {
     sdk.start();
-    console.log(`[otel-setup] SDK started — service="${SERVICE_NAME}" env="${DEPLOY_ENV}" otlp="${OTLP_ENDPOINT}"`);
+    logger.info(`[otel-setup] SDK started — service="${SERVICE_NAME}" env="${DEPLOY_ENV}" otlp="${OTLP_ENDPOINT}"`);
   } catch (err) {
     console.error('[otel-setup] SDK start failed (telemetry disabled):', err.message);
   }
@@ -138,7 +139,7 @@ async function shutdown() {
   if (!_started) return;
   try {
     await sdk.shutdown();
-    console.log('[otel-setup] SDK shutdown complete');
+    logger.info('[otel-setup] SDK shutdown complete');
   } catch (err) {
     console.error('[otel-setup] SDK shutdown error:', err.message);
   }

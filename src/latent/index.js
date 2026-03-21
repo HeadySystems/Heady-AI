@@ -5,6 +5,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const vectorSpaceOps = require('./vector-space-ops');
 const { VectorMemory } = require('./vector-memory');
@@ -59,11 +60,11 @@ function createLatentOS(opts = {}) {
 
     // Cross-wire events
     pipeline.on && pipeline.on('stored', (entry) => {
-        try { spatialMapper.add && spatialMapper.add(entry.key, entry.vector); } catch (_) {}
+        try { spatialMapper.add && spatialMapper.add(entry.key, entry.vector); } catch (_) { logger.error('Operation failed', { error: _.message }); }
     });
 
     awareness.on && awareness.on('drift-detected', (data) => {
-        try { driftDetector.onDriftSignal && driftDetector.onDriftSignal(data); } catch (_) {}
+        try { driftDetector.onDriftSignal && driftDetector.onDriftSignal(data); } catch (_) { logger.error('Operation failed', { error: _.message }); }
     });
 
     function shutdown() {

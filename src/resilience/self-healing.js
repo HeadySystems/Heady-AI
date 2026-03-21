@@ -7,6 +7,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 import { PHI, PSI, fib, phiBackoff, CSL_THRESHOLDS, PHI_TIMING } from '../../shared/phi-math.js';
 import { cslAND } from '../../shared/csl-engine.js';
@@ -231,12 +232,11 @@ export class SelfHealingMesh {
       record.lastHeartbeat = Date.now();
       record.quarantinedAt = null;
       this._emit('service.respawned', { serviceId: record.id, attempt: record.respawnAttempts });
-    } catch (err) {
-      // Back to quarantine with phi-backoff
+    } catch (err) { // Back to quarantine with phi-backoff
       record.state = SERVICE_STATE.QUARANTINED;
       record.quarantinedAt = Date.now();
       const backoff = phiBackoff(record.respawnAttempts);
-      this._emit('service.respawn.failed', { serviceId: record.id, error: err.message, retryMs: backoff });
+      this._emit('service.respawn.failed', { serviceId: record.id, error: err.message, retryMs: backoff  logger.error('Operation failed', { error: err.message }); });
     }
   }
 

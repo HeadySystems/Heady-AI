@@ -150,9 +150,7 @@ async function bootVault() {
                     projected++;
                     projectedKeys.push(envVar);
                 }
-            } catch (e) {
-                // Credential not found in vault — skip silently
-            }
+            } catch (e) { // Credential not found in vault — skip silently  logger.error('Operation failed', { error: e.message }); }
         }
 
         logger.logSystem(`  🔐 Vault Boot: ${projected} credentials projected into process.env`);

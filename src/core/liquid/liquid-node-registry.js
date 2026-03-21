@@ -464,7 +464,7 @@ function pruneIdle() {
     for (const [id, cached] of _lazyCache) {
         if (now - cached.lastAccess > IDLE_TTL_MS) {
             // Return to LATENT
-            try { cached.instance.stop?.(); } catch (_) { /* best effort */ }
+            try { cached.instance.stop?.(); } catch (_) { /* best effort */  logger.error('Operation failed', { error: _.message }); }
             if (cached.instance.__liquid) cached.instance.__liquid.lifecycle = LIFECYCLE.LATENT;
             _lazyCache.delete(id);
             getRegistry().delete(id);

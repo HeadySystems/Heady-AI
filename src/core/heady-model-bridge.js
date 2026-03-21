@@ -2,13 +2,12 @@
 // STUB — awaiting full implementation
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 let providerConnector = null;
 try {
   providerConnector = require('../integrations/provider-connector');
-} catch (err) {
-  // provider-connector not available
-}
+} catch (err) { // provider-connector not available  logger.error('Operation failed', { error: err.message }); }
 
 class ModelBridge {
   constructor(options = {}) {

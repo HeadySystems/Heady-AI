@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * DeepResearchEngine — Multi-provider deep research with consensus synthesis.
@@ -216,10 +217,8 @@ Synthesis:`;
         systemPrompt: 'You are a precise research synthesizer. Be accurate, comprehensive, and note uncertainty.',
       });
       return result.text;
-    } catch (err) {
-      // Fallback: return the best single result
-      return successful[0].text;
-    }
+    } catch (err) { // Fallback: return the best single result
+      return successful[0].text;  logger.error('Operation failed', { error: err.message }); }
   }
 
   // ─── Confidence scoring ────────────────────────────────────────────────────

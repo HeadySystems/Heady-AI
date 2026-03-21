@@ -15,6 +15,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 
@@ -492,7 +493,7 @@ class TelemetryInterceptor {
     _alert(alertObj) {
         const fullAlert = { ...alertObj, timestamp: new Date().toISOString() };
         for (const listener of this._alertListeners) {
-            try { listener(fullAlert); } catch (_) { /* swallow */ }
+            try { listener(fullAlert); } catch (_) { /* swallow */  logger.error('Operation failed', { error: _.message }); }
         }
     }
 

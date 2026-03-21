@@ -2,6 +2,7 @@
 // STUB — awaiting full implementation
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 class NeonDB {
   constructor(url = null) {
@@ -31,9 +32,7 @@ class NeonDB {
       if (this.connection && this.connection.end) {
         this.connection.end();
       }
-    } catch (err) {
-      // ignore
-    }
+    } catch (err) { // ignore  logger.error('Operation failed', { error: err.message }); }
     this.connection = null;
   }
 }

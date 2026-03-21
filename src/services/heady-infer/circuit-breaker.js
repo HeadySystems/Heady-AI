@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const EventEmitter = require('events');
 
@@ -233,8 +234,7 @@ class CircuitBreakerManager extends EventEmitter {
       circuit.onSuccess();
       this.emit('success', providerId);
       return result;
-    } catch (err) {
-      // Don't trip circuit on user errors (4xx) or aborts
+    } catch (err) { // Don't trip circuit on user errors (4xx) or aborts
       const shouldTrip = (
         err.name !== 'CircuitOpenError' &&
         err.name !== 'ValidationError'  &&
@@ -242,8 +242,7 @@ class CircuitBreakerManager extends EventEmitter {
       );
       if (shouldTrip) {
         circuit.onFailure(err);
-        this.emit('failure', providerId, err);
-      }
+        this.emit('failure', providerId, err);  logger.error('Operation failed', { error: err.message }); }
       throw err;
     }
   }

@@ -1,4 +1,5 @@
 'use strict';
+const logger = console;
 
 /**
  * HeadyChain Pre-built Agent Patterns
@@ -182,7 +183,7 @@ Final Answer: [your complete answer]`;
         steps[steps.length - 1].observation = observation;
 
         if (this.verbose) {
-          console.log(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
+          logger.info(`[ReAct] Iteration ${iterations}: Action=${toolName}, Observation=${observation.slice(0, 100)}`);
         }
       } else {
         // Unexpected format — ask LLM to continue

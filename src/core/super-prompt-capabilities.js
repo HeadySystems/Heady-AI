@@ -1,3 +1,4 @@
+const logger = console;
 // ═══════════════════════════════════════════════════════════════════════════════
 // SP-001–010: Super Prompt v6.0 Capability Implementations
 // HeadyAutoContext, Buddy Optimization Loop, Colab GPU, Swarm modules
@@ -403,7 +404,7 @@ export class SentinelSwarm {
   async detectThreats(rootDir = process.cwd()) {
     const threats = [];
     // ThreatDetectorBee: scan for known vulnerability patterns
-    const npmAudit = safeExec('npm audit --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); console.log(JSON.stringify(d.metadata?.vulnerabilities||{}))" 2>/dev/null', rootDir);
+    const npmAudit = safeExec('npm audit --json 2>/dev/null | node -e "const d=JSON.parse(require(\'fs\').readFileSync(0,\'utf8\')); logger.info(JSON.stringify(d.metadata?.vulnerabilities||{}))" 2>/dev/null', rootDir);
     if (npmAudit.ok) threats.push({ bee: 'ThreatDetectorBee', type: 'npm_vulns', data: JSON.parse(npmAudit.stdout || '{}') });
 
     // VulnScannerBee: check for exposed secrets

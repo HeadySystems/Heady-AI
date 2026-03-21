@@ -19,6 +19,8 @@
  *
  * @module edge-inference-worker
  */
+const logger = console;
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Phi-Math constants (inlined from shared/phi-math.js — Workers can't import)
@@ -103,8 +105,8 @@ const ALLOWED_ORIGINS = [
   'https://heady-ai.com',
   'https://app.heady-ai.com',
   'https://headyconnection.org',
-  'http://localhost:3000',
-  'http://localhost:5173',
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3000'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:5173'),
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -791,7 +793,7 @@ export default {
    * @param {ExecutionContext} ctx
    */
   async scheduled(event, env, ctx) {
-    console.log('[scheduled] cron fired:', event.cron);
+    logger.info('[scheduled] cron fired:', event.cron);
     // Placeholder for cache warm-up logic
     // In production, pre-embed common queries and store in EDGE_CACHE_KV
   },

@@ -14,6 +14,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const http = require('http');
 const crypto = require('crypto');
@@ -94,9 +95,7 @@ async function initNats() {
         max_msgs: fib(17),                // 1 597 messages
         max_age: fib(11) * fib(12) * fib(10) * fib(6) * 1e9,  // 89 × 144 × 55 × 8 = 5,637,120s ≈ 65d (Fibonacci-derived retention)
       });
-    } catch (_streamErr) {
-      // Stream may already exist — NATS idempotent creation
-    }
+    } catch (_streamErr) { // Stream may already exist — NATS idempotent creation  logger.error('Operation failed', { error: _streamErr.message }); }
 
     const js = nc.jetstream();
     const sub = await js.subscribe('heady.notifications.*', {
@@ -336,9 +335,7 @@ server.on('upgrade', (req, socket, head) => {
         markRead(msg.notificationId, userId);
         wsSend(ws, { type: 'read_confirmed', notificationId: msg.notificationId });
       }
-    } catch (_frameErr) {
-      // Malformed WebSocket frame — client sent invalid data
-    }
+    } catch (_frameErr) { // Malformed WebSocket frame — client sent invalid data  logger.error('Operation failed', { error: _frameErr.message }); }
   });
 
   ws.on('close', () => {
@@ -636,10 +633,10 @@ function gracefulShutdown(signal) {
   flushPersistBuffer();
 
   for (const [, conns] of sseConnections) {
-    for (const res of conns) { try { res.end(); } catch (_closeErr) { /* connection already closed — expected during shutdown */ } }
+    for (const res of conns) { try { res.end(); } catch (_closeErr) { /* connection already closed — expected during shutdown */  logger.error('Operation failed', { error: _closeErr.message }); } }
   }
   for (const [, conns] of wsConnections) {
-    for (const ws of conns) { try { wsSend(ws, { type: 'server_shutdown' }); ws.destroy(); } catch (_closeErr) { /* connection already closed — expected during shutdown */ } }
+    for (const ws of conns) { try { wsSend(ws, { type: 'server_shutdown' }); ws.destroy(); } catch (_closeErr) { /* connection already closed — expected during shutdown */  logger.error('Operation failed', { error: _closeErr.message }); } }
   }
   if (natsConnection) natsConnection.close().catch((_err) => { /* NATS connection already closing */ });
 

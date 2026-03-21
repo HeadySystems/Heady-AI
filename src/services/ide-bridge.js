@@ -316,10 +316,9 @@ function applyProposal(proposalId) {
             traceId: record.traceId,
             bytesWritten: Buffer.byteLength(record.proposedDiff, 'utf-8'),
         };
-    } catch (err) {
-        // Rollback: restore original if we backed it up
+    } catch (err) { // Rollback: restore original if we backed it up
         if (backupPath && originalContent !== null) {
-            try { fs.writeFileSync(targetPath, originalContent, 'utf-8'); } catch { /* best effort */ }
+            try { fs.writeFileSync(targetPath, originalContent, 'utf-8');  logger.error('Operation failed', { error: err.message }); } catch { /* best effort */ }
         }
 
         return {

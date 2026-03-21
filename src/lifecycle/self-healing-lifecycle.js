@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../utils/logger') || console;
 
 /**
  * self-healing-lifecycle.js
@@ -679,7 +680,7 @@ class SelfHealingLifecycle extends EventEmitter {
     this._log = opts.logger ?? ((level, msg, ctx) => {
       const ts = new Date().toISOString();
       const ctxStr = ctx ? ` ${JSON.stringify(ctx)}` : '';
-      console.log(`[${ts}] [${level.toUpperCase()}] ${msg}${ctxStr}`);
+      logger.info(`[${ts}] [${level.toUpperCase()}] ${msg}${ctxStr}`);
     });
 
     /** @type {Map<string, NodeJS.Timeout>} per-component drift check timers */

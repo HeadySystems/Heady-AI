@@ -14,6 +14,7 @@
  * @module enterprise-hardening/circuit-breaker/cloudflare-breaker
  */
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { EventEmitter } = require('events');
 const { registry, EnhancedCircuitBreaker, PHI } = require('./external-api-breakers');
@@ -97,11 +98,9 @@ class CloudflareAIBreaker extends EventEmitter {
         }
 
         return result;
-      } catch (err) {
-        // If circuit is OPEN or max retries exhausted, try origin
+      } catch (err) { // If circuit is OPEN or max retries exhausted, try origin
         if (err.message.includes('Circuit breaker') || attempt === this._maxRetries) {
-          return this._fallbackToOrigin(model, inputs, err);
-        }
+          return this._fallbackToOrigin(model, inputs, err);  logger.error('Operation failed', { error: err.message }); }
       }
     }
   }

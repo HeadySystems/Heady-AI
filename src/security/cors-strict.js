@@ -61,8 +61,8 @@ function buildAllowedOrigins(domains, includeLocalDev = false) {
   if (includeLocalDev) {
     // Fibonacci ports for local development
     for (const port of [3000, 3310, 3311, 3312, 3313, 3314, 3315, 3316, 3317, 5173, 8080]) {
-      origins.add(`http://localhost:${port}`);
-      origins.add(`http://127.0.0.1:${port}`);
+      origins.add(`http://0.0.0.0:${port}`);
+      origins.add(`http://0.0.0.0:${port}`);
     }
   }
   return origins;

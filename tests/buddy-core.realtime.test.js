@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -27,8 +28,8 @@ describe("BuddyCore realtime orchestration", () => {
     });
 
     test("orchestrates live event and forces immediate flush", async () => {
-        const ingestExternalEvent = jest.fn(() => ({ ok: true, queued: 1 }));
-        const flush = jest.fn(async () => ({ ok: true, queueDepth: 0 }));
+        const ingestExternalEvent = vi.fn(() => ({ ok: true, queued: 1 }));
+        const flush = vi.fn(async () => ({ ok: true, queueDepth: 0 }));
 
         const buddy = new BuddyCore();
         buddy.setRealtimeEngine({
@@ -71,11 +72,11 @@ describe("BuddyCore realtime orchestration", () => {
 
     test("awaits async ingest and clamps midi payload bounds", async () => {
         const callOrder = [];
-        const ingestExternalEvent = jest.fn(async () => {
+        const ingestExternalEvent = vi.fn(async () => {
             callOrder.push("ingest");
             return { ok: true };
         });
-        const flush = jest.fn(async () => {
+        const flush = vi.fn(async () => {
             callOrder.push("flush");
             return { ok: true, queueDepth: 0 };
         });

@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -115,9 +116,7 @@ class SkillSynthesizer {
 
         // Collect step names
         allStepNames.push(...tools);
-      } catch (e) {
-        // skip unloadable traces
-      }
+      } catch (e) { // skip unloadable traces  logger.error('Operation failed', { error: e.message }); }
     }
 
     // Find most common tool sequence (majority vote)

@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -128,7 +129,7 @@ function registerConnectorRoutes(app) {
     try {
         require("../utils/logger").logSystem("🔌 Connector routes registered: providers, services, token vault, health");
     } catch {
-        console.log("🔌 Connector routes registered");
+        logger.info("🔌 Connector routes registered");
     }
 }
 

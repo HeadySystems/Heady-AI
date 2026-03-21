@@ -5,6 +5,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const crypto       = require('crypto');
@@ -326,7 +327,7 @@ async function* streamToSSE(stream, requestId) {
  * @example
  * const gateway = new InferenceGateway({ router });
  * const response = await gateway.infer({ prompt: 'Hello', taskType: 'quick' });
- * console.log(response.text);
+ * logger.info(response.text);
  */
 class InferenceGateway extends EventEmitter {
   /**

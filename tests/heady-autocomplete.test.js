@@ -305,5 +305,5 @@ const verifier = new VerificationEngine();
     console.log(`\n  Total: ${passed + failed} | ✅ Passed: ${passed} | ❌ Failed: ${failed}`);
     console.log('═══════════════════════════════════════\n');
 
-    process.exit(failed > 0 ? 1 : 0);
+    process.exitCode = failed > 0 ? 1 : 0;
 })();

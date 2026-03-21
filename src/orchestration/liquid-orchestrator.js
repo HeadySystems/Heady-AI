@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 /**
  * liquid-orchestrator.js — LiquidOrchestrator
  * Dynamic liquid architecture engine for the Heady™ Sovereign AI Platform.
@@ -537,7 +538,7 @@ class LiquidOrchestrator extends EventEmitter {
 
     try {
       await this._dispatchToBee(bee, task, provider, routeStart, task._priorityScore || 0);
-    } catch (_) { /* error already emitted */ }
+    } catch (_) { /* error already emitted */  logger.error('Operation failed', { error: _.message }); }
   }
 
   // ─── Priority Scoring ────────────────────────────────────────────────────────

@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * HeadyStore Search Route — /api/store/search
  * Cascades through available AI providers for REAL product search:
@@ -221,14 +222,13 @@ function extractJSON(content) {
         // Try direct parse first
         const parsed = JSON.parse(content);
         if (parsed.products?.length > 0) return parsed;
-    } catch (e) {
-        // Extract JSON from fenced code or mixed text
-        const jsonMatch = content.match(/\{[\s\S]*\}/);
+    } catch (e) { // Extract JSON from fenced code or mixed text
+        const jsonMatch = content.match(/\{[\s\S]*\  logger.error('Operation failed', { error: e.message }); }/);
         if (jsonMatch) {
             try {
                 const parsed = JSON.parse(jsonMatch[0]);
                 if (parsed.products?.length > 0) return parsed;
-            } catch (e2) { /* fall through */ }
+            } catch (e2) { /* fall through */  logger.error('Operation failed', { error: e2.message }); }
         }
     }
     return null;
@@ -256,10 +256,10 @@ async function storeSearchHandler(req, res) {
 
         for (const provider of providers) {
             try {
-                console.log(`[store-search] Trying ${provider.name}...`);
+                logger.info(`[store-search] Trying ${provider.name}...`);
                 const result = await provider.fn(userMessage);
                 if (result?.products?.length > 0) {
-                    console.log(`[store-search] ${provider.name} returned ${result.products.length} products`);
+                    logger.info(`[store-search] ${provider.name} returned ${result.products.length} products`);
                     return res.json({
                         ...result,
                         _provider: provider.name,

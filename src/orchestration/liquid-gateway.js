@@ -287,7 +287,7 @@ class LiquidGateway extends EventEmitter {
       { id: PROVIDERS.GROQ,       baseUrl: 'https://api.groq.com/openai/v1',         model: 'llama-3.3-70b-versatile' },
       { id: PROVIDERS.SONAR,      baseUrl: 'https://api.perplexity.ai',              model: 'sonar-pro' },
       { id: PROVIDERS.WORKERS_AI, baseUrl: 'https://api.cloudflare.com/client/v4',   model: '@cf/meta/llama-3.1-8b-instruct' },
-      { id: PROVIDERS.OLLAMA,     baseUrl: 'http://localhost:11434',                 model: 'llama3.2', dailyCapUsd: 0 },
+      { id: PROVIDERS.OLLAMA,     baseUrl: (process.env.SERVICE_URL || 'http://0.0.0.0:11434'),                 model: 'llama3.2', dailyCapUsd: 0 },
     ];
     for (const cfg of defaults) {
       this._providers.set(cfg.id, new ProviderRecord(cfg));

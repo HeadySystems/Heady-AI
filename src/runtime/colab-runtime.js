@@ -1,3 +1,4 @@
+const logger = console;
 #!/usr/bin/env node
 /**
  * © 2026 Heady™Systems Inc..
@@ -419,7 +420,7 @@ class ColabOrchestrator {
                 } else {
                     // Recovery: reset failure count and circuit breaker
                     if (failures > 0) {
-                        console.log(`✅ ${id} recovered after ${failures} failures`);
+                        logger.info(`✅ ${id} recovered after ${failures} failures`);
                         this.runtimes[id]._circuitBroken = false;
                         this.runtimes[id]._circuitBrokenAt = null;
                     }
@@ -485,7 +486,7 @@ class ColabOrchestrator {
  */
 async function setupNgrokTunnel(port) {
     if (!GPU_CONFIG.ngrokToken) {
-        console.log("⚠ No NGROK_TOKEN — API only accessible within Colab");
+        logger.info("⚠ No NGROK_TOKEN — API only accessible within Colab");
         return null;
     }
     try {
@@ -496,11 +497,11 @@ async function setupNgrokTunnel(port) {
             domain: GPU_CONFIG.ngrokDomain || undefined,
         });
         const url = listener.url();
-        console.log(`🌐 Heady accessible at: ${url}`);
+        logger.info(`🌐 Heady accessible at: ${url}`);
         return url;
     } catch (err) {
-        console.log(`⚠ ngrok setup failed: ${err.message}`);
-        console.log("  Install: pip install pyngrok && npm install @ngrok/ngrok");
+        logger.info(`⚠ ngrok setup failed: ${err.message}`);
+        logger.info("  Install: pip install pyngrok && npm install @ngrok/ngrok");
         return null;
     }
 }

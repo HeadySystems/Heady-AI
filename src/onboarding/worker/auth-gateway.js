@@ -8,6 +8,8 @@
  *   - FIREBASE_PROJECT_ID (string) Firebase project ID (heady-ai)
  *   - RATE_LIMIT         (KV namespace) per-IP rate limiting store
  */
+const logger = console;
+
 
 // ─── Allowed Origins ────────────────────────────────────────────────
 const ALLOWED_ORIGINS = new Set([
@@ -335,5 +337,5 @@ function logStructured(level, data) {
     service: 'heady-edge-gateway',
     ...data,
   };
-  console.log(JSON.stringify(entry));
+  logger.info(JSON.stringify(entry));
 }

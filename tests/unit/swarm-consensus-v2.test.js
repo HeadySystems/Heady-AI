@@ -1,15 +1,16 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
  * SwarmConsensus v2 Unit Tests (TEST-04)
  */
 
-jest.mock('../../src/shared/phi-math', () => ({
+vi.mock('../../src/shared/phi-math', () => ({
   PHI_TIMING: { CYCLE: 29034 },
 }));
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const SwarmConsensus = require('../../src/orchestration/swarm-consensus-v2');
@@ -47,7 +48,7 @@ describe('SwarmConsensus v2', () => {
     });
 
     it('should emit lock:acquired event', async () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       consensus.on('lock:acquired', handler);
       await consensus.acquire('resource-1', 'owner-1');
       expect(handler).toHaveBeenCalled();
@@ -68,7 +69,7 @@ describe('SwarmConsensus v2', () => {
     });
 
     it('should emit lock:released on successful release', async () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       consensus.on('lock:released', handler);
       const { nonce } = await consensus.acquire('resource-1', 'owner-1');
       consensus.release('resource-1', 'owner-1', nonce);

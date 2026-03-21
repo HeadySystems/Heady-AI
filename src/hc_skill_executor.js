@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -59,7 +60,7 @@ class SkillExecutor extends EventEmitter {
       this.registerBuiltInHandlers();
       
       this.emit('initialized', { skillCount: this.skills.size });
-      console.log(`✓ Skill Executor initialized with ${this.skills.size} skills`);
+      logger.info(`✓ Skill Executor initialized with ${this.skills.size} skills`);
       
       return true;
     } catch (error) {

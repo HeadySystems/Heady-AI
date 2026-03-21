@@ -146,4 +146,4 @@ test('PROVIDERS have φ-scaled timeouts', () => {
 process.stdout.write(`\n${'═'.repeat(60)}\n`);
 process.stdout.write(`  Results: ${passed} passed, ${failed} failed\n`);
 process.stdout.write(`${'═'.repeat(60)}\n\n`);
-process.exit(failed > 0 ? 1 : 0);
+process.exitCode = failed > 0 ? 1 : 0;

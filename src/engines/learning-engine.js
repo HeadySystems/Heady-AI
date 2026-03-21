@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™ Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -268,13 +269,13 @@ module.exports = { runLearningCycle, analyzeResourcePatterns, analyzeGitPatterns
 if (require.main === module) {
   runLearningCycle()
     .then(({ learning, improvements }) => {
-      console.log(`[${learning.timestamp}] Learning cycle complete (${learning.durationMs}ms)`);
-      console.log(`  Resources: ${learning.resourceStats?.events || 0} events, avg ${learning.resourceStats?.avgUsage || 0}% usage`);
-      console.log(`  Git: ${learning.gitVelocity} velocity, ${learning.commitCount24h} commits/24h`);
-      console.log(`  Patterns: ${learning.patternsTracked} tracked, store v${learning.storeVersion}`);
-      console.log(`  Improvements: ${learning.improvementCount} suggestions`);
+      logger.info(`[${learning.timestamp}] Learning cycle complete (${learning.durationMs}ms)`);
+      logger.info(`  Resources: ${learning.resourceStats?.events || 0} events, avg ${learning.resourceStats?.avgUsage || 0}% usage`);
+      logger.info(`  Git: ${learning.gitVelocity} velocity, ${learning.commitCount24h} commits/24h`);
+      logger.info(`  Patterns: ${learning.patternsTracked} tracked, store v${learning.storeVersion}`);
+      logger.info(`  Improvements: ${learning.improvementCount} suggestions`);
       for (const imp of improvements) {
-        console.log(`    [${imp.priority}] ${imp.area}: ${imp.suggestion}`);
+        logger.info(`    [${imp.priority}] ${imp.area}: ${imp.suggestion}`);
       }
     })
     .catch(e => {

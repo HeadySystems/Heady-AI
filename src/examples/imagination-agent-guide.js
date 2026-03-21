@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -38,11 +39,11 @@ const { imagination } = require('../hc_imagination');
  */
 async function initializeAgentImagination() {
   await imagination.init();
-  console.log('[Agent] Imagination engine initialized');
+  logger.info('[Agent] Imagination engine initialized');
   
   // Load existing primitives from previous sessions
-  console.log(`[Agent] ${imagination.primitives.size} primitives available`);
-  console.log(`[Agent] ${imagination.concepts.size} concepts in library`);
+  logger.info(`[Agent] ${imagination.primitives.size} primitives available`);
+  logger.info(`[Agent] ${imagination.concepts.size} concepts in library`);
 }
 
 /**
@@ -50,7 +51,7 @@ async function initializeAgentImagination() {
  * This is the MOST IMPORTANT pattern - extract learnings from everything you do
  */
 async function learnFromTask(taskDescription, codeWritten, outcome) {
-  console.log('[Agent] Learning from completed task...');
+  logger.info('[Agent] Learning from completed task...');
   
   // Extract primitives from the code
   const extracted = await imagination.extractPrimitives(codeWritten, 'code');
@@ -72,7 +73,7 @@ async function learnFromTask(taskDescription, codeWritten, outcome) {
   // Save primitives
   await imagination.savePrimitives();
   
-  console.log(`[Agent] Extracted ${extracted.length} primitives`);
+  logger.info(`[Agent] Extracted ${extracted.length} primitives`);
   return extracted;
 }
 
@@ -81,7 +82,7 @@ async function learnFromTask(taskDescription, codeWritten, outcome) {
  * Run imagination to create new concept combinations
  */
 async function imagineNewSolutions(problemContext) {
-  console.log('[Agent] Running imagination cycle...');
+  logger.info('[Agent] Running imagination cycle...');
   
   // Add problem context as a primitive
   imagination.addPrimitive(
@@ -96,11 +97,11 @@ async function imagineNewSolutions(problemContext) {
   
   // Log results
   for (const concept of concepts) {
-    console.log(`[Agent] New concept: ${concept.title}`);
-    console.log(`  - Novelty: ${concept.scores.novelty.toFixed(2)}`);
-    console.log(`  - Usefulness: ${concept.scores.usefulness.toFixed(2)}`);
-    console.log(`  - Risk: ${concept.scores.risk.toFixed(2)}`);
-    console.log(`  - Status: ${concept.status}`);
+    logger.info(`[Agent] New concept: ${concept.title}`);
+    logger.info(`  - Novelty: ${concept.scores.novelty.toFixed(2)}`);
+    logger.info(`  - Usefulness: ${concept.scores.usefulness.toFixed(2)}`);
+    logger.info(`  - Risk: ${concept.scores.risk.toFixed(2)}`);
+    logger.info(`  - Status: ${concept.status}`);
   }
   
   return concepts;
@@ -114,18 +115,18 @@ async function checkForHotConcepts() {
   const hot = imagination.getHotConcepts();
   
   if (hot.length === 0) {
-    console.log('[Agent] No hot concepts currently');
+    logger.info('[Agent] No hot concepts currently');
     return [];
   }
   
-  console.log(`[Agent] Found ${hot.length} hot concepts!`);
+  logger.info(`[Agent] Found ${hot.length} hot concepts!`);
   
   for (const concept of hot.slice(0, 3)) {
-    console.log('\n🔥 HOT CONCEPT:');
-    console.log(`   Title: ${concept.title}`);
-    console.log(`   Summary: ${concept.summary}`);
-    console.log(`   Why hot: Novelty ${concept.scores.novelty.toFixed(2)}, Usefulness ${concept.scores.usefulness.toFixed(2)}`);
-    console.log(`   Action: Consider elaborating or creating IP package`);
+    logger.info('\n🔥 HOT CONCEPT:');
+    logger.info(`   Title: ${concept.title}`);
+    logger.info(`   Summary: ${concept.summary}`);
+    logger.info(`   Why hot: Novelty ${concept.scores.novelty.toFixed(2)}, Usefulness ${concept.scores.usefulness.toFixed(2)}`);
+    logger.info(`   Action: Consider elaborating or creating IP package`);
     
     // Auto-elaborate hot concepts
     concept.status = 'refined';
@@ -155,9 +156,9 @@ async function getInspirationForTask(taskKeywords) {
     .slice(0, 5);
   
   if (relevant.length > 0) {
-    console.log('[Agent] Found relevant concepts for inspiration:');
+    logger.info('[Agent] Found relevant concepts for inspiration:');
     relevant.forEach((c, i) => {
-      console.log(`  ${i+1}. ${c.title} (${c.recombination_op})`);
+      logger.info(`  ${i+1}. ${c.title} (${c.recombination_op})`);
     });
   }
   
@@ -208,21 +209,21 @@ async function manuallyCombinePrimitives(primitiveIdA, primitiveIdB, operator = 
  * Complete imagination pipeline without human intervention
  */
 async function runAutonomousCycle() {
-  console.log('[Agent] Running full autonomous imagination cycle...\n');
+  logger.info('[Agent] Running full autonomous imagination cycle...\n');
   
   // Step 1: Generate concepts
   const newConcepts = await imagination.imagine(5);
-  console.log(`✓ Generated ${newConcepts.length} concepts`);
+  logger.info(`✓ Generated ${newConcepts.length} concepts`);
   
   // Step 2: Identify hot concepts
   imagination.identifyHotConcepts();
   const hot = imagination.getHotConcepts();
-  console.log(`✓ Identified ${hot.length} hot concepts`);
+  logger.info(`✓ Identified ${hot.length} hot concepts`);
   
   // Step 3: Elaborate hot concepts
   for (const concept of hot.slice(0, 3)) {
     concept.status = 'refined';
-    console.log(`✓ Elaborated: ${concept.title}`);
+    logger.info(`✓ Elaborated: ${concept.title}`);
   }
   
   // Step 4: Create IP packages for top novel concepts
@@ -232,14 +233,14 @@ async function runAutonomousCycle() {
   
   for (const concept of topNovel) {
     const pkg = await imagination.createIPPackage(concept.id);
-    console.log(`✓ Created IP package: ${pkg.id} (${pkg.ip_posture})`);
+    logger.info(`✓ Created IP package: ${pkg.id} (${pkg.ip_posture})`);
   }
   
   // Step 5: Save everything
   await imagination.saveConcepts();
   await imagination.saveIPPackages();
   
-  console.log('\n[Agent] Autonomous cycle complete!');
+  logger.info('\n[Agent] Autonomous cycle complete!');
   
   return {
     generated: newConcepts.length,
@@ -260,8 +261,8 @@ async function selectBestConcept(conceptIds) {
   const winnerId = imagination.runTournament(conceptIds);
   const winner = imagination.concepts.get(winnerId);
   
-  console.log(`[Agent] Tournament winner: ${winner.title}`);
-  console.log(`  Composite score: ${(winner.scores.novelty * 0.4 + winner.scores.usefulness * 0.4 - winner.scores.risk * 0.2).toFixed(2)}`);
+  logger.info(`[Agent] Tournament winner: ${winner.title}`);
+  logger.info(`  Composite score: ${(winner.scores.novelty * 0.4 + winner.scores.usefulness * 0.4 - winner.scores.risk * 0.2).toFixed(2)}`);
   
   return winner;
 }
@@ -293,8 +294,8 @@ async function provideFeedback(conceptId, success, notes = '') {
   await imagination.saveConcepts();
   await imagination.savePrimitives();
   
-  console.log(`[Agent] Feedback recorded for ${conceptId}: ${success ? 'SUCCESS' : 'FAILED'}`);
-  console.log(`  Updated primitive weights and operator stats`);
+  logger.info(`[Agent] Feedback recorded for ${conceptId}: ${success ? 'SUCCESS' : 'FAILED'}`);
+  logger.info(`  Updated primitive weights and operator stats`);
 }
 
 // ============================================================================
@@ -396,7 +397,7 @@ async function runThoughtExperiment(concept) {
  * Shows how to integrate imagination throughout an agent session
  */
 async function exampleAgentSession() {
-  console.log('=== EXAMPLE AGENT SESSION ===\n');
+  logger.info('=== EXAMPLE AGENT SESSION ===\n');
   
   // 1. Initialize
   await initializeAgentImagination();
@@ -420,7 +421,7 @@ async function exampleAgentSession() {
   // 6. Get inspiration for next task
   await getInspirationForTask(['api', 'optimization', 'caching']);
   
-  console.log('\n=== SESSION COMPLETE ===');
+  logger.info('\n=== SESSION COMPLETE ===');
 }
 
 /**
@@ -428,7 +429,7 @@ async function exampleAgentSession() {
  * Shows how to use imagination for IP discovery
  */
 async function exampleIPDiscovery() {
-  console.log('=== EXAMPLE IP DISCOVERY ===\n');
+  logger.info('=== EXAMPLE IP DISCOVERY ===\n');
   
   // 1. Add domain primitives
   imagination.addPrimitive('mechanism', 'Predictive caching based on user patterns', 'domain', ['caching', 'prediction']);
@@ -439,15 +440,15 @@ async function exampleIPDiscovery() {
   
   // 3. Filter for high novelty
   const novel = concepts.filter(c => c.scores.novelty > 0.7);
-  console.log(`Found ${novel.length} novel concepts`);
+  logger.info(`Found ${novel.length} novel concepts`);
   
   // 4. Create IP packages for best ones
   for (const concept of novel.slice(0, 3)) {
     const pkg = await imagination.createIPPackage(concept.id);
-    console.log(`\nIP Package for: ${concept.title}`);
-    console.log(`  Posture: ${pkg.ip_posture}`);
-    console.log(`  Claims: ${pkg.claims.length}`);
-    console.log(`  Prior art: ${pkg.prior_art_list.length} references`);
+    logger.info(`\nIP Package for: ${concept.title}`);
+    logger.info(`  Posture: ${pkg.ip_posture}`);
+    logger.info(`  Claims: ${pkg.claims.length}`);
+    logger.info(`  Prior art: ${pkg.prior_art_list.length} references`);
   }
 }
 
@@ -530,7 +531,7 @@ module.exports = {
 // Run examples if executed directly
 if (require.main === module) {
   (async () => {
-    console.log('Running Imagination Engine examples...\n');
+    logger.info('Running Imagination Engine examples...\n');
     await exampleAgentSession();
     await exampleIPDiscovery();
   })();

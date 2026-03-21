@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * © 2026 HeadySystems Inc. — Rich Content Sections for Dynamic Sites
  * 
@@ -521,9 +522,7 @@ function getContentForDomain(domain) {
       OTHER_DOMAIN_CONTENT[domain] = dynamicContent;
       return dynamicContent;
     }
-  } catch (e) {
-    // content-loader not available or failed — graceful degradation
-  }
+  } catch (e) { // content-loader not available or failed — graceful degradation  logger.error('Operation failed', { error: e.message }); }
 
   return null;
 }

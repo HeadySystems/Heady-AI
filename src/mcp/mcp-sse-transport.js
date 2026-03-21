@@ -27,7 +27,7 @@ const logger = require('../utils/logger');
 class McpSseTransport {
     constructor(opts = {}) {
         this.oauthProvider = opts.oauthProvider;
-        this.baseUrl = opts.baseUrl || process.env.HEADY_MANAGER_URL || 'http://localhost:3301';
+        this.baseUrl = opts.baseUrl || process.env.HEADY_MANAGER_URL || (process.env.SERVICE_URL || 'http://0.0.0.0:3301');
         this.apiKey = opts.apiKey || process.env.HEADY_API_KEY || '';
         this.sessions = new Map();  // sessionId → { res, tier, clientId }
         this.router = express.Router();

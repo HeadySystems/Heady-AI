@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -27,8 +28,8 @@ describe("HCFullPipeline", () => {
     });
 
     test("accepts errorInterceptor and vectorMemory opts", () => {
-        const mockInterceptor = { intercept: jest.fn(), checkPreemptive: jest.fn() };
-        const mockVectorMemory = { queryMemory: jest.fn(), ingestMemory: jest.fn() };
+        const mockInterceptor = { intercept: vi.fn(), checkPreemptive: vi.fn() };
+        const mockVectorMemory = { queryMemory: vi.fn(), ingestMemory: vi.fn() };
 
         const p = new HCFullPipeline({
             errorInterceptor: mockInterceptor,

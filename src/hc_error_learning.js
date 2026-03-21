@@ -43,6 +43,7 @@
  */
 
 'use strict';
+const logger = require('utils/logger') || console;
 
 const fs = require('fs');
 const path = require('path');
@@ -62,7 +63,7 @@ try {
   logger = createLogger('error-learning', 'intelligence');
 } catch (e) {
   logger = {
-    info: (msg, data) => console.log(`[INFO] error-learning: ${msg}`, data || ''),
+    info: (msg, data) => logger.info(`[INFO] error-learning: ${msg}`, data || ''),
     warn: (msg, data) => console.warn(`[WARN] error-learning: ${msg}`, data || ''),
     error: (msg, data) => console.error(`[ERROR] error-learning: ${msg}`, data || ''),
     debug: () => {},
@@ -129,7 +130,7 @@ function decayScore(timestamp) {
 // ─── Persistence ─────────────────────────────────────────────────
 function ensureDir(filePath) {
   const dir = path.dirname(filePath);
-  try { fs.mkdirSync(dir, { recursive: true }); } catch (e) { /* exists */ }
+  try { fs.mkdirSync(dir, { recursive: true }); } catch (e) { /* exists */  logger.error('Operation failed', { error: e.message }); }
 }
 
 function loadJSON(filePath, fallback) {

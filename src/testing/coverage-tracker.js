@@ -123,9 +123,7 @@ function scoreTestAlignment(sourceNames, testDescriptions) {
         const result = CSL.resonance_gate(snVec, tdVec, PHI_INVERSE * 0.4);
         totalScore += result.score;
         comparisons++;
-      } catch (_) {
-        // dimension mismatch etc. — skip
-      }
+      } catch (_) { // dimension mismatch etc. — skip  logger.error('Operation failed', { error: _.message }); }
     }
   }
 
@@ -211,7 +209,7 @@ class CoverageTracker {
           const srcNames    = extractSourceIntent(srcContent);
           const testDescs   = extractTestDescriptions(testContent);
           alignmentScore    = scoreTestAlignment(srcNames, testDescs);
-        } catch (_) { /* best-effort */ }
+        } catch (_) { /* best-effort */  logger.error('Operation failed', { error: _.message }); }
       }
 
       records.push({

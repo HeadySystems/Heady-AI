@@ -12,7 +12,7 @@
  */
 const fs = require("fs");
 const path = require("path");
-let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const VERTICALS_PATH = path.join(__dirname, "verticals.json");
 const OUTPUT_DIR = path.join(__dirname, "..", "public", "verticals");
@@ -419,7 +419,7 @@ async function sendHeadyChat(){var input=document.getElementById('heady-chat-inp
         tok = 'cookie';  // Token set as httpOnly cookie by server
         updateUI({ valid: true, tier: d.tier, method: d.method, warp: d.warp });
       }
-    } catch(e) { /* graceful degradation */ }
+    } catch (e) { /* graceful degradation */  logger.error('Operation failed', { error: e.message }); }
   }
 
   function updateUI(session) {

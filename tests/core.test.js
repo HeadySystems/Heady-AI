@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -109,14 +110,14 @@ describe('HeadyKV', () => {
 
   test('getOrSet() returns existing value without calling compute fn', async () => {
     kv.set('cached', 'existing');
-    const computeFn = jest.fn().mockResolvedValue('computed');
+    const computeFn = vi.fn().mockResolvedValue('computed');
     const result = await kv.getOrSet('cached', computeFn);
     expect(result).toBe('existing');
     expect(computeFn).not.toHaveBeenCalled();
   });
 
   test('getOrSet() calls compute fn and stores result when key is missing', async () => {
-    const computeFn = jest.fn().mockResolvedValue('freshly-computed');
+    const computeFn = vi.fn().mockResolvedValue('freshly-computed');
     const result = await kv.getOrSet('new-key', computeFn);
     expect(result).toBe('freshly-computed');
     expect(computeFn).toHaveBeenCalledTimes(1);
@@ -241,21 +242,21 @@ describe('HeadyScheduler', () => {
   });
 
   test('every() schedules a repeated task and calls it', async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     scheduler.every('tick', 50, fn);
     await new Promise(r => setTimeout(r, 160));
     expect(fn.mock.calls.length).toBeGreaterThanOrEqual(2);
   });
 
   test('once() fires exactly once after delay', async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     scheduler.once('one-shot', 50, fn);
     await new Promise(r => setTimeout(r, 200));
     expect(fn).toHaveBeenCalledTimes(1);
   });
 
   test('remove() stops a scheduled task', async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     scheduler.every('removable', 30, fn);
     await new Promise(r => setTimeout(r, 80));
     const countBefore = fn.mock.calls.length;
@@ -265,7 +266,7 @@ describe('HeadyScheduler', () => {
   });
 
   test('pause() and resume() control task execution', async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     scheduler.every('pausable', 30, fn);
     await new Promise(r => setTimeout(r, 70));
     const countBeforePause = fn.mock.calls.length;
@@ -286,7 +287,7 @@ describe('HeadyScheduler', () => {
   });
 
   test('cron() schedules a task by cron expression', async () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     // Every minute — just validate registration without waiting a full minute
     expect(() => scheduler.cron('cron-task', '* * * * *', fn)).not.toThrow();
     const tasks = scheduler.list();

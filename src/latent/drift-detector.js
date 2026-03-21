@@ -16,6 +16,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { EventEmitter } = require('events');
 const { cosineSimilarity } = require('./vector-space-ops');
@@ -410,10 +411,9 @@ class DriftDetector extends EventEmitter {
         if (alertLevel !== monitor.previousAlertLevel) {
           this._handleAlertTransition(monitor, result, timestamp);
         }
-      } catch (err) {
-        // Log scan error without crashing.
+      } catch (err) { // Log scan error without crashing.
         if (process.env.NODE_ENV !== 'test') {
-          console.warn(`[DriftDetector] Scan error for ${componentId}: ${err.message}`);
+          console.warn(`[DriftDetector] Scan error for ${componentId  logger.error('Operation failed', { error: err.message }); }: ${err.message}`);
         }
       }
     }

@@ -13,7 +13,7 @@
  * Every dispatch is logged to the cognitive telemetry audit trail.
  */
 const EventEmitter = require("events");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 // ─── Service Catalog ─────────────────────────────────────────────────
 // Maps every service to its API endpoint and semantic capabilities.

@@ -1,3 +1,4 @@
+const logger = console;
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
  * durable-agent-state.js
@@ -360,7 +361,7 @@ export class DurableAgentState {
     if (att?.socketId) {
       this.activeSockets.delete(att.socketId);
     }
-    console.log(`[DurableAgentState] WebSocket closed: code=${code}, reason=${reason}`);
+    logger.info(`[DurableAgentState] WebSocket closed: code=${code}, reason=${reason}`);
     if (this.activeSockets.size === 0) {
       await this._transitionLifecycle('idle');
     }
@@ -389,7 +390,7 @@ export class DurableAgentState {
    */
   async alarm() {
     const intent = await this.state.storage.get('alarmIntent') ?? ALARM_INTENT.IDLE_CHECK;
-    console.log('[DurableAgentState] alarm fired, intent:', intent);
+    logger.info('[DurableAgentState] alarm fired, intent:', intent);
 
     switch (intent) {
       case ALARM_INTENT.IDLE_CHECK: {
@@ -899,7 +900,7 @@ export class DurableAgentState {
     const task = await this.state.storage.get('pendingTask');
     if (!task) return;
 
-    console.log('[DurableAgentState] running proactive task:', task);
+    logger.info('[DurableAgentState] running proactive task:', task);
 
     // Notify connected sockets
     const taskMsg = wsOut({ type: 'state', data: { event: 'proactive_task_start', task } });

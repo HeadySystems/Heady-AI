@@ -81,13 +81,11 @@ class AutoCommitEngine extends EventEmitter {
                     try {
                         process.kill(pid, 0); // check if alive
                         return false; // still alive, can't acquire
-                    } catch (_) {
-                        // PID is dead, stale lock — remove it
+                    } catch (_) { // PID is dead, stale lock — remove it
                         this._log("warn", `Removing stale lock from dead PID ${pid}`);
                     }
                 }
-            } catch (_) {
-                // corrupt lock file, remove it
+            } catch (_) { // corrupt lock file, remove it
             }
             fs.unlinkSync(LOCK_FILE);
         }
@@ -96,7 +94,7 @@ class AutoCommitEngine extends EventEmitter {
         const indexLock = path.join(this.repoRoot, ".git", "index.lock");
         if (fs.existsSync(indexLock)) {
             this._log("warn", "Removing stale .git/index.lock");
-            try { fs.unlinkSync(indexLock); } catch (err) { /* structured-logger: emit error */ }
+            try { fs.unlinkSync(indexLock); } catch (err) { logger.error('Failed to remove index.lock', { error: err.message }); }
         }
 
         // Write our PID as the lock
@@ -112,7 +110,7 @@ class AutoCommitEngine extends EventEmitter {
                     fs.unlinkSync(LOCK_FILE);
                 }
             }
-        } catch (err) { /* structured-logger: emit error */ }
+        } catch (err) { logger.error('Failed to release lock', { error: err.message }); }
     }
 
     // ── Git helpers ──────────────────────────────────────────────────────
@@ -222,8 +220,7 @@ class AutoCommitEngine extends EventEmitter {
                     fileCount: summary ? summary.fileCount : 0,
                     context: opts.context,
                 });
-            } catch (err) {
-                // git commit can fail if there's truly nothing to commit after staging
+            } catch (err) { // git commit can fail if there's truly nothing to commit after staging
                 if (err.message.includes("nothing to commit")) {
                     this._log("info", "Nothing to commit after staging.");
                     return { committed: false, pushed: false, clean: true };
@@ -296,7 +293,7 @@ class AutoCommitEngine extends EventEmitter {
             try {
                 const status = this._exec("git status --porcelain");
                 pendingCount = status.split("\n").filter(Boolean).length;
-            } catch (err) { /* structured-logger: emit error */ }
+            } catch (err) { logger.error('Failed to get status', { error: err.message }); }
         }
 
         return {

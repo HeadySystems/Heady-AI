@@ -333,5 +333,5 @@ asyncTest('EdgeAgentRuntime migrateAgent returns migration info', async () => {
 (async () => {
   for (const t of queue) await t();
   console.log(`\nResults: ${passed} passed, ${failed} failed\n`);
-  process.exit(failed > 0 ? 1 : 0);
+  process.exitCode = failed > 0 ? 1 : 0;
 })();

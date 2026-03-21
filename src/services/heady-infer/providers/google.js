@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const https = require('https');
 const http  = require('http');
@@ -229,7 +230,7 @@ class GoogleProvider extends BaseProvider {
                 inputTokens  = meta.promptTokenCount     || inputTokens;
                 outputTokens = meta.candidatesTokenCount || outputTokens;
               }
-            } catch (_) {}
+            } catch (_) { logger.error('Operation failed', { error: _.message }); }
           }
         });
 

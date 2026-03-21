@@ -7,6 +7,6 @@ async function run() {
   await c.connect(t);
   const res = await c.callTool({ name: 'heady_health', arguments: {} });
   console.log(JSON.stringify(res, null, 2));
-  process.exit(0);
+  process.exitCode = 0;
 }
 run().catch(console.error);

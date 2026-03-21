@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
@@ -39,9 +40,7 @@ function _writeAudit(entry) {
   if (_auditStream) {
     try {
       _auditStream.write(JSON.stringify(entry) + '\n');
-    } catch (err) {
-      // Non-fatal
-    }
+    } catch (err) { // Non-fatal  logger.error('Operation failed', { error: err.message }); }
   }
 }
 
@@ -321,7 +320,7 @@ async function initialize(opts = {}) {
   }
 
   _initialized = true;
-  console.log(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
+  logger.info(`[HeadyGuard] Initialized — stages: [${pipeline.getStageNames().join(', ')}]`);
 }
 
 /**
@@ -365,9 +364,8 @@ function middleware(opts = {}) {
       }
 
       return next();
-    } catch (err) {
-      // Guard failure should not block the request — log and pass through
-      console.error(`[HeadyGuard] Middleware error: ${err.message}`);
+    } catch (err) { // Guard failure should not block the request — log and pass through
+      console.error(`[HeadyGuard] Middleware error: ${err.message  logger.error('Operation failed', { error: err.message }); }`);
       req.guardResult = null;
       return next();
     }

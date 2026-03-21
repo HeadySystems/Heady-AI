@@ -27,6 +27,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 // ── Phi-Math Import ───────────────────────────────────────────────────────────
 import {
@@ -158,9 +159,9 @@ class UsageMeter extends EventEmitter {
     // Flush usage to Stripe on a phi-adaptive interval (starts at fib(12) = 144 min)
     this._flushInterval = setInterval(() => this._flushToStripe(), this._flushCurrentIntervalMs);
     this.emit('ready');
-    console.log(`[UsageMeter] Initialized. Flush interval: ${fib(12)} minutes (phi-harmonic fib(12)).`);
-    console.log(`[UsageMeter] Alert thresholds (phi-derived):`, ALERT_THRESHOLDS);
-    console.log(`[UsageMeter] Phi window progression (ms):`, PHI_WINDOW_PROGRESSION);
+    logger.info(`[UsageMeter] Initialized. Flush interval: ${fib(12)} minutes (phi-harmonic fib(12)).`);
+    logger.info(`[UsageMeter] Alert thresholds (phi-derived):`, ALERT_THRESHOLDS);
+    logger.info(`[UsageMeter] Phi window progression (ms):`, PHI_WINDOW_PROGRESSION);
   }
 
   /**
@@ -537,7 +538,7 @@ class UsageMeter extends EventEmitter {
       this._flushInterval = setInterval(() => this._flushToStripe(), this._flushCurrentIntervalMs);
     }
 
-    console.log(`[UsageMeter] Flushed usage for ${batch.size} organizations to Stripe.`);
+    logger.info(`[UsageMeter] Flushed usage for ${batch.size} organizations to Stripe.`);
   }
 
   /**
@@ -785,10 +786,8 @@ class UsageMeter extends EventEmitter {
           meta: JSON.stringify(meta),
           timestamp: new Date(),
         });
-      } catch (err) {
-        // Don't let DB failures block requests
-        console.error('[UsageMeter] Event log write failed:', err.message);
-      }
+      } catch (err) { // Don't let DB failures block requests
+        console.error('[UsageMeter] Event log write failed:', err.message);  logger.error('Operation failed', { error: err.message }); }
     });
   }
 }

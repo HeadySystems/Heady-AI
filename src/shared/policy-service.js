@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -7,8 +8,8 @@
  * PolicyService — Centralized provider for Policy and Budget Engines.
  */
 
-let PolicyEngine = null; try { PolicyEngine = require("./policy-engine"); } catch(e) { /* graceful */ }
-let BudgetService = null; try { BudgetService = require("./services/budget-service"); } catch(e) { /* graceful */ }
+let PolicyEngine = null; try { PolicyEngine = require("./policy-engine"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
+let BudgetService = null; try { BudgetService = require("./services/budget-service"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 // Initialize singletons
 const budgetService = new BudgetService();

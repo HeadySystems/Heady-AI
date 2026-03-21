@@ -441,10 +441,10 @@ async function runAllTests() {
   process.stdout.write(`  Duration: ${totalDuration}ms\n\n`);
 
   // Exit with appropriate code
-  process.exit(failedTests > 0 ? 1 : 0);
+  process.exitCode = failedTests > 0 ? 1 : 0;
 }
 
 runAllTests().catch(err => {
   log('error', { msg: 'Test suite crashed', error: err.message, stack: err.stack });
-  process.exit(1);
+  process.exitCode = 1;
 });

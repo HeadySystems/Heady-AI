@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const EventEmitter = require('events');
 const crypto       = require('crypto');
@@ -310,11 +311,10 @@ class HeadyInfer extends EventEmitter {
           response = await this.circuitBreaker.execute(provider, () => prov.generate(req));
         }
         return response;
-      } catch (err) {
-        // Don't continue failover on budget errors
+      } catch (err) { // Don't continue failover on budget errors
         if (err.code === 'BUDGET_EXCEEDED') throw err;
 
-        this._log('warn', `[${requestId}] Provider ${provider}/${model} failed: ${err.message}`);
+        this._log('warn', `[${requestId  logger.error('Operation failed', { error: err.message }); }] Provider ${provider}/${model} failed: ${err.message}`);
         errors.push({ provider, model: model || 'default', error: err.message, code: err.code });
 
         const taskType = request.taskType || 'general';
@@ -496,7 +496,7 @@ class HeadyInfer extends EventEmitter {
     const entry = `[HeadyInfer] [${level.toUpperCase()}] ${message}`;
     if (level === 'error')      console.error(entry);
     else if (level === 'warn')  console.warn(entry);
-    else if (this.config.logging.level !== 'silent') console.log(entry);
+    else if (this.config.logging.level !== 'silent') logger.info(entry);
     this.emit('log', { level, message, timestamp: new Date().toISOString() });
   }
 

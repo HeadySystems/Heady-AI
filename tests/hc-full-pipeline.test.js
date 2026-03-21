@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -32,7 +33,7 @@ describe("HCFullPipeline — 9-Stage State Machine", () => {
         });
 
         test("emits run:created event on createRun", () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             pipeline.on("run:created", spy);
             pipeline.createRun({ task: "test" });
             expect(spy).toHaveBeenCalledTimes(1);

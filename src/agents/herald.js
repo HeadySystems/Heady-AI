@@ -4,6 +4,7 @@
  * Mission: Trigger registration, webhook dispatch, event bus integration
  */
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const PHI = 1.618033988749895;
 const crypto = require('crypto');
@@ -21,11 +22,11 @@ class HeraldAgent {
   }
 
   async start() {
-    console.log('[HERALD] Event dispatch agent active');
+    logger.info('[HERALD] Event dispatch agent active');
     return { status: 'active', agent: this.name };
   }
 
-  async stop() { console.log('[HERALD] Shutdown complete'); }
+  async stop() { logger.info('[HERALD] Shutdown complete'); }
 
   /** Register a trigger */
   registerTrigger(triggerDef) {

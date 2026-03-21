@@ -451,4 +451,4 @@ console.log(`\n─────────────────────�
 console.log(`HS-051 Vibe-Match Router: ${passed} passed, ${failed} failed`);
 console.log(`─────────────────────────────────────────`);
 
-if (failed > 0) process.exit(1);
+if (failed > 0) process.exitCode = 1;

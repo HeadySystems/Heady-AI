@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * @fileoverview SwarmCoordinator — Enhanced coordination layer for 17 autonomous
  * agent swarms in the Heady™ Latent OS platform.
@@ -461,7 +462,7 @@ class SwarmMessageBus extends EventEmitter {
 
     if (allSubs.size > 0) {
       for (const handler of allSubs) {
-        try { handler(envelope); } catch (err) { /* isolate subscriber errors */ }
+        try { handler(envelope); } catch (err) { /* isolate subscriber errors */  logger.error('Operation failed', { error: err.message }); }
       }
     } else {
       // Queue for late subscribers
@@ -487,7 +488,7 @@ class SwarmMessageBus extends EventEmitter {
     const queued = this._queues.get(topic) ?? [];
     for (const env of queued) {
       if (!env.expiresAt || Date.now() < env.expiresAt) {
-        try { handler(env); } catch (_) {}
+        try { handler(env); } catch (_) { logger.error('Operation failed', { error: _.message }); }
       }
     }
     this._queues.delete(topic);

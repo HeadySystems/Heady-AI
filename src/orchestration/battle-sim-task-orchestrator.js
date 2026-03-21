@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 const EventEmitter = require('events');
@@ -74,7 +75,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
             try {
                 const { HeadyBattleService } = require('../services/HeadyBattle-service.js');
                 this.battleService = new HeadyBattleService({ gateway: this._gateway });
-            } catch (_) { }
+            } catch (_) { logger.error('Operation failed', { error: _.message }); }
         }
     }
 
@@ -299,9 +300,7 @@ class BattleSimTaskOrchestrator extends EventEmitter {
                             avgScore >= PSI_SQ ? 'marginal' : 'non_deterministic',
                     };
                 }
-            } catch (_) {
-                // Fall through to local hash-based MC
-            }
+            } catch (_) { // Fall through to local hash-based MC  logger.error('Operation failed', { error: _.message }); }
         }
 
         // Fallback: structural hash-based MC (no real AI calls)

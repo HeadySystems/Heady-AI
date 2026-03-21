@@ -32,6 +32,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const EventEmitter = require('events');
 
@@ -39,7 +40,7 @@ const EventEmitter = require('events');
 //  SECTION 1 — PHI-MATH IMPORTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch(e) { /* graceful */ }
+let phiMath = null; try { phiMath = require('../../shared/phi-math.js'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const {
   PHI,

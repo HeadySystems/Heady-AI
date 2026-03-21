@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * StructuredLogger — Security-Auditable Structured Logger
  * Produces JSON-formatted, tamper-evident log entries with SHA-256 chain hashing,
@@ -192,7 +193,7 @@ class StructuredLogger {
 
     // Write to all transports
     for (const transport of this.transports) {
-      try { transport.write(entry); } catch (_) { /* transport failure should not crash */ }
+      try { transport.write(entry); } catch (_) { /* transport failure should not crash */  logger.error('Operation failed', { error: _.message }); }
     }
 
     // Store in ring buffer

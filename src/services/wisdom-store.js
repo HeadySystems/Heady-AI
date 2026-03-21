@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
@@ -597,7 +598,7 @@ export class WisdomStore {
    */
   _log(msg, meta = {}) {
     if (this._verbose) {
-      console.log(`[WisdomStore] ${msg}`, meta);
+      logger.info(`[WisdomStore] ${msg}`, meta);
     }
   }
 }

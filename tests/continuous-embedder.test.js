@@ -69,10 +69,10 @@ async function run() {
     assert(templates.templateCount === 3, 'injectable templates count respects topK');
 
     console.log(`\nResults: ${passed} passed, ${failed} failed`);
-    process.exit(failed === 0 ? 0 : 1);
+    process.exitCode = failed === 0 ? 0 : 1;
 }
 
 run().catch((err) => {
     console.error(err);
-    process.exit(1);
+    process.exitCode = 1;
 });

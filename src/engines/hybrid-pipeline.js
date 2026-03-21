@@ -1,4 +1,5 @@
 'use strict';
+const logger = require('../utils/logger') || console;
 
 /**
  * @fileoverview HybridPipeline — Unified HCFullPipe + Auto-Success Orchestrator
@@ -519,7 +520,7 @@ function createDefaultExecutors() {
  * @example
  * const { HybridPipeline } = require('./hybrid-pipeline');
  * const pipeline = new HybridPipeline();
- * pipeline.on('pipeline:complete', (result) => console.log(result));
+ * pipeline.on('pipeline:complete', (result) => logger.info(result));
  * const result = await pipeline.run({ payload: { prompt: 'Hello' } });
  */
 class HybridPipeline extends EventEmitter {

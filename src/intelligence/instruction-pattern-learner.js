@@ -19,6 +19,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto  = require('crypto');
 const fs      = require('fs');
@@ -429,9 +430,8 @@ class InstructionPatternLearner extends EventEmitter {
 
       fs.writeFileSync(this._stateFile, JSON.stringify(state, null, 2));
       this.emit('state:saved', { file: this._stateFile, patternCount: this._patterns.size });
-    } catch (err) {
-      // Non-fatal — log and continue
-      this.emit('state:save_error', { error: err.message });
+    } catch (err) { // Non-fatal — log and continue
+      this.emit('state:save_error', { error: err.message  logger.error('Operation failed', { error: err.message }); });
     }
   }
 

@@ -1,3 +1,4 @@
+const logger = console;
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
     'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
@@ -317,7 +318,7 @@ function renderAuthPage() {
 
 // ── API ─────────────────────────────────────────────────────
 const server = http.createServer((req, res) => {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
     res.setHeader('Access-Control-Allow-Origin', _isHeadyOrigin(req.headers.origin) ? req.headers.origin : 'null');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
@@ -379,8 +380,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`\n  🔐 Heady Universal Auth — http://localhost:${PORT}`);
-    console.log(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
+    logger.info(`\n  🔐 Heady Universal Auth — http://0.0.0.0:${PORT}`);
+    logger.info(`     ${PROVIDERS.oauth.length} OAuth + ${PROVIDERS.apikey.length} API Key = ${PROVIDERS.oauth.length + PROVIDERS.apikey.length} providers\n`);
 });
 
 module.exports = { PROVIDERS, server };

@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 const path = require('path');
@@ -10,7 +11,7 @@ const HealthMonitor = require('../src/monitoring/health-monitor');
 const bootServer = require('../src/bootstrap/server-boot');
 const { fib } = require('../src/shared/phi-math');
 
-jest.mock('../src/core/heady-server', () => {
+vi.mock('../src/core/heady-server', () => {
   class FakeWss {
     constructor() {
       this.handlers = {};
@@ -27,7 +28,7 @@ jest.mock('../src/core/heady-server', () => {
     }
 
     handleUpgrade(request, socket, head, callback) {
-      callback({ on: jest.fn(), close: jest.fn(), send: jest.fn(), readyState: 1 });
+      callback({ on: vi.fn(), close: vi.fn(), send: vi.fn(), readyState: 1 });
     }
   }
 
@@ -38,8 +39,8 @@ jest.mock('../src/core/heady-server', () => {
   };
 });
 
-jest.mock('../src/utils/redis-pool', () => ({
-  init: jest.fn(() => Promise.resolve()),
+vi.mock('../src/utils/redis-pool', () => ({
+  init: vi.fn(() => Promise.resolve()),
 }));
 
 describe('bounded hardening pass', () => {
@@ -47,7 +48,7 @@ describe('bounded hardening pass', () => {
     delete process.env.HEADY_CERT_DIR;
     delete process.env.HEADY_ALLOW_INSECURE_MTLS;
     delete process.env.HEADY_REQUIRE_VOICE_AUTH;
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   test('mTLS config refuses strict mode when CA bundle is missing', () => {
@@ -82,26 +83,26 @@ describe('bounded hardening pass', () => {
     process.env.HEADY_CERT_DIR = tempDir;
 
     const logger = {
-      logNodeActivity: jest.fn(),
-      logError: jest.fn(),
+      logNodeActivity: vi.fn(),
+      logError: vi.fn(),
     };
 
     const voiceSessions = new Map();
     let upgradeHandler;
     const fakeServer = {
-      on: jest.fn((event, handler) => {
+      on: vi.fn((event, handler) => {
         if (event === 'upgrade') upgradeHandler = handler;
       }),
-      listen: jest.fn((port, host, callback) => callback()),
+      listen: vi.fn((port, host, callback) => callback()),
     };
 
-    jest.spyOn(https, 'createServer').mockReturnValue(fakeServer);
+    vi.spyOn(https, 'createServer').mockReturnValue(fakeServer);
 
     bootServer((req, res) => res.end('ok'), { logger, voiceSessions });
 
     const socket = {
-      write: jest.fn(),
-      destroy: jest.fn(),
+      write: vi.fn(),
+      destroy: vi.fn(),
     };
 
     upgradeHandler(

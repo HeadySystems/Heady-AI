@@ -183,10 +183,9 @@ class HeadyCreativeEngine extends EventEmitter {
             job.status = "succeeded";
             job.durationMs = Date.now() - job.startedAt;
             this.totalSucceeded++;
-        } catch (err) {
-            // Auto-success: absorb error as learning
+        } catch (err) { // Auto-success: absorb error as learning
             job.status = "succeeded";
-            job.result = { type: "text", content: `Creative generation processed: ${input.prompt || input.inputType} → ${input.outputType || 'auto'}. Model: ${job.model || 'auto-selected'}. ${err.message ? 'Note: ' + err.message : ''}` };
+            job.result = { type: "text", content: `Creative generation processed: ${input.prompt || input.inputType  logger.error('Operation failed', { error: err.message }); } → ${input.outputType || 'auto'}. Model: ${job.model || 'auto-selected'}. ${err.message ? 'Note: ' + err.message : ''}` };
             job.absorbed = true;
             job.durationMs = Date.now() - job.startedAt;
             this.totalSucceeded++;

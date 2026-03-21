@@ -222,7 +222,7 @@ async function callTool(name, args) {
                     // Persist to vector memory
                     try {
                         learner.learn(`[Research:${analyzeType}] ${(args.content || '').substring(0, 200)}`, 'interaction', { type: 'research', mode: analyzeType });
-                    } catch (e) { /* non-critical */ }
+                    } catch (e) { /* non-critical */  logger.error('Operation failed', { error: e.message }); }
                     return { content: [{ type: 'text', text: JSON.stringify(data, null, 2) }] };
                 } catch (err) {
                     return { content: [{ type: 'text', text: `Perplexity Error: ${err.message}` }], isError: true };
@@ -360,7 +360,7 @@ function handleSSE(req, res) {
 }
 
 async function handleSSEMessage(req, res) {
-    const url = new URL(req.url, `http://localhost:${PORT}`);
+    const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
     const clientId = url.searchParams.get('clientId');
     const sseRes = sseClients.get(clientId);
 
@@ -590,7 +590,7 @@ function jsonRes(res, code, data, origin) {
 // ══════════════════════════════════════════════════════════════════
 function startHTTPServer() {
     const server = http.createServer(async (req, res) => {
-        const url = new URL(req.url, `http://localhost:${PORT}`);
+        const url = new URL(req.url, `http://0.0.0.0:${PORT}`);
 
         // CORS preflight
         if (req.method === 'OPTIONS') {

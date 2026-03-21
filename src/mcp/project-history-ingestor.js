@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *
@@ -36,7 +37,7 @@ class ProjectHistoryIngestor {
         this._ingestPatterns();
         this._ingestBranches();
         const duration = Date.now() - start;
-        console.log(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
+        logger.info(`  📚 Project history: ${this.stats.commits} commits, ${this.stats.files} files, ${this.stats.docs} docs, ${this.stats.patterns} patterns (${duration}ms)`);
         return this.stats;
     }
 

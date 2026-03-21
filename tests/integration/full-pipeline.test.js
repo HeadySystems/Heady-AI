@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
@@ -5,8 +6,8 @@
  * Tests the full 21-stage pipeline execution end-to-end.
  */
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const HCFullPipeline = require('../../src/orchestration/hc-full-pipeline');
@@ -77,10 +78,10 @@ describe('HCFullPipeline Integration', () => {
 
   it('should integrate with vector memory', async () => {
     const mockMemory = {
-      queryMemory: jest.fn().mockResolvedValue([
+      queryMemory: vi.fn().mockResolvedValue([
         { content: 'prior knowledge', score: 0.85 },
       ]),
-      queryWithRelationships: jest.fn().mockResolvedValue([
+      queryWithRelationships: vi.fn().mockResolvedValue([
         { entity: 'related', score: 0.7 },
       ]),
     };

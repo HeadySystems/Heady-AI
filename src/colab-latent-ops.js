@@ -78,7 +78,7 @@ try {
   logger = loggerModule.createLogger ? loggerModule.createLogger('colab-latent-ops', 'compute') : loggerModule;
 } catch (e) {
   logger = {
-    info: (msg, data) => console.log(`[INFO] ${msg}`, data),
+    info: (msg, data) => logger.info(`[INFO] ${msg}`, data),
     warn: (msg, data) => console.warn(`[WARN] ${msg}`, data),
     error: (msg, data) => console.error(`[ERROR] ${msg}`, data),
     debug: (msg, data) => console.debug(`[DEBUG] ${msg}`, data),
@@ -94,9 +94,7 @@ const { FIB, PSI, PHI, phiBackoff, phiScale } = phiMath;
 let express = null;
 try {
   express = require('express');
-} catch (e) {
-  // Express will be required later if router is needed
-}
+} catch (e) { // Express will be required later if router is needed  logger.error('Operation failed', { error: e.message }); }
 
 const expressRouter = express ? express.Router() : null;
 
@@ -577,7 +575,7 @@ function startLearningCycle() {
           })),
           errorStats: errorLearning.getStats(),
         };
-      } catch (e) { /* error learning not available */ }
+      } catch (e) { /* error learning not available */  logger.error('Operation failed', { error: e.message }); }
 
       const result = await submitJob('learning', currentMode, {
         cycle: runtimeState.learning.learningCycles,
@@ -614,7 +612,7 @@ function startLearningCycle() {
               });
             }
           }
-        } catch (e) { /* error learning feedback optional */ }
+        } catch (e) { /* error learning feedback optional */  logger.error('Operation failed', { error: e.message }); }
       }
     } catch (err) {
       logger.error('Learning cycle failed', { error: err.message });

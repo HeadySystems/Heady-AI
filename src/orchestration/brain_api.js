@@ -1,8 +1,9 @@
+const logger = console;
 /**
  * HeadyBrain API — Per-Layer Intelligence Routes
  * Provides /plan, /feedback, /status endpoints for the brain orchestration layer.
  */
-let express = null; try { express = require('../core/heady-server'); } catch(e) { /* graceful */ }
+let express = null; try { express = require('../core/heady-server'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 const router = express.Router();
 
 router.get("/health", (req, res) => {

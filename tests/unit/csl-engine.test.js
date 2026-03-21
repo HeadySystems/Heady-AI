@@ -85,4 +85,4 @@ console.log(`\n${'═'.repeat(60)}`);
 console.log(`  Results: ${passed} passed, ${failed} failed`);
 console.log(`${'═'.repeat(60)}\n`);
 
-process.exit(failed > 0 ? 1 : 0);
+process.exitCode = failed > 0 ? 1 : 0;

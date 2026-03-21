@@ -15,6 +15,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 
@@ -185,11 +186,9 @@ class RedisSlidingWindowStore {
         String(windowMs),
         member,
       );
-    } catch (err) {
-      // Redis error — fall back to conservative estimate
+    } catch (err) { // Redis error — fall back to conservative estimate
       console.error('[RATE-LIMITER] Redis error, applying conservative limit:', err.message);
-      throw err;
-    }
+      throw err;  logger.error('Operation failed', { error: err.message }); }
 
     return {
       count:     Number(count),
@@ -329,12 +328,10 @@ class AdvancedRateLimiter {
         result = { windowResult, burstResult, key };
         chosenKey = key;
         break;
-      } catch (err) {
-        // Redis failure — degrade gracefully
+      } catch (err) { // Redis failure — degrade gracefully
         this._fallbackMode = true;
         console.error('[RATE-LIMITER] Store error:', err.message);
-        return this._fallbackResponse(tier, limit);
-      }
+        return this._fallbackResponse(tier, limit);  logger.error('Operation failed', { error: err.message }); }
     }
 
     if (!result) return this._fallbackResponse(tier, limit);

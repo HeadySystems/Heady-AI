@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.*
+!.env.example
+!.env.template
+dist/
+.DS_Store
+*.log
+*.pem
+*.key
+*-service-account*.json
+gcp-*.json
+coverage/
+.turbo/

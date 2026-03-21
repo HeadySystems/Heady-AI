@@ -5,6 +5,7 @@
 // RTP: 17-Swarm Decentralized Orchestration
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 
@@ -18,9 +19,7 @@ const TAXONOMY_PATH = require('path').resolve(__dirname, '../../configs/swarm-ta
 let _swarmTaxonomy = null;
 try {
   _swarmTaxonomy = JSON.parse(require('fs').readFileSync(TAXONOMY_PATH, 'utf8'));
-} catch (e) {
-  // taxonomy not required for core operation
-}
+} catch (e) { // taxonomy not required for core operation  logger.error('Operation failed', { error: e.message }); }
 
 function getSwarmTaxonomy() { return _swarmTaxonomy; }
 

@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -80,7 +81,7 @@ async function initializeSubsystems() {
     colabCluster = new ColabRuntimeCluster();
     await colabCluster.initialize();
     results.colab = true;
-    console.log('[SubsystemRoutes] Colab Runtime Cluster initialized (3 runtimes: Cortex, Synapse, Reflex)');
+    logger.info('[SubsystemRoutes] Colab Runtime Cluster initialized (3 runtimes: Cortex, Synapse, Reflex)');
   } catch (err) {
     console.warn('[SubsystemRoutes] Colab cluster init failed:', err.message);
   }
@@ -92,7 +93,7 @@ async function initializeSubsystems() {
       if (typeof FactoryClass === 'function') {
         beeFactory = new FactoryClass();
         results.bees = true;
-        console.log('[SubsystemRoutes] Bee Factory initialized');
+        logger.info('[SubsystemRoutes] Bee Factory initialized');
       }
     }
   } catch (err) {
@@ -106,7 +107,7 @@ async function initializeSubsystems() {
       if (typeof CoordClass === 'function') {
         swarmCoordinator = new CoordClass({ beeFactory });
         results.swarms = true;
-        console.log('[SubsystemRoutes] Swarm Coordinator initialized (17 swarms)');
+        logger.info('[SubsystemRoutes] Swarm Coordinator initialized (17 swarms)');
       }
     }
   } catch (err) {
@@ -117,7 +118,7 @@ async function initializeSubsystems() {
   try {
     loadUniversalPrompt();
     results.prompt = true;
-    console.log(`[SubsystemRoutes] Universal Agent Prompt loaded (hash: ${getPromptHash()})`);
+    logger.info(`[SubsystemRoutes] Universal Agent Prompt loaded (hash: ${getPromptHash()})`);
   } catch (err) {
     console.warn('[SubsystemRoutes] Universal Prompt load failed:', err.message);
   }
@@ -129,22 +130,22 @@ async function initializeSubsystems() {
       nodeRegistry = new LiquidNodeRegistry();
       nodeRegistry.initialize();
       results.liquidNodes = true;
-      console.log(`[SubsystemRoutes] Liquid Node Registry initialized (${nodeRegistry.getAllNodes().length} nodes in 3D vector space)`);
+      logger.info(`[SubsystemRoutes] Liquid Node Registry initialized (${nodeRegistry.getAllNodes().length} nodes in 3D vector space)`);
 
       if (VectorRouter) {
         vectorRouter = new VectorRouter(nodeRegistry);
-        console.log('[SubsystemRoutes] Vector Router initialized (CSL-gated 3D routing)');
+        logger.info('[SubsystemRoutes] Vector Router initialized (CSL-gated 3D routing)');
       }
 
       if (HealthMonitor) {
         healthMonitor = new HealthMonitor(nodeRegistry);
-        console.log('[SubsystemRoutes] Health Monitor initialized (phi-scaled heartbeats)');
+        logger.info('[SubsystemRoutes] Health Monitor initialized (phi-scaled heartbeats)');
       }
 
       if (ColabRuntimeManager) {
         colabRuntimeManager = new ColabRuntimeManager();
         colabRuntimeManager.initialize();
-        console.log('[SubsystemRoutes] Colab Runtime Manager initialized (3 A100 runtimes as latent space ops)');
+        logger.info('[SubsystemRoutes] Colab Runtime Manager initialized (3 A100 runtimes as latent space ops)');
       }
     }
   } catch (err) {
@@ -154,7 +155,7 @@ async function initializeSubsystems() {
   // 6. Register compute providers with the pipeline task executor
   if (registerComputeProviders && (colabCluster || swarmCoordinator)) {
     registerComputeProviders({ colabCluster, swarmCoordinator, colabRuntimeManager });
-    console.log('[SubsystemRoutes] Pipeline compute providers registered (colab + swarms + liquid nodes)');
+    logger.info('[SubsystemRoutes] Pipeline compute providers registered (colab + swarms + liquid nodes)');
   }
 
   return results;
@@ -463,19 +464,19 @@ async function shutdownSubsystems() {
     for (const rt of colabRuntimeManager.getAllRuntimes()) {
       try { await colabRuntimeManager.terminate(rt.id); } catch { /* ignore */ }
     }
-    console.log('[SubsystemRoutes] Colab runtime manager shut down');
+    logger.info('[SubsystemRoutes] Colab runtime manager shut down');
   }
   if (colabCluster) {
     await colabCluster.shutdown();
-    console.log('[SubsystemRoutes] Colab cluster shut down');
+    logger.info('[SubsystemRoutes] Colab cluster shut down');
   }
   if (beeFactory && typeof beeFactory.shutdown === 'function') {
     await beeFactory.shutdown();
-    console.log('[SubsystemRoutes] Bee factory shut down');
+    logger.info('[SubsystemRoutes] Bee factory shut down');
   }
   if (swarmCoordinator && typeof swarmCoordinator.shutdown === 'function') {
     await swarmCoordinator.shutdown();
-    console.log('[SubsystemRoutes] Swarm coordinator shut down');
+    logger.info('[SubsystemRoutes] Swarm coordinator shut down');
   }
 }
 

@@ -25,6 +25,8 @@
  * @author Eric Haywood
  * @license Proprietary — HeadySystems Inc.
  */
+const logger = console;
+
 
 // ─── Phi Constants (inlined for edge — no node_modules) ─────────────────────
 const PHI = 1.6180339887498949;
@@ -121,7 +123,7 @@ function edgeLog(level, data) {
   if (level === 'error') {
     console.error(JSON.stringify(entry));
   } else {
-    console.log(JSON.stringify(entry));
+    logger.info(JSON.stringify(entry));
   }
 }
 

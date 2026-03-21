@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -90,7 +91,7 @@ async function bootShell() {
         const response = await fetch('/api/domains/current');
         const projection = await response.json();
 
-        console.log(`[HeadyShell] Domain resolved → ${projection.uiId} (${projection.category})`);
+        logger.info(`[HeadyShell] Domain resolved → ${projection.uiId} (${projection.category})`);
 
         // Step 2: Look up the remote config
         const remote = REMOTE_REGISTRY[projection.uiId];
@@ -114,7 +115,7 @@ async function bootShell() {
             },
         });
 
-        console.log(`[HeadyShell] Mounted ${projection.uiId} successfully`);
+        logger.info(`[HeadyShell] Mounted ${projection.uiId} successfully`);
 
     } catch (error) {
         console.error('[HeadyShell] Boot error:', error);

@@ -38,7 +38,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-let logger = null; try { logger = require('../../utils/logger'); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require('../../utils/logger'); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 // ── Constants ──────────────────────────────────────────────────────
 

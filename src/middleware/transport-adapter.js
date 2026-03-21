@@ -1,3 +1,4 @@
+const logger = console;
 const { PHI_TIMING } = require('../shared/phi-math');
 /**
  * @fileoverview MCP Multi-Transport Adapter
@@ -146,7 +147,7 @@ export async function detectTransport(endpoint) {
       if (response.status === 404 || response.status === 405) {
         return TransportId.SSE;
       }
-    } catch (_) { /* fall through */ }
+    } catch (_) { /* fall through */  logger.error('Operation failed', { error: _.message }); }
 
     // Default to SSE for HTTP if detection fails
     return TransportId.SSE;
@@ -432,7 +433,7 @@ export class StreamableHTTPTransport extends BaseTransport {
           if (evt.id) this._lastEventId = evt.id;
           if (evt.data) {
             this._handleIncoming(evt.data);
-            try { lastResult = deserializeMessage(evt.data); } catch (_) {}
+            try { lastResult = deserializeMessage(evt.data); } catch (_) { logger.error('Operation failed', { error: _.message }); }
           }
         }
       }
@@ -570,7 +571,7 @@ export class LegacySSETransport extends BaseTransport {
    */
   async close() {
     this._connected = false;
-    try { await this._sseReader?.cancel(); } catch (_) {}
+    try { await this._sseReader?.cancel(); } catch (_) { logger.error('Operation failed', { error: _.message }); }
     this._sseReader = null;
     this.emit('disconnected', {});
   }

@@ -1,15 +1,16 @@
+import { vi } from "vitest";
 'use strict';
 
 /**
  * HeadyConductor v2 Unit Tests (TEST-02)
  */
 
-jest.mock('../../src/shared/phi-math', () => ({
+vi.mock('../../src/shared/phi-math', () => ({
   PHI_TIMING: { CYCLE: 29034 },
 }));
 
-jest.mock('../../src/utils/logger', () => ({
-  info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn(),
+vi.mock('../../src/utils/logger', () => ({
+  info: vi.fn(), warn: vi.fn(), error: vi.fn(), debug: vi.fn(),
 }));
 
 const { HeadyConductor } = require('../../src/orchestration/heady-conductor');
@@ -27,7 +28,7 @@ describe('HeadyConductor', () => {
 
   describe('Bee Registration', () => {
     it('should register a bee', () => {
-      const bee = { domain: 'research', execute: jest.fn() };
+      const bee = { domain: 'research', execute: vi.fn() };
       conductor.registerBee('bee-1', bee);
       expect(conductor.bees.has('bee-1')).toBe(true);
       expect(conductor.bees.get('bee-1').bee).toBe(bee);
@@ -35,7 +36,7 @@ describe('HeadyConductor', () => {
     });
 
     it('should emit bee:registered event', () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       conductor.on('bee:registered', handler);
       conductor.registerBee('bee-1', { domain: 'test' });
       expect(handler).toHaveBeenCalledWith({ beeId: 'bee-1' });
@@ -48,7 +49,7 @@ describe('HeadyConductor', () => {
     });
 
     it('should emit bee:unregistered event', () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       conductor.on('bee:unregistered', handler);
       conductor.registerBee('bee-1', { domain: 'test' });
       conductor.unregisterBee('bee-1');
@@ -58,7 +59,7 @@ describe('HeadyConductor', () => {
 
   describe('Task Dispatch', () => {
     it('should dispatch to explicit beeId', async () => {
-      const bee = { execute: jest.fn().mockResolvedValue({ output: 'done' }) };
+      const bee = { execute: vi.fn().mockResolvedValue({ output: 'done' }) };
       conductor.registerBee('bee-1', bee);
       const result = await conductor.dispatch('research', {}, { beeId: 'bee-1' });
       expect(result.ok).toBe(true);
@@ -66,21 +67,21 @@ describe('HeadyConductor', () => {
     });
 
     it('should dispatch by category match', async () => {
-      const bee = { category: 'research', execute: jest.fn().mockResolvedValue({ output: 'found' }) };
+      const bee = { category: 'research', execute: vi.fn().mockResolvedValue({ output: 'found' }) };
       conductor.registerBee('researcher', bee);
       const result = await conductor.dispatch('research', { query: 'test' });
       expect(result.ok).toBe(true);
     });
 
     it('should dispatch by domain match', async () => {
-      const bee = { domain: 'coding', execute: jest.fn().mockResolvedValue({ output: 'coded' }) };
+      const bee = { domain: 'coding', execute: vi.fn().mockResolvedValue({ output: 'coded' }) };
       conductor.registerBee('coder', bee);
       const result = await conductor.dispatch('coding', {});
       expect(result.ok).toBe(true);
     });
 
     it('should fallback to first idle bee', async () => {
-      const bee = { execute: jest.fn().mockResolvedValue({ output: 'fallback' }) };
+      const bee = { execute: vi.fn().mockResolvedValue({ output: 'fallback' }) };
       conductor.registerBee('generic', bee);
       const result = await conductor.dispatch('unknown-type', {});
       expect(result.ok).toBe(true);
@@ -93,9 +94,9 @@ describe('HeadyConductor', () => {
     });
 
     it('should emit task:dispatched event', async () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       conductor.on('task:dispatched', handler);
-      conductor.registerBee('bee-1', { execute: jest.fn().mockResolvedValue({}) });
+      conductor.registerBee('bee-1', { execute: vi.fn().mockResolvedValue({}) });
       await conductor.dispatch('test', {});
       expect(handler).toHaveBeenCalledWith(expect.objectContaining({
         beeId: 'bee-1',
@@ -104,17 +105,17 @@ describe('HeadyConductor', () => {
     });
 
     it('should emit task:completed on success', async () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       conductor.on('task:completed', handler);
-      conductor.registerBee('bee-1', { execute: jest.fn().mockResolvedValue({ ok: true }) });
+      conductor.registerBee('bee-1', { execute: vi.fn().mockResolvedValue({ ok: true }) });
       await conductor.dispatch('test', {});
       expect(handler).toHaveBeenCalled();
     });
 
     it('should emit task:failed on error', async () => {
-      const handler = jest.fn();
+      const handler = vi.fn();
       conductor.on('task:failed', handler);
-      conductor.registerBee('bee-1', { execute: jest.fn().mockRejectedValue(new Error('boom')) });
+      conductor.registerBee('bee-1', { execute: vi.fn().mockRejectedValue(new Error('boom')) });
       const result = await conductor.dispatch('test', {}, { timeout: 1000 });
       expect(result.ok).toBe(false);
       expect(handler).toHaveBeenCalled();
@@ -130,14 +131,14 @@ describe('HeadyConductor', () => {
     }, 10000);
 
     it('should increment counters', async () => {
-      conductor.registerBee('bee-1', { execute: jest.fn().mockResolvedValue({}) });
+      conductor.registerBee('bee-1', { execute: vi.fn().mockResolvedValue({}) });
       await conductor.dispatch('test', {});
       expect(conductor.totalDispatched).toBe(1);
       expect(conductor.totalCompleted).toBe(1);
     });
 
     it('should cap execution log at 100', async () => {
-      conductor.registerBee('bee-1', { execute: jest.fn().mockResolvedValue({}) });
+      conductor.registerBee('bee-1', { execute: vi.fn().mockResolvedValue({}) });
       for (let i = 0; i < 105; i++) {
         await conductor.dispatch('test', {});
       }
@@ -189,7 +190,7 @@ describe('HeadyConductor', () => {
 
     it('should delegate to redis pool when wired', async () => {
       const mockPool = {
-        agentHandoff: jest.fn().mockResolvedValue({
+        agentHandoff: vi.fn().mockResolvedValue({
           handoffId: 'handoff:test',
           stored: true,
           latencyMs: 5,

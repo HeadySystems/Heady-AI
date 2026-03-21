@@ -11,7 +11,7 @@
  * completions, failures, and receipts as they happen.
  */
 
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 const { PHI_TIMING } = require('../shared/phi-math');
 class EventStream {
     constructor() {

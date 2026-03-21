@@ -10,6 +10,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const { EventEmitter } = require('events');
@@ -154,12 +155,10 @@ class SagaOrchestrator {
                 const result = await step.execute(context);
                 context[step.name] = result;
                 this.completedSteps.push(step);
-            } catch (err) {
-                // Compensation — unwind in reverse order
+            } catch (err) { // Compensation — unwind in reverse order
                 for (const completed of [...this.completedSteps].reverse()) {
                     try {
-                        await completed.compensate(context);
-                    } catch (compErr) {
+                        await completed.compensate(context);  logger.error('Operation failed', { error: err.message }); } catch (compErr) {
                         console.error(`Compensation failed for ${completed.name}:`, compErr.message);
                     }
                 }

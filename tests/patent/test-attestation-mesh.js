@@ -392,4 +392,4 @@ console.log(`\n─────────────────────�
 console.log(`HS-059 Attestation Mesh: ${passed} passed, ${failed} failed`);
 console.log(`─────────────────────────────────────────`);
 
-if (failed > 0) process.exit(1);
+if (failed > 0) process.exitCode = 1;

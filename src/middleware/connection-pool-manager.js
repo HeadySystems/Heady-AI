@@ -1,3 +1,4 @@
+const logger = console;
 /**
  * @fileoverview MCP Connection Pool Manager — Phi-Continuous Edition
  *
@@ -373,7 +374,7 @@ class ConnectionPool extends EventEmitter {
     conn.state = ConnectionState.DRAINING;
     try {
       await conn.client?.close?.();
-    } catch (_) { /* ignore */ }
+    } catch (_) { /* ignore */  logger.error('Operation failed', { error: _.message }); }
     conn.state = ConnectionState.CLOSED;
     this._connections.delete(connId);
     this._idle = this._idle.filter(id => id !== connId);

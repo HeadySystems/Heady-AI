@@ -151,9 +151,8 @@ try {
   });
 
   logger.info('[Manager] prom-client metrics initialized');
-} catch (err) {
-  // prom-client is optional — log warning but continue
-  logger.warn('[Manager] prom-client not available — metrics endpoint disabled', { error: err.message });
+} catch (err) { // prom-client is optional — log warning but continue
+  logger.warn('[Manager] prom-client not available — metrics endpoint disabled', { error: err.message  logger.error('Operation failed', { error: err.message }); });
 }
 
 // ── Phase 3: OTEL Tracing ────────────────────────────────────────────────────

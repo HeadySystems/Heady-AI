@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * @file projection-sync-engine.js
@@ -895,10 +896,9 @@ class ProjectionSyncEngine extends EventEmitter {
           this.emit('sync:retry', { projectionId, target: 'github', attempt: att, error: err.message, waitMs: wait });
         },
       });
-    } catch (pushErr) {
-      // Rollback on push failure
+    } catch (pushErr) { // Rollback on push failure
       if (snapshotSha) {
-        await git.rollbackTo(snapshotSha).catch(() => {});
+        await git.rollbackTo(snapshotSha).catch(() => {  logger.error('Operation failed', { error: pushErr.message }); });
         this.emit('sync:rollback', { projectionId, target: 'github', snapshotSha });
       }
       throw pushErr;

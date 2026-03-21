@@ -95,10 +95,10 @@ async function runTests() {
 
     console.log('');
     console.log(`Results: ${passed} passed, ${failed} failed`);
-    process.exit(failed > 0 ? 1 : 0);
+    process.exitCode = failed > 0 ? 1 : 0;
 }
 
 runTests().catch(err => {
     console.error('Test runner error:', err);
-    process.exit(1);
+    process.exitCode = 1;
 });

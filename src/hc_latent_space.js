@@ -243,7 +243,7 @@ function getStatus() {
   try {
     const stat = fs.statSync(OPS_LOG_FILE);
     opsLogSize = stat.size;
-  } catch (e) { /* no log yet */ }
+  } catch (e) { /* no log yet */  logger.error('Operation failed', { error: e.message }); }
 
   return {
     l0_ring_buffer: { entries: ringBuffer.filter(Boolean).length, capacity: RING_BUFFER_SIZE },

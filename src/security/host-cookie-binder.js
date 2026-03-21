@@ -53,18 +53,18 @@ const ALLOWED_ORIGINS = new Set([
 
 // Development origins
 const DEV_ORIGINS = new Set([
-  'http://localhost:3310',
-  'http://localhost:3311',
-  'http://localhost:3312',
-  'http://localhost:3313',
-  'http://localhost:3314',
-  'http://localhost:3315',
-  'http://localhost:3316',
-  'http://localhost:3317',
-  'http://localhost:3318',
-  'http://localhost:3319',
-  'http://localhost:8080',
-  'http://localhost:5173',
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3310'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3311'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3312'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3313'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3314'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3315'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3316'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3317'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3318'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:3319'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:8080'),
+  (process.env.SERVICE_URL || 'http://0.0.0.0:5173'),
 ]);
 
 // ── Cookie Options Factory ──────────────────────────────

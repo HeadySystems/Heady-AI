@@ -504,7 +504,7 @@ async function scanServiceHealth(rootDir) {
       const localNames = ['api', 'worker', 'gateway', 'auth', 'metrics', 'admin'];
       services = localPorts.map((port, i) => ({
         name: localNames[i] || `service-${port}`,
-        url:  `http://localhost:${port}/health`,
+        url:  `http://0.0.0.0:${port}/health`,
       }));
     }
 

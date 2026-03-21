@@ -23,6 +23,7 @@
  */
 
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const fs = require('fs');
 const path = require('path');
@@ -628,10 +629,8 @@ class VectorMemoryV2 {
     if (this._embedFn) {
       try {
         vector = await this._embedFn(content);
-      } catch (err) {
-        // Fall back to a deterministic hash-based pseudo-vector
-        vector = this._hashVector(content);
-      }
+      } catch (err) { // Fall back to a deterministic hash-based pseudo-vector
+        vector = this._hashVector(content);  logger.error('Operation failed', { error: err.message }); }
     } else {
       // No embed function — use hash-based pseudo-vector
       vector = this._hashVector(content);

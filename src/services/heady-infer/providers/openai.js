@@ -1,4 +1,5 @@
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const https = require('https');
 const http  = require('http');
@@ -111,7 +112,7 @@ class OpenAIProvider extends BaseProvider {
                 promptTokens     = evt.usage.prompt_tokens     || 0;
                 completionTokens = evt.usage.completion_tokens || 0;
               }
-            } catch (_) {}
+            } catch (_) { logger.error('Operation failed', { error: _.message }); }
           }
         });
 
@@ -237,12 +238,11 @@ class OpenAIProvider extends BaseProvider {
     try {
       await this._request('/v1/models', null, this.config.timeouts?.health || 5000, null);
       return { provider: 'openai', status: 'healthy', latencyMs: Date.now() - start };
-    } catch (err) {
-      // Fall back to a minimal completion
+    } catch (err) { // Fall back to a minimal completion
       try {
         await this._request('/v1/chat/completions', {
           model:      'gpt-4o-mini',
-          messages:   [{ role: 'user', content: 'ping' }],
+          messages:   [{ role: 'user', content: 'ping'  logger.error('Operation failed', { error: err.message }); }],
           max_tokens: 1,
         }, 5000, null);
         return { provider: 'openai', status: 'healthy', latencyMs: Date.now() - start };

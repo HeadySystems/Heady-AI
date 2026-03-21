@@ -1,3 +1,4 @@
+const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.
@@ -96,9 +97,8 @@ function recordTransaction(type, from, to, amount, metadata = {}) {
     // Append to ledger (fire and forget for hot path, sync for critical)
     try {
         fs.appendFileSync(LEDGER_FILE, JSON.stringify(entry) + "\n");
-    } catch (err) {
-        // Fallback async
-        fs.appendFile(LEDGER_FILE, JSON.stringify(entry) + "\n", () => { });
+    } catch (err) { // Fallback async
+        fs.appendFile(LEDGER_FILE, JSON.stringify(entry) + "\n", () => {  logger.error('Operation failed', { error: err.message }); });
     }
 
     return entry;

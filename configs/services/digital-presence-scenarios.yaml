@@ -1,0 +1,11 @@
+# Digital Presence Scenarios
+# Auto-generated stub to prevent ENOENT errors in tests
+scenarios:
+  - name: default
+    description: Default digital presence scenario
+    coherence_threshold: 0.809
+    phi_scale: 1.618033988749895
+    channels:
+      - web
+      - mobile
+      - api

@@ -5,6 +5,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const fs           = require('fs');
@@ -245,7 +246,7 @@ function deepMerge(target, source) {
  * const loader = new ConfigLoader({ registryPath: './heady-registry.json' });
  * await loader.load();
  * const platform = loader.get('platform');
- * console.log(platform.version); // '4.0.0'
+ * logger.info(platform.version); // '4.0.0'
  */
 class ConfigLoader extends EventEmitter {
   /**

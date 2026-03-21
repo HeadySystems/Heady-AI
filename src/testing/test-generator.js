@@ -120,7 +120,7 @@ function edgeCaseTests(name, isAsync) {
 // ---------------------------------------------------------------------------
 function asyncBehaviorTests(name) {
   return [
-    renderIt(`${name}: returns a Promise`, `async () => {\n    const p = subject.${name}();\n    expect(p).toBeInstanceOf(Promise);\n    try { await p; } catch (_) {}\n  }`),
+    renderIt(`${name}: returns a Promise`, `async () => {\n    const p = subject.${name}();\n    expect(p).toBeInstanceOf(Promise);\n    try { await p; } catch (_) { logger.error('Operation failed', { error: _.message }); }\n  }`),
     renderIt(`${name}: resolves without unhandled rejection`, `async () => {\n    await expect(subject.${name}()).resolves.toBeDefined().catch(() => {});\n  }`),
   ];
 }
@@ -318,7 +318,7 @@ class TestGenerator {
         const fnVecs    = functions.map(f => this._nameToVec(f.toLowerCase()));
         const resonance = CSL.multi_resonance(fileVec, fnVecs, PHI_INVERSE * 0.5);
         cslNote = ` // CSL resonance scores: ${resonance.map(r => r.score.toFixed(3)).join(', ')}`;
-      } catch (_) { /* CSL scoring is best-effort */ }
+      } catch (_) { /* CSL scoring is best-effort */  logger.error('Operation failed', { error: _.message }); }
     }
 
     // Build sections

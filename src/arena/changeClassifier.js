@@ -20,6 +20,7 @@
  *   const { promoted, reason, risk } = await arenaGate(winner, { notifyFn, vetoFn });
  */
 'use strict';
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;         // φ⁻¹
@@ -141,12 +142,11 @@ export async function arenaGate(winner, opts = {}) {
     let veto;
     try {
       veto = await vetoFn(tier, winner, classification);
-    } catch (err) {
-      // Veto function failure is itself a block — fail safe
+    } catch (err) { // Veto function failure is itself a block — fail safe
       return {
         promoted:    false,
         risk:        tier,
-        reason:      `HeadySoul veto function threw: ${err.message}`,
+        reason:      `HeadySoul veto function threw: ${err.message  logger.error('Operation failed', { error: err.message }); }`,
         vetoReason:  'veto_function_error',
         classification,
       };
@@ -178,12 +178,11 @@ export async function arenaGate(winner, opts = {}) {
       if (typeof notifyFn === 'function') {
         try {
           await notifyFn(tier, winner, classification);
-        } catch (err) {
-          // Notification failure for SIGNIFICANT blocks promotion (fail safe)
+        } catch (err) { // Notification failure for SIGNIFICANT blocks promotion (fail safe)
           return {
             promoted:  false,
             risk:      tier,
-            reason:    `Notification failed — cannot request approval: ${err.message}`,
+            reason:    `Notification failed — cannot request approval: ${err.message  logger.error('Operation failed', { error: err.message }); }`,
             classification,
           };
         }

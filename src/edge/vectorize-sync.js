@@ -17,6 +17,8 @@
  *
  * @module vectorize-sync
  */
+const logger = console;
+
 
 import { PHI, PSI, fib, phiBackoff } from '../../shared/phi-math.js';
 
@@ -165,7 +167,7 @@ export class VectorizeSync {
     const watermark = fullResync ? 0 : await this._loadWatermark();
     let newWatermark = watermark;
 
-    console.log(`[VectorizeSync:${this.indexName}] starting incremental sync, watermark=${watermark}, fullResync=${fullResync}`);
+    logger.info(`[VectorizeSync:${this.indexName}] starting incremental sync, watermark=${watermark}, fullResync=${fullResync}`);
 
     try {
       while (offset < maxRecords) {
@@ -173,7 +175,7 @@ export class VectorizeSync {
         const batch = await this._fetchPgBatch(watermark, offset, PG_FETCH_BATCH_SIZE, namespace);
 
         if (batch.length === 0) {
-          console.log(`[VectorizeSync:${this.indexName}] no more records at offset=${offset}`);
+          logger.info(`[VectorizeSync:${this.indexName}] no more records at offset=${offset}`);
           break;
         }
 
@@ -187,7 +189,7 @@ export class VectorizeSync {
           newWatermark = maxUpdatedAt;
         }
 
-        console.log(`[VectorizeSync:${this.indexName}] batch synced: offset=${offset}, synced=${synced}, errors=${errors}`);
+        logger.info(`[VectorizeSync:${this.indexName}] batch synced: offset=${offset}, synced=${synced}, errors=${errors}`);
 
         // If batch was smaller than requested, we've reached the end
         if (batch.length < PG_FETCH_BATCH_SIZE) break;
@@ -215,7 +217,7 @@ export class VectorizeSync {
         duration_ms: result.duration_ms,
       });
 
-      console.log(`[VectorizeSync:${this.indexName}] sync complete:`, result);
+      logger.info(`[VectorizeSync:${this.indexName}] sync complete:`, result);
       return result;
     } catch (err) {
       console.error(`[VectorizeSync:${this.indexName}] sync failed:`, err);
@@ -600,7 +602,7 @@ export function createSyncScheduledHandler(options = {}) {
 
     ctx.waitUntil(
       sync.runIncrementalSync({ fullResync: isFullResyncDay })
-        .then((result) => console.log('[VectorizeSync] scheduled sync complete:', result))
+        .then((result) => logger.info('[VectorizeSync] scheduled sync complete:', result))
         .catch((err) => console.error('[VectorizeSync] scheduled sync failed:', err)),
     );
   };

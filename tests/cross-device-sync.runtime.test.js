@@ -65,10 +65,10 @@ async function run() {
     hub.shutdown();
 
     console.log(`\nResults: ${passed} passed, ${failed} failed`);
-    process.exit(failed === 0 ? 0 : 1);
+    process.exitCode = failed === 0 ? 0 : 1;
 }
 
 run().catch((error) => {
     console.error(error);
-    process.exit(1);
+    process.exitCode = 1;
 });

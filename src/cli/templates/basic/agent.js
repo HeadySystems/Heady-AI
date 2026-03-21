@@ -6,6 +6,7 @@
  */
 
 'use strict';
+const logger = console;
 
 // Sacred Geometry constants
 const PHI = 1.618033988749895;
@@ -99,7 +100,7 @@ class Agent {
 
   shutdown() {
     this.state = 'shutdown';
-    console.log(`[${this.name}] Agent shutting down`);
+    logger.info(`[${this.name}] Agent shutting down`);
   }
 }
 

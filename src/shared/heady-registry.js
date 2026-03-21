@@ -31,7 +31,7 @@
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
-let logger = null; try { logger = require("./utils/logger"); } catch(e) { /* graceful */ }
+let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  logger.error('Operation failed', { error: e.message }); }
 
 const REG_FILE = path.join(__dirname, "..", "data", "heady-registry.json");
 const REG_AUDIT = path.join(__dirname, "..", "data", "registry-audit.jsonl");

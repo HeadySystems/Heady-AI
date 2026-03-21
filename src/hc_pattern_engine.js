@@ -93,7 +93,7 @@ async function savePatternStoreAsync(store) {
     const dir = path.dirname(PATTERN_STORE_PATH);
     await fsp.mkdir(dir, { recursive: true });
     await fsp.writeFile(PATTERN_STORE_PATH, JSON.stringify(store, null, 2), "utf8");
-  } catch (_) {}
+  } catch (_) { logger.error('Operation failed', { error: _.message }); }
 }
 
 // Legacy sync version for shutdown hooks

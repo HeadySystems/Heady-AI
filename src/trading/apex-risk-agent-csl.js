@@ -33,6 +33,7 @@
  */
 
 'use strict';
+const logger = require('../utils/logger') || console;
 
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
@@ -232,7 +233,7 @@ const CONSTANTS_DIGEST = sha256({ PHI, PSI, EPSILON, PSI2, PSI3, PHI2, PHI3 });
  * const agent = new ApexRiskAgentCSL({ accountType: '100K' });
  * agent.startSession();
  * const result = agent.checkRiskCSL(100450, -200);
- * console.log(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
+ * logger.info(result.signal.label); // 'ENGAGE' or 'CAUTIOUS' etc.
  */
 class ApexRiskAgentCSL extends EventEmitter {
 

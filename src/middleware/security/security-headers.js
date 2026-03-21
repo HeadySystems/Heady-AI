@@ -21,6 +21,7 @@
  */
 
 'use strict';
+const logger = console;
 
 const crypto = require('crypto');
 
@@ -388,6 +389,6 @@ app.post('/.well-known/csp-violations',
 // Override frame options for specific embeddable page
 app.get('/embed/widget', frameOptions('SAMEORIGIN'), (req, res) => {
   // This page can be embedded in same-origin iframes
-  res.send(`<script nonce="${res.locals.cspNonce}">console.log('widget')</script>`);
+  res.send(`<script nonce="${res.locals.cspNonce}">logger.info('widget')</script>`);
 });
 */

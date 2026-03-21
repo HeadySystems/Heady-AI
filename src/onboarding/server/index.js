@@ -58,7 +58,7 @@ const ALLOWED_ORIGINS = [
 ];
 
 if (NODE_ENV === 'development') {
-  ALLOWED_ORIGINS.push('http://localhost:3000', 'http://localhost:8080', 'http://localhost:5173');
+  ALLOWED_ORIGINS.push((process.env.SERVICE_URL || 'http://0.0.0.0:3000'), (process.env.SERVICE_URL || 'http://0.0.0.0:8080'), (process.env.SERVICE_URL || 'http://0.0.0.0:5173'));
 }
 
 // ─── Firebase Admin Init ────────────────────────────────────────────────────

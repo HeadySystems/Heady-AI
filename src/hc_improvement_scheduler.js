@@ -1,3 +1,4 @@
+const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -166,7 +167,7 @@ class ImprovementScheduler extends EventEmitter {
       const existing = fs.existsSync(logPath) ? JSON.parse(fs.readFileSync(logPath, 'utf8')) : [];
       existing.push(logEntry);
       fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
-    } catch (_) { /* log dir may not exist */ }
+    } catch (_) { /* log dir may not exist */  logger.error('Operation failed', { error: _.message }); }
 
     this.emit('improvement_complete', { ...improvement, logEntry });
     return { success: true, action: logEntry.action };
@@ -196,7 +197,7 @@ class ImprovementScheduler extends EventEmitter {
       const existing = fs.existsSync(logPath) ? JSON.parse(fs.readFileSync(logPath, 'utf8')) : [];
       existing.push(logEntry);
       fs.writeFileSync(logPath, JSON.stringify(existing.slice(-200), null, 2));
-    } catch (_) { /* log dir may not exist */ }
+    } catch (_) { /* log dir may not exist */  logger.error('Operation failed', { error: _.message }); }
 
     this.emit('improvement_complete', { ...improvement, logEntry });
     return { success: true, applied, action: logEntry.action };
