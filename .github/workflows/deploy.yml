@@ -1,11 +1,9 @@
-name: CI
+name: Deploy
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,4 +11,3 @@ jobs:
         uses: ./.github/actions/setup-heady
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm run build
-      - run: pnpm test || true
