@@ -43,7 +43,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('heady-event-bus');
 
-const logger = console;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');

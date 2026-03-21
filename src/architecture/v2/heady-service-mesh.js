@@ -2,7 +2,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('heady-service-mesh');
 
-const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**

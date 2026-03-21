@@ -75,7 +75,6 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('heady-api-gateway-v2');
 
-const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const http         = require('http');
