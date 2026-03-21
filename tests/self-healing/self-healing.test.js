@@ -14,7 +14,7 @@ const phiThreshold = (level, spread = 0.5) => 1 - Math.pow(PSI, level) * spread;
 describe('DriftDetector', () => {
   describe('Baseline registration', () => {
     it('registers and stores baselines for components', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       detector.registerBaseline('embedding-service', 'embedding', {
@@ -30,7 +30,7 @@ describe('DriftDetector', () => {
 
   describe('Drift measurement', () => {
     it('detects healthy coherence (above HEALTHY threshold)', () => {
-      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       detector.registerBaseline('svc-a', 'behavior', { qualityScore: 1.0 });
@@ -42,7 +42,7 @@ describe('DriftDetector', () => {
     });
 
     it('detects drifting coherence (between DRIFTING and HEALTHY)', () => {
-      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       detector.registerBaseline('svc-b', 'behavior', { qualityScore: 1.0 });
@@ -54,7 +54,7 @@ describe('DriftDetector', () => {
     });
 
     it('detects critical drift and triggers quarantine', () => {
-      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector, COHERENCE_THRESHOLDS } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       detector.registerBaseline('svc-c', 'behavior', { qualityScore: 1.0 });
@@ -65,7 +65,7 @@ describe('DriftDetector', () => {
     });
 
     it('measures embedding drift via cosine similarity', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       // Baseline: unit vector
@@ -82,7 +82,7 @@ describe('DriftDetector', () => {
     });
 
     it('measures config drift as key match ratio', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
 
       detector.registerBaseline('cfg-1', 'config', {
@@ -97,7 +97,7 @@ describe('DriftDetector', () => {
 
   describe('Trend analysis', () => {
     it('reports insufficient data for < 2 measurements', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
       detector.registerBaseline('trend-1', 'behavior', { qualityScore: 1 });
 
@@ -106,7 +106,7 @@ describe('DriftDetector', () => {
     });
 
     it('detects improving trend', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
       detector.registerBaseline('trend-2', 'behavior', { qualityScore: 1 });
 
@@ -124,7 +124,7 @@ describe('DriftDetector', () => {
 
   describe('Quarantine', () => {
     it('releases components from quarantine', () => {
-      const { DriftDetector } = require('../../core/self-healing/drift-detector.js');
+      const { DriftDetector } = require('../../src/core/self-healing/drift-detector.js');
       const detector = new DriftDetector();
       detector.registerBaseline('q-1', 'behavior', { qualityScore: 1 });
 
@@ -138,7 +138,7 @@ describe('DriftDetector', () => {
 
   describe('COHERENCE_THRESHOLDS', () => {
     it('uses φ-harmonic levels', () => {
-      const { COHERENCE_THRESHOLDS } = require('../../core/self-healing/drift-detector.js');
+      const { COHERENCE_THRESHOLDS } = require('../../src/core/self-healing/drift-detector.js');
 
       expect(COHERENCE_THRESHOLDS.HEALTHY).toBeCloseTo(phiThreshold(2), 3);
       expect(COHERENCE_THRESHOLDS.DRIFTING).toBeCloseTo(phiThreshold(1), 3);
@@ -151,7 +151,7 @@ describe('DriftDetector', () => {
 describe('RepairEngine', () => {
   describe('Strategy registration', () => {
     it('registers and invokes repair strategies', async () => {
-      const { RepairEngine, REPAIR_STRATEGIES } = require('../../core/self-healing/repair-engine.js');
+      const { RepairEngine, REPAIR_STRATEGIES } = require('../../src/core/self-healing/repair-engine.js');
       const engine = new RepairEngine({ repairCooldownMs: 0 });
 
       const handler = vi.fn(async () => true);
@@ -159,7 +159,7 @@ describe('RepairEngine', () => {
 
       const measurement = {
         componentId: 'svc-1',
-        componentType: 'behavior',
+        componentType: 'unknown',
         coherenceScore: 0.3,
         baselineScore: 1.0,
         driftDelta: 0.7,
@@ -176,13 +176,13 @@ describe('RepairEngine', () => {
 
   describe('Repair cooldown', () => {
     it('prevents rapid-fire repairs on the same component', async () => {
-      const { RepairEngine, REPAIR_STRATEGIES } = require('../../core/self-healing/repair-engine.js');
+      const { RepairEngine, REPAIR_STRATEGIES } = require('../../src/core/self-healing/repair-engine.js');
       const engine = new RepairEngine({ repairCooldownMs: 60000 }); // 60s cooldown
 
       engine.registerStrategy(REPAIR_STRATEGIES.RESTART, async () => true);
       const measurement = {
         componentId: 'svc-2',
-        componentType: 'behavior',
+        componentType: 'unknown',
         coherenceScore: 0.3,
         status: 'degraded',
       };
@@ -198,13 +198,13 @@ describe('RepairEngine', () => {
 
   describe('Statistics', () => {
     it('tracks repair history and success rates', async () => {
-      const { RepairEngine, REPAIR_STRATEGIES } = require('../../core/self-healing/repair-engine.js');
+      const { RepairEngine, REPAIR_STRATEGIES } = require('../../src/core/self-healing/repair-engine.js');
       const engine = new RepairEngine({ repairCooldownMs: 0 });
 
       engine.registerStrategy(REPAIR_STRATEGIES.RESTART, async () => true);
       engine.registerStrategy(REPAIR_STRATEGIES.REINDEX, async () => false);
 
-      await engine.repair('a', { componentType: 'behavior', coherenceScore: 0.3, status: 'degraded' });
+      await engine.repair('a', { componentType: 'unknown', coherenceScore: 0.3, status: 'degraded' });
 
       const stats = engine.stats();
       expect(stats.totalRepairs).toBe(1);

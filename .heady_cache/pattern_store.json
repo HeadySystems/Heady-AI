@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-21T17:10:01.851Z",
-  "version": 20,
+  "lastUpdated": "2026-03-21T17:15:01.427Z",
+  "version": 21,
   "phi": 1.618033988749895,
   "resourcePatterns": [
     {
@@ -8,28 +8,28 @@
       "confidence": 1,
       "severity": "LOW",
       "firstSeen": "2026-03-21T13:50:01.965Z",
-      "lastSeen": "2026-03-21T17:10:01.851Z",
-      "occurrences": 20
+      "lastSeen": "2026-03-21T17:15:01.427Z",
+      "occurrences": 21
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 151,
+  "commitCount24h": 153,
   "topTopics": [
     {
       "word": "chore(auto)",
-      "count": 97
+      "count": 99
     },
     {
       "word": "[tier=significant]",
-      "count": 70
+      "count": 71
     },
     {
       "word": "pattern_store.json",
-      "count": 57
+      "count": 58
     },
     {
       "word": "auto-commit.log",
-      "count": 56
+      "count": 57
     },
     {
       "word": "hcfp-auto",
@@ -45,14 +45,14 @@
     },
     {
       "word": "[tier=trivial]",
-      "count": 16
+      "count": 17
     },
     {
       "word": "index.html",
       "count": 12
     },
     {
-      "word": "resource-events.jsonl",
+      "word": "index.json",
       "count": 10
     }
   ]

@@ -11,7 +11,7 @@ const assert = require('node:assert/strict');
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;
-const FIB = [1,1,2,3,5,8,13,21,34,55,89,144,233];
+const FIB = [0,1,1,2,3,5,8,13,21,34,55,89,144,233];
 
 describe('Auth — Session Security', () => {
   it('Session cookie name uses __Host- prefix', () => {

@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -6,6 +6,7 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./tests/setup.js'],
     include: ['tests/**/*.test.js'],
+    exclude: [...configDefaults.exclude, 'tests/auto-generated/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
