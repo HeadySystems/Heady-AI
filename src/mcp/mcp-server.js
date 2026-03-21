@@ -10,7 +10,6 @@ const logger = createLogger('mcp-server');
 const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
 const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
 const {
-const logger = require('../utils/logger');
   CallToolRequestSchema,
   ListToolsRequestSchema,
   ErrorCode,
