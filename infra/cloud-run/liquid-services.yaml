@@ -1,0 +1,161 @@
+# HEADY_BRAND:BEGIN
+# GCloud Cloud Run — Liquid Microservice Deployment Config
+# All services deploy as serverless containers with φ-scaled autoscaling
+# HEADY_BRAND:END
+
+# ─── HOT TIER (Always Running) ──────────────────────────────────────────────
+services:
+  - name: heady-manager
+    image: gcr.io/headysystems/heady-manager
+    port: 3300
+    min_instances: 1
+    max_instances: 13
+    cpu: "2"
+    memory: "2Gi"
+    concurrency: 89
+    timeout: 300
+    env:
+      NODE_ENV: production
+      SERVICE_NAME: heady-manager
+      SERVICE_TIER: hot
+    secrets:
+      - DATABASE_URL
+      - HEADY_API_KEY
+      - ANTHROPIC_API_KEY
+      - SENTRY_DSN
+      - UPSTASH_REDIS_REST_URL
+      - UPSTASH_REDIS_REST_TOKEN
+    labels:
+      heady-tier: hot
+      heady-liquid: "true"
+
+  - name: heady-brain
+    image: gcr.io/headysystems/heady-brain
+    port: 3311
+    min_instances: 1
+    max_instances: 8
+    cpu: "2"
+    memory: "4Gi"
+    concurrency: 55
+    timeout: 300
+    env:
+      SERVICE_NAME: heady-brain
+      SERVICE_TIER: hot
+    secrets: &common_secrets
+      - DATABASE_URL
+      - HEADY_API_KEY
+      - SENTRY_DSN
+      - UPSTASH_REDIS_REST_URL
+      - UPSTASH_REDIS_REST_TOKEN
+    labels:
+      heady-tier: hot
+      heady-liquid: "true"
+
+  - name: auto-success-engine
+    image: gcr.io/headysystems/auto-success-engine
+    port: 3301
+    min_instances: 1
+    max_instances: 8
+    cpu: "2"
+    memory: "4Gi"
+    concurrency: 34
+    env:
+      SERVICE_NAME: auto-success-engine
+      SERVICE_TIER: hot
+      FULL_THROTTLE: "true"
+    secrets: *common_secrets
+    labels:
+      heady-tier: hot
+      heady-liquid: "true"
+
+  - name: hcfullpipeline
+    image: gcr.io/headysystems/hcfullpipeline
+    port: 3330
+    min_instances: 1
+    max_instances: 13
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 34
+    env:
+      SERVICE_NAME: hcfullpipeline
+      SERVICE_TIER: hot
+      PIPELINE_MODE: event-driven
+    secrets: *common_secrets
+    labels:
+      heady-tier: hot
+      heady-liquid: "true"
+
+# ─── WARM TIER (Scale on Demand) ────────────────────────────────────────────
+  - name: heady-mc
+    image: gcr.io/headysystems/heady-mc
+    port: 3340
+    min_instances: 0
+    max_instances: 8
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 34
+    env:
+      SERVICE_NAME: heady-mc
+      SERVICE_TIER: warm
+    secrets: *common_secrets
+    labels:
+      heady-tier: warm
+      heady-liquid: "true"
+
+  - name: heady-sims
+    image: gcr.io/headysystems/heady-sims
+    port: 3341
+    min_instances: 0
+    max_instances: 8
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 34
+    env:
+      SERVICE_NAME: heady-sims
+      SERVICE_TIER: warm
+    secrets: *common_secrets
+    labels:
+      heady-tier: warm
+      heady-liquid: "true"
+
+  - name: heady-battle
+    image: gcr.io/headysystems/heady-battle
+    port: 3325
+    min_instances: 0
+    max_instances: 8
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 21
+    env:
+      SERVICE_NAME: heady-battle
+      SERVICE_TIER: warm
+    secrets: *common_secrets
+    labels:
+      heady-tier: warm
+      heady-liquid: "true"
+
+  - name: heady-vinci
+    image: gcr.io/headysystems/heady-vinci
+    port: 3322
+    min_instances: 0
+    max_instances: 8
+    cpu: "2"
+    memory: "4Gi"
+    concurrency: 34
+    env:
+      SERVICE_NAME: heady-vinci
+      SERVICE_TIER: warm
+    secrets: *common_secrets
+    labels:
+      heady-tier: warm
+      heady-liquid: "true"
+
+# ─── DEPLOYMENT SCRIPT ──────────────────────────────────────────────────────
+# Deploy all services:
+#   for svc in $(yq '.services[].name' liquid-services.yaml); do
+#     gcloud run deploy "$svc" \
+#       --image "$(yq ".services[] | select(.name == \"$svc\") | .image" liquid-services.yaml)" \
+#       --region us-central1 --platform managed \
+#       --min-instances "$(yq ".services[] | select(.name == \"$svc\") | .min_instances" liquid-services.yaml)" \
+#       --max-instances "$(yq ".services[] | select(.name == \"$svc\") | .max_instances" liquid-services.yaml)"
+#   done

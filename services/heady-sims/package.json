@@ -1,0 +1,23 @@
+{
+  "name": "@heady/heady-sims",
+  "version": "1.0.0",
+  "description": "HeadySims — Multi-scenario simulation engine with replay (Liquid Node)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@heady/platform": "workspace:*",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

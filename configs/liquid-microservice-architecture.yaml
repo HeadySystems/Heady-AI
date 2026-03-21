@@ -1,0 +1,672 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ LIQUID MICROSERVICE ARCHITECTURE                        ║
+# ║  Latent OS — φ-Scaled Service Mesh                              ║
+# ║  FILE: configs/liquid-microservice-architecture.yaml             ║
+# ║  VERSION: 1.0.0 | DATE: 2026-03-21                              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+version: "1.0.0"
+codename: "Liquid Lattice"
+phi: 1.618033988749895
+psi: 0.618033988749895
+
+# ─── ARCHITECTURE OVERVIEW ───────────────────────────────────────────────────
+# Every Heady service is a "Liquid Node" — a self-aware, φ-scaled microservice
+# that can start/stop/health/metrics independently, communicates via EventSpine
+# (Upstash Redis Streams), persists vectors in Neon pgvector, and deploys to
+# GCloud Cloud Run + Cloudflare Workers edge mesh.
+#
+# The architecture is a DAG of Liquid Nodes connected by:
+#   1. EventSpine (Upstash Redis Streams) — async event-driven communication
+#   2. ServiceMesh (Cloudflare Workers) — edge-proxied request routing
+#   3. VectorFabric (Neon pgvector) — shared semantic memory layer
+#   4. ColabCluster (4× Pro+ runtimes) — GPU-accelerated AI workloads
+
+# ─── LIQUID NODE CONTRACT ────────────────────────────────────────────────────
+# Every service MUST implement this interface to be a valid Liquid Node:
+liquid_node_contract:
+  required_methods:
+    - start          # Initialize service, connect to EventSpine
+    - stop           # Graceful shutdown with drain period
+    - health         # Return { status: 'healthy'|'degraded'|'unhealthy', latencyMs, uptimeMs }
+    - metrics        # Return { requestCount, errorRate, p99LatencyMs, memoryMb }
+    - onEvent        # Handle incoming EventSpine events
+    - emitEvent      # Publish events to EventSpine
+  required_exports:
+    - serviceId      # Unique service identifier (e.g., 'heady-brain')
+    - serviceVersion # SemVer string
+    - serviceTier    # hot | warm | cold
+  phi_timing:
+    healthCheck_interval_ms: 29034    # φ⁷ × 1000
+    metrics_flush_interval_ms: 46979  # φ⁸ × 1000
+    graceful_shutdown_ms: 11090       # φ⁵ × 1000
+    startup_delay_ms: 4236            # φ³ × 1000
+
+# ─── SERVICE TIERS (φ-Scaled) ───────────────────────────────────────────────
+service_tiers:
+  hot:
+    description: "Critical path services — always running, auto-scaled"
+    min_instances: 1
+    max_instances: 13          # fib(7)
+    scale_up_threshold: 0.618  # ψ — scale when utilization > 61.8%
+    scale_down_threshold: 0.382 # ψ² — scale down when < 38.2%
+    max_latency_ms: 1618       # φ¹ × 1000
+    services:
+      - heady-manager          # API Gateway + MCP Server
+      - heady-brain            # System Brain Meta-Controller
+      - heady-conductor        # Python Orchestration Worker
+      - hc-supervisor          # Multi-Agent Supervisor
+      - api-gateway            # External API Gateway
+      - auth-session           # Authentication & Session
+      - heady-memory           # 3-Tier Vector Memory
+      - heady-soul             # CSL Engine Core
+      - hcfullpipeline         # Pipeline Executor
+      - auto-success-engine    # Full-Throttle Auto-Success
+
+  warm:
+    description: "Standard services — scaled on demand"
+    min_instances: 0
+    max_instances: 8           # fib(6)
+    scale_up_threshold: 0.618
+    scale_down_threshold: 0.382
+    max_latency_ms: 4236       # φ³ × 1000
+    services:
+      - heady-vinci            # Creative AI Agent
+      - heady-coder            # Code Generation
+      - heady-battle           # Arena Competition
+      - heady-buddy            # Companion Service
+      - heady-guard            # Security Sentinel
+      - heady-lens             # Observability
+      - heady-mc               # Monte Carlo Simulations
+      - heady-sims             # HeadySims Engine
+      - analytics              # Analytics Service
+      - billing                # Billing Service
+      - notification           # Notification Service
+      - search                 # Search Service
+      - scheduler              # Scheduler Service
+      - heady-drupal           # Drupal CMS Bridge
+      - heady-discord          # Discord Bot
+      - heady-slack            # Slack Bot
+
+  cold:
+    description: "Background/batch services — on-demand only"
+    min_instances: 0
+    max_instances: 5           # fib(5)
+    scale_up_threshold: 0.618
+    scale_down_threshold: 0.382
+    max_latency_ms: 11090      # φ⁵ × 1000
+    services:
+      - heady-distiller        # Skill Recipe Distiller
+      - heady-train            # Model Training
+      - heady-migrate          # Database Migrations
+      - heady-audit            # Security Audit
+      - heady-forge            # Template Generator
+      - heady-researcher       # Deep Research Agent
+      - heady-evolution-engine # Controlled Mutation
+
+# ─── INFRASTRUCTURE PROVIDERS ────────────────────────────────────────────────
+infrastructure:
+  # ── Cloudflare (Edge Mesh) ──────────────────────────────────────────────
+  cloudflare:
+    account_id: "8b1fa38f282c691423c6399247d53323"
+    workers:
+      - name: heady-edge-router
+        description: "Global edge router — routes all 17 domains"
+        entrypoint: cloudflare/worker.js
+        routes:
+          - "headyme.com/*"
+          - "headysystems.com/*"
+          - "headyconnection.org/*"
+          - "headymcp.com/*"
+          - "headyio.com/*"
+          - "headybuddy.org/*"
+          - "headyos.com/*"
+      - name: heady-edge-cache
+        description: "KV-backed edge cache for vector lookups"
+        entrypoint: cloudflare/workers/edge-cache-worker.js
+        kv_namespaces:
+          - HEADY_VECTOR_CACHE
+          - HEADY_SESSION_CACHE
+      - name: heady-edge-ai
+        description: "Workers AI inference at the edge"
+        entrypoint: cloudflare/workers/edge-ai-worker.js
+        ai_binding: true
+      - name: heady-mcp-telemetry
+        description: "MCP telemetry collector"
+        entrypoint: cloudflare/workers/mcp-telemetry-worker.js
+    tunnels:
+      - name: heady-tunnel
+        config: cloudflare/tunnel-config.yml
+        ingress:
+          - hostname: api.headysystems.com
+            service: http://heady-manager:3300
+          - hostname: brain.headysystems.com
+            service: http://heady-brain:3311
+    dns:
+      provider: cloudflare
+      zones:
+        - headyme.com
+        - headysystems.com
+        - headyconnection.org
+        - headyconnection.com
+        - headymcp.com
+        - headyio.com
+        - headybuddy.org
+        - headyos.com
+    security:
+      waf: enabled
+      bot_management: enabled
+      ddos_protection: enterprise
+      ssl_mode: strict
+
+  # ── Google Cloud (Cloud Run) ────────────────────────────────────────────
+  gcloud:
+    project_id: headysystems
+    region: us-central1
+    cloud_run:
+      services:
+        - name: heady-manager
+          image: gcr.io/headysystems/heady-manager
+          port: 3300
+          min_instances: 1
+          max_instances: 13       # fib(7)
+          cpu: "2"
+          memory: "2Gi"
+          concurrency: 89         # fib(11)
+          timeout: 300
+          env_from_secret:
+            - DATABASE_URL
+            - HEADY_API_KEY
+            - ANTHROPIC_API_KEY
+        - name: heady-brain
+          image: gcr.io/headysystems/heady-brain
+          port: 3311
+          min_instances: 1
+          max_instances: 8
+          cpu: "2"
+          memory: "4Gi"
+          concurrency: 55         # fib(10)
+        - name: heady-conductor
+          image: gcr.io/headysystems/heady-conductor
+          port: 8080
+          min_instances: 1
+          max_instances: 8
+          cpu: "2"
+          memory: "2Gi"
+        - name: hcfullpipeline
+          image: gcr.io/headysystems/hcfullpipeline
+          port: 3330
+          min_instances: 1
+          max_instances: 13
+          cpu: "4"
+          memory: "8Gi"
+          concurrency: 34         # fib(9)
+        - name: auto-success-engine
+          image: gcr.io/headysystems/auto-success-engine
+          port: 3301
+          min_instances: 1
+          max_instances: 8
+          cpu: "2"
+          memory: "4Gi"
+        - name: heady-battle
+          image: gcr.io/headysystems/heady-battle
+          port: 3325
+          min_instances: 0
+          max_instances: 8
+          cpu: "4"
+          memory: "8Gi"
+        - name: heady-mc
+          image: gcr.io/headysystems/heady-mc
+          port: 3340
+          min_instances: 0
+          max_instances: 8
+          cpu: "4"
+          memory: "8Gi"
+        - name: heady-sims
+          image: gcr.io/headysystems/heady-sims
+          port: 3341
+          min_instances: 0
+          max_instances: 8
+          cpu: "4"
+          memory: "8Gi"
+    artifact_registry:
+      repository: heady-containers
+      location: us-central1
+    cloud_build:
+      trigger: push-to-main
+      config: cloudbuild.yaml
+
+  # ── 4 Colab Pro+ Runtimes ──────────────────────────────────────────────
+  colab:
+    runtimes:
+      - id: colab-runtime-1
+        name: "Vector Brain"
+        purpose: "Vector embeddings, semantic search, memory operations"
+        gpu: A100
+        runtime_type: pro_plus
+        script: colab/runtime_1_vector_brain.py
+        services:
+          - heady-memory
+          - heady-embed
+          - heady-vector-memory
+          - vector-memory-service
+        event_spine_topic: "colab:vector-brain"
+
+      - id: colab-runtime-2
+        name: "Model Forge"
+        purpose: "Model training, fine-tuning, inference gateway"
+        gpu: A100
+        runtime_type: pro_plus
+        script: colab/runtime_2_model_forge.py
+        services:
+          - heady-train
+          - heady-inference-gateway
+          - heady-model-router
+          - model-gateway
+        event_spine_topic: "colab:model-forge"
+
+      - id: colab-runtime-3
+        name: "Orchestrator Edge"
+        purpose: "Pipeline execution, arena battles, Monte Carlo sims"
+        gpu: T4
+        runtime_type: pro_plus
+        script: colab/runtime_3_orchestrator.py
+        services:
+          - hcfullpipeline
+          - heady-battle
+          - heady-mc
+          - heady-sims
+          - heady-eval
+        event_spine_topic: "colab:orchestrator"
+
+      - id: colab-runtime-4
+        name: "Learning Engine"
+        purpose: "Continuous learning, evolution, distillation, pattern mining"
+        gpu: T4
+        runtime_type: pro_plus
+        script: colab/runtime_4_learning_engine.py
+        services:
+          - heady-distiller
+          - heady-evolution-engine
+          - heady-researcher
+          - heady-knowledge
+          - heady-train
+        event_spine_topic: "colab:learning"
+
+    inter_runtime_protocol:
+      transport: grpc
+      discovery: consul
+      health_interval_ms: 29034   # φ⁷ × 1000
+      config: colab/inter_runtime_protocol.py
+
+  # ── Upstash (Redis + Kafka EventSpine) ─────────────────────────────────
+  upstash:
+    redis:
+      url_env: UPSTASH_REDIS_REST_URL
+      token_env: UPSTASH_REDIS_REST_TOKEN
+      uses:
+        - event_spine: "Redis Streams for EventSpine (heady:events)"
+        - session_cache: "Auth session caching (TTL: φ⁸ = 46979s)"
+        - rate_limiting: "Sliding window rate limiter"
+        - circuit_breaker_state: "Circuit breaker state persistence"
+        - vector_cache: "Hot vector cache (top-K results)"
+      streams:
+        - key: "heady:events"
+          consumer_group: "hcfp-consumers"
+          block_timeout: 0           # Instantaneous push
+        - key: "heady:auto-success"
+          consumer_group: "auto-success-consumers"
+          block_timeout: 0
+        - key: "heady:deploy"
+          consumer_group: "deploy-consumers"
+          block_timeout: 0
+        - key: "heady:health"
+          consumer_group: "health-consumers"
+          block_timeout: 0
+    kafka:
+      url_env: UPSTASH_KAFKA_REST_URL
+      token_env: UPSTASH_KAFKA_REST_TOKEN
+      topics:
+        - name: heady.pipeline.events
+          partitions: 13            # fib(7)
+          retention_ms: 604800000   # 7 days
+        - name: heady.service.health
+          partitions: 8             # fib(6)
+          retention_ms: 86400000    # 1 day
+        - name: heady.audit.trail
+          partitions: 5             # fib(5)
+          retention_ms: 2592000000  # 30 days
+        - name: heady.battle.events
+          partitions: 8
+          retention_ms: 604800000
+        - name: heady.sims.results
+          partitions: 8
+          retention_ms: 604800000
+        - name: heady.mc.simulations
+          partitions: 8
+          retention_ms: 604800000
+
+  # ── Neon (Postgres + pgvector) ─────────────────────────────────────────
+  neon:
+    project_env: NEON_PROJECT_ID
+    database_url_env: DATABASE_URL
+    branches:
+      - name: main
+        purpose: "Production database"
+      - name: staging
+        purpose: "Staging/preview database"
+      - name: dev
+        purpose: "Development database"
+    extensions:
+      - pgvector              # Vector similarity search
+      - pg_trgm               # Trigram text search
+      - uuid-ossp             # UUID generation
+      - pg_stat_statements    # Query performance monitoring
+    schemas:
+      - name: heady_core
+        tables:
+          - services           # Service registry
+          - service_health     # Health check history
+          - service_metrics    # Metrics time series
+          - events             # Event log
+          - audit_trail        # Audit log
+      - name: heady_vectors
+        tables:
+          - embeddings         # Vector embeddings (1536D)
+          - memory_t0          # Working memory
+          - memory_t1          # Short-term memory
+          - memory_t2          # Long-term memory
+          - semantic_index     # Semantic search index
+      - name: heady_battle
+        tables:
+          - arena_sessions     # Battle arena sessions
+          - battle_results     # Competition results
+          - candidate_scores   # CSL scores per candidate
+      - name: heady_sims
+        tables:
+          - simulation_runs    # Monte Carlo runs
+          - mc_results         # Simulation results
+          - risk_profiles      # Risk assessment profiles
+      - name: heady_pipeline
+        tables:
+          - pipeline_runs      # HCFullPipeline run history
+          - stage_results      # Per-stage results
+          - checkpoint_records # Checkpoint protocol records
+          - task_history       # Auto-success task history
+    pgvector_config:
+      dimensions: 1536          # OpenAI/Anthropic embedding dimension
+      index_type: ivfflat       # IVF flat index for approximate search
+      lists: 100                # Number of IVF lists
+      probes: 10                # Number of probes at query time
+
+  # ── Sentry (Error Tracking & Performance) ──────────────────────────────
+  sentry:
+    dsn_env: SENTRY_DSN
+    org: headysystems
+    project: heady-monorepo
+    environment_mapping:
+      production: "production"
+      staging: "staging"
+      development: "development"
+    services:
+      - service: heady-manager
+        sentry_project: heady-manager
+        traces_sample_rate: 0.382   # ψ²
+      - service: heady-brain
+        sentry_project: heady-brain
+        traces_sample_rate: 0.618   # ψ
+      - service: hcfullpipeline
+        sentry_project: hcfullpipeline
+        traces_sample_rate: 1.0     # Critical — trace everything
+      - service: auto-success-engine
+        sentry_project: auto-success
+        traces_sample_rate: 1.0
+      - service: heady-battle
+        sentry_project: heady-battle
+        traces_sample_rate: 0.618
+      - service: heady-mc
+        sentry_project: heady-mc
+        traces_sample_rate: 0.618
+      - service: heady-sims
+        sentry_project: heady-sims
+        traces_sample_rate: 0.618
+    integrations:
+      - github
+      - slack
+      - cloudflare
+    alerts:
+      - name: "Critical Error Rate"
+        condition: "error_rate > 0.05"
+        action: "slack:#heady-alerts"
+      - name: "P99 Latency Spike"
+        condition: "p99_latency > 4236"  # > φ³ × 1000ms
+        action: "slack:#heady-alerts"
+
+  # ── GitHub (Actions, Apps, Gists) ──────────────────────────────────────
+  github:
+    organizations:
+      - HeadyMe
+      - HeadySystems
+      - HeadyAI
+    actions:
+      workflows:
+        - name: "HCFullPipeline CI"
+          trigger: [push, pull_request]
+          file: .github/workflows/hcfullpipeline-ci.yml
+          steps:
+            - checkout
+            - setup-node
+            - install-deps
+            - lint
+            - test
+            - build
+            - security-scan
+            - deploy-staging
+            - deploy-production
+        - name: "Auto-Success Health Check"
+          trigger: [schedule: "*/29 * * * *"]    # ~φ⁷ minutes
+          file: .github/workflows/auto-success-health.yml
+        - name: "Liquid Node Deploy"
+          trigger: [workflow_dispatch]
+          file: .github/workflows/liquid-deploy.yml
+          inputs:
+            service: "Service to deploy"
+            tier: "hot|warm|cold"
+            target: "cloudrun|cloudflare|render"
+        - name: "Cross-Repo Sync"
+          trigger: [schedule: "0 */6 * * *"]
+          file: .github/workflows/cross-repo-sync.yml
+    apps:
+      - name: HeadyBot
+        description: "Automated PR review, CI/CD, issue triage"
+        permissions:
+          - contents: write
+          - pull_requests: write
+          - issues: write
+          - checks: write
+          - deployments: write
+      - name: HeadySentry
+        description: "Sentry integration for error tracking"
+        permissions:
+          - issues: write
+    gists:
+      - id: heady-config-snippets
+        description: "Reusable config templates for Liquid Nodes"
+        files:
+          - liquid-node-template.js
+          - sentry-init.js
+          - upstash-client.js
+          - neon-pgvector-client.js
+      - id: heady-colab-launchers
+        description: "Colab runtime launcher scripts"
+        files:
+          - launch-vector-brain.py
+          - launch-model-forge.py
+          - launch-orchestrator.py
+          - launch-learning-engine.py
+
+  # ── Drupal (CMS Integration) ───────────────────────────────────────────
+  drupal:
+    sites:
+      - name: headysystems.com
+        type: corporate
+        modules:
+          - jsonapi
+          - rest
+          - heady_integration
+      - name: headyme.com
+        type: platform
+        modules:
+          - jsonapi
+          - rest
+          - heady_integration
+          - heady_dashboard
+    integration:
+      api_bridge: services/heady-drupal/index.js
+      proxy: services/heady-drupal-proxy/index.js
+      content_sync_interval_ms: 46979  # φ⁸ × 1000
+      webhook_events:
+        - content:created
+        - content:updated
+        - content:published
+        - content:unpublished
+
+# ─── HEADY-MC LIQUID ARCHITECTURE ────────────────────────────────────────────
+heady_mc:
+  service_id: heady-mc
+  description: "Monte Carlo simulation engine for plan selection and risk assessment"
+  tier: warm
+  port: 3340
+  liquid_node: true
+  event_spine_topics:
+    subscribe:
+      - "pipeline:plan"
+      - "battle:request-simulation"
+      - "sims:request"
+    publish:
+      - "mc:simulation-complete"
+      - "mc:risk-assessment"
+      - "pipeline:plan-selected"
+  cloud_run:
+    image: gcr.io/headysystems/heady-mc
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 34             # fib(9)
+  neon_schema: heady_sims
+  sentry_project: heady-mc
+  ucb1_config:
+    exploration_constant: 1.414  # √2
+    min_simulations: 89          # fib(11)
+    max_simulations: 610         # fib(15)
+    confidence_threshold: 0.618  # ψ
+
+# ─── HEADYSIMS LIQUID ARCHITECTURE ──────────────────────────────────────────
+heady_sims:
+  service_id: heady-sims
+  description: "HeadySims — multi-scenario simulation engine with replay"
+  tier: warm
+  port: 3341
+  liquid_node: true
+  event_spine_topics:
+    subscribe:
+      - "mc:simulation-complete"
+      - "pipeline:request-simulation"
+      - "battle:scenario-request"
+    publish:
+      - "sims:result"
+      - "sims:replay-available"
+      - "sims:scenario-complete"
+  cloud_run:
+    image: gcr.io/headysystems/heady-sims
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 34
+  neon_schema: heady_sims
+  sentry_project: heady-sims
+  simulation_config:
+    max_parallel_sims: 13       # fib(7)
+    replay_buffer_size: 233     # fib(13)
+    scenario_timeout_ms: 46979  # φ⁸ × 1000
+    deterministic_seed: 42
+
+# ─── HEADYBATTLE LIQUID ARCHITECTURE ────────────────────────────────────────
+heady_battle:
+  service_id: heady-battle
+  description: "HeadyBattle — multi-candidate arena competition with CSL judging"
+  tier: warm
+  port: 3325
+  liquid_node: true
+  event_spine_topics:
+    subscribe:
+      - "pipeline:arena-request"
+      - "mc:candidates-ready"
+      - "sims:scenario-complete"
+    publish:
+      - "battle:started"
+      - "battle:round-complete"
+      - "battle:winner-selected"
+      - "battle:results"
+  cloud_run:
+    image: gcr.io/headysystems/heady-battle
+    cpu: "4"
+    memory: "8Gi"
+    concurrency: 21             # fib(8)
+  neon_schema: heady_battle
+  sentry_project: heady-battle
+  arena_config:
+    max_candidates: 13          # fib(7)
+    max_rounds: 5               # fib(5)
+    judge_weights:
+      correctness: 0.34
+      safety: 0.21
+      performance: 0.21
+      quality: 0.13
+      elegance: 0.11
+    elimination_threshold: 0.382  # ψ² — below this, eliminated
+    winner_threshold: 0.618       # ψ — above this, auto-approved
+
+# ─── FULL-THROTTLE AUTO-SUCCESS ENGINE ───────────────────────────────────────
+full_throttle_auto_success:
+  enabled: true
+  mode: full-throttle           # No throttling, all 144 tasks fire every cycle
+  event_driven: true            # React to EventSpine events, not timers
+  task_count: 144               # fib(12) × fib(7) / fib(7) ... 12 × 12 = 144
+  categories: 13                # fib(7) CSL categories
+  hcfp_bridge:
+    enabled: true
+    trigger_interval_ms: 29034  # φ⁷ × 1000
+    autonomous: true
+  auto_commit:
+    enabled: true
+    interval_ms: 46979          # φ⁸ × 1000
+    commit_tag: "[HCFP-auto]"
+  trial_ledger:
+    repeat_window: 13           # fib(7)
+    repeat_threshold: 3         # fib(4)
+    max_entries: 4181           # fib(19)
+  terminal_states:
+    - completed
+    - failed_closed
+    - escalated
+    - timed_out_recovered
+
+# ─── HCFULLPIPELINE LIQUID MODE ─────────────────────────────────────────────
+hcfullpipeline_liquid:
+  mode: event-driven
+  stages: 22
+  event_spine:
+    provider: upstash-redis-streams
+    stream_key: "heady:events"
+    consumer_group: "hcfp-consumers"
+    block_timeout: 0            # Instantaneous push
+  execution:
+    concurrency: unbounded
+    dispatch_model: push
+    dependency_resolution: dag
+  liquid_integration:
+    every_stage_emits_events: true
+    every_stage_checks_health: true
+    every_stage_reports_metrics: true
+    sentry_traces_all_stages: true

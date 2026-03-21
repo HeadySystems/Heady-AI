@@ -123,6 +123,8 @@ services:
       secondary: { concurrency: 21, jobType: inference, envVar: COLAB_SECONDARY_ENDPOINT }
       tertiary: { concurrency: 13, jobType: training, envVar: COLAB_TERTIARY_ENDPOINT }
       learning: { concurrency: 8, jobType: autonomous_learning, envVar: COLAB_LEARNING_ENDPOINT, dedicated: true }
+      # Runtime 4 added 2026-03-21: Learning Engine (distillation, evolution, research, synthesis)
+      learning_engine: { concurrency: 8, jobType: learning_engine, envVar: COLAB_RUNTIME_4_URL, script: colab/runtime_4_learning_engine.py }
     slos:
       availability: 95.0
       latencyP99Ms: 30000
@@ -139,6 +141,84 @@ services:
     slos:
       availability: 99.99
       latencyP99Ms: 50
+
+# ─── LIQUID MICROSERVICE NODES (v1.0 — Added 2026-03-21) ────────────────
+liquid_nodes:
+  - name: heady-sims
+    role: Multi-Scenario Simulation Engine with Replay
+    type: web
+    tier: warm
+    skills: [simulation, replay, scenario-modeling, risk-assessment, batch-sim]
+    tools: [heady-mc, phi-math, neon-pgvector]
+    endpoint: http://sims.headysystems.com:3341
+    healthCheck: /health
+    criticality: high
+    owner: system
+    liquid_node_contract: true
+    event_spine:
+      subscribe: [mc:simulation-complete, pipeline:request-simulation, battle:scenario-request]
+      publish: [sims:result, sims:replay-available, sims:scenario-complete]
+    infrastructure:
+      cloud_run: { image: gcr.io/headysystems/heady-sims, cpu: "4", memory: "8Gi" }
+      cloudflare_route: sims.headysystems.com/*
+      neon_schema: heady_sims
+      sentry_project: heady-sims
+      colab_runtime: 3
+    slos:
+      availability: 99.0
+      latencyP99Ms: 5000
+
+  - name: heady-mc
+    role: Monte Carlo Simulation & UCB1 Plan Selection
+    type: web
+    tier: warm
+    skills: [monte-carlo, ucb1, plan-selection, risk-assessment, candidate-evaluation]
+    tools: [phi-math, neon-pgvector, upstash-redis]
+    endpoint: http://mc.headysystems.com:3340
+    healthCheck: /health
+    criticality: high
+    owner: system
+    liquid_node_contract: true
+    event_spine:
+      subscribe: [pipeline:plan, battle:request-simulation, sims:request]
+      publish: [mc:simulation-complete, mc:risk-assessment, pipeline:plan-selected]
+    infrastructure:
+      cloud_run: { image: gcr.io/headysystems/heady-mc, cpu: "4", memory: "8Gi" }
+      cloudflare_route: mc.headysystems.com/*
+      neon_schema: heady_sims
+      sentry_project: heady-mc
+      colab_runtime: 3
+    slos:
+      availability: 99.0
+      latencyP99Ms: 5000
+
+  - name: heady-battle
+    role: Multi-Candidate Arena Competition with CSL Judging
+    type: web
+    tier: warm
+    skills: [arena-competition, csl-judging, multi-model-eval, round-robin, elimination]
+    tools: [heady-inference-gateway, phi-math, neon-pgvector]
+    endpoint: http://battle.headysystems.com:3325
+    healthCheck: /health
+    criticality: high
+    owner: system
+    liquid_node_contract: true
+    event_spine:
+      subscribe: [pipeline:arena-request, mc:candidates-ready, sims:scenario-complete]
+      publish: [battle:started, battle:round-complete, battle:winner-selected, battle:results]
+    infrastructure:
+      cloud_run: { image: gcr.io/headysystems/heady-battle, cpu: "4", memory: "8Gi" }
+      cloudflare_route: battle.headysystems.com/*
+      neon_schema: heady_battle
+      sentry_project: heady-battle
+      colab_runtime: 3
+    arena_config:
+      max_candidates: 13
+      max_rounds: 5
+      judge_weights: { correctness: 0.34, safety: 0.21, performance: 0.21, quality: 0.13, elegance: 0.11 }
+    slos:
+      availability: 99.0
+      latencyP99Ms: 10000
 
 # ─── PIPELINE SERVICES (v9.0 — Referenced by 22-Stage Pipeline) ──────────
 pipeline_services:

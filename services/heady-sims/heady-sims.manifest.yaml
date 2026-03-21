@@ -1,0 +1,50 @@
+# HEADY_BRAND:BEGIN
+# HeadySims — Liquid Node Manifest
+# HEADY_BRAND:END
+
+service:
+  name: heady-sims
+  version: "1.0.0"
+  description: "Multi-scenario simulation engine with replay"
+  tier: warm
+  port: 3341
+  domain: headysystems.com
+
+liquid_node:
+  contract: true
+  event_spine:
+    subscribe:
+      - "mc:simulation-complete"
+      - "pipeline:request-simulation"
+      - "battle:scenario-request"
+    publish:
+      - "sims:result"
+      - "sims:replay-available"
+      - "sims:scenario-complete"
+
+infrastructure:
+  cloud_run:
+    image: gcr.io/headysystems/heady-sims
+    cpu: "4"
+    memory: "8Gi"
+    min_instances: 0
+    max_instances: 8
+    concurrency: 34
+  cloudflare_route: "sims.headysystems.com/*"
+  neon_schema: heady_sims
+  sentry_project: heady-sims
+  upstash_streams:
+    - "heady:sims"
+  colab_runtime: 3  # Orchestrator Edge runtime
+
+upstreams:
+  - heady-mc
+  - heady-brain
+
+health:
+  endpoints:
+    - /health
+    - /health/live
+    - /health/ready
+    - /health/startup
+    - /health/details
