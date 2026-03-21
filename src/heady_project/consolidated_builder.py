@@ -33,9 +33,12 @@ def log_error(msg):
 
 def run_command(cmd, cwd=None, timeout=300):
     """Execute command with timeout and error handling"""
+    import shlex
     try:
+        # Convert string command to list to avoid shell=True
+        cmd_args = shlex.split(cmd) if isinstance(cmd, str) else cmd
         result = subprocess.run(
-            cmd, shell=True, cwd=cwd, timeout=timeout,
+            cmd_args, shell=False, cwd=cwd, timeout=timeout,
             capture_output=True, text=True, check=True
         )
         return result.stdout.strip(), result.stderr.strip()
