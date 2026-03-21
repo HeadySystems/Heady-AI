@@ -8,8 +8,8 @@ id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
 
 [vars]
 # HEADY_INTERNAL_TOKEN = "set via wrangler secret"
-HEADY_ORIGIN_BASE = "https://heady-manager-1073792900703.us-east1.run.app"
-COLAB_COMPILER_WEBHOOK = "https://heady-manager-1073792900703.us-east1.run.app/api/hologram/compile"
+HEADY_ORIGIN_BASE = "https://heady-edge-gateway-609590223909.us-central1.run.app"
+COLAB_COMPILER_WEBHOOK = "https://heady-edge-gateway-609590223909.us-central1.run.app/api/hologram/compile"
 
 # Active recovery routes managed as infrastructure-as-code.
 # ── AI Platform ──────────────────────────────────────────────────────────
@@ -74,3 +74,12 @@ zone_name = "headysystems.com"
 [[routes]]
 pattern = "auth.headysystems.com/*"
 zone_name = "headysystems.com"
+
+# ── HeadyAI ──────────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyai.com/*"
+zone_name = "headyai.com"
+
+[[routes]]
+pattern = "www.headyai.com/*"
+zone_name = "headyai.com"

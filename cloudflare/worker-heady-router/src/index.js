@@ -11,7 +11,7 @@
  */
 
 const CACHE_TTL_SECONDS = 3600;
-const DEFAULT_ORIGIN = 'https://heady-manager-1073792900703.us-east1.run.app';
+const DEFAULT_ORIGIN = 'https://heady-edge-gateway-609590223909.us-central1.run.app';
 const DEFAULT_COMPILER_WEBHOOK = `${DEFAULT_ORIGIN}/api/hologram/compile`;
 
 const DOMAIN_MODULES = {
@@ -178,6 +178,17 @@ const MODULE_BRANDS = {
     ctaHref: 'https://headyme.com',
   },
 };
+
+/** Validate origin is a Heady domain */
+function isHeadyOrigin(origin) {
+  if (!origin) return false;
+  try {
+    const { hostname } = new URL(origin);
+    const clean = hostname.replace(/^www\./, '');
+    return Object.keys(DOMAIN_MODULES).some(d => d.replace(/^www\./, '') === clean)
+      || clean.endsWith('.run.app');
+  } catch { return false; }
+}
 
 function moduleForHostname(hostname) {
   const clean = hostname.toLowerCase();
@@ -383,13 +394,16 @@ export default {
     const moduleName = moduleForHostname(hostname);
 
     if (request.method === 'OPTIONS') {
+      const reqOrigin = request.headers.get('Origin') || '';
+      const allowedOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headyme.com';
       return new Response(null, {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': allowedOrigin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Module',
           'Access-Control-Max-Age': '86400',
+          'Vary': 'Origin',
         },
       });
     }

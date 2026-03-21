@@ -139,6 +139,8 @@ render.yaml.bak
 *.key
 *.p12
 *.pfx
+*.gpg
+HEADY_ENV_*.env
 *.jks
 gcp-*.json
 *-service-account*.json
