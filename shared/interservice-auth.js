@@ -1,8 +1,8 @@
 const crypto = require('crypto');
-const { fib, phiWindow } = require('./phi-math');
+const { fib, phiMs } = require('./phi-math');
 
 const secret = process.env.HEADY_INTERSERVICE_SECRET || 'heady-interservice-secret';
-const maxSkewMs = phiWindow(fib(7)) * 1000;
+const maxSkewMs = phiMs(7); // PHI_TIMING.CYCLE = 29034ms
 
 function canonicalBody(rawBody) {
   return typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody || {});

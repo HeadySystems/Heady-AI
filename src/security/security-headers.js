@@ -9,8 +9,8 @@
  */
 'use strict';
 
-const { fib } = require('../../shared/phi-math');
-const { HEADY_DOMAINS, ADMIN_SUBDOMAINS } = require('../../shared/heady-domains');
+const { fib } = require('../shared/phi-math');
+const { HEADY_DOMAINS, ADMIN_SUBDOMAINS } = require('../shared/heady-domains');
 
 // ─── Build CSP sources from canonical domain list ───────────────────────────
 

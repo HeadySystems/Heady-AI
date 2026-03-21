@@ -1,4 +1,4 @@
-import { createLogger } from '../utils/logger.js';
+const { createLogger } = require('../utils/logger.js');
 const logger = createLogger('env-validator-hardened');
 'use strict';
 
