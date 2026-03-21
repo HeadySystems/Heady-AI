@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.3.0
  * Integration Tests: Security Headers
@@ -13,7 +14,7 @@ const { fib } = require('../../src/shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   try {
     fn();
@@ -35,7 +36,7 @@ function mockRes() {
 
 // ─── CSP Sources Tests ──────────────────────────────────────────────────────
 
-test('buildCSPSources includes all 9 domains', () => {
+runTest('buildCSPSources includes all 9 domains', () => {
   const sources = buildCSPSources();
   for (const domain of Object.values(HEADY_DOMAINS)) {
     assert.ok(
@@ -45,7 +46,7 @@ test('buildCSPSources includes all 9 domains', () => {
   }
 });
 
-test('buildCSPSources includes admin subdomains', () => {
+runTest('buildCSPSources includes admin subdomains', () => {
   const sources = buildCSPSources();
   for (const sub of ADMIN_SUBDOMAINS) {
     assert.ok(sources.includes(`https://${sub}`), `should include ${sub}`);
@@ -54,14 +55,14 @@ test('buildCSPSources includes admin subdomains', () => {
 
 // ─── HSTS Tests ─────────────────────────────────────────────────────────────
 
-test('HSTS_MAX_AGE is φ-derived (fib(11) × fib(12) × fib(10))', () => {
+runTest('HSTS_MAX_AGE is φ-derived (fib(11) × fib(12) × fib(10))', () => {
   const expected = fib(11) * fib(12) * fib(10); // 89 × 144 × 55
   assert.strictEqual(HSTS_MAX_AGE, expected);
 });
 
 // ─── Middleware Tests ───────────────────────────────────────────────────────
 
-test('securityHeadersMiddleware sets all required headers', () => {
+runTest('securityHeadersMiddleware sets all required headers', () => {
   const middleware = securityHeadersMiddleware();
   const res = mockRes();
   const req = {};
@@ -77,7 +78,7 @@ test('securityHeadersMiddleware sets all required headers', () => {
   assert.ok(headers['Permissions-Policy'], 'should set Permissions-Policy');
 });
 
-test('CSP includes auth bridge frame-src', () => {
+runTest('CSP includes auth bridge frame-src', () => {
   const middleware = securityHeadersMiddleware();
   const res = mockRes();
   middleware({}, res, () => {});
@@ -86,7 +87,7 @@ test('CSP includes auth bridge frame-src', () => {
   assert.ok(csp.includes('auth.headysystems.com'), 'should allow auth bridge');
 });
 
-test('CSP includes upgrade-insecure-requests', () => {
+runTest('CSP includes upgrade-insecure-requests', () => {
   const middleware = securityHeadersMiddleware();
   const res = mockRes();
   middleware({}, res, () => {});
@@ -94,7 +95,7 @@ test('CSP includes upgrade-insecure-requests', () => {
   assert.ok(csp.includes('upgrade-insecure-requests'));
 });
 
-test('HSTS includes includeSubDomains and preload', () => {
+runTest('HSTS includes includeSubDomains and preload', () => {
   const middleware = securityHeadersMiddleware();
   const res = mockRes();
   middleware({}, res, () => {});
@@ -114,3 +115,10 @@ process.stdout.write(JSON.stringify({
 }) + '\n');
 
 process.exitCode = passed === total ? 0 : 1;
+
+
+describe('security-headers', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

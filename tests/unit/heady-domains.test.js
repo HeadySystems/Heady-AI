@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.3.0
  * Tests: Heady Domains Registry
@@ -19,7 +20,7 @@ const { CSL_THRESHOLDS, PSI } = require('../../src/shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   try {
     fn();
@@ -32,11 +33,11 @@ function test(name, fn) {
 
 // ─── Domain Registry Tests ──────────────────────────────────────────────────
 
-test('HEADY_DOMAINS has exactly 9 entries', () => {
+runTest('HEADY_DOMAINS has exactly 9 entries', () => {
   assert.strictEqual(Object.keys(HEADY_DOMAINS).length, 9);
 });
 
-test('HEADY_DOMAINS includes all 9 canonical domains', () => {
+runTest('HEADY_DOMAINS includes all 9 canonical domains', () => {
   const hosts = Object.values(HEADY_DOMAINS).map((d) => d.host);
   const expected = [
     'headyme.com', 'headysystems.com', 'headyconnection.org',
@@ -48,7 +49,7 @@ test('HEADY_DOMAINS includes all 9 canonical domains', () => {
   }
 });
 
-test('every domain has role, pool, and csl fields', () => {
+runTest('every domain has role, pool, and csl fields', () => {
   for (const [key, domain] of Object.entries(HEADY_DOMAINS)) {
     assert.ok(domain.host, `${key} should have host`);
     assert.ok(domain.role, `${key} should have role`);
@@ -57,7 +58,7 @@ test('every domain has role, pool, and csl fields', () => {
   }
 });
 
-test('CSL gates use only canonical thresholds', () => {
+runTest('CSL gates use only canonical thresholds', () => {
   const validGates = [PSI, CSL_THRESHOLDS.LOW, CSL_THRESHOLDS.MEDIUM, CSL_THRESHOLDS.HIGH, CSL_THRESHOLDS.CRITICAL];
   for (const [key, domain] of Object.entries(HEADY_DOMAINS)) {
     assert.ok(
@@ -67,7 +68,7 @@ test('CSL gates use only canonical thresholds', () => {
   }
 });
 
-test('pools are valid Hot/Warm/Cold', () => {
+runTest('pools are valid Hot/Warm/Cold', () => {
   const validPools = ['hot', 'warm', 'cold'];
   for (const [key, domain] of Object.entries(HEADY_DOMAINS)) {
     assert.ok(validPools.includes(domain.pool), `${key} pool should be hot/warm/cold`);
@@ -76,7 +77,7 @@ test('pools are valid Hot/Warm/Cold', () => {
 
 // ─── ALLOWED_ORIGINS Tests ──────────────────────────────────────────────────
 
-test('ALLOWED_ORIGINS includes https:// for each domain', () => {
+runTest('ALLOWED_ORIGINS includes https:// for each domain', () => {
   for (const domain of Object.values(HEADY_DOMAINS)) {
     assert.ok(
       ALLOWED_ORIGINS.includes(`https://${domain.host}`),
@@ -85,7 +86,7 @@ test('ALLOWED_ORIGINS includes https:// for each domain', () => {
   }
 });
 
-test('ALLOWED_ORIGINS includes www variants', () => {
+runTest('ALLOWED_ORIGINS includes www variants', () => {
   for (const domain of Object.values(HEADY_DOMAINS)) {
     assert.ok(
       ALLOWED_ORIGINS.includes(`https://www.${domain.host}`),
@@ -94,63 +95,63 @@ test('ALLOWED_ORIGINS includes www variants', () => {
   }
 });
 
-test('ALLOWED_ORIGINS includes admin subdomains', () => {
+runTest('ALLOWED_ORIGINS includes admin subdomains', () => {
   for (const sub of ADMIN_SUBDOMAINS) {
     assert.ok(ALLOWED_ORIGINS.includes(`https://${sub}`), `should include https://${sub}`);
   }
 });
 
-test('ALLOWED_ORIGINS has no http:// entries (HTTPS only)', () => {
+runTest('ALLOWED_ORIGINS has no http:// entries (HTTPS only)', () => {
   for (const origin of ALLOWED_ORIGINS) {
     assert.ok(origin.startsWith('https://'), `${origin} should be HTTPS`);
   }
 });
 
-test('ALLOWED_ORIGINS is frozen', () => {
+runTest('ALLOWED_ORIGINS is frozen', () => {
   assert.ok(Object.isFrozen(ALLOWED_ORIGINS), 'should be frozen');
 });
 
 // ─── getDomainByHost Tests ──────────────────────────────────────────────────
 
-test('getDomainByHost returns correct domain config', () => {
+runTest('getDomainByHost returns correct domain config', () => {
   const result = getDomainByHost('headyme.com');
   assert.ok(result);
   assert.strictEqual(result.host, 'headyme.com');
   assert.strictEqual(result.role, 'command_center');
 });
 
-test('getDomainByHost strips www prefix', () => {
+runTest('getDomainByHost strips www prefix', () => {
   const result = getDomainByHost('www.headyai.com');
   assert.ok(result);
   assert.strictEqual(result.host, 'headyai.com');
 });
 
-test('getDomainByHost returns null for unknown host', () => {
+runTest('getDomainByHost returns null for unknown host', () => {
   const result = getDomainByHost('unknown.com');
   assert.strictEqual(result, null);
 });
 
 // ─── isAllowedOrigin Tests ──────────────────────────────────────────────────
 
-test('isAllowedOrigin returns true for canonical origins', () => {
+runTest('isAllowedOrigin returns true for canonical origins', () => {
   assert.strictEqual(isAllowedOrigin('https://headyme.com'), true);
   assert.strictEqual(isAllowedOrigin('https://headyai.com'), true);
 });
 
-test('isAllowedOrigin returns false for non-Heady origins', () => {
+runTest('isAllowedOrigin returns false for non-Heady origins', () => {
   assert.strictEqual(isAllowedOrigin('https://evil.com'), false);
   assert.strictEqual(isAllowedOrigin('http://headyme.com'), false); // HTTP not HTTPS
 });
 
 // ─── Navigation Map Tests ───────────────────────────────────────────────────
 
-test('NAVIGATION_MAP has primary, secondary, and admin sections', () => {
+runTest('NAVIGATION_MAP has primary, secondary, and admin sections', () => {
   assert.ok(Array.isArray(NAVIGATION_MAP.primary));
   assert.ok(Array.isArray(NAVIGATION_MAP.secondary));
   assert.ok(Array.isArray(NAVIGATION_MAP.admin));
 });
 
-test('all navigation links use HTTPS', () => {
+runTest('all navigation links use HTTPS', () => {
   const allLinks = [...NAVIGATION_MAP.primary, ...NAVIGATION_MAP.secondary, ...NAVIGATION_MAP.admin];
   for (const link of allLinks) {
     assert.ok(link.href.startsWith('https://'), `${link.label} href should be HTTPS`);
@@ -168,3 +169,10 @@ process.stdout.write(JSON.stringify({
 }) + '\n');
 
 process.exitCode = passed === total ? 0 : 1;
+
+
+describe('heady-domains', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

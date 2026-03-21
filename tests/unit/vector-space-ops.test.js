@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.4.0
  * Tests: Vector Space Operations (CSL)
@@ -18,7 +19,7 @@ const { CSL_THRESHOLDS, PSI } = require('../../shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   try {
     fn();
@@ -31,27 +32,27 @@ function test(name, fn) {
 
 // ─── AND (cosine similarity) ────────────────────────────────────────────────
 
-test('cslAND: identical vectors = 1.0', () => {
+runTest('cslAND: identical vectors = 1.0', () => {
   const v = randomUnitVector(8);
   const sim = cslAND(v, v);
   assert.ok(Math.abs(sim - 1.0) < 0.001, `Expected ~1.0, got ${sim}`);
 });
 
-test('cslAND: opposite vectors ≈ -1.0', () => {
+runTest('cslAND: opposite vectors ≈ -1.0', () => {
   const v = new Float32Array([1, 0, 0, 0]);
   const neg = new Float32Array([-1, 0, 0, 0]);
   const sim = cslAND(v, neg);
   assert.ok(Math.abs(sim - (-1.0)) < 0.001, `Expected ~-1.0, got ${sim}`);
 });
 
-test('cslAND: orthogonal vectors = 0', () => {
+runTest('cslAND: orthogonal vectors = 0', () => {
   const a = new Float32Array([1, 0, 0, 0]);
   const b = new Float32Array([0, 1, 0, 0]);
   const sim = cslAND(a, b);
   assert.ok(Math.abs(sim) < 0.001, `Expected ~0, got ${sim}`);
 });
 
-test('cslAND: is commutative', () => {
+runTest('cslAND: is commutative', () => {
   const a = randomUnitVector(8);
   const b = randomUnitVector(8);
   const ab = cslAND(a, b);
@@ -61,7 +62,7 @@ test('cslAND: is commutative', () => {
 
 // ─── OR (superposition) ─────────────────────────────────────────────────────
 
-test('cslOR: result is unit vector', () => {
+runTest('cslOR: result is unit vector', () => {
   const a = randomUnitVector(8);
   const b = randomUnitVector(8);
   const result = cslOR(a, b);
@@ -69,7 +70,7 @@ test('cslOR: result is unit vector', () => {
   assert.ok(Math.abs(mag - 1.0) < 0.001, `Expected unit vector, got magnitude ${mag}`);
 });
 
-test('cslOR: self-union is self', () => {
+runTest('cslOR: self-union is self', () => {
   const v = normalize(new Float32Array([1, 2, 3, 4]));
   const result = cslOR(v, v);
   const sim = cslAND(v, result);
@@ -78,7 +79,7 @@ test('cslOR: self-union is self', () => {
 
 // ─── NOT (orthogonal projection removal) ────────────────────────────────────
 
-test('cslNOT: result is orthogonal to b', () => {
+runTest('cslNOT: result is orthogonal to b', () => {
   const a = normalize(new Float32Array([1, 1, 0, 0]));
   const b = normalize(new Float32Array([1, 0, 0, 0]));
   const notAB = cslNOT(a, b);
@@ -86,7 +87,7 @@ test('cslNOT: result is orthogonal to b', () => {
   assert.ok(Math.abs(dotResult) < 0.001, `Expected orthogonal (~0 dot), got ${dotResult}`);
 });
 
-test('cslNOT: is idempotent (NOT(NOT(a,b),b) = NOT(a,b))', () => {
+runTest('cslNOT: is idempotent (NOT(NOT(a,b),b) = NOT(a,b))', () => {
   const a = randomUnitVector(8);
   const b = randomUnitVector(8);
   const first = cslNOT(a, b);
@@ -98,7 +99,7 @@ test('cslNOT: is idempotent (NOT(NOT(a,b),b) = NOT(a,b))', () => {
 
 // ─── IMPLY (projection) ─────────────────────────────────────────────────────
 
-test('cslIMPLY: projection of aligned vectors', () => {
+runTest('cslIMPLY: projection of aligned vectors', () => {
   const a = normalize(new Float32Array([2, 0, 0, 0]));
   const b = normalize(new Float32Array([1, 0, 0, 0]));
   const proj = cslIMPLY(a, b);
@@ -108,14 +109,14 @@ test('cslIMPLY: projection of aligned vectors', () => {
 
 // ─── CONSENSUS ──────────────────────────────────────────────────────────────
 
-test('cslCONSENSUS: single vector returns itself', () => {
+runTest('cslCONSENSUS: single vector returns itself', () => {
   const v = randomUnitVector(8);
   const result = cslCONSENSUS([v]);
   const sim = cslAND(v, result);
   assert.ok(Math.abs(sim - 1.0) < 0.001);
 });
 
-test('cslCONSENSUS: result is unit vector', () => {
+runTest('cslCONSENSUS: result is unit vector', () => {
   const vectors = [randomUnitVector(8), randomUnitVector(8), randomUnitVector(8)];
   const result = cslCONSENSUS(vectors);
   const mag = magnitude(result);
@@ -124,18 +125,18 @@ test('cslCONSENSUS: result is unit vector', () => {
 
 // ─── GATE ───────────────────────────────────────────────────────────────────
 
-test('cslGATE: high score passes gate', () => {
+runTest('cslGATE: high score passes gate', () => {
   // cosScore=0.95 with tau=MINIMUM(0.5): (0.95-0.5)/0.236 → sigmoid ≈ 0.87
   const gated = cslGATE(1.0, 0.95, CSL_THRESHOLDS.MINIMUM);
   assert.ok(gated > 0.8, `Expected >0.8, got ${gated}`);
 });
 
-test('cslGATE: low score blocks gate', () => {
+runTest('cslGATE: low score blocks gate', () => {
   const gated = cslGATE(1.0, 0.1, CSL_THRESHOLDS.MEDIUM);
   assert.ok(gated < 0.1, `Expected <0.1, got ${gated}`);
 });
 
-test('cslGATE: works with vectors', () => {
+runTest('cslGATE: works with vectors', () => {
   const v = new Float32Array([1, 2, 3, 4]);
   const result = cslGATE(v, 0.95, CSL_THRESHOLDS.MINIMUM);
   assert.ok(result instanceof Float32Array);
@@ -144,41 +145,41 @@ test('cslGATE: works with vectors', () => {
 
 // ─── Utilities ──────────────────────────────────────────────────────────────
 
-test('normalize: produces unit vector', () => {
+runTest('normalize: produces unit vector', () => {
   const v = new Float32Array([3, 4, 0, 0]);
   const n = normalize(v);
   assert.ok(Math.abs(magnitude(n) - 1.0) < 0.001);
 });
 
-test('randomUnitVector: correct dimension and unit length', () => {
+runTest('randomUnitVector: correct dimension and unit length', () => {
   const v = randomUnitVector(13);
   assert.strictEqual(v.length, 13);
   assert.ok(Math.abs(magnitude(v) - 1.0) < 0.001);
 });
 
-test('phiFusionScores: single score returns itself', () => {
+runTest('phiFusionScores: single score returns itself', () => {
   assert.ok(Math.abs(phiFusionScores([0.8]) - 0.8) < 0.001);
 });
 
-test('phiFusionScores: first score carries most weight', () => {
+runTest('phiFusionScores: first score carries most weight', () => {
   const result = phiFusionScores([1.0, 0.0, 0.0]);
   // Weights: [ψ⁰,ψ¹,ψ²]=[1,0.618,0.382] → 1.0/2.0 = 0.5 (boundary)
   assert.ok(result >= 0.5, `Expected >=0.5, got ${result}`);
 });
 
-test('isCollapsed: zero vector is collapsed', () => {
+runTest('isCollapsed: zero vector is collapsed', () => {
   assert.strictEqual(isCollapsed(zeroVector(8)), true);
 });
 
-test('isCollapsed: unit vector is not collapsed', () => {
+runTest('isCollapsed: unit vector is not collapsed', () => {
   assert.strictEqual(isCollapsed(randomUnitVector(8)), false);
 });
 
-test('DEFAULT_DIM is fib(14) = 377', () => {
+runTest('DEFAULT_DIM is fib(14) = 377', () => {
   assert.strictEqual(DEFAULT_DIM, 377);
 });
 
-test('PHI_TEMPERATURE is ψ³', () => {
+runTest('PHI_TEMPERATURE is ψ³', () => {
   const expected = PSI * PSI * PSI;
   assert.ok(Math.abs(PHI_TEMPERATURE - expected) < 0.0001);
 });
@@ -190,3 +191,10 @@ process.stdout.write(JSON.stringify({
   passed, total, status: passed === total ? 'ALL_PASS' : 'SOME_FAIL',
 }) + '\n');
 process.exitCode = passed === total ? 0 : 1;
+
+
+describe('vector-space-ops', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

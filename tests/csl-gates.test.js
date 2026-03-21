@@ -1,4 +1,4 @@
-const test = require('node:test');
+import { test, expect } from 'vitest';
 const assert = require('node:assert/strict');
 const { CSL_GATES, cslGate } = require('../shared/csl-gates');
 

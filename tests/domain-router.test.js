@@ -1,4 +1,3 @@
-const test = require('node:test');
 const assert = require('node:assert/strict');
 const { resolveHost } = require('../services/domain-router/src/router-table');
 

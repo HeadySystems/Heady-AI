@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * HeadyAutoComplete Engine — Unit Tests
  * Tests the core task completion engine, DAG builder, verification engine,
@@ -23,7 +24,7 @@ let passed = 0;
 let failed = 0;
 const results = [];
 
-function test(name, fn) {
+function runTest(name, fn) {
     try {
         fn();
         passed++;
@@ -51,7 +52,7 @@ async function testAsync(name, fn) {
 
 console.log('\n📐 TaskDAGBuilder Tests');
 
-test('DAGNode creates with correct properties', () => {
+runTest('DAGNode creates with correct properties', () => {
     const node = new DAGNode({
         id: 'st1', name: 'Research', type: 'research',
         depends_on: [], verification: { type: 'not_empty' },
@@ -61,14 +62,14 @@ test('DAGNode creates with correct properties', () => {
     assert.deepStrictEqual(node.dependsOn, []);
 });
 
-test('TaskDAG adds nodes and tracks count', () => {
+runTest('TaskDAG adds nodes and tracks count', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: [] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: ['1'] }));
     assert.strictEqual(dag.nodeCount, 2);
 });
 
-test('TaskDAG.getReadyNodes returns nodes with satisfied deps', () => {
+runTest('TaskDAG.getReadyNodes returns nodes with satisfied deps', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: [] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: ['1'] }));
@@ -83,14 +84,14 @@ test('TaskDAG.getReadyNodes returns nodes with satisfied deps', () => {
     assert.ok(readyAfterA.some(n => n.id === '2')); // B is now ready
 });
 
-test('TaskDAG.topologicalSort detects cycles', () => {
+runTest('TaskDAG.topologicalSort detects cycles', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: ['2'] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: ['1'] }));
     assert.throws(() => dag.topologicalSort(), /Cycle detected/);
 });
 
-test('TaskDAG.topologicalSort returns valid order', () => {
+runTest('TaskDAG.topologicalSort returns valid order', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: [] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: ['1'] }));
@@ -101,7 +102,7 @@ test('TaskDAG.topologicalSort returns valid order', () => {
     assert.ok(ids.indexOf('2') < ids.indexOf('3'));
 });
 
-test('TaskDAG.serialize/deserialize roundtrip', () => {
+runTest('TaskDAG.serialize/deserialize roundtrip', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: [] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: ['1'] }));
@@ -112,7 +113,7 @@ test('TaskDAG.serialize/deserialize roundtrip', () => {
     assert.ok(restored.getNode('2'));
 });
 
-test('TaskDAG.maxParallelism calculates correctly', () => {
+runTest('TaskDAG.maxParallelism calculates correctly', () => {
     const dag = new TaskDAG();
     dag.addNode(new DAGNode({ id: '1', name: 'A', type: 'research', depends_on: [] }));
     dag.addNode(new DAGNode({ id: '2', name: 'B', type: 'code_gen', depends_on: [] }));
@@ -307,3 +308,10 @@ const verifier = new VerificationEngine();
 
     process.exitCode = failed > 0 ? 1 : 0;
 })();
+
+
+describe('heady-autocomplete', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

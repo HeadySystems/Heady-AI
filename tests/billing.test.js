@@ -1,4 +1,3 @@
-const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const { verifyStripeSignature } = require('../services/billing-service/src/server');

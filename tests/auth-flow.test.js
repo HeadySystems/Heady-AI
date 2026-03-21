@@ -6,7 +6,7 @@
  */
 'use strict';
 
-const { describe, it } = require('node:test');
+
 const assert = require('node:assert/strict');
 
 const PHI = 1.618033988749895;

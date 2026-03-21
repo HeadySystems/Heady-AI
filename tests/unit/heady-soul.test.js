@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.4.0
  * Tests: HeadySoul Values & Awareness Core
@@ -12,7 +13,7 @@ const { fib, CSL_THRESHOLDS } = require('../../shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   try {
     fn();
@@ -23,35 +24,35 @@ function test(name, fn) {
   }
 }
 
-test('HeadySoul initializes with correct state', () => {
+runTest('HeadySoul initializes with correct state', () => {
   const soul = new HeadySoul();
   assert.strictEqual(soul.state, 'initializing');
   assert.ok(soul.sessionId.length > 0);
 });
 
-test('HeadySoul has 8 core values', () => {
+runTest('HeadySoul has 8 core values', () => {
   assert.strictEqual(Object.keys(CORE_VALUES).length, 8);
 });
 
-test('VALUES_VECTOR_DIM is fib(14) = 377', () => {
+runTest('VALUES_VECTOR_DIM is fib(14) = 377', () => {
   assert.strictEqual(VALUES_VECTOR_DIM, fib(14));
 });
 
-test('HeadySoul.start transitions to active', () => {
+runTest('HeadySoul.start transitions to active', () => {
   const soul = new HeadySoul();
   soul.start();
   assert.strictEqual(soul.state, 'active');
   soul.stop();
 });
 
-test('evaluateAction rejects wrong dimensions', () => {
+runTest('evaluateAction rejects wrong dimensions', () => {
   const soul = new HeadySoul();
   const result = soul.evaluateAction(new Float32Array(10));
   assert.strictEqual(result.aligned, false);
   assert.strictEqual(result.reason, 'invalid_embedding_dimensions');
 });
 
-test('evaluateAction accepts correct dimensions', () => {
+runTest('evaluateAction accepts correct dimensions', () => {
   const soul = new HeadySoul();
   const embedding = new Float32Array(VALUES_VECTOR_DIM);
   for (let i = 0; i < VALUES_VECTOR_DIM; i++) embedding[i] = Math.random() * 2 - 1;
@@ -62,7 +63,7 @@ test('evaluateAction accepts correct dimensions', () => {
   assert.strictEqual(Object.keys(result.valueScores).length, 8);
 });
 
-test('getState returns expected shape', () => {
+runTest('getState returns expected shape', () => {
   const soul = new HeadySoul();
   const state = soul.getState();
   assert.strictEqual(state.state, 'initializing');
@@ -75,3 +76,10 @@ process.stdout.write(JSON.stringify({
   passed, total, status: passed === total ? 'ALL_PASS' : 'SOME_FAIL',
 }) + '\n');
 process.exitCode = passed === total ? 0 : 1;
+
+
+describe('heady-soul', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

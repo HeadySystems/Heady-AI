@@ -1,4 +1,3 @@
-const test = require('node:test');
 const assert = require('node:assert/strict');
 const { verifySession, createSession } = require('../services/auth-session-server/src/session-store');
 

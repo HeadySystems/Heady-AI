@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.4.0
  * Tests: HeadyVinci Session Planner + AsyncParallelExecutor
@@ -13,7 +14,7 @@ const { fib } = require('../../shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   Promise.resolve().then(fn).then(() => {
     passed++;
@@ -25,7 +26,7 @@ function test(name, fn) {
 
 // ─── HeadyVinci Tests ───────────────────────────────────────────────────────
 
-test('createPlan produces valid plan', async () => {
+runTest('createPlan produces valid plan', async () => {
   const vinci = new HeadyVinci();
   const plan = vinci.createPlan('Build system', [
     { name: 'Design', pool: 'warm' },
@@ -37,7 +38,7 @@ test('createPlan produces valid plan', async () => {
   assert.strictEqual(plan.status, 'ready');
 });
 
-test('getReadySubtasks returns only dependency-free tasks', async () => {
+runTest('getReadySubtasks returns only dependency-free tasks', async () => {
   const vinci = new HeadyVinci();
   const plan = vinci.createPlan('Build', [
     { name: 'A', dependencies: [] },
@@ -49,7 +50,7 @@ test('getReadySubtasks returns only dependency-free tasks', async () => {
   assert.ok(ready.every((s) => s.status === SubtaskStatus.READY));
 });
 
-test('markSubtaskCompleted unlocks dependents', async () => {
+runTest('markSubtaskCompleted unlocks dependents', async () => {
   const vinci = new HeadyVinci();
   const plan = vinci.createPlan('Build', [
     { name: 'A' },
@@ -62,13 +63,13 @@ test('markSubtaskCompleted unlocks dependents', async () => {
   assert.strictEqual(ready[0].name, 'B');
 });
 
-test('MAX_SUBTASKS is fib(10) = 55', async () => {
+runTest('MAX_SUBTASKS is fib(10) = 55', async () => {
   assert.strictEqual(MAX_SUBTASKS, fib(10));
 });
 
 // ─── AsyncParallelExecutor Tests ────────────────────────────────────────────
 
-test('executeConcurrent runs all tasks', async () => {
+runTest('executeConcurrent runs all tasks', async () => {
   const executor = new AsyncParallelExecutor({ maxConcurrency: 5 });
   const results = await executor.executeConcurrent([
     () => Promise.resolve('a'),
@@ -79,7 +80,7 @@ test('executeConcurrent runs all tasks', async () => {
   assert.strictEqual(results.get('task_0'), 'a');
 });
 
-test('executeDAG respects dependencies', async () => {
+runTest('executeDAG respects dependencies', async () => {
   const executor = new AsyncParallelExecutor({ maxConcurrency: 5 });
   const order = [];
   const results = await executor.executeDAG([
@@ -92,7 +93,7 @@ test('executeDAG respects dependencies', async () => {
   assert.strictEqual(results.get('second'), 2);
 });
 
-test('MAX_CONCURRENCY is fib(8) = 21', async () => {
+runTest('MAX_CONCURRENCY is fib(8) = 21', async () => {
   assert.strictEqual(MAX_CONCURRENCY, fib(8));
 });
 
@@ -104,3 +105,10 @@ setTimeout(() => {
   }) + '\n');
   process.exitCode = passed === total ? 0 : 1;
 }, 5000);
+
+
+describe('heady-vinci', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

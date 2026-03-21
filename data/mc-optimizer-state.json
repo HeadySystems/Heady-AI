@@ -9,7 +9,7 @@
     "local-ryzen": 0
   },
   "baseRates": {
-    "test-scenario": 0.4938
+    "test-scenario": 0.492
   },
   "totalBatches": 0,
   "history": [
@@ -1026,7 +1026,85 @@
         "async": true
       },
       "runAt": 1774100692356
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 87,
+        "failureRate": 0.13,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 87,
+          "partial": 0,
+          "failure": 13
+        },
+        "confidenceBounds": {
+          "lower": 0.07757093858414264,
+          "upper": 0.20980521894809878
+        },
+        "seed": 279303915,
+        "baseRateUsed": 0.85,
+        "simulationMs": 11,
+        "async": true
+      },
+      "runAt": 1774100797174
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 87,
+        "failureRate": 0.13,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 87,
+          "partial": 0,
+          "failure": 13
+        },
+        "confidenceBounds": {
+          "lower": 0.07757093858414264,
+          "upper": 0.20980521894809878
+        },
+        "seed": 279394661,
+        "baseRateUsed": 0.85,
+        "simulationMs": 3,
+        "async": true
+      },
+      "runAt": 1774100887912
+    },
+    {
+      "type": "risk",
+      "scenario": "test-scenario",
+      "result": {
+        "scenario": "test-scenario",
+        "iterations": 100,
+        "confidence": 80,
+        "failureRate": 0.2,
+        "riskGrade": "GREEN",
+        "topMitigations": [],
+        "outcomes": {
+          "success": 80,
+          "partial": 0,
+          "failure": 20
+        },
+        "confidenceBounds": {
+          "lower": 0.1333659225590988,
+          "upper": 0.28883096192650237
+        },
+        "seed": 279465020,
+        "baseRateUsed": 0.85,
+        "simulationMs": 6,
+        "async": true
+      },
+      "runAt": 1774100958274
     }
   ],
-  "savedAt": "2026-03-21T13:44:52.374Z"
+  "savedAt": "2026-03-21T13:49:18.294Z"
 }

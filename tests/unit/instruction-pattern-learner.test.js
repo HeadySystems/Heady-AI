@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.4.0
  * Tests: InstructionPatternLearner — HeadyVinci's Pattern Memory
@@ -17,7 +18,7 @@ const { InstructionPatternLearner, SEED_PATTERNS } = require('../../src/intellig
 let passed = 0;
 let total  = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   Promise.resolve().then(fn).then(() => {
     passed++;
@@ -29,13 +30,13 @@ function test(name, fn) {
 
 // ─── Core Tests ──────────────────────────────────────────────────────────────
 
-test('constructor initializes with seed patterns', async () => {
+runTest('constructor initializes with seed patterns', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const rules = learner.getAutomationRules();
   assert.ok(rules.length >= SEED_PATTERNS.length, `Expected at least ${SEED_PATTERNS.length} seed rules, got ${rules.length}`);
 });
 
-test('record creates fingerprint for new instruction', async () => {
+runTest('record creates fingerprint for new instruction', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const result = learner.record('fix the broken headybuddy domain');
   assert.ok(result.fingerprint, 'Should return a fingerprint');
@@ -43,14 +44,14 @@ test('record creates fingerprint for new instruction', async () => {
   assert.strictEqual(result.automationSuggested, false, 'No automation for first occurrence');
 });
 
-test('repeated instruction increments count and flags as repeated', async () => {
+runTest('repeated instruction increments count and flags as repeated', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE, repeatThreshold: 2 });
   learner.record('deploy headyweb to cloud run');
   const second = learner.record('deploy headyweb to cloud run');
   assert.strictEqual(second.isRepeated, true, 'Should be flagged as repeated after 2 occurrences');
 });
 
-test('automation rule created at threshold', async () => {
+runTest('automation rule created at threshold', async () => {
   const learner = new InstructionPatternLearner({
     stateFile: TEST_STATE_FILE,
     repeatThreshold: 2,
@@ -62,27 +63,27 @@ test('automation rule created at threshold', async () => {
   assert.strictEqual(third.automationSuggested, true, 'Should suggest automation at threshold');
 });
 
-test('match returns null for unknown instruction', async () => {
+runTest('match returns null for unknown instruction', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const result = learner.match('completely random instruction that has never been seen');
   assert.strictEqual(result, null, 'Should return null for unknown');
 });
 
-test('match returns seed rule for headybuddy domain instruction', async () => {
+runTest('match returns seed rule for headybuddy domain instruction', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const result = learner.match('headybuddy.com should be headybuddy.org domain wrong');
   assert.ok(result, 'Should find a matching seed rule');
   assert.ok(result.canonical.includes('headybuddy'), 'Should match headybuddy domain rule');
 });
 
-test('match returns seed rule for gcloud auth instruction', async () => {
+runTest('match returns seed rule for gcloud auth instruction', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const result = learner.match('gcloud auth token expired need to login');
   assert.ok(result, 'Should find a matching seed rule');
   assert.ok(result.canonical.includes('gcloud') || result.canonical.includes('auth'), 'Should match gcloud auth rule');
 });
 
-test('feedback increases confidence on success', async () => {
+runTest('feedback increases confidence on success', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE, automationThreshold: 3 });
   // Create a learned rule with lower confidence by recording 3 times
   learner.record('fix gcloud credential refresh issue');
@@ -97,7 +98,7 @@ test('feedback increases confidence on success', async () => {
   assert.ok(after >= before, `Confidence should increase: ${before} → ${after}`);
 });
 
-test('feedback decreases confidence on failure', async () => {
+runTest('feedback decreases confidence on failure', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   const rules = learner.getAutomationRules();
   const rule = rules[0];
@@ -107,7 +108,7 @@ test('feedback decreases confidence on failure', async () => {
   assert.ok(after <= before, `Confidence should decrease: ${before} → ${after}`);
 });
 
-test('getStats returns learning statistics', async () => {
+runTest('getStats returns learning statistics', async () => {
   const learner = new InstructionPatternLearner({ stateFile: TEST_STATE_FILE });
   learner.record('test instruction one');
   learner.record('test instruction two');
@@ -117,7 +118,7 @@ test('getStats returns learning statistics', async () => {
   assert.ok(typeof stats.successRate === 'number', 'Should have success rate');
 });
 
-test('suggestAutomation works for repeated pattern', async () => {
+runTest('suggestAutomation works for repeated pattern', async () => {
   const learner = new InstructionPatternLearner({
     stateFile: TEST_STATE_FILE,
     repeatThreshold: 2,
@@ -129,7 +130,7 @@ test('suggestAutomation works for repeated pattern', async () => {
   assert.ok(suggestion.suggested, 'Should suggest automation for repeated pattern');
 });
 
-test('save and load persistence works', async () => {
+runTest('save and load persistence works', async () => {
   const stateFile = path.join('/tmp', `heady-ipl-persist-${Date.now()}.json`);
   const learner1 = new InstructionPatternLearner({ stateFile });
   learner1.record('unique persistent instruction alpha');
@@ -151,7 +152,7 @@ test('save and load persistence works', async () => {
   try { fs.unlinkSync(stateFile); } catch {}
 });
 
-test('emits pattern:repeated event', async () => {
+runTest('emits pattern:repeated event', async () => {
   const learner = new InstructionPatternLearner({
     stateFile: TEST_STATE_FILE,
     repeatThreshold: 2,
@@ -179,3 +180,10 @@ setTimeout(() => {
 
   process.exitCode = passed === total ? 0 : 1;
 }, 5000);
+
+
+describe('instruction-pattern-learner', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});

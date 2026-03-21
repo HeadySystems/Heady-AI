@@ -1,4 +1,3 @@
-const test = require('node:test');
 const assert = require('node:assert/strict');
 const { addDocument, search, createEmbedding, cosine } = require('../services/search-service/src/search-index');
 

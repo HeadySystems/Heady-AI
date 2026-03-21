@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 /**
  * Heady™ Latent OS v5.3.0
  * Tests: Cross-Domain Auth Relay
@@ -22,7 +23,7 @@ const { CSL_THRESHOLDS, PHI_TIMING } = require('../../shared/phi-math');
 let passed = 0;
 let total = 0;
 
-function test(name, fn) {
+function runTest(name, fn) {
   total++;
   try {
     fn();
@@ -35,21 +36,21 @@ function test(name, fn) {
 
 // ─── Relay Code Tests ────────────────────────────────────────────────────────
 
-test('generateRelayCode returns code and nonce', () => {
+runTest('generateRelayCode returns code and nonce', () => {
   const result = generateRelayCode('user_1', 'headyme.com');
   assert.ok(result.code, 'should have code');
   assert.ok(result.nonce, 'should have nonce');
   assert.ok(result.expiresAt > Date.now(), 'should expire in the future');
 });
 
-test('generateRelayCode TTL uses PHI_TIMING.PHI_5', () => {
+runTest('generateRelayCode TTL uses PHI_TIMING.PHI_5', () => {
   const before = Date.now();
   const result = generateRelayCode('user_2', 'headyai.com');
   const expectedExpiry = before + PHI_TIMING.PHI_5;
   assert.ok(Math.abs(result.expiresAt - expectedExpiry) < 100, 'TTL should match PHI_5');
 });
 
-test('consumeRelayCode succeeds with valid code and nonce', () => {
+runTest('consumeRelayCode succeeds with valid code and nonce', () => {
   const relay = generateRelayCode('user_3', 'headyme.com');
   const result = consumeRelayCode(relay.code, relay.nonce);
   assert.strictEqual(result.valid, true);
@@ -57,7 +58,7 @@ test('consumeRelayCode succeeds with valid code and nonce', () => {
   assert.strictEqual(result.sourceDomain, 'headyme.com');
 });
 
-test('consumeRelayCode fails on second use (replay protection)', () => {
+runTest('consumeRelayCode fails on second use (replay protection)', () => {
   const relay = generateRelayCode('user_4', 'headyme.com');
   consumeRelayCode(relay.code, relay.nonce); // First use
   const result = consumeRelayCode(relay.code, relay.nonce); // Replay
@@ -65,14 +66,14 @@ test('consumeRelayCode fails on second use (replay protection)', () => {
   assert.strictEqual(result.reason, 'code_already_used');
 });
 
-test('consumeRelayCode fails with wrong nonce', () => {
+runTest('consumeRelayCode fails with wrong nonce', () => {
   const relay = generateRelayCode('user_5', 'headyme.com');
   const result = consumeRelayCode(relay.code, 'wrong_nonce');
   assert.strictEqual(result.valid, false);
   assert.strictEqual(result.reason, 'nonce_mismatch');
 });
 
-test('consumeRelayCode fails for unknown code', () => {
+runTest('consumeRelayCode fails for unknown code', () => {
   const result = consumeRelayCode('nonexistent_code', 'some_nonce');
   assert.strictEqual(result.valid, false);
   assert.strictEqual(result.reason, 'code_not_found');
@@ -80,12 +81,12 @@ test('consumeRelayCode fails for unknown code', () => {
 
 // ─── Lockout Tests ──────────────────────────────────────────────────────────
 
-test('checkLockout returns unlocked for new identifier', () => {
+runTest('checkLockout returns unlocked for new identifier', () => {
   const result = checkLockout('new_user_lockout_test');
   assert.strictEqual(result.locked, false);
 });
 
-test('recordFailedAttempt triggers lockout after MAX_RELAY_ATTEMPTS', () => {
+runTest('recordFailedAttempt triggers lockout after MAX_RELAY_ATTEMPTS', () => {
   const id = 'lockout_test_user_' + Date.now();
   for (let i = 0; i < MAX_RELAY_ATTEMPTS; i++) {
     recordFailedAttempt(id);
@@ -97,7 +98,7 @@ test('recordFailedAttempt triggers lockout after MAX_RELAY_ATTEMPTS', () => {
 
 // ─── PKCE Tests ─────────────────────────────────────────────────────────────
 
-test('generatePKCE returns verifier, challenge, and method', () => {
+runTest('generatePKCE returns verifier, challenge, and method', () => {
   const pkce = generatePKCE();
   assert.ok(pkce.verifier, 'should have verifier');
   assert.ok(pkce.challenge, 'should have challenge');
@@ -105,7 +106,7 @@ test('generatePKCE returns verifier, challenge, and method', () => {
   assert.ok(pkce.verifier.length > 20, 'verifier should be at least 20 chars');
 });
 
-test('generatePKCE produces unique pairs', () => {
+runTest('generatePKCE produces unique pairs', () => {
   const a = generatePKCE();
   const b = generatePKCE();
   assert.notStrictEqual(a.verifier, b.verifier, 'verifiers should differ');
@@ -114,7 +115,7 @@ test('generatePKCE produces unique pairs', () => {
 
 // ─── Auth Confidence Tests ──────────────────────────────────────────────────
 
-test('evaluateAuthConfidence allows with all factors true', () => {
+runTest('evaluateAuthConfidence allows with all factors true', () => {
   const result = evaluateAuthConfidence({
     tokenValid: true,
     fingerprintMatch: true,
@@ -126,7 +127,7 @@ test('evaluateAuthConfidence allows with all factors true', () => {
   assert.strictEqual(result.rawScore, 1, 'raw score should be 1.0 with all factors true');
 });
 
-test('evaluateAuthConfidence denies with all factors false', () => {
+runTest('evaluateAuthConfidence denies with all factors false', () => {
   const result = evaluateAuthConfidence({
     tokenValid: false,
     fingerprintMatch: false,
@@ -138,7 +139,7 @@ test('evaluateAuthConfidence denies with all factors false', () => {
   assert.ok(result.rawScore < CSL_THRESHOLDS.MINIMUM, 'raw score should be below MINIMUM');
 });
 
-test('evaluateAuthConfidence allows with token + fingerprint only', () => {
+runTest('evaluateAuthConfidence allows with token + fingerprint only', () => {
   const result = evaluateAuthConfidence({
     tokenValid: true,
     fingerprintMatch: true,
@@ -151,14 +152,14 @@ test('evaluateAuthConfidence allows with token + fingerprint only', () => {
   assert.ok(['allow', 'deny'].includes(result.decision));
 });
 
-test('evaluateAuthConfidence threshold is CSL_THRESHOLDS.LOW', () => {
+runTest('evaluateAuthConfidence threshold is CSL_THRESHOLDS.LOW', () => {
   const result = evaluateAuthConfidence({ tokenValid: true });
   assert.strictEqual(result.threshold, CSL_THRESHOLDS.LOW);
 });
 
 // ─── Bridge HTML Tests ──────────────────────────────────────────────────────
 
-test('generateBridgeHTML returns valid HTML', () => {
+runTest('generateBridgeHTML returns valid HTML', () => {
   const html = generateBridgeHTML(true, { uid: 'user_1', email: 'test@test.com' });
   assert.ok(html.includes('<!DOCTYPE html>'), 'should be HTML document');
   assert.ok(html.includes('HEADY_SESSION_CHECK'), 'should handle session checks');
@@ -166,7 +167,7 @@ test('generateBridgeHTML returns valid HTML', () => {
   assert.ok(html.includes('headyme.com'), 'should include canonical domains');
 });
 
-test('generateBridgeHTML includes session status', () => {
+runTest('generateBridgeHTML includes session status', () => {
   const html = generateBridgeHTML(false, null);
   assert.ok(html.includes('"valid":false'), 'should include session validity');
 });
@@ -182,3 +183,10 @@ process.stdout.write(JSON.stringify({
 }) + '\n');
 
 process.exitCode = passed === total ? 0 : 1;
+
+
+describe('cross-domain-auth', () => {
+  it('runs all tests', () => {
+    expect(passed).toBe(total);
+  });
+});
