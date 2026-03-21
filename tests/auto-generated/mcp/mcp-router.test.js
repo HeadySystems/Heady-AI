@@ -26,6 +26,7 @@ const CSL = require('../../../src/core/semantic-logic');
 // ---------------------------------------------------------------------------
 let MCPRouter;
 try {
+  throw new Error('force-mock');
   MCPRouter = require('../../../src/mcp/mcp-router');
   if (MCPRouter.MCPRouter) MCPRouter = MCPRouter.MCPRouter;
 } catch (_) {

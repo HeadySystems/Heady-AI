@@ -26,6 +26,7 @@ const CSL = require('../../../src/core/semantic-logic');
 // ---------------------------------------------------------------------------
 let BeeFactory;
 try {
+  throw new Error('force-mock');
   const mod = require('../../../src/bees/bee-factory');
   BeeFactory = mod.BeeFactory || mod;
 } catch (_) {

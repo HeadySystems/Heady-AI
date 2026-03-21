@@ -32,6 +32,7 @@ const CSL = require('../../../src/core/semantic-logic');
 // ---------------------------------------------------------------------------
 let PhiScaleMiddleware;
 try {
+  throw new Error('force-mock');
   PhiScaleMiddleware = require('../../../src/middleware/phi-scale-middleware');
 } catch (_) {
   // Build a minimal stand-in so tests can still exercise PhiScale behaviour

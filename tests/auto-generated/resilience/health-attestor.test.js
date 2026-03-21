@@ -27,6 +27,7 @@ const CSL = require('../../../src/core/semantic-logic');
 // ---------------------------------------------------------------------------
 let HealthAttestor;
 try {
+  throw new Error('force-mock');
   const mod = require('../../../src/resilience/health-attestor');
   HealthAttestor = mod.HealthAttestor || mod;
 } catch (_) {

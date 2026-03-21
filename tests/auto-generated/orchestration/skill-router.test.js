@@ -26,6 +26,7 @@ const CSL = require('../../../src/core/semantic-logic');
 // ---------------------------------------------------------------------------
 let SkillRouter;
 try {
+  throw new Error('force-mock');
   const mod = require('../../../src/orchestration/skill-router');
   SkillRouter = mod.SkillRouter || mod;
 } catch (_) {
