@@ -1,17 +1,16 @@
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 
-const APP_TARGET = process.env.APP_TARGET || 'HeadyWeb';
-
 const TARGET_URLS = {
   'HeadyWeb': 'https://headysystems.com',
   'HeadyBuddy': 'https://buddy.headysystems.com',
   'HeadyAI-IDE': 'https://ide.headysystems.com'
 };
 
-const targetUrl = TARGET_URLS[APP_TARGET] || TARGET_URLS['HeadyWeb'];
-
 function createWindow () {
+  const APP_TARGET = app.getName();
+  const targetUrl = TARGET_URLS[APP_TARGET] || TARGET_URLS['HeadyWeb'];
+
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
