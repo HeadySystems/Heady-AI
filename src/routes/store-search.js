@@ -1,7 +1,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('store-search');
 
-const logger = console;
+// const logger = console;
 /**
  * HeadyStore Search Route — /api/store/search
  * Cascades through available AI providers for REAL product search:

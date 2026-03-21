@@ -1,7 +1,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('project-history-ingestor');
 
-const logger = console;
+// const logger = console;
 /*
  * © 2026 Heady™Systems Inc.. PROPRIETARY AND CONFIDENTIAL.
  *

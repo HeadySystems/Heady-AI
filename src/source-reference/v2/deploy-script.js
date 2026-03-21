@@ -24,7 +24,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('deploy-script');
 
-const logger = console;
+// const logger = console;
 
 const { execSync } = require('child_process');
 const path = require('path');

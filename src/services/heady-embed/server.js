@@ -2,7 +2,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('server');
 
-const logger = console;
+// const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**

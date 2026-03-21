@@ -1,7 +1,7 @@
 const { createLogger } = require('./utils/logger');
 const logger = createLogger('heady_story_driver');
 
-const logger = console;
+// const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

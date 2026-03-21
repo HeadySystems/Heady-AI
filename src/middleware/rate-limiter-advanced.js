@@ -18,7 +18,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('rate-limiter-advanced');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const crypto = require('crypto');
 

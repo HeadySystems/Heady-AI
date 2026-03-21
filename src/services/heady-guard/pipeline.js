@@ -2,7 +2,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('pipeline');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 /**
  * HeadyGuard — Pipeline Engine

@@ -2,7 +2,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('index');
 
-const logger = console;
+// const logger = console;
 
 /**
  * HeadyVector — Main Service Entry Point

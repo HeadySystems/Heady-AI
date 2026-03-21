@@ -1,7 +1,7 @@
 const { createLogger } = require('./utils/logger');
 const logger = createLogger('hc_skill_executor');
 
-const logger = console;
+// const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║

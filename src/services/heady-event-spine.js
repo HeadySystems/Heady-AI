@@ -1,7 +1,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('heady-event-spine');
 
-const logger = console;
+// const logger = console;
 // ═══════════════════════════════════════════════════════════════════════════════
 // HeadyEventSpine — Instantaneous Push-Based Event Bus
 // ═══════════════════════════════════════════════════════════════════════════════

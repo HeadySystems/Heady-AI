@@ -28,7 +28,7 @@ const logger = createLogger('worker');
  * @author Eric Haywood
  * @license Proprietary — HeadySystems Inc.
  */
-const logger = console;
+// const logger = console;
 
 
 // ─── Phi Constants (inlined for edge — no node_modules) ─────────────────────

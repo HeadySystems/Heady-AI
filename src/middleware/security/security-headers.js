@@ -24,7 +24,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('security-headers');
 
-const logger = console;
+// const logger = console;
 
 const crypto = require('crypto');
 

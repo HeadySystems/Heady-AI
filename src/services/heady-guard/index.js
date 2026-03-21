@@ -2,7 +2,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('index');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**

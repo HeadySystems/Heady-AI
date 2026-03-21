@@ -34,7 +34,7 @@ const logger = createLogger('evolution-engine');
  * @author HeadyConnection <eric@headyconnection.org>
  * @copyright © 2026 Heady™Connection
  */
-const logger = console;
+// const logger = console;
 
 
 import { PHI, PSI, phiBackoff, fib as _fib, cslGate } from '../shared/phi-math.js';

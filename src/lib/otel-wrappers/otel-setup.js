@@ -8,7 +8,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('otel-setup');
 
-const logger = console;
+// const logger = console;
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 const { NodeSDK } = require('@opentelemetry/sdk-node');

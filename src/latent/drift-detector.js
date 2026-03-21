@@ -19,7 +19,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('drift-detector');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { EventEmitter } = require('events');
 const { cosineSimilarity } = require('./vector-space-ops');

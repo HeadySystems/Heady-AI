@@ -637,7 +637,7 @@ const TOOLS = [
           '',
           `/** @fileoverview ${desc} */`,
           '',
-          "const logger = require('../utils/logger');",
+//           "const logger = require('../utils/logger');",
           '',
           'function init(config = {}) {',
           "  logger.info('[generated] module initialized');",

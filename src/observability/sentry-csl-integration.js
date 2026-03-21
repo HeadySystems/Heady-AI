@@ -9,7 +9,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('sentry-csl-integration');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI, PSI, FIB, CSL, POOLS } = require('../heady-phi-constants');
 

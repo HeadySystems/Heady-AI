@@ -1,7 +1,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('index');
 
-const logger = console;
+// const logger = console;
 /*
  * © 2026 Heady™Systems Inc..
  * PROPRIETARY AND CONFIDENTIAL.

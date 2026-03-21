@@ -22,7 +22,7 @@ const { createLogger } = require('../../utils/logger');
 const logger = createLogger('edge-inference-worker');
 
  */
-const logger = console;
+// const logger = console;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Phi-Math constants (inlined from shared/phi-math.js — Workers can't import)

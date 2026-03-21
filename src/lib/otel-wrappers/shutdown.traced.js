@@ -17,7 +17,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('shutdown.traced');
 
-const logger = console;
+// const logger = console;
 
 const { trace, context, SpanStatusCode, metrics, propagation } = require('@opentelemetry/api');
 

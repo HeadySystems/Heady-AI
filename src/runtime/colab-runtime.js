@@ -1,7 +1,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('colab-runtime');
 
-const logger = console;
+// const logger = console;
 #!/usr/bin/env node
 /**
  * © 2026 Heady™Systems Inc..

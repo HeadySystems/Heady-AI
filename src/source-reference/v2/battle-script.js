@@ -23,7 +23,7 @@
 const { createLogger } = require('../../utils/logger');
 const logger = createLogger('battle-script');
 
-const logger = console;
+// const logger = console;
 
 const { execSync } = require('child_process');
 const fs = require('fs');

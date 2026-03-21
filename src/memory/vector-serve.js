@@ -10,7 +10,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('vector-serve');
 
-const logger = console;
+// const logger = console;
 
 
 const PHI = 1.618033988749895;

@@ -18,7 +18,7 @@
 const { createLogger } = require('../utils/logger');
 const logger = createLogger('budgetMonitor');
 
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+// const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const PHI = 1.618033988749895;
 const PSI = 0.618033988749895;
