@@ -228,8 +228,29 @@ class AutoCommitEngine extends EventEmitter {
                 throw err;
             }
 
-            // Push with backoff
+            // Push with backoff — pull first to prevent non-fast-forward
             try {
+                // Pull with rebase to keep linear history (prevents divergence)
+                try {
+                    this._exec(`git pull --rebase ${this.remote} ${this.branch}`);
+                } catch (pullErr) {
+                    // If rebase fails (conflict), abort it and log
+                    if (pullErr.message.includes('CONFLICT') || pullErr.message.includes('rebase')) {
+                        try { this._exec('git rebase --abort'); } catch (_) {}
+                        this._log('warn', `Pull --rebase failed (conflict), will try merge: ${pullErr.message}`);
+                        // Fallback: try merge instead
+                        try {
+                            this._exec(`git pull --no-rebase ${this.remote} ${this.branch}`);
+                        } catch (mergeErr) {
+                            try { this._exec('git merge --abort'); } catch (_) {}
+                            this._log('error', `Pull --merge also failed: ${mergeErr.message}`);
+                            throw pullErr;
+                        }
+                    } else {
+                        this._log('warn', `Pull failed (non-conflict): ${pullErr.message}`);
+                    }
+                }
+
                 this._exec(`git push ${this.remote} ${this.branch}`);
                 this.stats.totalPushes++;
                 this.consecutiveFailures = 0;
