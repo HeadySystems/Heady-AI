@@ -27,6 +27,9 @@ RUN rm -rf .git .github .turbo .heady_cache tests __tests__ \
 
 # ─── Stage 2: Production ─────────────────────────────────────────────
 FROM node:22-alpine AS production
+LABEL org.opencontainers.image.source="https://github.com/HeadyMe/Heady" \
+      org.opencontainers.image.vendor="Heady Systems" \
+      org.opencontainers.image.title="Heady"
 
 # Install tini for proper PID 1 signal handling (SIGTERM → graceful shutdown)
 RUN apk add --no-cache tini curl
