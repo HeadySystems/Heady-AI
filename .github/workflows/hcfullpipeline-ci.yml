@@ -19,33 +19,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: [22]
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Heady
-        uses: ./.github/actions/setup-heady
-      - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: pnpm install --no-frozen-lockfile
+          cache: 'npm'
+      - run: npm ci
       - name: Lint
-        run: pnpm run lint 2>/dev/null || echo "Lint configured via eslint"
+        run: npm run lint 2>/dev/null || echo "Lint configured via eslint"
       - name: Test
-        run: pnpm test
+        run: npm test
       - name: Build
-        run: pnpm run build 2>/dev/null || echo "No build step"
+        run: npm run build 2>/dev/null || echo "No build step"
 
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Heady
-        uses: ./.github/actions/setup-heady
-      - run: pnpm install --no-frozen-lockfile
-      - name: Audit
-        run: pnpm audit --audit-level=high 2>/dev/null || true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: NPM Audit
+        run: npm audit --audit-level=high 2>/dev/null || true
       - name: Secrets Scan
         run: |
           # Scan for hardcoded secrets
@@ -62,8 +62,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Heady
-        uses: ./.github/actions/setup-heady
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Validate YAML configs
         run: |
           npx yaml-lint configs/hcfullpipeline.yaml 2>/dev/null || echo "YAML valid"

@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
   "version": "5.0.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
+  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=22.0.0"
@@ -102,29 +102,35 @@
   "overrides": {
     "flatted": "^3.4.2",
     "protobufjs": ">=7.4.0",
-    "undici": ">=7.5.0",
+    "undici": ">=6.24.0",
     "fast-xml-parser": ">=4.5.1",
-    "hono": ">=4.12.7",
+    "hono": ">=4.11.10",
     "@hono/node-server": ">=1.19.10",
     "effect": ">=3.20.0",
     "langsmith": ">=0.4.6",
-    "lodash": ">=4.17.23",
+    "lodash": ">=4.17.21",
     "underscore": ">=1.13.7",
-    "tar": ">=6.2.1"
+    "tar": ">=6.2.1",
+    "js-yaml": ">=3.13.1",
+    "minimatch": ">=3.0.5",
+    "slug": ">=9.1.0"
   },
   "pnpm": {
     "overrides": {
       "flatted": "^3.4.2",
       "protobufjs": ">=7.4.0",
-      "undici": ">=7.5.0",
+      "undici": ">=6.24.0",
       "fast-xml-parser": ">=4.5.1",
-      "hono": ">=4.12.7",
+      "hono": ">=4.11.10",
       "@hono/node-server": ">=1.19.10",
       "effect": ">=3.20.0",
       "langsmith": ">=0.4.6",
-      "lodash": ">=4.17.23",
+      "lodash": ">=4.17.21",
       "underscore": ">=1.13.7",
-      "tar": ">=6.2.1"
+      "tar": ">=6.2.1",
+      "js-yaml": ">=3.13.1",
+      "minimatch": ">=3.0.5",
+      "slug": ">=9.1.0"
     }
   }
 }
