@@ -77,7 +77,8 @@ function loadLockState() {
         'package.json',
         'package-lock.json'
       ],
-      lockLevel: 'full' // full | protected-only | audit-only };
+      lockLevel: 'full' // full | protected-only | audit-only
+    };
     saveLockState(defaultState);
     return defaultState;
   }

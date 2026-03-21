@@ -224,8 +224,6 @@ class AgentOrchestrator extends EventEmitter {
       const preferred = this._agents.get(task.preferredAgentId);
       if (preferred && preferred.status === AGENT_STATUS.IDLE) return preferred;
     }
-  }
-
     // Find idle agent with matching capability
     const capable = Array.from(this._agents.values()).filter(a =>
       a.status === AGENT_STATUS.IDLE &&
