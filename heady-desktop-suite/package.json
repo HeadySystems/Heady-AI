@@ -24,11 +24,11 @@
       "output": "dist/${env.APP_TARGET}"
     },
     "win": {
-      "icon": "assets/icon.ico",
+      "icon": "assets/icon.png",
       "target": "nsis"
     },
     "mac": {
-      "icon": "assets/icon.icns",
+      "icon": "assets/icon.png",
       "target": "dmg"
     },
     "linux": {
