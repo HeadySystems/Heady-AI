@@ -12,6 +12,7 @@ HEADY_ORIGIN_BASE = "https://heady-manager-1073792900703.us-east1.run.app"
 COLAB_COMPILER_WEBHOOK = "https://heady-manager-1073792900703.us-east1.run.app/api/hologram/compile"
 
 # Active recovery routes managed as infrastructure-as-code.
+# ── AI Platform ──────────────────────────────────────────────────────────
 [[routes]]
 pattern = "heady-ai.com/*"
 zone_name = "heady-ai.com"
@@ -20,6 +21,34 @@ zone_name = "heady-ai.com"
 pattern = "www.heady-ai.com/*"
 zone_name = "heady-ai.com"
 
+# ── Companion ────────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headybuddy.org/*"
+zone_name = "headybuddy.org"
+
+[[routes]]
+pattern = "www.headybuddy.org/*"
+zone_name = "headybuddy.org"
+
+# ── Bot / Automation ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "headybot.com/*"
+zone_name = "headybot.com"
+
+[[routes]]
+pattern = "www.headybot.com/*"
+zone_name = "headybot.com"
+
+# ── API Gateway ──────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyapi.com/*"
+zone_name = "headyapi.com"
+
+[[routes]]
+pattern = "www.headyapi.com/*"
+zone_name = "headyapi.com"
+
+# ── OS Portal ────────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyos.com/*"
 zone_name = "headyos.com"
@@ -28,6 +57,7 @@ zone_name = "headyos.com"
 pattern = "www.headyos.com/*"
 zone_name = "headyos.com"
 
+# ── Executive Hub ────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyex.com/*"
 zone_name = "headyex.com"
@@ -36,6 +66,7 @@ zone_name = "headyex.com"
 pattern = "www.headyex.com/*"
 zone_name = "headyex.com"
 
+# ── Admin Subdomains ─────────────────────────────────────────────────────
 [[routes]]
 pattern = "admin.headysystems.com/*"
 zone_name = "headysystems.com"
