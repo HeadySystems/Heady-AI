@@ -160,3 +160,18 @@ logs/resource-events.jsonl
 
 !.env.example
 !.env.template
+
+# ── GCP Service Account Keys (NEVER commit) ───────────
+*-firebase-adminsdk-*.json
+*-serviceAccountKey.json
+gcp-service-account*.json
+firebase-admin-sdk*.json
+firebase-service-account*.json
+gen-lang-client-*.json
+ai-educational-labs-*.json
+config/secrets/
+configs/secrets/
+secrets_registry.json
+
+# ── Loose credential files ─────────────────────────────
+!package-lock.json
