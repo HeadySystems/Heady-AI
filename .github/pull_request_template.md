@@ -1,28 +1,30 @@
-## Summary
-<!-- Brief description of changes -->
+## What changed
+(Concise summary)
 
-## Type
-- [ ] `feat` — New feature
-- [ ] `fix` — Bug fix
-- [ ] `docs` — Documentation
-- [ ] `chore` — Maintenance
-- [ ] `security` — Security patch
+## Why
+(Link issue or defect category: P0/P1/P2/P3/P4)
 
-## Domains Affected
-<!-- Which Heady domains are impacted? -->
+## Reproduction
+```bash
+# commands that reproduce the bug
+```
 
-## Checklist
-- [ ] No `TODO`/`FIXME`/placeholder comments
-- [ ] No `localhost` references
-- [ ] No hardcoded secrets
-- [ ] ESLint passes
-- [ ] Core modules load without errors
-- [ ] JSON content files are valid
-- [ ] Tested on target domain(s)
-- [ ] Commit messages follow Conventional Commits
+## Fix
+(What you did, where, and why this is the minimal safe fix)
 
-## Screenshots
-<!-- Before/after if visual changes -->
+## Verification
+```bash
+# commands executed
+npm ci
+npm test
+npm run build --if-present
+node scripts/scan-conflicts.mjs
+```
 
-## Deployment Notes
-<!-- Any special deployment considerations -->
+## Evidence
+- Attach logs or paste key outputs
+- Reference CI run link
+
+## Risk & rollback
+- **Risk level:**
+- **Rollback plan:**
