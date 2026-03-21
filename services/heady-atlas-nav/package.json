@@ -1,0 +1,16 @@
+{
+  "name": "@heady/heady-atlas-nav",
+  "version": "1.0.0",
+  "description": "Heady heady-atlas-nav MCP service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "heady": {
+    "port": 3703,
+    "category": "ecosystem",
+    "phiTier": 1,
+    "healthPath": "/health"
+  }
+}

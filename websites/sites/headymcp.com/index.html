@@ -21,787 +21,743 @@
     <meta name="twitter:image" content="https://headymcp.com/assets/og-headymcp.png">
     <link rel="canonical" href="https://headymcp.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --bg-card-hover: #1c1c28;
-            --bg-code: #0d0d14;
-            --border: #1e1e2e;
-            --border-accent: #2a2a3e;
-            --text-primary: #e8e8f0;
-            --text-secondary: #9898b0;
-            --text-muted: #6868a0;
-            --accent: #6366f1;
-            --accent-bright: #818cf8;
-            --accent-glow: rgba(99, 102, 241, 0.15);
-            --accent-2: #06b6d4;
-            --accent-3: #a855f7;
-            --accent-4: #22c55e;
-            --accent-5: #f59e0b;
-            --accent-6: #ef4444;
-            --gold: #fbbf24;
-            --phi: 1.618;
-            --radius: 12px;
-            --radius-lg: 16px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        code,
-        pre {
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ─── Animated Background ──────────────────────────── */
-        .bg-grid {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-image:
-                radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
-                linear-gradient(rgba(30, 30, 46, 0.4) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 30, 46, 0.4) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 60px 60px, 60px 60px;
-            animation: gridPulse 8s ease-in-out infinite;
-        }
-
-        @keyframes gridPulse {
-
-            0%,
-            100% {
-                opacity: 0.5;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        /* ─── Navigation ───────────────────────────────────── */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(10, 10, 15, 0.82);
-            border-bottom: 1px solid var(--border);
-            padding: 0 2rem;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            letter-spacing: -0.02em;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-
-        .nav-brand .logo-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            font-weight: 900;
-            color: white;
-        }
-
-        .nav-brand span {
-            color: var(--accent-bright);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links .btn-nav {
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            background: var(--accent);
-            color: white;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .nav-links .btn-nav:hover {
-            background: var(--accent-bright);
-            transform: translateY(-1px);
-        }
-
-        /* ─── Layout ───────────────────────────────────────── */
-        .page-wrapper {
-            position: relative;
-            z-index: 1;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        section {
-            padding: 5rem 0;
-        }
-
-        /* ─── Hero ─────────────────────────────────────────── */
-        .hero {
-            padding-top: 140px;
-            padding-bottom: 80px;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border-radius: 40px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(99, 102, 241, 0.25);
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--accent-bright);
-            margin-bottom: 24px;
-            letter-spacing: 0.04em;
-        }
-
-        .hero-badge .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--accent-4);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-            }
-
-            50% {
-                opacity: 0.7;
-                box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
-            }
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5.5vw, 4rem);
-            font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-bright) 50%, var(--accent-2) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            max-width: 620px;
-            margin: 0 auto 36px;
-        }
-
-        .hero-actions {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.25s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
-            color: white;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border-accent);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent);
-        }
-
-        /* ─── Quick Config Block ───────────────────────────── */
-        .hero-code {
-            max-width: 680px;
-            margin: 48px auto 0;
-            background: var(--bg-code);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            text-align: left;
-        }
-
-        .code-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            background: rgba(22, 22, 31, 0.6);
-        }
-
-        .code-tab {
-            padding: 10px 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            cursor: pointer;
-            border: none;
-            background: none;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .code-tab.active {
-            color: var(--accent-bright);
-            border-bottom-color: var(--accent);
-        }
-
-        .code-tab:hover {
-            color: var(--text-secondary);
-        }
-
-        .code-panel {
-            display: none;
-        }
-
-        .code-panel.active {
-            display: block;
-        }
-
-        .code-panel pre {
-            padding: 20px 24px;
-            font-size: 0.82rem;
-            line-height: 1.65;
-            overflow-x: auto;
-            color: var(--text-secondary);
-        }
-
-        .code-panel pre .key {
-            color: var(--accent-2);
-        }
-
-        .code-panel pre .str {
-            color: var(--accent-4);
-        }
-
-        .code-panel pre .comment {
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        .code-panel pre .punct {
-            color: var(--text-muted);
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 48px;
-            right: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-accent);
-            color: var(--text-muted);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .copy-btn:hover {
-            color: var(--accent-bright);
-            border-color: var(--accent);
-        }
-
-        .hero-code {
-            position: relative;
-        }
-
-        /* ─── Section Headers ──────────────────────────────── */
-        .section-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--accent-bright);
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            margin-bottom: 12px;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            max-width: 580px;
-            margin-bottom: 40px;
-        }
-
-        /* ─── Endpoints Table ──────────────────────────────── */
-        .endpoints-section {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .endpoints-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .endpoint-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            transition: all 0.25s;
-        }
-
-        .endpoint-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .endpoint-method {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            margin-bottom: 10px;
-        }
-
-        .method-get {
-            background: rgba(34, 197, 94, 0.12);
-            color: var(--accent-4);
-        }
-
-        .method-post {
-            background: rgba(99, 102, 241, 0.12);
-            color: var(--accent-bright);
-        }
-
-        .method-ws {
-            background: rgba(168, 85, 247, 0.12);
-            color: var(--accent-3);
-        }
-
-        .endpoint-path {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-        }
-
-        .endpoint-desc {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-        }
-
-        /* ─── Tools Grid ───────────────────────────────────── */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
-        }
-
-        .tool-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            transition: all 0.25s;
-            cursor: default;
-        }
-
-        .tool-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .tool-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            margin-bottom: 14px;
-        }
-
-        .tool-card h3 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .tool-card p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        .tool-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        .tool-action {
-            font-size: 0.68rem;
-            padding: 3px 8px;
-            border-radius: 5px;
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--text-muted);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ─── Config Section ───────────────────────────────── */
-        .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .config-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-        }
-
-        .config-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 0.88rem;
-        }
-
-        .config-header .icon {
-            font-size: 1.1rem;
-        }
-
-        .config-card pre {
-            padding: 16px 20px;
-            font-size: 0.78rem;
-            line-height: 1.6;
-            overflow-x: auto;
-            color: var(--text-secondary);
-        }
-
-        .config-card pre .key {
-            color: var(--accent-2);
-        }
-
-        .config-card pre .str {
-            color: var(--accent-4);
-        }
-
-        .config-card pre .comment {
-            color: var(--text-muted);
-        }
-
-        /* ─── Architecture ─────────────────────────────────── */
-        .arch-flow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            flex-wrap: wrap;
-            margin: 40px 0;
-        }
-
-        .arch-node {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px 28px;
-            text-align: center;
-            min-width: 160px;
-            transition: all 0.25s;
-        }
-
-        .arch-node:hover {
-            border-color: var(--accent);
-            transform: scale(1.04);
-        }
-
-        .arch-node .icon {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
-        }
-
-        .arch-node h4 {
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .arch-node p {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        .arch-arrow {
-            font-size: 1.4rem;
-            color: var(--text-muted);
-            padding: 0 12px;
-        }
-
-        /* ─── Servers Table ────────────────────────────────── */
-        .server-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .server-table th {
-            text-align: left;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .server-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.85rem;
-        }
-
-        .server-table tr:hover td {
-            background: var(--bg-card);
-        }
-
-        .server-table .server-name {
-            font-weight: 700;
-            color: var(--accent-bright);
-        }
-
-        .server-table .server-url {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            color: var(--accent-2);
-        }
-
-        .server-table .badge-transport {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-http {
-            background: rgba(6, 182, 212, 0.12);
-            color: var(--accent-2);
-        }
-
-        .badge-stdio {
-            background: rgba(168, 85, 247, 0.12);
-            color: var(--accent-3);
-        }
-
-        .badge-ws {
-            background: rgba(245, 158, 11, 0.12);
-            color: var(--accent-5);
-        }
-
-        /* ─── Auth / Security ──────────────────────────────── */
-        .auth-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .auth-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            text-align: center;
-        }
-
-        .auth-card .icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
-        }
-
-        .auth-card h3 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .auth-card p {
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-        }
-
-        /* ─── Footer ───────────────────────────────────────── */
-        footer {
-            padding: 40px 0;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        footer p {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        footer a {
-            color: var(--accent-bright);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 16px;
-        }
-
-        .footer-links a {
-            font-size: 0.82rem;
-            color: var(--text-secondary);
-        }
-
-        /* ─── Responsive ───────────────────────────────────── */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .endpoints-grid,
-            .config-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .auth-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .arch-flow {
-                flex-direction: column;
-            }
-
-            .arch-arrow {
-                transform: rotate(90deg);
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-        }
-
-        /* ─── Inline Code ──────────────────────────────────── */
-        p code,
-        li code,
-        td code {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--accent-bright);
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-size: 0.82em;
-        }
+/* ============================================================
+   HEADY SACRED GEOMETRY CSS FRAMEWORK — INLINE
+   Deep cosmic palette with phi-derived spacing
+   ============================================================ */
+:root {
+    --bg-base: #050510;
+    --bg-primary: #0a0a18;
+    --bg-secondary: #0e0e20;
+    --bg-card: rgba(14, 14, 32, 0.6);
+    --bg-card-hover: rgba(20, 20, 45, 0.8);
+    --bg-code: #08081a;
+    --border: rgba(99, 102, 241, 0.15);
+    --border-glow: rgba(99, 102, 241, 0.3);
+    --text-primary: #e8e8f8;
+    --text-secondary: #a0a0c8;
+    --text-muted: #6868a0;
+    --indigo: #6366f1;
+    --cyan: #06b6d4;
+    --fuchsia: #d946ef;
+    --emerald: #10b981;
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --gold: #fbbf24;
+    --phi: 1.618033988749895;
+    --radius: 16px;
+    --radius-lg: 24px;
+    --glass-bg: rgba(10, 10, 30, 0.55);
+    --glass-border: rgba(99, 102, 241, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+    scroll-behavior: smooth;
+    background: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+}
+
+body {
+    background: var(--bg-base);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* ── Animated Gradient Background ── */
+.bg-gradient-animated {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0;
+    background: 
+        radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99,102,241,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 70%, rgba(217,70,239,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 50%, rgba(6,182,212,0.08) 0%, transparent 60%);
+    animation: bgShift 20s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+    0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+    25% { opacity: 0.85; filter: hue-rotate(15deg); }
+    50% { opacity: 1; filter: hue-rotate(-10deg); }
+    75% { opacity: 0.9; filter: hue-rotate(20deg); }
+}
+
+/* ── Pulsing Orbs ── */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orbPulse 8s ease-in-out infinite;
+}
+.orb-1 { width: 500px; height: 500px; top: -100px; left: -100px; background: rgba(99,102,241,0.2); animation-delay: 0s; }
+.orb-2 { width: 400px; height: 400px; bottom: -80px; right: -80px; background: rgba(217,70,239,0.18); animation-delay: 2s; }
+.orb-3 { width: 350px; height: 350px; top: 40%; left: 60%; background: rgba(6,182,212,0.15); animation-delay: 4s; }
+.orb-4 { width: 300px; height: 300px; top: 70%; left: 10%; background: rgba(16,185,129,0.12); animation-delay: 6s; }
+.orb-5 { width: 450px; height: 450px; top: 20%; right: -50px; background: rgba(244,63,94,0.1); animation-delay: 3s; }
+
+@keyframes orbPulse {
+    0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+    33% { transform: scale(1.15) translate(20px, -15px); opacity: 0.9; }
+    66% { transform: scale(0.9) translate(-15px, 10px); opacity: 0.5; }
+}
+
+/* ── Sacred Geometry Canvas ── */
+#sacred-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* ── Particle Field Canvas ── */
+#particle-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* ── Content wrapper ── */
+.content-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+/* ── Gradient Text ── */
+.gradient-text {
+    background: linear-gradient(135deg, var(--indigo), var(--cyan), var(--fuchsia), var(--emerald));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientFlow 6s ease-in-out infinite;
+}
+
+.gradient-text-alt {
+    background: linear-gradient(135deg, var(--cyan), var(--fuchsia), var(--indigo), var(--amber));
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientFlow 8s ease-in-out infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ── Gradient Dividers ── */
+.gradient-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--indigo), var(--cyan), var(--fuchsia), transparent);
+    background-size: 200% 100%;
+    animation: dividerFlow 4s linear infinite;
+    margin: 3rem auto;
+    max-width: 800px;
+    border: none;
+    opacity: 0.6;
+}
+
+@keyframes dividerFlow {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ── Glass Card ── */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-card:hover {
+    border-color: var(--border-glow);
+    box-shadow: 0 8px 40px rgba(99,102,241,0.15), 0 0 60px rgba(99,102,241,0.05);
+    transform: translateY(-4px);
+}
+
+.glass-card .card-geo-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glass-card .card-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem;
+}
+
+/* ── Status Dots ── */
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: statusGlow 2s ease-in-out infinite;
+}
+
+.status-dot.active { background: var(--emerald); box-shadow: 0 0 12px rgba(16,185,129,0.6); }
+.status-dot.pending { background: var(--amber); box-shadow: 0 0 12px rgba(245,158,11,0.6); }
+.status-dot.inactive { background: var(--text-muted); box-shadow: 0 0 8px rgba(104,104,160,0.4); }
+
+@keyframes statusGlow {
+    0%, 100% { box-shadow: 0 0 8px currentColor; opacity: 1; }
+    50% { box-shadow: 0 0 20px currentColor; opacity: 0.7; }
+}
+
+/* ── Section Styles ── */
+section {
+    padding: 5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.section-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+}
+
+/* ── Hero Section ── */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.25);
+    border-radius: 100px;
+    font-size: 0.85rem;
+    color: var(--indigo);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-title {
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    max-width: 650px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--indigo), var(--fuchsia));
+    color: white;
+    box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 40px rgba(99,102,241,0.5);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.btn-secondary {
+    background: rgba(99,102,241,0.1);
+    color: var(--indigo);
+    border: 1px solid rgba(99,102,241,0.25);
+}
+
+.btn-secondary:hover {
+    background: rgba(99,102,241,0.2);
+    border-color: rgba(99,102,241,0.5);
+    transform: translateY(-2px);
+}
+
+/* ── Stats Grid ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* ── Tool Catalog ── */
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.tool-card .card-content {
+    padding: 1.5rem;
+}
+
+.tool-card .tool-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1rem;
+}
+
+.tool-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.tool-name {
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
+}
+
+.tool-category-badge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tool-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.cat-ai .tool-icon { background: rgba(99,102,241,0.15); color: var(--indigo); }
+.cat-ai .tool-category-badge { background: rgba(99,102,241,0.12); color: var(--indigo); }
+.cat-orchestration .tool-icon { background: rgba(217,70,239,0.15); color: var(--fuchsia); }
+.cat-orchestration .tool-category-badge { background: rgba(217,70,239,0.12); color: var(--fuchsia); }
+.cat-data .tool-icon { background: rgba(6,182,212,0.15); color: var(--cyan); }
+.cat-data .tool-category-badge { background: rgba(6,182,212,0.12); color: var(--cyan); }
+.cat-observability .tool-icon { background: rgba(16,185,129,0.15); color: var(--emerald); }
+.cat-observability .tool-category-badge { background: rgba(16,185,129,0.12); color: var(--emerald); }
+.cat-security .tool-icon { background: rgba(244,63,94,0.15); color: var(--rose); }
+.cat-security .tool-category-badge { background: rgba(244,63,94,0.12); color: var(--rose); }
+.cat-devops .tool-icon { background: rgba(245,158,11,0.15); color: var(--amber); }
+.cat-devops .tool-category-badge { background: rgba(245,158,11,0.12); color: var(--amber); }
+.cat-creative .tool-icon { background: rgba(251,191,36,0.15); color: var(--gold); }
+.cat-creative .tool-category-badge { background: rgba(251,191,36,0.12); color: var(--gold); }
+.cat-swarm .tool-icon { background: rgba(99,102,241,0.15); color: #818cf8; }
+.cat-swarm .tool-category-badge { background: rgba(99,102,241,0.12); color: #818cf8; }
+
+/* ── Code Blocks ── */
+.code-block {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(99,102,241,0.05);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.code-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.code-dots span {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+}
+
+.code-dots span:nth-child(1) { background: #ff5f57; }
+.code-dots span:nth-child(2) { background: #ffbd2e; }
+.code-dots span:nth-child(3) { background: #28c840; }
+
+.code-body {
+    padding: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: var(--text-secondary);
+}
+
+.code-body .key { color: #818cf8; }
+.code-body .str { color: #34d399; }
+.code-body .num { color: #f59e0b; }
+.code-body .kw { color: #d946ef; }
+.code-body .fn { color: #06b6d4; }
+.code-body .cmt { color: #4a4a6a; font-style: italic; }
+.code-body .op { color: #f43f5e; }
+.code-body .type { color: #fbbf24; }
+
+/* ── Architecture Diagram ── */
+.arch-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.arch-layer {
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    position: relative;
+}
+
+.arch-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.arch-nodes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.arch-node {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.arch-node:hover {
+    transform: scale(1.05);
+}
+
+/* ── Phi Tier Table ── */
+.tier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.tier-card {
+    padding: 1.5rem;
+}
+
+.tier-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.tier-threshold {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--cyan);
+    margin-bottom: 0.75rem;
+}
+
+.tier-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ── Nav ── */
+.nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1rem 2rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(5,5,16,0.7);
+    border-bottom: 1px solid rgba(99,102,241,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+.nav-logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+/* ── Footer ── */
+.footer {
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover { color: var(--indigo); }
+
+.footer-copy {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 1rem;
+}
+
+/* ── Scroll Reveal ── */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── Spinning Geometry inside cards ── */
+.card-geo-bg svg {
+    width: 100%;
+    height: 100%;
+    animation: spinGeo 60s linear infinite;
+}
+
+@keyframes spinGeo {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ── Floating Animation ── */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Tabs ── */
+.tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.tab-btn {
+    padding: 8px 20px;
+    border-radius: 10px;
+    background: rgba(99,102,241,0.06);
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.tab-btn.active, .tab-btn:hover {
+    background: rgba(99,102,241,0.15);
+    border-color: rgba(99,102,241,0.3);
+    color: var(--indigo);
+}
+
+/* ── Transport Badges ── */
+.transport-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* ── Pipeline Stages ── */
+.pipeline-flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.pipeline-stage {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.pipeline-stage:hover {
+    background: rgba(99,102,241,0.2);
+    color: var(--text-primary);
+    border-color: var(--indigo);
+}
+
+.pipeline-arrow {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .catalog-grid { grid-template-columns: 1fr; }
+    .transport-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-title { font-size: clamp(2.5rem, 12vw, 5rem); }
+    section { padding: 3rem 1rem; }
+    .tier-grid { grid-template-columns: 1fr; }
+}
     </style>
     <script type="application/ld+json">
 [
@@ -841,552 +797,1044 @@
     <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
-
 <body>
-    <div class="bg-grid"></div>
 
-    <!-- ─── Navigation ─────────────────────────────────────── -->
-    <nav>
-        <a href="#" class="nav-brand">
-            <div class="logo-icon">H</div>
-            Heady<span>MCP</span>
-        </a>
-        <div class="nav-links">
-            <a href="#quickstart">Quickstart</a>
-            <a href="#endpoints">Endpoints</a>
-            <a href="#tools">Tools</a>
-            <a href="#servers">Servers</a>
-            <a href="#config">Configuration</a>
-            <a href="#security">Security</a>
-            <a href="https://headysystems.com" class="btn-nav">Heady Platform →</a>
+<!-- ============================================================
+     BACKGROUND LAYERS
+     ============================================================ -->
+<div class="bg-gradient-animated"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="orb orb-4"></div>
+<div class="orb orb-5"></div>
+<canvas id="sacred-canvas"></canvas>
+<canvas id="particle-canvas"></canvas>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+    <a href="#" class="nav-logo gradient-text">HeadyMCP</a>
+    <ul class="nav-links">
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#tiers">Phi-Tiers</a></li>
+        <li><a href="#pipeline">Pipeline</a></li>
+        <li><a href="https://github.com/heady-systems" target="_blank">GitHub</a></li>
+    </ul>
+</nav>
+
+<!-- ============================================================
+     CONTENT WRAPPER
+     ============================================================ -->
+<div class="content-wrapper">
+
+<!-- ════════════════════════════════════════════════════════════════
+     HERO SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+    <div class="hero-badge">
+        <span class="status-dot active"></span>
+        Model Context Protocol v3.1 — Live
+    </div>
+    <h1 class="hero-title gradient-text">HeadyMCP</h1>
+    <p class="hero-subtitle">
+        45+ MCP tools bridging AI assistants to a living ecosystem of 175+ services, 
+        9 phi-derived tiers, and the world's first sacred-geometry orchestration layer.
+    </p>
+    <div class="hero-actions">
+        <a href="#quickstart" class="btn btn-primary">Get Started</a>
+        <a href="#tools" class="btn btn-secondary">Explore 45 Tools</a>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     STATS SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="stats">
+    <div class="stats-grid">
+        <div class="glass-card stat-card reveal">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(99,102,241,0.3)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="30s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></circle><circle cx="100" cy="100" r="50" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="20s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/></circle><polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="rgba(99,102,241,0.15)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="25s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></polygon></svg></div>
+            <div class="card-content">
+                <div class="stat-number gradient-text">45</div>
+                <div class="stat-label">MCP Tools</div>
+            </div>
         </div>
-    </nav>
+        <div class="glass-card stat-card reveal reveal-delay-1">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="70" fill="none" stroke="rgba(6,182,212,0.3)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="35s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></circle><polygon points="100,30 170,100 100,170 30,100" fill="none" stroke="rgba(6,182,212,0.2)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="22s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/></polygon><polygon points="100,50 150,100 100,150 50,100" fill="none" stroke="rgba(6,182,212,0.15)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="28s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></polygon></svg></div>
+            <div class="card-content">
+                <div class="stat-number gradient-text-alt">175+</div>
+                <div class="stat-label">Services</div>
+            </div>
+        </div>
+        <div class="glass-card stat-card reveal reveal-delay-2">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="60" fill="none" stroke="rgba(217,70,239,0.3)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></circle><polygon points="100,40 145,75 145,125 100,160 55,125 55,75" fill="none" stroke="rgba(217,70,239,0.2)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="30s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/></polygon></svg></div>
+            <div class="card-content">
+                <div class="stat-number gradient-text">9</div>
+                <div class="stat-label">Phi-Tiers</div>
+            </div>
+        </div>
+        <div class="glass-card stat-card reveal reveal-delay-3">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="rgba(16,185,129,0.25)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="32s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></polygon><polygon points="100,40 160,100 100,160 40,100" fill="none" stroke="rgba(16,185,129,0.2)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="24s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/></polygon><polygon points="100,60 140,100 100,140 60,100" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"><animateTransform attributeName="transform" type="rotate" dur="18s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/></polygon></svg></div>
+            <div class="card-content">
+                <div class="stat-number gradient-text-alt">3</div>
+                <div class="stat-label">Transports</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-    <div class="page-wrapper">
+<hr class="gradient-divider">
 
-        <!-- ─── Hero ──────────────────────────────────────── -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-badge">
-                    <div class="dot"></div>
-                    MCP v1.0 · Protocol Stable
+<!-- ════════════════════════════════════════════════════════════════
+     TOOL CATALOG SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="tools">
+    <h2 class="section-title gradient-text reveal">Tool Catalog</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        All 45 MCP tools organized by domain. Each tool is accessible via STDIO, SSE, or HTTP transports
+        with phi-derived rate limiting and CSL confidence gating.
+    </p>
+
+    <div class="tab-bar reveal reveal-delay-2">
+        <button class="tab-btn active" onclick="filterTools('all')">All (45)</button>
+        <button class="tab-btn" onclick="filterTools('ai')">&#x2726; AI & Intelligence (11)</button>
+        <button class="tab-btn" onclick="filterTools('creative')">&#x2728; Creative & Content (2)</button>
+        <button class="tab-btn" onclick="filterTools('orchestration')">&#x2699; Orchestration (5)</button>
+        <button class="tab-btn" onclick="filterTools('devops')">&#x2692; DevOps & Deploy (4)</button>
+        <button class="tab-btn" onclick="filterTools('swarm')">&#x2638; Swarm & Agents (4)</button>
+        <button class="tab-btn" onclick="filterTools('observability')">&#x2316; Observability (8)</button>
+        <button class="tab-btn" onclick="filterTools('security')">&#x26A0; Security & Governance (6)</button>
+        <button class="tab-btn" onclick="filterTools('data')">&#x26C1; Data & Memory (5)</button>
+    </div>
+
+    <div class="catalog-grid" id="catalog-grid">
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_soul</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
                 </div>
-                <h1>Connect anything to Heady</h1>
-                <p>
-                    HeadyMCP exposes the entire Heady ecosystem — 12 tools, brain-aware routing,
-                    and the HCFullPipeline — through the Model Context Protocol.
-                    Drop in one config block. Works everywhere MCP is spoken.
-                </p>
-                <div class="hero-actions">
-                    <a href="#quickstart" class="btn btn-primary">Get Started →</a>
-                    <a href="#tools" class="btn btn-secondary">Explore Tools</a>
-                </div>
-
-                <!-- Quick-config code block -->
-                <div class="hero-code" id="quickstart">
-                    <div class="code-tabs">
-                        <button class="code-tab active" data-panel="json">mcp.json</button>
-                        <button class="code-tab" data-panel="env">Environment</button>
-                        <button class="code-tab" data-panel="curl">cURL Test</button>
-                    </div>
-                    <button class="copy-btn" onclick="copyCode()">Copy</button>
-                    <div class="code-panel active" id="panel-json">
-                        <pre>{
-  <span class="key">"mcpServers"</span>: {
-    <span class="key">"heady-brain"</span>: {
-      <span class="key">"displayName"</span>: <span class="str">"Heady"</span>,
-      <span class="key">"transport"</span>:   <span class="str">"http"</span>,
-      <span class="key">"url"</span>:         <span class="str">"https://headyio.com/mcp"</span>,
-      <span class="key">"apiKey"</span>:      <span class="str">"${HEADY_API_KEY}"</span>
-    },
-    <span class="key">"heady-manager"</span>: {
-      <span class="key">"displayName"</span>: <span class="str">"Heady Manager"</span>,
-      <span class="key">"transport"</span>:   <span class="str">"http"</span>,
-      <span class="key">"url"</span>:         <span class="str">"https://headyio.com/manager"</span>,
-      <span class="key">"apiKey"</span>:      <span class="str">"${HEADY_API_KEY}"</span>
-    },
-    <span class="key">"heady-registry"</span>: {
-      <span class="key">"displayName"</span>: <span class="str">"Heady Registry"</span>,
-      <span class="key">"transport"</span>:   <span class="str">"http"</span>,
-      <span class="key">"url"</span>:         <span class="str">"https://headyio.com/registry"</span>,
-      <span class="key">"apiKey"</span>:      <span class="str">"${HEADY_API_KEY}"</span>
-    }
-  }
-}</pre>
-                    </div>
-                    <div class="code-panel" id="panel-env">
-                        <pre><span class="comment"># Set your Heady API key</span>
-<span class="key">HEADY_API_KEY</span>=<span class="str">hdy_ent_your_key_here</span>
-
-<span class="comment"># Key prefixes by tier:</span>
-<span class="comment">#   hdy_int_  →  Internal / Developer</span>
-<span class="comment">#   hdy_pro_  →  Professional</span>
-<span class="comment">#   hdy_ent_  →  Enterprise</span>
-
-<span class="comment"># Optional: MCP Gateway port (default 3500)</span>
-<span class="key">MCP_PORT</span>=<span class="str">3500</span>
-
-<span class="comment"># Optional: Workspace root for file scoping</span>
-<span class="key">HEADY_WORKSPACE</span>=<span class="str">/path/to/your/project</span></pre>
-                    </div>
-                    <div class="code-panel" id="panel-curl">
-                        <pre><span class="comment"># Health check</span>
-curl <span class="str">https://headyio.com/mcp</span>/health
-
-<span class="comment"># List all available MCP tools</span>
-curl <span class="str">https://headyio.com/mcp</span>/tools \
-  -H <span class="str">"Authorization: Bearer $HEADY_API_KEY"</span>
-
-<span class="comment"># Call a specific tool</span>
-curl -X POST <span class="str">https://headyio.com/mcp</span>/tools/filesystem/call \
-  -H <span class="str">"Authorization: Bearer $HEADY_API_KEY"</span> \
-  -H <span class="str">"Content-Type: application/json"</span> \
-  -d <span class="str">'{"action":"list","path":"."}'</span></pre>
-                    </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Soul intelligence: analyze content for patterns, optimize reasoning, train on new data.
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ─── Architecture Flow ─────────────────────────── -->
-        <section>
-            <div class="container">
-                <div class="section-label">Architecture</div>
-                <div class="section-title">Brain-Aware Tool Routing</div>
-                <p class="section-subtitle">Every MCP request flows through the HCSysOrchestrator for intelligent
-                    context-aware execution.</p>
-                <div class="arch-flow">
-                    <div class="arch-node">
-                        <div class="icon">🖥️</div>
-                        <h4>IDE / Agent</h4>
-                        <p>Claude, Cursor, Jules, etc.</p>
-                    </div>
-                    <div class="arch-arrow">→</div>
-                    <div class="arch-node" style="border-color: var(--accent);">
-                        <div class="icon">⚡</div>
-                        <h4>MCP Gateway</h4>
-                        <p>Port 3500 · 12 tools</p>
-                    </div>
-                    <div class="arch-arrow">→</div>
-                    <div class="arch-node">
-                        <div class="icon">🧠</div>
-                        <h4>Orchestrator</h4>
-                        <p>HCSysOrchestrator</p>
-                    </div>
-                    <div class="arch-arrow">→</div>
-                    <div class="arch-node">
-                        <div class="icon">∞</div>
-                        <h4>Heady Services</h4>
-                        <p>Brain · Registry · Pipeline</p>
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_vinci</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- ─── Endpoints ─────────────────────────────────── -->
-        <section class="endpoints-section" id="endpoints">
-            <div class="container">
-                <div class="section-label">API Reference</div>
-                <div class="section-title">Gateway Endpoints</div>
-                <p class="section-subtitle">The MCP Gateway at <code>https://headyio.com/mcp</code> exposes these REST
-                    endpoints.</p>
-                <div class="endpoints-grid">
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get">GET</span>
-                        <div class="endpoint-path">/health</div>
-                        <div class="endpoint-desc">Gateway health, tool count, and orchestrator status</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get">GET</span>
-                        <div class="endpoint-path">/tools</div>
-                        <div class="endpoint-desc">List all available MCP tools with input schemas</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-post">POST</span>
-                        <div class="endpoint-path">/tools/:toolId/call</div>
-                        <div class="endpoint-desc">Execute a tool through the brain-aware orchestrator</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get">GET</span>
-                        <div class="endpoint-path">/resources</div>
-                        <div class="endpoint-desc">List MCP resources (registry, pipeline status, metrics)</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-post">POST</span>
-                        <div class="endpoint-path">/prompts/:promptId</div>
-                        <div class="endpoint-desc">Execute a prompt template via the orchestrator</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-ws">WS</span>
-                        <div class="endpoint-path">/mcp</div>
-                        <div class="endpoint-desc">Full MCP protocol over WebSocket (streaming)</div>
-                    </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Pattern recognition engine: learn, predict, and recognize structures in data.
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ─── Tools ─────────────────────────────────────── -->
-        <section id="tools">
-            <div class="container">
-                <div class="section-label">MCP Tools</div>
-                <div class="section-title">12 Built-In Tools</div>
-                <p class="section-subtitle">Every tool is routed through the HCSysOrchestrator for brain-aware,
-                    context-enriched execution.</p>
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(99,102,241,0.1);">📁</div>
-                        <h3>Filesystem</h3>
-                        <p>Read, write, list, and search files on the local filesystem</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">read</span>
-                            <span class="tool-action">write</span>
-                            <span class="tool-action">list</span>
-                            <span class="tool-action">search</span>
-                            <span class="tool-action">stat</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(168,85,247,0.1);">⬛</div>
-                        <h3>Terminal</h3>
-                        <p>Execute shell commands with safety controls and timeout guards</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">command</span>
-                            <span class="tool-action">cwd</span>
-                            <span class="tool-action">timeout</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(6,182,212,0.1);">🌐</div>
-                        <h3>Browser</h3>
-                        <p>Navigate, screenshot, and interact with web pages</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">navigate</span>
-                            <span class="tool-action">screenshot</span>
-                            <span class="tool-action">click</span>
-                            <span class="tool-action">type</span>
-                            <span class="tool-action">extract</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(34,197,94,0.1);">🐙</div>
-                        <h3>GitHub</h3>
-                        <p>Manage repos, issues, PRs, and actions on GitHub</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">list-repos</span>
-                            <span class="tool-action">create-issue</span>
-                            <span class="tool-action">create-pr</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(245,158,11,0.1);">💬</div>
-                        <h3>Slack</h3>
-                        <p>Send messages, list channels, and manage workspace</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">send</span>
-                            <span class="tool-action">list-channels</span>
-                            <span class="tool-action">read-channel</span>
-                            <span class="tool-action">search</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(99,102,241,0.1);">📝</div>
-                        <h3>Notion</h3>
-                        <p>Query and update Notion databases and pages</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">query-db</span>
-                            <span class="tool-action">get-page</span>
-                            <span class="tool-action">create-page</span>
-                            <span class="tool-action">search</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(6,182,212,0.1);">📂</div>
-                        <h3>Google Drive</h3>
-                        <p>Access and manage Google Drive files</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">list</span>
-                            <span class="tool-action">read</span>
-                            <span class="tool-action">search</span>
-                            <span class="tool-action">upload</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(168,85,247,0.1);">🐳</div>
-                        <h3>Docker</h3>
-                        <p>Manage Docker containers, images, and compose stacks</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">ps</span>
-                            <span class="tool-action">up</span>
-                            <span class="tool-action">down</span>
-                            <span class="tool-action">logs</span>
-                            <span class="tool-action">exec</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(34,197,94,0.1);">📅</div>
-                        <h3>Calendar</h3>
-                        <p>Manage calendar events and scheduling</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">list</span>
-                            <span class="tool-action">create</span>
-                            <span class="tool-action">find-free</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(245,158,11,0.1);">🗂️</div>
-                        <h3>Heady Registry</h3>
-                        <p>Query and update the central service catalog</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">list</span>
-                            <span class="tool-action">get</span>
-                            <span class="tool-action">search</span>
-                            <span class="tool-action">update-status</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(99,102,241,0.1);">🔄</div>
-                        <h3>HCFullPipeline</h3>
-                        <p>Trigger and monitor HCFullPipeline runs</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">run</span>
-                            <span class="tool-action">status</span>
-                            <span class="tool-action">history</span>
-                            <span class="tool-action">cancel</span>
-                        </div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon" style="background: rgba(168,85,247,0.1);">🧠</div>
-                        <h3>HeadyBrain</h3>
-                        <p>Request plans from the HeadyBrain orchestrator</p>
-                        <div class="tool-actions">
-                            <span class="tool-action">plan</span>
-                            <span class="tool-action">feedback</span>
-                            <span class="tool-action">arena</span>
-                            <span class="tool-action">health</span>
-                        </div>
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_embed</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
                     </div>
                 </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Generate 384D vector embeddings for text using configurable models.
+                </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ─── Servers ───────────────────────────────────── -->
-        <section class="endpoints-section" id="servers">
-            <div class="container">
-                <div class="section-label">Core Servers</div>
-                <div class="section-title">HeadyMCP Server Registry</div>
-                <p class="section-subtitle">Three core servers power the Heady MCP ecosystem. All traffic is brain-first
-                    with 100% Heady routing.</p>
-                <table class="server-table">
-                    <thead>
-                        <tr>
-                            <th>Server</th>
-                            <th>Endpoint</th>
-                            <th>Transport</th>
-                            <th>Priority</th>
-                            <th>Capabilities</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="server-name">HeadyBrain</td>
-                            <td class="server-url">https://headyio.com/mcp</td>
-                            <td><span class="badge-transport badge-http">HTTP</span></td>
-                            <td>200 (default)</td>
-                            <td>Chat · Completion · Embedding · Code Analysis · Image Gen</td>
-                        </tr>
-                        <tr>
-                            <td class="server-name">HeadyManager</td>
-                            <td class="server-url">https://headyio.com/manager</td>
-                            <td><span class="badge-transport badge-http">HTTP</span></td>
-                            <td>150</td>
-                            <td>Deployment · Service Management · Health Monitoring</td>
-                        </tr>
-                        <tr>
-                            <td class="server-name">HeadyRegistry</td>
-                            <td class="server-url">https://headyio.com/registry</td>
-                            <td><span class="badge-transport badge-http">HTTP</span></td>
-                            <td>140</td>
-                            <td>Service Discovery · Catalog Query</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_memory</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Semantic search over vector memory store with ranked similarity results.
+                </div>
+            </div>
+        </div>
 
-                <h3 style="margin-top: 40px; font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">Access Points
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_code_generate</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Generate production-ready code from natural language prompts.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_code_review</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Review code for bugs, security issues, performance, and style.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_research</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Conduct deep research using all available knowledge sources.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_analyze</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Analyze data, text, or structured info and return insights.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-creative reveal" data-category="creative">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2728;</div>
+                    <div>
+                        <div class="tool-name">heady_creative</div>
+                        <span class="tool-category-badge">Creative & Content</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Generate stories, marketing copy, ideas, designs, and artistic content.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_patterns</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Detect patterns, trends, and structures using Vinci pattern engine.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-orchestration reveal" data-category="orchestration">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2699;</div>
+                    <div>
+                        <div class="tool-name">heady_conductor_route</div>
+                        <span class="tool-category-badge">Orchestration</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Route tasks through the Conductor orchestration layer to optimal nodes.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-orchestration reveal" data-category="orchestration">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2699;</div>
+                    <div>
+                        <div class="tool-name">heady_pipeline_run</div>
+                        <span class="tool-category-badge">Orchestration</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Execute HCFullPipeline with full-auto mode for autonomous execution.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-orchestration reveal" data-category="orchestration">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2699;</div>
+                    <div>
+                        <div class="tool-name">heady_battle</div>
+                        <span class="tool-category-badge">Orchestration</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Run Arena Battle evaluation between candidate solutions with scoring.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-orchestration reveal" data-category="orchestration">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2699;</div>
+                    <div>
+                        <div class="tool-name">heady_monte_carlo</div>
+                        <span class="tool-category-badge">Orchestration</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Run Monte Carlo simulation for decision-making under uncertainty.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-devops reveal" data-category="devops">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2692;</div>
+                    <div>
+                        <div class="tool-name">heady_deploy</div>
+                        <span class="tool-category-badge">DevOps & Deploy</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Deploy a service or configuration to staging, production, or edge.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-swarm reveal" data-category="swarm">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2638;</div>
+                    <div>
+                        <div class="tool-name">heady_bee_spawn</div>
+                        <span class="tool-category-badge">Swarm & Agents</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Spawn a Bee agent worker for a specific domain or task.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-swarm reveal" data-category="swarm">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2638;</div>
+                    <div>
+                        <div class="tool-name">heady_bee_status</div>
+                        <span class="tool-category-badge">Swarm & Agents</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Check the status and progress of a spawned Bee agent.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-swarm reveal" data-category="swarm">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2638;</div>
+                    <div>
+                        <div class="tool-name">heady_corrections</div>
+                        <span class="tool-category-badge">Swarm & Agents</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Analyze behavior patterns and apply subtle corrections or improvements.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_health</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Check health status of a specific service or all services.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_status</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Get comprehensive system status: all nodes, services, and metrics.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_nodes</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>List all active nodes in the Heady network with status and capabilities.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_coherence</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Compute overall system coherence score across all nodes and services.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_readiness</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Evaluate operational readiness: nodes, thresholds, dependencies.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_drift_check</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Detect when component behavior deviates from semantic baseline.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_governance_check</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Validate actions against governance policies, safety, and ethics.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_secrets</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Interface for secret management: get, set, rotate, or list secrets.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_audit</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Query the audit trail for system events, actions, and decisions.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-data reveal" data-category="data">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26C1;</div>
+                    <div>
+                        <div class="tool-name">heady_config</div>
+                        <span class="tool-category-badge">Data & Memory</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Get or set configuration values with dot-notation key support.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-data reveal" data-category="data">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26C1;</div>
+                    <div>
+                        <div class="tool-name">heady_budget_status</div>
+                        <span class="tool-category-badge">Data & Memory</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Get current budget usage, limits, and remaining allocations.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-data reveal" data-category="data">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26C1;</div>
+                    <div>
+                        <div class="tool-name">heady_story</div>
+                        <span class="tool-category-badge">Data & Memory</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Log events to the Autobiographer for narrative tracking.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-creative reveal" data-category="creative">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2728;</div>
+                    <div>
+                        <div class="tool-name">heady_lens</div>
+                        <span class="tool-category-badge">Creative & Content</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Generate AR overlay explanation for objects, concepts, or data points.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_brain_query</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Query the Heady Brain for contextual intelligence and reasoning.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-ai reveal" data-category="ai">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2726;</div>
+                    <div>
+                        <div class="tool-name">heady_csl_evaluate</div>
+                        <span class="tool-category-badge">AI & Intelligence</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Evaluate Continuous Semantic Logic scores for routing decisions.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-swarm reveal" data-category="swarm">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2638;</div>
+                    <div>
+                        <div class="tool-name">heady_swarm_dispatch</div>
+                        <span class="tool-category-badge">Swarm & Agents</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Dispatch tasks to the swarm layer for parallel bee execution.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-orchestration reveal" data-category="orchestration">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2699;</div>
+                    <div>
+                        <div class="tool-name">heady_saga_run</div>
+                        <span class="tool-category-badge">Orchestration</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Execute distributed sagas with automatic compensation on failure.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-data reveal" data-category="data">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26C1;</div>
+                    <div>
+                        <div class="tool-name">heady_vector_search</div>
+                        <span class="tool-category-badge">Data & Memory</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Search the 384D vector space for nearest neighbors.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-data reveal" data-category="data">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26C1;</div>
+                    <div>
+                        <div class="tool-name">heady_cache_manage</div>
+                        <span class="tool-category-badge">Data & Memory</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Manage hot/warm/cold phi-derived cache pools.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-devops reveal" data-category="devops">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2692;</div>
+                    <div>
+                        <div class="tool-name">heady_webhook_fire</div>
+                        <span class="tool-category-badge">DevOps & Deploy</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Fire webhooks to registered external endpoints.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-devops reveal" data-category="devops">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2692;</div>
+                    <div>
+                        <div class="tool-name">heady_migrate_run</div>
+                        <span class="tool-category-badge">DevOps & Deploy</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Run database migrations with rollback support.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_log_query</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Query structured JSON logs with correlation ID support.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-observability reveal" data-category="observability">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2316;</div>
+                    <div>
+                        <div class="tool-name">heady_metric_push</div>
+                        <span class="tool-category-badge">Observability</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Push custom metrics to the observability pipeline.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/><circle cx="100" cy="40" r="30"/><circle cx="152" cy="70" r="30"/><circle cx="152" cy="130" r="30"/><circle cx="100" cy="160" r="30"/><circle cx="48" cy="130" r="30"/><circle cx="48" cy="70" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_session_manage</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Manage user sessions with CRDT sync support.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><polygon points="100,55 145,130 55,130"/><polygon points="100,145 55,70 145,70"/><polygon points="100,65 135,122 65,122"/><polygon points="100,135 65,78 135,78"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_identity_verify</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Verify user identity through Firebase auth integration.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-security reveal" data-category="security">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="40s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,150 20,150"/><polygon points="100,180 20,50 180,50"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="50" x2="180" y2="150"/><line x1="180" y1="50" x2="20" y2="150"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x26A0;</div>
+                    <div>
+                        <div class="tool-name">heady_rate_check</div>
+                        <span class="tool-category-badge">Security & Governance</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Check and manage phi-scaled rate limiting windows.
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card tool-card cat-devops reveal" data-category="devops">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="currentColor" fill="none" stroke-width="0.4" opacity="0.5"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/><line x1="100" y1="60" x2="134.6" y2="80"/><line x1="134.6" y1="80" x2="134.6" y2="120"/><line x1="134.6" y1="120" x2="100" y2="140"/><line x1="100" y1="140" x2="65.4" y2="120"/><line x1="65.4" y1="120" x2="65.4" y2="80"/><line x1="65.4" y1="80" x2="100" y2="60"/></g></svg></div>
+            <div class="card-content">
+                <div class="tool-header">
+                    <div class="tool-icon">&#x2692;</div>
+                    <div>
+                        <div class="tool-name">heady_edge_deploy</div>
+                        <span class="tool-category-badge">DevOps & Deploy</span>
+                    </div>
+                </div>
+                <div class="tool-desc">
+                    <span class="status-dot active"></span>Deploy to Cloudflare edge: Workers, KV, Vectorize.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     QUICK START SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="quickstart">
+    <h2 class="section-title gradient-text reveal">Quick Start</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        Connect your AI assistant to HeadyMCP in under 60 seconds. Supports Claude, GPT, Gemini, 
+        and any MCP-compatible client.
+    </p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2rem;">
+
+        <!-- STDIO Transport -->
+        <div class="glass-card reveal reveal-delay-1">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.3)" fill="none" stroke-width="0.4"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">STDIO Transport</span>
                 </h3>
-                <table class="server-table">
-                    <thead>
-                        <tr>
-                            <th>Access Method</th>
-                            <th>Endpoint</th>
-                            <th>Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>IDE Extension</td>
-                            <td class="server-url">https://mcp.headymcp.com</td>
-                            <td>VSCode / Cursor / Windsurf</td>
-                        </tr>
-                        <tr>
-                            <td>API Gateway</td>
-                            <td class="server-url">https://api.headymcp.com</td>
-                            <td>REST API</td>
-                        </tr>
-                        <tr>
-                            <td>Web Interface</td>
-                            <td class="server-url">https://app.headymcp.com</td>
-                            <td>Dashboard</td>
-                        </tr>
-                        <tr>
-                            <td>Edge AI</td>
-                            <td class="server-url">https://headyio.com/edge</td>
-                            <td>Cloudflare Workers</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ─── Configuration ─────────────────────────────── -->
-        <section id="config">
-            <div class="container">
-                <div class="section-label">Configuration</div>
-                <div class="section-title">IDE Setup Configs</div>
-                <p class="section-subtitle">Drop these into your IDE's MCP settings. Works with Claude Desktop, Cursor,
-                    Windsurf, and any MCP-compatible client.</p>
-                <div class="config-grid">
-                    <div class="config-card">
-                        <div class="config-header">
-                            <span class="icon">📋</span> Full Config (headymcp.json)
-                        </div>
-                        <pre>{
-  <span class="key">"mcpServers"</span>: {
-    <span class="key">"heady-brain"</span>: {
-      <span class="key">"url"</span>: <span class="str">"https://headyio.com/mcp"</span>,
-      <span class="key">"apiKey"</span>: <span class="str">"${HEADY_API_KEY}"</span>,
-      <span class="key">"priority"</span>: 200,
-      <span class="key">"default"</span>: true
-    },
-    <span class="key">"heady-manager"</span>: {
-      <span class="key">"url"</span>: <span class="str">"https://headyio.com/manager"</span>,
-      <span class="key">"apiKey"</span>: <span class="str">"${HEADY_API_KEY}"</span>
-    },
-    <span class="key">"heady-registry"</span>: {
-      <span class="key">"url"</span>: <span class="str">"https://headyio.com/registry"</span>,
-      <span class="key">"apiKey"</span>: <span class="str">"${HEADY_API_KEY}"</span>
-    }
-  },
-  <span class="key">"modelRouting"</span>: {
-    <span class="key">"defaultModel"</span>: <span class="str">"heady-brain"</span>,
-    <span class="key">"policy"</span>: <span class="str">"heady_only"</span>,
-    <span class="key">"headyPercentage"</span>: 100
-  }
-}</pre>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Fastest setup. Add to your MCP client config and connect directly.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>claude_desktop_config.json</span>
                     </div>
-                    <div class="config-card">
-                        <div class="config-header">
-                            <span class="icon">⚡</span> Minimal Config
-                        </div>
-                        <pre><span class="comment">// Minimum viable config — one server</span>
-{
+                    <div class="code-body">
+<pre>{
   <span class="key">"mcpServers"</span>: {
     <span class="key">"heady"</span>: {
-      <span class="key">"transport"</span>: <span class="str">"http"</span>,
-      <span class="key">"url"</span>: <span class="str">"https://headyio.com/mcp"</span>,
-      <span class="key">"headers"</span>: {
-        <span class="key">"Authorization"</span>:
-          <span class="str">"Bearer $HEADY_API_KEY"</span>
+      <span class="key">"command"</span>: <span class="str">"npx"</span>,
+      <span class="key">"args"</span>: [<span class="str">"heady-mcp"</span>],
+      <span class="key">"env"</span>: {
+        <span class="key">"HEADY_API_KEY"</span>: <span class="str">"your-key-here"</span>
       }
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SSE Transport -->
+        <div class="glass-card reveal reveal-delay-2">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(6,182,212,0.3)" fill="none" stroke-width="0.4"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/><polygon points="100,160 40,60 160,60"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">SSE Transport</span>
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Server-Sent Events for real-time streaming connections over HTTP.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>mcp-config.json</span>
+                    </div>
+                    <div class="code-body">
+<pre>{
+  <span class="key">"mcpServers"</span>: {
+    <span class="key">"heady-sse"</span>: {
+      <span class="key">"url"</span>: <span class="str">"https://mcp.headyos.com/sse"</span>,
+      <span class="key">"transport"</span>: <span class="str">"sse"</span>,
+      <span class="key">"headers"</span>: {
+        <span class="key">"Authorization"</span>: <span class="str">"Bearer $HEADY_KEY"</span>
+      }
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HTTP Transport -->
+        <div class="glass-card reveal reveal-delay-3">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(217,70,239,0.3)" fill="none" stroke-width="0.4"><animateTransform attributeName="transform" type="rotate" dur="48s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,100 100,180 20,100"/><polygon points="100,40 160,100 100,160 40,100"/><polygon points="100,60 140,100 100,140 60,100"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">HTTP Transport</span>
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    REST-compatible HTTP transport for direct API integration and webhooks.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>curl</span>
+                    </div>
+                    <div class="code-body">
+<pre><span class="cmt"># Call any MCP tool via HTTP</span>
+<span class="fn">curl</span> -X POST https://mcp.headyos.com/call \
+  -H <span class="str">"Authorization: Bearer $HEADY_KEY"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "tool": "heady_soul",
+    "arguments": {
+      "content": "Analyze this codebase",
+      "action": "analyze"
+    }
+  }'</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool Call Example -->
+        <div class="glass-card reveal reveal-delay-4">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(16,185,129,0.3)" fill="none" stroke-width="0.4"><animateTransform attributeName="transform" type="rotate" dur="42s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="126" cy="115" r="30"/><circle cx="100" cy="130" r="30"/><circle cx="74" cy="115" r="30"/><circle cx="74" cy="85" r="30"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">Tool Call Example</span>
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Example MCP tool call with full pipeline execution and auto mode.
+                </p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>MCP Tool Call</span>
+                    </div>
+                    <div class="code-body">
+<pre><span class="cmt">// MCP tool_call request</span>
+{
+  <span class="key">"method"</span>: <span class="str">"tools/call"</span>,
+  <span class="key">"params"</span>: {
+    <span class="key">"name"</span>: <span class="str">"heady_pipeline_run"</span>,
+    <span class="key">"arguments"</span>: {
+      <span class="key">"task"</span>: <span class="str">"Analyze user sentiment"</span>,
+      <span class="key">"autoMode"</span>: <span class="kw">true</span>
     }
   }
 }
 
-<span class="comment">// That's it. 12 tools. Zero config.</span></pre>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ─── Security ──────────────────────────────────── -->
-        <section class="endpoints-section" id="security">
-            <div class="container">
-                <div class="section-label">Security</div>
-                <div class="section-title">Authentication & Security</div>
-                <p class="section-subtitle">All HeadyMCP endpoints enforce TLS 1.3 with tier-prefixed API keys.</p>
-                <div class="auth-grid">
-                    <div class="auth-card">
-                        <div class="icon">🔑</div>
-                        <h3>API Key Auth</h3>
-                        <p>Tier-prefixed keys: <code>hdy_int_</code>, <code>hdy_pro_</code>, <code>hdy_ent_</code>. Set
-                            via <code>HEADY_API_KEY</code> env var.</p>
-                    </div>
-                    <div class="auth-card">
-                        <div class="icon">🔒</div>
-                        <h3>TLS 1.3 / HTTPS</h3>
-                        <p>All HTTP endpoints enforced over HTTPS with modern TLS. No plaintext ever.</p>
-                    </div>
-                    <div class="auth-card">
-                        <div class="icon">📋</div>
-                        <h3>Audit Logging</h3>
-                        <p>Enterprise tier includes full MCP audit logging. Every tool call recorded with 365-day
-                            retention.</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 32px;">
-                    <div class="config-card">
-                        <div class="config-header">
-                            <span class="icon">🛡️</span> Model Routing Policy
-                        </div>
-                        <pre><span class="comment">// All MCP requests are brain-first</span>
+<span class="cmt">// Response — 21-stage pipeline result</span>
 {
-  <span class="key">"defaultModel"</span>: <span class="str">"heady-brain"</span>,
-  <span class="key">"policy"</span>: <span class="str">"heady_only"</span>,
-  <span class="key">"headyPercentage"</span>: 100,
-  <span class="key">"allowExternalOverride"</span>: true,
-  <span class="key">"overrideRequires"</span>: <span class="str">"explicit_user_direction"</span>,
-  <span class="key">"logAllModelSwitches"</span>: true,
-  <span class="key">"fallbackChain"</span>: [<span class="str">"heady-brain"</span>, <span class="str">"heady-manager"</span>]
+  <span class="key">"content"</span>: [{
+    <span class="key">"type"</span>: <span class="str">"text"</span>,
+    <span class="key">"text"</span>: <span class="str">"Pipeline complete..."</span>
+  }],
+  <span class="key">"coherenceScore"</span>: <span class="num">0.927</span>,
+  <span class="key">"stagesExecuted"</span>: <span class="num">21</span>,
+  <span class="key">"pathType"</span>: <span class="str">"FULL_PATH"</span>
 }</pre>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
-        <!-- ─── MCP Resources ─────────────────────────────── -->
-        <section id="resources">
-            <div class="container">
-                <div class="section-label">Resources</div>
-                <div class="section-title">Available MCP Resources</div>
-                <p class="section-subtitle">These resources are exposed via the <code>GET /resources</code> endpoint and
-                    can be read by any MCP client.</p>
-                <div class="endpoints-grid">
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get"
-                            style="background: rgba(245,158,11,0.12); color: var(--accent-5);">URI</span>
-                        <div class="endpoint-path">heady://registry</div>
-                        <div class="endpoint-desc">Central service catalog — every Heady service and its status</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get"
-                            style="background: rgba(245,158,11,0.12); color: var(--accent-5);">URI</span>
-                        <div class="endpoint-path">heady://pipeline/status</div>
-                        <div class="endpoint-desc">Current HCFullPipeline run status and history</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get"
-                            style="background: rgba(245,158,11,0.12); color: var(--accent-5);">URI</span>
-                        <div class="endpoint-path">heady://brain/health</div>
-                        <div class="endpoint-desc">HeadyBrain orchestrator health and metrics</div>
-                    </div>
-                    <div class="endpoint-card">
-                        <span class="endpoint-method method-get"
-                            style="background: rgba(245,158,11,0.12); color: var(--accent-5);">URI</span>
-                        <div class="endpoint-path">heady://metrics</div>
-                        <div class="endpoint-desc">System-wide metrics including tool call latency and throughput</div>
-                    </div>
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     ARCHITECTURE SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="architecture">
+    <h2 class="section-title gradient-text reveal">Sacred Architecture</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        The Heady topology maps onto sacred geometry: a center soul, inner ring of orchestration, 
+        middle ring of specialist agents, and outer ring of service nodes.
+    </p>
+
+    <div class="arch-container">
+        <!-- Center Layer -->
+        <div class="glass-card arch-layer reveal" style="border-color: rgba(251,191,36,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(251,191,36,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="60s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="100" r="20"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="100" x2="180" y2="100"/><line x1="43" y1="43" x2="157" y2="157"/><line x1="157" y1="43" x2="43" y2="157"/></g></svg></div>
+            <div class="card-content">
+                <div class="arch-label" style="color: var(--gold);">&#x2726; Center — HeadySoul</div>
+                <div class="arch-nodes">
+                    <span class="arch-node" style="background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--gold);">HeadySoul</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: center;">
+                    The core intelligence. Every request passes through the Soul for intent classification and coherence scoring.
+                </p>
+            </div>
+        </div>
+
+        <!-- Inner Ring -->
+        <div class="glass-card arch-layer reveal reveal-delay-1" style="border-color: rgba(99,102,241,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.12)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><polygon points="100,30 170,100 100,170 30,100"/><polygon points="100,50 150,100 100,150 50,100"/><polygon points="100,70 130,100 100,130 70,100"/><circle cx="100" cy="100" r="75"/></g></svg></div>
+            <div class="card-content">
+                <div class="arch-label" style="color: var(--indigo);">&#x2699; Inner Ring — Orchestration</div>
+                <div class="arch-nodes">
+                    <span class="arch-node" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); color: var(--indigo);">Conductor</span>
+                    <span class="arch-node" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); color: var(--indigo);">Brains</span>
+                    <span class="arch-node" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); color: var(--indigo);">Vinci</span>
+                    <span class="arch-node" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); color: var(--indigo);">AutoSuccess</span>
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- ─── Footer ────────────────────────────────────── -->
         
@@ -1496,44 +1944,730 @@ curl -X POST <span class="str">https://headyio.com/mcp</span>/tools/filesystem/c
                     <a href="https://headyconnection.org">HeadyConnection</a>
                     <a href="https://headyweb.com">HeadyWeb</a>
                 </div>
-                <p>© 2026 Heady Systems Inc. · <a href="https://headysystems.com">headysystems.com</a> · ∞ Sacred
-                    Geometry</p>
             </div>
-        </footer>
+        </div>
+
+        <!-- Outer Ring -->
+        <div class="glass-card arch-layer reveal reveal-delay-3" style="border-color: rgba(217,70,239,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(217,70,239,0.12)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="70s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><circle cx="100" cy="100" r="70"/><circle cx="100" cy="100" r="50"/></g></svg></div>
+            <div class="card-content">
+                <div class="arch-label" style="color: var(--fuchsia);">&#x2726; Outer Ring — Service Nodes</div>
+                <div class="arch-nodes">
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">BRIDGE</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">MUSE</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">SENTINEL</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">NOVA</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">JANITOR</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">SOPHIA</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">CIPHER</span>
+                    <span class="arch-node" style="background: rgba(217,70,239,0.1); border: 1px solid rgba(217,70,239,0.3); color: var(--fuchsia);">LENS</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Governance Ring -->
+        <div class="glass-card arch-layer reveal reveal-delay-4" style="border-color: rgba(16,185,129,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(16,185,129,0.12)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="75s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="80"/><polygon points="100,20 180,100 100,180 20,100"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="100" x2="180" y2="100"/></g></svg></div>
+            <div class="card-content">
+                <div class="arch-label" style="color: var(--emerald);">&#x26A0; Governance Layer</div>
+                <div class="arch-nodes">
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">Check</span>
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">Assure</span>
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">Aware</span>
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">Patterns</span>
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">MC</span>
+                    <span class="arch-node" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald);">Risks</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     PHI-TIERS SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="tiers">
+    <h2 class="section-title gradient-text reveal">9 Phi-Tiers</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        Every routing decision, cache policy, and confidence gate is derived from the golden ratio.
+        CSL (Continuous Semantic Logic) scores map to these phi-derived thresholds.
+    </p>
+
+    <div class="tier-grid">
+        <div class="glass-card tier-card reveal">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text">Tier 1 — Minimum</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.500</div>
+                <div class="tier-desc">Base threshold. Requests below this are rejected outright. Ensures minimum semantic coherence for any operation.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-1">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(6,182,212,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text-alt">Tier 2 — Low</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.618</div>
+                <div class="tier-desc">The golden ratio inverse (psi). Simple queries and basic tool routing. Cold cache access permitted.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-2">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(217,70,239,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><polygon points="100,20 180,100 100,180 20,100"/><circle cx="100" cy="100" r="65"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text">Tier 3 — Medium</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.691</div>
+                <div class="tier-desc">Standard operations. Multi-tool routing enabled. Warm cache tier access. Fibonacci-indexed backoff.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-3">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(16,185,129,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="48s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="30"/><circle cx="100" cy="70" r="30"/><circle cx="126" cy="85" r="30"/><circle cx="74" cy="85" r="30"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text-alt">Tier 4 — Good</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.764</div>
+                <div class="tier-desc">Pipeline execution permitted. Conductor routing with node selection. Monte Carlo sampling enabled.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(244,63,94,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="52s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,30 170,100 100,170 30,100"/><polygon points="100,50 150,100 100,150 50,100"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text">Tier 5 — High</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.809</div>
+                <div class="tier-desc">Semantic coherence threshold. Full pipeline execution. Arena battles. Hot cache tier access.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-1">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(245,158,11,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="58s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><circle cx="100" cy="100" r="60"/><polygon points="100,40 145,75 145,125 100,160 55,125 55,75"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text-alt">Tier 6 — Very High</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.854</div>
+                <div class="tier-desc">Swarm dispatch enabled. Bee agent spawning. Multi-agent collaboration. Pattern capture and learning.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-2">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(251,191,36,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="62s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><polygon points="100,40 160,140 40,140"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text">Tier 7 — Critical</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.882</div>
+                <div class="tier-desc">Critical operations. Deploy access. Secret rotation. Governance override with audit logging.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-3">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="66s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text-alt">Tier 8 — Supreme</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.927</div>
+                <div class="tier-desc">Full autonomous mode. Auto-pilot pipeline. Production deploy authority. Cross-domain saga execution.</div>
+            </div>
+        </div>
+        <div class="glass-card tier-card reveal reveal-delay-4">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(251,191,36,0.2)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="70s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="100" r="20"/><polygon points="100,20 180,100 100,180 20,100"/><polygon points="100,40 160,100 100,160 40,100"/></g></svg></div>
+            <div class="card-content">
+                <div class="tier-name gradient-text">Tier 9 — Dedup / Unity</div>
+                <div class="tier-threshold"><span class="status-dot active"></span>CSL >= 0.972</div>
+                <div class="tier-desc">Near-perfect semantic alignment. Deduplication threshold. System-level pattern integration and self-optimization.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     PIPELINE SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="pipeline">
+    <h2 class="section-title gradient-text reveal">HCFullPipeline v7</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        The 21-stage state machine that processes every request. Four path variants optimize for 
+        speed, completeness, evaluation, or learning.
+    </p>
+
+    <div class="glass-card reveal reveal-delay-2" style="max-width: 1000px; margin: 0 auto 2rem;">
+        <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.1)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="80s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="60"/><circle cx="100" cy="100" r="40"/><polygon points="100,20 180,100 100,180 20,100"/><polygon points="100,40 160,100 100,160 40,100"/><line x1="100" y1="20" x2="100" y2="180"/><line x1="20" y1="100" x2="180" y2="100"/></g></svg></div>
+        <div class="card-content">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-secondary);">
+                <span class="status-dot active"></span>
+                FULL_PATH — 21 Stages
+            </h3>
+            <div class="pipeline-flow">
+                <span class="pipeline-stage">CHANNEL_ENTRY</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">AUTH_GATE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">INTENT_CLASSIFY</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">CONTEXT_ASSEMBLE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">NODE_SELECT</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">CSL_GATE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">BATTLE_DISPATCH</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">MC_SAMPLE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">BEE_DISPATCH</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">SWARM_ROUTE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">EXECUTE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">QUALITY_GATE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">ASSURANCE_GATE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">PATTERN_CAPTURE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">DRIFT_CHECK</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">STORY_UPDATE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">GOVERNANCE_LOG</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">COST_TALLY</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">CACHE_WRITE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">RESPONSE_SHAPE</span><span class="pipeline-arrow">&#x2192;</span>
+                <span class="pipeline-stage">RECEIPT</span>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Tab switching
-        document.querySelectorAll('.code-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
-                tab.classList.add('active');
-                document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
-            });
-        });
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; max-width: 1000px; margin: 0 auto;">
+        <div class="glass-card reveal" style="border-color: rgba(16,185,129,0.3);">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--emerald);">
+                    <span class="status-dot active"></span> FAST_PATH
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">7</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">stages — low-latency routing</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-1" style="border-color: rgba(99,102,241,0.3);">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--indigo);">
+                    <span class="status-dot active"></span> FULL_PATH
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">21</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">stages — complete pipeline</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-2" style="border-color: rgba(217,70,239,0.3);">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--fuchsia);">
+                    <span class="status-dot active"></span> ARENA_PATH
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">9</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">stages — battle evaluation</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-3" style="border-color: rgba(6,182,212,0.3);">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--cyan);">
+                    <span class="status-dot active"></span> LEARNING_PATH
+                </div>
+                <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">7</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">stages — pattern learning</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        // Copy button
-        function copyCode() {
-            const active = document.querySelector('.code-panel.active pre');
-            const text = active.innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.textContent = 'Copied!';
-                setTimeout(() => btn.textContent = 'Copy', 2000);
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     PHI MATH CONSTANTS
+     ════════════════════════════════════════════════════════════════ -->
+<section id="phi-math">
+    <h2 class="section-title gradient-text-alt reveal">Phi-Math Constants</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        Every threshold, pool allocation, and backoff curve is derived from the golden ratio 
+        and Fibonacci sequence. No magic numbers.
+    </p>
+
+    <div class="glass-card reveal reveal-delay-2" style="max-width: 800px; margin: 0 auto;">
+        <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(251,191,36,0.12)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="90s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="49.4"/><circle cx="100" cy="100" r="30.5"/><circle cx="100" cy="100" r="18.9"/><circle cx="100" cy="100" r="11.7"/></g></svg></div>
+        <div class="card-content">
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <span>phi-constants.js</span>
+                </div>
+                <div class="code-body">
+<pre><span class="cmt">// Golden Ratio Constants</span>
+<span class="kw">const</span> <span class="type">PHI</span> = <span class="num">1.618033988749895</span>;
+<span class="kw">const</span> <span class="type">PSI</span> = <span class="num">0.618033988749895</span>;  <span class="cmt">// 1/PHI</span>
+
+<span class="cmt">// Fibonacci Sequence (used for indexing)</span>
+<span class="kw">const</span> <span class="type">FIB</span> = [<span class="num">0</span>,<span class="num">1</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">5</span>,<span class="num">8</span>,<span class="num">13</span>,<span class="num">21</span>,<span class="num">34</span>,<span class="num">55</span>,<span class="num">89</span>,<span class="num">144</span>,<span class="num">233</span>,<span class="num">377</span>,<span class="num">610</span>,<span class="num">987</span>];
+
+<span class="cmt">// CSL Confidence Thresholds</span>
+<span class="kw">const</span> <span class="type">CSL</span> = {
+  <span class="key">MINIMUM</span>:  <span class="num">0.500</span>,   <span class="cmt">// Gate: reject below</span>
+  <span class="key">LOW</span>:      <span class="num">0.618</span>,   <span class="cmt">// PSI — basic routing</span>
+  <span class="key">MEDIUM</span>:   <span class="num">0.691</span>,   <span class="cmt">// Multi-tool access</span>
+  <span class="key">GOOD</span>:     <span class="num">0.764</span>,   <span class="cmt">// Pipeline execution</span>
+  <span class="key">HIGH</span>:     <span class="num">0.809</span>,   <span class="cmt">// Full pipeline</span>
+  <span class="key">VERY_HIGH</span>:<span class="num"> 0.854</span>,   <span class="cmt">// Swarm dispatch</span>
+  <span class="key">CRITICAL</span>: <span class="num">0.882</span>,   <span class="cmt">// Deploy access</span>
+  <span class="key">SUPREME</span>:  <span class="num">0.927</span>,   <span class="cmt">// Full auto-pilot</span>
+  <span class="key">DEDUP</span>:    <span class="num">0.972</span>,   <span class="cmt">// Unity threshold</span>
+};
+
+<span class="cmt">// Cache Pool Allocations (phi-derived)</span>
+<span class="kw">const</span> <span class="type">POOLS</span> = {
+  <span class="key">Hot</span>:        <span class="num">0.34</span>,   <span class="cmt">// 34% — Fib(9)</span>
+  <span class="key">Warm</span>:       <span class="num">0.21</span>,   <span class="cmt">// 21% — Fib(8)</span>
+  <span class="key">Cold</span>:       <span class="num">0.13</span>,   <span class="cmt">// 13% — Fib(7)</span>
+  <span class="key">Reserve</span>:    <span class="num">0.08</span>,   <span class="cmt">// 8%  — Fib(6)</span>
+  <span class="key">Governance</span>: <span class="num">0.05</span>,   <span class="cmt">// 5%  — Fib(5)</span>
+};
+
+<span class="cmt">// Backoff: PHI^attempt * base (jitter +/-38.2%)</span>
+<span class="kw">function</span> <span class="fn">phiBackoff</span>(attempt, base = <span class="num">100</span>) {
+  <span class="kw">const</span> delay = Math.pow(<span class="type">PHI</span>, attempt) * base;
+  <span class="kw">const</span> jitter = delay * <span class="num">0.382</span> * (Math.random() * <span class="num">2</span> - <span class="num">1</span>);
+  <span class="kw">return</span> Math.round(delay + jitter);
+}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     TRANSPORTS SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="transports">
+    <h2 class="section-title gradient-text reveal">3 Transports</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        Connect via any MCP-compatible transport. Each transport supports all 45 tools with
+        identical capabilities and phi-scaled rate limiting.
+    </p>
+
+    <div class="transport-grid">
+        <div class="glass-card reveal" style="border-color: rgba(99,102,241,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(99,102,241,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="45s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,25 175,150 25,150"/><polygon points="100,175 25,50 175,50"/><circle cx="100" cy="100" r="55"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">
+                    <span class="gradient-text">STDIO</span>
+                </h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">
+                    Standard input/output transport. Zero network overhead. Direct process communication. 
+                    Ideal for local IDE integrations like Claude Desktop, Cursor, and Windsurf.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(99,102,241,0.1); color: var(--indigo); font-weight: 600;">Claude Desktop</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(99,102,241,0.1); color: var(--indigo); font-weight: 600;">Cursor</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(99,102,241,0.1); color: var(--indigo); font-weight: 600;">Windsurf</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(99,102,241,0.1); color: var(--indigo); font-weight: 600;">VS Code</span>
+                </div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-1" style="border-color: rgba(6,182,212,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(6,182,212,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="50s" repeatCount="indefinite" from="360 100 100" to="0 100 100"/><circle cx="100" cy="100" r="40"/><circle cx="100" cy="60" r="40"/><circle cx="134.6" cy="80" r="40"/><circle cx="134.6" cy="120" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="65.4" cy="120" r="40"/><circle cx="65.4" cy="80" r="40"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">
+                    <span class="gradient-text-alt">SSE</span>
+                </h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">
+                    Server-Sent Events over HTTP. Real-time streaming responses. Persistent connections with 
+                    automatic reconnection. Ideal for web-based clients and remote agents.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(6,182,212,0.1); color: var(--cyan); font-weight: 600;">Web Clients</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(6,182,212,0.1); color: var(--cyan); font-weight: 600;">Remote Agents</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(6,182,212,0.1); color: var(--cyan); font-weight: 600;">HeadyBuddy</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(6,182,212,0.1); color: var(--cyan); font-weight: 600;">HeadyWeb</span>
+                </div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-2" style="border-color: rgba(217,70,239,0.3);">
+            <div class="card-geo-bg"><svg viewBox="0 0 200 200"><g stroke="rgba(217,70,239,0.15)" fill="none" stroke-width="0.3"><animateTransform attributeName="transform" type="rotate" dur="55s" repeatCount="indefinite" from="0 100 100" to="360 100 100"/><polygon points="100,20 180,100 100,180 20,100"/><polygon points="100,40 160,100 100,160 40,100"/><polygon points="100,60 140,100 100,140 60,100"/><circle cx="100" cy="100" r="65" stroke-dasharray="4 4"/></g></svg></div>
+            <div class="card-content">
+                <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">
+                    <span class="gradient-text">HTTP</span>
+                </h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">
+                    RESTful HTTP transport. Standard request/response. Compatible with any HTTP client. 
+                    Webhook support for async operations. Edge-deployed via Cloudflare Workers.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(217,70,239,0.1); color: var(--fuchsia); font-weight: 600;">REST APIs</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(217,70,239,0.1); color: var(--fuchsia); font-weight: 600;">Webhooks</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(217,70,239,0.1); color: var(--fuchsia); font-weight: 600;">Edge Workers</span>
+                    <span style="padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; background: rgba(217,70,239,0.1); color: var(--fuchsia); font-weight: 600;">Custom Clients</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     DOMAINS SECTION
+     ════════════════════════════════════════════════════════════════ -->
+<section id="domains">
+    <h2 class="section-title gradient-text-alt reveal">Heady Ecosystem</h2>
+    <p class="section-subtitle reveal reveal-delay-1">
+        Nine domains, one interconnected ecosystem. HeadyMCP bridges them all through a single
+        protocol interface.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+        <div class="glass-card reveal">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">headymcp.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">MCP Documentation & Tools</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-1">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">headyme.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Personal AI Assistant</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-2">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">headysystems.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Enterprise Platform</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-3">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">headyconnection.org</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Community & Mission</div>
+            </div>
+        </div>
+        <div class="glass-card reveal">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">headybuddy.org</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">AI Companion Widget</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-1">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">headyio.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Developer Platform</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-2">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">headybot.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Bot Integrations</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-3">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text-alt">headyapi.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">API Gateway & Docs</div>
+            </div>
+        </div>
+        <div class="glass-card reveal reveal-delay-4">
+            <div class="card-content" style="padding: 1.25rem;">
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.3rem;">
+                    <span class="status-dot active"></span>
+                    <span class="gradient-text">headyai.com</span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">AI Research & Models</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="gradient-divider">
+
+<!-- ════════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+    <div style="max-width: 1400px; margin: 0 auto;">
+        <div style="font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem;">
+            <span class="gradient-text">HeadyMCP</span>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; max-width: 500px; margin: 0 auto 2rem; line-height: 1.7;">
+            The sacred geometry of intelligence. 45+ tools, 175+ services, infinite possibility.
+        </p>
+        <div class="footer-links">
+            <a href="https://headymcp.com">HeadyMCP</a>
+            <a href="https://headysystems.com">HeadySystems</a>
+            <a href="https://headyme.com">HeadyMe</a>
+            <a href="https://headyconnection.org">HeadyConnection</a>
+            <a href="https://headybuddy.org">HeadyBuddy</a>
+            <a href="https://headyio.com">HeadyIO</a>
+            <a href="https://headybot.com">HeadyBot</a>
+            <a href="https://headyapi.com">HeadyAPI</a>
+            <a href="https://headyai.com">HeadyAI</a>
+            <a href="https://github.com/heady-systems">GitHub</a>
+        </div>
+        <hr class="gradient-divider" style="margin: 2rem auto;">
+        <p class="footer-copy">
+            &copy; 2026 HeadySystems Inc. — Eric Haywood, Founder — 60+ Provisional Patents<br>
+            <span style="color: var(--text-muted);">
+                Built with sacred geometry. Powered by phi. Every threshold golden-ratio derived.
+            </span>
+        </p>
+        <p style="margin-top: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted);">
+            PHI = 1.618033988749895 &middot; PSI = 0.618033988749895 &middot; heady-mcp v3.1.0
+        </p>
+    </div>
+</footer>
+
+</div><!-- end content-wrapper -->
+
+<!-- ============================================================
+     SACRED GEOMETRY CANVAS ENGINE — INLINE
+     Full wireframe renderer: Metatron's Cube, Flower of Life,
+     Sri Yantra, Merkaba, Seed of Life, all spinning densely
+     ============================================================ -->
+<script>
+(function() {
+    'use strict';
+
+    // ── Sacred Geometry Canvas ──
+    const canvas = document.getElementById('sacred-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    const PHI = 1.618033988749895;
+    const TAU = Math.PI * 2;
+    const shapes = [];
+
+    // Generate dense sacred geometry objects
+    function createShapes() {
+        shapes.length = 0;
+        const count = Math.max(12, Math.floor((W * H) / 80000));
+        for (let i = 0; i < count; i++) {
+            const type = Math.floor(Math.random() * 6);
+            shapes.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                size: 80 + Math.random() * 250,
+                rotation: Math.random() * TAU,
+                speed: (Math.random() - 0.5) * 0.003,
+                type: type,
+                opacity: 0.06 + Math.random() * 0.1,
+                hue: [240, 280, 190, 160, 320, 50][type],
+                drift: { x: (Math.random() - 0.5) * 0.15, y: (Math.random() - 0.5) * 0.1 }
             });
         }
+    }
+    createShapes();
+    window.addEventListener('resize', createShapes);
 
-        // Smooth scroll for nav links
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
-            });
+    function drawMetatronsCube(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        // 7 overlapping circles
+        const positions = [
+            [0, 0], [0, -r*0.5],
+            [r*0.433, -r*0.25], [r*0.433, r*0.25],
+            [0, r*0.5], [-r*0.433, r*0.25], [-r*0.433, -r*0.25]
+        ];
+        for (const [px, py] of positions) {
+            ctx.beginPath();
+            ctx.arc(px, py, r * 0.5, 0, TAU);
+            ctx.stroke();
+        }
+        // Connecting lines forming the cube
+        for (let i = 0; i < positions.length; i++) {
+            for (let j = i + 1; j < positions.length; j++) {
+                ctx.beginPath();
+                ctx.moveTo(positions[i][0], positions[i][1]);
+                ctx.lineTo(positions[j][0], positions[j][1]);
+                ctx.stroke();
+            }
+        }
+        ctx.restore();
+    }
+
+    function drawFlowerOfLife(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        const cr = r * 0.33;
+        // Center
+        ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.stroke();
+        // Inner ring (6)
+        for (let i = 0; i < 6; i++) {
+            const a = (i / 6) * TAU;
+            ctx.beginPath();
+            ctx.arc(Math.cos(a) * cr, Math.sin(a) * cr, cr, 0, TAU);
+            ctx.stroke();
+        }
+        // Outer ring (12)
+        for (let i = 0; i < 12; i++) {
+            const a = (i / 12) * TAU;
+            ctx.beginPath();
+            ctx.arc(Math.cos(a) * cr * 2, Math.sin(a) * cr * 2, cr, 0, TAU);
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    function drawSriYantra(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        // Nested triangles pointing up and down
+        for (let i = 0; i < 4; i++) {
+            const s = r * (1 - i * 0.2);
+            // Upward triangle
+            ctx.beginPath();
+            ctx.moveTo(0, -s);
+            ctx.lineTo(s * 0.866, s * 0.5);
+            ctx.lineTo(-s * 0.866, s * 0.5);
+            ctx.closePath();
+            ctx.stroke();
+            // Downward triangle
+            ctx.beginPath();
+            ctx.moveTo(0, s);
+            ctx.lineTo(s * 0.866, -s * 0.5);
+            ctx.lineTo(-s * 0.866, -s * 0.5);
+            ctx.closePath();
+            ctx.stroke();
+        }
+        // Outer circle
+        ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawMerkaba(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        // 3D-projected merkaba (two interlocking tetrahedra)
+        const h = r * 0.866;
+        // Tetrahedron 1 (up)
+        ctx.beginPath();
+        ctx.moveTo(0, -r);
+        ctx.lineTo(h, r * 0.5);
+        ctx.lineTo(-h, r * 0.5);
+        ctx.closePath();
+        ctx.stroke();
+        // Tetrahedron 2 (down)
+        ctx.beginPath();
+        ctx.moveTo(0, r);
+        ctx.lineTo(h, -r * 0.5);
+        ctx.lineTo(-h, -r * 0.5);
+        ctx.closePath();
+        ctx.stroke();
+        // Connecting edges
+        ctx.beginPath();
+        ctx.moveTo(0, -r); ctx.lineTo(0, r);
+        ctx.moveTo(h, r*0.5); ctx.lineTo(-h, -r*0.5);
+        ctx.moveTo(-h, r*0.5); ctx.lineTo(h, -r*0.5);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawSeedOfLife(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        const cr = r * 0.4;
+        ctx.beginPath(); ctx.arc(0, 0, cr, 0, TAU); ctx.stroke();
+        for (let i = 0; i < 6; i++) {
+            const a = (i / 6) * TAU;
+            ctx.beginPath();
+            ctx.arc(Math.cos(a) * cr, Math.sin(a) * cr, cr, 0, TAU);
+            ctx.stroke();
+        }
+        // Outer boundary
+        ctx.beginPath(); ctx.arc(0, 0, r * 0.8, 0, TAU); ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawVesicaPiscis(cx, cy, r, rot) {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        const d = r * 0.3;
+        ctx.beginPath(); ctx.arc(-d, 0, r * 0.5, 0, TAU); ctx.stroke();
+        ctx.beginPath(); ctx.arc(d, 0, r * 0.5, 0, TAU); ctx.stroke();
+        // Diamond inside vesica
+        const h = Math.sqrt(r*0.5*r*0.5 - d*d);
+        ctx.beginPath();
+        ctx.moveTo(0, -h); ctx.lineTo(d*2, 0);
+        ctx.lineTo(0, h); ctx.lineTo(-d*2, 0);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    const drawFns = [drawMetatronsCube, drawFlowerOfLife, drawSriYantra, drawMerkaba, drawSeedOfLife, drawVesicaPiscis];
+
+    let time = 0;
+    function animate() {
+        time += 0.016;
+        ctx.clearRect(0, 0, W, H);
+
+        for (const s of shapes) {
+            s.rotation += s.speed;
+            s.x += s.drift.x;
+            s.y += s.drift.y;
+
+            // Wrap around
+            if (s.x < -s.size) s.x = W + s.size;
+            if (s.x > W + s.size) s.x = -s.size;
+            if (s.y < -s.size) s.y = H + s.size;
+            if (s.y > H + s.size) s.y = -s.size;
+
+            const hue = s.hue + Math.sin(time * 0.5) * 20;
+            ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${s.opacity})`;
+            ctx.lineWidth = 0.5;
+
+            drawFns[s.type](s.x, s.y, s.size * 0.5, s.rotation);
+        }
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ── Particle Field ──
+    const pCanvas = document.getElementById('particle-canvas');
+    const pCtx = pCanvas.getContext('2d');
+    let pW, pH;
+
+    function pResize() {
+        pW = pCanvas.width = window.innerWidth;
+        pH = pCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', pResize);
+    pResize();
+
+    const particles = [];
+    const particleCount = Math.max(60, Math.floor((window.innerWidth * window.innerHeight) / 12000));
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push({
+            x: Math.random() * pW,
+            y: Math.random() * pH,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: 1 + Math.random() * 2,
+            hue: 240 + Math.random() * 80,
+            alpha: 0.2 + Math.random() * 0.4
         });
-    </script>
-</body>
+    }
 
 </html>
 =======

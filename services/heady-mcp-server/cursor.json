@@ -5,7 +5,9 @@
       "args": ["./services/heady-mcp-server/src/index.js"],
       "env": {
         "HEADY_MCP_TRANSPORT": "stdio",
-        "HEADY_SERVICE_HOST": "localhost"
+        "HEADY_SERVICE_HOST": "localhost",
+        "HEADY_MCP_VERSION": "5.1.0",
+        "HEADY_TOOL_COUNT": "87"
       }
     }
   }

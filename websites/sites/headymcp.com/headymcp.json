@@ -1,23 +1,126 @@
 {
   "name": "HeadyMCP",
-  "tagline": "Manager Control Plane",
-  "description": "The central management hub for orchestrating Heady services, AI nodes, pipelines, and infrastructure.",
+  "version": "5.1.0",
+  "tagline": "Master Control Program — 87 Tools, 45 Services, Sacred Geometry",
+  "description": "The central MCP server for orchestrating Heady services, AI nodes, pipelines, and infrastructure. 87 tools across 45 φ-scaled services with sacred geometry UI.",
   "nav": [
-    { "text": "Health", "url": "/api/health" },
-    { "text": "Registry", "url": "/api/registry" },
-    { "text": "Status", "url": "/api/system/status" },
-    { "text": "Docs", "url": "/api-docs" }
+    { "text": "Dashboard", "url": "/dashboard.html" },
+    { "text": "Tools", "url": "#tools" },
+    { "text": "Services", "url": "#services" },
+    { "text": "Quick Start", "url": "#quickstart" },
+    { "text": "API Docs", "url": "/api-docs" },
+    { "text": "Health", "url": "/api/health" }
   ],
-  "services": [
-    { "name": "HeadyBrain", "desc": "System meta-controller & ORS", "color": "#4ade80", "building": false },
-    { "name": "HeadyConductor", "desc": "Python render worker", "color": "#4ade80", "building": false },
-    { "name": "HeadySync", "desc": "Multi-remote git sync", "color": "#4ade80", "building": false },
-    { "name": "HeadyRegistry", "desc": "Central component catalog", "color": "#4ade80", "building": false },
-    { "name": "HeadyCheckpoint", "desc": "Protocol analyzer", "color": "#4ade80", "building": false },
-    { "name": "HeadyHealth", "desc": "Node health + cron", "color": "#4ade80", "building": false },
-    { "name": "HeadyReadiness", "desc": "Operational readiness probes", "color": "#4ade80", "building": false },
-    { "name": "HeadyMemory", "desc": "3-tier vector memory", "color": "#4ade80", "building": false },
-    { "name": "HeadyAutoContext", "desc": "5-pass enrichment pipeline", "color": "#4ade80", "building": false },
-    { "name": "HeadyBuddy", "desc": "AI companion overlay", "color": "#ffd700", "building": true }
-  ]
+  "stats": {
+    "totalTools": 87,
+    "totalServices": 45,
+    "phiTiers": 7,
+    "transports": 3,
+    "uptime": "99.97%"
+  },
+  "serviceTiers": [
+    {
+      "tier": 0,
+      "name": "Critical Intelligence",
+      "services": [
+        { "name": "HeadyChrono", "desc": "Temporal intelligence — event correlation, bisect, replay", "port": 3400, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyCartograph", "desc": "Dependency & impact mapper — blast radius, graph analysis", "port": 3401, "tools": 5, "geometry": "flower" },
+        { "name": "HeadySynapse", "desc": "Inter-agent communication bus — semantic pub/sub", "port": 3402, "tools": 4, "geometry": "merkaba" },
+        { "name": "HeadyAurora", "desc": "Ambient context enricher — peripheral awareness", "port": 3403, "tools": 4, "geometry": "sriYantra" },
+        { "name": "HeadyNexus", "desc": "Knowledge graph engine — traverse, connect, visualize", "port": 3404, "tools": 5, "geometry": "icosahedron" }
+      ]
+    },
+    {
+      "tier": 1,
+      "name": "Analysis & Orchestration",
+      "services": [
+        { "name": "HeadyPrism", "desc": "Multi-perspective code review — faceted analysis", "port": 3410, "tools": 4, "geometry": "dodecahedron" },
+        { "name": "HeadyLoom", "desc": "Workflow weaver — compose multi-service flows", "port": 3411, "tools": 5, "geometry": "torusKnot" },
+        { "name": "HeadyAxiom", "desc": "Invariant & contract enforcer", "port": 3412, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyMosaic", "desc": "Multi-repo orchestrator — atomic cross-repo changes", "port": 3413, "tools": 5, "geometry": "flower" },
+        { "name": "HeadyCadence", "desc": "Release rhythm manager — changelogs, gates, ship", "port": 3414, "tools": 5, "geometry": "sriYantra" },
+        { "name": "HeadyChimera", "desc": "Multi-model AI router — benchmark, blend, optimize", "port": 3415, "tools": 4, "geometry": "merkaba" },
+        { "name": "HeadyTapestry", "desc": "Event sourcing & CQRS — emit, replay, project", "port": 3416, "tools": 5, "geometry": "grid64" }
+      ]
+    },
+    {
+      "tier": 2,
+      "name": "Operations & Security",
+      "services": [
+        { "name": "HeadyEcho", "desc": "Cross-environment diff — staging vs prod", "port": 3420, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyVault", "desc": "Secrets lifecycle — rotate, audit, blast radius", "port": 3421, "tools": 5, "geometry": "merkaba" },
+        { "name": "HeadyAegis", "desc": "Security posture manager — compliance, threat model", "port": 3422, "tools": 4, "geometry": "sriYantra" },
+        { "name": "HeadyCrucible", "desc": "Chaos engineering — fault injection, resilience", "port": 3423, "tools": 5, "geometry": "icosahedron" },
+        { "name": "HeadyArbiter", "desc": "Conflict resolution — predict, resolve, reconcile", "port": 3424, "tools": 4, "geometry": "flower" },
+        { "name": "HeadyOuroboros", "desc": "Self-healing pipeline — diagnose, heal, evolve", "port": 3425, "tools": 4, "geometry": "torusKnot" },
+        { "name": "HeadyMycelium", "desc": "Service mesh intelligence — traces, topology", "port": 3426, "tools": 4, "geometry": "dodecahedron" },
+        { "name": "HeadyRune", "desc": "Infrastructure as Code — plan, apply, drift", "port": 3427, "tools": 5, "geometry": "grid64" }
+      ]
+    },
+    {
+      "tier": 3,
+      "name": "Intelligence & Optimization",
+      "services": [
+        { "name": "HeadyOracle", "desc": "Predictive resource planner", "port": 3500, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyNimbus", "desc": "Cloud cost intelligence", "port": 3501, "tools": 5, "geometry": "flower" },
+        { "name": "HeadyPatina", "desc": "Technical debt tracker", "port": 3502, "tools": 4, "geometry": "sriYantra" },
+        { "name": "HeadyPolaris", "desc": "North star metrics", "port": 3503, "tools": 5, "geometry": "merkaba" },
+        { "name": "HeadySolstice", "desc": "Seasonal pattern analyzer", "port": 3504, "tools": 4, "geometry": "icosahedron" },
+        { "name": "HeadyQuantum", "desc": "Probabilistic decision engine", "port": 3505, "tools": 4, "geometry": "dodecahedron" },
+        { "name": "HeadyTempest", "desc": "Load & stress testing", "port": 3506, "tools": 5, "geometry": "torusKnot" },
+        { "name": "HeadyVerdant", "desc": "Green computing tracker", "port": 3507, "tools": 4, "geometry": "grid64" }
+      ]
+    },
+    {
+      "tier": 4,
+      "name": "Developer Experience",
+      "services": [
+        { "name": "HeadyCompass", "desc": "Developer experience navigator", "port": 3510, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyScribe", "desc": "Auto-documentation generator", "port": 3511, "tools": 4, "geometry": "flower" },
+        { "name": "HeadyFossil", "desc": "Code archaeology", "port": 3512, "tools": 4, "geometry": "sriYantra" },
+        { "name": "HeadyGenesis", "desc": "Project scaffolder", "port": 3513, "tools": 4, "geometry": "merkaba" },
+        { "name": "HeadyLabyrinth", "desc": "Test maze runner", "port": 3514, "tools": 4, "geometry": "icosahedron" },
+        { "name": "HeadyMimic", "desc": "Mock & fixture generator", "port": 3515, "tools": 4, "geometry": "dodecahedron" }
+      ]
+    },
+    {
+      "tier": 5,
+      "name": "Data & Communication",
+      "services": [
+        { "name": "HeadyAlchemy", "desc": "Data pipeline transformer", "port": 3600, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyWeave", "desc": "GraphQL federation gateway", "port": 3601, "tools": 4, "geometry": "flower" },
+        { "name": "HeadyHerald", "desc": "Notification engine", "port": 3602, "tools": 4, "geometry": "sriYantra" },
+        { "name": "HeadyResonance", "desc": "Feedback loop aggregator", "port": 3603, "tools": 4, "geometry": "merkaba" },
+        { "name": "HeadyEmber", "desc": "Warm cache manager", "port": 3604, "tools": 4, "geometry": "icosahedron" },
+        { "name": "HeadySigil", "desc": "API key & token manager", "port": 3605, "tools": 5, "geometry": "dodecahedron" },
+        { "name": "HeadyTessera", "desc": "Feature flags & experiments", "port": 3606, "tools": 5, "geometry": "torusKnot" }
+      ]
+    },
+    {
+      "tier": 6,
+      "name": "Platform Services",
+      "services": [
+        { "name": "HeadyLingua", "desc": "i18n & translation", "port": 3610, "tools": 4, "geometry": "metatron" },
+        { "name": "HeadyMeridian", "desc": "Cross-timezone coordination", "port": 3611, "tools": 4, "geometry": "flower" },
+        { "name": "HeadySpectra", "desc": "API contract testing", "port": 3612, "tools": 5, "geometry": "sriYantra" },
+        { "name": "HeadyAether", "desc": "Edge computing orchestrator", "port": 3613, "tools": 4, "geometry": "merkaba" }
+      ]
+    }
+  ],
+  "resources": [
+    { "uri": "heady://memory/vectors", "name": "Vector Memory", "description": "Heady 3D vector memory store" },
+    { "uri": "heady://pipeline/status", "name": "Pipeline Status", "description": "HCFullPipeline execution state" },
+    { "uri": "heady://swarm/health", "name": "Swarm Health", "description": "All bee health and circuit breaker states" },
+    { "uri": "heady://services/registry", "name": "Service Registry", "description": "All 175+ registered services" },
+    { "uri": "heady://topology/graph", "name": "Topology Graph", "description": "Sacred geometry service topology" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "headerName": "Authorization",
+    "oauth2": {
+      "issuer": "https://auth.headysystems.com",
+      "audience": "heady-mcp",
+      "pkce": "S256"
+    }
+  }
 }

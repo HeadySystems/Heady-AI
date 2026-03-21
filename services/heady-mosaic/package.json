@@ -1,0 +1,21 @@
+{
+  "name": "@heady/mosaic",
+  "version": "1.0.0",
+  "description": "Multi-repo orchestrator",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3413,
+    "category": "orchestration",
+    "phiTier": 4,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

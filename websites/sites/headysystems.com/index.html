@@ -18,97 +18,311 @@
     <meta name="twitter:image" content="https://headysystems.com/assets/og-headysystems.png">
     <link rel="canonical" href="https://headysystems.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================= */
+        /* SACRED GEOMETRY THEME - HeadySystems          */
+        /* ============================================= */
+
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --bg-card-hover: #1c1c28;
-            --bg-code: #0d0d14;
-            --border: #1e1e2e;
-            --border-accent: #2a2a3e;
-            --text-primary: #e8e8f0;
-            --text-secondary: #9898b0;
+            --void: #050510;
+            --void-light: #0a0a1a;
+            --void-card: #0d0d1f;
+            --void-card-hover: #111128;
+            --border: #1a1a35;
+            --border-glow: #2a2a55;
+            --text-primary: #e8e8f5;
+            --text-secondary: #9898c0;
             --text-muted: #6868a0;
-            --accent: #6366f1;
-            --accent-bright: #818cf8;
-            --accent-glow: rgba(99, 102, 241, 0.15);
-            --accent-2: #06b6d4;
-            --accent-3: #a855f7;
-            --accent-4: #22c55e;
-            --accent-5: #f59e0b;
-            --accent-6: #ef4444;
-            --gold: #fbbf24;
+            --indigo: #6366f1;
+            --cyan: #06b6d4;
+            --fuchsia: #d946ef;
+            --emerald: #10b981;
+            --gold: #f59e0b;
+            --rose: #f43f5e;
+            --violet: #8b5cf6;
+            --sky: #38bdf8;
             --phi: 1.618;
-            --radius: 12px;
-            --radius-lg: 16px;
+            --radius: 16px;
+            --radius-lg: 24px;
+            --glass-bg: rgba(13, 13, 31, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
         body {
-            font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            background: var(--bg-primary);
+            font-family: "Inter", -apple-system, system-ui, sans-serif;
+            background: var(--void);
             color: var(--text-primary);
             line-height: 1.7;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
 
-        code, pre {
-            font-family: 'JetBrains Mono', monospace;
+        code, pre { font-family: "JetBrains Mono", monospace; }
+
+        /* ─── Sacred Geometry Canvas ─── */
+        #sacred-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        /* ─── Nav ───────────────────────────────────────── */
+        /* ─── Pulsing Color Orbs ─── */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbPulse 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .orb-1 {
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(99,102,241,0.15), transparent 70%);
+            top: -10%; left: -5%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(6,182,212,0.12), transparent 70%);
+            top: 30%; right: -10%;
+            animation-delay: -2s;
+        }
+        .orb-3 {
+            width: 550px; height: 550px;
+            background: radial-gradient(circle, rgba(217,70,239,0.1), transparent 70%);
+            bottom: 10%; left: 20%;
+            animation-delay: -4s;
+        }
+        .orb-4 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(16,185,129,0.1), transparent 70%);
+            top: 60%; right: 30%;
+            animation-delay: -6s;
+        }
+
+        @keyframes orbPulse {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+            25% { transform: scale(1.15) translate(30px, -20px); opacity: 0.9; }
+            50% { transform: scale(0.95) translate(-20px, 30px); opacity: 0.5; }
+            75% { transform: scale(1.1) translate(-30px, -10px); opacity: 0.8; }
+        }
+
+        /* ─── Animated Gradient Text ─── */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--indigo), var(--cyan), var(--fuchsia), var(--emerald), var(--gold), var(--indigo));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, var(--text-primary) 0%, var(--cyan) 25%, var(--text-primary) 50%, var(--fuchsia) 75%, var(--text-primary) 100%);
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 50%; }
+            100% { background-position: -100% 50%; }
+        }
+        /* ─── Flowing Gradient Dividers ─── */
+        .gradient-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--indigo), var(--cyan), var(--fuchsia), var(--emerald), transparent);
+            background-size: 200% 100%;
+            animation: flowDivider 4s linear infinite;
+            margin: 60px auto;
+            max-width: 800px;
+            border: none;
+            border-radius: 2px;
+        }
+
+        @keyframes flowDivider {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* ─── Glass Morphism Cards ─── */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.1);
+        }
+
+        .glass-card .card-geo-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass-card .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ─── Scroll Reveal ─── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ─── Glowing Status Indicators ─── */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-dot::before {
+            content: '';
+            position: absolute;
+            top: -3px; left: -3px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            animation: statusPulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        .status-online .status-dot { background: var(--emerald); }
+        .status-online .status-dot::before { background: rgba(16, 185, 129, 0.3); }
+        .status-online { color: var(--emerald); }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.8); opacity: 0; }
+        }
+
+        /* ─── Navigation ─── */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(10, 10, 15, 0.82);
-            border-bottom: 1px solid var(--border);
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(5, 5, 16, 0.8);
+            border-bottom: 1px solid var(--glass-border);
             padding: 0 2rem;
-            height: 64px;
+            height: 72px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        nav.scrolled {
+            height: 60px;
+            background: rgba(5, 5, 16, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: -0.02em;
             text-decoration: none;
             color: var(--text-primary);
         }
 
-        .nav-brand img.logo-img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            object-fit: contain;
+        .nav-logo {
+            width: 36px; height: 36px;
+            position: relative;
         }
 
-        .nav-brand span {
-            color: var(--accent-bright);
+        .nav-logo svg {
+            width: 100%; height: 100%;
+            animation: logoSpin 20s linear infinite;
         }
+
+        @keyframes logoSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-brand span { color: var(--cyan); }
 
         .nav-links {
             display: flex;
@@ -121,393 +335,640 @@
             text-decoration: none;
             font-size: 0.875rem;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-primary);
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--indigo), var(--cyan));
+            transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .nav-links .btn-nav {
-            padding: 8px 18px;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            background: var(--accent);
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-btn {
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, var(--indigo), var(--violet));
             color: white;
             font-weight: 600;
-            transition: all 0.2s;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
 
-        .nav-links .btn-nav:hover {
-            background: var(--accent-bright);
-            transform: translateY(-1px);
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
         }
 
+        /* ─── Page Wrapper ─── */
         .page-wrapper {
             position: relative;
             z-index: 1;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding-top: 64px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             padding: 0 2rem;
             width: 100%;
         }
 
+        /* ─── Hero Section ─── */
         .hero {
-            padding-top: 80px;
-            padding-bottom: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             position: relative;
+            padding: 120px 2rem 80px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--indigo);
+            font-weight: 600;
+            margin-bottom: 32px;
+            animation: fadeInDown 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 5.5vw, 4rem);
+            font-size: clamp(3.5rem, 8vw, 7rem);
             font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-bright) 50%, var(--accent-2) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s both;
         }
 
-        .hero p {
-            font-size: 1.15rem;
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
             color: var(--text-secondary);
-            max-width: 620px;
-            margin: 0 auto 36px;
+            max-width: 700px;
+            margin: 0 auto 48px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s both;
+        }
+
+        .hero-subtitle span {
+            color: var(--text-muted);
+            margin: 0 8px;
         }
 
         .hero-actions {
             display: flex;
-            gap: 14px;
+            gap: 16px;
             justify-content: center;
             flex-wrap: wrap;
+            animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.8s both;
         }
 
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Buttons ─── */
         .btn {
-            padding: 12px 28px;
-            border-radius: 10px;
-            font-size: 0.9rem;
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-size: 0.95rem;
             font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.25s;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             border: none;
             cursor: pointer;
+            font-family: inherit;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-3));
+            background: linear-gradient(135deg, var(--indigo), var(--violet));
             color: white;
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.45);
         }
 
         .btn-secondary {
-            background: var(--bg-card);
+            background: var(--glass-bg);
             color: var(--text-primary);
-            border: 1px solid var(--border-accent);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--indigo);
+            transform: translateY(-3px);
         }
 
-        /* ─── Docs Layout ───────────────────────────────────────── */
-        .docs-layout {
-            display: flex;
-            gap: 40px;
-            padding: 40px 0;
-            flex: 1;
+        /* ─── Stats Section ─── */
+        .stats-section {
+            padding: 80px 0;
+            position: relative;
         }
 
-        .docs-sidebar {
-            width: 280px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 104px;
-            height: calc(100vh - 104px);
-            overflow-y: auto;
-            padding-right: 20px;
-            border-right: 1px solid var(--border);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
         }
 
-        .docs-sidebar h3 {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            margin-top: 32px;
+        .stat-card {
+            text-align: center;
+            padding: 32px 20px;
         }
 
-        .docs-sidebar h3:first-child {
-            margin-top: 0;
-        }
-
-        .docs-sidebar ul {
-            list-style: none;
-        }
-
-        .docs-sidebar li {
+        .stat-card .stat-value {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1;
             margin-bottom: 8px;
         }
 
-        .docs-sidebar a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
+        .stat-card .stat-label {
             font-size: 0.9rem;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            border-left: 2px solid transparent;
-        }
-
-        .docs-sidebar a:hover {
-            color: var(--text-primary);
-            background: var(--bg-card);
-        }
-
-        .docs-sidebar a.active {
-            color: var(--accent-bright);
-            background: rgba(99, 102, 241, 0.1);
-            border-left-color: var(--accent);
-        }
-
-        .docs-content {
-            flex: 1;
-            min-width: 0;
-            max-width: 800px;
-            padding-bottom: 100px;
-        }
-
-        .docs-content section {
-            margin-bottom: 60px;
-            scroll-margin-top: 100px;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--accent-bright);
-            margin-bottom: 12px;
-        }
-
-        .docs-content h2 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-        }
-
-        .docs-content h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 40px;
-            margin-bottom: 16px;
-        }
-
-        .docs-content p {
-            margin-bottom: 20px;
-            font-size: 1.05rem;
             color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .docs-content ul, .docs-content ol {
-            margin-bottom: 24px;
-            padding-left: 24px;
-            color: var(--text-secondary);
-        }
-
-        .docs-content li {
-            margin-bottom: 10px;
-        }
-
-        .docs-content code {
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--accent-bright);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .docs-content pre {
-            background: var(--bg-code);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow-x: auto;
-            margin-bottom: 24px;
-        }
-
-        .docs-content pre code {
-            background: transparent;
-            color: inherit;
-            padding: 0;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-            margin-bottom: 40px;
-        }
-
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            transition: all 0.25s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .feature-card h4 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-
-        /* ─── Endpoints Table ──────────────────────────────── */
-        .server-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 40px;
-        }
-
-        .server-table th {
-            text-align: left;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 16px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .server-table td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-        }
-
-        .server-table tr:hover td {
-            background: var(--bg-card);
-        }
-
-        .server-table a {
-            color: var(--accent-bright);
-            text-decoration: none;
             font-weight: 500;
         }
 
-        .server-table a:hover {
-            text-decoration: underline;
+        /* ─── Section Styles ─── */
+        .section {
+            padding: 100px 0;
+            position: relative;
         }
 
-        /* ─── Footer ───────────────────────────────────────── */
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+        }
+
+        .section-label-indigo {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--indigo);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .section-label-cyan {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--cyan);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .section-label-fuchsia {
+            background: rgba(217, 70, 239, 0.1);
+            color: var(--fuchsia);
+            border: 1px solid rgba(217, 70, 239, 0.2);
+        }
+
+        .section-label-emerald {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--emerald);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .section-label-gold {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .section-label-rose {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--rose);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ─── Architecture Section ─── */
+        .arch-topology {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .arch-layer {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 24px 32px;
+        }
+
+        .arch-layer-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .arch-layer-nodes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .arch-node {
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .arch-node:hover {
+            border-color: var(--indigo);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .arch-connector {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            padding: 8px 0;
+        }
+
+        /* ─── Service Categories Grid ─── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            min-height: 220px;
+        }
+
+        .service-card .card-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .service-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .service-tag {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* ─── API Reference ─── */
+        .api-section pre {
+            background: rgba(5, 5, 16, 0.8);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .api-section pre code {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            border-radius: var(--radius) var(--radius) 0 0;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .code-header + pre {
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dots span {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+
+        .code-dots span:nth-child(1) { background: #ff5f57; }
+        .code-dots span:nth-child(2) { background: #febc2e; }
+        .code-dots span:nth-child(3) { background: #28c840; }
+
+        .method-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        .method-get { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+        .method-post { background: rgba(99, 102, 241, 0.15); color: var(--indigo); }
+        .method-ws { background: rgba(245, 158, 11, 0.15); color: var(--gold); }
+        .method-delete { background: rgba(244, 63, 94, 0.15); color: var(--rose); }
+
+        .endpoint-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .endpoint-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .endpoint-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .endpoint-path {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            min-width: 200px;
+        }
+
+        .endpoint-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* ─── Developer Tools ─── */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .tool-card {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .tool-card .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .tool-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tool-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .tool-card .tool-status {
+            margin-top: 12px;
+        }
+
+        /* ─── Getting Started ─── */
+        .getting-started-steps {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .step-number {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--indigo), var(--violet));
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .step-content { flex: 1; }
+
+        .step-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step-content p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        /* ─── Footer ─── */
         footer {
-            padding: 60px 0;
+            padding: 80px 0 40px;
             border-top: 1px solid var(--border);
-            background: var(--bg-primary);
-            margin-top: auto;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 300px;
         }
 
         .footer-col h4 {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 20px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
-        .footer-col ul {
-            list-style: none;
-        }
+        .footer-col ul { list-style: none; }
 
-        .footer-col li {
-            margin-bottom: 12px;
-        }
+        .footer-col li { margin-bottom: 12px; }
 
         .footer-col a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .footer-col a:hover {
-            color: var(--accent-bright);
-        }
+        .footer-col a:hover { color: var(--cyan); }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 30px;
+            padding-top: 32px;
             border-top: 1px solid var(--border);
             color: var(--text-muted);
             font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        /* ─── Responsive ───────────────────────────────────── */
-        @media (max-width: 900px) {
-            .docs-layout {
-                flex-direction: column;
-            }
-            .docs-sidebar {
-                width: 100%;
-                height: auto;
-                position: static;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-                padding-bottom: 20px;
-                margin-bottom: 40px;
-            }
-            .nav-links {
-                display: none;
-            }
+        .footer-bottom a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-bottom a:hover { color: var(--cyan); }
+
+        /* ─── Keyword highlights in code ─── */
+        .kw { color: var(--fuchsia); }
+        .str { color: var(--emerald); }
+        .fn { color: var(--indigo); }
+        .cm { color: var(--text-muted); }
+        .num { color: var(--gold); }
+        .op { color: var(--text-secondary); }
+        .prop { color: var(--cyan); }
+
+        /* ─── Responsive ─── */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .services-grid { grid-template-columns: 1fr; }
+            .tools-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3rem; }
+            .arch-layer { flex-direction: column; align-items: flex-start; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .step { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .tools-grid { grid-template-columns: 1fr; }
         }
     </style>
     <script type="application/ld+json">
@@ -549,17 +1010,45 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
 </head>
 <body>
-    <nav>
+    <!-- Sacred Geometry Background Canvas -->
+    <canvas id="sacred-canvas"></canvas>
+
+    <!-- Pulsing Color Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+
+    <!-- Navigation -->
+    <nav id="mainNav">
         <a href="https://headysystems.com" class="nav-brand">
-            <div class="logo-icon">H</div>
+            <div class="nav-logo">
+                <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="17" stroke="url(#logoGrad)" stroke-width="1.5" opacity="0.6"/>
+                    <polygon points="18,3 31,10 31,26 18,33 5,26 5,10" stroke="url(#logoGrad)" stroke-width="1" fill="none" opacity="0.5"/>
+                    <polygon points="18,8 26,12 26,24 18,28 10,24 10,12" stroke="url(#logoGrad)" stroke-width="1" fill="none" opacity="0.7"/>
+                    <circle cx="18" cy="18" r="5" stroke="url(#logoGrad)" stroke-width="1" fill="none"/>
+                    <line x1="18" y1="3" x2="18" y2="33" stroke="url(#logoGrad)" stroke-width="0.5" opacity="0.3"/>
+                    <line x1="5" y1="10" x2="31" y2="26" stroke="url(#logoGrad)" stroke-width="0.5" opacity="0.3"/>
+                    <line x1="31" y1="10" x2="5" y2="26" stroke="url(#logoGrad)" stroke-width="0.5" opacity="0.3"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="50%" stop-color="#06b6d4"/>
+                            <stop offset="100%" stop-color="#d946ef"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
             Heady<span>Systems</span>
         </a>
         <div class="nav-links">
-            <a href="#overview" class="active">Overview</a>
             <a href="#architecture">Architecture</a>
+            <a href="#services">Services</a>
             <a href="#api">API Reference</a>
-            <a href="#ecosystem">Ecosystem</a>
-            <a href="https://headysystems.com" class="btn-nav">Heady Platform →</a>
+            <a href="#developer-tools">Dev Tools</a>
+            <a href="#getting-started">Get Started</a>
+            <a href="https://headyme.com" class="nav-btn">Dashboard &#8594;</a>
         </div>
     </nav>
 
@@ -569,35 +1058,103 @@
                 <h1>HeadySystems</h1>
                 <p>The compliance-ready, patent-protected platform for autonomous agent deployment at scale. 51+ patents. 21 microservices.</p>
                 <div class="hero-actions">
-                    <a href="#docs-start" class="btn btn-primary">Read Documentation →</a>
+                    <a href="#getting-started" class="btn btn-primary">Get Started &#8594;</a>
                     <a href="#api" class="btn btn-secondary">API Reference</a>
+                    <a href="#architecture" class="btn btn-secondary">Architecture Map</a>
                 </div>
             </div>
         </section>
 
-        <div class="container">
-            <div class="docs-layout" id="docs-start">
-                <aside class="docs-sidebar">
-                    <h3>Getting Started</h3>
-                    <ul>
-                        <li><a href="#overview" class="nav-item">Overview</a></li>
-                        <li><a href="#quickstart" class="nav-item">Quickstart</a></li>
-                        <li><a href="#installation" class="nav-item">Installation</a></li>
-                    </ul>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- STATS SECTION                                   -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="glass-card stat-card reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="100,10 190,60 190,140 100,190 10,140 10,60" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="30s" repeatCount="indefinite"/>
+                            </polygon>
+                            <polygon points="100,30 170,65 170,135 100,170 30,135 30,65" fill="none" stroke="rgba(6,182,212,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="25s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <div class="stat-value gradient-text">175+</div>
+                            <div class="stat-label">Services</div>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card reveal" style="transition-delay: 0.1s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(217,70,239,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="20s" repeatCount="indefinite"/>
+                            </circle>
+                            <polygon points="100,20 180,100 100,180 20,100" fill="none" stroke="rgba(217,70,239,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="15s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <div class="stat-value gradient-text">45</div>
+                            <div class="stat-label">MCP Tools</div>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card reveal" style="transition-delay: 0.2s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="30" y="30" width="140" height="140" rx="10" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5" transform="rotate(45 100 100)">
+                                <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="22s" repeatCount="indefinite"/>
+                            </rect>
+                            <rect x="50" y="50" width="100" height="100" rx="10" fill="none" stroke="rgba(16,185,129,0.2)" stroke-width="0.5" transform="rotate(0 100 100)">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="18s" repeatCount="indefinite"/>
+                            </rect>
+                        </svg>
+                        <div class="card-content">
+                            <div class="stat-value gradient-text">75+</div>
+                            <div class="stat-label">Repositories</div>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card reveal" style="transition-delay: 0.3s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="100,15 135,40 150,80 135,120 100,145 65,120 50,80 65,40" fill="none" stroke="rgba(245,158,11,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="28s" repeatCount="indefinite"/>
+                            </polygon>
+                            <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(245,158,11,0.12)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="stat-value gradient-text">140</div>
+                            <div class="stat-label">Microservices</div>
+                        </div>
+                    </div>
+                    <div class="glass-card stat-card reveal" style="transition-delay: 0.4s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(6,182,212,0.15)" stroke-width="0.5"/>
+                            <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(6,182,212,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="12s" repeatCount="indefinite"/>
+                            </circle>
+                            <line x1="100" y1="30" x2="100" y2="170" stroke="rgba(6,182,212,0.1)" stroke-width="0.5"/>
+                            <line x1="30" y1="100" x2="170" y2="100" stroke="rgba(6,182,212,0.1)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="stat-value" style="background: linear-gradient(90deg, var(--emerald), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">99.97%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                    <h3>Core Concepts</h3>
-                    <ul>
-                        <li><a href="#architecture" class="nav-item">Architecture</a></li>
-                        <li><a href="#data-model" class="nav-item">Data Model</a></li>
-                        <li><a href="#security" class="nav-item">Security</a></li>
-                    </ul>
+        <div class="gradient-divider"></div>
 
-                    <h3>Integration</h3>
-                    <ul>
-                        <li><a href="#api" class="nav-item">API Reference</a></li>
-                        <li><a href="#webhooks" class="nav-item">Webhooks</a></li>
-                        <li><a href="#sdks" class="nav-item">Client SDKs</a></li>
-                    </ul>
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- ARCHITECTURE SECTION                            -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section" id="architecture">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-indigo">Architecture</span>
+                    <h2 class="section-title shimmer-text">System Topology</h2>
+                    <p class="section-desc">A multi-layered microservices architecture deployed across global edge nodes, orchestrated by the HCFullPipeline v7 engine with phi-derived scaling.</p>
+                </div>
 
                     <h3>Ecosystem</h3>
                     <ul>
@@ -628,78 +1185,72 @@
                                 <p>Continuous authentication and Continuous Security Posture Management (CSPM) enforced at every node.</p>
                             </div>
                         </div>
-                    </section>
+                    </div>
 
-                    <section id="architecture">
-                        <div class="section-label">Architecture</div>
-                        <h2>System Architecture</h2>
-                        <p>HeadySystems utilizes a microservices-based architecture deployed across multiple global regions. The system is conceptually divided into several key layers:</p>
+                    <div class="arch-connector reveal">&#8595; &#8595; &#8595;</div>
 
-                        <ul>
-                            <li><strong>Edge Layer:</strong> Handles global routing, DDoS protection, and TLS termination via Cloudflare.</li>
-                            <li><strong>Gateway Layer:</strong> API Gateway that validates requests, enforces rate limits, and performs JWT verification.</li>
-                            <li><strong>Orchestration Layer:</strong> The HCSysOrchestrator manages the flow of data between services based on cognitive load and system health.</li>
-                            <li><strong>Service Layer:</strong> The core business logic specific to headysystems.com.</li>
-                            <li><strong>Data Layer:</strong> Distributed Postgres databases with real-time replication and vector stores for AI embeddings.</li>
-                        </ul>
+                    <div class="glass-card arch-layer reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="200,10 390,50 200,90 10,50" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 200 50" to="360 200 50" dur="20s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                            <span class="arch-layer-name" style="color:var(--violet);">Gateway</span>
+                            <div class="arch-layer-nodes">
+                                <span class="arch-node">Envoy Proxy</span>
+                                <span class="arch-node">JWT Validation</span>
+                                <span class="arch-node">Rate Limiter (&#966;-scaled)</span>
+                                <span class="arch-node">Request Router</span>
+                                <span class="arch-node">CSL Gate</span>
+                            </div>
+                        </div>
+                    </div>
 
-                        <pre><code>// Architecture Topology
-const topology = {
-  edge: 'cloudflare-workers',
-  gateway: 'envoy-proxy',
-  orchestrator: 'hcsys-orchestrator',
-  compute: 'gke-clusters',
-  storage: ['postgres', 'redis-cluster', 'qdrant-vector']
-};</code></pre>
-                    </section>
+                    <div class="arch-connector reveal">&#8595; &#8595; &#8595;</div>
 
-                    <section id="api">
-                        <div class="section-label">Integration</div>
-                        <h2>API Reference</h2>
-                        <p>Interact with HeadySystems programmatically using our REST and MCP APIs. All endpoints require authentication via a standard Bearer token.</p>
+                    <div class="glass-card arch-layer reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="50" y="10" width="300" height="80" rx="10" fill="none" stroke="rgba(245,158,11,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 200 50" to="360 200 50" dur="35s" repeatCount="indefinite"/>
+                            </rect>
+                        </svg>
+                        <div class="card-content" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                            <span class="arch-layer-name" style="color:var(--gold);">Orchestration</span>
+                            <div class="arch-layer-nodes">
+                                <span class="arch-node">HCFullPipeline v7</span>
+                                <span class="arch-node">HeadyConductor</span>
+                                <span class="arch-node">HeadyBrain</span>
+                                <span class="arch-node">Swarm Router</span>
+                                <span class="arch-node">CSL Engine</span>
+                            </div>
+                        </div>
+                    </div>
 
-                        <h3>Authentication</h3>
-                        <p>Include your API key in the Authorization header of your requests:</p>
-                        <pre><code>curl -H "Authorization: Bearer hdy_your_api_key" https://api.headysystems.com/v1/status</code></pre>
+                    <div class="arch-connector reveal">&#8595; &#8595; &#8595;</div>
 
-                        <h3>Common Endpoints</h3>
-                        <table class="server-table">
-                            <thead>
-                                <tr>
-                                    <th>Endpoint</th>
-                                    <th>Method</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>/v1/health</code></td>
-                                    <td>GET</td>
-                                    <td>Returns the current health status of the service cluster.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/v1/metrics</code></td>
-                                    <td>GET</td>
-                                    <td>Provides Prometheus-formatted metrics for monitoring.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/v1/sync</code></td>
-                                    <td>POST</td>
-                                    <td>Triggers a synchronization event with the Heady Registry.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>/mcp/connect</code></td>
-                                    <td>WS</td>
-                                    <td>Establishes a WebSocket connection for real-time MCP streaming.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </section>
+                    <div class="glass-card arch-layer reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="50" r="35" fill="none" stroke="rgba(16,185,129,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 50" to="360 100 50" dur="18s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="300" cy="50" r="35" fill="none" stroke="rgba(16,185,129,0.08)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 300 50" to="0 300 50" dur="22s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        <div class="card-content" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                            <span class="arch-layer-name" style="color:var(--emerald);">Compute</span>
+                            <div class="arch-layer-nodes">
+                                <span class="arch-node">GKE Clusters</span>
+                                <span class="arch-node">Cloud Run</span>
+                                <span class="arch-node">140 Microservices</span>
+                                <span class="arch-node">Bee Swarm Workers</span>
+                                <span class="arch-node">GPU Inference</span>
+                            </div>
+                        </div>
+                    </div>
 
-                    <section id="ecosystem">
-                        <div class="section-label">Ecosystem</div>
-                        <h2>The Heady Network</h2>
-                        <p>HeadySystems is just one piece of the puzzle. Explore the rest of the Heady ecosystem to see how our platforms connect.</p>
+                    <div class="arch-connector reveal">&#8595; &#8595; &#8595;</div>
 
                         <table class="server-table">
                             <thead>
@@ -787,7 +1338,673 @@ const topology = {
                     </section>
                 </main>
             </div>
-        </div>
+        </section>
+
+        <div class="gradient-divider"></div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- SERVICE CATEGORIES                              -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section" id="services">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-fuchsia">Service Mesh</span>
+                    <h2 class="section-title shimmer-text">Service Categories</h2>
+                    <p class="section-desc">Nine pillars of the Heady ecosystem, each containing specialized microservices orchestrated through the sacred geometry topology.</p>
+                </div>
+
+                <div class="services-grid">
+                    <!-- Core Services -->
+                    <div class="glass-card service-card reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="150,20 280,75 280,175 150,230 20,175 20,75" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="30s" repeatCount="indefinite"/>
+                            </polygon>
+                            <polygon points="150,50 250,87 250,163 150,200 50,163 50,87" fill="none" stroke="rgba(99,102,241,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 150 125" to="0 150 125" dur="25s" repeatCount="indefinite"/>
+                            </polygon>
+                            <circle cx="150" cy="125" r="40" fill="none" stroke="rgba(99,102,241,0.1)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(99,102,241,0.15);color:var(--indigo);">&#9670;</div>
+                            <h3>Core</h3>
+                            <p>Foundation services: HeadySoul, Gateway, Manager, Persistence, Kernel boot sequence, and identity federation.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">heady-gateway</span>
+                                <span class="service-tag">heady-manager</span>
+                                <span class="service-tag">heady-soul</span>
+                                <span class="service-tag">heady-persistence</span>
+                                <span class="service-tag">kernel</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.1s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="150" cy="125" r="90" fill="none" stroke="rgba(217,70,239,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="20s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="150" cy="125" r="60" fill="none" stroke="rgba(217,70,239,0.2)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 150 125" to="0 150 125" dur="15s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="150" cy="125" r="30" fill="none" stroke="rgba(217,70,239,0.15)" stroke-width="0.5"/>
+                            <line x1="150" y1="35" x2="150" y2="215" stroke="rgba(217,70,239,0.08)" stroke-width="0.5"/>
+                            <line x1="60" y1="125" x2="240" y2="125" stroke="rgba(217,70,239,0.08)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(217,70,239,0.15);color:var(--fuchsia);">&#9733;</div>
+                            <h3>AI &amp; Intelligence</h3>
+                            <p>Neural inference, HeadyBrain orchestration, multi-model routing (Claude, GPT, Gemini), vector embeddings, and swarm intelligence.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">hc-brain</span>
+                                <span class="service-tag">heady-vinci</span>
+                                <span class="service-tag">swarm-router</span>
+                                <span class="service-tag">vector-memory</span>
+                                <span class="service-tag">mc-sampler</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.2s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="40" y="35" width="220" height="180" rx="15" fill="none" stroke="rgba(6,182,212,0.15)" stroke-width="0.5" transform="rotate(15 150 125)">
+                                <animateTransform attributeName="transform" type="rotate" from="15 150 125" to="375 150 125" dur="28s" repeatCount="indefinite"/>
+                            </rect>
+                            <rect x="70" y="55" width="160" height="140" rx="10" fill="none" stroke="rgba(6,182,212,0.2)" stroke-width="0.5" transform="rotate(-10 150 125)">
+                                <animateTransform attributeName="transform" type="rotate" from="-10 150 125" to="-370 150 125" dur="22s" repeatCount="indefinite"/>
+                            </rect>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(6,182,212,0.15);color:var(--cyan);">&#9638;</div>
+                            <h3>Data &amp; Storage</h3>
+                            <p>Distributed PostgreSQL with pgvector (HNSW m=21), Redis caching, CRDT sync, Qdrant vector stores, and Cloudflare KV.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">postgres</span>
+                                <span class="service-tag">redis-cluster</span>
+                                <span class="service-tag">qdrant</span>
+                                <span class="service-tag">crdt-sync</span>
+                                <span class="service-tag">cloudflare-kv</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.3s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="150,25 250,75 250,175 150,225 50,175 50,75" fill="none" stroke="rgba(244,63,94,0.12)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="35s" repeatCount="indefinite"/>
+                            </polygon>
+                            <polygon points="150,55 220,87 220,163 150,195 80,163 80,87" fill="none" stroke="rgba(244,63,94,0.18)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 150 125" to="0 150 125" dur="28s" repeatCount="indefinite"/>
+                            </polygon>
+                            <polygon points="150,80 190,100 190,150 150,170 110,150 110,100" fill="none" stroke="rgba(244,63,94,0.15)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(244,63,94,0.15);color:var(--rose);">&#9679;</div>
+                            <h3>Security</h3>
+                            <p>Zero-trust architecture with CSPM, Firebase Auth, JWT validation, RBAC policies, secrets management, and audit logging.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">sentinel</span>
+                                <span class="service-tag">cipher</span>
+                                <span class="service-tag">auth-gate</span>
+                                <span class="service-tag">cspm</span>
+                                <span class="service-tag">audit-log</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Orchestration Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.4s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="150" cy="125" r="80" fill="none" stroke="rgba(245,158,11,0.12)" stroke-width="0.5"/>
+                            <polygon points="150,45 230,125 150,205 70,125" fill="none" stroke="rgba(245,158,11,0.18)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="25s" repeatCount="indefinite"/>
+                            </polygon>
+                            <polygon points="150,65 210,125 150,185 90,125" fill="none" stroke="rgba(245,158,11,0.12)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 150 125" to="0 150 125" dur="20s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(245,158,11,0.15);color:var(--gold);">&#9678;</div>
+                            <h3>Orchestration</h3>
+                            <p>HCFullPipeline v7 with 21-stage state machine, HeadyConductor task routing, Bee swarm dispatch, and phi-derived backoff.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">conductor</span>
+                                <span class="service-tag">pipeline-v7</span>
+                                <span class="service-tag">bee-dispatch</span>
+                                <span class="service-tag">csl-engine</span>
+                                <span class="service-tag">supervisor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.5s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="50" y1="50" x2="250" y2="200" stroke="rgba(56,189,248,0.1)" stroke-width="0.5"/>
+                            <line x1="250" y1="50" x2="50" y2="200" stroke="rgba(56,189,248,0.1)" stroke-width="0.5"/>
+                            <line x1="150" y1="25" x2="150" y2="225" stroke="rgba(56,189,248,0.08)" stroke-width="0.5"/>
+                            <line x1="25" y1="125" x2="275" y2="125" stroke="rgba(56,189,248,0.08)" stroke-width="0.5"/>
+                            <circle cx="150" cy="125" r="50" fill="none" stroke="rgba(56,189,248,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="18s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(56,189,248,0.15);color:var(--sky);">&#9674;</div>
+                            <h3>Integration</h3>
+                            <p>MCP Protocol bridges, webhook delivery, REST/GraphQL/WebSocket APIs, third-party connectors, and event streaming.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">mcp-bridge</span>
+                                <span class="service-tag">webhook-relay</span>
+                                <span class="service-tag">api-gateway</span>
+                                <span class="service-tag">event-bus</span>
+                                <span class="service-tag">connectors</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observability Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.6s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="85" r="30" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"/>
+                            <circle cx="200" cy="85" r="30" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"/>
+                            <circle cx="150" cy="165" r="30" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"/>
+                            <line x1="100" y1="85" x2="200" y2="85" stroke="rgba(16,185,129,0.1)" stroke-width="0.5"/>
+                            <line x1="100" y1="85" x2="150" y2="165" stroke="rgba(16,185,129,0.1)" stroke-width="0.5"/>
+                            <line x1="200" y1="85" x2="150" y2="165" stroke="rgba(16,185,129,0.1)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(16,185,129,0.15);color:var(--emerald);">&#9673;</div>
+                            <h3>Observability</h3>
+                            <p>Structured JSON logging with Pino, Prometheus metrics, distributed tracing, drift detection, and coherence scoring.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">observer</span>
+                                <span class="service-tag">drift-check</span>
+                                <span class="service-tag">metrics</span>
+                                <span class="service-tag">tracing</span>
+                                <span class="service-tag">patterns</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UI Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.7s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="60" y="45" width="180" height="160" rx="20" fill="none" stroke="rgba(139,92,246,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="40s" repeatCount="indefinite"/>
+                            </rect>
+                            <circle cx="150" cy="125" r="55" fill="none" stroke="rgba(139,92,246,0.12)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="360 150 125" to="0 150 125" dur="30s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(139,92,246,0.15);color:var(--violet);">&#9671;</div>
+                            <h3>UI &amp; Frontend</h3>
+                            <p>React micro-frontends via Webpack Module Federation, Sacred Geometry design system, HeadyBuddy widget, and HeadyWeb browser.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">headyweb</span>
+                                <span class="service-tag">heady-buddy</span>
+                                <span class="service-tag">sacred-geo-sdk</span>
+                                <span class="service-tag">micro-frontends</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DevOps Services -->
+                    <div class="glass-card service-card reveal" style="transition-delay:0.8s">
+                        <svg class="card-geo-bg" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="150,30 270,90 270,160 150,220 30,160 30,90" fill="none" stroke="rgba(245,158,11,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 150 125" to="360 150 125" dur="32s" repeatCount="indefinite"/>
+                            </polygon>
+                            <line x1="150" y1="30" x2="150" y2="220" stroke="rgba(245,158,11,0.06)" stroke-width="0.5"/>
+                            <line x1="30" y1="125" x2="270" y2="125" stroke="rgba(245,158,11,0.06)" stroke-width="0.5"/>
+                        </svg>
+                        <div class="card-content">
+                            <div class="card-icon" style="background:rgba(245,158,11,0.15);color:var(--gold);">&#9881;</div>
+                            <h3>DevOps &amp; Infrastructure</h3>
+                            <p>CI/CD pipelines with Turborepo, Docker orchestration, GKE cluster management, Cloudflare Workers deployment, and health monitoring.</p>
+                            <div class="service-tags">
+                                <span class="service-tag">docker</span>
+                                <span class="service-tag">turborepo</span>
+                                <span class="service-tag">gke</span>
+                                <span class="service-tag">cloud-run</span>
+                                <span class="service-tag">cf-workers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="gradient-divider"></div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- API REFERENCE                                   -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section api-section" id="api">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-cyan">API Reference</span>
+                    <h2 class="section-title shimmer-text">REST &amp; MCP APIs</h2>
+                    <p class="section-desc">Interact with HeadySystems programmatically. All endpoints require Bearer token authentication with CSL confidence gating.</p>
+                </div>
+
+                <div class="reveal" style="max-width:800px;margin:0 auto 48px;">
+                    <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:16px;">Authentication</h3>
+                    <p style="color:var(--text-secondary);margin-bottom:16px;">Include your API key in the Authorization header:</p>
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>bash</span>
+                    </div>
+                    <pre><code><span class="cm"># Authenticate with the HeadySystems API</span>
+curl -X GET https://api.headysystems.com/v1/health \
+  -H <span class="str">"Authorization: Bearer hdy_your_api_key"</span> \
+  -H <span class="str">"Content-Type: application/json"</span></code></pre>
+                </div>
+
+                <div class="reveal" style="max-width:800px;margin:0 auto 48px;">
+                    <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:24px;">Core Endpoints</h3>
+                    <div class="glass-card" style="padding:0;overflow:hidden;">
+                        <ul class="endpoint-list">
+                            <li class="endpoint-item">
+                                <span class="method-badge method-get">GET</span>
+                                <span class="endpoint-path">/v1/health</span>
+                                <span class="endpoint-desc">Service cluster health with coherence scores</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-get">GET</span>
+                                <span class="endpoint-path">/v1/metrics</span>
+                                <span class="endpoint-desc">Prometheus-formatted metrics for monitoring</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-post">POST</span>
+                                <span class="endpoint-path">/v1/sync</span>
+                                <span class="endpoint-desc">Trigger synchronization with Heady Registry</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-post">POST</span>
+                                <span class="endpoint-path">/v1/pipeline/invoke</span>
+                                <span class="endpoint-desc">Execute an HCFullPipeline v7 pipeline run</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-get">GET</span>
+                                <span class="endpoint-path">/v1/services</span>
+                                <span class="endpoint-desc">List all registered services with status</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-ws">WS</span>
+                                <span class="endpoint-path">/mcp/connect</span>
+                                <span class="endpoint-desc">WebSocket for real-time MCP streaming</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-post">POST</span>
+                                <span class="endpoint-path">/mcp/tools/invoke</span>
+                                <span class="endpoint-desc">Invoke an MCP tool by name with params</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-get">GET</span>
+                                <span class="endpoint-path">/v1/vectors/search</span>
+                                <span class="endpoint-desc">384D vector similarity search (HNSW)</span>
+                            </li>
+                            <li class="endpoint-item">
+                                <span class="method-badge method-delete">DEL</span>
+                                <span class="endpoint-path">/v1/cache/invalidate</span>
+                                <span class="endpoint-desc">Invalidate cache entries by key pattern</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="reveal" style="max-width:800px;margin:0 auto 48px;">
+                    <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:16px;">Response Format</h3>
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>json</span>
+                    </div>
+                    <pre><code>{
+  <span class="prop">"status"</span>: <span class="str">"healthy"</span>,
+  <span class="prop">"version"</span>: <span class="str">"7.1.0"</span>,
+  <span class="prop">"coherenceScore"</span>: <span class="num">0.927</span>,
+  <span class="prop">"pipeline"</span>: <span class="str">"HCFullPipeline-v7"</span>,
+  <span class="prop">"services"</span>: {
+    <span class="prop">"registered"</span>: <span class="num">175</span>,
+    <span class="prop">"healthy"</span>: <span class="num">174</span>,
+    <span class="prop">"degraded"</span>: <span class="num">1</span>
+  },
+  <span class="prop">"uptime"</span>: <span class="str">"99.97%"</span>,
+  <span class="prop">"phi"</span>: <span class="num">1.618</span>,
+  <span class="prop">"timestamp"</span>: <span class="str">"2026-03-18T12:00:00Z"</span>
+}</code></pre>
+                </div>
+
+                <div class="reveal" style="max-width:800px;margin:0 auto;">
+                    <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:16px;">MCP Tool Invocation</h3>
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>javascript</span>
+                    </div>
+                    <pre><code><span class="cm">// Connect to HeadySystems MCP endpoint</span>
+<span class="kw">import</span> { MCPClient } <span class="kw">from</span> <span class="str">'@heady/mcp-sdk'</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">MCPClient</span>({
+  <span class="prop">endpoint</span>: <span class="str">'wss://api.headysystems.com/mcp/connect'</span>,
+  <span class="prop">apiKey</span>: process.env.<span class="prop">HEADY_API_KEY</span>,
+  <span class="prop">pipeline</span>: <span class="str">'FAST_PATH'</span>,
+  <span class="prop">coherenceThreshold</span>: <span class="num">0.809</span>
+});
+
+<span class="kw">await</span> client.<span class="fn">connect</span>();
+
+<span class="cm">// List available tools</span>
+<span class="kw">const</span> tools = <span class="kw">await</span> client.<span class="fn">listTools</span>();
+console.<span class="fn">log</span>(<span class="str">`Available: </span>${tools.length}<span class="str"> MCP tools`</span>);
+
+<span class="cm">// Invoke a tool</span>
+<span class="kw">const</span> result = <span class="kw">await</span> client.<span class="fn">invoke</span>(<span class="str">'heady-search'</span>, {
+  <span class="prop">query</span>: <span class="str">'sacred geometry topology'</span>,
+  <span class="prop">limit</span>: <span class="num">10</span>,
+  <span class="prop">vectorSearch</span>: <span class="kw">true</span>
+});</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <div class="gradient-divider"></div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- DEVELOPER TOOLS                                 -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section" id="developer-tools">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-emerald">Developer Experience</span>
+                    <h2 class="section-title shimmer-text">IDE Integrations</h2>
+                    <p class="section-desc">First-class developer experience with extensions and plugins for every major IDE. Full MCP protocol support built in.</p>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="glass-card tool-card reveal">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="100,20 180,60 180,140 100,180 20,140 20,60" fill="none" stroke="rgba(56,189,248,0.12)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="25s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <span class="tool-icon">&#9998;</span>
+                            <h3>VS Code</h3>
+                            <p>Full HeadyMCP integration, inline docs, sacred geometry preview panel, and pipeline debugger.</p>
+                            <div class="tool-status">
+                                <span class="status-indicator status-online">
+                                    <span class="status-dot"></span>
+                                    Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card tool-card reveal" style="transition-delay:0.1s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="70" fill="none" stroke="rgba(217,70,239,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="20s" repeatCount="indefinite"/>
+                            </circle>
+                            <polygon points="100,30 170,100 100,170 30,100" fill="none" stroke="rgba(217,70,239,0.12)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="15s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <span class="tool-icon">&#9883;</span>
+                            <h3>JetBrains</h3>
+                            <p>IntelliJ, WebStorm, PyCharm plugin with HeadyBrain-powered code completion and CSL analysis.</p>
+                            <div class="tool-status">
+                                <span class="status-indicator status-online">
+                                    <span class="status-dot"></span>
+                                    Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card tool-card reveal" style="transition-delay:0.2s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="30" y="30" width="140" height="140" rx="15" fill="none" stroke="rgba(99,102,241,0.12)" stroke-width="0.5" transform="rotate(45 100 100)">
+                                <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="28s" repeatCount="indefinite"/>
+                            </rect>
+                        </svg>
+                        <div class="card-content">
+                            <span class="tool-icon">&#10070;</span>
+                            <h3>Cursor</h3>
+                            <p>Native AI-powered editing with HeadyMCP context injection, pipeline-aware suggestions, and vector search.</p>
+                            <div class="tool-status">
+                                <span class="status-indicator status-online">
+                                    <span class="status-dot"></span>
+                                    Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card tool-card reveal" style="transition-delay:0.3s">
+                        <svg class="card-geo-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(16,185,129,0.12)" stroke-width="0.5"/>
+                            <circle cx="100" cy="100" r="40" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="12s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="100" cy="100" r="20" fill="none" stroke="rgba(16,185,129,0.1)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="8s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                        <div class="card-content">
+                            <span class="tool-icon">&#9730;</span>
+                            <h3>Windsurf</h3>
+                            <p>Cascade integration with HeadyAI-IDE features, anti-gravity code flows, and real-time collaboration.</p>
+                            <div class="tool-status">
+                                <span class="status-indicator status-online">
+                                    <span class="status-dot"></span>
+                                    Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="gradient-divider"></div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- GETTING STARTED                                 -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section" id="getting-started">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-gold">Quick Start</span>
+                    <h2 class="section-title shimmer-text">Getting Started</h2>
+                    <p class="section-desc">Go from zero to fully integrated in under five minutes. Clone, configure, and connect to the Heady ecosystem.</p>
+                </div>
+
+                <div class="getting-started-steps">
+                    <div class="step reveal">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>Install the Heady CLI</h3>
+                            <p>The CLI provides access to all HeadySystems tools, service management, and MCP protocol operations.</p>
+                            <div class="code-header">
+                                <div class="code-dots"><span></span><span></span><span></span></div>
+                                <span>bash</span>
+                            </div>
+                            <pre><code><span class="cm"># Install globally via npm</span>
+npm install -g @heady/cli
+
+<span class="cm"># Verify installation</span>
+heady --version
+<span class="cm"># HeadyCLI v7.1.0 | Pipeline: HCFullPipeline-v7</span></code></pre>
+                        </div>
+                    </div>
+
+                    <div class="step reveal" style="transition-delay:0.1s">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>Authenticate &amp; Configure</h3>
+                            <p>Connect to the HeadySystems API with your credentials and set up your development environment.</p>
+                            <div class="code-header">
+                                <div class="code-dots"><span></span><span></span><span></span></div>
+                                <span>bash</span>
+                            </div>
+                            <pre><code><span class="cm"># Login to HeadySystems</span>
+heady auth login
+
+<span class="cm"># Initialize project configuration</span>
+heady init --pipeline full-path
+
+<span class="cm"># Set environment variables</span>
+heady config set HEADY_API_KEY <span class="str">"hdy_your_key"</span>
+heady config set PIPELINE_MODE <span class="str">"FAST_PATH"</span></code></pre>
+                        </div>
+                    </div>
+
+                    <div class="step reveal" style="transition-delay:0.2s">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>Connect to MCP</h3>
+                            <p>Establish a connection to the Model Context Protocol for real-time AI-powered development.</p>
+                            <div class="code-header">
+                                <div class="code-dots"><span></span><span></span><span></span></div>
+                                <span>bash</span>
+                            </div>
+                            <pre><code><span class="cm"># Start MCP connection</span>
+heady mcp connect --mode interactive
+
+<span class="cm"># List available tools (45 MCP tools)</span>
+heady mcp tools list
+
+<span class="cm"># Invoke a tool</span>
+heady mcp invoke heady-search \
+  --query <span class="str">"architecture topology"</span> \
+  --vector-search</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="step reveal" style="transition-delay:0.3s">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>Deploy Your First Service</h3>
+                            <p>Create and deploy a microservice into the Heady ecosystem with built-in observability and CSL gating.</p>
+                            <div class="code-header">
+                                <div class="code-dots"><span></span><span></span><span></span></div>
+                                <span>bash</span>
+                            </div>
+                            <pre><code><span class="cm"># Scaffold a new service</span>
+heady create service my-service \
+  --template microservice \
+  --port <span class="num">3350</span>
+
+<span class="cm"># Run locally with hot reload</span>
+heady dev --watch
+
+<span class="cm"># Deploy to the Heady mesh</span>
+heady deploy --target production \
+  --region us-east1 \
+  --coherence-gate <span class="num">0.809</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="gradient-divider"></div>
+
+        <!-- ═══════════════════════════════════════════════ -->
+        <!-- PIPELINE VISUALIZATION                          -->
+        <!-- ═══════════════════════════════════════════════ -->
+        <section class="section" id="pipeline">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-label section-label-rose">Pipeline Engine</span>
+                    <h2 class="section-title shimmer-text">HCFullPipeline v7</h2>
+                    <p class="section-desc">21-stage state machine with phi-derived thresholds, CSL gating at every node, and four execution path variants.</p>
+                </div>
+
+                <div class="reveal" style="max-width:900px;margin:0 auto 48px;">
+                    <div class="glass-card" style="padding:24px;overflow-x:auto;">
+                        <svg class="card-geo-bg" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="300,10 590,100 300,190 10,100" fill="none" stroke="rgba(244,63,94,0.08)" stroke-width="0.5">
+                                <animateTransform attributeName="transform" type="rotate" from="0 300 100" to="360 300 100" dur="60s" repeatCount="indefinite"/>
+                            </polygon>
+                        </svg>
+                        <div class="card-content">
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+                                <span class="arch-node" style="border-color:rgba(99,102,241,0.3);color:var(--indigo);font-size:0.75rem;">CHANNEL_ENTRY</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(244,63,94,0.3);color:var(--rose);font-size:0.75rem;">AUTH_GATE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(217,70,239,0.3);color:var(--fuchsia);font-size:0.75rem;">INTENT_CLASSIFY</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(6,182,212,0.3);color:var(--cyan);font-size:0.75rem;">CONTEXT_ASSEMBLE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(245,158,11,0.3);color:var(--gold);font-size:0.75rem;">NODE_SELECT</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(16,185,129,0.3);color:var(--emerald);font-size:0.75rem;">CSL_GATE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(99,102,241,0.3);color:var(--indigo);font-size:0.75rem;">BATTLE_DISPATCH</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(139,92,246,0.3);color:var(--violet);font-size:0.75rem;">MC_SAMPLE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(245,158,11,0.3);color:var(--gold);font-size:0.75rem;">BEE_DISPATCH</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(56,189,248,0.3);color:var(--sky);font-size:0.75rem;">SWARM_ROUTE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(16,185,129,0.3);color:var(--emerald);font-size:0.75rem;">EXECUTE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(6,182,212,0.3);color:var(--cyan);font-size:0.75rem;">QUALITY_GATE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(244,63,94,0.3);color:var(--rose);font-size:0.75rem;">ASSURANCE_GATE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(217,70,239,0.3);color:var(--fuchsia);font-size:0.75rem;">PATTERN_CAPTURE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(139,92,246,0.3);color:var(--violet);font-size:0.75rem;">DRIFT_CHECK</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(99,102,241,0.3);color:var(--indigo);font-size:0.75rem;">STORY_UPDATE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(245,158,11,0.3);color:var(--gold);font-size:0.75rem;">GOVERNANCE_LOG</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(16,185,129,0.3);color:var(--emerald);font-size:0.75rem;">COST_TALLY</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(6,182,212,0.3);color:var(--cyan);font-size:0.75rem;">CACHE_WRITE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(56,189,248,0.3);color:var(--sky);font-size:0.75rem;">RESPONSE_SHAPE</span>
+                                <span style="color:var(--text-muted);">&#8594;</span>
+                                <span class="arch-node" style="border-color:rgba(16,185,129,0.4);color:var(--emerald);font-size:0.75rem;font-weight:700;">RECEIPT &#10003;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto;">
+                    <div class="glass-card reveal" style="padding:20px;text-align:center;">
+                        <div style="font-size:2rem;font-weight:800;color:var(--indigo);">7</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">FAST_PATH</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">stages</div>
+                    </div>
+                    <div class="glass-card reveal" style="padding:20px;text-align:center;transition-delay:0.1s;">
+                        <div style="font-size:2rem;font-weight:800;color:var(--fuchsia);">21</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">FULL_PATH</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">stages</div>
+                    </div>
+                    <div class="glass-card reveal" style="padding:20px;text-align:center;transition-delay:0.2s;">
+                        <div style="font-size:2rem;font-weight:800;color:var(--gold);">9</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">ARENA_PATH</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">stages</div>
+                    </div>
+                    <div class="glass-card reveal" style="padding:20px;text-align:center;transition-delay:0.3s;">
+                        <div style="font-size:2rem;font-weight:800;color:var(--emerald);">7</div>
+                        <div style="font-size:0.8rem;color:var(--text-muted);font-weight:600;">LEARNING_PATH</div>
+                        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">stages</div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     
@@ -890,7 +2107,18 @@ const topology = {
 
     <footer>
         <div class="container">
+            <div class="gradient-divider" style="margin-top:0;margin-bottom:60px;"></div>
             <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3 class="gradient-text">HeadySystems</h3>
+                    <p>The core architecture powering the Heady ecosystem. Built on sacred geometry principles, phi-derived scaling, and organic system design.</p>
+                    <div style="margin-top:16px;">
+                        <span class="status-indicator status-online">
+                            <span class="status-dot"></span>
+                            All Systems Operational
+                        </span>
+                    </div>
+                </div>
                 <div class="footer-col">
                     <h4>Core Platforms</h4>
                     <ul>
@@ -898,6 +2126,8 @@ const topology = {
                         <li><a href="https://headyio.com">HeadyIO</a></li>
                         <li><a href="https://headyme.com">HeadyMe</a></li>
                         <li><a href="https://headyweb.com">HeadyWeb</a></li>
+                        <li><a href="https://headyos.com">HeadyOS</a></li>
+                        <li><a href="https://headyapi.com">HeadyAPI</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -905,22 +2135,18 @@ const topology = {
                     <ul>
                         <li><a href="https://heady-ai.com">Heady AI</a></li>
                         <li><a href="https://headymcp.com">HeadyMCP</a></li>
-                        <li><a href="https://headyos.com">HeadyOS</a></li>
+                        <li><a href="https://headyai.com">HeadyAI</a></li>
+                        <li><a href="https://headybot.com">HeadyBot</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Community & Commerce</h4>
+                    <h4>Community</h4>
                     <ul>
                         <li><a href="https://headyconnection.org">HeadyConnection (Org)</a></li>
-                        <li><a href="https://headyconnection.com">HeadyConnection (Community)</a></li>
+                        <li><a href="https://headyconnection.com">HeadyConnection</a></li>
+                        <li><a href="https://headybuddy.org">HeadyBuddy (Org)</a></li>
                         <li><a href="https://headyex.com">HeadyEx Exchange</a></li>
                         <li><a href="https://headysystems.com">HeadySystems</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Admin</h4>
-                    <ul>
-                        <li><a href="https://admin.headysystems.com">System Admin</a></li>
                     </ul>
                 </div>
             </div>
@@ -930,48 +2156,350 @@ const topology = {
         </div>
     </footer>
 
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SACRED GEOMETRY CANVAS RENDERER + PARTICLE FIELD + SCROLL -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
     <script>
-        // Smooth scroll for nav and sidebar links
+    (function() {
+        'use strict';
+
+        // ──────────────────────────────────────────────
+        // SACRED GEOMETRY CANVAS - Full 3D Wireframe
+        // ──────────────────────────────────────────────
+        const canvas = document.getElementById('sacred-canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, time = 0;
+        const PHI = 1.618033988749895;
+        const TAU = Math.PI * 2;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 3D projection helpers
+        function project(x, y, z, cx, cy, fov) {
+            const scale = fov / (fov + z);
+            return {
+                x: cx + x * scale,
+                y: cy + y * scale,
+                scale: scale
+            };
+        }
+
+        function rotateX(p, angle) {
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            return { x: p.x, y: p.y * cos - p.z * sin, z: p.y * sin + p.z * cos };
+        }
+
+        function rotateY(p, angle) {
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            return { x: p.x * cos + p.z * sin, y: p.y, z: -p.x * sin + p.z * cos };
+        }
+
+        function rotateZ(p, angle) {
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            return { x: p.x * cos - p.y * sin, y: p.x * sin + p.y * cos, z: p.z };
+        }
+
+        // Generate icosahedron vertices
+        function generateIcosahedron(radius) {
+            const t = (1 + Math.sqrt(5)) / 2;
+            const vertices = [
+                {x: -1, y:  t, z:  0}, {x:  1, y:  t, z:  0},
+                {x: -1, y: -t, z:  0}, {x:  1, y: -t, z:  0},
+                {x:  0, y: -1, z:  t}, {x:  0, y:  1, z:  t},
+                {x:  0, y: -1, z: -t}, {x:  0, y:  1, z: -t},
+                {x:  t, y:  0, z: -1}, {x:  t, y:  0, z:  1},
+                {x: -t, y:  0, z: -1}, {x: -t, y:  0, z:  1}
+            ];
+            const len = Math.sqrt(1 + t * t);
+            return vertices.map(v => ({
+                x: (v.x / len) * radius,
+                y: (v.y / len) * radius,
+                z: (v.z / len) * radius
+            }));
+        }
+
+        // Icosahedron edges
+        const icoEdges = [
+            [0,1],[0,5],[0,7],[0,10],[0,11],
+            [1,5],[1,7],[1,8],[1,9],
+            [2,3],[2,4],[2,6],[2,10],[2,11],
+            [3,4],[3,6],[3,8],[3,9],
+            [4,5],[4,9],[4,11],
+            [5,9],[5,11],
+            [6,7],[6,8],[6,10],
+            [7,8],[7,10],
+            [8,9],
+            [10,11]
+        ];
+
+        // Generate dodecahedron vertices
+        function generateDodecahedron(radius) {
+            const phi = (1 + Math.sqrt(5)) / 2;
+            const iphi = 1 / phi;
+            const raw = [
+                {x: 1,y: 1,z: 1},{x: 1,y: 1,z:-1},{x: 1,y:-1,z: 1},{x: 1,y:-1,z:-1},
+                {x:-1,y: 1,z: 1},{x:-1,y: 1,z:-1},{x:-1,y:-1,z: 1},{x:-1,y:-1,z:-1},
+                {x: 0,y: iphi,z: phi},{x: 0,y: iphi,z:-phi},{x: 0,y:-iphi,z: phi},{x: 0,y:-iphi,z:-phi},
+                {x: iphi,y: phi,z: 0},{x: iphi,y:-phi,z: 0},{x:-iphi,y: phi,z: 0},{x:-iphi,y:-phi,z: 0},
+                {x: phi,y: 0,z: iphi},{x: phi,y: 0,z:-iphi},{x:-phi,y: 0,z: iphi},{x:-phi,y: 0,z:-iphi}
+            ];
+            const len = Math.sqrt(3);
+            return raw.map(v => ({
+                x: (v.x / len) * radius,
+                y: (v.y / len) * radius,
+                z: (v.z / len) * radius
+            }));
+        }
+
+        const dodecEdges = [
+            [0,8],[0,12],[0,16],[8,4],[8,10],[4,14],[4,18],[10,2],[10,6],
+            [12,1],[12,14],[14,5],[1,9],[1,17],[9,5],[9,11],[5,19],
+            [16,2],[16,17],[17,3],[2,13],[3,11],[3,13],[6,15],[6,18],
+            [7,11],[7,15],[7,19],[13,15],[18,19]
+        ];
+
+        // Generate Metatron's Cube vertices (2D projected to 3D)
+        function generateMetatronsCube(radius) {
+            const vertices = [];
+            // Center
+            vertices.push({x: 0, y: 0, z: 0});
+            // Inner ring (6 vertices)
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * TAU / 6) - Math.PI / 2;
+                vertices.push({
+                    x: Math.cos(angle) * radius * 0.4,
+                    y: Math.sin(angle) * radius * 0.4,
+                    z: 0
+                });
+            }
+            // Outer ring (6 vertices)
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * TAU / 6) - Math.PI / 2;
+                vertices.push({
+                    x: Math.cos(angle) * radius * 0.8,
+                    y: Math.sin(angle) * radius * 0.8,
+                    z: 0
+                });
+            }
+            return vertices;
+        }
+
+        // Metatron's Cube: connect every vertex to every other
+        function generateMetatronsEdges(vertexCount) {
+            const edges = [];
+            for (let i = 0; i < vertexCount; i++) {
+                for (let j = i + 1; j < vertexCount; j++) {
+                    edges.push([i, j]);
+                }
+            }
+            return edges;
+        }
+
+        // Particle field
+        const particles = [];
+        const PARTICLE_COUNT = 80;
+        const PARTICLE_CONNECT_DIST = 150;
+
+        function initParticles() {
+            particles.length = 0;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    radius: Math.random() * 1.5 + 0.5
+                });
+            }
+        }
+        initParticles();
+        window.addEventListener('resize', initParticles);
+
+        function updateParticles() {
+            for (const p of particles) {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = W;
+                if (p.x > W) p.x = 0;
+                if (p.y < 0) p.y = H;
+                if (p.y > H) p.y = 0;
+            }
+        }
+
+        function drawParticles() {
+            for (const p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, TAU);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.3)';
+                ctx.fill();
+            }
+            // Connect nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < PARTICLE_CONNECT_DIST) {
+                        const alpha = (1 - dist / PARTICLE_CONNECT_DIST) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${alpha})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Color shifting for geometry edges
+        function getShiftingColor(t, offset, alpha) {
+            const r = Math.sin(t * 0.3 + offset) * 127 + 128;
+            const g = Math.sin(t * 0.3 + offset + 2.094) * 127 + 128;
+            const b = Math.sin(t * 0.3 + offset + 4.188) * 127 + 128;
+            return `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, ${alpha})`;
+        }
+
+        function drawWireframe(vertices, edges, rotX, rotY, rotZ, cx, cy, fov, baseAlpha, colorOffset) {
+            const projected = vertices.map(v => {
+                let p = rotateX(v, rotX);
+                p = rotateY(p, rotY);
+                p = rotateZ(p, rotZ);
+                return project(p.x, p.y, p.z, cx, cy, fov);
+            });
+
+            for (let i = 0; i < edges.length; i++) {
+                const [a, b] = edges[i];
+                const pa = projected[a];
+                const pb = projected[b];
+                if (pa.scale > 0 && pb.scale > 0) {
+                    const alpha = baseAlpha * Math.min(pa.scale, pb.scale);
+                    ctx.beginPath();
+                    ctx.moveTo(pa.x, pa.y);
+                    ctx.lineTo(pb.x, pb.y);
+                    ctx.strokeStyle = getShiftingColor(time, colorOffset + i * 0.1, alpha);
+                    ctx.lineWidth = 0.6 * Math.min(pa.scale, pb.scale);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw vertices as small dots
+            for (const p of projected) {
+                if (p.scale > 0) {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 1.5 * p.scale, 0, TAU);
+                    ctx.fillStyle = getShiftingColor(time, colorOffset, baseAlpha * 0.6 * p.scale);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // Main geometry objects
+        const icoVerts = generateIcosahedron(220);
+        const dodecVerts = generateDodecahedron(180);
+        const metaVerts = generateMetatronsCube(280);
+        const metaEdges = generateMetatronsEdges(metaVerts.length);
+
+        // Secondary smaller objects
+        const smallIco1 = generateIcosahedron(100);
+        const smallIco2 = generateIcosahedron(80);
+        const smallDodec = generateDodecahedron(90);
+
+        function animate() {
+            time += 0.008;
+            ctx.clearRect(0, 0, W, H);
+
+            updateParticles();
+            drawParticles();
+
+            const cx = W * 0.5;
+            const cy = H * 0.45;
+            const fov = 500;
+
+            // Main Icosahedron (center, large)
+            drawWireframe(icoVerts, icoEdges,
+                time * 0.2, time * 0.15, time * 0.1,
+                cx, cy, fov, 0.25, 0);
+
+            // Main Dodecahedron (center, overlapping)
+            drawWireframe(dodecVerts, dodecEdges,
+                -time * 0.12, time * 0.18, -time * 0.08,
+                cx, cy, fov, 0.15, 2);
+
+            // Metatron's Cube overlay (slowly rotating in Z)
+            drawWireframe(metaVerts, metaEdges,
+                Math.sin(time * 0.1) * 0.3, Math.cos(time * 0.08) * 0.2, time * 0.05,
+                cx, cy, fov, 0.06, 4);
+
+            // Small icosahedron top-left
+            drawWireframe(smallIco1, icoEdges,
+                time * 0.3, -time * 0.2, time * 0.15,
+                W * 0.15, H * 0.2, 400, 0.12, 1);
+
+            // Small icosahedron bottom-right
+            drawWireframe(smallIco2, icoEdges,
+                -time * 0.25, time * 0.3, -time * 0.12,
+                W * 0.85, H * 0.75, 400, 0.1, 3);
+
+            // Small dodecahedron top-right
+            drawWireframe(smallDodec, dodecEdges,
+                time * 0.18, time * 0.22, -time * 0.1,
+                W * 0.8, H * 0.25, 400, 0.08, 5);
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ──────────────────────────────────────────────
+        // SCROLL REVEAL ANIMATIONS
+        // ──────────────────────────────────────────────
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // ──────────────────────────────────────────────
+        // NAV SCROLL EFFECT
+        // ──────────────────────────────────────────────
+        const nav = document.getElementById('mainNav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        }, { passive: true });
+
+        // ──────────────────────────────────────────────
+        // SMOOTH SCROLL FOR ANCHOR LINKS
+        // ──────────────────────────────────────────────
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 e.preventDefault();
                 const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' });
-                    // Update active state
-                    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                    if (a.classList.contains('nav-item')) {
-                        a.classList.add('active');
-                    }
                 }
             });
         });
 
-        // Intersection Observer for highlighting sidebar based on scroll position
-        const sections = document.querySelectorAll('.docs-content section');
-        const navItems = document.querySelectorAll('.docs-sidebar .nav-item');
-
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.3
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navItems.forEach(item => {
-                        item.classList.remove('active');
-                        if (item.getAttribute('href') === '#' + id) {
-                            item.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }, observerOptions);
-
-        sections.forEach(section => observer.observe(section));
+    })();
     </script>
 </body>
 </html>

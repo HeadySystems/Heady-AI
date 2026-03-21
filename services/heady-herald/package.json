@@ -1,0 +1,21 @@
+{
+  "name": "@heady/herald",
+  "version": "1.0.0",
+  "description": "Notification engine",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3602,
+    "category": "data",
+    "phiTier": 6,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

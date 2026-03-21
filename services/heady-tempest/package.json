@@ -1,0 +1,21 @@
+{
+  "name": "@heady/tempest",
+  "version": "1.0.0",
+  "description": "Load & stress testing",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3506,
+    "category": "optimization",
+    "phiTier": 5,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

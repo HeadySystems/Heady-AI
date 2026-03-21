@@ -1,0 +1,21 @@
+{
+  "name": "@heady/rune",
+  "version": "1.0.0",
+  "description": "Infrastructure as Code",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3427,
+    "category": "infrastructure",
+    "phiTier": 4,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}

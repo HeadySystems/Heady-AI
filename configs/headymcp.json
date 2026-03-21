@@ -1,8 +1,8 @@
 {
     "$schema": "https://heady.ai/schemas/headymcp.v1.json",
     "name": "heady-mcp",
-    "version": "1.0.0",
-    "description": "Heady™ Model Context Protocol server configuration",
+    "version": "5.1.0",
+    "description": "Heady™ Model Context Protocol server — 87 tools across 45 advanced services, φ-scaled routing",
     "server": {
         "host": "0.0.0.0",
         "port": 3321,

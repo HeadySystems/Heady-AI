@@ -2,9 +2,9 @@ const { createLogger } = require('../../utils/logger');
 const logger = createLogger('auto-fixed');
 #!/usr/bin/env node
 /**
- * Heady™ MCP Server v5.0 — Master Control Program
+ * Heady™ MCP Server v5.1 — Master Control Program
  * ================================================
- * Full MCP server with 42 tools, multiple transports, φ-scaled routing
+ * Full MCP server with 87 tools, multiple transports, φ-scaled routing
  *
  * Transports:
  *   - stdio  (default for Claude Desktop / Claude Code / Cursor)
@@ -47,8 +47,8 @@ const log = createLogger('heady-mcp');
 // ── Server Info ─────────────────────────────────────────────────────────────
 const SERVER_INFO = {
   name: 'heady-mcp-server',
-  version: '5.0.0',
-  description: 'Heady™ Master Control Program — 42 MCP tools, φ-scaled autonomous orchestration',
+  version: '5.2.0',
+  description: 'Heady™ Master Control Program — 147 MCP tools across 60 services, liquid parallel async orchestration',
   vendor: 'HeadySystems Inc.',
   homepage: 'https://headymcp.com',
   protocolVersion: '2024-11-05'

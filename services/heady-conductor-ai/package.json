@@ -1,0 +1,16 @@
+{
+  "name": "@heady/heady-conductor-ai",
+  "version": "1.0.0",
+  "description": "Heady heady-conductor-ai MCP service",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "heady": {
+    "port": 3722,
+    "category": "ecosystem",
+    "phiTier": 1,
+    "healthPath": "/health"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@heady/tessera",
+  "version": "1.0.0",
+  "description": "Feature flags & experiments",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js"
+  },
+  "heady": {
+    "port": 3606,
+    "category": "platform",
+    "phiTier": 6,
+    "healthPath": "/health",
+    "transport": [
+      "http",
+      "grpc"
+    ]
+  }
+}
