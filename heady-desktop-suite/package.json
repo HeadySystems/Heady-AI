@@ -7,9 +7,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "build:web": "cross-env APP_TARGET=HeadyWeb electron-builder --config electron-builder.js --mac --win --linux",
-    "build:buddy": "cross-env APP_TARGET=HeadyBuddy electron-builder --config electron-builder.js --mac --win --linux",
-    "build:ide": "cross-env APP_TARGET=HeadyAI-IDE electron-builder --config electron-builder.js --mac --win --linux",
+    "build:web": "cross-env APP_TARGET=HeadyWeb electron-builder --config electron-builder.js --mac --linux",
+    "build:buddy": "cross-env APP_TARGET=HeadyBuddy electron-builder --config electron-builder.js --mac --linux",
+    "build:ide": "cross-env APP_TARGET=HeadyAI-IDE electron-builder --config electron-builder.js --mac --linux",
     "build:all": "npm run build:web && npm run build:buddy && npm run build:ide"
   },
   "devDependencies": {
