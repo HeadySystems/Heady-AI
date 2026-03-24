@@ -93,6 +93,83 @@ function getOriginConfig(hostname) {
   return domainMap[domain] || { pathPrefix: '', cacheTtl: CACHE_TTL.static };
 }
 
+// ─── GitHub Pages Routing ──────────────────────────────────────────
+
+/**
+ * Maps hostnames to their HeadyMe GitHub Pages repo.
+ * These sites are served as static pages from headyme.github.io/{repo}/
+ */
+const GITHUB_PAGES_SITES = {
+  'headybuddy.org':           'headybuddy-org',
+  'www.headybuddy.org':       'headybuddy-org',
+  'headybot.com':             'headybot',
+  'www.headybot.com':         'headybot',
+  'headyapi.com':             'headyapi',
+  'www.headyapi.com':         'headyapi',
+  'headyai.com':              'headyai',
+  'www.headyai.com':          'headyai',
+  'discord.headysystems.com': 'heady-discord',
+};
+
+async function serveFromGitHubPages(request, url, repo, corsHeaders) {
+  const path = url.pathname === '/' ? '/index.html' : url.pathname;
+  const ghPagesUrl = `https://headyme.github.io/${repo}${path}`;
+
+  try {
+    const ghResponse = await fetch(ghPagesUrl, {
+      headers: { 'User-Agent': 'HeadyEdgeRouter/1.0' },
+    });
+
+    if (!ghResponse.ok && !url.pathname.includes('.')) {
+      // SPA fallback
+      const fallback = await fetch(`https://headyme.github.io/${repo}/index.html`, {
+        headers: { 'User-Agent': 'HeadyEdgeRouter/1.0' },
+      });
+      if (fallback.ok) {
+        const body = await fallback.text();
+        return new Response(body, {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': `public, max-age=3600`,
+            'X-Heady-Origin': 'github-pages',
+            'X-Heady-Repo': repo,
+            ...HEADY_BRAND_HEADERS,
+            ...SECURITY_HEADERS,
+            ...corsHeaders,
+          },
+        });
+      }
+    }
+
+    const headers = new Headers(ghResponse.headers);
+    headers.set('X-Heady-Origin', 'github-pages');
+    headers.set('X-Heady-Repo', repo);
+    headers.set('Cache-Control', 'public, max-age=3600');
+    for (const [k, v] of Object.entries(HEADY_BRAND_HEADERS)) headers.set(k, v);
+    for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
+    for (const [k, v] of Object.entries(corsHeaders)) headers.set(k, v);
+
+    return new Response(ghResponse.body, {
+      status: ghResponse.status,
+      headers,
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({
+      error: 'GitHub Pages unreachable',
+      repo,
+      timestamp: new Date().toISOString(),
+    }), {
+      status: 502,
+      headers: {
+        'Content-Type': 'application/json',
+        ...HEADY_BRAND_HEADERS,
+        ...corsHeaders,
+      },
+    });
+  }
+}
+
 // ─── HeadyAutoContext Middleware ────────────────────────────────────
 
 /**
@@ -236,6 +313,14 @@ export default {
       return corsResult;
     }
     const corsHeaders = corsResult;
+
+    // Check if this domain should be served from GitHub Pages
+    const ghPagesRepo = GITHUB_PAGES_SITES[hostname];
+    if (ghPagesRepo) {
+      const corsResult2 = handleCors(request, env);
+      const corsHeaders2 = corsResult2 instanceof Response ? {} : corsResult2;
+      return serveFromGitHubPages(request, url, ghPagesRepo, corsHeaders2);
+    }
 
     // Resolve origin config for this hostname
     const originConfig = getOriginConfig(hostname);
