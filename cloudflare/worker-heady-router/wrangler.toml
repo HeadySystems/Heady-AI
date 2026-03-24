@@ -75,6 +75,11 @@ zone_name = "headysystems.com"
 pattern = "auth.headysystems.com/*"
 zone_name = "headysystems.com"
 
+# ── Discord Community ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "discord.headysystems.com/*"
+zone_name = "headysystems.com"
+
 # ── HeadyAI ──────────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyai.com/*"
