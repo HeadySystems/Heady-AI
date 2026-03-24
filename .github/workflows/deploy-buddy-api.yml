@@ -6,6 +6,7 @@ on:
     paths:
       - 'services/heady-buddy-api/**'
   workflow_dispatch:
+  workflow_call:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -50,15 +51,15 @@ jobs:
             --image "$IMAGE:${{ github.sha }}" \
             --region $REGION \
             --min-instances=1 \
-            --max-instances=13 \
-            --memory=1Gi \
+            --max-instances=8 \
+            --memory=512Mi \
             --cpu=1 \
             --port=3002 \
-            --concurrency=150 \
+            --concurrency=100 \
             --timeout=60s \
             --allow-unauthenticated \
             --set-env-vars="NODE_ENV=production,HEADY_VERSION=${{ github.sha }}" \
-            --set-secrets="GEMINI_API_KEY=gemini-api-key:latest,CF_ACCOUNT_ID=cf-account-id:latest,CF_API_TOKEN=cf-api-token:latest,HF_TOKEN=hf-token:latest,NEON_DATABASE_URL=neon-database-url:latest,UPSTASH_REDIS_URL=upstash-redis-url:latest,UPSTASH_REDIS_TOKEN=upstash-redis-token:latest" \
+            --set-secrets="FIREBASE_SERVICE_ACCOUNT=firebase-service-account:latest,NEON_DATABASE_URL=neon-database-url:latest,UPSTASH_REDIS_URL=upstash-redis-url:latest,UPSTASH_REDIS_TOKEN=upstash-redis-token:latest,SESSION_SECRET=session-secret:latest" \
             --set-env-vars="CORS_ORIGINS=https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com,https://api.headysystems.com"
 
       - name: Get service URL
