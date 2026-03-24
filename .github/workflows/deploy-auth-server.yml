@@ -36,8 +36,8 @@ jobs:
         run: |
           cat > /tmp/env.yaml << 'ENVEOF'
           NODE_ENV: production
-          PORT: "3001"
           HEADY_VERSION: "${{ github.sha }}"
+          HEADY_SERVICE: heady-auth-server
           CORS_ORIGINS: "https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com"
           ENVEOF
           gcloud run deploy $SERVICE \
