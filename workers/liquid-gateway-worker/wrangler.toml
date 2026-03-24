@@ -9,6 +9,7 @@ HEADY_ENV = "production"
 WORKER_NAME = "liquid-gateway-worker"
 HEADY_VERSION = "4.0.0"
 BACKEND_ORIGIN = "https://manager.headysystems.com"
+BUDDY_API_ORIGIN = "https://manager.headysystems.com"
 # FIREBASE_API_KEY — set via wrangler secret put FIREBASE_API_KEY
 
 [env.production]
