@@ -1,8 +1,8 @@
 {
   "name": "heady-buddy-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
-  "description": "HeadyBuddy Chat API — LLM routing + vector memory + persistent conversations",
+  "description": "HeadyBuddy Chat API — Gemini 2.5 Flash + 384D vector memory + persistent conversations",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -12,14 +12,16 @@
     "express": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "helmet": "^8.0.0",
+    "@google/genai": "^1.0.0",
     "@upstash/redis": "^1.34.0",
     "@neondatabase/serverless": "^1.0.0",
-    "pino": "^9.0.0"
+    "pino": "^9.0.0",
+    "@sentry/node": "^9.0.0"
   },
   "engines": { "node": ">=22.0.0" },
   "heady": {
     "domain": "companion",
-    "port": 3351,
+    "port": 3002,
     "sacred_geometry_layer": "Middle"
   }
 }
