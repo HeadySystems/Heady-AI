@@ -1,6 +1,36 @@
 {
-  "_note": "Stripe Billing Registry — created by Full-Spectrum Beneficial Actions pipeline.",
+  "_note": "Stripe Billing Registry — Heady Sovereign AI Platform.",
   "_created": "2026-03-19",
+  "_updated": "2026-03-21",
+  "payment_links": {
+    "developer_monthly": {
+      "link_id": "plink_1TDVwz7edJeDouhQfZeNMo8y",
+      "url": "https://buy.stripe.com/bJe00dfZl9aQfL195t87K0f",
+      "tier": "developer",
+      "interval": "month"
+    },
+    "team_monthly": {
+      "link_id": "plink_1TDVwz7edJeDouhQN0fqtnwK",
+      "url": "https://buy.stripe.com/8x24gt3cz0Ek8izdlJ87K0e",
+      "tier": "team",
+      "interval": "month"
+    },
+    "enterprise_monthly": {
+      "link_id": "plink_1TDVwz7edJeDouhQlDuSOquS",
+      "url": "https://buy.stripe.com/bJe14hcN95YEeGXdlJ87K0d",
+      "tier": "enterprise",
+      "interval": "month"
+    }
+  },
+  "coupons": {
+    "annual_fibonacci_21": {
+      "coupon_id": "y03TtMq1",
+      "name": "Heady Annual — Fibonacci 21% Discount",
+      "percent_off": 21,
+      "duration": "once",
+      "phi_note": "fib(8) = 21 — Fibonacci-derived discount percentage"
+    }
+  },
   "products": {
     "developer": {
       "name": "Heady Developer",
