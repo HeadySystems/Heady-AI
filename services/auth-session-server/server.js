@@ -4,6 +4,15 @@
 // Sacred Geometry Layer: Governance
 // ============================================================================
 
+import * as Sentry from '@sentry/node';
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || '',
+  environment: process.env.NODE_ENV || 'development',
+  release: process.env.SENTRY_RELEASE || process.env.HEADY_VERSION || '2.0.0',
+  enabled: !!process.env.SENTRY_DSN,
+});
+
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -788,6 +797,11 @@ app.use((req, res) => {
     phi: PHI,
   });
 });
+
+// ============================================================================
+// Sentry Error Handler (must precede custom error handler)
+// ============================================================================
+Sentry.setupExpressErrorHandler(app);
 
 // ============================================================================
 // Global Error Handler

@@ -53,12 +53,13 @@ jobs:
             --max-instances=8 \
             --memory=512Mi \
             --cpu=1 \
-            --port=3001 \
+            --port=3400 \
             --concurrency=100 \
             --timeout=30s \
             --allow-unauthenticated \
-            --set-env-vars="NODE_ENV=production,HEADY_VERSION=${{ github.sha }},PORT=3001" \
-            --set-env-vars="CORS_ORIGINS=https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com"
+            --set-env-vars="NODE_ENV=production,HEADY_VERSION=${{ github.sha }},SENTRY_RELEASE=${{ github.sha }},PORT=3400" \
+            --set-secrets="FIREBASE_SERVICE_ACCOUNT=firebase-service-account:latest,NEON_DATABASE_URL=neon-database-url:latest,UPSTASH_REDIS_URL=upstash-redis-url:latest,UPSTASH_REDIS_TOKEN=upstash-redis-token:latest,SESSION_SECRET=session-secret:latest,SENTRY_DSN=sentry-dsn:latest" \
+            --set-env-vars="CORS_ORIGINS=https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com,https://api.headysystems.com"
 
       - name: Get service URL
         run: |
