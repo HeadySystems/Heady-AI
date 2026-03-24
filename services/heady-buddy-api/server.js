@@ -7,7 +7,7 @@
 
 // Sentry instrumentation — MUST be first import
 import './instrument.js';
-import { Sentry } from './instrument.js';
+import Sentry from './instrument.js';
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
