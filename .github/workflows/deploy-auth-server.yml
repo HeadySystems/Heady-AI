@@ -6,6 +6,7 @@ on:
     paths:
       - 'services/auth-session-server/**'
   workflow_dispatch:
+  workflow_call:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
