@@ -45,8 +45,10 @@ jobs:
             --concurrency=100 \
             --timeout=30s \
             --allow-unauthenticated \
-            --set-env-vars="NODE_ENV=production,HEADY_VERSION=${{ github.sha }},PORT=3001" \
-            --set-env-vars="CORS_ORIGINS=https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com"
+            --set-env-vars=NODE_ENV=production \
+            --set-env-vars=HEADY_VERSION=${{ github.sha }} \
+            --set-env-vars=PORT=3001 \
+            --set-env-vars="^||^CORS_ORIGINS=https://headyme.com||https://headysystems.com||https://headyconnection.org||https://headybuddy.org||https://headymcp.com||https://headyio.com||https://headybot.com||https://headyapi.com||https://headyai.com"
 
       - name: Get service URL
         run: |
