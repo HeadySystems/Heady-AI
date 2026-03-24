@@ -38,7 +38,10 @@ jobs:
           NODE_ENV: production
           HEADY_VERSION: "${{ github.sha }}"
           HEADY_SERVICE: heady-buddy-api
+          SENTRY_DSN: "https://9367535bcdaffa7f2e2c3edb4edded79@o4510998791192576.ingest.us.sentry.io/4511070397464576"
           CORS_ORIGINS: "https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://headyai.com"
+          BUDDY_API_URL: "https://heady-buddy-api-bf4q4zywhq-uc.a.run.app"
+          AUTH_SERVER_URL: "https://heady-auth-server-bf4q4zywhq-uc.a.run.app"
           ENVEOF
           gcloud run deploy $SERVICE \
             --source . \
