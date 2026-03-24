@@ -46,7 +46,47 @@ const DOMAIN_MODULES = {
   'admin.headysystems.com': 'admin-portal',
   'auth.headysystems.com': 'auth-portal',
   'heady.headyme.com': 'edge-mcp',
+  'discord.headysystems.com': 'community-hub',
 };
+
+
+// ─── GitHub Pages Repos ────────────────────────────────────────────
+// Sites that are statically served from headyme.github.io/{repo}/
+// This is the primary origin for these static landing pages.
+const GITHUB_PAGES_REPOS = {
+  'headybuddy.org':           'headybuddy-org',
+  'www.headybuddy.org':       'headybuddy-org',
+  'headybot.com':             'headybot',
+  'www.headybot.com':         'headybot',
+  'headyapi.com':             'headyapi',
+  'www.headyapi.com':         'headyapi',
+  'headyai.com':              'headyai',
+  'www.headyai.com':          'headyai',
+  'discord.headysystems.com': 'heady-discord',
+};
+
+async function serveGitHubPages(repo, pathname) {
+  const path = (pathname === '/' || pathname === '') ? '/index.html' : pathname;
+  const url = `https://headyme.github.io/${repo}${path}`;
+  
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'HeadyRouter/2.0', 'Accept': 'text/html,*/*' },
+    });
+    
+    if (!res.ok && !pathname.includes('.')) {
+      // SPA fallback to index.html
+      const fallback = await fetch(`https://headyme.github.io/${repo}/index.html`, {
+        headers: { 'User-Agent': 'HeadyRouter/2.0' },
+      });
+      if (fallback.ok) return fallback;
+    }
+    
+    return res.ok ? res : null;
+  } catch (_e) {
+    return null;
+  }
+}
 
 const MODULE_BRANDS = {
   'mcp-dashboard': {
@@ -417,6 +457,25 @@ export default {
         status: 404,
         headers: commonHeaders('unknown', 'router-miss', 'application/json; charset=utf-8'),
       });
+    }
+
+    // ── GitHub Pages first-priority routing ──
+    const ghRepo = GITHUB_PAGES_REPOS[hostname];
+    if (ghRepo) {
+      const ghResponse = await serveGitHubPages(ghRepo, url.pathname);
+      if (ghResponse) {
+        const headers = new Headers();
+        headers.set('Content-Type', ghResponse.headers.get('Content-Type') || 'text/html; charset=utf-8');
+        headers.set('Cache-Control', 'public, max-age=3600');
+        headers.set('X-Heady-Source', 'github-pages');
+        headers.set('X-Heady-Repo', ghRepo);
+        headers.set('X-Heady-Module', moduleName);
+        return new Response(ghResponse.body, {
+          status: ghResponse.status,
+          headers,
+        });
+      }
+      // Fall through to fallback if GitHub Pages unavailable
     }
 
     const cacheKey = `hologram:${moduleName}:${url.pathname || '/'}:${url.search || ''}`;
