@@ -56,6 +56,7 @@ const DOMAIN_MODULES = {
 // Sites that are statically served from headyme.github.io/{repo}/
 // This is the primary origin for these static landing pages.
 const GITHUB_PAGES_REPOS = {
+  // ── Active GitHub Pages repos ──
   'headybuddy.org':           'headybuddy-org',
   'www.headybuddy.org':       'headybuddy-org',
   'headybot.com':             'headybot',
@@ -64,9 +65,9 @@ const GITHUB_PAGES_REPOS = {
   'www.headyapi.com':         'headyapi',
   'headyai.com':              'headyai',
   'www.headyai.com':          'headyai',
-  'discord.headysystems.com': 'heady-discord',
   'heady-ai.com':             'headyai',
   'www.heady-ai.com':         'headyai',
+  'discord.headysystems.com': 'heady-discord',
   'headyos.com':              'headyos',
   'www.headyos.com':          'headyos',
   'headyconnection.org':      'headyconnection',
@@ -77,12 +78,8 @@ const GITHUB_PAGES_REPOS = {
   'www.headymcp.com':         'headymcp-com',
   'headysystems.com':         'headysystems-com',
   'www.headysystems.com':     'headysystems-com',
-  'headyex.com':              'headyex',
-  'www.headyex.com':          'headyex',
-  'headyfinance.com':         'headyfinance',
-  'www.headyfinance.com':     'headyfinance',
-  'headycloud.com':           'headycloud',
-  'www.headycloud.com':       'headycloud',
+  // headyex.com, headyfinance.com, headycloud.com — served by Cloud Run origin
+  // admin.headysystems.com — served by Cloud Run origin
 };
 
 async function serveGitHubPages(repo, pathname) {
