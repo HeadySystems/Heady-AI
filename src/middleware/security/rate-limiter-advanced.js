@@ -181,7 +181,8 @@ class RedisSlidingWindowStore {
 
     let count;
     try {
-      count = await this._redis.eval(
+      count = // SEC-017 SAFE: Redis Lua script execution (not JS eval)
+      await this._redis.eval(
         this._SLIDING_WINDOW_SCRIPT,
         1,    // number of keys
         key,
@@ -244,7 +245,8 @@ class RedisSlidingWindowStore {
     `;
 
     try {
-      const result = await this._redis.eval(script, 1, bucketKey,
+      const result = // SEC-017 SAFE: Redis Lua script execution (not JS eval)
+      await this._redis.eval(script, 1, bucketKey,
         String(now), String(maxTokens), String(refillRate), String(refillIntervalMs));
       const [allowed, tokensRemaining] = result;
       return {

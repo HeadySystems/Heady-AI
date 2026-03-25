@@ -177,3 +177,4 @@ secrets_registry.json
 
 # ── Loose credential files ─────────────────────────────
 !package-lock.json
+auth-service/node_modules/

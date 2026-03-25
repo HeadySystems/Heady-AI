@@ -294,7 +294,7 @@ const BUILT_IN_RULES = Object.freeze([
     check: (output) => {
       if (typeof output.content !== 'string') return { score: 1.0, issues: [] };
       if (/\beval\s*\(/.test(output.content) || /new\s+Function\s*\(/.test(output.content)) {
-        return { score: 0, issues: ['eval() or new Function() detected — security violation'] };
+        return { score: 0, issues: ['SEC-017: eval() or new Function() detected — security violation'] };
       }
       return { score: 1.0, issues: [] };
     },

@@ -22,7 +22,7 @@ app.use(helmet({
 // CORS - Not too permissive
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.endsWith('.headysystems.com') || origin === 'http://localhost:3314') {
+        if (!origin || origin.endsWith('.headysystems.com') || origin === (process.env.MODEL_GATEWAY_URL || 'http://localhost:3314')) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -47,6 +47,33 @@ const retryWithPhiBackoff = async (fn, retries = 3, delay = 1.618 * 1000) => {
     }
 };
 
+
+// ── Health Check Triad — Omnipotence Directive Cycle 1 ──
+const _startTime = Date.now();
+let _serviceReady = false;
+let _startupComplete = false;
+
+app.get('/health/live', (req, res) => {
+  res.status(200).json({ status: 'ALIVE', service: 'model-gateway', timestamp: new Date().toISOString() });
+});
+
+app.get('/health/ready', (req, res) => {
+  res.status(_serviceReady ? 200 : 503).json({
+    status: _serviceReady ? 'READY' : 'NOT_READY',
+    service: 'model-gateway',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/health/startup', (req, res) => {
+  res.status(_startupComplete ? 200 : 503).json({
+    status: _startupComplete ? 'STARTED' : 'STARTING',
+    service: 'model-gateway',
+    uptime: Date.now() - _startTime,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', service: 'model-gateway', timestamp: Date.now() });
 });
@@ -59,5 +86,7 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3314;
 app.listen(port, () => {
+    _serviceReady = true;
+    _startupComplete = true;
     logger.info(`Service model-gateway listening on port ${port}`);
 });

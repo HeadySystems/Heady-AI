@@ -22,7 +22,7 @@ app.use(helmet({
 // CORS - Not too permissive
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.endsWith('.headysystems.com') || origin === 'http://localhost:3320') {
+        if (!origin || origin.endsWith('.headysystems.com') || origin === (process.env.HEADY_HIVE_URL || 'http://localhost:3320')) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -47,6 +47,33 @@ const retryWithPhiBackoff = async (fn, retries = 3, delay = 1.618 * 1000) => {
     }
 };
 
+
+// ── Health Check Triad — Omnipotence Directive Cycle 1 ──
+const _startTime = Date.now();
+let _serviceReady = false;
+let _startupComplete = false;
+
+app.get('/health/live', (req, res) => {
+  res.status(200).json({ status: 'ALIVE', service: 'heady-hive', timestamp: new Date().toISOString() });
+});
+
+app.get('/health/ready', (req, res) => {
+  res.status(_serviceReady ? 200 : 503).json({
+    status: _serviceReady ? 'READY' : 'NOT_READY',
+    service: 'heady-hive',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/health/startup', (req, res) => {
+  res.status(_startupComplete ? 200 : 503).json({
+    status: _startupComplete ? 'STARTED' : 'STARTING',
+    service: 'heady-hive',
+    uptime: Date.now() - _startTime,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', service: 'heady-hive', timestamp: Date.now() });
 });
@@ -59,5 +86,7 @@ app.use((err, req, res, next) => {
 
 const port = process.env.PORT || 3320;
 app.listen(port, () => {
+    _serviceReady = true;
+    _startupComplete = true;
     logger.info(`Service heady-hive listening on port ${port}`);
 });
