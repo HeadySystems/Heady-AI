@@ -63,36 +63,11 @@ zone_name = "headyex.com"
 pattern = "www.headyex.com/*"
 zone_name = "headyex.com"
 
-# ── HeadySystems Subdomains (service endpoints) ────────────────────────
-[[routes]]
-pattern = "manager.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "ai.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "api.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "buddy.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "mcp.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "edge.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "battle.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "stream.headysystems.com/*"
-zone_name = "headysystems.com"
-[[routes]]
-pattern = "vector.headysystems.com/*"
-zone_name = "headysystems.com"
-
 # ── Admin / Auth / Discord Subdomains ────────────────────────────────
+# NOTE: manager/ai/api/buddy/mcp/edge/battle/stream/vector subdomains
+# are handled by the headysystems.com/* wildcard route below.
+# Explicit subdomain routes removed — they conflicted with existing
+# Cloudflare worker assignments (deploy error: "routes assigned to another worker").
 [[routes]]
 pattern = "admin.headysystems.com/*"
 zone_name = "headysystems.com"

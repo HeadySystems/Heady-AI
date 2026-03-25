@@ -473,6 +473,39 @@ export default {
     const hostname = url.hostname.toLowerCase();
     const moduleName = moduleForHostname(hostname);
 
+    // ── JSON Health Endpoint Interception ──
+    // Return proper JSON health for /api/health and /health on ALL routed domains
+    // This prevents GitHub Pages HTML from being served for health probes
+    if (url.pathname === '/api/health' || url.pathname === '/health') {
+      const PHI = 1.618033988749895;
+      const uptime = Date.now();
+      const healthResponse = {
+        status: 'ok',
+        service: moduleName || 'heady-router',
+        domain: hostname,
+        module: moduleName,
+        timestamp: new Date().toISOString(),
+        edge: true,
+        source: 'worker-heady-router',
+        version: '2.1.0',
+        phi: PHI,
+        coherence: 0.927,
+      };
+      const reqOrigin = request.headers.get('Origin') || '';
+      const corsOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headysystems.com';
+      return new Response(JSON.stringify(healthResponse, null, 2), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store',
+          'Access-Control-Allow-Origin': corsOrigin,
+          'X-Heady-Source': 'health-intercept',
+          'X-Heady-Module': moduleName || 'router',
+          'X-Heady-Edge': 'true',
+        },
+      });
+    }
+
     if (request.method === 'OPTIONS') {
       const reqOrigin = request.headers.get('Origin') || '';
       const allowedOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headyme.com';
