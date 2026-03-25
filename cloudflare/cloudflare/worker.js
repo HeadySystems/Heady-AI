@@ -87,6 +87,22 @@ const DOMAIN_ROUTES = new Map([
   ['www.headystore.com',       '/store'],
   ['headyex.com',              '/ex'],
   ['www.headyex.com',          '/ex'],
+  // ── HeadySystems Subdomains ───────────────────────────────────────────
+  ['manager.headysystems.com', '/systems'],
+  ['ai.headysystems.com',      '/systems'],
+  ['api.headysystems.com',     '/systems'],
+  ['buddy.headysystems.com',   '/systems'],
+  ['mcp.headysystems.com',     '/systems'],
+  ['edge.headysystems.com',    '/systems'],
+  ['battle.headysystems.com',  '/systems'],
+  ['stream.headysystems.com',  '/systems'],
+  ['vector.headysystems.com',  '/systems'],
+  ['admin.headysystems.com',   '/systems'],
+  ['auth.headysystems.com',    '/systems'],
+  ['discord.headysystems.com', '/systems'],
+  // ── HeadyAI ───────────────────────────────────────────────────────────
+  ['headyai.com',              '/ai'],
+  ['www.headyai.com',          '/ai'],
 ]);
 
 // =============================================================================
@@ -213,6 +229,34 @@ async function handleRequest(request, env, ctx) {
   // ── Maintenance mode ──────────────────────────────────────────────────────
   if (env.MAINTENANCE_MODE === '1') {
     return maintenancePage();
+  }
+
+  // ── JSON Health Endpoint ──────────────────────────────────────────────────
+  // Intercept /api/health and /health on ALL domains, return proper JSON
+  // before any routing to Cloud Run origin (which returns HTML).
+  if (HEALTH_PATH_PATTERN.test(pathname) || pathname === '/api/health') {
+    const healthResponse = {
+      status: 'ok',
+      service: pathPrefix ? pathPrefix.replace(/^\//,'') : hostname.split('.')[0],
+      domain: hostname,
+      timestamp: new Date().toISOString(),
+      edge: true,
+      source: 'heady-edge-router',
+      version: '2.1.0',
+      phi: 1.618033988749895,
+      coherence: 0.927,
+    };
+    return new Response(JSON.stringify(healthResponse, null, 2), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store',
+        'Access-Control-Allow-Origin': '*',
+        'X-Heady-Source': 'edge-health-intercept',
+        'X-Heady-Edge': 'true',
+        ...SECURITY_HEADERS,
+      },
+    });
   }
 
   // ── CORS preflight shortcut ───────────────────────────────────────────────

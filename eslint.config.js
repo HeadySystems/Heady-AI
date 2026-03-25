@@ -20,6 +20,8 @@ const tsParser = require('@typescript-eslint/parser');
 module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
+    // Skip auto-generated .d.ts declaration files — they use 'any' by design
+    ignores: ['**/*.d.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -62,6 +64,7 @@ module.exports = [
       "!.*",
       "dist",
       "node_modules",
+      "**/*.d.ts",
       "venv/**",
       ".windsurf/**",
       "**/node_modules/**",

@@ -58,10 +58,26 @@ jobs:
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
 
-  deploy-edge-router-cleanup:
-    name: Deploy heady-edge-router (Deprecated — Route Cleanup)
+  deploy-edge-router-primary:
+    name: Deploy heady-edge-router (Primary Domain Router)
     runs-on: ubuntu-latest
-    needs: [deploy-heady-router]
+    needs: [validate]
+    defaults:
+      run:
+        working-directory: cloudflare/cloudflare
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy
+        run: wrangler deploy --config wrangler.toml
+
+  deploy-edge-router-cleanup:
+    name: Deploy heady-edge-router-deprecated (Route Cleanup)
+    runs-on: ubuntu-latest
+    needs: [deploy-edge-router-primary]
     defaults:
       run:
         working-directory: cloudflare/heady-edge-router

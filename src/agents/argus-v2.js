@@ -443,7 +443,7 @@ class ArgusV2Agent {
     return traceparent?.split('-')[2] || null;
   }
 }
-const FIB_89 = 89;
+// FIB_89 already defined at line 6 via FIB[11]
 module.exports = {
   ArgusV2Agent,
   OTEL_GENAI,

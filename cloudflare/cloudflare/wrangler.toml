@@ -83,6 +83,24 @@ routes = [
   { pattern = "www.headystore.com/*",       zone_name = "headystore.com" },
   { pattern = "headyex.com/*",              zone_name = "headyex.com" },
   { pattern = "www.headyex.com/*",          zone_name = "headyex.com" },
+
+  # ── HeadySystems Subdomains (service health endpoints) ─────────────────
+  { pattern = "manager.headysystems.com/*",  zone_name = "headysystems.com" },
+  { pattern = "ai.headysystems.com/*",       zone_name = "headysystems.com" },
+  { pattern = "api.headysystems.com/*",      zone_name = "headysystems.com" },
+  { pattern = "buddy.headysystems.com/*",    zone_name = "headysystems.com" },
+  { pattern = "mcp.headysystems.com/*",      zone_name = "headysystems.com" },
+  { pattern = "edge.headysystems.com/*",     zone_name = "headysystems.com" },
+  { pattern = "battle.headysystems.com/*",   zone_name = "headysystems.com" },
+  { pattern = "stream.headysystems.com/*",   zone_name = "headysystems.com" },
+  { pattern = "vector.headysystems.com/*",   zone_name = "headysystems.com" },
+  { pattern = "admin.headysystems.com/*",    zone_name = "headysystems.com" },
+  { pattern = "auth.headysystems.com/*",     zone_name = "headysystems.com" },
+  { pattern = "discord.headysystems.com/*",  zone_name = "headysystems.com" },
+
+  # ── HeadyAI ────────────────────────────────────────────────────────────
+  { pattern = "headyai.com/*",              zone_name = "headyai.com" },
+  { pattern = "www.headyai.com/*",          zone_name = "headyai.com" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -92,20 +110,21 @@ routes = [
 #              wrangler kv:namespace create "CACHE_KV"
 #              wrangler kv:namespace create "CONFIG_KV"
 
-[[kv_namespaces]]
-binding  = "RATE_LIMIT_KV"
-id       = "REPLACE_WITH_RATE_LIMIT_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_NAMESPACE_ID"
-
-[[kv_namespaces]]
-binding  = "CACHE_KV"
-id       = "REPLACE_WITH_CACHE_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_CACHE_KV_PREVIEW_NAMESPACE_ID"
-
-[[kv_namespaces]]
-binding  = "CONFIG_KV"
-id       = "REPLACE_WITH_CONFIG_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_CONFIG_KV_PREVIEW_NAMESPACE_ID"
+# KV Namespaces — commented out until real IDs are created
+# The worker gracefully degrades without KV (rate limiting & caching disabled)
+# Create with: wrangler kv:namespace create "RATE_LIMIT_KV" etc.
+# [[kv_namespaces]]
+# binding  = "RATE_LIMIT_KV"
+# id       = "REPLACE_WITH_RATE_LIMIT_KV_NAMESPACE_ID"
+# preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_NAMESPACE_ID"
+# [[kv_namespaces]]
+# binding  = "CACHE_KV"
+# id       = "REPLACE_WITH_CACHE_KV_NAMESPACE_ID"
+# preview_id = "REPLACE_WITH_CACHE_KV_PREVIEW_NAMESPACE_ID"
+# [[kv_namespaces]]
+# binding  = "CONFIG_KV"
+# id       = "REPLACE_WITH_CONFIG_KV_NAMESPACE_ID"
+# preview_id = "REPLACE_WITH_CONFIG_KV_PREVIEW_NAMESPACE_ID"
 
 # ---------------------------------------------------------------------------
 # Durable Objects (optional — for stateful WebSocket coordination)
@@ -198,7 +217,7 @@ preview_id = "REPLACE_WITH_STAGING_CONFIG_KV_PREVIEW_ID"
 name = "heady-edge-router-dev"
 
 [env.dev.vars]
-CLOUD_RUN_ORIGIN   = "http://localhost:8080"
+CLOUD_RUN_ORIGIN   = "https://heady-production-uc.a.run.app"
 RATE_LIMIT_WINDOW  = "60"
 RATE_LIMIT_MAX     = "1000"
 MAINTENANCE_MODE   = "0"
