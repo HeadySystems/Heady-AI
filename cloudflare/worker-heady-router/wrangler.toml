@@ -71,18 +71,14 @@ zone_name = "headysystems.com"
 [[routes]]
 pattern = "ai.headysystems.com/*"
 zone_name = "headysystems.com"
-[[routes]]
-pattern = "api.headysystems.com/*"
-zone_name = "headysystems.com"
+# api.headysystems.com — owned by heady-api-production worker (has own JSON health)
 [[routes]]
 pattern = "buddy.headysystems.com/*"
 zone_name = "headysystems.com"
 [[routes]]
 pattern = "mcp.headysystems.com/*"
 zone_name = "headysystems.com"
-[[routes]]
-pattern = "edge.headysystems.com/*"
-zone_name = "headysystems.com"
+# edge.headysystems.com — owned by heady-edge-node worker
 [[routes]]
 pattern = "battle.headysystems.com/*"
 zone_name = "headysystems.com"
@@ -113,13 +109,7 @@ zone_name = "headyio.com"
 pattern = "www.headyio.com/*"
 zone_name = "headyio.com"
 
-# ── HeadyMCP ────────────────────────────────────────────────────────
-[[routes]]
-pattern = "headymcp.com/*"
-zone_name = "headymcp.com"
-[[routes]]
-pattern = "www.headymcp.com/*"
-zone_name = "headymcp.com"
+# headymcp.com — owned by headymcp-edge worker (deployed separately)
 
 # ── HeadyConnection.com ─────────────────────────────────────────────
 [[routes]]
