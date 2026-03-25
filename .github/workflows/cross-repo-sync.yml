@@ -1,5 +1,9 @@
 # HEADY_BRAND:BEGIN
-# Cross-Repo Sync — Synchronize HeadyMe, HeadySystems, HeadyAI orgs
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  Cross-Repo Sync — Synchronize shared files across HeadyMe org ║
+# ║  FIXED: Now actually syncs content (not just checks existence) ║
+# ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 name: Cross-Repo Sync
@@ -7,39 +11,135 @@ name: Cross-Repo Sync
 on:
   schedule:
     - cron: '0 */6 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'shared/**'
+      - 'configs/sacred-geometry-v4.yaml'
+      - 'configs/liquid-microservice-architecture.yaml'
   workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force sync all files regardless of hash match'
+        type: boolean
+        default: false
+
+concurrency:
+  group: cross-repo-sync
+  cancel-in-progress: false
 
 jobs:
   sync:
-    name: Sync Heady Organizations
+    name: Sync Shared Files to Satellite Repos
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          token: ${{ secrets.HEADY_GITHUB_TOKEN }}
 
-      - name: Sync shared configs
+      - name: Sync shared files across HeadyMe org
         env:
           GH_TOKEN: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          FORCE_SYNC: ${{ inputs.force || 'false' }}
         run: |
-          echo "## Cross-Repo Sync Report" >> $GITHUB_STEP_SUMMARY
+          echo "# 🔄 Cross-Repo Sync Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Force**: $FORCE_SYNC" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Shared config files to sync across orgs
-          SHARED_FILES=(
-            "configs/liquid-microservice-architecture.yaml"
-            "src/core/liquid-node-base.js"
-            ".github/workflows/hcfullpipeline-ci.yml"
-            ".github/workflows/liquid-deploy.yml"
-          )
+          # ─── Shared files to sync ───────────────────────────────────────
+          declare -A SYNC_MAP
+          # Format: "file_path=repo1,repo2,repo3"
+          # phi-math.js → all repos that use phi constants
+          SYNC_MAP["shared/phi-math.js"]="headysystems,headymcp,headyconnection,headyai,headyos,HeadyBuddy,HeadyWeb,Heady-Main,Heady-Main-1,Heady-Testing,Heady-Staging,headysystems-core,headymcp-core,headyconnection-core,headyme-core,headyos-core,headybuddy-core,headyio-core,headyapi-core,headybot-core"
+          SYNC_MAP["shared/cors-config.js"]="headysystems,headymcp,headyconnection,headyai,headyos,HeadyBuddy,HeadyWeb,headysystems-core,headymcp-core,headyconnection-core,headyme-core,headyos-core"
+          SYNC_MAP["shared/logger.js"]="headysystems,headymcp,headyconnection,headyai,HeadyBuddy,HeadyWeb,headysystems-core,headymcp-core"
+          SYNC_MAP["shared/health.js"]="headysystems,headymcp,headyconnection,headyai,HeadyBuddy,HeadyWeb,headysystems-core,headymcp-core"
+          SYNC_MAP["configs/sacred-geometry-v4.yaml"]="headysystems,headymcp,headyai,headyos,Heady-Main,Heady-Testing"
+          SYNC_MAP["configs/liquid-microservice-architecture.yaml"]="headysystems,headymcp,Heady-Main"
 
-          for file in "${SHARED_FILES[@]}"; do
-            if [ -f "$file" ]; then
-              echo "- ✅ $file exists" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "- ❌ $file missing" >> $GITHUB_STEP_SUMMARY
+          TOTAL_SYNCED=0
+          TOTAL_SKIPPED=0
+          TOTAL_FAILED=0
+          TOTAL_MISSING=0
+
+          echo "| File | Repo | Status | Details |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|--------|---------|" >> $GITHUB_STEP_SUMMARY
+
+          for FILE in "${!SYNC_MAP[@]}"; do
+            # Check source file exists
+            if [ ! -f "$FILE" ]; then
+              echo "| \`$FILE\` | — | ⚠️ Source missing | File not in heady-production |" >> $GITHUB_STEP_SUMMARY
+              ((TOTAL_MISSING++))
+              continue
             fi
+
+            SOURCE_HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
+            CONTENT_B64=$(base64 -w0 < "$FILE")
+
+            IFS=',' read -ra REPOS <<< "${SYNC_MAP[$FILE]}"
+
+            for REPO in "${REPOS[@]}"; do
+              REPO=$(echo "$REPO" | xargs)
+
+              # Get existing file from target repo
+              EXISTING=$(gh api "repos/HeadyMe/$REPO/contents/$FILE" 2>/dev/null || echo "")
+
+              if [ -n "$EXISTING" ]; then
+                # File exists — compare hashes
+                TARGET_CONTENT=$(echo "$EXISTING" | jq -r '.content // empty' | tr -d '\n' | base64 -d 2>/dev/null || echo "")
+                TARGET_HASH=$(echo "$TARGET_CONTENT" | sha256sum | cut -d' ' -f1)
+                FILE_SHA=$(echo "$EXISTING" | jq -r '.sha // empty')
+
+                if [ "$SOURCE_HASH" = "$TARGET_HASH" ] && [ "$FORCE_SYNC" != "true" ]; then
+                  echo "| \`$FILE\` | $REPO | ✅ In sync | Hash match |" >> $GITHUB_STEP_SUMMARY
+                  ((TOTAL_SKIPPED++))
+                  continue
+                fi
+
+                # Update existing file
+                if gh api "repos/HeadyMe/$REPO/contents/$FILE" \
+                  --method PUT \
+                  -f "message=sync(auto): update $FILE from heady-production [cross-repo-sync]" \
+                  -f "content=$CONTENT_B64" \
+                  -f "sha=$FILE_SHA" \
+                  -f "branch=main" > /dev/null 2>&1; then
+                  echo "| \`$FILE\` | $REPO | 🔄 Updated | Hash changed |" >> $GITHUB_STEP_SUMMARY
+                  ((TOTAL_SYNCED++))
+                else
+                  echo "| \`$FILE\` | $REPO | ❌ Failed | API error |" >> $GITHUB_STEP_SUMMARY
+                  ((TOTAL_FAILED++))
+                fi
+              else
+                # File doesn't exist — create it
+                if gh api "repos/HeadyMe/$REPO/contents/$FILE" \
+                  --method PUT \
+                  -f "message=sync(auto): add $FILE from heady-production [cross-repo-sync]" \
+                  -f "content=$CONTENT_B64" \
+                  -f "branch=main" > /dev/null 2>&1; then
+                  echo "| \`$FILE\` | $REPO | ✨ Created | New file |" >> $GITHUB_STEP_SUMMARY
+                  ((TOTAL_SYNCED++))
+                else
+                  echo "| \`$FILE\` | $REPO | ❌ Failed | API error |" >> $GITHUB_STEP_SUMMARY
+                  ((TOTAL_FAILED++))
+                fi
+              fi
+
+              # Rate limit protection — φ² seconds between API calls
+              sleep 2.618
+            done
           done
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Orgs:** HeadyMe, HeadySystems, HeadyAI" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** $(git branch --show-current)" >> $GITHUB_STEP_SUMMARY
+          echo "## Summary" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔄 Synced | $TOTAL_SYNCED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Already in sync | $TOTAL_SKIPPED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ Failed | $TOTAL_FAILED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⚠️ Source missing | $TOTAL_MISSING |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "φ = 1.618033988749895 | HeadySystems Inc." >> $GITHUB_STEP_SUMMARY

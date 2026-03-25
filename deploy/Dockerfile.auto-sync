@@ -1,0 +1,27 @@
+# HEADY_BRAND:BEGIN
+# HeadyAutoSync — Cloud Run Job Container
+# © 2026 HeadySystems Inc. | φ = 1.618033988749895
+# HEADY_BRAND:END
+
+FROM node:20-alpine AS base
+
+# Install git + openssh for clone/push operations
+RUN apk add --no-cache git openssh-client bash curl
+
+# Create non-root user
+RUN addgroup -S heady && adduser -S heady -G heady
+WORKDIR /app
+
+# Copy just the sync runner script
+COPY scripts/cloud-run-auto-sync.sh /app/sync.sh
+COPY shared/phi-math.js /app/shared/phi-math.js
+RUN chmod +x /app/sync.sh
+
+# SSH config for GitHub
+RUN mkdir -p /home/heady/.ssh && \
+    ssh-keyscan github.com >> /home/heady/.ssh/known_hosts 2>/dev/null && \
+    chown -R heady:heady /home/heady/.ssh
+
+USER heady
+
+ENTRYPOINT ["/app/sync.sh"]

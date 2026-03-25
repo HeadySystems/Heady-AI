@@ -1,0 +1,274 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HeadyAutoSync — GitHub Actions Auto-Commit & Cross-Repo Push  ║
+# ║  LAYER: orchestration/automation                                ║
+# ║  INTERVAL: φ⁸ ≈ 47s (simulated via */5 cron + push triggers)  ║
+# ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Option 1: GitHub Actions-based AutoSync
+# Runs every 5 minutes (closest cron approximation to φ⁸ interval)
+# Also triggers on push to main to cascade changes to satellite repos.
+#
+# Requirements:
+#   - Secret HEADY_GITHUB_TOKEN: PAT with repo scope across HeadyMe org
+#   - Secret HEADY_SSH_KEY: Deploy key for push access (optional, PAT preferred)
+#
+# What it does:
+#   1. Checks for uncommitted generated artifacts (build outputs, configs)
+#   2. Auto-commits with classified tier messages
+#   3. Syncs shared files to 38 satellite repos
+#   4. Reports sync status to GitHub Step Summary
+
+name: HeadyAutoSync
+
+on:
+  schedule:
+    # Every 5 minutes — closest cron resolution to φ⁸ (46.97s)
+    - cron: '*/5 * * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'configs/**'
+      - 'shared/**'
+      - 'src/core/**'
+      - '.github/workflows/hcfullpipeline-ci.yml'
+      - '.github/workflows/liquid-deploy.yml'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync all repos regardless of changes'
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Dry run — report what would sync without pushing'
+        type: boolean
+        default: false
+
+concurrency:
+  group: heady-auto-sync
+  cancel-in-progress: false
+
+env:
+  PHI: '1.618033988749895'
+  PSI: '0.618033988749895'
+  CSL_MEDIUM: '0.809'
+  SYNC_BRANCH: main
+
+jobs:
+  # ─── STAGE 1: Auto-Commit Generated Artifacts ───────────────────────────────
+  auto-commit:
+    name: "φ⁸ Auto-Commit Check"
+    runs-on: ubuntu-latest
+    outputs:
+      has_new_commits: ${{ steps.commit.outputs.committed }}
+      commit_sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          fetch-depth: 2
+
+      - name: Configure git identity
+        run: |
+          git config user.name "HeadyAutoSync[bot]"
+          git config user.email "autosync@headysystems.com"
+
+      - name: Detect and classify changes
+        id: detect
+        run: |
+          # Check for uncommitted changes (generated configs, build artifacts)
+          STATUS=$(git status --porcelain)
+          if [ -z "$STATUS" ]; then
+            echo "clean=true" >> $GITHUB_OUTPUT
+            echo "No uncommitted changes detected"
+            exit 0
+          fi
+
+          echo "clean=false" >> $GITHUB_OUTPUT
+          FILE_COUNT=$(echo "$STATUS" | wc -l)
+          echo "file_count=$FILE_COUNT" >> $GITHUB_OUTPUT
+
+          # Classify changes using Arena Mode tiers
+          CRITICAL_PATTERN='auth|billing|password|private.key|DROP[[:space:]]TABLE|schema[[:space:]]migrat'
+          if echo "$STATUS" | grep -qiE "$CRITICAL_PATTERN"; then
+            echo "tier=CRITICAL" >> $GITHUB_OUTPUT
+            echo "::warning::CRITICAL changes detected — skipping auto-commit, requires manual review"
+          elif echo "$STATUS" | grep -qvE '\.(md|yaml|yml|json|txt|css)$'; then
+            echo "tier=SIGNIFICANT" >> $GITHUB_OUTPUT
+          else
+            echo "tier=TRIVIAL" >> $GITHUB_OUTPUT
+          fi
+
+          echo "### 📊 Changes Detected" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Files changed | $FILE_COUNT |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$STATUS" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Auto-commit (TRIVIAL + SIGNIFICANT only)
+        id: commit
+        if: steps.detect.outputs.clean != 'true' && steps.detect.outputs.tier != 'CRITICAL'
+        run: |
+          TIER="${{ steps.detect.outputs.tier }}"
+          FILE_COUNT="${{ steps.detect.outputs.file_count }}"
+
+          # Build commit message following AutoCommitDeploy convention
+          CHANGED_FILES=$(git status --porcelain | head -5 | awk '{print $2}' | xargs -I{} basename {} | paste -sd', ')
+          MSG="chore(auto-sync): ${CHANGED_FILES} [tier=${TIER}] [actions]"
+          # Truncate to FIB[10]=89 chars
+          MSG="${MSG:0:89}"
+
+          git add -A
+          git commit -m "$MSG" || { echo "committed=false" >> $GITHUB_OUTPUT; exit 0; }
+
+          SHA=$(git rev-parse --short HEAD)
+          echo "committed=true" >> $GITHUB_OUTPUT
+          echo "sha=$SHA" >> $GITHUB_OUTPUT
+          echo "msg=$MSG" >> $GITHUB_OUTPUT
+
+          git push origin ${{ env.SYNC_BRANCH }}
+
+          echo "### ✅ Auto-Committed" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA**: \`$SHA\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Message**: $MSG" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tier**: $TIER" >> $GITHUB_STEP_SUMMARY
+
+  # ─── STAGE 2: Cross-Repo Sync to All 38 Satellite Repos ─────────────────────
+  cross-repo-sync:
+    name: "Cross-Repo Content Sync"
+    runs-on: ubuntu-latest
+    needs: [auto-commit]
+    if: always()
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        # Sync groups — shared files pushed to these repo categories
+        sync_group:
+          - name: core-sites
+            repos: "headysystems-com,headyconnection-org,headymcp-com,headyai,headyos,headybuddy-org,headyio-com,headyapi,headybot"
+            files: "shared/phi-math.js,shared/cors-config.js,shared/logger.js,configs/sacred-geometry-v4.yaml"
+          - name: production-mirrors
+            repos: "headysystems,headymcp,headyconnection,HeadyBuddy,HeadyWeb"
+            files: "shared/phi-math.js,shared/cors-config.js,shared/health.js,.github/workflows/hcfullpipeline-ci.yml"
+          - name: core-repos
+            repos: "headysystems-core,headymcp-core,headyconnection-core,headyme-core,headyos-core,headybuddy-core,headyio-core,headyapi-core,headybot-core"
+            files: "shared/phi-math.js,shared/cors-config.js,shared/logger.js,shared/health.js"
+          - name: staging-testing
+            repos: "Heady-Testing,Heady-Staging,Heady-Main,Heady-Main-1"
+            files: "shared/phi-math.js,configs/sacred-geometry-v4.yaml,.github/workflows/ci.yml"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: "Sync: ${{ matrix.sync_group.name }}"
+        env:
+          GH_TOKEN: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+          FORCE_SYNC: ${{ inputs.force_sync || 'false' }}
+        run: |
+          IFS=',' read -ra REPOS <<< "${{ matrix.sync_group.repos }}"
+          IFS=',' read -ra FILES <<< "${{ matrix.sync_group.files }}"
+
+          echo "## 🔄 Sync Group: ${{ matrix.sync_group.name }}" >> $GITHUB_STEP_SUMMARY
+          echo "| Repo | File | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          SYNCED=0
+          SKIPPED=0
+          FAILED=0
+
+          for REPO in "${REPOS[@]}"; do
+            REPO=$(echo "$REPO" | xargs)  # trim whitespace
+
+            for FILE in "${FILES[@]}"; do
+              FILE=$(echo "$FILE" | xargs)
+
+              # Check if source file exists
+              if [ ! -f "$FILE" ]; then
+                echo "| $REPO | $FILE | ⚠️ Source missing |" >> $GITHUB_STEP_SUMMARY
+                ((SKIPPED++))
+                continue
+              fi
+
+              # Get source file SHA256
+              SOURCE_HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
+
+              # Check if file exists in target repo and compare
+              EXISTING_CONTENT=$(gh api "repos/HeadyMe/$REPO/contents/$FILE" \
+                --jq '.content' 2>/dev/null | base64 -d 2>/dev/null || echo "")
+
+              if [ -n "$EXISTING_CONTENT" ]; then
+                TARGET_HASH=$(echo "$EXISTING_CONTENT" | sha256sum | cut -d' ' -f1)
+                if [ "$SOURCE_HASH" = "$TARGET_HASH" ] && [ "$FORCE_SYNC" != "true" ]; then
+                  echo "| $REPO | $FILE | ✅ In sync |" >> $GITHUB_STEP_SUMMARY
+                  ((SKIPPED++))
+                  continue
+                fi
+              fi
+
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "| $REPO | $FILE | 🔍 Would sync |" >> $GITHUB_STEP_SUMMARY
+                ((SYNCED++))
+                continue
+              fi
+
+              # Get the SHA of existing file (needed for update)
+              FILE_SHA=$(gh api "repos/HeadyMe/$REPO/contents/$FILE" \
+                --jq '.sha' 2>/dev/null || echo "")
+
+              # Create or update file via GitHub API
+              CONTENT_B64=$(base64 -w0 < "$FILE")
+              COMMIT_MSG="sync(auto): update $FILE from heady-production [HeadyAutoSync]"
+
+              API_ARGS=(
+                "repos/HeadyMe/$REPO/contents/$FILE"
+                -f "message=$COMMIT_MSG"
+                -f "content=$CONTENT_B64"
+                -f "branch=main"
+              )
+
+              if [ -n "$FILE_SHA" ]; then
+                API_ARGS+=(-f "sha=$FILE_SHA")
+              fi
+
+              if gh api "${API_ARGS[@]}" --method PUT > /dev/null 2>&1; then
+                echo "| $REPO | $FILE | 🔄 Synced |" >> $GITHUB_STEP_SUMMARY
+                ((SYNCED++))
+              else
+                echo "| $REPO | $FILE | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+                ((FAILED++))
+              fi
+
+              # Rate limit protection — φ² seconds between API calls
+              sleep 2.618
+            done
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Summary**: $SYNCED synced, $SKIPPED skipped, $FAILED failed" >> $GITHUB_STEP_SUMMARY
+
+  # ─── STAGE 3: Sync Report ───────────────────────────────────────────────────
+  report:
+    name: "Sync Report"
+    runs-on: ubuntu-latest
+    needs: [auto-commit, cross-repo-sync]
+    if: always()
+    steps:
+      - name: Generate final report
+        run: |
+          echo "# 🧠 HeadyAutoSync Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**New commits**: ${{ needs.auto-commit.outputs.has_new_commits || 'none' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit SHA**: ${{ needs.auto-commit.outputs.commit_sha || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "φ = 1.618033988749895 | HeadySystems Inc." >> $GITHUB_STEP_SUMMARY
