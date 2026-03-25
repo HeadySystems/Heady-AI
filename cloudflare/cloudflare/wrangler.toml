@@ -85,18 +85,8 @@ routes = [
   { pattern = "www.headyex.com/*",          zone_name = "headyex.com" },
 
   # ── HeadySystems Subdomains (service health endpoints) ─────────────────
-  { pattern = "manager.headysystems.com/*",  zone_name = "headysystems.com" },
-  { pattern = "ai.headysystems.com/*",       zone_name = "headysystems.com" },
-  { pattern = "api.headysystems.com/*",      zone_name = "headysystems.com" },
-  { pattern = "buddy.headysystems.com/*",    zone_name = "headysystems.com" },
-  { pattern = "mcp.headysystems.com/*",      zone_name = "headysystems.com" },
-  { pattern = "edge.headysystems.com/*",     zone_name = "headysystems.com" },
-  { pattern = "battle.headysystems.com/*",   zone_name = "headysystems.com" },
-  { pattern = "stream.headysystems.com/*",   zone_name = "headysystems.com" },
-  { pattern = "vector.headysystems.com/*",   zone_name = "headysystems.com" },
-  { pattern = "admin.headysystems.com/*",    zone_name = "headysystems.com" },
-  { pattern = "auth.headysystems.com/*",     zone_name = "headysystems.com" },
-  { pattern = "discord.headysystems.com/*",  zone_name = "headysystems.com" },
+  # *.headysystems.com subdomains handled by worker-heady-router (has health intercept + GH Pages)
+  # Removed from heady-edge-router to prevent route conflict and 530 proxy errors
 
   # ── HeadyAI ────────────────────────────────────────────────────────────
   { pattern = "headyai.com/*",              zone_name = "headyai.com" },

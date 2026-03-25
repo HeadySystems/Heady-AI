@@ -29,7 +29,8 @@ jobs:
   deploy-heady-router:
     name: Deploy worker-heady-router (Primary)
     runs-on: ubuntu-latest
-    needs: [validate]
+    # Deploy AFTER heady-edge-router so this worker wins shared route ownership
+    needs: [validate, deploy-edge-router-primary]
     defaults:
       run:
         working-directory: cloudflare/worker-heady-router
