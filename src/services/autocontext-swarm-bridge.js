@@ -61,7 +61,7 @@ const crypto = require('crypto');
 
 let logger;
 try { logger = require('../utils/logger'); } catch (_) {
-    logger = { info: console.log, warn: console.warn, error: console.error, debug: () => { } };
+    logger = { info: () => {}, warn: () => {}, error: () => {}, debug: () => {} }; // L4: No console.log fallback
 }
 
 // ─── Constants (φ-scaled) ───────────────────────────────────────────────────

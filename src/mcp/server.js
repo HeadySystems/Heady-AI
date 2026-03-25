@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /**
  * HeadyMCP Server — JSON-RPC 2.0 + SSE transport
  * 30+ native tools for chat, code, search, embed, deploy.
@@ -14,7 +23,7 @@ export class MCPServer {
   }
 
   authenticate(token) {
-    return token === this.#bearerToken;
+    return safeCompare(token, this.#bearerToken);
   }
 
   async handleRPC(request) {

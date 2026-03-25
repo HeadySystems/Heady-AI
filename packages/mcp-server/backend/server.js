@@ -291,7 +291,12 @@ async function executeTool(name, args) {
 // ─── HTTP Server ──────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
   // CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // SEC: CORS whitelist — zero wildcards (Law L3)
+    const HEADY_ORIGINS = ['https://headyme.com','https://headysystems.com','https://heady-ai.com','https://headyconnection.org','https://headybuddy.org','https://headybot.com','https://headyapi.com','https://headyio.com','https://headymcp.com','https://headyos.com','https://headyex.com','https://headyfinance.com','https://admin.headysystems.com','https://auth.headysystems.com','https://api.headysystems.com'];
+    const origin = req.headers.origin;
+    if (!origin || HEADY_ORIGINS.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin || HEADY_ORIGINS[0]);
+    }
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {

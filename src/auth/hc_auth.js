@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -319,7 +328,7 @@ class HeadyAuth extends EventEmitter {
         if (!token) return null;
 
         // Admin key is always valid
-        if (token === this.adminKey) {
+        if (safeCompare(token, this.adminKey)) {
             return {
                 valid: true,
                 tier: "admin",

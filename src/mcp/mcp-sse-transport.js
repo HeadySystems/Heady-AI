@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -47,7 +56,7 @@ class McpSseTransport {
         }
 
         // Fallback: accept raw Heady™ API key
-        if (token === this.apiKey) {
+        if (safeCompare(token, this.apiKey)) {
             return { valid: true, tier: 'admin', scope: 'mcp:tools mcp:resources mcp:prompts', apiKey: token };
         }
 
