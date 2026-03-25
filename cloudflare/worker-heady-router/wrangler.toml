@@ -2,9 +2,11 @@ name = "worker-heady-router"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
 
-[[kv_namespaces]]
-binding = "HEADY_UI_MANIFEST"
-id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
+# KV binding temporarily removed - CF_API_TOKEN needs KV write perms
+# Re-enable when token is updated:
+# [[kv_namespaces]]
+# binding = "HEADY_UI_MANIFEST"
+# id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
 
 [vars]
 # HEADY_INTERNAL_TOKEN = "set via wrangler secret"
