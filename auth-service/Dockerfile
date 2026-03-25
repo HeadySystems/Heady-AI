@@ -1,12 +1,12 @@
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Install production dependencies
 COPY package*.json ./
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 # Copy application code
-COPY . .
+COPY src/ src/
 
 # Environment
 ENV NODE_ENV=production

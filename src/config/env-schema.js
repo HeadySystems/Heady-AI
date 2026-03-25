@@ -14,7 +14,6 @@ const logger = createLogger('env-schema');
 
 
 const ENV_SCHEMA = {
-const logger = require('../utils/logger');
     // ── Critical (app won't function without these) ──
     critical: [
         { name: 'DATABASE_URL', description: 'Neon Postgres connection string' },

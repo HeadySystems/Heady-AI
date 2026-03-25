@@ -1,6 +1,7 @@
 /**
  * HeadyAuth Production Service v5.0
  * Zero-trust identity layer for the Heady™ ecosystem.
+ * Powers the HeadyKey public auth product (headykey.com).
  *
  * Features:
  * - JWT access + refresh tokens (HS256, 1h/30d TTL)
@@ -9,9 +10,12 @@
  * - Session cookies (httpOnly, Secure, SameSite=Strict)
  * - Neon PostgreSQL + pgvector (auto-schema at startup)
  * - Health triad (/health/live, /health/ready, /health/startup)
- * - Hardened CORS (17 origins, zero wildcards)
+ * - Hardened CORS (zero wildcards)
  * - Structured JSON logging
  * - Graceful SIGTERM shutdown
+ *
+ * Internal service name: auth-service / heady-auth (stable, unchanged)
+ * Public product name: HeadyKey
  *
  * © 2026 HeadySystems Inc. All Rights Reserved. 60+ Provisional Patents.
  */
@@ -56,6 +60,8 @@ const ALLOWED_ORIGINS = [
   'https://headybuddy.org',    'https://www.headybuddy.org',
   'https://headybot.com',      'https://headyapi.com',
   'https://headyio.com',       'https://headymcp.com',
+  'https://headykey.com',      'https://www.headykey.com',
+  'https://headyvault.com',    'https://www.headyvault.com',
 ];
 
 // ─── Express App ─────────────────────────────────────────────────────────────

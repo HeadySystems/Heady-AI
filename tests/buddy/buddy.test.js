@@ -5,7 +5,7 @@
  * and suggestion generation.
  */
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;

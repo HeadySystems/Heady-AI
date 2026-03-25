@@ -1,5 +1,13 @@
 # HeadyAuth Deployment Guide
 
+> **Public product:** HeadyKey (headykey.com)
+> **Internal service name:** auth-service (HeadyAuth v5.0)
+>
+> This service is the backend for the HeadyKey public auth product.
+> The internal service name `auth-service` / `heady-auth` is stable and unchanged.
+> See also: `HeadySystems/Heady-Main: docs/auth-service-boundaries.md` for the
+> full service boundary documentation between auth-service and auth-session-server.
+
 ## Prerequisites
 - GCP project: `headyme-444017`
 - Region: `us-central1`
@@ -63,3 +71,34 @@ Then upgrade to admin via direct DB:
 ```sql
 UPDATE users SET role = 'admin', onboarding_stage = 5 WHERE email = 'eric@headyconnection.org';
 ```
+
+## Required GitHub Secrets
+
+These secrets must be configured in the repository's GitHub Actions settings
+before CI/CD auto-deploy will work:
+
+| Secret | Purpose | Status |
+|--------|---------|--------|
+| `GCP_SA_KEY` | GCP Service Account key JSON (used by deploy-auth.yml) | Required — blocks deploy if missing |
+| `GCP_PROJECT_ID` | GCP project ID (used by deploy-auth-server.yml) | Required — blocks deploy if missing |
+| `NEON_DATABASE_URL` | Neon PostgreSQL connection string | Required for runtime |
+| `SENTRY_DSN` | Sentry error tracking | Recommended |
+| `SENTRY_AUTH_TOKEN` | Sentry source map uploads | Recommended |
+
+## Runtime Secret Manager Checks
+
+At startup, auth-service validates `JWT_SECRET`. If missing, it exits with
+code 1 (see `src/index.js` `start()` function). `DATABASE_URL` is loaded
+from GCP Secret Manager at deploy time via `--set-secrets` in the Cloud Run
+deploy step.
+
+| GCP Secret Name | Injected As | Purpose |
+|----------------|-------------|---------|
+| `heady-jwt-secret` | `JWT_SECRET` | JWT signing key (HS256) |
+| `neon-database-url` | `DATABASE_URL` | PostgreSQL connection string |
+
+If startup fails, check:
+1. The Cloud Run service account has `roles/secretmanager.secretAccessor`
+2. The secrets exist in project `headyme-444017`
+3. The `:latest` version of each secret is enabled
+4. `JWT_SECRET` is non-empty (the only hard startup gate in code)

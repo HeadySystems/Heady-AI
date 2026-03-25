@@ -1,11 +1,15 @@
 {
   "name": "@heady/auth-service",
   "version": "5.0.0",
-  "description": "HeadyAuth — Zero-trust identity layer for the Heady ecosystem",
+  "description": "HeadyAuth — Zero-trust identity layer for the Heady ecosystem (powers the HeadyKey public auth product)",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "node --watch src/index.js"
+    "dev": "node --watch src/index.js",
+    "test": "jest --forceExit"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
