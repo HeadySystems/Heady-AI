@@ -94,7 +94,7 @@ const server = http.createServer((req, res) => {
           'Content-Type': 'image/png',
           'Content-Length': data.length,
           'Cache-Control': 'public, max-age=604800',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': (req.headers.origin && ['https://headyme.com','https://headysystems.com','https://heady-ai.com','https://headyconnection.org','https://headybuddy.org','https://headybot.com','https://headyapi.com','https://headyio.com','https://headymcp.com','https://headyos.com','https://headyex.com','https://headyfinance.com','https://admin.headysystems.com','https://auth.headysystems.com','https://api.headysystems.com'].includes(req.headers.origin)) ? req.headers.origin : 'https://headysystems.com'
         });
         return res.end(data);
       }
