@@ -63,6 +63,35 @@ zone_name = "headyex.com"
 pattern = "www.headyex.com/*"
 zone_name = "headyex.com"
 
+# ── HeadySystems Subdomains (service endpoints) ────────────────────────
+[[routes]]
+pattern = "manager.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "ai.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "api.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "buddy.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "mcp.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "edge.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "battle.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "stream.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "vector.headysystems.com/*"
+zone_name = "headysystems.com"
+
 # ── Admin / Auth / Discord Subdomains ────────────────────────────────
 [[routes]]
 pattern = "admin.headysystems.com/*"
