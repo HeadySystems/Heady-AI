@@ -12,7 +12,8 @@
 # Also triggers on push to main to cascade changes to satellite repos.
 #
 # Requirements:
-#   - Secret HEADY_GITHUB_TOKEN: PAT with repo scope across HeadyMe org
+#   - Secret HEADY_GITHUB_TOKEN: PAT with repo scope across HeadyMe org (optional)
+#     If missing, auto-commit uses GITHUB_TOKEN, cross-repo sync is skipped.
 #   - Secret HEADY_SSH_KEY: Deploy key for push access (optional, PAT preferred)
 #
 # What it does:
@@ -64,10 +65,14 @@ jobs:
     outputs:
       has_new_commits: ${{ steps.commit.outputs.committed }}
       commit_sha: ${{ steps.commit.outputs.sha }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          # Use PAT if available (enables triggering downstream workflows),
+          # otherwise fall back to GITHUB_TOKEN (can still push but won't trigger)
+          token: ${{ secrets.HEADY_GITHUB_TOKEN || github.token }}
           fetch-depth: 2
 
       - name: Configure git identity
@@ -143,6 +148,7 @@ jobs:
     name: "Cross-Repo Content Sync"
     runs-on: ubuntu-latest
     needs: [auto-commit]
+    # Cross-repo sync requires org-wide PAT; gracefully skips if unavailable
     if: always()
     strategy:
       fail-fast: false
@@ -163,12 +169,28 @@ jobs:
             repos: "Heady-Testing,Heady-Staging,Heady-Main,Heady-Main-1"
             files: "shared/phi-math.js,configs/sacred-geometry-v4.yaml,.github/workflows/ci.yml"
     steps:
+      - name: Check token availability
+        id: token_check
+        env:
+          HAS_TOKEN: ${{ secrets.HEADY_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$HAS_TOKEN" ]; then
+            echo "::warning::HEADY_GITHUB_TOKEN not set -- skipping cross-repo sync"
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "### Cross-Repo Sync Skipped" >> $GITHUB_STEP_SUMMARY
+            echo "HEADY_GITHUB_TOKEN secret not configured. Auto-commit works with GITHUB_TOKEN, but cross-repo sync requires an org-wide PAT." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.token_check.outputs.available == 'true'
         with:
           token: ${{ secrets.HEADY_GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: "Sync: ${{ matrix.sync_group.name }}"
+        if: steps.token_check.outputs.available == 'true'
         env:
           GH_TOKEN: ${{ secrets.HEADY_GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run || 'false' }}
