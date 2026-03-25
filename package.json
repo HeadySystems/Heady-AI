@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
   "version": "5.0.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
+  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=22.0.0"
@@ -111,7 +111,7 @@
     "lodash": ">=4.17.21",
     "underscore": ">=1.13.7",
     "tar": ">=6.2.1",
-    "js-yaml": ">=3.13.1",
+    "js-yaml": "^4.1.1",
     "minimatch": ">=3.0.5",
     "slug": ">=9.1.0"
   },
