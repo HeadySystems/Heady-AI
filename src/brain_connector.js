@@ -32,7 +32,6 @@ const logger = createLogger('brain_connector');
 const axios = require('axios');
 const EventEmitter = require('events');
 const { Worker } = require('worker_threads');
-const logger = require('./utils/logger');
 
 class BrainConnector extends EventEmitter {
   constructor(options = {}) {

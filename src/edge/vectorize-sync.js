@@ -22,7 +22,6 @@ const logger = console;
 
 import { PHI, PSI, fib, phiBackoff } from '../../shared/phi-math.js';
 import { createLogger } from '../utils/logger.js';
-const logger = createLogger('vectorize-sync');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants

@@ -24,7 +24,6 @@ const logger = createLogger('request-sanitizer');
 // ─── XSS Patterns ────────────────────────────────────────────────────────────
 
 const HTML_ENTITY_MAP = {
-const logger = require('../../utils/logger');
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',

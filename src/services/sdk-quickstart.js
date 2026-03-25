@@ -17,7 +17,6 @@ const crypto = require('crypto');
 
 const BLUEPRINT_PATH = path.resolve(__dirname, '..', 'configs', 'resources', 'developer-platform-blueprint.yaml');
 const ONBOARDING_PATH = path.resolve(__dirname, '..', 'configs', 'resources', 'developer-platform-onboarding.yaml');
-const logger = require('../utils/logger');
 
 class HeadySDK {
     constructor(options = {}) {

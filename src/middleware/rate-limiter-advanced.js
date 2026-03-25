@@ -568,7 +568,6 @@ module.exports = {
 /*
 const Redis = require('ioredis');
 const { createRateLimiter } = require('./rate-limiter-advanced');
-const logger = require('../utils/logger');
 
 const redis = new Redis(process.env.REDIS_URL);
 

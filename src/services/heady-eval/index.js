@@ -41,7 +41,6 @@ const CustomScorer = require('./scorers/custom-scorer');
 // ─── Built-in scorer registry ─────────────────────────────────────────────────
 
 const BUILT_IN_SCORERS = {
-const logger = require('../../utils/logger');
   relevance: RelevanceScorer,
   faithfulness: FaithfulnessScorer,
   safety: SafetyScorer,

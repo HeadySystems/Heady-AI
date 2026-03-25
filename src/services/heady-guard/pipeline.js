@@ -27,7 +27,6 @@ const config = require('./config');
 // ── Stage registry ────────────────────────────────────────────────────────────
 
 const _registry = new Map(); // stageName → { runner, priority, parallel }
-const logger = require('../../utils/logger');
 
 /**
  * Register a filter stage.

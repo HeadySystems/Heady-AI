@@ -128,7 +128,6 @@ router.get('/full', async (req, res) => {
     try {
         introspection = require('../../self-awareness').getSystemIntrospection();
     } catch (e) {
-      const logger = require('../../utils/logger');
       logger.error('Unexpected error', { error: e.message, stack: e.stack });
     }
 

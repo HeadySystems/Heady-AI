@@ -17,7 +17,6 @@ const path = require('path');
 const crypto = require('crypto');
 const readline = require('readline');
 const config = require('./config');
-const logger = require('../../utils/logger');
 
 // ─── Schema validation ───────────────────────────────────────────────────────
 

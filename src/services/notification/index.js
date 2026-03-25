@@ -22,7 +22,6 @@ const {
   URL
 } = require('url');
 const express = require('express');
-const logger = require('../../utils/logger');
 const {
   PHI,
   PSI,

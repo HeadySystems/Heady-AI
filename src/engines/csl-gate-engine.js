@@ -15,7 +15,6 @@ const logger = require('../utils/logger') || console;
  */
 
 const {
-const logger = require('../utils/logger');
   PHI,
   PSI,
   PHI_TEMPERATURE,

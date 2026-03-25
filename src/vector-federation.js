@@ -11,7 +11,6 @@ const PHI = (1 + Math.sqrt(5)) / 2;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
-const logger = require('./utils/logger');
 
 const SYNC_STRATEGIES = {
   PUSH: 'push',     // Push changes to peers

@@ -34,7 +34,9 @@ module.exports = [
     },
     rules: {
       ...tsEslint.configs.recommended.rules,
-      // Additional TypeScript rules
+      // Relax strict TS rules for mixed JS/TS codebase
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     }
   },
   {

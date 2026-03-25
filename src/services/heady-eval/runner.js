@@ -18,7 +18,6 @@ const path = require('path');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
 const config = require('./config');
-const logger = require('../../utils/logger');
 
 // ─── Concurrency pool ─────────────────────────────────────────────────────────
 

@@ -20,7 +20,6 @@ const logger = createLogger('routes');
  */
 
 const express = require('express');
-const logger = require('../../utils/logger');
 
 /**
  * @param {import('./index').HeadyCache} cache

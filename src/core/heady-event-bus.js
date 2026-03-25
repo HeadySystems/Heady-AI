@@ -44,7 +44,6 @@ const logger = require('../utils/logger') || console;
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
-const logger = require('../utils/logger');
 
 // ─── Topic Namespace Rules ───────────────────────────────────────────────────
 

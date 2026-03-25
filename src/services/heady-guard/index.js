@@ -28,7 +28,6 @@ const path    = require('path');
 const config   = require('./config');
 const pipeline = require('./pipeline');
 const rules    = require('./rules');
-const logger = require('../../utils/logger');
 
 // ── Audit log ─────────────────────────────────────────────────────────────────
 

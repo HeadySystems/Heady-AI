@@ -32,7 +32,6 @@ const crypto = require('crypto');
 const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
-const logger = require('../utils/logger');
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

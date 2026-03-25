@@ -18,9 +18,6 @@
  * Universal Agent Prompt — Loader & Injector
  *
  * Loads the MAXIMUM POTENTIAL universal coding agent system prompt and provides
-const { createLogger } = require('../utils/logger');
-const logger = createLogger('universal-agent-prompt');
-
  * structured prompt injection for all Heady agents. Every agent in the system
  * receives the universal directives, cognitive framework, and Heady-specific
  * integration context (liquid nodes, swarms, Colab runtimes, CSL gates).
@@ -32,6 +29,8 @@ const logger = createLogger('universal-agent-prompt');
  * @version 1.0.0
  */
 
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('universal-agent-prompt');
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -44,7 +43,6 @@ const PSI = 1 / PHI; // ≈ 0.618
 
 // CSL gate thresholds for prompt relevance filtering
 const CSL_GATES = Object.freeze({
-const logger = require('../utils/logger');
   MINIMUM: 0.500,
   LOW: 0.691,
   MEDIUM: 0.809,

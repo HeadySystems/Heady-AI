@@ -1356,7 +1356,6 @@ async function demonstrateSwarm() {
   try {
     // Initialize
     const config = new Config();
-    const logger = new Logger(config.logLevel);
     logger.info('Initializing SwarmQueen', config.toJSON());
     const queen = new SwarmQueen(config, logger);
     queen.start();

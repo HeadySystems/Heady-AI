@@ -8,7 +8,6 @@ const logger = createLogger('audit-log');
 
 
 const crypto = require('crypto');
-const logger = require('../utils/logger');
 
 class AuditLogger {
     constructor(opts = {}) {

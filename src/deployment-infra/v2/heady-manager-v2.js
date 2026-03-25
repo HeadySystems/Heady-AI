@@ -217,7 +217,6 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
 startupState.phase = 'engines';
 const { wireEngines } = require('./src/bootstrap/engine-wiring');
 const { loadRegistry } = require('./src/routes/registry');
-const logger = require('../../utils/logger');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
 const _engines = wireEngines(app, {
   pipeline, loadRegistry, eventBus,

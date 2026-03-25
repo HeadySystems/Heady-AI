@@ -1,7 +1,6 @@
 const logger = console;
 // ─── HEADY CORS WHITELIST ────────────────────────────────────────────
 const HEADY_ALLOWED_ORIGINS = new Set([
-const logger = require('../utils/logger');
     'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
     'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
     'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',

@@ -81,7 +81,6 @@ const { URL }      = require('url');
 const crypto       = require('crypto');
 const EventEmitter = require('events');
 const { pipeline } = require('stream');
-const logger = require('../utils/logger');
 
 // ─── φ constant ───────────────────────────────────────────────────────────────
 const PHI = 1.6180339887;

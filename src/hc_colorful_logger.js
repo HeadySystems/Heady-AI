@@ -214,7 +214,6 @@ class ColorfulLogger {
 module.exports = ColorfulLogger;
 
 // 🎨 CREATE DEFAULT INSTANCE
-const logger = new ColorfulLogger({
   enabled: true,
   level: process.env.LOG_LEVEL || 'info',
   useRainbow: true,

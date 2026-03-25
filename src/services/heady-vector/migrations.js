@@ -13,7 +13,6 @@ const config = require('./config');
 // Ordered array; never remove or reorder. Add new entries at the end.
 
 const MIGRATIONS = [
-const logger = require('../../utils/logger');
   {
     version: 1,
     name: 'create_pgvector_extension',

@@ -29,7 +29,6 @@ const { loadDynamicRemote, mountRemote, preloadRemote } = require('./load-dynami
 const SHELL_VERSION = '3.0.1';
 
 const REMOTE_REGISTRY = {
-const logger = require('../utils/logger');
     'antigravity': {
         url: '/remotes/antigravity/remoteEntry.js',
         scope: 'antigravity',

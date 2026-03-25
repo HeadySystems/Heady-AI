@@ -235,14 +235,19 @@ async function handleRequest(request, env, ctx) {
   // Intercept /api/health and /health on ALL domains, return proper JSON
   // before any routing to Cloud Run origin (which returns HTML).
   if (HEALTH_PATH_PATTERN.test(pathname) || pathname === '/api/health') {
+    const routePrefix = DOMAIN_ROUTES.get(hostname);
+    const serviceName = routePrefix
+      ? routePrefix.replace(/^\//, '')
+      : hostname.split('.')[0];
     const healthResponse = {
       status: 'ok',
-      service: pathPrefix ? pathPrefix.replace(/^\//,'') : hostname.split('.')[0],
+      service: serviceName,
       domain: hostname,
+      module: serviceName,
       timestamp: new Date().toISOString(),
       edge: true,
       source: 'heady-edge-router',
-      version: '2.1.0',
+      version: '2.2.0',
       phi: 1.618033988749895,
       coherence: 0.927,
     };

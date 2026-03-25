@@ -24,7 +24,6 @@ const router  = express.Router();
 const guard   = require('./index');
 const { getRules, setRules, addRule, removeRule } = require('./rules');
 const config  = require('./config');
-const logger = require('../../utils/logger');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
