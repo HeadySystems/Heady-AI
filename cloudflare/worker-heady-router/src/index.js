@@ -509,18 +509,25 @@ export default {
     const cacheKey = `hologram:${moduleName}:${url.pathname || '/'}:${url.search || ''}`;
     const contentType = contentTypeForPath(url.pathname);
 
-    const cached = await env.HEADY_UI_MANIFEST.get(cacheKey, { type: 'text' });
-    if (cached) {
-      return new Response(cached, {
-        status: 200,
-        headers: commonHeaders(moduleName, 'edge-cache', contentType),
-      });
+    // KV cache layer (optional - gracefully degrades if KV not bound)
+    if (env.HEADY_UI_MANIFEST) {
+      try {
+        const cached = await env.HEADY_UI_MANIFEST.get(cacheKey, { type: 'text' });
+        if (cached) {
+          return new Response(cached, {
+            status: 200,
+            headers: commonHeaders(moduleName, 'edge-cache', contentType),
+          });
+        }
+      } catch (_e) { /* KV unavailable, continue */ }
     }
 
     try {
       const compiled = await tryCompiler(url, hostname, moduleName, env);
       if (compiled) {
-        await env.HEADY_UI_MANIFEST.put(cacheKey, compiled, { expirationTtl: CACHE_TTL_SECONDS });
+        if (env.HEADY_UI_MANIFEST) {
+          try { await env.HEADY_UI_MANIFEST.put(cacheKey, compiled, { expirationTtl: CACHE_TTL_SECONDS }); } catch (_e) { /* KV unavailable */ }
+        }
         return new Response(compiled, {
           status: 200,
           headers: commonHeaders(moduleName, 'just-compiled', contentType),
