@@ -1,12 +1,31 @@
 {
-  "name": "@heady-ai/heady-distiller",
+  "name": "heady-distiller",
   "version": "1.0.0",
-  "description": "Heady heady-distiller package",
+  "description": "HeadyDistiller — Stage 22 DISTILL of the HCFullPipeline. Knowledge distillation: recipes, compressed 384D vector facts, and pattern insights.",
+  "type": "module",
   "main": "src/index.js",
-  "scripts": {
-    "test": "jest --passWithNoTests",
-    "lint": "eslint src/"
+  "exports": {
+    "./shared/phi-math": "./shared/phi-math.js",
+    "./shared/structured-logger": "./shared/structured-logger.js",
+    "./shared/errors": "./shared/errors.js",
+    "./src/trace-collector": "./src/trace-collector.js",
+    "./src/trajectory-filter": "./src/trajectory-filter.js",
+    "./src/knowledge-compressor": "./src/knowledge-compressor.js"
   },
-  "keywords": ["heady", "heady-distiller"],
-  "license": "UNLICENSED"
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.3",
+    "@upstash/redis": "^1.31.3",
+    "pino": "^9.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "check": "node --input-type=module --eval \"import './shared/phi-math.js'; import './shared/errors.js'; import './shared/structured-logger.js'; console.log('All shared modules parsed OK');\"",
+    "lint": "node --check shared/phi-math.js shared/structured-logger.js shared/errors.js src/trace-collector.js src/trajectory-filter.js src/knowledge-compressor.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -2,7 +2,7 @@
  * @fileoverview Pipeline Canonical — Single Canonical HCFullPipeline Definition
  *
  * Replaces 3 conflicting pipeline versions with one authoritative definition.
- * All 21 stages fully defined with phi-gated success thresholds.
+ * All 22 stages fully defined with phi-gated success thresholds.
  * CSL gates replace all boolean if/else.
  * All constants derive from φ = 1.6180339887 — NO magic numbers.
  *
@@ -60,11 +60,12 @@ const RESOURCE_POOLS = {
 // ─── STAGE CATEGORIES ───────────────────────────────────────────────────────────
 
 const STAGE_CATEGORY = {
-  PREPARATION: 'preparation',
-  EXECUTION:   'execution',
-  QUALITY:     'quality',
-  MONITORING:  'monitoring',
-  MAINTENANCE: 'maintenance',
+  PREPARATION:  'preparation',
+  EXECUTION:    'execution',
+  QUALITY:      'quality',
+  MONITORING:   'monitoring',
+  MAINTENANCE:  'maintenance',
+  INTELLIGENCE: 'intelligence',  // Stage 22 DISTILL — knowledge distillation
 };
 
 // ─── PIPELINE STAGE DEFINITIONS ─────────────────────────────────────────────────
@@ -406,6 +407,25 @@ const PIPELINE_STAGES = [
     rollback: 'escalateToOperator',
     metrics: ['healthScore', 'degradationLevel', 'healingActions'],
   },
+  // ── Stage 22 (index 21) — DISTILL — Knowledge Distillation ──────────────────
+  // Compresses execution traces into reusable recipes, knowledge facts,
+  // and ancestral wisdom. Non-blocking intelligence capture.
+  {
+    index: 21,
+    id: 'Distill',
+    category: STAGE_CATEGORY.INTELLIGENCE,
+    description: 'Compress execution trace into reusable recipes, knowledge facts, and ancestral wisdom',
+    cslThreshold: CSL_THRESHOLDS.LOW,
+    pool: 'COLD',
+    timeout: FIB[10] * FIB[6],   // 89 * 13 = 1157ms
+    retries: FIB[2],             // 2
+    dependsOn: ['SelfHealCheck'],
+    parallel: false,
+    phiWeight: PSI2,
+    actions: ['collectTrace', 'filterTrajectories', 'classifyRecipe', 'storeRecipe', 'compressKnowledge', 'crystallizeWisdom'],
+    rollback: 'skipDistillation',
+    metrics: ['recipesDistilled', 'factsCompressed', 'wisdomCrystallized', 'tokenReduction', 'distillLatency'],
+  },
 ];
 
 // ─── STAGE INDEX MAP ────────────────────────────────────────────────────────────
@@ -517,7 +537,7 @@ function validatePipeline() {
     thresholdGate.signal === 'FAIL' && errors.push(`${stage.id} has threshold below MINIMUM`);
   }
 
-  const totalStages = FIB[7]; // 21
+  const totalStages = FIB[7] + 1; // 22 — includes Stage 22 DISTILL
   const countGate = cslGate(
     PIPELINE_STAGES.length === totalStages ? CSL_THRESHOLDS.CRITICAL : CSL_THRESHOLDS.LOW,
     CSL_THRESHOLDS.HIGH

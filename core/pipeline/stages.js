@@ -3,9 +3,10 @@
  * ═══════════════════════════════════════════════════════════════
  *
  * Hybridizes:
- *   - hybrid-pipeline.js (21 stages, 4 variants)
+ *   - hybrid-pipeline.js (21 stages, 4 variants) + Stage 22 DISTILL
  *   - pipeline-runner.js (5 stages: INGEST→DECOMPOSE→ROUTE→VALIDATE→PERSIST)
  *   - auto-success-engine.ts (13 categories)
+ *   - heady-distiller (Stage 22: knowledge distillation)
  *
  * The 5-step HCFP maps onto the 21-stage sequence:
  *   INGEST    → CHANNEL_ENTRY + RECON + INTAKE
@@ -55,6 +56,13 @@ const STAGES = Object.freeze({
 
   // Phase 6: PERSIST
   RECEIPT:           { id: 20, phase: 'PERSIST',   timeout: TIMING.REQUEST, csl: CSL.INCLUDE },
+
+  // Phase 7: DISTILL — Stage 22 (index 21) — Knowledge Distillation
+  // Compresses execution traces into reusable recipes, knowledge facts, and ancestral wisdom.
+  // CSL: INCLUDE (PSI2 = 0.382) — non-blocking intelligence capture.
+  // Pool: COLD — batch/analytics allocation.
+  // Timeout: FIB[10]*FIB[6] = 89*13 = 1157ms (using stages.js FIB indexing).
+  DISTILL:           { id: 21, phase: 'DISTILL',   timeout: TIMING.TASK,    csl: CSL.INCLUDE },
 });
 
 const STAGE_NAMES = Object.keys(STAGES);
@@ -77,25 +85,25 @@ const VARIANTS = Object.freeze({
     'OPTIMIZATION_OPS', 'RECEIPT',
   ],
 
-  /** Full path: all 21 stages */
+  /** Full path: all 22 stages (includes DISTILL) */
   FULL: STAGE_NAMES,
 
-  /** Arena path: routes through multi-model competition */
+  /** Arena path: routes through multi-model competition + distillation */
   ARENA: [
     'CHANNEL_ENTRY', 'RECON', 'INTAKE', 'CLASSIFY', 'TRIAGE',
     'DECOMPOSE', 'ORCHESTRATE',
     'MONTE_CARLO', 'ARENA', 'JUDGE', 'APPROVE',
     'EXECUTE', 'VERIFY', 'SELF_AWARENESS',
-    'RECEIPT',
+    'RECEIPT', 'DISTILL',
   ],
 
-  /** Learning path: emphasizes evolution and self-improvement */
+  /** Learning path: emphasizes evolution and self-improvement + distillation */
   LEARNING: [
     'CHANNEL_ENTRY', 'INTAKE', 'CLASSIFY',
     'TRIAL_AND_ERROR', 'EXECUTE', 'VERIFY',
     'SELF_AWARENESS', 'SELF_CRITIQUE', 'MISTAKE_ANALYSIS',
     'OPTIMIZATION_OPS', 'CONTINUOUS_SEARCH', 'EVOLUTION',
-    'RECEIPT',
+    'RECEIPT', 'DISTILL',
   ],
 });
 
@@ -111,6 +119,7 @@ const AUTO_SUCCESS_CATEGORIES = Object.freeze({
   Communication:    { phase: 'PERSIST',   stages: ['RECEIPT'] },
   Infrastructure:   { phase: 'EXECUTE',   stages: ['ORCHESTRATE'] },
   Intelligence:     { phase: 'EXECUTE',   stages: ['ARENA', 'JUDGE'] },
+  Distillation:     { phase: 'DISTILL',   stages: ['DISTILL'] },
   DataSync:         { phase: 'PERSIST',   stages: ['RECEIPT'] },
   CostOptimization: { phase: 'EVOLVE',    stages: ['OPTIMIZATION_OPS'] },
   SelfAwareness:    { phase: 'VALIDATE',  stages: ['SELF_AWARENESS', 'SELF_CRITIQUE'] },
@@ -125,6 +134,7 @@ const HCFP_PHASES = Object.freeze({
   ROUTE:     ['ORCHESTRATE', 'ARENA', 'JUDGE'],
   VALIDATE:  ['VERIFY', 'SELF_AWARENESS', 'SELF_CRITIQUE'],
   PERSIST:   ['RECEIPT'],
+  DISTILL:   ['DISTILL'],
 });
 
 /** Select variant based on task complexity and CSL confidence */
