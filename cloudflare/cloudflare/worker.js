@@ -234,7 +234,10 @@ async function handleRequest(request, env, ctx) {
   // ── JSON Health Endpoint ──────────────────────────────────────────────────
   // Intercept /api/health and /health on ALL domains, return proper JSON
   // before any routing to Cloud Run origin (which returns HTML).
-  if (HEALTH_PATH_PATTERN.test(pathname) || pathname === '/api/health') {
+  // IMPORTANT: Match ALL health paths including /api/health with normalization
+  const healthPath = pathname.toLowerCase().split('?')[0];
+  if (healthPath === '/api/health' || healthPath === '/health' || healthPath === '/healthz'
+      || HEALTH_PATH_PATTERN.test(healthPath)) {
     const routePrefix = DOMAIN_ROUTES.get(hostname);
     const serviceName = routePrefix
       ? routePrefix.replace(/^\//, '')
@@ -247,7 +250,7 @@ async function handleRequest(request, env, ctx) {
       timestamp: new Date().toISOString(),
       edge: true,
       source: 'heady-edge-router',
-      version: '2.2.0',
+      version: '2.3.0',
       phi: 1.618033988749895,
       coherence: 0.927,
     };
