@@ -117,3 +117,21 @@ zone_name = "headyfinance.com"
 [[routes]]
 pattern = "www.headyfinance.com/*"
 zone_name = "headyfinance.com"
+
+# ── HeadyMCP Website ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "headymcp.com/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern = "www.headymcp.com/*"
+zone_name = "headymcp.com"
+
+# ── HeadySystems Website ─────────────────────────────────────────────────
+[[routes]]
+pattern = "headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "www.headysystems.com/*"
+zone_name = "headysystems.com"
