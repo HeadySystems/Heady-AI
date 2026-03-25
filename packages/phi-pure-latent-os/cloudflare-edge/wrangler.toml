@@ -1,0 +1,247 @@
+# © 2026 HeadySystems Inc. All Rights Reserved.
+# PROPRIETARY AND CONFIDENTIAL.
+#
+# Heady φ-Pure Latent OS — Cloudflare Worker (heady-edge)
+# Production wrangler.toml
+#
+# Bindings declared:
+#   - Workers AI                      (env.AI)
+#   - R2 bucket "heady-artifacts"     (env.HEADY_ARTIFACTS)
+#   - Queue producer "heady-tasks"    (env.HEADY_TASKS)
+#   - Queue producer "heady-tasks-dlq"(env.HEADY_TASKS_DLQ)
+#   - KV namespace "HEADY_CACHE"      (env.HEADY_CACHE)
+#   - Durable Object "RateLimiter"    (env.RATE_LIMITER)
+#   - Queue consumer "heady-tasks"
+#
+# Routes: headyapi.com/api/* (primary public API domain)
+
+name              = "heady-edge"
+main              = "src/worker.ts"
+compatibility_date = "2025-12-01"
+
+# Worker entrypoint — TypeScript transpiled by wrangler
+# All other source files (rate-limiter-do.ts, firebase-jwt.ts, queue-handler.ts)
+# are imported from src/ and bundled automatically.
+
+# ---------------------------------------------------------------------------
+# Workers AI binding
+# ---------------------------------------------------------------------------
+[ai]
+binding = "AI"
+
+# ---------------------------------------------------------------------------
+# R2 bucket — artifact storage
+# ---------------------------------------------------------------------------
+[[r2_buckets]]
+binding         = "HEADY_ARTIFACTS"
+bucket_name     = "heady-artifacts"
+preview_bucket_name = "heady-artifacts-preview"
+
+# ---------------------------------------------------------------------------
+# KV namespace — JWT key cache, embedding cache, rate-limit metadata
+# ---------------------------------------------------------------------------
+[[kv_namespaces]]
+binding   = "HEADY_CACHE"
+id        = "HEADY_CACHE_KV_ID"              # replace with actual KV namespace ID
+preview_id = "HEADY_CACHE_KV_PREVIEW_ID"    # replace with preview KV namespace ID
+
+# ---------------------------------------------------------------------------
+# Queue producer — main task queue
+# ---------------------------------------------------------------------------
+[[queues.producers]]
+binding    = "HEADY_TASKS"
+queue      = "heady-tasks"
+
+# ---------------------------------------------------------------------------
+# Queue producer — dead letter queue
+# ---------------------------------------------------------------------------
+[[queues.producers]]
+binding    = "HEADY_TASKS_DLQ"
+queue      = "heady-tasks-dlq"
+
+# ---------------------------------------------------------------------------
+# Queue consumer — processes heady-tasks messages
+# max_batch_size:  FIB[8] = 34 (maximum batch size)
+# max_batch_timeout: FIB[5] = 8 seconds
+# max_retries: 0 — we manage retries ourselves via retryCount in the payload
+# dead_letter_queue: "heady-tasks-dlq"
+# ---------------------------------------------------------------------------
+[[queues.consumers]]
+queue              = "heady-tasks"
+max_batch_size     = 34          # FIB[8]
+max_batch_timeout  = 8           # FIB[5] seconds
+max_retries        = 0           # Managed manually — see queue-handler.ts
+dead_letter_queue  = "heady-tasks-dlq"
+
+# ---------------------------------------------------------------------------
+# Durable Object — RateLimiterDO (sliding-window, Fibonacci tiers)
+# ---------------------------------------------------------------------------
+[[durable_objects.bindings]]
+name       = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+[[migrations]]
+tag  = "v1"
+new_classes = ["RateLimiter"]
+
+# ---------------------------------------------------------------------------
+# Routes — headyapi.com is the primary public-facing API domain
+# All other Heady domains access through the same worker via custom domains
+# ---------------------------------------------------------------------------
+[[routes]]
+pattern     = "headyapi.com/api/*"
+zone_name   = "headyapi.com"
+
+[[routes]]
+pattern     = "www.headyapi.com/api/*"
+zone_name   = "headyapi.com"
+
+[[routes]]
+pattern     = "headyapi.com/mcp*"
+zone_name   = "headyapi.com"
+
+[[routes]]
+pattern     = "headyapi.com/health"
+zone_name   = "headyapi.com"
+
+# ---------------------------------------------------------------------------
+# Custom domains — edge worker handles all 9 Heady domains on /api/*
+# ---------------------------------------------------------------------------
+[[routes]]
+pattern   = "headyme.com/api/*"
+zone_name = "headyme.com"
+
+[[routes]]
+pattern   = "headysystems.com/api/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern   = "headyconnection.org/api/*"
+zone_name = "headyconnection.org"
+
+[[routes]]
+pattern   = "headybuddy.org/api/*"
+zone_name = "headybuddy.org"
+
+[[routes]]
+pattern   = "headymcp.com/api/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern   = "headymcp.com/mcp*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern   = "headyio.com/api/*"
+zone_name = "headyio.com"
+
+[[routes]]
+pattern   = "headybot.com/api/*"
+zone_name = "headybot.com"
+
+[[routes]]
+pattern   = "headyai.com/api/*"
+zone_name = "headyai.com"
+
+# ---------------------------------------------------------------------------
+# Environment variables — set real values in Cloudflare dashboard
+# or via `wrangler secret put`
+# ---------------------------------------------------------------------------
+[vars]
+WORKER_ENV            = "production"
+
+# Secrets (set via `wrangler secret put <NAME>`):
+#   FIREBASE_PROJECT_ID  — Firebase project ID for JWT validation
+#   ORIGIN_API_URL       — Upstream API origin (e.g. https://api-internal.headysystems.com)
+#   MCP_ORIGIN_URL       — MCP upstream (e.g. https://mcp.headymcp.com)
+
+# ---------------------------------------------------------------------------
+# Production environment overrides
+# ---------------------------------------------------------------------------
+[env.production]
+name = "heady-edge"
+
+[env.production.vars]
+WORKER_ENV = "production"
+
+[[env.production.r2_buckets]]
+binding     = "HEADY_ARTIFACTS"
+bucket_name = "heady-artifacts"
+
+[[env.production.kv_namespaces]]
+binding    = "HEADY_CACHE"
+id         = "HEADY_CACHE_KV_ID"
+
+[[env.production.queues.producers]]
+binding = "HEADY_TASKS"
+queue   = "heady-tasks"
+
+[[env.production.queues.producers]]
+binding = "HEADY_TASKS_DLQ"
+queue   = "heady-tasks-dlq"
+
+[[env.production.queues.consumers]]
+queue             = "heady-tasks"
+max_batch_size    = 34
+max_batch_timeout = 8
+max_retries       = 0
+dead_letter_queue = "heady-tasks-dlq"
+
+[[env.production.durable_objects.bindings]]
+name       = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+# ---------------------------------------------------------------------------
+# Staging environment
+# ---------------------------------------------------------------------------
+[env.staging]
+name = "heady-edge-staging"
+
+[env.staging.vars]
+WORKER_ENV = "staging"
+
+[[env.staging.r2_buckets]]
+binding     = "HEADY_ARTIFACTS"
+bucket_name = "heady-artifacts-staging"
+
+[[env.staging.kv_namespaces]]
+binding    = "HEADY_CACHE"
+id         = "HEADY_CACHE_KV_STAGING_ID"
+
+[[env.staging.queues.producers]]
+binding = "HEADY_TASKS"
+queue   = "heady-tasks-staging"
+
+[[env.staging.queues.producers]]
+binding = "HEADY_TASKS_DLQ"
+queue   = "heady-tasks-dlq-staging"
+
+[[env.staging.queues.consumers]]
+queue             = "heady-tasks-staging"
+max_batch_size    = 13            # FIB[6] — smaller batches in staging
+max_batch_timeout = 5
+max_retries       = 0
+dead_letter_queue = "heady-tasks-dlq-staging"
+
+[[env.staging.durable_objects.bindings]]
+name       = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+# ---------------------------------------------------------------------------
+# Build configuration
+# ---------------------------------------------------------------------------
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "modules"
+
+# ---------------------------------------------------------------------------
+# Observability
+# ---------------------------------------------------------------------------
+[observability]
+enabled = true
+
+[observability.logs]
+enabled   = true
+head_sampling_rate = 1   # 100% sampling in production for full observability

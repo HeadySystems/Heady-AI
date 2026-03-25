@@ -1,0 +1,47 @@
+{
+  "name": "@heady/phi-pure-latent-os",
+  "version": "1.0.0",
+  "description": "φ-Pure Latent OS — Production implementation across 15 technology domains",
+  "author": "HeadySystems Inc. <eric@headysystems.com>",
+  "license": "PROPRIETARY",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "test": "vitest run",
+    "dev:mcp": "tsx mcp-server/src/server.ts",
+    "dev:worker": "tsx redis-streams/consumer.ts",
+    "start": "pm2 start runtime/ecosystem.config.cjs",
+    "migrate": "psql $DATABASE_URL_DIRECT -f neon-pgvector/migrations/001_vector_memory.sql",
+    "deploy:edge": "cd cloudflare-edge && wrangler deploy"
+  },
+  "dependencies": {
+    "@google/genai": "catalog:",
+    "@modelcontextprotocol/sdk": "catalog:",
+    "@neondatabase/serverless": "catalog:",
+    "@opentelemetry/api": "catalog:",
+    "@pinecone-database/pinecone": "catalog:",
+    "@sentry/node": "catalog:",
+    "express": "^4.21.0",
+    "ioredis": "catalog:",
+    "mcp-auth": "^0.2.0",
+    "pg": "^8.13.0",
+    "pino": "catalog:",
+    "pino-pretty": "^13.0.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

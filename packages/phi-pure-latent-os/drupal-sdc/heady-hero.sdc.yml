@@ -1,0 +1,127 @@
+# © 2026 HeadySystems Inc. All Rights Reserved.
+# PROPRIETARY AND CONFIDENTIAL.
+#
+# Drupal 11 Single Directory Component (SDC) definition for the Heady Hero banner.
+# Supports dark / light / glass background variants with Sacred Geometry spacing.
+# Compatible with Drupal 11 Component plugin (^1.0) and Layout Builder.
+
+name: Heady Hero
+description: >
+  Full-width hero banner for HeadyConnection sites. Supports dark, light, and
+  glassmorphism variants. Spacing derived from the Fibonacci Sacred Geometry
+  design system (13px / 21px / 34px / 55px).
+status: stable
+version: '1.0'
+group: Heady — Layout
+
+# ─── Props ─────────────────────────────────────────────────────────────────────
+props:
+  type: object
+  additionalProperties: false
+  required:
+    - title
+  properties:
+    title:
+      type: string
+      title: Title
+      description: 'Primary hero heading. Required.'
+      examples:
+        - 'Welcome to HeadyConnection'
+        - 'AI-Powered Community Intelligence'
+
+    subtitle:
+      type: string
+      title: Subtitle
+      description: 'Supporting text rendered below the title.'
+      examples:
+        - 'Empowering communities through sacred geometry and latent AI.'
+
+    ctaText:
+      type: string
+      title: CTA Button Text
+      description: 'Label for the primary call-to-action button.'
+      default: 'Get Started'
+      examples:
+        - 'Join the Network'
+        - 'Explore the Platform'
+
+    ctaUrl:
+      type: string
+      title: CTA URL
+      description: 'Destination URL for the CTA button. Must be a relative or absolute URL.'
+      format: uri-reference
+      examples:
+        - '/join'
+        - 'https://headyconnection.org/start'
+
+    ctaSecondaryText:
+      type: string
+      title: Secondary CTA Text
+      description: 'Optional secondary action label (ghost button).'
+      examples:
+        - 'Learn More'
+
+    ctaSecondaryUrl:
+      type: string
+      title: Secondary CTA URL
+      description: 'Destination for the secondary CTA button.'
+      format: uri-reference
+
+    backgroundVariant:
+      type: string
+      title: Background Variant
+      description: >
+        Visual theme variant. dark = deep space Heady palette,
+        light = minimal light mode, glass = glassmorphism overlay.
+      enum:
+        - dark
+        - light
+        - glass
+      default: dark
+
+    backgroundImageUrl:
+      type: string
+      title: Background Image URL
+      description: 'Optional background image. Rendered with an overlay for text legibility.'
+      format: uri-reference
+
+    eyebrow:
+      type: string
+      title: Eyebrow Text
+      description: 'Small label rendered above the title (e.g., category or tag).'
+      examples:
+        - 'New Feature'
+        - 'Community Update'
+
+    showCoherenceIndicator:
+      type: boolean
+      title: Show Coherence Indicator
+      description: 'Display the phi-harmonic coherence score indicator (decorative).'
+      default: false
+
+    coherenceScore:
+      type: number
+      title: Coherence Score
+      description: 'Semantic coherence score (0–1). Shown when showCoherenceIndicator=true.'
+      minimum: 0
+      maximum: 1
+
+# ─── Slots ─────────────────────────────────────────────────────────────────────
+slots:
+  content:
+    title: Additional Content
+    description: 'Optional body content rendered below the subtitle and CTA buttons.'
+
+# ─── Asset Libraries ────────────────────────────────────────────────────────────
+libraryOverrides:
+  css:
+    component:
+      heady-hero.css: {}
+  js:
+    heady-hero.js:
+      attributes:
+        type: module
+
+# ─── Accessibility ─────────────────────────────────────────────────────────────
+# Region landmark: <section aria-label="{{ title }}">
+# CTA buttons use <a> with descriptive aria-label when ctaText alone is ambiguous.
