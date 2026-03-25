@@ -99,3 +99,21 @@ zone_name = "headyai.com"
 [[routes]]
 pattern = "www.headyai.com/*"
 zone_name = "headyai.com"
+
+# ── HeadyConnection ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyconnection.org/*"
+zone_name = "headyconnection.org"
+
+[[routes]]
+pattern = "www.headyconnection.org/*"
+zone_name = "headyconnection.org"
+
+# ── HeadyFinance ─────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyfinance.com/*"
+zone_name = "headyfinance.com"
+
+[[routes]]
+pattern = "www.headyfinance.com/*"
+zone_name = "headyfinance.com"
