@@ -78,7 +78,13 @@ const GITHUB_PAGES_REPOS = {
   'www.headymcp.com':         'headymcp-com',
   'headysystems.com':         'headysystems-com',
   'www.headysystems.com':     'headysystems-com',
-  // headyex.com, headyfinance.com, headycloud.com — served by Cloud Run origin
+  // ── New GitHub Pages repos (March 2026) ──
+  'headyex.com':              'headyex-com',
+  'www.headyex.com':          'headyex-com',
+  'headyfinance.com':         'headyfinance-com',
+  'www.headyfinance.com':     'headyfinance-com',
+  'headycloud.com':           'headycloud-com',
+  'www.headycloud.com':       'headycloud-com',
   // admin.headysystems.com — served by Cloud Run origin
 };
 

@@ -1,0 +1,18 @@
+# HeadyMCP Edge Worker — serves headymcp.com website + MCP API
+# Replaces old JSON-only gateway with GitHub Pages website serving
+# MCP API paths (/mcp/*, /sse, /health, etc.) still proxy to origin
+
+name = "headymcp-edge"
+main = "src/index.js"
+compatibility_date = "2026-03-06"
+
+[[routes]]
+pattern = "headymcp.com/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern = "www.headymcp.com/*"
+zone_name = "headymcp.com"
+
+[vars]
+ORIGIN_URL = "https://heady-edge-gateway-609590223909.us-central1.run.app"
