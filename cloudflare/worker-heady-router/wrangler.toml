@@ -80,6 +80,15 @@ zone_name = "headysystems.com"
 pattern = "discord.headysystems.com/*"
 zone_name = "headysystems.com"
 
+# ── Cloud Platform ──────────────────────────────────────────────────────
+[[routes]]
+pattern = "headycloud.com/*"
+zone_name = "headycloud.com"
+
+[[routes]]
+pattern = "www.headycloud.com/*"
+zone_name = "headycloud.com"
+
 # ── HeadyAI ──────────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyai.com/*"

@@ -43,6 +43,8 @@ const DOMAIN_MODULES = {
   'www.headyos.com': 'os-portal',
   'headyex.com': 'executive-hub',
   'www.headyex.com': 'executive-hub',
+  'headycloud.com': 'cloud-platform',
+  'www.headycloud.com': 'cloud-platform',
   'admin.headysystems.com': 'admin-portal',
   'auth.headysystems.com': 'auth-portal',
   'heady.headyme.com': 'edge-mcp',
@@ -192,6 +194,14 @@ const MODULE_BRANDS = {
     accent: '#94a3b8',
     ctaLabel: 'Open HeadyEX',
     ctaHref: 'https://headyex.com',
+  },
+  'cloud-platform': {
+    brand: 'HeadyCloud',
+    title: 'Cloud infrastructure platform',
+    description: 'Managed cloud infrastructure, edge deployment, and serverless orchestration for the Heady ecosystem.',
+    accent: '#0ea5e9',
+    ctaLabel: 'Open HeadyCloud',
+    ctaHref: 'https://headycloud.com',
   },
   'admin-portal': {
     brand: 'Heady Admin',
