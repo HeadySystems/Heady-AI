@@ -43,7 +43,11 @@ const DOMAIN_MODULES = {
   'www.headyos.com': 'os-portal',
   'headyex.com': 'executive-hub',
   'www.headyex.com': 'executive-hub',
+  'headyvault.com': 'secrets-engine',
+  'www.headyvault.com': 'secrets-engine',
   'headycloud.com': 'cloud-platform',
+  'headykey.com': 'auth-identity',
+  'www.headykey.com': 'auth-identity',
   'www.headycloud.com': 'cloud-platform',
   'manager.headysystems.com': 'systems-portal',
   'ai.headysystems.com': 'systems-portal',
@@ -96,6 +100,10 @@ const GITHUB_PAGES_REPOS = {
   'www.headycloud.com':       'headycloud-com',
   'headyme.com':             'headyme-com',
   'www.headyme.com':          'headyme-com',
+  'headykey.com':             'headykey-com',
+  'www.headykey.com':         'headykey-com',
+  'headyvault.com':           'headyvault-com',
+  'www.headyvault.com':       'headyvault-com',
   // admin.headysystems.com — served by Cloud Run origin
 };
 
@@ -226,6 +234,22 @@ const MODULE_BRANDS = {
     accent: '#94a3b8',
     ctaLabel: 'Open HeadyEX',
     ctaHref: 'https://headyex.com',
+  },
+  'auth-identity': {
+    brand: 'HeadyKey',
+    title: 'Sovereign identity & authentication',
+    description: 'Zero-trust identity layer. JWT sessions, OAuth2, RBAC, API key management.',
+    accent: '#f59e0b',
+    ctaLabel: 'Open auth portal',
+    ctaHref: 'https://headykey.com',
+  },
+  'secrets-engine': {
+    brand: 'HeadyVault',
+    title: 'Secrets & key management',
+    description: 'Cryptographic secrets engine. Ed25519 signing, AES-256-GCM encryption, φ-scheduled rotation.',
+    accent: '#10b981',
+    ctaLabel: 'Open vault portal',
+    ctaHref: 'https://headyvault.com',
   },
   'cloud-platform': {
     brand: 'HeadyCloud',
