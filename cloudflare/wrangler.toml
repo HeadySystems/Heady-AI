@@ -33,79 +33,8 @@ cpu_ms = 50              # 50ms CPU budget per request (free plan: 10ms)
 # Routes — all 17 Heady domains, www + apex
 # All routes forward to the same Worker (heady-edge-router)
 # ---------------------------------------------------------------------------
-routes = [
-  # ── Core Platform ───────────────────────────────────────────────────────
-  { pattern = "headyme.com/*",              zone_name = "headyme.com" },
-  { pattern = "www.headyme.com/*",          zone_name = "headyme.com" },
-  { pattern = "headysystems.com/*",         zone_name = "headysystems.com" },
-  { pattern = "www.headysystems.com/*",     zone_name = "headysystems.com" },
-
-  # ── Community & Connection ─────────────────────────────────────────────
-  { pattern = "headyconnection.org/*",      zone_name = "headyconnection.org" },
-  { pattern = "www.headyconnection.org/*",  zone_name = "headyconnection.org" },
-  { pattern = "headyconnection.com/*",      zone_name = "headyconnection.com" },
-  { pattern = "www.headyconnection.com/*",  zone_name = "headyconnection.com" },
-
-  # ── Companion ─────────────────────────────────────────────────────────
-  { pattern = "headybuddy.com/*",           zone_name = "headybuddy.com" },
-  { pattern = "www.headybuddy.com/*",       zone_name = "headybuddy.com" },
-  { pattern = "headybuddy.org/*",           zone_name = "headybuddy.org" },
-  { pattern = "www.headybuddy.org/*",       zone_name = "headybuddy.org" },
-  { pattern = "headybot.com/*",             zone_name = "headybot.com" },
-  { pattern = "www.headybot.com/*",         zone_name = "headybot.com" },
-
-  # ── Developer & API ───────────────────────────────────────────────────
-  { pattern = "headymcp.com/*",             zone_name = "headymcp.com" },
-  { pattern = "www.headymcp.com/*",         zone_name = "headymcp.com" },
-  { pattern = "headyio.com/*",              zone_name = "headyio.com" },
-  { pattern = "www.headyio.com/*",          zone_name = "headyio.com" },
-  { pattern = "headyapi.com/*",             zone_name = "headyapi.com" },
-  { pattern = "www.headyapi.com/*",         zone_name = "headyapi.com" },
-
-  # ── Research & OS ────────────────────────────────────────────────────
-  { pattern = "heady-ai.com/*",             zone_name = "heady-ai.com" },
-  { pattern = "www.heady-ai.com/*",         zone_name = "heady-ai.com" },
-  { pattern = "headyos.com/*",              zone_name = "headyos.com" },
-  { pattern = "www.headyos.com/*",          zone_name = "headyos.com" },
-
-  # ── Infrastructure ───────────────────────────────────────────────────
-  { pattern = "headycloud.com/*",           zone_name = "headycloud.com" },
-  { pattern = "www.headycloud.com/*",       zone_name = "headycloud.com" },
-  { pattern = "headyweb.com/*",             zone_name = "headyweb.com" },
-  { pattern = "www.headyweb.com/*",         zone_name = "headyweb.com" },
-
-  # ── Verticals ────────────────────────────────────────────────────────
-  { pattern = "headyfinance.com/*",         zone_name = "headyfinance.com" },
-  { pattern = "www.headyfinance.com/*",     zone_name = "headyfinance.com" },
-  { pattern = "headymusic.com/*",           zone_name = "headymusic.com" },
-  { pattern = "www.headymusic.com/*",       zone_name = "headymusic.com" },
-
-  # ── Marketplace & Exchange ───────────────────────────────────────────
-  { pattern = "headystore.com/*",           zone_name = "headystore.com" },
-  { pattern = "www.headystore.com/*",       zone_name = "headystore.com" },
-  { pattern = "headyex.com/*",              zone_name = "headyex.com" },
-  { pattern = "www.headyex.com/*",          zone_name = "headyex.com" },
-
-  # ── Audit Ecosystem Domains (added March 2026) ───────────────────────
-  { pattern = "headyai.com/*",              zone_name = "headyai.com" },
-  { pattern = "www.headyai.com/*",          zone_name = "headyai.com" },
-  { pattern = "headyfullstack.com/*",       zone_name = "headyfullstack.com" },
-  { pattern = "www.headyfullstack.com/*",   zone_name = "headyfullstack.com" },
-  { pattern = "headymusic.net/*",           zone_name = "headymusic.net" },
-  { pattern = "www.headymusic.net/*",       zone_name = "headymusic.net" },
-  { pattern = "headycloud.io/*",            zone_name = "headycloud.io" },
-  { pattern = "www.headycloud.io/*",        zone_name = "headycloud.io" },
-  { pattern = "headydata.io/*",             zone_name = "headydata.io" },
-  { pattern = "www.headydata.io/*",         zone_name = "headydata.io" },
-  { pattern = "headyinc.com/*",             zone_name = "headyinc.com" },
-  { pattern = "www.headyinc.com/*",         zone_name = "headyinc.com" },
-  { pattern = "headyhc.com/*",              zone_name = "headyhc.com" },
-  { pattern = "www.headyhc.com/*",          zone_name = "headyhc.com" },
-  { pattern = "headygraphics.com/*",        zone_name = "headygraphics.com" },
-  { pattern = "www.headygraphics.com/*",    zone_name = "headygraphics.com" },
-  { pattern = "headyapis.com/*",            zone_name = "headyapis.com" },
-  { pattern = "www.headyapis.com/*",        zone_name = "headyapis.com" },
-]
+# Routes removed — all routing consolidated into worker-heady-router
+routes = []
 
 # ---------------------------------------------------------------------------
 # KV Namespaces
@@ -170,26 +99,8 @@ HEADY_ENV          = "production"
 [env.staging]
 name = "heady-edge-router-staging"
 
-routes = [
-  { pattern = "staging.headyme.com/*",        zone_name = "headyme.com" },
-  { pattern = "staging.headysystems.com/*",   zone_name = "headysystems.com" },
-  { pattern = "staging.headyconnection.org/*",zone_name = "headyconnection.org" },
-  { pattern = "staging.headybuddy.com/*",     zone_name = "headybuddy.com" },
-  { pattern = "staging.headybuddy.org/*",     zone_name = "headybuddy.org" },
-  { pattern = "staging.headymcp.com/*",       zone_name = "headymcp.com" },
-  { pattern = "staging.headyio.com/*",        zone_name = "headyio.com" },
-  { pattern = "staging.headybot.com/*",       zone_name = "headybot.com" },
-  { pattern = "staging.headyapi.com/*",       zone_name = "headyapi.com" },
-  { pattern = "staging.heady-ai.com/*",         zone_name = "heady-ai.com" },
-  { pattern = "staging.headyconnection.com/*", zone_name = "headyconnection.com" },
-  { pattern = "staging.headyos.com/*",         zone_name = "headyos.com" },
-  { pattern = "staging.headycloud.com/*",      zone_name = "headycloud.com" },
-  { pattern = "staging.headyweb.com/*",        zone_name = "headyweb.com" },
-  { pattern = "staging.headyfinance.com/*",    zone_name = "headyfinance.com" },
-  { pattern = "staging.headymusic.com/*",      zone_name = "headymusic.com" },
-  { pattern = "staging.headystore.com/*",      zone_name = "headystore.com" },
-  { pattern = "staging.headyex.com/*",         zone_name = "headyex.com" },
-]
+# Routes removed — all routing consolidated into worker-heady-router
+routes = []
 
 [env.staging.vars]
 CLOUD_RUN_ORIGIN   = "https://heady-staging-uc.a.run.app"

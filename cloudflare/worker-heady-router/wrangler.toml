@@ -13,7 +13,10 @@ compatibility_date = "2026-03-06"
 HEADY_ORIGIN_BASE = "https://heady-edge-gateway-609590223909.us-central1.run.app"
 COLAB_COMPILER_WEBHOOK = "https://heady-edge-gateway-609590223909.us-central1.run.app/api/hologram/compile"
 
-# Active recovery routes managed as infrastructure-as-code.
+# ═══════════════════════════════════════════════════════════════════
+# Active recovery routes — ALL Heady domains consolidated here
+# ═══════════════════════════════════════════════════════════════════
+
 # ── AI Platform ──────────────────────────────────────────────────────────
 [[routes]]
 pattern = "heady-ai.com/*"
@@ -117,3 +120,30 @@ zone_name = "headyfinance.com"
 [[routes]]
 pattern = "www.headyfinance.com/*"
 zone_name = "headyfinance.com"
+
+# ── HeadyMCP (was blocked by heady-edge-router route) ────────────────────
+[[routes]]
+pattern = "headymcp.com/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern = "www.headymcp.com/*"
+zone_name = "headymcp.com"
+
+# ── HeadySystems ─────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headysystems.com/*"
+zone_name = "headysystems.com"
+
+[[routes]]
+pattern = "www.headysystems.com/*"
+zone_name = "headysystems.com"
+
+# ── HeadyMe ─────────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyme.com/*"
+zone_name = "headyme.com"
+
+[[routes]]
+pattern = "www.headyme.com/*"
+zone_name = "headyme.com"

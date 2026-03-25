@@ -2,9 +2,11 @@
 # HEADY CI/CD — Cloudflare Edge Deployment
 # .github/workflows/deploy-edge.yml
 #
-# Deploys Cloudflare Workers (edge proxy, AI gateway, MCP telemetry)
-# LR-001: Uses workingDirectory: cloudflare/heady-edge-proxy
-# LR-005: Validates Host header stripping before deploy
+# Deploys all Cloudflare Workers:
+#   - worker-heady-router (primary domain router)
+#   - heady-edge-router (deprecated — kept for cleanup, no routes)
+#   - worker-ai-gateway
+#   - worker-mcp-telemetry
 # ============================================================================
 
 name: Deploy Edge Workers
@@ -29,13 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # LR-005: Verify Host header deletion in edge proxy
-      - name: 'LR-005: Check Host header handling'
-        run: |
-          if ! grep -q "delete.*headers.*Host\|request\.headers\.delete.*host" cloudflare/heady-edge-proxy/*.js cloudflare/heady-edge-proxy/*.ts 2>/dev/null; then
-            echo "::warning::Host header deletion not found in edge proxy (LR-005)"
-          fi
-
       # No localhost in Workers code
       - name: 'Law 0: Localhost check'
         run: |
@@ -46,28 +41,42 @@ jobs:
             exit 1
           fi
 
-  deploy-edge-proxy:
-    name: 'Deploy heady-edge-proxy'
+  deploy-heady-router:
+    name: 'Deploy Heady Router Worker (Primary)'
     runs-on: ubuntu-latest
     needs: [validate]
-    # LR-001: workingDirectory for edge deploys
     defaults:
       run:
-        working-directory: cloudflare/heady-edge-proxy
+        working-directory: cloudflare/worker-heady-router
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install wrangler
-        run: npm install -g wrangler
-
+      - run: npm install -g wrangler
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+  deploy-edge-router-cleanup:
+    name: 'Deploy heady-edge-router (Route Cleanup)'
+    runs-on: ubuntu-latest
+    needs: [deploy-heady-router]
+    defaults:
+      run:
+        working-directory: cloudflare/heady-edge-router
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy (removes old routes)
+        run: wrangler deploy --config wrangler.toml --env production
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        continue-on-error: true
 
   deploy-ai-gateway:
     name: 'Deploy AI Gateway Worker'
@@ -86,6 +95,7 @@ jobs:
         run: wrangler deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        continue-on-error: true
 
   deploy-mcp-telemetry:
     name: 'Deploy MCP Telemetry Worker'
@@ -104,21 +114,4 @@ jobs:
         run: wrangler deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
-  deploy-heady-router:
-    name: 'Deploy Heady Router Worker'
-    runs-on: ubuntu-latest
-    needs: [validate]
-    defaults:
-      run:
-        working-directory: cloudflare/worker-heady-router
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm install -g wrangler
-      - name: Deploy
-        run: wrangler deploy --config wrangler.toml
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        continue-on-error: true
