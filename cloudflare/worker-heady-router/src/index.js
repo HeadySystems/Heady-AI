@@ -94,6 +94,8 @@ const GITHUB_PAGES_REPOS = {
   'www.headyfinance.com':     'headyfinance-com',
   'headycloud.com':           'headycloud-com',
   'www.headycloud.com':       'headycloud-com',
+  'headyme.com':             'headyme-com',
+  'www.headyme.com':          'headyme-com',
   // admin.headysystems.com — served by Cloud Run origin
 };
 
