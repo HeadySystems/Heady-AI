@@ -86,6 +86,22 @@ jobs:
               HEADY_ENV=production,\
               HEADY_VERSION=${{ github.sha }},\
               SENTRY_DSN=${{ secrets.SENTRY_DSN }},\
+              NEON_DATABASE_URL=${{ secrets.NEON_DATABASE_URL }},\
+              HEADY_NEXUS_KEY=${{ secrets.HEADY_NEXUS_KEY }},\
+              HEADY_JULES_KEY=${{ secrets.HEADY_JULES_KEY }},\
+              ANTHROPIC_SECONDARY_KEY=${{ secrets.ANTHROPIC_SECONDARY_KEY }},\
+              HEADY_COMPUTE_KEY=${{ secrets.HEADY_COMPUTE_KEY }},\
+              GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }},\
+              GOOGLE_API_KEY_SECONDARY=${{ secrets.GOOGLE_API_KEY_SECONDARY }},\
+              HEADY_PYTHIA_KEY_HEADY=${{ secrets.HEADY_PYTHIA_KEY_HEADY }},\
+              HEADY_PYTHIA_KEY_GCLOUD=${{ secrets.HEADY_PYTHIA_KEY_GCLOUD }},\
+              HEADY_PYTHIA_KEY_COLAB=${{ secrets.HEADY_PYTHIA_KEY_COLAB }},\
+              HEADY_PYTHIA_KEY_STUDIO=${{ secrets.HEADY_PYTHIA_KEY_STUDIO }},\
+              HF_TOKEN=${{ secrets.HF_TOKEN }},\
+              HF_TOKEN_2=${{ secrets.HF_TOKEN_2 }},\
+              HF_TOKEN_3=${{ secrets.HF_TOKEN_3 }},\
+              HEADY_BRAIN_API=${{ secrets.HEADY_BRAIN_API }},\
+              FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }},\
               PORT=8080" \
             --labels "app=heady-sites,env=production"
 

@@ -19,10 +19,25 @@ app.use(helmet({
   }
 }));
 
-// CORS - Not too permissive
+// CORS — allow all 9 Heady domains + headybuddy.org
+const HEADY_DOMAINS = [
+    '.headysystems.com',
+    '.headyconnection.org',
+    '.headyconnection.com',
+    'headyme.com',
+    'headybuddy.org',
+    'headyio.com',
+    'headybot.com',
+    'headyapi.com',
+    'heady-ai.com',
+    'headyos.com',
+    'headyex.com',
+    'headyfinance.com',
+    'headycloud.com',
+];
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.endsWith('.headysystems.com') || origin === (process.env.HEADY_BUDDY_URL || 'http://localhost:3338')) {
+        if (!origin || HEADY_DOMAINS.some(d => origin.endsWith(d) || origin.includes(d))) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -76,6 +91,53 @@ app.get('/health/startup', (req, res) => {
 
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', service: 'heady-buddy', timestamp: Date.now() });
+});
+
+// ── Buddy Chat Proxy — forwards /api/buddy/chat to /api/brain/chat ──
+// Legacy widgets call /api/buddy/chat; new widget calls /api/brain/chat directly.
+// This proxy ensures backward compatibility.
+const https = require('https');
+const BRAIN_API = process.env.HEADY_BRAIN_API || 'https://api.headysystems.com';
+
+app.post('/api/buddy/chat', async (req, res) => {
+    try {
+        const { message, domain, user, history, session_id } = req.body;
+        const response = await retryWithPhiBackoff(async () => {
+            const payload = JSON.stringify({ message, user: user || 'anonymous', history: history || [], session_id });
+            return new Promise((resolve, reject) => {
+                const url = new URL(BRAIN_API + '/api/brain/chat');
+                const reqOpts = {
+                    hostname: url.hostname,
+                    port: url.port || 443,
+                    path: url.pathname,
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) },
+                    timeout: 13000
+                };
+                const r = https.request(reqOpts, (resp) => {
+                    let data = '';
+                    resp.on('data', chunk => data += chunk);
+                    resp.on('end', () => {
+                        try { resolve(JSON.parse(data)); }
+                        catch { resolve({ response: data }); }
+                    });
+                });
+                r.on('error', reject);
+                r.on('timeout', () => { r.destroy(); reject(new Error('timeout')); });
+                r.write(payload);
+                r.end();
+            });
+        });
+        return res.json({
+            ok: true,
+            reply: response.response || response.reply || response.message || 'HeadyBuddy is here to help.',
+            response: response.response,
+            session_id: response.session_id
+        });
+    } catch (err) {
+        logger.error('Buddy chat proxy error', err);
+        return res.status(502).json({ error: 'HEADY-ERR-BUDDY', reply: 'HeadyBuddy is connecting to the neural network. Try again in a moment.' });
+    }
 });
 
 // Error Handler - Prevents swallowing errors silently

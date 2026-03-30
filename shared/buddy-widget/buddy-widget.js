@@ -1,791 +1,542 @@
 /**
- * HeadyBuddy Universal Chat Widget v1.0.0
- * Drop-in chat widget with Firebase Auth, real backend, vector memory.
- * Usage: <script src="/buddy-widget.js"></script>
+ * HeadyBuddy Universal Chat Widget v4.0
+ * Sacred Geometry Dark Glassmorphism — Single IIFE, zero dependencies
+ * Deployed across all 9 Heady domain sites
+ *
+ * Configuration (set before script loads):
+ *   window.HEADY_API           — API base URL     (default: https://api.headysystems.com)
+ *   window.HEADY_AUTH          — Auth base URL    (default: https://headykey.com)
+ *   window.HEADY_BUDDY_GREETING — Custom greeting
  */
+
 (function () {
   'use strict';
 
-  /* ───────────────────────── Configuration ───────────────────────── */
+  // ─── § 1  CONFIGURATION ──────────────────────────────────────────────────────
 
-  var API_BASE = (window.HEADY_API || 'https://api.headysystems.com').replace(/\/+$/, '');
-  var AUTH_BASE = (window.HEADY_AUTH || 'https://auth.headysystems.com').replace(/\/+$/, '');
-  var FIREBASE_CONFIG = {
-    apiKey: window.HEADY_FIREBASE_API_KEY || '',
-    authDomain: 'gen-lang-client-0920560496.firebaseapp.com',
-    projectId: 'gen-lang-client-0920560496'
-  };
-  var MAX_HISTORY = 6;
+  var API_BASE  = (window.HEADY_API  || 'https://api.headysystems.com').replace(/\/$/, '');
+  var AUTH_BASE = (window.HEADY_AUTH || 'https://headykey.com').replace(/\/$/, '');
+  var GREETING  = window.HEADY_BUDDY_GREETING ||
+    "Hey! I'm HeadyBuddy, your AI companion. Ask me anything about the Heady ecosystem.";
 
-  /* ───────────────────────── State ───────────────────────── */
+  // Phi-derived constants
+  var PHI = 1.618033988749895;
+  var FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+  var TRANSITION = 'cubic-bezier(0.618, 0, 0.382, 1)';
+
+  // ─── § 2  PERSISTENT SESSION & DEVICE IDs ───────────────────────────────────
+
+  function getOrCreate(key, generator) {
+    var val = localStorage.getItem(key);
+    if (!val) { val = generator(); localStorage.setItem(key, val); }
+    return val;
+  }
+
+  function genId(prefix) {
+    return prefix + '-' + Date.now().toString(36) + '-' +
+      Math.random().toString(36).slice(2, 9);
+  }
+
+  var SESSION_ID = getOrCreate('heady_buddy_session', function () { return genId('sess'); });
+  var DEVICE_ID  = getOrCreate('heady_device_id',     function () { return genId('dev');  });
+
+  // ─── § 3  STATE ──────────────────────────────────────────────────────────────
 
   var state = {
-    open: false,
-    user: null,         // { uid, email, displayName }
-    messages: [],       // { role: 'user'|'bot'|'system', text: string }
-    sending: false,
-    firebaseReady: false,
-    authChecked: false
+    open:    false,
+    user:    null,        // { uid, email, displayName } or null
+    history: [],          // [{ role, content }]
+    turns:   0,
+    polling: null
   };
 
-  /* ───────────────────────── DOM references (set after inject) ─── */
+  // ─── § 4  UTILITIES ──────────────────────────────────────────────────────────
 
-  var els = {};
-
-  /* ───────────────────────── Firebase SDK loader ─────────────── */
-
-  function loadScript(src) {
-    return new Promise(function (resolve, reject) {
-      if (document.querySelector('script[src="' + src + '"]')) {
-        resolve();
-        return;
-      }
-      var s = document.createElement('script');
-      s.src = src;
-      s.onload = resolve;
-      s.onerror = function () { reject(new Error('Failed to load ' + src)); };
-      document.head.appendChild(s);
-    });
+  /** XSS-safe HTML escaping for user content */
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,  '&amp;')
+      .replace(/</g,  '&lt;')
+      .replace(/>/g,  '&gt;')
+      .replace(/"/g,  '&quot;')
+      .replace(/'/g,  '&#39;');
   }
 
-  function initFirebase() {
-    return loadScript('https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js')
-      .then(function () {
-        return loadScript('https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js');
-      })
-      .then(function () {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(FIREBASE_CONFIG);
-        }
-        state.firebaseReady = true;
-      });
-  }
-
-  /* ───────────────────────── Auth helpers ─────────────────────── */
-
-  function signInWithGoogle() {
-    if (!state.firebaseReady) return;
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
-      .then(function (result) {
-        var user = result.user;
-        return user.getIdToken().then(function (idToken) {
-          return exchangeToken(idToken).then(function () {
-            setUser(user);
-            loadHistory();
-          });
-        });
-      })
-      .catch(function (err) {
-        if (err.code !== 'auth/popup-closed-by-user') {
-          addMessage('system', 'Sign-in failed: ' + err.message);
-        }
-      });
-  }
-
-  function exchangeToken(idToken) {
-    return fetch(AUTH_BASE + '/api/auth/session', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken: idToken })
-    }).then(function (r) {
-      if (!r.ok) throw new Error('Session exchange failed (' + r.status + ')');
-      return r.json();
-    });
-  }
-
-  function checkSession() {
-    return fetch(AUTH_BASE + '/api/auth/session', {
-      method: 'GET',
-      credentials: 'include'
-    }).then(function (r) {
-      if (!r.ok) throw new Error('No session');
-      return r.json();
-    });
-  }
-
-  function signOut() {
-    fetch(AUTH_BASE + '/api/auth/session', {
-      method: 'DELETE',
-      credentials: 'include'
-    }).catch(function () { /* best effort */ });
-
-    if (state.firebaseReady && firebase.auth().currentUser) {
-      firebase.auth().signOut().catch(function () {});
-    }
-    state.user = null;
-    state.messages = [];
-    renderAuth();
-    renderMessages();
-  }
-
-  function setUser(firebaseUser) {
-    state.user = {
-      uid: firebaseUser.uid || firebaseUser.user_id || '',
-      email: firebaseUser.email || '',
-      displayName: firebaseUser.displayName || firebaseUser.name || firebaseUser.email || ''
-    };
-    state.authChecked = true;
-    renderAuth();
-  }
-
-  /* ───────────────────────── Chat API ────────────────────────── */
-
-  function sendMessage(text) {
-    if (!text.trim() || state.sending) return;
-
-    addMessage('user', text);
-    state.sending = true;
-    showTyping(true);
-
-    var history = state.messages
-      .filter(function (m) { return m.role !== 'system'; })
-      .slice(-MAX_HISTORY)
-      .map(function (m) { return { role: m.role, content: m.text }; });
-
-    fetch(API_BASE + '/api/brain/chat', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: text,
-        user: state.user ? state.user.uid : 'anonymous',
-        history: history
-      })
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error('API ' + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        var reply = data.response || data.reply || data.message || data.answer || '';
-        if (!reply) throw new Error('Empty response');
-        addMessage('bot', reply);
-        storeVector(text, reply);
-      })
-      .catch(function () {
-        addMessage('bot', 'HeadyBuddy is currently connecting to the neural network. Try again in a moment.');
-      })
-      .then(function () {
-        state.sending = false;
-        showTyping(false);
-      });
-  }
-
-  /* ───────────────────────── History ──────────────────────────── */
-
-  function loadHistory() {
-    if (!state.user) return;
-    fetch(API_BASE + '/api/buddy/history', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: state.user.uid })
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error('History ' + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        var items = data.messages || data.history || data || [];
-        if (!Array.isArray(items)) return;
-        items.forEach(function (m) {
-          var role = m.role === 'assistant' ? 'bot' : (m.role || 'bot');
-          var text = m.content || m.text || m.message || '';
-          if (text) state.messages.push({ role: role, text: text });
-        });
-        renderMessages();
-      })
-      .catch(function () { /* no history available */ });
-  }
-
-  /* ───────────────────────── Vector storage ──────────────────── */
-
-  function storeVector(question, answer) {
-    if (!state.user) return;
-    fetch(API_BASE + '/api/vector/store', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user: state.user.uid,
-        question: question,
-        answer: answer
-      })
-    }).catch(function () { /* fire and forget */ });
-  }
-
-  /* ───────────────────────── Markdown renderer ───────────────── */
-
+  /**
+   * Safe markdown renderer for bot messages.
+   * Handles: code blocks, inline code, bold, italic, links.
+   * Input is trusted (comes from our own API).
+   */
   function renderMarkdown(text) {
-    var s = text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-
-    // Code blocks (```)
-    s = s.replace(/```([\s\S]*?)```/g, function (_, code) {
-      return '<pre class="hb-code-block">' + code.trim() + '</pre>';
+    var s = escHtml(text);
+    // Un-escape for markdown processing (we escaped first to stop XSS, now
+    // we selectively allow safe markdown-derived HTML only)
+    // Code blocks: ```lang\n...\n```
+    s = s.replace(/```([a-z]*)\n?([\s\S]*?)```/g, function (_, lang, code) {
+      return '<pre style="background:rgba(0,0,0,0.5);border-radius:' + FIB[4] + 'px;' +
+             'padding:' + FIB[4] + 'px;overflow-x:auto;margin:' + FIB[3] + 'px 0;' +
+             'font-size:0.8rem;line-height:1.5;border:1px solid rgba(124,58,237,0.3)">' +
+             '<code style="font-family:\'Fira Code\',monospace;color:#a78bfa">' +
+             code + '</code></pre>';
     });
     // Inline code
-    s = s.replace(/`([^`]+)`/g, '<code class="hb-inline-code">$1</code>');
+    s = s.replace(/`([^`]+)`/g,
+      '<code style="background:rgba(124,58,237,0.2);color:#c4b5fd;padding:2px 5px;' +
+      'border-radius:4px;font-family:\'Fira Code\',monospace;font-size:0.85em">$1</code>');
     // Bold
-    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#e8e8f0">$1</strong>');
     // Italic
-    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    // Links
-    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener noreferrer" class="hb-link">$1</a>');
+    s = s.replace(/\*([^*]+)\*/g, '<em style="color:#c4b5fd">$1</em>');
+    // Links — only allow http/https
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" ' +
+      'style="color:#06b6d4;text-decoration:underline">$1</a>');
     // Line breaks
     s = s.replace(/\n/g, '<br>');
-
     return s;
   }
 
-  /* ───────────────────────── UI helpers ───────────────────────── */
+  // ─── § 5  AUTH — SESSION-COOKIE FLOW ────────────────────────────────────────
 
-  function addMessage(role, text) {
-    state.messages.push({ role: role, text: text });
-    renderMessages();
+  function checkSession(cb) {
+    fetch(AUTH_BASE + '/api/auth/session', {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(function (res) {
+      if (!res.ok) { cb(null); return; }
+      return res.json();
+    })
+    .then(function (data) {
+      if (!data) { cb(null); return; }
+      var user = null;
+      if (data && data.user && data.user.uid) {
+        user = {
+          uid:         data.user.uid,
+          email:       data.user.email       || '',
+          displayName: data.user.displayName || data.user.email || 'User'
+        };
+      } else if (data && data.uid) {
+        user = {
+          uid:         data.uid,
+          email:       data.email       || '',
+          displayName: data.displayName || data.email || 'User'
+        };
+      }
+      cb(user);
+    })
+    .catch(function () { cb(null); });
   }
 
-  function renderMessages() {
-    if (!els.messages) return;
-    var html = '';
-    state.messages.forEach(function (m) {
-      var cls = 'hb-msg hb-msg-' + m.role;
-      var content = m.role === 'bot' ? renderMarkdown(m.text) : escapeHtml(m.text);
-      html += '<div class="' + cls + '">' + content + '</div>';
+  function signOut() {
+    fetch(AUTH_BASE + '/api/auth/signout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .catch(function () {})
+    .finally(function () {
+      state.user = null;
+      updateAuthBar();
     });
-    els.messages.innerHTML = html;
-    els.messages.scrollTop = els.messages.scrollHeight;
   }
 
-  function escapeHtml(text) {
-    return text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/\n/g, '<br>');
+  /** Open the auth page in a new tab with return URL */
+  function openAuthPage() {
+    var returnUrl = encodeURIComponent(window.location.href);
+    window.open(AUTH_BASE + '?return=' + returnUrl, '_blank', 'noopener,noreferrer');
   }
 
-  function showTyping(show) {
-    if (!els.typing) return;
-    els.typing.style.display = show ? 'flex' : 'none';
-    if (show && els.messages) {
-      els.messages.scrollTop = els.messages.scrollHeight;
+  /**
+   * Poll for session after the user opens the auth tab.
+   * Fires every ~FIB[9]=55 seconds, stops once logged in.
+   */
+  function startAuthPolling() {
+    if (state.polling) return;
+    state.polling = setInterval(function () {
+      if (state.user) { stopAuthPolling(); return; }
+      checkSession(function (user) {
+        if (user) {
+          state.user = user;
+          updateAuthBar();
+          stopAuthPolling();
+          if (state.open) loadHistory();
+        }
+      });
+    }, FIB[9] * 1000); // 55s
+  }
+
+  function stopAuthPolling() {
+    if (state.polling) { clearInterval(state.polling); state.polling = null; }
+  }
+
+  // Also listen for storage events from other tabs
+  window.addEventListener('storage', function (e) {
+    if (e.key === 'heady_auth_signal') {
+      checkSession(function (user) {
+        if (user && !state.user) {
+          state.user = user;
+          updateAuthBar();
+          if (state.open) loadHistory();
+        }
+      });
     }
+  });
+
+  // ─── § 6  API CALLS ──────────────────────────────────────────────────────────
+
+  function apiPost(path, body, cb, errCb) {
+    fetch(API_BASE + path, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    .then(function (res) {
+      if (!res.ok) { throw new Error('HTTP ' + res.status); }
+      return res.json();
+    })
+    .then(cb)
+    .catch(errCb || function () {});
   }
 
-  function renderAuth() {
-    if (!els.auth) return;
-    if (state.user) {
-      els.auth.innerHTML =
-        '<div class="hb-user-info">' +
-          '<span class="hb-user-name">' + escapeHtml(state.user.displayName || state.user.email) + '</span>' +
-          '<button class="hb-sign-out" id="hb-sign-out">Sign Out</button>' +
-        '</div>';
-      document.getElementById('hb-sign-out').addEventListener('click', signOut);
-      els.inputRow.style.display = 'flex';
-    } else {
-      els.auth.innerHTML =
-        '<button class="hb-google-btn" id="hb-google-signin">' +
-          '<svg class="hb-google-icon" viewBox="0 0 24 24" width="18" height="18">' +
-            '<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>' +
-            '<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>' +
-            '<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>' +
-            '<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>' +
-          '</svg>' +
-          'Sign in with Google' +
-        '</button>';
-      document.getElementById('hb-google-signin').addEventListener('click', signInWithGoogle);
-      els.inputRow.style.display = 'none';
-    }
+  function sendChat(message, onDone, onError) {
+    var body = {
+      message:    message,
+      user:       state.user || { uid: DEVICE_ID, email: '', displayName: 'Anonymous' },
+      history:    state.history.slice(-20),   // last 20 turns for context window
+      session_id: SESSION_ID
+    };
+    apiPost('/api/brain/chat', body, function (data) {
+      var reply = (data && data.reply) || (data && data.message) || (data && data.response) || '';
+      onDone(reply);
+    }, function () {
+      onError('HeadyBuddy is connecting to the neural network. Try again in a moment.');
+    });
   }
 
-  function togglePanel() {
-    state.open = !state.open;
-    els.panel.style.display = state.open ? 'flex' : 'none';
-    if (state.open && els.input) {
-      setTimeout(function () { els.input.focus(); }, 100);
-    }
+  function loadHistory() {
+    if (!state.user) return;
+    apiPost('/api/buddy/history', { user: state.user }, function (data) {
+      if (data && Array.isArray(data.history) && data.history.length) {
+        state.history = data.history;
+        // Render existing history into messages area
+        var msgs = el('hb-messages');
+        if (msgs) {
+          msgs.innerHTML = '';
+          state.history.forEach(function (turn) {
+            appendMessage(turn.role === 'user' ? 'user' : 'bot', turn.content, false);
+          });
+          msgs.scrollTop = msgs.scrollHeight;
+        }
+      }
+    }, function () {});
   }
 
-  /* ───────────────────────── CSS ──────────────────────────────── */
+  function storeVector(question, answer) {
+    if (!state.user) return;
+    apiPost('/api/vector/store', {
+      user:     state.user,
+      question: question,
+      answer:   answer
+    }, function () {}, function () {});
+  }
+
+  // ─── § 7  DOM HELPERS ────────────────────────────────────────────────────────
+
+  function el(id) { return document.getElementById(id); }
+
+  function css(element, styles) {
+    Object.keys(styles).forEach(function (k) { element.style[k] = styles[k]; });
+  }
+
+  // ─── § 8  WIDGET INJECTION ───────────────────────────────────────────────────
 
   function injectStyles() {
-    var css = [
-      /* Reset scoping */
-      '#heady-buddy-root, #heady-buddy-root * {',
-      '  box-sizing: border-box;',
-      '  margin: 0;',
-      '  padding: 0;',
-      '  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;',
-      '  line-height: 1.5;',
-      '}',
-
-      /* FAB */
-      '.hb-fab {',
-      '  position: fixed;',
-      '  bottom: 24px;',
-      '  right: 24px;',
-      '  width: 60px;',
-      '  height: 60px;',
-      '  border-radius: 50%;',
-      '  border: none;',
-      '  cursor: pointer;',
-      '  background: linear-gradient(135deg, #7c3aed, #06b6d4);',
-      '  color: #fff;',
-      '  font-size: 28px;',
-      '  display: flex;',
-      '  align-items: center;',
-      '  justify-content: center;',
-      '  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4), 0 2px 8px rgba(0,0,0,0.3);',
-      '  z-index: 2147483646;',
-      '  transition: transform 0.2s ease, box-shadow 0.2s ease;',
-      '}',
-      '.hb-fab:hover {',
-      '  transform: scale(1.08);',
-      '  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.55), 0 4px 12px rgba(0,0,0,0.4);',
-      '}',
-      '.hb-fab:active {',
-      '  transform: scale(0.95);',
-      '}',
-
-      /* Panel */
-      '.hb-panel {',
-      '  position: fixed;',
-      '  bottom: 96px;',
-      '  right: 24px;',
-      '  width: 380px;',
-      '  height: 520px;',
-      '  display: none;',
-      '  flex-direction: column;',
-      '  border-radius: 16px;',
-      '  overflow: hidden;',
-      '  z-index: 2147483647;',
-      '  background: rgba(15, 15, 25, 0.88);',
-      '  backdrop-filter: blur(20px);',
-      '  -webkit-backdrop-filter: blur(20px);',
-      '  border: 1px solid rgba(124, 58, 237, 0.25);',
-      '  box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 80px rgba(124, 58, 237, 0.12);',
-      '}',
-
-      /* Header */
-      '.hb-header {',
-      '  display: flex;',
-      '  align-items: center;',
-      '  justify-content: space-between;',
-      '  padding: 14px 16px;',
-      '  background: rgba(124, 58, 237, 0.1);',
-      '  border-bottom: 1px solid rgba(124, 58, 237, 0.15);',
-      '  flex-shrink: 0;',
-      '}',
-      '.hb-title {',
-      '  font-size: 16px;',
-      '  font-weight: 700;',
-      '  background: linear-gradient(90deg, #a78bfa, #06b6d4);',
-      '  -webkit-background-clip: text;',
-      '  -webkit-text-fill-color: transparent;',
-      '  background-clip: text;',
-      '}',
-      '.hb-close {',
-      '  background: none;',
-      '  border: none;',
-      '  color: rgba(255,255,255,0.5);',
-      '  font-size: 20px;',
-      '  cursor: pointer;',
-      '  width: 32px;',
-      '  height: 32px;',
-      '  display: flex;',
-      '  align-items: center;',
-      '  justify-content: center;',
-      '  border-radius: 8px;',
-      '  transition: background 0.15s, color 0.15s;',
-      '}',
-      '.hb-close:hover {',
-      '  background: rgba(255,255,255,0.08);',
-      '  color: rgba(255,255,255,0.9);',
-      '}',
-
-      /* Auth section */
-      '.hb-auth {',
-      '  padding: 10px 16px;',
-      '  border-bottom: 1px solid rgba(255,255,255,0.06);',
-      '  flex-shrink: 0;',
-      '}',
-      '.hb-google-btn {',
-      '  display: flex;',
-      '  align-items: center;',
-      '  gap: 10px;',
-      '  width: 100%;',
-      '  padding: 10px 16px;',
-      '  border: 1px solid rgba(255,255,255,0.12);',
-      '  border-radius: 8px;',
-      '  background: rgba(255,255,255,0.04);',
-      '  color: #e2e8f0;',
-      '  font-size: 14px;',
-      '  font-weight: 500;',
-      '  cursor: pointer;',
-      '  transition: background 0.15s, border-color 0.15s;',
-      '}',
-      '.hb-google-btn:hover {',
-      '  background: rgba(255,255,255,0.08);',
-      '  border-color: rgba(255,255,255,0.2);',
-      '}',
-      '.hb-google-icon {',
-      '  flex-shrink: 0;',
-      '}',
-      '.hb-user-info {',
-      '  display: flex;',
-      '  align-items: center;',
-      '  justify-content: space-between;',
-      '  gap: 8px;',
-      '}',
-      '.hb-user-name {',
-      '  color: #a78bfa;',
-      '  font-size: 13px;',
-      '  font-weight: 500;',
-      '  overflow: hidden;',
-      '  text-overflow: ellipsis;',
-      '  white-space: nowrap;',
-      '  flex: 1;',
-      '  min-width: 0;',
-      '}',
-      '.hb-sign-out {',
-      '  background: none;',
-      '  border: 1px solid rgba(255,255,255,0.1);',
-      '  color: rgba(255,255,255,0.45);',
-      '  font-size: 12px;',
-      '  padding: 4px 10px;',
-      '  border-radius: 6px;',
-      '  cursor: pointer;',
-      '  flex-shrink: 0;',
-      '  transition: color 0.15s, border-color 0.15s;',
-      '}',
-      '.hb-sign-out:hover {',
-      '  color: rgba(255,255,255,0.8);',
-      '  border-color: rgba(255,255,255,0.25);',
-      '}',
-
-      /* Messages area */
-      '.hb-messages {',
-      '  flex: 1;',
-      '  overflow-y: auto;',
-      '  padding: 12px 16px;',
-      '  display: flex;',
-      '  flex-direction: column;',
-      '  gap: 8px;',
-      '  scrollbar-width: thin;',
-      '  scrollbar-color: rgba(124,58,237,0.3) transparent;',
-      '}',
-      '.hb-messages::-webkit-scrollbar { width: 6px; }',
-      '.hb-messages::-webkit-scrollbar-track { background: transparent; }',
-      '.hb-messages::-webkit-scrollbar-thumb {',
-      '  background: rgba(124,58,237,0.3);',
-      '  border-radius: 3px;',
-      '}',
-      '.hb-msg {',
-      '  max-width: 85%;',
-      '  padding: 10px 14px;',
-      '  border-radius: 12px;',
-      '  font-size: 14px;',
-      '  word-wrap: break-word;',
-      '  overflow-wrap: break-word;',
-      '}',
-      '.hb-msg-user {',
-      '  align-self: flex-end;',
-      '  background: linear-gradient(135deg, rgba(124,58,237,0.5), rgba(124,58,237,0.3));',
-      '  color: #f1f5f9;',
-      '  border-bottom-right-radius: 4px;',
-      '}',
-      '.hb-msg-bot {',
-      '  align-self: flex-start;',
-      '  background: rgba(255,255,255,0.06);',
-      '  color: #e2e8f0;',
-      '  border-bottom-left-radius: 4px;',
-      '}',
-      '.hb-msg-system {',
-      '  align-self: center;',
-      '  background: none;',
-      '  color: rgba(255,255,255,0.35);',
-      '  font-size: 12px;',
-      '  text-align: center;',
-      '  padding: 4px 8px;',
-      '}',
-
-      /* Markdown elements */
-      '.hb-code-block {',
-      '  background: rgba(0,0,0,0.35);',
-      '  border: 1px solid rgba(255,255,255,0.08);',
-      '  border-radius: 8px;',
-      '  padding: 10px 12px;',
-      '  margin: 6px 0;',
-      '  font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;',
-      '  font-size: 13px;',
-      '  overflow-x: auto;',
-      '  white-space: pre-wrap;',
-      '  color: #a5f3fc;',
-      '}',
-      '.hb-inline-code {',
-      '  background: rgba(0,0,0,0.3);',
-      '  padding: 2px 6px;',
-      '  border-radius: 4px;',
-      '  font-family: "SF Mono", "Fira Code", Consolas, monospace;',
-      '  font-size: 13px;',
-      '  color: #a5f3fc;',
-      '}',
-      '.hb-link {',
-      '  color: #67e8f9;',
-      '  text-decoration: underline;',
-      '  text-decoration-color: rgba(103,232,249,0.3);',
-      '  transition: text-decoration-color 0.15s;',
-      '}',
-      '.hb-link:hover {',
-      '  text-decoration-color: rgba(103,232,249,0.8);',
-      '}',
-      '.hb-msg-bot strong { color: #c4b5fd; }',
-
-      /* Typing indicator */
-      '.hb-typing {',
-      '  display: none;',
-      '  align-items: center;',
-      '  gap: 4px;',
-      '  padding: 0 16px 8px;',
-      '  flex-shrink: 0;',
-      '}',
-      '.hb-typing-dot {',
-      '  width: 7px;',
-      '  height: 7px;',
-      '  border-radius: 50%;',
-      '  background: rgba(124,58,237,0.5);',
-      '  animation: hb-bounce 1.4s infinite ease-in-out both;',
-      '}',
-      '.hb-typing-dot:nth-child(1) { animation-delay: -0.32s; }',
-      '.hb-typing-dot:nth-child(2) { animation-delay: -0.16s; }',
-      '@keyframes hb-bounce {',
-      '  0%, 80%, 100% { transform: scale(0); }',
-      '  40% { transform: scale(1); }',
-      '}',
-
-      /* Input row */
-      '.hb-input-row {',
-      '  display: flex;',
-      '  align-items: center;',
-      '  gap: 8px;',
-      '  padding: 12px 16px;',
-      '  border-top: 1px solid rgba(255,255,255,0.06);',
-      '  flex-shrink: 0;',
-      '  background: rgba(0,0,0,0.15);',
-      '}',
-      '.hb-input {',
-      '  flex: 1;',
-      '  background: rgba(255,255,255,0.06);',
-      '  border: 1px solid rgba(255,255,255,0.1);',
-      '  border-radius: 10px;',
-      '  padding: 10px 14px;',
-      '  color: #f1f5f9;',
-      '  font-size: 14px;',
-      '  outline: none;',
-      '  transition: border-color 0.2s;',
-      '}',
-      '.hb-input::placeholder {',
-      '  color: rgba(255,255,255,0.25);',
-      '}',
-      '.hb-input:focus {',
-      '  border-color: rgba(124,58,237,0.45);',
-      '}',
-      '.hb-send {',
-      '  width: 40px;',
-      '  height: 40px;',
-      '  border: none;',
-      '  border-radius: 10px;',
-      '  background: linear-gradient(135deg, #7c3aed, #06b6d4);',
-      '  color: #fff;',
-      '  font-size: 18px;',
-      '  cursor: pointer;',
-      '  display: flex;',
-      '  align-items: center;',
-      '  justify-content: center;',
-      '  flex-shrink: 0;',
-      '  transition: opacity 0.15s, transform 0.15s;',
-      '}',
-      '.hb-send:hover { opacity: 0.85; }',
-      '.hb-send:active { transform: scale(0.92); }',
-      '.hb-send:disabled {',
-      '  opacity: 0.4;',
-      '  cursor: not-allowed;',
-      '  transform: none;',
-      '}',
-
-      /* Mobile responsive */
-      '@media (max-width: 480px) {',
-      '  .hb-panel {',
-      '    width: calc(100vw - 16px);',
-      '    height: calc(100vh - 100px);',
-      '    right: 8px;',
-      '    bottom: 88px;',
-      '    border-radius: 14px;',
-      '  }',
-      '  .hb-fab {',
-      '    bottom: 16px;',
-      '    right: 16px;',
-      '  }',
-      '}'
-    ].join('\n');
-
     var style = document.createElement('style');
     style.id = 'heady-buddy-styles';
-    style.textContent = css;
+    style.textContent = [
+      /* Keyframes */
+      '@keyframes hb-bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}',
+      '@keyframes hb-fadein{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}',
+      '@keyframes hb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,0.4)}70%{box-shadow:0 0 0 10px rgba(124,58,237,0)}}',
+      /* FAB */
+      '#hb-fab{position:fixed;bottom:34px;right:34px;width:60px;height:60px;border-radius:50%;',
+      'background:linear-gradient(135deg,#7c3aed,#06b6d4);',
+      'border:none;cursor:pointer;z-index:2147483646;',
+      'display:flex;align-items:center;justify-content:center;',
+      'font-size:26px;box-shadow:0 8px 34px rgba(124,58,237,0.5);',
+      'transition:transform 0.3s ' + TRANSITION + ',box-shadow 0.3s ' + TRANSITION + ';',
+      'animation:hb-pulse 2.618s infinite;}',
+      '#hb-fab:hover{transform:scale(1.1);box-shadow:0 13px 55px rgba(124,58,237,0.7);}',
+      /* Panel */
+      '#hb-panel{position:fixed;bottom:108px;right:34px;width:380px;height:520px;',
+      'background:rgba(15,15,25,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);',
+      'border:1px solid rgba(124,58,237,0.3);border-radius:16px;',
+      'display:flex;flex-direction:column;',
+      'z-index:2147483647;overflow:hidden;',
+      'box-shadow:0 21px 89px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.05);',
+      'transition:opacity 0.3s ' + TRANSITION + ',transform 0.3s ' + TRANSITION + ';}',
+      '#hb-panel.hb-hidden{opacity:0;transform:translateY(21px) scale(0.97);pointer-events:none;}',
+      /* Header */
+      '#hb-header{padding:13px 21px;',
+      'background:linear-gradient(135deg,rgba(124,58,237,0.25),rgba(6,182,212,0.15));',
+      'border-bottom:1px solid rgba(124,58,237,0.2);',
+      'display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}',
+      '#hb-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
+      'font-size:1.1rem;font-weight:700;',
+      'background:linear-gradient(135deg,#a78bfa,#06b6d4);',
+      '-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}',
+      '#hb-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:20px;',
+      'cursor:pointer;padding:0 5px;line-height:1;',
+      'transition:color 0.2s;}',
+      '#hb-close:hover{color:#fff;}',
+      /* Auth bar */
+      '#hb-auth-bar{padding:8px 21px;',
+      'background:rgba(0,0,0,0.25);border-bottom:1px solid rgba(255,255,255,0.06);',
+      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
+      'font-size:0.76rem;color:rgba(255,255,255,0.55);',
+      'display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}',
+      '#hb-auth-bar a,#hb-auth-bar button.hb-link{color:#06b6d4;text-decoration:none;',
+      'background:none;border:none;cursor:pointer;font-size:0.76rem;padding:0;}',
+      '#hb-auth-bar a:hover,#hb-auth-bar button.hb-link:hover{color:#a78bfa;}',
+      /* Messages */
+      '#hb-messages{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:8px;}',
+      '#hb-messages::-webkit-scrollbar{width:4px;}',
+      '#hb-messages::-webkit-scrollbar-track{background:transparent;}',
+      '#hb-messages::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.4);border-radius:2px;}',
+      /* Message bubbles */
+      '.hb-msg{max-width:85%;animation:hb-fadein 0.3s ' + TRANSITION + ';',
+      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:0.875rem;line-height:1.5;}',
+      '.hb-msg-user{align-self:flex-end;',
+      'background:linear-gradient(135deg,#7c3aed,#5b21b6);',
+      'color:#fff;padding:8px 13px;border-radius:16px 16px 4px 16px;}',
+      '.hb-msg-bot{align-self:flex-start;',
+      'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);',
+      'color:#e8e8f0;padding:8px 13px;border-radius:16px 16px 16px 4px;}',
+      /* Typing indicator */
+      '#hb-typing{align-self:flex-start;',
+      'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);',
+      'padding:10px 16px;border-radius:16px 16px 16px 4px;display:none;}',
+      '#hb-typing span{display:inline-block;width:7px;height:7px;margin:0 2px;',
+      'background:#a78bfa;border-radius:50%;',
+      'animation:hb-bounce 1.2s infinite ease-in-out;}',
+      '#hb-typing span:nth-child(1){animation-delay:-0.32s;}',
+      '#hb-typing span:nth-child(2){animation-delay:-0.16s;}',
+      /* Input row */
+      '#hb-input-row{padding:13px;border-top:1px solid rgba(255,255,255,0.06);',
+      'display:flex;gap:8px;align-items:flex-end;flex-shrink:0;',
+      'background:rgba(0,0,0,0.2);}',
+      '#hb-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);',
+      'border-radius:13px;padding:10px 13px;color:#e8e8f0;font-size:0.875rem;',
+      'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;',
+      'resize:none;outline:none;min-height:42px;max-height:120px;',
+      'transition:border-color 0.2s ' + TRANSITION + ';}',
+      '#hb-input:focus{border-color:rgba(124,58,237,0.6);}',
+      '#hb-input::placeholder{color:rgba(255,255,255,0.3);}',
+      '#hb-send{width:42px;height:42px;border-radius:13px;flex-shrink:0;',
+      'background:linear-gradient(135deg,#7c3aed,#06b6d4);',
+      'border:none;cursor:pointer;color:#fff;font-size:18px;',
+      'display:flex;align-items:center;justify-content:center;',
+      'transition:transform 0.2s ' + TRANSITION + ',opacity 0.2s;}',
+      '#hb-send:hover:not(:disabled){transform:scale(1.08);}',
+      '#hb-send:disabled{opacity:0.4;cursor:not-allowed;}',
+      /* Mobile responsive */
+      '@media(max-width:480px){',
+      '#hb-panel{right:0;bottom:0;width:100vw;height:calc(100vh - 0px);border-radius:16px 16px 0 0;}',
+      '#hb-fab{bottom:21px;right:21px;}',
+      '}'
+    ].join('');
     document.head.appendChild(style);
   }
 
-  /* ───────────────────────── DOM construction ─────────────────── */
+  function buildWidget() {
+    // FAB
+    var fab = document.createElement('button');
+    fab.id = 'hb-fab';
+    fab.setAttribute('aria-label', 'Open HeadyBuddy chat');
+    fab.innerHTML = '&#x1F9E0;'; // 🧠
+    fab.addEventListener('click', togglePanel);
 
-  function injectDOM() {
-    var root = document.createElement('div');
-    root.id = 'heady-buddy-root';
+    // Panel
+    var panel = document.createElement('div');
+    panel.id = 'hb-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'HeadyBuddy chat');
+    panel.classList.add('hb-hidden');
 
-    root.innerHTML = [
-      /* FAB */
-      '<button class="hb-fab" id="hb-fab" aria-label="Open HeadyBuddy chat">\uD83E\uDDE0</button>',
-
-      /* Panel */
-      '<div class="hb-panel" id="hb-panel">',
-        /* Header */
-        '<div class="hb-header">',
-          '<span class="hb-title">\uD83E\uDDE0 HeadyBuddy</span>',
-          '<button class="hb-close" id="hb-close" aria-label="Close chat">\u2715</button>',
-        '</div>',
-        /* Auth */
-        '<div class="hb-auth" id="hb-auth"></div>',
-        /* Messages */
-        '<div class="hb-messages" id="hb-messages"></div>',
-        /* Typing indicator */
-        '<div class="hb-typing" id="hb-typing">',
-          '<div class="hb-typing-dot"></div>',
-          '<div class="hb-typing-dot"></div>',
-          '<div class="hb-typing-dot"></div>',
-        '</div>',
-        /* Input row */
-        '<div class="hb-input-row" id="hb-input-row" style="display:none;">',
-          '<input class="hb-input" id="hb-input" type="text" placeholder="Ask HeadyBuddy..." autocomplete="off">',
-          '<button class="hb-send" id="hb-send" aria-label="Send message">',
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">',
-              '<line x1="22" y1="2" x2="11" y2="13"></line>',
-              '<polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>',
-            '</svg>',
-          '</button>',
-        '</div>',
+    panel.innerHTML = [
+      /* Header */
+      '<div id="hb-header">',
+      '  <span id="hb-title">&#x1F9E0; HeadyBuddy</span>',
+      '  <button id="hb-close" aria-label="Close chat">&times;</button>',
+      '</div>',
+      /* Auth bar */
+      '<div id="hb-auth-bar"></div>',
+      /* Messages */
+      '<div id="hb-messages" role="log" aria-live="polite">',
+      '  <div id="hb-typing"><span></span><span></span><span></span></div>',
+      '</div>',
+      /* Input row */
+      '<div id="hb-input-row">',
+      '  <textarea id="hb-input" placeholder="Ask HeadyBuddy anything..." rows="1" aria-label="Chat message"></textarea>',
+      '  <button id="hb-send" aria-label="Send message">&#10148;</button>',
       '</div>'
     ].join('');
 
-    document.body.appendChild(root);
+    document.body.appendChild(fab);
+    document.body.appendChild(panel);
 
-    /* Cache references */
-    els.fab = document.getElementById('hb-fab');
-    els.panel = document.getElementById('hb-panel');
-    els.close = document.getElementById('hb-close');
-    els.auth = document.getElementById('hb-auth');
-    els.messages = document.getElementById('hb-messages');
-    els.typing = document.getElementById('hb-typing');
-    els.inputRow = document.getElementById('hb-input-row');
-    els.input = document.getElementById('hb-input');
-    els.send = document.getElementById('hb-send');
-  }
-
-  /* ───────────────────────── Event binding ────────────────────── */
-
-  function bindEvents() {
-    els.fab.addEventListener('click', togglePanel);
-    els.close.addEventListener('click', togglePanel);
-
-    els.send.addEventListener('click', function () {
-      var text = els.input.value.trim();
-      if (text) {
-        sendMessage(text);
-        els.input.value = '';
-      }
+    // Wire events
+    el('hb-close').addEventListener('click', togglePanel);
+    el('hb-send').addEventListener('click', handleSend);
+    el('hb-input').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
     });
-
-    els.input.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        els.send.click();
-      }
-    });
-
-    /* Close on outside click */
-    document.addEventListener('click', function (e) {
-      if (state.open &&
-          !els.panel.contains(e.target) &&
-          !els.fab.contains(e.target)) {
-        state.open = false;
-        els.panel.style.display = 'none';
-      }
-    });
-
-    /* Close on Escape */
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && state.open) {
-        state.open = false;
-        els.panel.style.display = 'none';
-      }
+    // Auto-resize textarea
+    el('hb-input').addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
     });
   }
 
-  /* ───────────────────────── Boot sequence ────────────────────── */
+  // ─── § 9  AUTH BAR RENDERING ─────────────────────────────────────────────────
+
+  function updateAuthBar() {
+    var bar = el('hb-auth-bar');
+    if (!bar) return;
+    if (state.user) {
+      var email = escHtml(state.user.email || state.user.displayName || 'Signed in');
+      bar.innerHTML =
+        '<span>' + email + ' &nbsp;&#10003;</span>' +
+        '<button class="hb-link" id="hb-signout-btn">Sign out</button>';
+      var soBtn = el('hb-signout-btn');
+      if (soBtn) soBtn.addEventListener('click', signOut);
+    } else {
+      var returnUrl = encodeURIComponent(window.location.href);
+      bar.innerHTML =
+        '<span>Sign in for persistent memory &nbsp;</span>' +
+        '<a href="' + escHtml(AUTH_BASE) + '?return=' + returnUrl +
+        '" target="_blank" rel="noopener noreferrer" id="hb-signin-link">Sign in &#8599;</a>';
+      var signinLink = el('hb-signin-link');
+      if (signinLink) {
+        signinLink.addEventListener('click', function () {
+          startAuthPolling();
+        });
+      }
+    }
+  }
+
+  // ─── § 10  PANEL TOGGLE ──────────────────────────────────────────────────────
+
+  function togglePanel() {
+    state.open = !state.open;
+    var panel = el('hb-panel');
+    if (state.open) {
+      panel.classList.remove('hb-hidden');
+      el('hb-input').focus();
+      // Show greeting if no messages yet
+      var msgs = el('hb-messages');
+      var existingMsgs = msgs.querySelectorAll('.hb-msg');
+      if (existingMsgs.length === 0) {
+        appendMessage('bot', GREETING, false);
+        if (state.user) loadHistory();
+      }
+    } else {
+      panel.classList.add('hb-hidden');
+    }
+  }
+
+  // ─── § 11  MESSAGE RENDERING ─────────────────────────────────────────────────
+
+  function appendMessage(role, content, isHtml) {
+    var msgs = el('hb-messages');
+    var typing = el('hb-typing');
+    var div = document.createElement('div');
+    div.className = 'hb-msg hb-msg-' + (role === 'user' ? 'user' : 'bot');
+
+    if (role === 'user') {
+      div.textContent = content; // plain text for user messages (XSS safe)
+    } else {
+      div.innerHTML = isHtml ? content : renderMarkdown(content);
+    }
+
+    msgs.insertBefore(div, typing);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function showTyping() {
+    var t = el('hb-typing');
+    if (t) {
+      t.style.display = 'block';
+      el('hb-messages').scrollTop = el('hb-messages').scrollHeight;
+    }
+  }
+
+  function hideTyping() {
+    var t = el('hb-typing');
+    if (t) t.style.display = 'none';
+  }
+
+  // ─── § 12  SEND HANDLER ──────────────────────────────────────────────────────
+
+  function handleSend() {
+    var input = el('hb-input');
+    var sendBtn = el('hb-send');
+    var message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    appendMessage('user', message, false);
+    state.history.push({ role: 'user', content: message });
+    state.turns++;
+
+    showTyping();
+
+    sendChat(message, function (reply) {
+      hideTyping();
+      if (reply) {
+        appendMessage('bot', reply, false);
+        state.history.push({ role: 'assistant', content: reply });
+        storeVector(message, reply);
+      }
+      sendBtn.disabled = false;
+      input.focus();
+    }, function (errMsg) {
+      hideTyping();
+      appendMessage('bot', errMsg, false);
+      sendBtn.disabled = false;
+      input.focus();
+    });
+  }
+
+  // ─── § 13  BOOT ──────────────────────────────────────────────────────────────
 
   function boot() {
-    injectStyles();
-    injectDOM();
-    bindEvents();
-    renderAuth();
+    // Guard: only inject once
+    if (document.getElementById('hb-fab')) return;
 
-    /* Load Firebase then check existing session */
-    initFirebase()
-      .then(function () {
-        return checkSession();
-      })
-      .then(function (sessionData) {
-        /* Session cookie is valid — restore user from session data */
-        var u = sessionData.user || sessionData;
-        state.user = {
-          uid: u.uid || u.user_id || '',
-          email: u.email || '',
-          displayName: u.displayName || u.display_name || u.name || u.email || ''
-        };
-        state.authChecked = true;
-        renderAuth();
-        loadHistory();
-      })
-      .catch(function () {
-        /* No valid session — listen for Firebase auth state changes */
-        state.authChecked = true;
-        if (state.firebaseReady) {
-          firebase.auth().onAuthStateChanged(function (fbUser) {
-            if (fbUser && !state.user) {
-              fbUser.getIdToken().then(function (idToken) {
-                return exchangeToken(idToken);
-              }).then(function () {
-                setUser(fbUser);
-                loadHistory();
-              }).catch(function () {
-                /* Token exchange failed — need fresh sign-in */
-              });
-            }
-          });
-        }
-      });
+    injectStyles();
+    buildWidget();
+
+    // Check existing session silently
+    checkSession(function (user) {
+      state.user = user;
+      updateAuthBar();
+      // If panel was open before page reload, keep it closed (fresh start is fine)
+    });
   }
 
-  /* ───────────────────────── Init ─────────────────────────────── */
-
+  // Boot after DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
   }
+
 })();
