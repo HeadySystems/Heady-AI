@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          token: ${{ secrets.HEADY_GITHUB_TOKEN }}
+          token: ${{ secrets.HEADY_GITHUB_TOKEN || github.token }}
 
       - name: Sync shared files across HeadyMe org
         env:
