@@ -2,13 +2,13 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HeadyAutoSync — GitHub Actions Auto-Commit & Cross-Repo Push  ║
 # ║  LAYER: orchestration/automation                                ║
-# ║  INTERVAL: φ⁸ ≈ 47s (simulated via */30 cron + push triggers) ║
+# ║  INTERVAL: φ⁸ ≈ 47s (simulated via */5 cron + push triggers)  ║
 # ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 #
 # Option 1: GitHub Actions-based AutoSync
-# Runs every 30 minutes (reduced from 5min — was exhausting GitHub Actions minutes quota)
+# Runs every 5 minutes (closest cron approximation to φ⁸ interval)
 # Also triggers on push to main to cascade changes to satellite repos.
 #
 # Requirements:
@@ -26,8 +26,8 @@ name: HeadyAutoSync
 
 on:
   schedule:
-    # Every 30 minutes — reduced from 5min to prevent GitHub Actions suspension (was exhausting free minutes)
-    - cron: '*/30 * * * *'
+    # Every 5 minutes — closest cron resolution to φ⁸ (46.97s)
+    - cron: '*/5 * * * *'
   push:
     branches: [main]
     paths:

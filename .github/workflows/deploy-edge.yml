@@ -125,3 +125,21 @@ jobs:
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
         continue-on-error: true
+
+  deploy-heady-edge-node:
+    name: Deploy heady-edge-node (edge.headysystems.com)
+    runs-on: ubuntu-latest
+    needs: [validate]
+    defaults:
+      run:
+        working-directory: cloudflare/heady-edge-node
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Deploy (with explicit route for edge.headysystems.com)
+        run: wrangler deploy --config wrangler.toml

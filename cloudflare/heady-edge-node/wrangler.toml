@@ -2,6 +2,14 @@ name = "heady-edge-node"
 main = "src/index.js"
 compatibility_date = "2026-03-01"
 
+# FIX (2026-03-30): Added explicit route for edge.headysystems.com.
+# Previously the worker was deployed to workers.dev only with no wrangler route,
+# but a Cloudflare Custom Domain was configured manually in the dashboard.
+# Adding the canonical route here keeps IaC in sync with reality.
+[[routes]]
+pattern = "edge.headysystems.com/*"
+zone_name = "headysystems.com"
+
 # [vars]
 # HEADY_API_KEY = "example"
 
