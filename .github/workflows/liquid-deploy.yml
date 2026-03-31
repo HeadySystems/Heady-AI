@@ -43,9 +43,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-      - run: npm ci
+      - run: pnpm install
       - name: Validate service manifest
         run: |
           SERVICE="${{ inputs.service }}"
@@ -107,9 +107,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Install Wrangler
-        run: npm install -g wrangler
+        run: pnpm install -g wrangler
       - name: Deploy Worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

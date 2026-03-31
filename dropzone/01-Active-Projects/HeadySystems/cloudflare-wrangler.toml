@@ -13,8 +13,8 @@ main            = "worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
-# Account & zone — fill in from Cloudflare dashboard
-account_id      = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+# Account & zone — Heady production Cloudflare account
+account_id      = "8b1fa38f282c691423c6399247d53323"
 
 # ---------------------------------------------------------------------------
 # Bundling
@@ -79,18 +79,18 @@ routes = [
 
 [[kv_namespaces]]
 binding  = "RATE_LIMIT_KV"
-id       = "REPLACE_WITH_RATE_LIMIT_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_RATE_LIMIT_KV_PREVIEW_NAMESPACE_ID"
+id       = "693bada2a836453898b348806ee4e004"
+preview_id = "850806497daa48e588da39bc2a75387d"
 
 [[kv_namespaces]]
 binding  = "CACHE_KV"
-id       = "REPLACE_WITH_CACHE_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_CACHE_KV_PREVIEW_NAMESPACE_ID"
+id       = "a20a619cb4d64ec2be248cdf5a1e9264"
+preview_id = "21b596e614fa4b83b0826dde2443e5ba"
 
 [[kv_namespaces]]
 binding  = "CONFIG_KV"
-id       = "REPLACE_WITH_CONFIG_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_CONFIG_KV_PREVIEW_NAMESPACE_ID"
+id       = "43c9a329f07440048192442a030aacbc"
+preview_id = "e01e028313d7407db2fdd700c7764dde"
 
 # ---------------------------------------------------------------------------
 # Durable Objects (optional — for stateful WebSocket coordination)

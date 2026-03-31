@@ -8,7 +8,7 @@ compatibility_date = "2026-03-01"
 # Use bindings instead of REST APIs for zero-latency
 [[kv_namespaces]]
 binding = "HEADY_CACHE"
-id = "YOUR_KV_NAMESPACE_ID"
+id = "863390221ffe425fab1a8d7d873e1d13"
 
 [[r2_buckets]]
 binding = "HEADY_STORAGE"
@@ -17,7 +17,7 @@ bucket_name = "heady-assets"
 [[d1_databases]]
 binding = "HEADY_DB"
 database_name = "heady-production"
-database_id = "YOUR_D1_DATABASE_ID"
+database_id = "heady-d1-prod"
 
 # Service-to-service bindings (zero network hop)
 [[services]]

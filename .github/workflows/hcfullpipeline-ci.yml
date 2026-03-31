@@ -26,13 +26,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
+      - run: pnpm install
       - name: Lint
-        run: npm run lint 2>/dev/null || echo "Lint configured via eslint"
+        run: pnpm run lint 2>/dev/null || echo "Lint configured via eslint"
       - name: Test
         run: npm test
       - name: Build
-        run: npm run build 2>/dev/null || echo "No build step"
+        run: pnpm run build 2>/dev/null || echo "No build step"
 
   security-scan:
     name: Security Scan
@@ -41,9 +41,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-      - run: npm ci
+      - run: pnpm install
       - name: NPM Audit
         run: npm audit --audit-level=high 2>/dev/null || true
       - name: Secrets Scan
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Validate YAML configs
         run: |
           npx yaml-lint configs/hcfullpipeline.yaml 2>/dev/null || echo "YAML valid"
