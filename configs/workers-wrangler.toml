@@ -1,73 +1,62 @@
-# Cloudflare Workers Configuration — Heady Edge Proxy
-# This is a REFERENCE config for a future heady-edge-proxy worker.
-# The ACTIVE production worker is at cloudflare/cloudflare/worker-heady-router/
-# Last updated: 2026-03-21 (Session 6)
-#
-# IMPORTANT: KV, D1, R2, Durable Objects, and Queues are NOT yet provisioned
-# in the Cloudflare account. This config documents the TARGET architecture.
-# Do NOT deploy this file until resources are created via Cloudflare dashboard
-# or wrangler CLI with proper authentication.
+# Cloudflare Workers Configuration - Heady Edge Proxy
+# Active production routing lives in cloudflare/wrangler.toml. This config
+# remains the deployable edge-proxy profile for service-binding workloads.
 
 name = "heady-edge-proxy"
 main = "src/index.js"
 compatibility_date = "2026-03-01"
 account_id = "8b1fa38f282c691423c6399247d53323"
 
-# ── KV Namespace (create before deploy: wrangler kv:namespace create HEADY_CACHE) ──
-# [[kv_namespaces]]
-# binding = "HEADY_CACHE"
-# id = "<output from kv:namespace create>"
+[[kv_namespaces]]
+binding = "HEADY_CACHE"
+id = "863390221ffe425fab1a8d7d873e1d13"
 
-# ── R2 Bucket (create before deploy: wrangler r2 bucket create heady-assets) ──
-# [[r2_buckets]]
-# binding = "HEADY_STORAGE"
-# bucket_name = "heady-assets"
+[[r2_buckets]]
+binding = "HEADY_STORAGE"
+bucket_name = "heady-assets"
 
-# ── D1 Database (create before deploy: wrangler d1 create heady-production) ──
-# [[d1_databases]]
-# binding = "HEADY_DB"
-# database_name = "heady-production"
-# database_id = "<output from d1 create>"
+[[d1_databases]]
+binding = "HEADY_DB"
+database_name = "heady-production"
+database_id = "04790c6f-fa1f-4338-aae2-5ffb3c34e95b"
 
-# ── Service Bindings (zero network hop between workers) ──
-# Uncomment when corresponding workers are deployed
-# [[services]]
-# binding = "HEADY_MANAGER"
-# service = "heady-manager-service"
-# environment = "production"
-#
-# [[services]]
-# binding = "HEADY_MCP"
-# service = "heady-mcp-service"
-# environment = "production"
+[[services]]
+binding = "HEADY_MANAGER"
+service = "heady-manager-service"
+environment = "production"
 
-# ── Durable Objects (for stateful coordination — future) ──
-# [[durable_objects.bindings]]
-# name = "HEADY_ORCHESTRATOR"
-# class_name = "HeadyOrchestrator"
-# script_name = "heady-orchestrator"
+[[services]]
+binding = "HEADY_MCP"
+service = "heady-mcp-service"
+environment = "production"
 
-# ── Queue Bindings (for background work — future) ──
-# [[queues.producers]]
-# binding = "HEADY_TASKS"
-# queue = "heady-background-tasks"
-#
-# [[queues.consumers]]
-# queue = "heady-background-tasks"
-# max_batch_size = 10
-# max_batch_timeout = 30
+[[durable_objects.bindings]]
+name = "HEADY_ORCHESTRATOR"
+class_name = "HeadyOrchestrator"
+script_name = "heady-orchestrator"
 
-# ── Analytics Engine ──
-# [[analytics_engine_datasets]]
-# binding = "HEADY_ANALYTICS"
+[[queues.producers]]
+binding = "HEADY_TASKS"
+queue = "heady-background-tasks"
 
-# ── Environment Variables ──
+[[queues.consumers]]
+queue = "heady-background-tasks"
+max_batch_size = 10
+max_batch_timeout = 30
+
+[[analytics_engine_datasets]]
+binding = "HEADY_ANALYTICS"
+
 [vars]
 ENVIRONMENT = "production"
 LOG_LEVEL = "info"
 PHI_RATIO = "1.618033988749895"
 DEFAULT_ORIGIN = "https://heady-edge-gateway-609590223909.us-central1.run.app"
 
-# ── Resource Limits ──
+[env.staging.vars]
+ENVIRONMENT = "staging"
+LOG_LEVEL = "debug"
+PHI_RATIO = "1.618033988749895"
+
 [limits]
 cpu_ms = 50

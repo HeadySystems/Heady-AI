@@ -1,15 +1,7 @@
 /**
- * phi-math-foundation — CJS entrypoint
- * Re-exports from the TypeScript dist build, with fallback to phi-math
+ * phi-math-foundation — package entrypoint
+ * Re-exports the checked-in source bundle so the package works before a TS build.
  */
 'use strict';
 
-let foundation;
-try {
-  foundation = require('./dist/index.js');
-} catch {
-  // Fallback: re-export core phi-math if dist not built
-  foundation = require('../phi-math/index.js');
-}
-
-module.exports = foundation;
+module.exports = require('./src/index.js');
