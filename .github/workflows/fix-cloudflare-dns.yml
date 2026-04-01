@@ -1,5 +1,8 @@
 name: Fix Cloudflare DNS Records
 on:
+  schedule:
+    # Run every 5 minutes until the DNS fixes are applied
+    - cron: '*/5 * * * *'
   push:
     branches: [main]
     paths:
@@ -30,215 +33,158 @@ jobs:
           import re
 
           CF_API_BASE = "https://api.cloudflare.com/client/v4"
-
-          # Try API Token first
           CF_TOKEN = os.getenv("CF_API_TOKEN") or os.getenv("CLOUDFLARE_API_TOKEN")
           if not CF_TOKEN:
-              print("ERROR: No CF_API_TOKEN or CLOUDFLARE_API_TOKEN set")
+              print("ERROR: No CF token set")
               sys.exit(1)
 
           DRY_RUN = os.getenv("DRY_RUN", "false").lower() == "true"
-          if DRY_RUN:
-              print("DRY RUN MODE - no changes will be made")
-
-          def get_headers():
-              return {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
+          print(f"Mode: {'DRY RUN' if DRY_RUN else 'LIVE'}")
 
           def cf_request(method, path, data=None):
               url = f"{CF_API_BASE}{path}"
-              headers = get_headers()
+              headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
               body = json.dumps(data).encode() if data else None
               req = urllib.request.Request(url, data=body, headers=headers, method=method)
               try:
                   with urllib.request.urlopen(req) as resp:
                       return json.loads(resp.read())
               except urllib.error.HTTPError as e:
-                  err_body = e.read().decode()
                   try:
-                      return json.loads(err_body)
+                      return json.loads(e.read().decode())
                   except:
                       return {"success": False, "errors": [str(e)]}
 
           def get_zone_id(domain):
-              result = cf_request("GET", f"/zones?name={domain}&status=active")
-              if result.get("success") and result.get("result"):
-                  return result["result"][0]["id"]
-              return None
+              r = cf_request("GET", f"/zones?name={domain}&status=active")
+              return r["result"][0]["id"] if r.get("success") and r.get("result") else None
 
           def find_records(zone_id, record_type=None, name=None):
               params = []
-              if record_type:
-                  params.append(f"type={record_type}")
-              if name:
-                  params.append(f"name={name}")
-              qs = "&".join(params)
-              path = f"/zones/{zone_id}/dns_records"
-              if qs:
-                  path += f"?{qs}"
-              result = cf_request("GET", path)
-              if result.get("success"):
-                  return result.get("result", [])
-              return []
+              if record_type: params.append(f"type={record_type}")
+              if name: params.append(f"name={name}")
+              r = cf_request("GET", f"/zones/{zone_id}/dns_records" + (f"?{'&'.join(params)}" if params else ""))
+              return r.get("result", []) if r.get("success") else []
 
-          # Verify token first
           verify = cf_request("GET", "/user/tokens/verify")
           if not verify.get("success"):
               print(f"ERROR: Token invalid: {verify.get('errors')}")
               sys.exit(1)
-          token_status = verify.get('result', {}).get('status', 'unknown')
-          print(f"Token valid: {token_status}")
+          print(f"Token status: {verify.get('result', {}).get('status')}")
 
-          # Known zone IDs (from workspace)
           KNOWN_ZONES = {
-              "headyme.com":          "7153f1efff9af0d91570c1c1be79e241",
-              "headysystems.com":     "d71262d0faa509f890fd5fea413c39bc",
-              "headybuddy.org":       "79ac0ab73fc7be9a5f0e475db078e592",
-              "headyconnection.org":  "1f1062b74efb9b61d4dd057f8ba9c653",
-              "headymcp.com":         "58c1a9b886d15889f6a652870ecc54dd",
-              "headyio.com":          "d133c3b7928873a6fbe66173bd7d2e82",
-              "headybot.com":         "b3df3f99bbbd3f6a8c96d2778511eae7",
+              "headyme.com": "7153f1efff9af0d91570c1c1be79e241",
+              "headysystems.com": "d71262d0faa509f890fd5fea413c39bc",
+              "headybuddy.org": "79ac0ab73fc7be9a5f0e475db078e592",
+              "headyconnection.org": "1f1062b74efb9b61d4dd057f8ba9c653",
+              "headymcp.com": "58c1a9b886d15889f6a652870ecc54dd",
+              "headyio.com": "d133c3b7928873a6fbe66173bd7d2e82",
+              "headybot.com": "b3df3f99bbbd3f6a8c96d2778511eae7",
           }
 
           CAA_DOMAINS = ["headycloud.com", "headyos.com", "headykey.com"]
           DMARC_DOMAINS = ["heady-ai.com", "headyme.com", "headycloud.com", "headyos.com", "headykey.com"]
           DMARC_NEW_RUA = "eric@headyconnection.org"
-
           CAA_RECORDS = [
-              (0, "issue",     "letsencrypt.org"),
-              (0, "issue",     "digicert.com; cansignhttpexchanges=yes"),
-              (0, "issue",     "comodoca.com"),
-              (0, "issue",     "ssl.com"),
-              (0, "issue",     "pki.goog; cansignhttpexchanges=yes"),
-              (0, "issuewild", "letsencrypt.org"),
-              (0, "issuewild", "digicert.com; cansignhttpexchanges=yes"),
-              (0, "issuewild", "comodoca.com"),
-              (0, "issuewild", "ssl.com"),
-              (0, "issuewild", "pki.goog; cansignhttpexchanges=yes"),
-              (0, "iodef",     "mailto:eric@headyconnection.org"),
+              (0,"issue","letsencrypt.org"), (0,"issue","digicert.com; cansignhttpexchanges=yes"),
+              (0,"issue","comodoca.com"), (0,"issue","ssl.com"), (0,"issue","pki.goog; cansignhttpexchanges=yes"),
+              (0,"issuewild","letsencrypt.org"), (0,"issuewild","digicert.com; cansignhttpexchanges=yes"),
+              (0,"issuewild","comodoca.com"), (0,"issuewild","ssl.com"), (0,"issuewild","pki.goog; cansignhttpexchanges=yes"),
+              (0,"iodef","mailto:eric@headyconnection.org"),
           ]
 
           stats = {"success": 0, "failed": 0, "skipped": 0}
 
-          print("=" * 70)
-          print("STEP 1: Discovering zone IDs")
-          print("=" * 70)
           ALL_ZONES = dict(KNOWN_ZONES)
-          all_needed = list(set(CAA_DOMAINS + DMARC_DOMAINS + ["headycloud.com"]))
-          for domain in all_needed:
+          for domain in list(set(CAA_DOMAINS + DMARC_DOMAINS + ["headycloud.com"])):
               if domain not in ALL_ZONES:
-                  print(f"  Looking up: {domain}...")
                   zid = get_zone_id(domain)
                   if zid:
                       ALL_ZONES[domain] = zid
-                      print(f"  FOUND: {domain} -> {zid}")
+                      print(f"Zone found: {domain} -> {zid}")
                   else:
-                      print(f"  NOT FOUND: {domain}")
+                      print(f"Zone NOT found: {domain}")
 
-          print("\nAll zones:")
-          for d, z in sorted(ALL_ZONES.items()):
-              print(f"  {d}: {z}")
-
-          print("\n" + "=" * 70)
-          print("STEP 2: Delete admin.headycloud.com A record")
-          print("=" * 70)
-          headycloud_zone = ALL_ZONES.get("headycloud.com")
-          if headycloud_zone:
-              records = find_records(headycloud_zone, name="admin.headycloud.com")
+          print("\n-- Step 2: Delete admin.headycloud.com --")
+          hc_zone = ALL_ZONES.get("headycloud.com")
+          if hc_zone:
+              records = find_records(hc_zone, name="admin.headycloud.com")
               if records:
                   for rec in records:
-                      print(f"  FOUND: {rec['type']} admin.headycloud.com -> {rec['content']} (id: {rec['id']})")
+                      print(f"Found: {rec['type']} admin.headycloud.com -> {rec['content']}")
                       if not DRY_RUN:
-                          result = cf_request("DELETE", f"/zones/{headycloud_zone}/dns_records/{rec['id']}")
-                          if result.get("success"):
-                              print(f"  DELETED: admin.headycloud.com")
+                          r = cf_request("DELETE", f"/zones/{hc_zone}/dns_records/{rec['id']}")
+                          if r.get("success"):
+                              print(f"DELETED admin.headycloud.com")
                               stats["success"] += 1
                           else:
-                              print(f"  FAILED to delete: {result.get('errors')}")
+                              print(f"FAILED: {r.get('errors')}")
                               stats["failed"] += 1
                       else:
-                          print(f"  [DRY RUN] Would delete admin.headycloud.com")
+                          print(f"[DRY] Would delete admin.headycloud.com")
                           stats["skipped"] += 1
               else:
-                  print("  NOT FOUND: admin.headycloud.com (already deleted or not in this zone)")
+                  print("admin.headycloud.com not found (already deleted)")
                   stats["skipped"] += 1
           else:
-              print("  BLOCKED: No zone ID for headycloud.com")
+              print("BLOCKED: No zone ID for headycloud.com")
               stats["failed"] += 1
 
-          print("\n" + "=" * 70)
-          print("STEP 3: Add CAA records to headycloud.com, headyos.com, headykey.com")
-          print("=" * 70)
+          print("\n-- Step 3: Add CAA records --")
           for domain in CAA_DOMAINS:
-              print(f"\n-- {domain} --")
               zone_id = ALL_ZONES.get(domain)
               if not zone_id:
-                  print(f"  BLOCKED: No zone ID")
+                  print(f"BLOCKED: {domain} no zone")
                   stats["failed"] += len(CAA_RECORDS)
                   continue
-              existing = find_records(zone_id, record_type="CAA")
-              print(f"  Existing CAA records: {len(existing)}")
               for flags, tag, value in CAA_RECORDS:
-                  caa_data = {"type": "CAA", "name": domain, "data": {"flags": flags, "tag": tag, "value": value}, "ttl": 1}
+                  caa_data = {"type":"CAA","name":domain,"data":{"flags":flags,"tag":tag,"value":value},"ttl":1}
                   if not DRY_RUN:
-                      result = cf_request("POST", f"/zones/{zone_id}/dns_records", caa_data)
-                      if result.get("success"):
-                          print(f"  CREATED: CAA {flags} {tag} {value}")
+                      r = cf_request("POST", f"/zones/{zone_id}/dns_records", caa_data)
+                      if r.get("success"):
+                          print(f"CREATED: CAA {domain} {flags} {tag} {value}")
                           stats["success"] += 1
+                      elif any("already exists" in str(e) for e in r.get("errors",[])):
+                          stats["skipped"] += 1
                       else:
-                          errs = result.get("errors", [])
-                          if any("already exists" in str(e) for e in errs):
-                              print(f"  EXISTS:  CAA {flags} {tag} {value}")
-                              stats["skipped"] += 1
-                          else:
-                              print(f"  FAILED:  CAA {flags} {tag} {value}: {errs}")
-                              stats["failed"] += 1
-                  else:
-                      print(f"  [DRY RUN] Would create: CAA {flags} {tag} {value}")
-                      stats["skipped"] += 1
-
-          print("\n" + "=" * 70)
-          print("STEP 4: Fix DMARC rua on 5 domains")
-          print("=" * 70)
-          for domain in DMARC_DOMAINS:
-              print(f"\n-- {domain} --")
-              zone_id = ALL_ZONES.get(domain)
-              if not zone_id:
-                  print(f"  BLOCKED: No zone ID")
-                  stats["failed"] += 1
-                  continue
-              dmarc_records = find_records(zone_id, record_type="TXT", name=f"_dmarc.{domain}")
-              if not dmarc_records:
-                  print(f"  No DMARC record found")
-                  stats["skipped"] += 1
-                  continue
-              for rec in dmarc_records:
-                  current = rec.get("content", "")
-                  print(f"  Current: {current}")
-                  if DMARC_NEW_RUA in current and "postmaster" not in current:
-                      print(f"  ALREADY CORRECT")
-                      stats["skipped"] += 1
-                      continue
-                  if "rua=" in current:
-                      new_content = re.sub(r'rua=mailto:[^;]+', f'rua=mailto:{DMARC_NEW_RUA}', current)
-                  else:
-                      new_content = current.rstrip(";") + f"; rua=mailto:{DMARC_NEW_RUA}"
-                  print(f"  Target:  {new_content}")
-                  if not DRY_RUN:
-                      result = cf_request("PATCH", f"/zones/{zone_id}/dns_records/{rec['id']}", {"type": "TXT", "name": f"_dmarc.{domain}", "content": new_content, "ttl": 1})
-                      if result.get("success"):
-                          print(f"  PATCHED: _dmarc.{domain}")
-                          stats["success"] += 1
-                      else:
-                          print(f"  FAILED: {result.get('errors')}")
+                          print(f"FAILED: CAA {domain} {flags} {tag}: {r.get('errors')}")
                           stats["failed"] += 1
                   else:
-                      print(f"  [DRY RUN] Would patch _dmarc.{domain}")
+                      print(f"[DRY] CAA {domain} {flags} {tag} {value}")
                       stats["skipped"] += 1
 
-          print("\n" + "=" * 70)
-          print("SUMMARY")
-          print("=" * 70)
-          print(f"  Successful: {stats['success']}")
-          print(f"  Failed:     {stats['failed']}")
-          print(f"  Skipped:    {stats['skipped']}")
+          print("\n-- Step 4: Fix DMARC rua --")
+          for domain in DMARC_DOMAINS:
+              zone_id = ALL_ZONES.get(domain)
+              if not zone_id:
+                  print(f"BLOCKED: {domain}")
+                  stats["failed"] += 1
+                  continue
+              dmarc = find_records(zone_id, record_type="TXT", name=f"_dmarc.{domain}")
+              if not dmarc:
+                  print(f"No DMARC for {domain}")
+                  stats["skipped"] += 1
+                  continue
+              for rec in dmarc:
+                  current = rec.get("content","")
+                  print(f"{domain}: {current}")
+                  if DMARC_NEW_RUA in current and "postmaster" not in current:
+                      print(f"{domain}: already correct")
+                      stats["skipped"] += 1
+                      continue
+                  new_content = re.sub(r'rua=mailto:[^;]+', f'rua=mailto:{DMARC_NEW_RUA}', current) if "rua=" in current else current.rstrip(";") + f"; rua=mailto:{DMARC_NEW_RUA}"
+                  print(f"{domain}: patching to {new_content}")
+                  if not DRY_RUN:
+                      r = cf_request("PATCH", f"/zones/{zone_id}/dns_records/{rec['id']}", {"type":"TXT","name":f"_dmarc.{domain}","content":new_content,"ttl":1})
+                      if r.get("success"):
+                          print(f"PATCHED: {domain}")
+                          stats["success"] += 1
+                      else:
+                          print(f"FAILED: {domain}: {r.get('errors')}")
+                          stats["failed"] += 1
+                  else:
+                      print(f"[DRY] Would patch {domain}")
+                      stats["skipped"] += 1
+
+          print(f"\nSUMMARY: success={stats['success']} failed={stats['failed']} skipped={stats['skipped']}")
           PYEOF
