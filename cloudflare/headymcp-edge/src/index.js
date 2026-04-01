@@ -2,7 +2,7 @@
  * HeadyMCP Edge Worker — serves headymcp.com from GitHub Pages
  * Replaces the old MCP Edge Gateway that returned JSON.
  *
- * Priority: GitHub Pages > Origin > Branded Fallback
+ * Priority: Health Intercept > MCP API > GitHub Pages > Branded Fallback
  */
 
 const GITHUB_PAGES_REPO = 'headymcp-com';
@@ -31,11 +31,27 @@ async function serveGitHubPages(pathname) {
 }
 
 // MCP API endpoints — preserve the protocol gateway for /mcp/* paths
+// NOTE: /health and /api/health are handled by the health intercept BEFORE this check
 function isMcpApiPath(pathname) {
   return pathname.startsWith('/mcp') || pathname === '/sse' || 
          pathname.startsWith('/v1/') || pathname === '/catalog/servers' || 
-         pathname.startsWith('/registry/') || pathname === '/health' ||
+         pathname.startsWith('/registry/') ||
          pathname === '/tools';
+}
+
+// Check if origin is a Heady domain
+function isHeadyOrigin(origin) {
+  if (!origin) return false;
+  try {
+    const host = new URL(origin).hostname;
+    return host.endsWith('.headysystems.com') || host.endsWith('.headyme.com') ||
+           host === 'headysystems.com' || host === 'headyme.com' ||
+           host === 'headymcp.com' || host === 'heady-ai.com' ||
+           host === 'headyio.com' || host === 'headyapi.com' ||
+           host === 'headybot.com' || host === 'headybuddy.org' ||
+           host === 'headyconnection.org' || host === 'headyos.com' ||
+           host === 'localhost';
+  } catch { return false; }
 }
 
 export default {
@@ -43,6 +59,39 @@ export default {
     const url = new URL(request.url);
     const hostname = url.hostname.toLowerCase();
     const pathname = url.pathname;
+
+    // ── JSON Health Endpoint Interception ──
+    // Return proper JSON health for /api/health and /health
+    // This matches the pattern in worker-heady-router for consistency
+    // Must fire BEFORE isMcpApiPath routing to prevent origin HTML responses
+    if (url.pathname === '/api/health' || url.pathname === '/health') {
+      const PHI = 1.618033988749895;
+      const healthResponse = {
+        status: 'ok',
+        service: 'mcp-dashboard',
+        domain: hostname,
+        module: 'mcp-dashboard',
+        timestamp: new Date().toISOString(),
+        edge: true,
+        source: 'headymcp-edge',
+        version: '2.1.0',
+        phi: PHI,
+        coherence: 0.927,
+      };
+      const reqOrigin = request.headers.get('Origin') || '';
+      const corsOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headysystems.com';
+      return new Response(JSON.stringify(healthResponse, null, 2), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store',
+          'Access-Control-Allow-Origin': corsOrigin,
+          'X-Heady-Source': 'health-intercept',
+          'X-Heady-Module': 'mcp-dashboard',
+          'X-Heady-Edge': 'true',
+        },
+      });
+    }
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
