@@ -54,6 +54,17 @@ function isHeadyOrigin(origin) {
   } catch { return false; }
 }
 
+/**
+ * Security headers applied to every edge response.
+ */
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  'X-XSS-Protection': '0',
+};
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -89,6 +100,7 @@ export default {
           'X-Heady-Source': 'health-intercept',
           'X-Heady-Module': 'mcp-dashboard',
           'X-Heady-Edge': 'true',
+          ...SECURITY_HEADERS,
         },
       });
     }
@@ -124,6 +136,9 @@ export default {
         if (response.ok) {
           const respHeaders = new Headers(response.headers);
           respHeaders.set('X-Heady-Source', 'mcp-origin');
+          for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+            if (!respHeaders.has(k)) respHeaders.set(k, v);
+          }
           return new Response(response.body, { status: response.status, headers: respHeaders });
         }
       } catch (_e) { /* fall through */ }
@@ -143,6 +158,7 @@ export default {
         headers: {
           'X-Heady-Source': 'mcp-fallback',
           'Access-Control-Allow-Origin': '*',
+          ...SECURITY_HEADERS,
         },
       });
     }
@@ -155,6 +171,9 @@ export default {
       headers.set('Cache-Control', 'public, max-age=3600');
       headers.set('X-Heady-Source', 'github-pages');
       headers.set('X-Heady-Module', 'mcp-dashboard');
+      headers.set('X-Heady-Edge', 'true');
+      headers.set('Vary', 'Accept-Encoding');
+      for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
       return new Response(ghResponse.body, { status: ghResponse.status, headers });
     }
 
@@ -169,7 +188,7 @@ a{display:inline-block;padding:12px 24px;background:linear-gradient(135deg,#f59e
 </head><body><div class="card"><h1>HeadyMCP</h1><p>Protocol and tool orchestration for the Heady sovereign AI ecosystem.</p>
 <a href="https://headysystems.com">Open HeadySystems</a></div></body></html>`, {
       status: 200,
-      headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Source': 'static-fallback' },
+      headers: { 'Content-Type': 'text/html; charset=utf-8', 'X-Heady-Source': 'static-fallback', ...SECURITY_HEADERS },
     });
   },
 };

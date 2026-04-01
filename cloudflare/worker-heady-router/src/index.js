@@ -325,6 +325,18 @@ function contentTypeForPath(pathname) {
   return 'text/html; charset=utf-8';
 }
 
+/**
+ * Security headers applied to every edge response.
+ * HSTS is handled by Cloudflare zone settings, so we set the remaining OWASP headers.
+ */
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  'X-XSS-Protection': '0', // Modern browsers: CSP is preferred; '0' disables buggy auditor
+};
+
 function commonHeaders(moduleName, source, contentType = 'text/html; charset=utf-8') {
   return {
     'Content-Type': contentType,
@@ -332,6 +344,7 @@ function commonHeaders(moduleName, source, contentType = 'text/html; charset=utf
     'X-Heady-Source': source,
     'X-Heady-Module': moduleName,
     'X-Heady-Edge': 'true',
+    ...SECURITY_HEADERS,
   };
 }
 
@@ -542,6 +555,7 @@ export default {
           'X-Heady-Source': 'health-intercept',
           'X-Heady-Module': moduleName || 'router',
           'X-Heady-Edge': 'true',
+          ...SECURITY_HEADERS,
         },
       });
     }
@@ -577,12 +591,17 @@ export default {
     if (ghRepo) {
       const ghResponse = await serveGitHubPages(ghRepo, url.pathname);
       if (ghResponse) {
-        const headers = new Headers();
-        headers.set('Content-Type', ghResponse.headers.get('Content-Type') || 'text/html; charset=utf-8');
-        headers.set('Cache-Control', 'public, max-age=3600');
-        headers.set('X-Heady-Source', 'github-pages');
-        headers.set('X-Heady-Repo', ghRepo);
-        headers.set('X-Heady-Module', moduleName);
+        const ct = ghResponse.headers.get('Content-Type') || contentTypeForPath(url.pathname);
+        const headers = new Headers({
+          'Content-Type': ct,
+          'Cache-Control': 'public, max-age=3600',
+          'X-Heady-Source': 'github-pages',
+          'X-Heady-Repo': ghRepo,
+          'X-Heady-Module': moduleName,
+          'X-Heady-Edge': 'true',
+          'Vary': 'Accept-Encoding',
+          ...SECURITY_HEADERS,
+        });
         return new Response(ghResponse.body, {
           status: ghResponse.status,
           headers,
@@ -629,6 +648,10 @@ export default {
         headers.set('X-Heady-Source', 'origin-proxy');
         headers.set('X-Heady-Module', moduleName);
         headers.set('X-Heady-Edge', 'true');
+        // Apply security headers — origin may already set some, but we enforce consistency
+        for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+          if (!headers.has(k)) headers.set(k, v);
+        }
         return new Response(originResponse.body, {
           status: originResponse.status,
           headers,
