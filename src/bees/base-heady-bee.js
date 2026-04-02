@@ -31,11 +31,12 @@ class BaseHeadyBee extends EventEmitter {
     this.id = crypto.randomUUID();
     this.type = config.type || 'base';
     this.name = config.name || `${this.type}-${this.id.slice(0, fib(6))}`;
+    this.layer = config.layer || 'worker';
     this.metadata = config.metadata || {};
 
     // Phi-scaled parameters
     this.maxRetries = fib(6); // 8
-    this.timeout = Math.round(PHI * PHI_TIMING.TICK); // 1618ms
+    this.timeout = Math.round(Math.pow(PHI, 4) * 1000); // PHI^4 * 1000ms ≈ 6854ms
     this.retryCount = 0;
 
     // Lifecycle state
@@ -256,17 +257,20 @@ class BaseHeadyBee extends EventEmitter {
    * @returns {Object}
    */
   health() {
+    const uptime = this.spawnedAt ? Date.now() - this.spawnedAt : 0;
     return {
+      status: this.coherenceScore >= CSL_THRESHOLDS.MEDIUM ? 'healthy' : 'degraded',
+      uptime,
+      tasksCompleted: this._metrics.successCount,
       beeId: this.id,
       type: this.type,
       name: this.name,
+      layer: this.layer,
       state: this.state,
       coherenceScore: this.coherenceScore,
-      status: this.coherenceScore >= CSL_THRESHOLDS.MEDIUM ? 'healthy' : 'degraded',
       metrics: {
         ...this._metrics
-      },
-      uptime_ms: this.spawnedAt ? Date.now() - this.spawnedAt : 0
+      }
     };
   }
 }

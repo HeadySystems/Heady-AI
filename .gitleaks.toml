@@ -1,0 +1,132 @@
+# gitleaks configuration for HeadyMe/heady-production
+# Prevents common secret patterns from being committed
+# Usage: gitleaks detect --config gitleaks-config.toml
+# Or as a pre-commit hook: gitleaks protect --config gitleaks-config.toml
+
+title = "HeadyMe Gitleaks Configuration"
+
+[extend]
+# Extend the default gitleaks ruleset
+useDefault = true
+
+[[rules]]
+id = "cloudflare-api-token"
+description = "Cloudflare API Token"
+regex = '''(?i)(cloudflare[_\-]?api[_\-]?token|cf[_\-]?token|CF_TOKEN)\s*[=:]\s*['"]?[A-Za-z0-9_\-]{30,}['"]?'''
+keywords = ["cloudflare", "cf_token", "CF_TOKEN"]
+entropy = 3.5
+tags = ["cloudflare", "api-token"]
+
+[[rules]]
+id = "cloudflare-api-key"
+description = "Cloudflare Global API Key"
+regex = '''(?i)(cloudflare[_\-]?api[_\-]?key|X-Auth-Key)\s*[=:]\s*['"]?[a-f0-9]{37}['"]?'''
+keywords = ["cloudflare", "x-auth-key"]
+entropy = 3.0
+tags = ["cloudflare", "api-key"]
+
+[[rules]]
+id = "cloudflare-bearer-token"
+description = "Cloudflare Bearer Token (high-entropy)"
+regex = '''[A-Za-z0-9_\-]{30,40}'''
+entropy = 4.5
+keywords = ["CF_TOKEN", "cloudflare"]
+tags = ["cloudflare", "high-entropy"]
+
+[[rules]]
+id = "generic-api-key-assignment"
+description = "Generic API key hardcoded assignment"
+regex = '''(?i)(api[_\-]?key|api[_\-]?token|auth[_\-]?token|secret[_\-]?key|access[_\-]?token)\s*[=:]\s*['"][A-Za-z0-9_\-\.]{20,}['"]'''
+entropy = 3.5
+keywords = ["api_key", "api_token", "auth_token", "secret_key", "access_token"]
+tags = ["generic", "api-key"]
+
+[[rules]]
+id = "private-key-pem"
+description = "Private Key (PEM format)"
+regex = '''-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'''
+keywords = ["BEGIN PRIVATE KEY", "BEGIN RSA PRIVATE KEY", "BEGIN EC PRIVATE KEY", "BEGIN OPENSSH PRIVATE KEY"]
+tags = ["private-key", "certificate"]
+
+[[rules]]
+id = "firebase-api-key"
+description = "Firebase API Key"
+regex = '''AIza[0-9A-Za-z\-_]{35}'''
+keywords = ["AIza", "firebase", "firebaseapp"]
+tags = ["firebase", "api-key"]
+
+[[rules]]
+id = "firebase-service-account"
+description = "Firebase Service Account JSON"
+regex = '''"type"\s*:\s*"service_account"'''
+keywords = ["service_account", "firebase-adminsdk"]
+tags = ["firebase", "service-account"]
+
+[[rules]]
+id = "neon-connection-string"
+description = "Neon PostgreSQL Connection String with credentials"
+regex = '''postgresql://[^:]+:[^@]+@[a-z0-9\-]+\.neon\.tech[/\?]'''
+keywords = ["neon.tech", "postgresql://"]
+tags = ["neon", "database", "connection-string"]
+
+[[rules]]
+id = "database-url-with-password"
+description = "Database URL containing credentials"
+regex = '''(postgresql|mysql|mongodb(\+srv)?|redis)://[^:]+:[^@\s]{8,}@'''
+keywords = ["DATABASE_URL", "postgres://", "mysql://", "mongodb://", "redis://"]
+tags = ["database", "credentials"]
+
+[[rules]]
+id = "github-token"
+description = "GitHub Personal Access Token"
+regex = '''(ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{82}|ghs_[A-Za-z0-9]{36})'''
+keywords = ["ghp_", "github_pat_", "ghs_"]
+tags = ["github", "token"]
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic API Key"
+regex = '''sk-ant-[A-Za-z0-9\-_]{90,}'''
+keywords = ["sk-ant-", "anthropic"]
+tags = ["anthropic", "api-key"]
+
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[A-Za-z0-9]{48}'''
+keywords = ["sk-", "openai"]
+tags = ["openai", "api-key"]
+
+[[rules]]
+id = "jwt-secret-hardcoded"
+description = "Hardcoded JWT Secret (high entropy string assigned to jwt/secret var)"
+regex = '''(?i)(jwt[_\-]?secret|session[_\-]?secret|cookie[_\-]?secret)\s*[=:]\s*['"][A-Za-z0-9_\-\.!@#$%^&*]{32,}['"]'''
+entropy = 4.0
+keywords = ["jwt_secret", "session_secret", "cookie_secret"]
+tags = ["jwt", "secret"]
+
+[allowlist]
+description = "Global allowlist for false positives"
+regexes = [
+  '''REMOVED''',           # BFG redaction placeholder
+  '''placeholder''',       # Explicit placeholders
+  '''changeme''',          # Obvious test values
+  '''your[_\-]?.*here''',  # Template values
+  '''<[A-Z_]+>''',         # Angle-bracket variables
+  '''example\.com''',      # Example domains
+  '''test[_\-]?secret''',  # Test values
+  '''ci[_\-]?test''',      # CI test values
+  '''not[_\-]?for[_\-]?production''', # Explicit non-prod markers
+]
+paths = [
+  '''.env.example''',
+  '''.env.sample''',
+  '''README''',
+  '''*.md''',
+  '''test[s]?/''',
+  '''__tests__/''',
+  '''*.test.js''',
+  '''*.test.ts''',
+  '''*.spec.js''',
+  '''*.spec.ts''',
+]
