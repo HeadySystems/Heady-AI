@@ -530,19 +530,18 @@ export default {
     // Return proper JSON health for /api/health and /health on ALL routed domains
     // This prevents GitHub Pages HTML from being served for health probes
     if (url.pathname === '/api/health' || url.pathname === '/health') {
-      const PHI = 1.618033988749895;
-      const uptime = Date.now();
+      // Derive a clean service name from the domain (e.g. headyai.com → headyai)
+      const baseDomain = hostname.replace(/^www\./, '');
+      const serviceName = baseDomain.replace(/\.(com|org|io|net)$/, '');
       const healthResponse = {
         status: 'ok',
-        service: moduleName || 'heady-router',
+        service: serviceName,
         domain: hostname,
         module: moduleName,
         timestamp: new Date().toISOString(),
         edge: true,
-        source: 'worker-heady-router',
+        source: `${serviceName}-edge`,
         version: '2.1.0',
-        phi: PHI,
-        coherence: 0.927,
       };
       const reqOrigin = request.headers.get('Origin') || '';
       const corsOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headysystems.com';
