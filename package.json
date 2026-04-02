@@ -35,7 +35,8 @@
     "validate:env": "node src/security/env-validator.cjs",
     "validate:env:strict": "node src/security/env-validator.cjs --strict",
     "validate:env:ci": "node src/security/env-validator.cjs --ci",
-    "predeploy": "node src/security/env-validator.cjs --strict"
+    "predeploy": "node src/security/env-validator.cjs --strict",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
@@ -83,6 +84,7 @@
     "@typescript-eslint/parser": "^8.57.0",
     "concurrently": "^9.1.2",
     "eslint": "^10.0.3",
+    "husky": "^9.1.7",
     "jest": "^30.3.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.3.3",
