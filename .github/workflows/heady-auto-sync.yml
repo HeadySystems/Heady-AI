@@ -309,13 +309,12 @@ jobs:
     steps:
       - name: Apply Cloudflare DNS fixes
         env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           python3 << 'PYEOF'
           import json, urllib.request, urllib.error, sys, os, re
           CF_API_BASE = "https://api.cloudflare.com/client/v4"
-          CF_TOKEN = os.getenv("CF_API_TOKEN") or os.getenv("CLOUDFLARE_API_TOKEN")
+          CF_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
           if not CF_TOKEN:
               print("No CF token - skipping")
               sys.exit(0)
