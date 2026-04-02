@@ -61,7 +61,7 @@ openai==1.6.1
 anthropic==0.8.1
 
 # Workflow orchestration
-celery==5.3.4
+celery==5.6.3
 kombu==5.3.4
 flower==2.0.1
 
