@@ -1,6 +1,10 @@
 name: Enable Cloudflare Proxy for heady-ai.com
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/enable-cloudflare-proxy.yml'
   workflow_dispatch:
     inputs:
       dry_run:
