@@ -1,0 +1,42 @@
+{
+  "name": "@heady/context7-mcp",
+  "version": "1.0.0",
+  "description": "Context7 Documentation Server — real-time, version-specific library docs for Heady coding agents",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "health": "curl -s http://localhost:3371/health | node -e \"process.stdin.pipe(process.stdout)\""
+  },
+  "keywords": [
+    "heady",
+    "context7",
+    "mcp",
+    "documentation",
+    "library-docs",
+    "model-context-protocol"
+  ],
+  "author": "HeadySystems Inc. <eric@headyconnection.org>",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "cors": "^2.8.5",
+    "@heady/core": "workspace:*"
+  },
+  "heady": {
+    "service": "context7-mcp",
+    "port": 3371,
+    "sacred_geometry": {
+      "layer": "Outer",
+      "node": "BRIDGE",
+      "pool": "Warm"
+    },
+    "phi_compliance": true,
+    "registry_id": "context7-mcp"
+  }
+}

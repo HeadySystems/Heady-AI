@@ -1,0 +1,84 @@
+{
+  "operation": "add-component",
+  "registryVersion": "3.2.0",
+  "patchVersion": "1.0.0",
+  "appliedAt": "2026-04-01",
+  "component": {
+    "id": "context7-mcp",
+    "name": "Context7DocumentationServer",
+    "type": "mcp-external",
+    "version": "1.0.0",
+    "sourceOfTruth": "src/mcp/context7-adapter.js",
+    "endpoint": "https://mcp.context7.com/mcp",
+    "internalService": "http://localhost:3371",
+    "responsibilities": [
+      "libraryDocumentation",
+      "apiReference",
+      "codeExamples",
+      "versionSpecificDocs"
+    ],
+    "ownership": "integration",
+    "status": "active",
+    "criticality": "high",
+    "sacredGeometry": {
+      "layer": "Outer",
+      "node": "BRIDGE",
+      "pool": "Warm"
+    },
+    "dependencies": [
+      "heady-manager",
+      "headyconductor"
+    ],
+    "tools": [
+      "context7.resolve-library-id",
+      "context7.query-docs"
+    ],
+    "capabilities": [
+      "documentation",
+      "library-reference",
+      "api-docs",
+      "code-examples",
+      "version-specific-docs",
+      "framework-docs",
+      "sdk-reference"
+    ],
+    "transport": "streamable-http",
+    "namespace": "context7",
+    "bee": {
+      "domain": "context7",
+      "swarm": "research",
+      "tier": "high",
+      "template": "context7-doc-resolver"
+    },
+    "pipeline": {
+      "hooks": [
+        {
+          "stage": 1,
+          "name": "context7-context-assembly",
+          "action": "pre-resolve library IDs"
+        },
+        {
+          "stage": 4,
+          "name": "context7-execution-enrichment",
+          "action": "inject documentation into code generation context"
+        }
+      ]
+    },
+    "cacheConfig": {
+      "libraryIds": {
+        "maxSize": 89,
+        "ttlMs": 377000
+      },
+      "docs": {
+        "maxSize": 21,
+        "ttlMs": 233000
+      }
+    },
+    "circuitBreaker": {
+      "maxFailures": 8,
+      "resetTimeoutMs": 55000,
+      "halfOpenMax": 3
+    },
+    "lastUpdated": "2026-04-01"
+  }
+}
