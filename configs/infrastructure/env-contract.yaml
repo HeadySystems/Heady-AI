@@ -1,0 +1,58 @@
+# Heady Environment Variable Contract
+# Every service must validate these on startup
+
+required:
+  core:
+    - NODE_ENV
+    - PORT
+    - HEADY_API_KEY
+  
+  database:
+    - DATABASE_URL  # Neon Postgres connection string
+  
+  cache:
+    - REDIS_URL  # Upstash Redis
+    - UPSTASH_REDIS_REST_URL
+    - UPSTASH_REDIS_REST_TOKEN
+  
+  auth:
+    - FIREBASE_PROJECT_ID
+    - FIREBASE_PRIVATE_KEY
+    - FIREBASE_CLIENT_EMAIL
+  
+  monitoring:
+    - SENTRY_DSN
+    - SENTRY_ORG
+    - SENTRY_PROJECT
+  
+  ai_providers:
+    - OPENAI_API_KEY
+    - ANTHROPIC_API_KEY
+    - GEMINI_API_KEY_HEADY
+
+optional:
+  cloud:
+    - CLOUDFLARE_ACCOUNT_ID
+    - CLOUDFLARE_API_TOKEN
+    - GCP_PROJECT_ID
+    - VERCEL_TOKEN
+  
+  embeddings:
+    - NOMIC_API_KEY
+    - VOYAGE_API_KEY
+    - HF_TOKEN
+  
+  payments:
+    - STRIPE_SECRET_KEY
+    - STRIPE_WEBHOOK_SECRET
+  
+  integrations:
+    - GITHUB_TOKEN
+    - LINEAR_API_KEY
+    - SLACK_WEBHOOK_URL
+    - TAILSCALE_API_KEY
+
+  services:
+    - GROQ_API_KEY
+    - PERPLEXITY_API_KEY
+    - COLAB_AUTH_TOKEN
