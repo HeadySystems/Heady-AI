@@ -156,7 +156,7 @@ class ServiceDiscovery {
                 const domain = config.domain || `${serviceName}.headysystems.com`;
                 
                 // Create comprehensive mappings
-                const internal.headyio.comPatterns = [
+                const internalHeadyioComPatterns = [
                     `localhost:${port}`,
                     `internal.headyio.com:${port}`,
                     `0.0.0.0:${port}`,

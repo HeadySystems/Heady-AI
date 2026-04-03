@@ -29,8 +29,7 @@ The table below scores each domain on current state and recommended target.
 
 **Severity: High**
 
-`Heady/README.md` contains 5 unresolved `<<<<<<< HEAD` / `>>>>>>> a3d7d06c` conflict markers. This is the first file any contributor opens. Until resolved, the README is unparseable by documentation tooling and signals broken repo hygiene to external developers.
-
+`Heady/README.md` contains 5 unresolved `
 **Recommendation:** Resolve all conflicts immediately. The `HEAD` side (cloud-first, full service table) is richer and should be kept. Add a pre-commit hook checking for conflict markers:
 
 ```bash

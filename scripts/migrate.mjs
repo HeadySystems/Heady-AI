@@ -54,7 +54,7 @@ async function ensureMigrationTable() {
   `);
 }
 
-function getChecksum(content) {
+async function getChecksum(content) {
   const crypto = await import('node:crypto');
   return crypto.createHash('sha256').update(content).digest('hex').slice(0, 16);
 }

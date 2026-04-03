@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const logger = require('../logger');
 // HEADY_BRAND:BEGIN
 // HEADY SYSTEMS :: SACRED GEOMETRY
@@ -13,7 +14,6 @@ const logger = require('../logger');
 //    Sacred Geometry :: Organic Systems :: Breathing Interfaces
 // HEADY_BRAND:END
 
-#!/usr/bin/env node
 /**
  * Auto Merge Script
  * Wraps validation and synchronization logic into a single automated flow.
