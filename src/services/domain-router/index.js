@@ -25,7 +25,7 @@ const {
 } = require('../../shared/heady-domains');
 const {
   generateRelayCode, evaluateAuthConfidence,
-} = require('../../src/security/cross-domain-auth');
+} = require('../../security/cross-domain-auth');
 
 // ─── φ-Constants ─────────────────────────────────────────────────────────────
 

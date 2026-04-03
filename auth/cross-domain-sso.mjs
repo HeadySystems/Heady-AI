@@ -39,7 +39,7 @@ const ALLOWED_ORIGINS = new Set([
   'https://headybot.com',
   'https://headyapi.com',
   'https://headylens.com',
-  'https://headyai.com',
+  'https://heady-ai.com',
   'https://headyfinance.com',
 ]);
 

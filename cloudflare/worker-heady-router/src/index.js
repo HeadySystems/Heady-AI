@@ -37,8 +37,6 @@ const DOMAIN_MODULES = {
   'www.headybot.com': 'bot-automation',
   'heady-ai.com': 'ai-assistant',
   'www.heady-ai.com': 'ai-assistant',
-  'headyai.com': 'ai-assistant',
-  'www.headyai.com': 'ai-assistant',
   'headyos.com': 'os-portal',
   'www.headyos.com': 'os-portal',
   'headyex.com': 'executive-hub',
@@ -82,10 +80,8 @@ const GITHUB_PAGES_REPOS = {
   'www.headybot.com':         'headybot',
   'headyapi.com':             'headyapi',
   'www.headyapi.com':         'headyapi',
-  'headyai.com':              'headyai',
-  'www.headyai.com':          'headyai',
-  'heady-ai.com':             'headyai',
-  'www.heady-ai.com':         'headyai',
+  'heady-ai.com':              'headyai',
+  'www.heady-ai.com':          'headyai',
   'discord.headysystems.com': 'heady-discord',
   'headyos.com':              'headyos',
   'www.headyos.com':          'headyos',
@@ -530,7 +526,7 @@ export default {
     // Return proper JSON health for /api/health and /health on ALL routed domains
     // This prevents GitHub Pages HTML from being served for health probes
     if (url.pathname === '/api/health' || url.pathname === '/health') {
-      // Derive a clean service name from the domain (e.g. headyai.com → headyai)
+      // Derive a clean service name from the domain (e.g. heady-ai.com → headyai)
       const baseDomain = hostname.replace(/^www\./, '');
       const serviceName = baseDomain.replace(/\.(com|org|io|net)$/, '');
       const healthResponse = {

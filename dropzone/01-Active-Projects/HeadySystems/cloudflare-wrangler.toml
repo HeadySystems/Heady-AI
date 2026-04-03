@@ -65,9 +65,9 @@ routes = [
   { pattern = "headyapi.com/*",        zone_name = "headyapi.com" },
   { pattern = "www.headyapi.com/*",    zone_name = "headyapi.com" },
 
-  # headyai.com
-  { pattern = "headyai.com/*",         zone_name = "headyai.com" },
-  { pattern = "www.headyai.com/*",     zone_name = "headyai.com" },
+  # heady-ai.com
+  { pattern = "heady-ai.com/*",         zone_name = "heady-ai.com" },
+  { pattern = "www.heady-ai.com/*",     zone_name = "heady-ai.com" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -142,7 +142,7 @@ routes = [
   { pattern = "staging.headyio.com/*",        zone_name = "headyio.com" },
   { pattern = "staging.headybot.com/*",       zone_name = "headybot.com" },
   { pattern = "staging.headyapi.com/*",       zone_name = "headyapi.com" },
-  { pattern = "staging.headyai.com/*",        zone_name = "headyai.com" },
+  { pattern = "staging.heady-ai.com/*",        zone_name = "heady-ai.com" },
 ]
 
 [env.staging.vars]

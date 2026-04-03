@@ -10,7 +10,7 @@
  *
  *   All 9 Heady domains included in connect-src:
  *     headyme.com, headysystems.com, headyconnection.org, headybuddy.org,
- *     headymcp.com, headyio.com, headybot.com, headyapi.com, headyai.com
+ *     headymcp.com, headyio.com, headybot.com, headyapi.com, heady-ai.com
  */
 
 import { randomBytes } from 'node:crypto';
@@ -63,7 +63,7 @@ const HEADY_DOMAINS = [
   'https://*.headyio.com',
   'https://*.headybot.com',
   'https://*.headyapi.com',
-  'https://*.headyai.com',
+  'https://*.heady-ai.com',
 ] as const;
 
 /** Nonce byte length: 16 bytes = 128 bits of entropy */

@@ -92,4 +92,4 @@ See `.env.example` for all required configuration. Zero localhost references —
 
 ## HeadySystems Domains (CORS whitelist)
 
-headyme.com · headysystems.com · headyconnection.org · headybuddy.org · headymcp.com · headyio.com · headybot.com · headyapi.com · headyai.com
+headyme.com · headysystems.com · headyconnection.org · headybuddy.org · headymcp.com · headyio.com · headybot.com · headyapi.com · heady-ai.com

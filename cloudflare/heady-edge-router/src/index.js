@@ -106,8 +106,8 @@ const GITHUB_PAGES_SITES = {
   'www.headybot.com':         'headybot',
   'headyapi.com':             'headyapi',
   'www.headyapi.com':         'headyapi',
-  'headyai.com':              'headyai',
-  'www.headyai.com':          'headyai',
+  'heady-ai.com':              'headyai',
+  'www.heady-ai.com':          'headyai',
   'discord.headysystems.com': 'heady-discord',
 };
 

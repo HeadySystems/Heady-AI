@@ -113,8 +113,8 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.headybot.com',
   'https://headyapi.com',
   'https://www.headyapi.com',
-  'https://headyai.com',
-  'https://www.headyai.com',
+  'https://heady-ai.com',
+  'https://www.heady-ai.com',
 ]);
 
 // Methods allowed on cross-origin requests

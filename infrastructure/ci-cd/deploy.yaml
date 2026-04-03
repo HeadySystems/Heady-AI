@@ -292,7 +292,7 @@ jobs:
             --region $GCP_REGION \
             --format 'value(status.url)' 2>/dev/null | sed 's|https://||')
 
-          for DOMAIN in headyme.com headysystems.com headyconnection.org headybuddy.org headymcp.com headyio.com headybot.com headyapi.com headyai.com; do
+          for DOMAIN in headyme.com headysystems.com headyconnection.org headybuddy.org headymcp.com headyio.com headybot.com headyapi.com heady-ai.com; do
             curl -s -X PUT \
               "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/dns_records" \
               -H "Authorization: Bearer ${CF_API_TOKEN}" \

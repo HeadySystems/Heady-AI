@@ -157,7 +157,7 @@ server_card_domains:
   - "https://headyconnection.org/.well-known/mcp.json"
   - "https://headybuddy.org/.well-known/mcp.json"
   - "https://headyio.com/.well-known/mcp.json"
-  - "https://headyai.com/.well-known/mcp.json"
+  - "https://heady-ai.com/.well-known/mcp.json"
   - "https://headyapi.com/.well-known/mcp.json"
   - "https://headybot.com/.well-known/mcp.json"
 

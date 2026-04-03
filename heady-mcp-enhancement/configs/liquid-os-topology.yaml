@@ -179,7 +179,7 @@ domain-mapping:
     support: [HeadyAegis, HeadyTide, HeadyGravity]
     purpose: "API gateway and routing"
 
-  headyai.com:
+  heady-ai.com:
     primary: HeadyBrains
     support: [HeadyQuantum, HeadyParallax, HeadySpectra]
     purpose: "AI research and intelligence"

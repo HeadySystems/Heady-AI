@@ -111,11 +111,11 @@ ingress:
   - service: http_status:404
 
   # ── Audit Ecosystem Domains (added March 2026) ─────────────────────
-  - hostname: headyai.com
+  - hostname: heady-ai.com
     service: http://heady-manager:3301
     originRequest:
       connectTimeout: 30s
-      httpHostHeader: headyai.com
+      httpHostHeader: heady-ai.com
 
   - hostname: headyfullstack.com
     service: http://heady-manager:3301
