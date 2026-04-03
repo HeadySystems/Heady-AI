@@ -166,10 +166,10 @@ if (!global.crypto) {
   global.crypto = crypto;
 }
 
-if (require.main === module) { main().catch((err) => { }
+if (require.main === module) { main().catch((err) => {
   logger.error('Fatal startup error:', err);
   process.exit(1);
-});
+}); }
 
 
 // --- Auto-Unified Latent Service Pattern (Smart) ---

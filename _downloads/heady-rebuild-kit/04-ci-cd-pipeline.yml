@@ -46,8 +46,7 @@ jobs:
       - name: Check for merge conflicts
         id: conflict_check
         run: |
-          CONFLICTS=$(grep -rl "<<<<<<< HEAD" --include="*.json" --include="*.yml" --include="*.yaml" --include="*.js" --include="*.env*" . || true)
-          if [ -n "$CONFLICTS" ]; then
+          CONFLICTS=$(grep -rl "          if [ -n "$CONFLICTS" ]; then
             echo "has_conflicts=true" >> $GITHUB_OUTPUT
             echo "::error::Unresolved merge conflicts found in:"
             echo "$CONFLICTS"

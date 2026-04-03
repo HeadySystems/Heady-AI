@@ -78,10 +78,10 @@ async function main() {
   return { app, server, hv };
 }
 
-if (require.main === module) { main().catch((err) => { }
+if (require.main === module) { main().catch((err) => {
   log.fatal('fatal startup error', { error: err.message, stack: err.stack });
   process.exit(1);
-});
+}); }
 
 module.exports = { main };
 

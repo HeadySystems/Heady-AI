@@ -248,8 +248,7 @@ PostgreSQL connection strings were committed in plain text in Jupyter notebooks.
 
 **Source:** [HeadyMe/Heady-Main README](https://github.com/HeadyMe/Heady-Main/blob/main/README.md)
 
-The README.md contains unresolved git merge conflict markers (`<<<<<<< HEAD` ... `>>>>>>>`) showing divergence between HEAD and commit `233933e0`. This indicates an incomplete merge or rebase during active rearchitecture. Any tool that parses README for metadata may misbehave.
-
+The README.md contains unresolved git merge conflict markers (`
 ### 4.5 MCP Configuration Wiring (heady-server token)
 
 **Source:** [HeadySystems/Heady-pre-production Issue #12](https://github.com/HeadySystems/Heady-pre-production/issues/12)

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,7 +14,6 @@
 // ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-#!/usr/bin/env node
 
 const { program } = require('commander');
 const scanner = require('../src/services/file-scanner');
