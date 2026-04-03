@@ -1,7 +1,7 @@
 {
   "name": "heady-latent-os",
   "version": "5.0.0",
-  "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
+  "description": "Self-aware, self-correcting intelligence infrastructure \u2014 the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
     "node": ">=22.0.0"
@@ -45,6 +45,7 @@
     "@heady-ai/phi-math": "file:./packages/phi-math",
     "@heady-ai/structured-logger": "file:./packages/structured-logger",
     "@huggingface/inference": "^4.13.12",
+    "@langchain/core": "^1.1.38",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@notionhq/client": "^2.2.15",
     "@octokit/auth-app": "^8.2.0",
