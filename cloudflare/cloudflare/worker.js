@@ -100,9 +100,6 @@ const DOMAIN_ROUTES = new Map([
   ['admin.headysystems.com',   '/systems'],
   ['auth.headysystems.com',    '/systems'],
   ['discord.headysystems.com', '/systems'],
-  // ── HeadyAI ───────────────────────────────────────────────────────────
-  ['headyai.com',              '/ai'],
-  ['www.headyai.com',          '/ai'],
 ]);
 
 // =============================================================================

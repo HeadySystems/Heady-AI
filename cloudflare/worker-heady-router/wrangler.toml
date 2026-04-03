@@ -167,14 +167,6 @@ zone_name = "headycloud.com"
 pattern = "www.headycloud.com/*"
 zone_name = "headycloud.com"
 
-# ── HeadyAI ──────────────────────────────────────────────────────────
-[[routes]]
-pattern = "headyai.com/*"
-zone_name = "headyai.com"
-[[routes]]
-pattern = "www.headyai.com/*"
-zone_name = "headyai.com"
-
 # ── HeadyConnection ─────────────────────────────────────────────────
 [[routes]]
 pattern = "headyconnection.org/*"

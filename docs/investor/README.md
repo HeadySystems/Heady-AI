@@ -28,7 +28,7 @@ Sovereign AI Operating System with 60+ Provisional Patents
 | headymcp.com | Live | MCP protocol hub & marketplace |
 | headyio.com | Live | Developer portal & SDK |
 | heady-ai.com | Live | Intelligence routing hub |
-| headyai.com | Live | Intelligence routing hub |
+| heady-ai.com | Live | Intelligence routing hub |
 | headybuddy.org | Deploy needed | Personal AI assistant & guide |
 | headybot.com | Deploy needed | Automation and agents |
 | headyapi.com | Deploy needed | Interactive API playground |

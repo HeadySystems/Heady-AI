@@ -80,7 +80,7 @@ sites:
     status: degraded  # HTTP 522 — worker deploy needed
 
   - id: headyai
-    domain: headyai.com
+    domain: heady-ai.com
     purpose: "Intelligence routing hub"
     pool: hot
     sacred_geometry_layer: inner

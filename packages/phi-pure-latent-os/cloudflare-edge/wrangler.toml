@@ -140,8 +140,8 @@ pattern   = "headybot.com/api/*"
 zone_name = "headybot.com"
 
 [[routes]]
-pattern   = "headyai.com/api/*"
-zone_name = "headyai.com"
+pattern   = "heady-ai.com/api/*"
+zone_name = "heady-ai.com"
 
 # ---------------------------------------------------------------------------
 # Environment variables — set real values in Cloudflare dashboard
