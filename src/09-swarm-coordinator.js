@@ -28,7 +28,7 @@
 
 import { EventEmitter } from 'events';
 import { createHash, randomUUID } from 'crypto';
-import { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence } from '../../shared/phi-math.js';
+import { PHI, PSI, CSL_THRESHOLDS, DEDUP_THRESHOLD, phiResourceWeights, phiBackoff, phiFusionWeights, cslGate, cslBlend, PRESSURE_LEVELS, classifyPressure, phiAdaptiveInterval, fib, fibSequence } from '../shared/phi-math.js';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

@@ -45,10 +45,10 @@ try { logger = require('../utils/logger'); } catch (_) {
 }
 
 let VectorMemory;
-try { ({ VectorMemory } = require('../vector-memory')); } catch (_) { VectorMemory = null; }
+try { ({ VectorMemory } = require('./vector-memory')); } catch (_) { VectorMemory = null; }
 
 let cosineSimilarity;
-try { ({ cosineSimilarity } = require('../vector-space-ops')); } catch (_) { cosineSimilarity = null; }
+try { ({ cosineSimilarity } = require('./vector-space-ops')); } catch (_) { cosineSimilarity = null; }
 
 // ─── Constants (φ-scaled) ───────────────────────────────────────────────────
 
