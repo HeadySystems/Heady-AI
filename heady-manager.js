@@ -3221,6 +3221,154 @@ app.get("/startup", (req, res) => {
   res.json({ status: 'started', service: 'heady-manager', version: '4.1.0', uptime_ms: process.uptime() * 1000, timestamp: new Date().toISOString() });
 });
 
+// ─── Sentry → Linear Webhook Bridge ─────────────────────────────────
+// Receives Sentry alert webhooks and auto-creates Linear issues.
+// Configure in Sentry: Organization Settings → Integrations → Webhooks
+// Webhook URL: https://<service-url>/api/webhooks/sentry
+// Secret: set SENTRY_WEBHOOK_SECRET env var
+const crypto = require('crypto');
+
+function verifySentrySignature(req) {
+  const secret = process.env.SENTRY_WEBHOOK_SECRET;
+  if (!secret) return true; // skip verification if secret not configured (dev)
+  const sig = req.headers['sentry-hook-signature'] || '';
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(JSON.stringify(req.body));
+  const expected = hmac.digest('hex');
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+}
+
+async function createLinearIssueFromSentry(sentryEvent) {
+  const linearToken = process.env.LINEAR_API_KEY;
+  const linearTeamId = process.env.LINEAR_TEAM_ID;
+  if (!linearToken || !linearTeamId) return null;
+
+  const issue = sentryEvent.data?.issue || sentryEvent.issue || {};
+  const title = `[Sentry] ${issue.title || sentryEvent.message || 'Unknown error'}`;
+  const project = sentryEvent.project_slug || sentryEvent.data?.project?.slug || 'unknown';
+  const issueUrl = issue.web_url || issue.permalink || '';
+  const firstSeen = issue.firstSeen || new Date().toISOString();
+  const culprit = issue.culprit || '';
+
+  const description = [
+    `**Sentry Project:** ${project}`,
+    `**First Seen:** ${firstSeen}`,
+    culprit ? `**Culprit:** \`${culprit}\`` : null,
+    issueUrl ? `**Sentry URL:** ${issueUrl}` : null,
+    '',
+    '**Auto-created by Sentry → Linear webhook bridge.**',
+  ].filter(Boolean).join('\n');
+
+  const mutation = `
+    mutation CreateIssue($teamId: String!, $title: String!, $description: String!, $priority: Int) {
+      issueCreate(input: {teamId: $teamId, title: $title, description: $description, priority: $priority}) {
+        success
+        issue { id identifier url }
+      }
+    }
+  `;
+
+  try {
+    const resp = await fetch('https://api.linear.app/graphql', {
+      method: 'POST',
+      headers: {
+        'Authorization': linearToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: { teamId: linearTeamId, title, description, priority: 1 },
+      }),
+    });
+    const data = await resp.json();
+    return data?.data?.issueCreate?.issue || null;
+  } catch (err) {
+    log.warn('Failed to create Linear issue from Sentry event', { errorMessage: err.message });
+    return null;
+  }
+}
+
+app.post(
+  '/api/webhooks/sentry',
+  express.json({ type: 'application/json', limit: '256kb' }),
+  async (req, res) => {
+    if (!verifySentrySignature(req)) {
+      return res.status(401).json({ error: 'invalid_signature' });
+    }
+
+    const trigger = req.headers['sentry-hook-resource'] || req.body?.action || 'unknown';
+    const actionable = ['issue', 'event_alert', 'metric_alert'];
+    if (!actionable.includes(trigger)) {
+      return res.status(200).json({ ok: true, skipped: true, trigger });
+    }
+
+    const action = req.body?.action;
+    // Only create Linear issues for new/regression events, not for resolved ones
+    if (action === 'resolved' || action === 'archived') {
+      return res.status(200).json({ ok: true, skipped: true, action });
+    }
+
+    log.info('Sentry webhook received', { trigger, action });
+    const linearIssue = await createLinearIssueFromSentry(req.body);
+    if (linearIssue) {
+      log.info('Linear issue created from Sentry event', { linearIssue });
+    }
+    res.status(200).json({ ok: true, linearIssue });
+  }
+);
+
+// ─── Linear → Sentry Webhook Bridge ─────────────────────────────────
+// Receives Linear webhooks and marks Sentry issues as resolved when
+// Linear issues are completed.
+// Configure in Linear: Settings → API → Webhooks → Add webhook
+// Secret: set LINEAR_WEBHOOK_SECRET env var
+function verifyLinearSignature(req) {
+  const secret = process.env.LINEAR_WEBHOOK_SECRET;
+  if (!secret) return true;
+  const sig = req.headers['linear-signature'] || '';
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(JSON.stringify(req.body));
+  const expected = hmac.digest('hex');
+  try {
+    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
+app.post(
+  '/api/webhooks/linear',
+  express.json({ type: 'application/json', limit: '64kb' }),
+  async (req, res) => {
+    if (!verifyLinearSignature(req)) {
+      return res.status(401).json({ error: 'invalid_signature' });
+    }
+
+    const { type, action, data } = req.body || {};
+    // Only handle issue state changes to completed/canceled
+    if (type !== 'Issue' || !['update'].includes(action)) {
+      return res.status(200).json({ ok: true, skipped: true });
+    }
+
+    const stateName = data?.state?.name?.toLowerCase() || '';
+    const isClosed = ['done', 'completed', 'canceled', 'cancelled', 'duplicate'].includes(stateName);
+
+    if (!isClosed) {
+      return res.status(200).json({ ok: true, skipped: true, stateName });
+    }
+
+    log.info('Linear issue closed — skipping Sentry sync (no Sentry issue ID tracked)', {
+      issueId: data?.id,
+      identifier: data?.identifier,
+      stateName,
+    });
+
+    // Future: if we store Sentry issue ID on Linear issues (as label or description ref),
+    // we can call Sentry API to resolve the corresponding issue here.
+    res.status(200).json({ ok: true, action: 'issue_closed', identifier: data?.identifier });
+  }
+);
+
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: "Not found", path: req.path, hint: "Try /api/health or visit /" });
