@@ -82,6 +82,8 @@ const cors = require("cors");
 const compression = require("compression");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const { RedisStore } = require("rate-limit-redis");
+const Redis = require("ioredis");
 
 // Load and preload persistent memory before any operations
 function preloadPersistentMemory() {
@@ -101,6 +103,28 @@ function preloadPersistentMemory() {
 
 // Preload memory at startup
 preloadPersistentMemory();
+
+// ── Upstash Redis client (for rate-limit store + session cache) ────────────
+let redisClient = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  // Upstash REST URL format: https://<host> — ioredis needs TLS redis:// URL
+  // Upstash also exposes a direct redis:// endpoint via REDIS_URL env var
+  const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
+  if (redisUrl) {
+    redisClient = new Redis(redisUrl, {
+      tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+      lazyConnect: true,
+      maxRetriesPerRequest: 2,
+      connectTimeout: 5000,
+      enableOfflineQueue: false,
+    });
+    redisClient.on('error', (err) => log.warn('Redis client error', { errorMessage: err.message }));
+    redisClient.connect().catch((err) => {
+      log.warn('Redis connect failed — falling back to in-memory rate limiting', { errorMessage: err.message });
+      redisClient = null;
+    });
+  }
+}
 // Load remote resources config
 let remoteConfig;
 try {
@@ -215,12 +239,24 @@ app.use(helmet({
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
+      reportTo: "csp-endpoint",
+      reportUri: ["/api/csp-report"],
     },
   },
   crossOriginEmbedderPolicy: { policy: 'credentialless' },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   hsts: { maxAge: 31536000, includeSubDomains: true },
 }));
+
+// Report-To header for CSP violation collection
+app.use((req, res, next) => {
+  res.setHeader('Report-To', JSON.stringify({
+    group: 'csp-endpoint',
+    max_age: 86400,
+    endpoints: [{ url: '/api/csp-report' }],
+  }));
+  next();
+});
 app.use(compression());
 
 // Request body size limits
@@ -229,6 +265,24 @@ app.use(express.urlencoded({ limit: "1mb", extended: true }));
 
 // Analytics-specific endpoint with tighter limit
 app.use("/api/analytics", express.json({ limit: "256kb" }));
+
+// CSP violation report endpoint — accepts application/csp-report and application/json
+app.post("/api/csp-report",
+  express.json({ type: ["application/json", "application/csp-report"], limit: "8kb" }),
+  (req, res) => {
+    const report = req.body?.["csp-report"] || req.body;
+    if (report) {
+      log.warn('CSP violation', {
+        blockedUri: report["blocked-uri"],
+        violatedDirective: report["violated-directive"],
+        documentUri: report["document-uri"],
+        disposition: report["disposition"],
+        referrer: report["referrer"],
+      });
+    }
+    res.status(204).end();
+  }
+);
 
 // Security: remove X-Powered-By
 app.disable('x-powered-by');
@@ -387,13 +441,19 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rate limiting — stricter for auth endpoints
+// Rate limiting — stricter for auth endpoints; uses Redis store when Upstash is wired
+const redisStoreOptions = redisClient
+  ? { store: new RedisStore({ sendCommand: (...args) => redisClient.call(...args) }) }
+  : {};
+
 app.use("/api/auth/login", rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'too_many_requests', message: 'Too many login attempts' },
+  ...redisStoreOptions,
+  keyPrefix: 'rl:auth:',
 }));
 
 app.use("/api/", rateLimit({
@@ -401,6 +461,8 @@ app.use("/api/", rateLimit({
   max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
+  ...redisStoreOptions,
+  keyPrefix: 'rl:api:',
 }));
 
 const coreApi = require('./services/core-api');

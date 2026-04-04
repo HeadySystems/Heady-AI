@@ -1,25 +1,49 @@
-# Heady™ Dependabot — Production Config (reduced frequency)
-# Only security updates, no version bumps, to prevent CI queue flooding
+# Heady™ Dependabot — Production Config
+# Security updates run weekly; patch auto-merge enabled for low-risk updates
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
     groups:
-      security-only:
+      # Patch updates for all production deps — auto-mergeable
+      patch-production:
         dependency-type: "production"
         update-types:
           - "patch"
+      # Minor updates for dev deps — auto-mergeable
+      minor-dev:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
     labels:
       - "dependencies"
-      - "security"
+    # Auto-merge patch PRs; minor/major require manual review
+    ignore:
+      # Never auto-update major versions of critical runtime deps
+      - dependency-name: "express"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "pg"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "ioredis"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@anthropic-ai/sdk"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 2
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
     labels:
       - "ci"
+      - "dependencies"
