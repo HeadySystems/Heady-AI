@@ -42,7 +42,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Lint
-        run: pnpm run lint 2>/dev/null || echo "::warning::Lint issues found"
+        run: pnpm run lint
 
       - name: Run tests
         run: pnpm test
@@ -50,7 +50,7 @@ jobs:
           NODE_ENV: test
 
       - name: Security audit
-        run: pnpm audit --audit-level=high 2>/dev/null || echo "::warning::Security vulnerabilities found"
+        run: pnpm audit --audit-level=high
 
   build:
     name: Build
@@ -76,7 +76,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build
-        run: pnpm run build 2>/dev/null || echo "Build step skipped"
+        run: pnpm run build
 
   docker:
     name: Docker Build Test

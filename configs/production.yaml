@@ -1,0 +1,235 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Production Configuration                               ║
+# ║  Canonical production settings — source of truth for all       ║
+# ║  services, endpoints, feature flags, and deployment targets.   ║
+# ║  Do NOT commit secrets here — use environment variables.       ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+version: "5.0.0"
+environment: production
+updated: "2026-04-04"
+
+# ─── Runtime ────────────────────────────────────────────────────────
+runtime:
+  node_env: production
+  heady_env: production
+  log_level: info
+  heady_version: "5.0.0"
+  heady_target: cloud
+  heady_mode: CLOUD_ONLY
+  cloud_first: true
+  disable_localhost: true
+  local_services_enabled: false
+
+# ─── Server Ports ────────────────────────────────────────────────────
+ports:
+  manager: 3301
+  guard: 3302
+  infer: 3303
+  embed: 3304
+  eval: 3305
+  cache: 3306
+  mcp: 3307
+  edge: 3308
+  dashboard: 3309
+  gateway: 3310
+  chain: 3311
+  site: 3312
+  buddy: 3310
+  buddy_ws: 3311
+  ide: 3320
+
+# ─── Domains ────────────────────────────────────────────────────────
+domains:
+  primary:
+    - headyme.com
+    - headysystems.com
+    - headybuddy.org
+    - headymcp.com
+    - headyio.com
+    - headyconnection.org
+    - headyconnection.com
+    - headyapi.com
+    - headyos.com
+    - heady-ai.com
+  api:
+    gateway: api.headysystems.com
+    manager: manager.headysystems.com
+    auth: auth.headysystems.com
+    registry: registry.headysystems.com
+    compute: compute.headysystems.com
+    artifacts: artifacts.headysystems.com
+    sync: sync.headysystems.com
+  cdn:
+    provider: cloudflare-pages
+    worker: liquid-gateway-worker
+
+# ─── Services ────────────────────────────────────────────────────────
+services:
+  heady-manager:
+    type: cloud-run
+    health_path: /api/brain/health
+    port: 3301
+    min_instances: 1
+    max_instances: 10
+    cpu: "1"
+    memory: 512Mi
+    region: us-central1
+    project: headyme-444017
+
+  heady-edge-gateway:
+    type: cloud-run
+    cloud_run_id: heady-edge-gateway-609590223909
+    region: us-central1
+    health_path: /health
+
+  site-server:
+    type: cloud-run
+    health_path: /health
+    port: 3312
+    serves_domains: true
+
+  liquid-gateway-worker:
+    type: cloudflare-worker
+    routes:
+      - api.headysystems.com/*
+
+# ─── Database ────────────────────────────────────────────────────────
+database:
+  provider: neon-postgres
+  region: us-east-2
+  ssl: required
+  pgvector:
+    enabled: true
+    dimensions: 384
+    index_type: hnsw
+  pool:
+    min: 2
+    max: 20
+
+# ─── Cache ───────────────────────────────────────────────────────────
+cache:
+  provider: upstash-redis
+  protocol: rediss  # TLS required
+  rate_limiting: true
+  session_caching: true
+
+# ─── Feature Flags ───────────────────────────────────────────────────
+features:
+  atlas: false
+  builder: false
+  codemap: false
+  jules: true
+  observer: true
+  perplexity: false
+  pqc: false
+  sync_service: true
+  postgres: false       # use DATABASE_URL instead
+  redis: false          # use UPSTASH_REDIS_REST_URL instead
+  cloud_mode: true
+  local_services: false
+
+# ─── AI Providers ────────────────────────────────────────────────────
+ai:
+  default_provider: anthropic
+  providers:
+    - anthropic
+    - openai
+    - google
+    - groq
+  vertex_ai_location: us-central1
+  gcp_project: headyme-444017
+
+# ─── Deployment ──────────────────────────────────────────────────────
+deployment:
+  strategy: canary
+  canary_steps: [5, 25, 50, 100]  # percent
+  rollback_threshold_error_rate: 0.05
+  health_check_grace_period_seconds: 30
+  min_healthy_instances: 1
+  render:
+    enabled: true
+    plan: performance
+    build_command: "npm install && cd frontend && npm install && npm run build && cd .."
+    start_command: "npm start"
+  cloud_run:
+    enabled: true
+    region: us-central1
+    project: headyme-444017
+
+# ─── CI/CD ───────────────────────────────────────────────────────────
+ci:
+  node_version: "22"
+  package_manager: pnpm
+  pnpm_version: "10.6.0"
+  test_command: "pnpm test"
+  lint_command: "pnpm run lint"
+  build_command: "pnpm run build"
+  audit_level: high
+  required_checks:
+    - lint-and-test
+    - build
+    - docker
+
+# ─── Monitoring & Observability ──────────────────────────────────────
+monitoring:
+  sentry:
+    org: headyconnection-inc
+    project: heady-production
+    environment: production
+    traces_sample_rate: 0.1
+    replays_on_error_sample_rate: 1.0
+  uptime:
+    check_interval_seconds: 60
+    alert_after_failures: 3
+  health_endpoints:
+    - https://api.headysystems.com/health
+    - https://manager.headysystems.com/api/brain/health
+
+# ─── Security ────────────────────────────────────────────────────────
+security:
+  cors:
+    allowed_origins:
+      - https://headyme.com
+      - https://headysystems.com
+      - https://headybuddy.org
+      - https://headymcp.com
+      - https://headyio.com
+      - https://headyconnection.org
+      - https://headyconnection.com
+      - https://headyapi.com
+      - https://headyos.com
+      - https://heady-ai.com
+    allow_credentials: true
+  headers:
+    hsts: "max-age=31536000; includeSubDomains; preload"
+    x_frame_options: DENY
+    x_content_type_options: nosniff
+    referrer_policy: strict-origin-when-cross-origin
+  auth:
+    firebase_project: headyme-444017
+    jwt_expiry: 3600
+    cookie_domain: .headysystems.com
+  secret_scanning: true
+  push_protection: true
+
+# ─── Budget / Cost Controls ──────────────────────────────────────────
+budgets:
+  monthly_ai_usd: 500
+  monthly_compute_usd: 200
+  alert_threshold_percent: 80
+
+# ─── Auth Relay ──────────────────────────────────────────────────────
+auth_relay:
+  allowed_domains:
+    - headyme.com
+    - headysystems.com
+    - headyconnection.org
+    - headybuddy.org
+    - headymcp.com
+    - headyio.com
+    - headybot.com
+    - headyapi.com
+    - headyai.com
+  origin: https://auth.headysystems.com
