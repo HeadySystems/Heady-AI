@@ -52,6 +52,9 @@ jobs:
       - name: Security audit
         run: pnpm audit --audit-level=high
 
+      - name: Validate skill src references
+        run: node scripts/validate-skill-refs.js
+
   build:
     name: Build
     runs-on: ubuntu-latest
