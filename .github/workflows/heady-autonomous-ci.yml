@@ -14,45 +14,71 @@ permissions:
   actions: read
 
 env:
-  NODE_VERSION: '25'
-  PNPM_VERSION: '9.15.0'
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.6.0'
 
 jobs:
   lint-and-test:
+    name: Lint & Test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint 2>/dev/null || true
-      - run: pnpm test 2>/dev/null || true
 
-  security-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --prod || true
-      - name: CodeQL Analysis
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+        env:
+          NODE_ENV: test
+
+      - name: Security audit
+        run: pnpm audit --prod --audit-level=high
+
+  codeql:
+    name: CodeQL SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: javascript
-      - uses: github/codeql-action/analyze@v3
+          languages: javascript, python
+          queries: security-extended
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 
   deploy-sites:
+    name: Deploy Sites
     needs: [lint-and-test]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -64,6 +90,7 @@ jobs:
           - { name: heady-ai, dir: sites/heady-ai }
     steps:
       - uses: actions/checkout@v4
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
@@ -73,6 +100,7 @@ jobs:
           directory: ${{ matrix.site.dir }}
 
   health-check:
+    name: Domain Health Check
     needs: [deploy-sites]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -80,22 +108,30 @@ jobs:
       - name: Check all domains
         run: |
           domains=("headyme.com" "headysystems.com" "heady-ai.com" "headymcp.com" "headykey.com" "headyvault.com" "headyconnection.org" "headybuddy.com" "headybrowser.com")
+          failed=0
           for domain in "${domains[@]}"; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" "https://$domain" || echo "000")
+            status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://$domain" || echo "000")
             echo "$domain: $status"
             if [ "$status" != "200" ] && [ "$status" != "301" ] && [ "$status" != "302" ]; then
               echo "::warning::$domain returned $status"
+              failed=$((failed + 1))
             fi
           done
+          if [ $failed -gt 3 ]; then
+            echo "::error::$failed domains unhealthy — investigate immediately"
+            exit 1
+          fi
 
-  notify:
-    needs: [lint-and-test, security-scan]
-    if: always()
+  notify-failure:
+    name: Notify on Failure
+    needs: [lint-and-test, codeql]
+    if: failure()
     runs-on: ubuntu-latest
     steps:
       - name: Report to Sentry
-        if: failure()
         run: |
-          curl -X POST "${{ secrets.SENTRY_DSN }}" \
+          curl -s -X POST "https://sentry.io/api/0/organizations/${{ secrets.SENTRY_ORG }}/releases/" \
+            -H "Authorization: Bearer ${{ secrets.SENTRY_AUTH_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"message": "CI/CD pipeline failed", "level": "error"}'
+            -d "{\"version\":\"${{ github.sha }}\",\"projects\":[\"${{ secrets.SENTRY_PROJECT }}\"],\"status\":\"open\"}" \
+            || true

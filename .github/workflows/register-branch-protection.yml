@@ -1,0 +1,94 @@
+name: Register Branch Protection Checks
+
+# This workflow registers the actual CI check names in branch protection
+# for heady-production, Heady-Main, and Heady-Staging repos.
+# Run manually after updating CI workflows or when branch protection is reset.
+#
+# Required secrets:
+#   GH_PAT_ADMIN: Personal Access Token with repo admin permissions
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (print changes without applying)'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  register-checks:
+    name: Register CI Checks in Branch Protection
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Register branch protection checks
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_ADMIN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+
+          ORG="HeadyMe"
+
+          # Map of repo → required check names (matches job names in CI workflows)
+          declare -A REPO_CHECKS
+          REPO_CHECKS["heady-production"]="Lint & Test,Build,Docker Build Test,CodeQL SAST"
+          REPO_CHECKS["Heady-Main"]="Lint & Test,Build"
+          REPO_CHECKS["Heady-Staging"]="Lint & Test,Build"
+
+          for repo in "${!REPO_CHECKS[@]}"; do
+            echo "=== $ORG/$repo ==="
+
+            IFS=',' read -ra checks <<< "${REPO_CHECKS[$repo]}"
+            checks_json=$(printf '%s\n' "${checks[@]}" | jq -R . | jq -s .)
+
+            echo "Checks to register:"
+            echo "$checks_json"
+
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "[DRY RUN] Would update branch protection for $repo with above checks"
+            else
+              # Get current branch protection
+              current=$(gh api "repos/$ORG/$repo/branches/main/protection" \
+                --jq '.required_status_checks // {"strict": true, "contexts": []}' 2>/dev/null \
+                || echo '{"strict": true, "contexts": []}')
+
+              strict=$(echo "$current" | jq '.strict')
+
+              # Apply updated check names
+              gh api "repos/$ORG/$repo/branches/main/protection" \
+                --method PUT \
+                --input - <<EOF
+          {
+            "required_status_checks": {
+              "strict": $strict,
+              "contexts": $(echo "$checks_json")
+            },
+            "enforce_admins": false,
+            "required_pull_request_reviews": {
+              "required_approving_review_count": 1,
+              "dismiss_stale_reviews": true
+            },
+            "restrictions": null
+          }
+          EOF
+
+              echo "Branch protection updated for $ORG/$repo"
+            fi
+          done
+
+      - name: Verify branch protection
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_ADMIN }}
+        run: |
+          ORG="HeadyMe"
+          for repo in heady-production Heady-Main Heady-Staging; do
+            echo "=== $ORG/$repo ==="
+            gh api "repos/$ORG/$repo/branches/main/protection" \
+              --jq '.required_status_checks | {strict, contexts}'
+          done
