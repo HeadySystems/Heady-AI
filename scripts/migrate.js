@@ -761,6 +761,189 @@ const MIGRATIONS = [
   },
 
   // ---------------------------------------------------------------------------
+  // 0021 — heady_embeddings: phi-HNSW indexed 384-dim vector store
+  // ---------------------------------------------------------------------------
+  {
+    id:    '0021_heady_embeddings',
+    label: 'Create heady_embeddings table with phi-HNSW (m=21, ef=89) cosine index',
+    async up(client) {
+      await exec(client, `
+        CREATE TABLE IF NOT EXISTS heady_embeddings (
+          id          UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+          content     TEXT            NOT NULL,
+          embedding   vector(384)     NOT NULL,
+          metadata    JSONB           DEFAULT '{}',
+          domain      VARCHAR(50),
+          csl_score   REAL            DEFAULT 0.0,
+          pool        VARCHAR(20)     DEFAULT 'cold',
+          created_at  TIMESTAMPTZ     DEFAULT NOW(),
+          updated_at  TIMESTAMPTZ     DEFAULT NOW(),
+          CONSTRAINT chk_he_domain CHECK (
+            domain IS NULL OR domain IN (
+              'intelligence','memory','perception','language','action',
+              'reasoning','learning','coordination','interface'
+            )
+          ),
+          CONSTRAINT chk_he_pool CHECK (pool IN ('hot','warm','cold','reserve')),
+          CONSTRAINT chk_he_csl  CHECK (csl_score >= 0.0 AND csl_score <= 1.0)
+        );
+      `, 'heady_embeddings');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_embeddings_hnsw
+          ON heady_embeddings
+          USING hnsw (embedding vector_cosine_ops)
+          WITH (m = 21, ef_construction = 89);
+      `, 'heady_embeddings hnsw index (m=21 FIB8, ef=89 FIB11)');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_embeddings_metadata_gin
+          ON heady_embeddings USING gin (metadata);
+      `, 'heady_embeddings gin metadata index');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_embeddings_domain_csl
+          ON heady_embeddings (domain, csl_score DESC);
+      `, 'heady_embeddings domain+csl composite index');
+
+      await exec(client, `
+        CREATE OR REPLACE FUNCTION heady_set_updated_at()
+        RETURNS TRIGGER LANGUAGE plpgsql AS $$
+        BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
+        $$;
+
+        DROP TRIGGER IF EXISTS trg_heady_embeddings_updated_at ON heady_embeddings;
+        CREATE TRIGGER trg_heady_embeddings_updated_at
+          BEFORE UPDATE ON heady_embeddings
+          FOR EACH ROW EXECUTE FUNCTION heady_set_updated_at();
+      `, 'heady_embeddings updated_at trigger');
+    },
+    async down(client) {
+      await exec(client, `DROP TABLE IF EXISTS heady_embeddings CASCADE;`);
+    },
+  },
+
+  // ---------------------------------------------------------------------------
+  // 0022 — heady_memory: tiered long-term memory with decay tracking
+  // ---------------------------------------------------------------------------
+  {
+    id:    '0022_heady_memory',
+    label: 'Create heady_memory table with tiered decay and phi-HNSW partial index',
+    async up(client) {
+      await exec(client, `
+        CREATE TABLE IF NOT EXISTS heady_memory (
+          id            UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+          key           VARCHAR(255)    UNIQUE NOT NULL,
+          value         JSONB           NOT NULL,
+          embedding     vector(384),
+          tier          VARCHAR(20)     DEFAULT 'T2',
+          decay_rate    REAL            DEFAULT 0.01,
+          access_count  INTEGER         DEFAULT 0,
+          last_accessed TIMESTAMPTZ     DEFAULT NOW(),
+          created_at    TIMESTAMPTZ     DEFAULT NOW(),
+          CONSTRAINT chk_hm_tier CHECK (tier IN ('T0','T1','T2')),
+          CONSTRAINT chk_hm_decay CHECK (decay_rate > 0.0)
+        );
+      `, 'heady_memory');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_memory_hnsw
+          ON heady_memory
+          USING hnsw (embedding vector_cosine_ops)
+          WITH (m = 21, ef_construction = 89)
+          WHERE embedding IS NOT NULL;
+      `, 'heady_memory partial hnsw index');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_memory_tier_accessed
+          ON heady_memory (tier, last_accessed DESC);
+        CREATE INDEX IF NOT EXISTS idx_heady_memory_access_count
+          ON heady_memory (access_count DESC);
+      `, 'heady_memory composite indexes');
+
+      await exec(client, `
+        CREATE OR REPLACE FUNCTION heady_touch_memory(p_key VARCHAR(255))
+        RETURNS VOID LANGUAGE plpgsql AS $$
+        BEGIN
+          UPDATE heady_memory
+          SET last_accessed = NOW(), access_count = access_count + 1
+          WHERE key = p_key;
+        END;
+        $$;
+      `, 'heady_touch_memory function');
+    },
+    async down(client) {
+      await exec(client, `DROP TABLE IF EXISTS heady_memory CASCADE;`);
+      await exec(client, `DROP FUNCTION IF EXISTS heady_touch_memory;`);
+    },
+  },
+
+  // ---------------------------------------------------------------------------
+  // 0023 — heady_config: key/value config store with scoped namespacing
+  // ---------------------------------------------------------------------------
+  {
+    id:    '0023_heady_config',
+    label: 'Create heady_config key-value store with scoped namespacing and versioning',
+    async up(client) {
+      await exec(client, `
+        CREATE TABLE IF NOT EXISTS heady_config (
+          id          UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+          -- Dot-namespaced key: e.g. "pipeline.ors_threshold", "feature.dark_mode"
+          key         VARCHAR(512)    NOT NULL,
+          -- Config scope: global | service | agent | user
+          scope       VARCHAR(50)     NOT NULL DEFAULT 'global',
+          -- Optional scope owner ID (service name, agent ID, or user UUID)
+          scope_id    VARCHAR(255),
+          value       JSONB           NOT NULL,
+          -- Config schema/type for validation: string | number | boolean | object | array
+          value_type  VARCHAR(50)     DEFAULT 'object',
+          -- Human-readable description of what this config key controls
+          description TEXT,
+          -- Version counter; incremented on every update
+          version     INTEGER         NOT NULL DEFAULT 1,
+          -- Whether this config can be updated at runtime without restart
+          hot_reload  BOOLEAN         DEFAULT true,
+          created_at  TIMESTAMPTZ     DEFAULT NOW(),
+          updated_at  TIMESTAMPTZ     DEFAULT NOW(),
+          -- NULL scope_id = no specific owner (global/service level configs)
+          CONSTRAINT uq_heady_config_key_scope UNIQUE NULLS NOT DISTINCT (key, scope, scope_id),
+          CONSTRAINT chk_hc_scope CHECK (scope IN ('global','service','agent','user'))
+        );
+      `, 'heady_config');
+
+      await exec(client, `
+        CREATE INDEX IF NOT EXISTS idx_heady_config_key ON heady_config (key);
+        CREATE INDEX IF NOT EXISTS idx_heady_config_scope ON heady_config (scope, scope_id);
+      `, 'heady_config indexes');
+
+      await exec(client, `
+        DROP TRIGGER IF EXISTS trg_heady_config_updated_at ON heady_config;
+        CREATE TRIGGER trg_heady_config_updated_at
+          BEFORE UPDATE ON heady_config
+          FOR EACH ROW EXECUTE FUNCTION heady_set_updated_at();
+      `, 'heady_config updated_at trigger');
+
+      // Seed critical runtime defaults
+      await exec(client, `
+        INSERT INTO heady_config (key, scope, value, value_type, description)
+        VALUES
+          ('pipeline.ors_threshold.full_parallel', 'global', '85',    'number', 'ORS score above which full parallelism is enabled'),
+          ('pipeline.ors_threshold.normal',        'global', '70',    'number', 'ORS score for normal operation mode'),
+          ('pipeline.ors_threshold.maintenance',   'global', '50',    'number', 'ORS score for maintenance mode'),
+          ('pipeline.ors_threshold.recovery',      'global', '0',     'number', 'ORS score for recovery-only mode'),
+          ('csl.coherence_drift_threshold',        'global', '0.809', 'number', 'Minimum cosine similarity before drift alert'),
+          ('sentry.traces_sample_rate',            'global', '0.1',   'number', 'Sentry distributed tracing sample rate for production'),
+          ('rate_limit.auth.max',                  'global', '20',    'number', 'Max auth login requests per 15-minute window'),
+          ('rate_limit.api.max',                   'global', '1000',  'number', 'Max general API requests per 15-minute window')
+        ON CONFLICT (key, scope, scope_id) DO NOTHING;
+      `, 'heady_config default seeds');
+    },
+    async down(client) {
+      await exec(client, `DROP TABLE IF EXISTS heady_config CASCADE;`);
+    },
+  },
+
+  // ---------------------------------------------------------------------------
   // 0020 — Row-level security policies (optional hardening)
   // ---------------------------------------------------------------------------
   {
