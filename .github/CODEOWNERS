@@ -1,19 +1,26 @@
-# Heady™ Latent OS — Code Ownership
-# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+# CODEOWNERS for Heady Production
+# Eric Haywood owns all security-sensitive paths
 
-# Default — Eric Head reviews everything
-* @erichaywood
+# Root config
+/* @HeadyMe/core
 
-# Core server infrastructure
-src/core/ @erichaywood
-services/ @erichaywood
+# Authentication & Security
+src/auth/ @HeadyMe/core
+src/security/ @HeadyMe/core
+src/bees/security-bee.js @HeadyMe/core
+src/bees/governance-bee.js @HeadyMe/core
 
-# Security-sensitive files
-.github/ @erichaywood
-Dockerfile @erichaywood
-docker-compose*.yml @erichaywood
-*.env* @erichaywood
+# Infrastructure
+.github/ @HeadyMe/core
+Dockerfile* @HeadyMe/core
+docker-compose* @HeadyMe/core
+*.yml @HeadyMe/core
 
-# Content and branding
-content/ @erichaywood
-public/ @erichaywood
+# Payment & Billing
+src/billing/ @HeadyMe/core
+src/bees/trading-bee.js @HeadyMe/core
+
+# Secrets & Environment
+.env* @HeadyMe/core
+*.key @HeadyMe/core
+*.pem @HeadyMe/core
