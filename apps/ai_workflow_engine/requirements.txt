@@ -25,7 +25,7 @@ aiofiles==23.2.1
 # Authentication and security
 cryptography>=41.0.0
 PyJWT>=2.10.1
-python-multipart==0.0.22
+python-multipart==0.0.26
 
 # Data processing and serialization
 pydantic==2.5.2
