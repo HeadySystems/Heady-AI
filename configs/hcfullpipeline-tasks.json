@@ -3,42 +3,42 @@
   "version": "9.0.2",
   "pipeline": "hcfullpipeline",
   "generatedAt": "2026-03-10T05:41:52Z",
-  "lastFineTuned": "2026-05-07T19:32:10.840Z",
+  "lastFineTuned": "2026-05-07T19:32:13.368Z",
   "phi": 1.618033988749895,
   "pipelineStages": 22,
   "pipelineCompletionTarget": "φ⁵ × 1.09 ≈ 12.1s",
   "description": "Complete task queue for HCFullPipeline v9.0 — 22 stages (HeadyDistiller = Stage 22: Knowledge Distillation & Compression). Liquid Architecture v9.0 with 8 cloud providers, 4 Colab runtimes, Neon+Upstash+Qdrant data layer.",
-  "taskCount": 782,
+  "taskCount": 1010,
   "concurrentEquals": true,
   "paradigm": "All tasks are concurrent-equals. No ranking, no priority tiering. CSL resonance determines contextual relevance, not importance hierarchy.",
   "categories": {
     "SECURITY": {
       "csl_resonance": 1,
-      "tasks": 39
+      "tasks": 43
     },
     "INFRASTRUCTURE": {
       "csl_resonance": 1,
-      "tasks": 98
+      "tasks": 110
     },
     "ARCHITECTURE": {
       "csl_resonance": 1,
-      "tasks": 44
+      "tasks": 50
     },
     "QUALITY": {
       "csl_resonance": 1,
-      "tasks": 72
+      "tasks": 77
     },
     "DOCUMENTATION": {
       "csl_resonance": 1,
-      "tasks": 35
+      "tasks": 38
     },
     "SCALING": {
       "csl_resonance": 1,
-      "tasks": 19
+      "tasks": 20
     },
     "FEATURES": {
       "csl_resonance": 1,
-      "tasks": 67
+      "tasks": 96
     },
     "REMEDIATION": {
       "csl_resonance": 1,
@@ -54,7 +54,7 @@
     },
     "FIX": {
       "csl_resonance": 1,
-      "tasks": 39
+      "tasks": 263
     },
     "REPO_INTEL": {
       "csl_resonance": 1,
@@ -106,7 +106,7 @@
     },
     "SITE_CONTENT": {
       "csl_resonance": 1.618,
-      "tasks": 9
+      "tasks": 10
     },
     "COLAB_4X": {
       "csl_resonance": 1.618,
@@ -118,7 +118,7 @@
     },
     "PIPELINE": {
       "csl_resonance": 1.618,
-      "tasks": 3
+      "tasks": 6
     },
     "ABSORPTION": {
       "csl_resonance": 1.618,
@@ -127,10 +127,6 @@
     "DISTILLATION": {
       "csl_resonance": 1.618,
       "tasks": 1
-    },
-    "AIEDUCLABS": {
-      "csl_resonance": 1.618,
-      "tasks": 18
     }
   },
   "tasks": [
@@ -1562,8 +1558,8 @@
     {
       "id": "REM-003",
       "category": "REMEDIATION",
-      "title": "Fix 8 remaining Eric Head → Eric Haywood references",
-      "description": "Audit found 8 references to 'Eric Head' that should be 'Eric Haywood'. Files: heady-improvements.py (1), perplexity-space-instruction.md (2, × 2 copies), max_potential_rebuild_audit.py (2). HEADY_CONTEXT.md already corrected",
+      "title": "Fix 8 remaining Eric Head → HeadyMe references",
+      "description": "Audit found 8 references to 'Eric Head' that should be 'HeadyMe'. Files: heady-improvements.py (1), perplexity-space-instruction.md (2, × 2 copies), max_potential_rebuild_audit.py (2). HEADY_CONTEXT.md already corrected",
       "status": "done",
       "notes": "HEADY_CONTEXT.md corrected in Session 5. 6 remaining refs in archive/skill files need cleanup",
       "csl_confidence": 0.927,
@@ -3487,8 +3483,8 @@
     {
       "id": "DEPLOY-007",
       "category": "DEPLOY",
-      "title": "Investigate heady-ai.com and headyai.org domain availability",
-      "description": "Neither heady-ai.com nor headyai.org appear in official domain portfolio. Check availability, register if possible, or document decision not to register. Note: Finnish company Headai (headai.com) exists — brand confusion risk",
+      "title": "Investigate headyai.com and headyai.org domain availability",
+      "description": "Neither headyai.com nor headyai.org appear in official domain portfolio. Check availability, register if possible, or document decision not to register. Note: Finnish company Headai (headai.com) exists — brand confusion risk",
       "status": "done",
       "csl_confidence": 0.618,
       "estimated_hours": 1,
@@ -4813,7 +4809,7 @@
     {
       "id": "SITE-006",
       "category": "DEPLOY",
-      "title": "Build heady-ai.com — AI research and community site",
+      "title": "Build headyai.com — AI research and community site",
       "description": "HeadyAI research portal. Model docs, API reference, community hub.",
       "status": "done",
       "csl_confidence": 0.8,
@@ -7955,7 +7951,7 @@
       "estimated_hours": 3,
       "source": "Super Prompt v6.0 §18 Stripe webhook",
       "auto_fix": "curl -s -o /dev/null -w '%{http_code}' https://headyapi.com/webhooks/health",
-      "completedAt": "2026-03-21T18:05:16.191Z",
+      "completedAt": "2026-03-29T14:31:24.125Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -7968,7 +7964,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §4 Law 4 — Implementation Completeness",
       "auto_fix": "find docs/ -name 'openapi*' -mtime +21 | wc -l",
-      "completedAt": "2026-03-21T18:05:16.215Z",
+      "completedAt": "2026-03-29T14:31:24.132Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -7981,7 +7977,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §2 Glass Box Mandate",
       "auto_fix": "git log --oneline -5 | grep -v CHANGELOG",
-      "completedAt": "2026-03-21T18:05:16.249Z",
+      "completedAt": "2026-03-29T14:31:24.138Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -7994,7 +7990,7 @@
       "estimated_hours": 4,
       "source": "Super Prompt v6.0 §13 Domain Map — 10 core domains",
       "auto_fix": "echo | openssl s_client -servername headysystems.com -connect headysystems.com:443 2>/dev/null | openssl x509 -noout -dates",
-      "completedAt": "2026-03-21T18:05:16.430Z",
+      "completedAt": "2026-03-29T14:31:24.235Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8007,7 +8003,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §18 Cloud Run infra",
       "auto_fix": "gcloud run revisions list --service heady-manager --format='value(name,status.conditions)' 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:20.483Z",
+      "completedAt": "2026-03-29T14:31:26.456Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8020,7 +8016,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §18 Cloudflare edge",
       "auto_fix": "curl -sI https://headysystems.com/assets/logo.svg | grep cf-cache-status",
-      "completedAt": "2026-03-21T18:05:20.661Z",
+      "completedAt": "2026-03-29T14:31:26.724Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8033,7 +8029,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §20 HeadyAutoContext v2",
       "auto_fix": "find .heady -name 'autocontext-vectors*' -mtime +7 | wc -l",
-      "completedAt": "2026-03-21T18:05:20.679Z",
+      "completedAt": "2026-03-29T14:31:26.728Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8057,7 +8053,7 @@
       "estimated_hours": 4,
       "source": "Super Prompt v6.0 §14 AI Provider Routing Mesh",
       "auto_fix": "echo 'Multi-model council health check'",
-      "completedAt": "2026-03-21T18:05:20.907Z",
+      "completedAt": "2026-03-29T14:31:26.761Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8070,7 +8066,7 @@
       "estimated_hours": 4,
       "source": "Super Prompt v6.0 §9 Oracle swarm — CostTrackerBee",
       "auto_fix": "grep -rn 'ANTHROPIC_API_KEY\\|OPENAI_API_KEY' .env 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:20.920Z",
+      "completedAt": "2026-03-29T14:31:26.764Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8094,7 +8090,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §17 φ-scaled governance",
       "auto_fix": "find data/memory -name '*.jsonl' -mtime +21 | wc -l",
-      "completedAt": "2026-03-21T18:05:23.570Z",
+      "completedAt": "2026-03-29T14:31:27.873Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8118,7 +8114,7 @@
       "estimated_hours": 2,
       "source": "Super Prompt v6.0 §28 Colab Pro+ cluster",
       "auto_fix": "find data/ -name 'finetune*' 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:23.871Z",
+      "completedAt": "2026-03-29T14:31:27.901Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8142,7 +8138,7 @@
       "estimated_hours": 8,
       "source": "Super Prompt v6.0 §20 Gateway Middleware",
       "auto_fix": "grep -rn 'wrapGateway' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:26.713Z",
+      "completedAt": "2026-03-29T14:31:28.099Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8155,7 +8151,7 @@
       "estimated_hours": 6,
       "source": "Super Prompt v6.0 §20 Mandatory Integration Points",
       "auto_fix": "grep -rn 'onAuthStateChanged' src/auth/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:26.732Z",
+      "completedAt": "2026-03-29T14:31:28.103Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8168,7 +8164,7 @@
       "estimated_hours": 12,
       "source": "Super Prompt v6.0 §21 Buddy Deterministic Optimization Loop",
       "auto_fix": "grep -rn 'optimization.*loop\\|OptimizationLoop' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:26.795Z",
+      "completedAt": "2026-05-07T19:20:20.004Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8181,7 +8177,7 @@
       "estimated_hours": 6,
       "source": "Super Prompt v6.0 §21 Active Learned Rules",
       "auto_fix": "grep -rn 'LR-00' src/ configs/ 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:27.274Z",
+      "completedAt": "2026-03-29T14:31:28.230Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8194,7 +8190,7 @@
       "estimated_hours": 6,
       "source": "Super Prompt v6.0 §28 Colab Pro+ GPU Cluster",
       "auto_fix": "grep -rn 'colab.*pulse\\|ColabRuntime' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:27.449Z",
+      "completedAt": "2026-03-29T14:31:28.347Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8207,7 +8203,7 @@
       "estimated_hours": 10,
       "source": "Super Prompt v6.0 §28 SwarmDispatch integration",
       "auto_fix": "grep -rn 'SwarmDispatch\\|colab.*dispatch' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:27.754Z",
+      "completedAt": "2026-03-29T14:31:28.469Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8220,7 +8216,7 @@
       "estimated_hours": 12,
       "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Sentinel",
       "auto_fix": "find src/bees/ -name '*sentinel*' -o -name '*threat*' -o -name '*vuln*' 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:27.766Z",
+      "completedAt": "2026-03-29T14:31:28.473Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8233,7 +8229,7 @@
       "estimated_hours": 10,
       "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Quant",
       "auto_fix": "find src/bees/ -name '*market*' -o -name '*trading*' 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:27.782Z",
+      "completedAt": "2026-03-29T14:31:28.477Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8246,7 +8242,7 @@
       "estimated_hours": 8,
       "source": "Super Prompt v6.0 §9 17-Swarm Matrix — Diplomat",
       "auto_fix": "find src/bees/ -name '*procurement*' -o -name '*diplomat*' 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:27.838Z",
+      "completedAt": "2026-03-29T14:31:28.481Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8259,7 +8255,7 @@
       "estimated_hours": 4,
       "source": "hcfullpipeline.yaml stage 0 channel-entry",
       "auto_fix": "grep -rn 'scan_3d_persistent' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:28.189Z",
+      "completedAt": "2026-03-29T14:31:28.599Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8272,7 +8268,7 @@
       "estimated_hours": 4,
       "source": "hcfullpipeline.yaml stage 1 recon",
       "auto_fix": "grep -rn 'scan_attack_surface\\|attack.*surface' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:28.440Z",
+      "completedAt": "2026-03-29T14:31:28.745Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8285,7 +8281,7 @@
       "estimated_hours": 3,
       "source": "hcfullpipeline.yaml stage 1 recon",
       "auto_fix": "grep -rn 'cost_trajectory\\|scan_cost' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:28.923Z",
+      "completedAt": "2026-03-29T14:31:28.906Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8298,7 +8294,7 @@
       "estimated_hours": 3,
       "source": "hcfullpipeline.yaml stage 3 classify",
       "auto_fix": "grep -rn 'compute_csl_resonance\\|csl_resonance' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:29.964Z",
+      "completedAt": "2026-03-29T14:31:29.035Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8311,7 +8307,7 @@
       "estimated_hours": 2,
       "source": "hcfullpipeline.yaml stage 3 classify",
       "auto_fix": "grep -rn 'public_domain_inspiration' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:30.758Z",
+      "completedAt": "2026-03-29T14:31:29.147Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8324,7 +8320,7 @@
       "estimated_hours": 3,
       "source": "hcfullpipeline.yaml stage 4 triage",
       "auto_fix": "find configs/governance -name 'governance-policies*' 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:30.790Z",
+      "completedAt": "2026-03-29T14:31:29.151Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8337,7 +8333,7 @@
       "estimated_hours": 4,
       "source": "hcfullpipeline.yaml stage 6 trial-and-error",
       "auto_fix": "grep -rn 'setup_sandbox\\|sandbox_env' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:30.966Z",
+      "completedAt": "2026-03-29T14:31:29.262Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8350,7 +8346,7 @@
       "estimated_hours": 2,
       "source": "hcfullpipeline.yaml stage 6 trial-and-error",
       "auto_fix": "grep -rn 'cleanup_sandbox' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:31.233Z",
+      "completedAt": "2026-03-29T14:31:29.371Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8363,7 +8359,7 @@
       "estimated_hours": 3,
       "source": "hcfullpipeline.yaml stage 12 execute",
       "auto_fix": "grep -rn 'metacognitive\\|assess_confidence' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:31.545Z",
+      "completedAt": "2026-03-29T14:31:29.552Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8376,7 +8372,7 @@
       "estimated_hours": 3,
       "source": "hcfullpipeline.yaml stage 16 mistake-analysis",
       "auto_fix": "grep -rn 'immunize_pipeline\\|prevention_guard' src/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:32.884Z",
+      "completedAt": "2026-03-29T14:31:29.752Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8389,7 +8385,7 @@
       "estimated_hours": 10,
       "source": "hcfullpipeline.yaml event-spine section",
       "auto_fix": "redis-cli -u $REDIS_URL XINFO GROUPS hcfullpipeline-stream 2>/dev/null || echo 'Event Spine not configured'",
-      "completedAt": "2026-03-21T18:05:32.933Z",
+      "completedAt": "2026-03-29T14:31:29.760Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8402,7 +8398,7 @@
       "estimated_hours": 12,
       "source": "hcfullpipeline.yaml execution.implementation",
       "auto_fix": "test -f src/orchestration/hcfullpipeline.js && echo 'exists' || echo 'MISSING: pipeline execution engine'",
-      "completedAt": "2026-03-21T18:05:32.947Z",
+      "completedAt": "2026-03-29T14:31:29.761Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8415,7 +8411,7 @@
       "estimated_hours": 6,
       "source": "Super Prompt v6.0 §8 Stage 20 RECEIPT + hcfullpipeline.yaml",
       "auto_fix": "find configs/pki -name '*ed25519*' 2>/dev/null | wc -l",
-      "completedAt": "2026-03-21T18:05:32.961Z",
+      "completedAt": "2026-03-29T14:31:29.765Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8428,7 +8424,7 @@
       "estimated_hours": 6,
       "source": "Super Prompt v6.0 §10 CSL Gates + pipeline YAML stages 3,10",
       "auto_fix": "grep -rn 'csl-engine' src/orchestration/ 2>/dev/null | head -3",
-      "completedAt": "2026-03-21T18:05:33.074Z",
+      "completedAt": "2026-03-29T14:31:29.771Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8441,7 +8437,7 @@
       "estimated_hours": 2,
       "source": "hcfullpipeline.yaml receipt stage signing config",
       "auto_fix": "test -f configs/pki/ed25519-receipt-key.pem && echo 'Key exists' || echo 'MISSING: Ed25519 key'",
-      "completedAt": "2026-03-21T18:05:33.110Z",
+      "completedAt": "2026-03-29T14:31:29.773Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8454,7 +8450,7 @@
       "estimated_hours": 16,
       "source": "OpenClaw gap analysis — no real-time collaboration",
       "auto_fix": "echo '[ABS] ABS-001: CRDT multiplayer needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.130Z",
+      "completedAt": "2026-03-29T14:31:29.775Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8467,7 +8463,7 @@
       "estimated_hours": 12,
       "source": "OpenHands event-stream architecture",
       "auto_fix": "echo '[ABS] ABS-002: EventBus typed actions need implementation'",
-      "completedAt": "2026-03-21T18:05:33.139Z",
+      "completedAt": "2026-03-29T14:31:29.777Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8480,7 +8476,7 @@
       "estimated_hours": 16,
       "source": "Temporal.io durable execution pattern",
       "auto_fix": "echo '[ABS] ABS-003: Durable execution needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.160Z",
+      "completedAt": "2026-03-29T14:31:29.779Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8493,7 +8489,7 @@
       "estimated_hours": 12,
       "source": "Aider PageRank-based repository map",
       "auto_fix": "echo '[ABS] ABS-004: PageRank repo maps need implementation'",
-      "completedAt": "2026-03-21T18:05:33.181Z",
+      "completedAt": "2026-03-29T14:31:29.780Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8506,7 +8502,7 @@
       "estimated_hours": 10,
       "source": "Cursor Merkle tree indexing architecture",
       "auto_fix": "echo '[ABS] ABS-005: Merkle tree indexing needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.200Z",
+      "completedAt": "2026-03-29T14:31:29.782Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8519,7 +8515,7 @@
       "estimated_hours": 8,
       "source": "MetaGPT structured SOP outputs — 85.9% Pass@1 on HumanEval",
       "auto_fix": "echo '[ABS] ABS-006: SOP templates need implementation'",
-      "completedAt": "2026-03-21T18:05:33.229Z",
+      "completedAt": "2026-03-29T14:31:29.783Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8532,7 +8528,7 @@
       "estimated_hours": 8,
       "source": "LiteLLM/Bifrost semantic caching — 95% cost reduction",
       "auto_fix": "echo '[ABS] ABS-007: Semantic caching needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.253Z",
+      "completedAt": "2026-03-29T14:31:29.784Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8545,7 +8541,7 @@
       "estimated_hours": 8,
       "source": "SWE-Agent Agent-Computer Interface — NeurIPS 2024",
       "auto_fix": "echo '[ABS] ABS-008: Linter-gated editing needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.263Z",
+      "completedAt": "2026-03-29T14:31:29.786Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8558,7 +8554,7 @@
       "estimated_hours": 10,
       "source": "Aider Architect/Editor separation pattern",
       "auto_fix": "echo '[ABS] ABS-009: Dual-pass model separation needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.269Z",
+      "completedAt": "2026-03-29T14:31:29.787Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8571,7 +8567,7 @@
       "estimated_hours": 6,
       "source": "Claude Code hooks system",
       "auto_fix": "echo '[ABS] ABS-010: Hook system needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.274Z",
+      "completedAt": "2026-03-29T14:31:29.789Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8584,7 +8580,7 @@
       "estimated_hours": 8,
       "source": "OpenClaw Layer 4 hybrid search architecture",
       "auto_fix": "echo '[ABS] ABS-011: Hybrid search fusion needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.278Z",
+      "completedAt": "2026-03-29T14:31:29.791Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8597,7 +8593,7 @@
       "estimated_hours": 24,
       "source": "n8n visual flow builder — 500+ integrations",
       "auto_fix": "echo '[ABS] ABS-012: Visual workflow builder needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.283Z",
+      "completedAt": "2026-03-29T14:31:29.792Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8610,7 +8606,7 @@
       "estimated_hours": 12,
       "source": "IronClaw capability-based WASM security model",
       "auto_fix": "echo '[ABS] ABS-013: WASM permissions need implementation'",
-      "completedAt": "2026-03-21T18:05:33.287Z",
+      "completedAt": "2026-03-29T14:31:29.794Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8623,7 +8619,7 @@
       "estimated_hours": 10,
       "source": "Windsurf dual planning/execution architecture",
       "auto_fix": "echo '[ABS] ABS-014: Intent inference needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.291Z",
+      "completedAt": "2026-03-29T14:31:29.795Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8636,7 +8632,7 @@
       "estimated_hours": 8,
       "source": "Bolt.new WebContainers — 5M+ users, $40M ARR",
       "auto_fix": "echo '[ABS] ABS-015: WebContainer scaffold needs creation'",
-      "completedAt": "2026-03-21T18:05:33.320Z",
+      "completedAt": "2026-03-29T14:31:29.797Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8649,7 +8645,7 @@
       "estimated_hours": 6,
       "source": "Continue.dev AI Checks system",
       "auto_fix": "echo '[ABS] ABS-016: Markdown CI checks need implementation'",
-      "completedAt": "2026-03-21T18:05:33.333Z",
+      "completedAt": "2026-03-29T14:31:29.799Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8662,7 +8658,7 @@
       "estimated_hours": 8,
       "source": "Devin v3 dynamic re-planning — 67% PR merge rate",
       "auto_fix": "echo '[ABS] ABS-017: Dynamic re-planning needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.365Z",
+      "completedAt": "2026-03-29T14:31:29.800Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8675,7 +8671,7 @@
       "estimated_hours": 6,
       "source": "Cursor speculative decoding architecture",
       "auto_fix": "echo '[ABS] ABS-018: Speculative decoding needs scaffolding'",
-      "completedAt": "2026-03-21T18:05:33.382Z",
+      "completedAt": "2026-03-29T14:31:29.802Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8688,7 +8684,7 @@
       "estimated_hours": 6,
       "source": "CrewAI role-based agent abstraction — 45.9K stars",
       "auto_fix": "echo '[ABS] ABS-019: CrewAI abstraction needs extension'",
-      "completedAt": "2026-03-21T18:05:33.417Z",
+      "completedAt": "2026-03-29T14:31:29.804Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8701,7 +8697,7 @@
       "estimated_hours": 12,
       "source": "Extism WASM plugin system + WebAssembly Component Model",
       "auto_fix": "echo '[ABS] ABS-020: Extism integration needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.425Z",
+      "completedAt": "2026-03-29T14:31:29.805Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8714,7 +8710,7 @@
       "estimated_hours": 10,
       "source": "MCP protocol — 97M+ monthly SDK downloads",
       "auto_fix": "echo '[ABS] ABS-021: Bidirectional MCP needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.431Z",
+      "completedAt": "2026-03-29T14:31:29.807Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8727,7 +8723,7 @@
       "estimated_hours": 8,
       "source": "Yjs Awareness CRDT protocol",
       "auto_fix": "echo '[ABS] ABS-022: Awareness CRDT needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.435Z",
+      "completedAt": "2026-03-29T14:31:29.809Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8740,7 +8736,7 @@
       "estimated_hours": 4,
       "source": "Yjs Y.UndoManager per-agent pattern",
       "auto_fix": "echo '[ABS] ABS-023: Per-agent UndoManager needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.440Z",
+      "completedAt": "2026-03-29T14:31:29.811Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8753,7 +8749,7 @@
       "estimated_hours": 8,
       "source": "Aider/Cursor codebase indexing pipeline",
       "auto_fix": "echo '[ABS] ABS-024: Dependency graph needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.446Z",
+      "completedAt": "2026-03-29T14:31:29.812Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8766,7 +8762,7 @@
       "estimated_hours": 6,
       "source": "Codebase indexing pipeline — drift detection",
       "auto_fix": "echo '[ABS] ABS-025: Drift detection needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.453Z",
+      "completedAt": "2026-03-29T14:31:29.813Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8779,7 +8775,7 @@
       "estimated_hours": 8,
       "source": "Greptile research + MetaGPT SOP pattern",
       "auto_fix": "echo '[ABS] ABS-026: Auto-documentation needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.461Z",
+      "completedAt": "2026-03-29T14:31:29.815Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8792,7 +8788,7 @@
       "estimated_hours": 8,
       "source": "Anthropic/OpenAI hybrid streaming pattern",
       "auto_fix": "echo '[ABS] ABS-027: Hybrid streaming needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.468Z",
+      "completedAt": "2026-03-29T14:31:29.816Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8805,7 +8801,7 @@
       "estimated_hours": 10,
       "source": "TrueFoundry/ContextForge MCP Gateway",
       "auto_fix": "echo '[ABS] ABS-028: MCP Gateway needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.472Z",
+      "completedAt": "2026-03-29T14:31:29.818Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8818,7 +8814,7 @@
       "estimated_hours": 6,
       "source": "LangGraph Send API — 60% latency reduction",
       "auto_fix": "echo '[ABS] ABS-029: Fan-out/fan-in needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.475Z",
+      "completedAt": "2026-03-29T14:31:29.819Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8831,7 +8827,7 @@
       "estimated_hours": 8,
       "source": "Cisco ClawHub security audit — CVE-2026-25253",
       "auto_fix": "echo '[ABS] ABS-030: Skill security scanning needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.481Z",
+      "completedAt": "2026-03-29T14:31:29.821Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8844,7 +8840,7 @@
       "estimated_hours": 6,
       "source": "LiteLLM multi-provider routing — 33K+ stars",
       "auto_fix": "echo '[ABS] ABS-031: LiteLLM integration needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.487Z",
+      "completedAt": "2026-03-29T14:31:29.823Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8857,7 +8853,7 @@
       "estimated_hours": 8,
       "source": "OpenClaw tool policy cascade architecture",
       "auto_fix": "echo '[ABS] ABS-032: Tool policy cascade needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.496Z",
+      "completedAt": "2026-03-29T14:31:29.825Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8870,7 +8866,7 @@
       "estimated_hours": 6,
       "source": "OpenClaw sub-agent spawning pattern",
       "auto_fix": "echo '[ABS] ABS-033: Sub-agent spawning needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.505Z",
+      "completedAt": "2026-03-29T14:31:29.826Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8883,7 +8879,7 @@
       "estimated_hours": 6,
       "source": "OpenClaw steer queue mode",
       "auto_fix": "echo '[ABS] ABS-034: Steer queue needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.512Z",
+      "completedAt": "2026-03-29T14:31:29.828Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8896,7 +8892,7 @@
       "estimated_hours": 4,
       "source": "OpenClaw auto-compaction pattern",
       "auto_fix": "echo '[ABS] ABS-035: Auto-compaction needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.525Z",
+      "completedAt": "2026-03-29T14:31:29.829Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8909,7 +8905,7 @@
       "estimated_hours": 6,
       "source": "Greptile research — 12% retrieval quality improvement",
       "auto_fix": "echo '[ABS] ABS-036: NL code summaries need implementation'",
-      "completedAt": "2026-03-21T18:05:33.536Z",
+      "completedAt": "2026-03-29T14:31:29.831Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8922,7 +8918,7 @@
       "estimated_hours": 16,
       "source": "Heady exclusive — distributed GPU inference",
       "auto_fix": "echo '[ABS] ABS-037: GPU inference mesh needs implementation'",
-      "completedAt": "2026-03-21T18:05:33.540Z",
+      "completedAt": "2026-03-29T14:31:29.833Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -8935,7 +8931,7 @@
       "estimated_hours": 8,
       "source": "Heady exclusive — CSL continuous conditionals",
       "auto_fix": "echo '[ABS] ABS-038: CSL continuous conditionals need implementation'",
-      "completedAt": "2026-03-21T18:05:33.544Z",
+      "completedAt": "2026-03-29T14:31:29.835Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9111,7 +9107,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:33.548Z",
+      "completedAt": "2026-03-29T14:31:29.836Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9137,7 +9133,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:38.683Z",
+      "completedAt": "2026-03-29T14:31:31.511Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9151,7 +9147,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:38.692Z",
+      "completedAt": "2026-03-29T14:31:31.512Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9189,7 +9185,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:43.073Z",
+      "completedAt": "2026-03-29T14:31:32.676Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9203,7 +9199,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:43.082Z",
+      "completedAt": "2026-03-29T14:31:32.677Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9217,7 +9213,7 @@
       "assignee": "auto-success-engine",
       "source": "v8-super-prompt",
       "created": "2026-03-16",
-      "completedAt": "2026-03-21T18:05:43.090Z",
+      "completedAt": "2026-03-29T14:31:32.679Z",
       "completedBy": "auto-success-engine-v2"
     },
     {
@@ -9247,590 +9243,898 @@
       "created": "2026-03-16"
     },
     {
-      "id": "AIEDUCLABS-001",
-      "category": "AIEDUCLABS",
-      "title": "Deploy AI Educational Labs site to Cloud Run",
-      "description": "Build and deploy sites/aieducationallabs/ to Cloud Run with Dockerfile, health check, and domain mapping for aieducationallabs.ai",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
+      "id": "PIPE-006",
+      "category": "PIPELINE",
+      "title": "Implement scripts/merge-auto-extracted-tasks.mjs to merge reviewed rows from data/auto-extracted-tasks.json into configs/hcfullpipeline-t…",
+      "description": "Implement scripts/merge-auto-extracted-tasks.mjs to merge reviewed rows from data/auto-extracted-tasks.json into configs/hcfullpipeline-tasks.json with title deduplication and per-prefix ID assignment.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/auto-extract-implementation.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "PIPE-007",
+      "category": "PIPELINE",
+      "title": "Autonomous Linear-to-HCFP Reconciliation",
+      "description": "Drain pending tasks from Linear into the Auto-Success Engine task queue using scripts/drain-linear-to-hcfp.mjs.",
+      "status": "pending",
+      "source": "Heady Sovereignty Integration v1.0",
       "csl_confidence": 0.927,
-      "estimated_hours": 2,
-      "auto_fix": "curl -s https://aieducationallabs.ai/health | jq .status"
-    },
-    {
-      "id": "AIEDUCLABS-002",
-      "category": "AIEDUCLABS",
-      "title": "Earth Sciences lab module — plate tectonics, weather, geology",
-      "description": "Canvas-based interactive simulations for plate tectonic drift, weather pattern modeling, and geological layer exploration",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] Earth Sciences module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-003",
-      "category": "AIEDUCLABS",
-      "title": "Biology lab module — cell explorer, DNA, ecosystems",
-      "description": "Interactive biology simulations: 3D cell navigation, DNA replication steps, predator-prey ecosystem modeling",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] Biology module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-004",
-      "category": "AIEDUCLABS",
-      "title": "Chemistry lab module — molecular builder, reactions, periodic table",
-      "description": "3D molecule construction, chemical reaction dynamics simulator, interactive periodic table with orbital configs",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] Chemistry module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-005",
-      "category": "AIEDUCLABS",
-      "title": "Physics lab module — projectile motion, optics, circuits",
-      "description": "Kinematics projectile launcher, optical bench with lenses/mirrors, real-time circuit analysis simulator",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] Physics module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-006",
-      "category": "AIEDUCLABS",
-      "title": "Computer Science & AI lab module — sorting, neural nets, pathfinding",
-      "description": "Sorting algorithm step-through visualizer, neural network playground with training, A*/Dijkstra pathfinding maze",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] CS & AI module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-007",
-      "category": "AIEDUCLABS",
-      "title": "Engineering & Robotics lab module — circuits, robot arm, bridge builder",
-      "description": "Digital logic circuit designer, programmable robotic arm simulator, structural bridge stress-testing",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 4,
-      "auto_fix": "echo '[AIEDUCLABS] Engineering & Robotics module deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-008",
-      "category": "AIEDUCLABS",
-      "title": "Admin UI — lab management, user management, compliance dashboard",
-      "description": "Full admin dashboard with lab CRUD, user role management, compliance status tracking, usage analytics",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 3,
-      "auto_fix": "echo '[AIEDUCLABS] Admin UI deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-009",
-      "category": "AIEDUCLABS",
-      "title": "Subscriber UI — lab browser, workspace, progress tracker",
-      "description": "Student-facing lab catalog, interactive lab workspace with canvas simulations, per-discipline progress tracking",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 3,
-      "auto_fix": "echo '[AIEDUCLABS] Subscriber UI deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-010",
-      "category": "AIEDUCLABS",
-      "title": "VR integration — WebXR/A-Frame immersive lab sessions",
-      "description": "WebXR session support for VR headsets. A-Frame scene readiness for immersive 3D lab environments",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.718,
-      "estimated_hours": 3,
-      "auto_fix": "echo '[AIEDUCLABS] VR integration deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-011",
-      "category": "AIEDUCLABS",
-      "title": "Voice control — Web Speech API commands and narration",
-      "description": "Continuous speech recognition for hands-free lab control. Voice commands: play, pause, reset, step, record, export",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.718,
-      "estimated_hours": 2,
-      "auto_fix": "echo '[AIEDUCLABS] Voice control deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-012",
-      "category": "AIEDUCLABS",
-      "title": "Accessibility — WCAG 2.1 AA+, screen reader, keyboard nav",
-      "description": "Focus indicators, ARIA roles, skip links, screen reader announcements, keyboard navigation, high contrast mode, reduced motion",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 3,
-      "auto_fix": "echo '[AIEDUCLABS] WCAG 2.1 AA+ accessibility deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-013",
-      "category": "AIEDUCLABS",
-      "title": "Cross-platform PWA — offline/online sync for all OS",
-      "description": "Service worker for offline caching, IndexedDB local storage, PWA manifest for Windows/macOS/Android/iOS/Linux installability",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 2,
-      "auto_fix": "echo '[AIEDUCLABS] PWA + offline sync deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-014",
-      "category": "AIEDUCLABS",
-      "title": "Authentication — Firebase Auth (email/password + Google)",
-      "description": "Login/signup flows with Firebase Auth integration, session persistence, role-based access control (admin vs subscriber)",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.718,
-      "estimated_hours": 2,
-      "auto_fix": "echo '[AIEDUCLABS] Firebase Auth deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-015",
-      "category": "AIEDUCLABS",
-      "title": "Compliance — ToS, Operator Agreement, FERPA/COPPA",
-      "description": "Terms of Service acceptance gate, Operator Agreement for institutions, FERPA and COPPA compliance documentation",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 2,
-      "auto_fix": "echo '[AIEDUCLABS] Compliance documents deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-016",
-      "category": "AIEDUCLABS",
-      "title": "Data export — CSV, JSON, PDF for lab results and progress",
-      "description": "One-click export of lab results and progress data in CSV, JSON, and PDF (via print) formats",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 1,
-      "auto_fix": "echo '[AIEDUCLABS] Data export deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-017",
-      "category": "AIEDUCLABS",
-      "title": "Security headers and Dockerfile for production deployment",
-      "description": "Express server with CSP, HSTS, X-Frame-Options, compression. Distroless multi-stage Dockerfile for Cloud Run",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.927,
-      "estimated_hours": 1,
-      "auto_fix": "echo '[AIEDUCLABS] Security + Dockerfile deployed'"
-    },
-    {
-      "id": "AIEDUCLABS-018",
-      "category": "AIEDUCLABS",
-      "title": "SEO — sitemap.xml, robots.txt, Open Graph, structured data",
-      "description": "Search engine optimization with sitemap, robots directives, Open Graph meta tags, Twitter Cards, and semantic HTML",
-      "status": "done",
-      "completedAt": "2026-03-18T00:26:00Z",
-      "completedBy": "auto-success-engine-v2",
-      "csl_confidence": 0.882,
-      "estimated_hours": 1,
-      "auto_fix": "echo '[AIEDUCLABS] SEO deployed'"
-    },
-    {
-      "id": "SECURITY-028",
-      "category": "SECURITY",
-      "title": "Wire guard-rules.json into heady-guard service runtime",
-      "description": "The new guard-rules.json config (145 lines) defines PII, toxicity, and prompt-injection rules but needs to be loaded by the heady-guard service at startup. Connect config loading in src/services/guard/index.js",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 2,
-      "source": "configs/guard-rules.json — no runtime loader found"
-    },
-    {
-      "id": "SECURITY-029",
-      "category": "SECURITY",
-      "title": "Add Luhn validation for credit card detection in Guard pipeline",
-      "description": "guard-rules.json has luhn_validate: true for credit card pattern but no implementation exists. Add Luhn check in PII stage",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 1,
-      "source": "configs/guard-rules.json — credit_card.luhn_validate flag"
-    },
-    {
-      "id": "QUALITY-031",
-      "category": "QUALITY",
-      "title": "Fix non-phi timeouts in heady.config.json",
-      "description": "boot_ms=30000, shutdown_ms=10000, health_ms=5000, tool_ms=30000 are round numbers, not phi-derived. Replace with φⁿ × 1000 values",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 1,
-      "source": "configs/heady.config.json — timeouts section"
-    },
-    {
-      "id": "QUALITY-032",
-      "category": "QUALITY",
-      "title": "Validate CSL confidence_ceiling of 0.718 against phi derivation",
-      "description": "heady.config.json sets confidence_ceiling=0.718 but this is not a standard φ-derived value (1/φ²=0.382, 1/φ=0.618, φ-1=0.618). Document or fix the derivation",
-      "status": "pending",
-      "csl_confidence": 0.618,
       "estimated_hours": 0.5,
-      "source": "configs/heady.config.json — csl.thresholds.high"
+      "auto_fix": "export LINEAR_API_KEY=$(grep LINEAR_API_KEY .env | head -n 1 | cut -d '=' -f2) && node scripts/drain-linear-to-hcfp.mjs"
     },
     {
-      "id": "FEATURES-042",
-      "category": "FEATURES",
-      "title": "Integrate BeeFactory agent into swarm orchestration pipeline",
-      "description": "agents/bee-factory.js was added in production merge but not wired into the 17-Swarm Matrix or HCFullPipeline. Register in swarm-taxonomy.json and add to skill router",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 3,
-      "source": "agents/bee-factory.js — new agent, no swarm registration"
-    },
-    {
-      "id": "DEPLOY-016",
-      "category": "DEPLOY",
-      "title": "Test and validate Dockerfile.distroless build",
-      "description": "New distroless Dockerfile added but no CI workflow references it. Add distroless build target to ci.yml and test the build",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "Dockerfile.distroless — no CI integration"
-    },
-    {
-      "id": "INFRASTRUCTURE-118",
-      "category": "INFRASTRUCTURE",
-      "title": "Audit and consolidate 28 GitHub Actions workflows",
-      "description": "28 CI/CD workflows in .github/workflows/ — many appear duplicated (deploy-cloud-run.yml vs deploy-cloud-run-v2.yml vs deploy-cloud-run-gap.yml). Consolidate into fewer, well-organized workflows",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 4,
-      "source": ".github/workflows/ — 28 files, potential duplicates"
-    },
-    {
-      "id": "INFRASTRUCTURE-119",
-      "category": "INFRASTRUCTURE",
-      "title": "Remove localhost-validation.yml workflow",
-      "description": "localhost-validation.yml (18KB) references localhost patterns which violate the /heady-no-local rule. Remove or replace with cloud-based validation",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 1,
-      "source": ".github/workflows/localhost-validation.yml — violates no-local rule"
-    },
-    {
-      "id": "ARCHITECTURE-026",
-      "category": "ARCHITECTURE",
-      "title": "Wire swarm-taxonomy.json into swarm orchestrator runtime",
-      "description": "New swarm-taxonomy.json config (195 lines) defines the 17-swarm matrix but needs to be loaded by the orchestrator at startup instead of hardcoded values",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "configs/swarm-taxonomy.json — no runtime loader"
-    },
-    {
-      "id": "DEPLOY-017",
-      "category": "DEPLOY",
-      "title": "Validate liquid-os-manifest.json against running Cloud Run services",
-      "description": "New liquid-os-manifest.json (197 lines) defines the OS manifest but needs validation against actual Cloud Run service config",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 1,
-      "source": "configs/liquid-os-manifest.json — no validation step"
-    },
-    {
-      "id": "VERIFICATION-007",
-      "category": "VERIFICATION",
-      "title": "Verify all CHANGELOG v3.1.0 features have working implementations",
-      "description": "CHANGELOG.md lists 20+ features added in v3.1.0 (OTel, graceful shutdown, feature flags, key rotation, eval pipeline, prompt guard, circuit breaker, worker pool, graph orchestrator, multi-cloud failover, SSO+RBAC, audit logging). Verify each has working code and tests",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 8,
-      "source": "CHANGELOG.md — v3.1.0 features listed but unverified"
-    },
-    {
-      "id": "FEATURES-043",
-      "category": "FEATURES",
-      "title": "Implement intelligent squash-merge from Golden Master Plan",
-      "description": "Golden_Master_Plan.md describes auto-squash-merge across cascade workspaces. Implement in auto-commit-deploy.js or as separate merge orchestrator",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 5,
-      "source": "docs/strategic/Golden_Master_Plan.md — Phase 4 auto-merge"
-    },
-    {
-      "id": "FEATURES-044",
-      "category": "FEATURES",
-      "title": "Implement visual test runner from Golden Master Plan",
-      "description": "Golden_Master_Plan.md describes a visible auto-test/demo flow. Build a browser-based test dashboard showing real-time test execution",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 6,
-      "source": "docs/strategic/Golden_Master_Plan.md — visible testing flow"
-    },
-    {
-      "id": "DOCUMENTATION-030",
+      "id": "DOC-030",
       "category": "DOCUMENTATION",
-      "title": "Sync Dropzone context tiers with live codebase changes",
-      "description": "The 3 context tiers (Small/Medium/Large) in Desktop/Dropzone/01-Context need a sync mechanism to stay current as the codebase evolves. Add a script or workflow to regenerate context files",
+      "title": "Document the docs/incoming/ drop zone in root README.md or developer docs and standardize running npm run extract:tasks after adding sour…",
+      "description": "Document the docs/incoming/ drop zone in root README.md or developer docs and standardize running npm run extract:tasks after adding sources here.",
       "status": "pending",
+      "source": "auto-extract — docs/incoming/auto-extract-implementation.md",
       "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "Dropzone reorganization — context files are static snapshots"
+      "estimated_hours": 2
     },
     {
-      "id": "INFRASTRUCTURE-120",
-      "category": "INFRASTRUCTURE",
-      "title": "Wire auto-commit-deploy service into main orchestrator startup",
-      "description": "Auto-sync service loads correctly (all exports verified) but status shows running:false — it needs start() called from the main heady-manager startup sequence",
+      "id": "DOC-031",
+      "category": "DOCUMENTATION",
+      "title": "Append a dated summary block to docs/extracted-report-tasks.md when merge runs with --write so the log stays aligned with JSON changes.",
+      "description": "Append a dated summary block to docs/extracted-report-tasks.md when merge runs with --write so the log stays aligned with JSON changes.",
       "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 1,
-      "source": "auto-commit-deploy.js — getStatus shows running:false"
-    },
-    {
-      "id": "SITE_CONTENT-010",
-      "category": "SITE_CONTENT",
-      "title": "Wire OG image assets into liquid site projections",
-      "description": "9 new OG images (og-heady-ai.png through og-headysystems.png) were added in production merge. Wire into site-registry.json meta tags for each domain",
-      "status": "pending",
+      "source": "auto-extract — docs/incoming/auto-extract-implementation.md",
       "csl_confidence": 0.618,
-      "estimated_hours": 1,
-      "source": "assets/og-*.png — 9 images added, not referenced in site-registry"
+      "estimated_hours": 2
     },
     {
-      "id": "QUALITY-033",
+      "id": "DOC-032",
+      "category": "DOCUMENTATION",
+      "title": "Add an optional GitHub Actions workflow that runs npm run extract:tasks on pull requests touching docs/**/*.md or docs/incoming/** and up…",
+      "description": "Add an optional GitHub Actions workflow that runs npm run extract:tasks on pull requests touching docs/**/*.md or docs/incoming/** and uploads data/auto-extracted-tasks.json as an artifact for human review.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/auto-extract-implementation.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3
+    },
+    {
+      "id": "FEAT-042",
+      "category": "FEATURES",
+      "title": "Extend scripts/auto-extract-tasks.mjs to capture standalone lines containing should or must as actionable items when they are not already…",
+      "description": "Extend scripts/auto-extract-tasks.mjs to capture standalone lines containing should or must as actionable items when they are not already covered by numbered or bulleted patterns.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/auto-extract-implementation.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-043",
+      "category": "FEATURES",
+      "title": "[ ] Fix merge conflicts in .env.example — choose v4.0.0 cloud config",
+      "description": "[ ] Fix merge conflicts in .env.example — choose v4.0.0 cloud config",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/HEADY-ASAP-ENTERPRISE-ROADMAP.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-044",
+      "category": "FEATURES",
+      "title": "[ ] Update NODE_VERSION: '22' in all 46 workflow files",
+      "description": "[ ] Update NODE_VERSION: '22' in all 46 workflow files",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/HEADY-ASAP-ENTERPRISE-ROADMAP.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-045",
+      "category": "FEATURES",
+      "title": "[ ] Create/fix 3 missing entrypoints (phi-math, mcp-server, backend)",
+      "description": "[ ] Create/fix 3 missing entrypoints (phi-math, mcp-server, backend)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/HEADY-ASAP-ENTERPRISE-ROADMAP.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-046",
+      "category": "FEATURES",
+      "title": "[ ] Run pnpm update to resolve critical Dependabot alert (protobufjs)",
+      "description": "[ ] Run pnpm update to resolve critical Dependabot alert (protobufjs)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/HEADY-ASAP-ENTERPRISE-ROADMAP.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "QUAL-031",
       "category": "QUALITY",
-      "title": "Validate CODEOWNERS file has correct team assignments",
-      "description": "New .github/CODEOWNERS file added — verify all paths map to correct teams/users and that branch protection rules reference it",
+      "title": "[ ] Push to main — verify CI passes",
+      "description": "[ ] Push to main — verify CI passes",
       "status": "pending",
+      "source": "auto-extract — docs/incoming/HEADY-ASAP-ENTERPRISE-ROADMAP.md",
       "csl_confidence": 0.618,
-      "estimated_hours": 0.5,
-      "source": ".github/CODEOWNERS — new file, needs validation"
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-047",
+      "category": "FEATURES",
+      "title": "Security: credential validation, permission checking, audit logging",
+      "description": "Security: credential validation, permission checking, audit logging",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SCALE-018",
+      "category": "SCALING",
+      "title": "HeadyPulse - The monitor. System health, performance metrics, and uptime tracking.",
+      "description": "HeadyPulse - The monitor. System health, performance metrics, and uptime tracking.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-048",
+      "category": "FEATURES",
+      "title": "Pattern: Kubernetes-compatible, Cloud Run native",
+      "description": "Pattern: Kubernetes-compatible, Cloud Run native",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-049",
+      "category": "FEATURES",
+      "title": "URL: https://heady-mcp-server-1003436179562.us-east1.run.app",
+      "description": "URL: https://heady-mcp-server-1003436179562.us-east1.run.app",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-050",
+      "category": "FEATURES",
+      "title": "URL: https://heady-discord-bot-1003436179562.us-east1.run.app",
+      "description": "URL: https://heady-discord-bot-1003436179562.us-east1.run.app",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-118",
+      "category": "INFRASTRUCTURE",
+      "title": "URL: https://heady-huggingface-gateway-1003436179562.us-east1.run.app",
+      "description": "URL: https://heady-huggingface-gateway-1003436179562.us-east1.run.app",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-051",
+      "category": "FEATURES",
+      "title": "Secure Mesh Transport - Hardware-identity based P2P networking",
+      "description": "Secure Mesh Transport - Hardware-identity based P2P networking",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-052",
+      "category": "FEATURES",
+      "title": "Legacy API Bridge - Backward-compatible secure integration",
+      "description": "Legacy API Bridge - Backward-compatible secure integration",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-053",
+      "category": "FEATURES",
+      "title": "Cloud: Google Cloud Run (heady-ai project, us-east1)",
+      "description": "Cloud: Google Cloud Run (heady-ai project, us-east1)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "QUAL-032",
+      "category": "QUALITY",
+      "title": "Testing: Node.js native test runner (node --test)",
+      "description": "Testing: Node.js native test runner (node --test)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-119",
+      "category": "INFRASTRUCTURE",
+      "title": "Discord Bot Deploy: Built container from Fastify v5 source, deployed to Cloud Run in under 3 minutes",
+      "description": "Discord Bot Deploy: Built container from Fastify v5 source, deployed to Cloud Run in under 3 minutes",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-120",
+      "category": "INFRASTRUCTURE",
+      "title": "HF Gateway Fix: Fixed Dockerfile (npm ci requires lockfile, switched to npm install for pnpm workspace compatibility)",
+      "description": "HF Gateway Fix: Fixed Dockerfile (npm ci requires lockfile, switched to npm install for pnpm workspace compatibility)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-121",
+      "category": "INFRASTRUCTURE",
+      "title": "HF Gateway Deploy: Built container from Express v5 source, deployed successfully",
+      "description": "HF Gateway Deploy: Built container from Express v5 source, deployed successfully",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-054",
+      "category": "FEATURES",
+      "title": "HeadyConnection.org - the nonprofit he founded - reflects his values: technology should connect people, not isolate them. Heady the platf…",
+      "description": "HeadyConnection.org - the nonprofit he founded - reflects his values: technology should connect people, not isolate them. Heady the platform is the technical expression of that belief.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/Heady_NotebookLM_Source_March2026.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-028",
+      "category": "SECURITY",
+      "title": "Recommendation: Migrate to GitHub App installation tokens (auto-rotating) or GCP Secret Manager with workload identity.",
+      "description": "Recommendation: Migrate to GitHub App installation tokens (auto-rotating) or GCP Secret Manager with workload identity.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-122",
+      "category": "INFRASTRUCTURE",
+      "title": "Issue: Combined with §33's AUTO_DEPLOY_INTERVAL_MS=47000, this means auto-deploy polls every 47 seconds to push to main. If CI/CD is brok…",
+      "description": "Issue: Combined with §33's AUTO_DEPLOY_INTERVAL_MS=47000, this means auto-deploy polls every 47 seconds to push to main. If CI/CD is broken (which it currently is), this creates a tight failure loop.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-123",
+      "category": "INFRASTRUCTURE",
+      "title": "Recommendation: Disable AUTO_DEPLOY_ENABLED until CI/CD is fixed. 47000ms interval is also unusual — use Fibonacci-aligned 55000ms.",
+      "description": "Recommendation: Disable AUTO_DEPLOY_ENABLED until CI/CD is fixed. 47000ms interval is also unusual — use Fibonacci-aligned 55000ms.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-055",
+      "category": "FEATURES",
+      "title": "Issue: The audit found Firebase was queried against gen-lang-client, but the primary project is headyme-444017. This split may cause conf…",
+      "description": "Issue: The audit found Firebase was queried against gen-lang-client, but the primary project is headyme-444017. This split may cause confusion.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-029",
+      "category": "SECURITY",
+      "title": "Impact: This is likely why CI/CD can't deploy to Cloud Run (GitHub Issue #7). Without GOOGLE_APPLICATION_CREDENTIALS, service account aut…",
+      "description": "Impact: This is likely why CI/CD can't deploy to Cloud Run (GitHub Issue #7). Without GOOGLE_APPLICATION_CREDENTIALS, service account auth fails.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-124",
+      "category": "INFRASTRUCTURE",
+      "title": "Issue: Two different Cloud Run services referenced. The edge gateway URL uses a different GCP project number (609590223909 vs 667608982461).",
+      "description": "Issue: Two different Cloud Run services referenced. The edge gateway URL uses a different GCP project number (609590223909 vs 667608982461).",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-056",
+      "category": "FEATURES",
+      "title": "Recommendation: Populate per-domain zone IDs or use a lookup at boot.",
+      "description": "Recommendation: Populate per-domain zone IDs or use a lookup at boot.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-125",
+      "category": "INFRASTRUCTURE",
+      "title": "Recommendation: Either populate from Cloudflare dashboard or remove if using direct Cloud Run routing.",
+      "description": "Recommendation: Either populate from Cloudflare dashboard or remove if using direct Cloud Run routing.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-057",
+      "category": "FEATURES",
+      "title": "Recommendation: Set up if edge caching/vector search is planned; remove if not in current scope.",
+      "description": "Recommendation: Set up if edge caching/vector search is planned; remove if not in current scope.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "QUAL-033",
+      "category": "QUALITY",
+      "title": "Issue: Model naming suggests GPT-4.1 series. Verify this is a valid model identifier with OpenAI.",
+      "description": "Issue: Model naming suggests GPT-4.1 series. Verify this is a valid model identifier with OpenAI.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-058",
+      "category": "FEATURES",
+      "title": "Recommendation: Confirm model availability. Consider gpt-4.1 for Hot pool, gpt-4.1-mini for Warm.",
+      "description": "Recommendation: Confirm model availability. Consider gpt-4.1 for Hot pool, gpt-4.1-mini for Warm.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-059",
+      "category": "FEATURES",
+      "title": "Issue: Consistent with the audit finding that all Anthropic keys were revoked. These need to be regenerated.",
+      "description": "Issue: Consistent with the audit finding that all Anthropic keys were revoked. These need to be regenerated.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "QUAL-034",
+      "category": "QUALITY",
+      "title": "Issue: These appear to be cutting-edge model identifiers. Verify availability.",
+      "description": "Issue: These appear to be cutting-edge model identifiers. Verify availability.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-060",
+      "category": "FEATURES",
+      "title": "Recommendation: Audit actual pgvector table schemas. Migration may be needed. 384D is the correct Heady standard (matches Nomic v2 embedd…",
+      "description": "Recommendation: Audit actual pgvector table schemas. Migration may be needed. 384D is the correct Heady standard (matches Nomic v2 embedding model).",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-126",
+      "category": "INFRASTRUCTURE",
+      "title": "Recommendation: Configure Upstash or remove Redis dependency.",
+      "description": "Recommendation: Configure Upstash or remove Redis dependency.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-061",
+      "category": "FEATURES",
+      "title": "Recommendation: Either populate if Azure is part of the multi-cloud strategy, or remove section to reduce confusion.",
+      "description": "Recommendation: Either populate if Azure is part of the multi-cloud strategy, or remove section to reduce confusion.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-062",
+      "category": "FEATURES",
+      "title": "Recommendation: Enable after certificate infrastructure is in place.",
+      "description": "Recommendation: Enable after certificate infrastructure is in place.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "INFRA-127",
+      "category": "INFRASTRUCTURE",
+      "title": "Issue: Correct for Cloudflare → Cloud Run chain. Ensures X-Forwarded-For headers are trusted.",
+      "description": "Issue: Correct for Cloudflare → Cloud Run chain. Ensures X-Forwarded-For headers are trusted.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-063",
+      "category": "FEATURES",
+      "title": "Issue: Is Render still in use? If migrated to Cloud Run, this should be removed.",
+      "description": "Issue: Is Render still in use? If migrated to Cloud Run, this should be removed.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-064",
+      "category": "FEATURES",
+      "title": "Recommendation: Remove if unused to reduce attack surface.",
+      "description": "Recommendation: Remove if unused to reduce attack surface.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-065",
+      "category": "FEATURES",
+      "title": "Recommendation: Configure SMTP or switch to Resend API (RESEND_API_KEY also empty).",
+      "description": "Recommendation: Configure SMTP or switch to Resend API (RESEND_API_KEY also empty).",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-066",
+      "category": "FEATURES",
+      "title": "Issue: Block at 0.8 is close to CSL HIGH (0.882). Flag at 0.5 is CSL MINIMUM.",
+      "description": "Issue: Block at 0.8 is close to CSL HIGH (0.882). Flag at 0.5 is CSL MINIMUM.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-067",
+      "category": "FEATURES",
+      "title": "Issue: These will fail in Cloud Run / container environments.",
+      "description": "Issue: These will fail in Cloud Run / container environments.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-068",
+      "category": "FEATURES",
+      "title": "Recommendation: Remove localhost references or gate behind feature flags.",
+      "description": "Recommendation: Remove localhost references or gate behind feature flags.",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/env-audit-raw.md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SEC-030",
+      "category": "SECURITY",
+      "title": "Created credential audit documenting all 11 exposed secrets with rotation priority order",
+      "description": "Created credential audit documenting all 11 exposed secrets with rotation priority order",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/heady-final-status-march21 (1).md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-069",
+      "category": "FEATURES",
+      "title": "⚠️ STILL NEEDED: Eric must update billing at [github.com/settings/billing](https://github.com/settings/billing)",
+      "description": "⚠️ STILL NEEDED: Eric must update billing at [github.com/settings/billing](https://github.com/settings/billing)",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/heady-final-status-march21 (1).md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "FEAT-070",
+      "category": "FEATURES",
+      "title": "Created \"March 2026 Status Update\" page with current ecosystem state",
+      "description": "Created \"March 2026 Status Update\" page with current ecosystem state",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/heady-final-status-march21 (1).md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
+    },
+    {
+      "id": "SITE-010",
+      "category": "SITE_CONTENT",
+      "title": "Drupal DB password — Update in Drupal admin",
+      "description": "Drupal DB password — Update in Drupal admin",
+      "status": "pending",
+      "source": "auto-extract — docs/incoming/heady-final-status-march21 (1).md",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2
     },
     {
       "id": "FIX-026",
       "category": "FIX",
-      "title": "Resolve Dockerfile merge conflict markers",
-      "description": "Production Dockerfile has 3 unresolved <<<<<<< merge conflict markers. This blocks ALL Cloud Run deployments. Choose multi-stage build (Node 22 Alpine, tini, non-root user). Root cause of deployment paralysis.",
+      "title": "[LINEAR-HEA-58] 🟠 [P1-INFRA] Validate GCP Secret Manager — all 14 GitHub Actions secrets wired correctly",
+      "description": "[LINEAR-HEA-58] 🟠 [P1-INFRA] Validate GCP Secret Manager — all 14 GitHub Actions secrets wired correctly",
       "status": "pending",
-      "csl_confidence": 0.927,
-      "estimated_hours": 0.5,
-      "source": "heady-optimization-report.docx — Blocker 1",
-      "priority": "CRITICAL",
-      "phase": 1
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
     },
     {
       "id": "FIX-027",
       "category": "FIX",
-      "title": "Fix heady-ai.com 522 error — deploy Cloudflare Worker",
-      "description": "heady-ai.com returns Cloudflare 522 (origin unreachable). The heady-ai-router Worker is not deployed. Deploy via wrangler or configure route in Cloudflare dashboard. Only domain scoring 0/10.",
-      "status": "pending",
-      "csl_confidence": 0.927,
-      "estimated_hours": 1,
-      "source": "heady-optimization-report.docx — Blocker 2",
-      "priority": "CRITICAL",
-      "phase": 1
-    },
-    {
-      "id": "SECURITY-030",
-      "category": "SECURITY",
-      "title": "Fix 13 Dependabot alerts — 1 critical protobufjs, 4 high undici",
-      "description": "1 critical (protobufjs prototype pollution), 4 high (3 undici WebSocket, 1 fast-xml-parser entity expansion), 7 medium, 1 low. Use npm overrides in root package.json for workspace: protocol deps.",
+      "title": "[LINEAR-HEA-57] Review ChatGPT Business subscription renewal (March 26)",
+      "description": "[LINEAR-HEA-57] Review ChatGPT Business subscription renewal (March 26)",
       "status": "pending",
       "csl_confidence": 0.882,
-      "estimated_hours": 2,
-      "source": "heady-optimization-report.docx — Blocker 3",
-      "priority": "HIGH",
-      "phase": 2
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
     },
     {
       "id": "FIX-028",
       "category": "FIX",
-      "title": "Fix CI/CD pipeline failures — deploy-domain-sites has 3 consecutive failures",
-      "description": "deploy-domain-sites: 3 consecutive failures. deploy-cloud-run: skipped (gated on domain-sites). security-scan: also failing. Root cause is Dockerfile merge conflicts cascading across all workflows.",
+      "title": "[LINEAR-HEA-56] 🟠 [P1-SEC] Patch all 51 Dependabot alerts (1 critical, 19 high) — apply overrides + regenerate lockfiles",
+      "description": "[LINEAR-HEA-56] 🟠 [P1-SEC] Patch all 51 Dependabot alerts (1 critical, 19 high) — apply overrides + regenerate lockfiles",
       "status": "pending",
       "csl_confidence": 0.882,
       "estimated_hours": 1,
-      "source": "heady-optimization-report.docx — Blocker 4",
-      "priority": "HIGH",
-      "phase": 1
-    },
-    {
-      "id": "INFRASTRUCTURE-121",
-      "category": "INFRASTRUCTURE",
-      "title": "Configure DNS for 8 portfolio domains",
-      "description": "8 portfolio domains not resolving. Configure A/CNAME records in respective registrar or Cloudflare DNS. Affects brand coverage.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "heady-optimization-report.docx — Blocker 5",
-      "priority": "MEDIUM",
-      "phase": 4
-    },
-    {
-      "id": "INFRASTRUCTURE-122",
-      "category": "INFRASTRUCTURE",
-      "title": "Archive 20+ inactive GitHub repos to reduce maintenance surface",
-      "description": "HeadyMe org has 79 repos, many <1MB single-purpose. Archive inactive repos and use monorepo services/ dir. Estimated impact: reduce maintenance by 40-50%.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 3,
-      "source": "heady-optimization-report.docx — Optimization A",
-      "phase": 4
-    },
-    {
-      "id": "SCALING-018",
-      "category": "SCALING",
-      "title": "Optimize Cloud Run billing and concurrency",
-      "description": "Switch to instance-based billing, co-locate with Neon Postgres region, min instances=0 for non-critical services, Cloud CDN for static assets, max concurrency=80. Estimated savings: 20-40%.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 3,
-      "source": "heady-optimization-report.docx — Optimization B",
-      "phase": 3
-    },
-    {
-      "id": "SCALING-019",
-      "category": "SCALING",
-      "title": "Optimize pgvector HNSW indexes with Fibonacci parameters",
-      "description": "Use halfvec for 50% storage reduction. Set m=21 (Fib), ef_construction=89 (Fib). pg_prewarm for 3-5x throughput. Consider DiskANN for >10M vectors.",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 2,
-      "source": "heady-optimization-report.docx — Optimization C",
-      "phase": 3
-    },
-    {
-      "id": "SCALING-020",
-      "category": "SCALING",
-      "title": "Move embeddings to Cloudflare Workers AI for sub-50ms edge inference",
-      "description": "Workers AI supports Llama 4 Scout at edge. Move embedding gen to Workers AI, use KV/D1 for edge caching, implement Liquid Gateway Worker pattern.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 4,
-      "source": "heady-optimization-report.docx — Optimization D",
-      "phase": 3
-    },
-    {
-      "id": "INFRASTRUCTURE-123",
-      "category": "INFRASTRUCTURE",
-      "title": "Run git gc and reduce 2.5GB monorepo bloat by 40-60%",
-      "description": "Production=783MB, staging=895MB, testing=862MB. Run git gc --aggressive, use .gitattributes with Git LFS, archive _downloads and _archive dirs, use DVC for large data.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "heady-optimization-report.docx — Optimization E",
-      "phase": 4
-    },
-    {
-      "id": "INFRASTRUCTURE-124",
-      "category": "INFRASTRUCTURE",
-      "title": "Consolidate and rationalize 19 Sentry projects",
-      "description": "19 Sentry projects with 0 errors. Consolidate heady-ai + heady-ai-cloudrun. Verify headybuddy/headyme frontends still active. Enable Session Replay for user-facing domains.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 2,
-      "source": "heady-optimization-report.docx — Optimization F",
-      "phase": 4
-    },
-    {
-      "id": "SECURITY-031",
-      "category": "SECURITY",
-      "title": "EMERGENCY: Rotate all 10 exposed production secrets",
-      "description": "8 critical secret exposures in .env: 4 GitHub PATs (HeadyMe, HeadyConnection, HeadyAI, Deploy), Azure DevOps PAT, Cloudflare API Token. Follow SECRET-ROTATION-GUIDE.md for step-by-step rotation. Create fine-grained PATs with minimal scopes, 90-day expiry.",
-      "status": "pending",
-      "csl_confidence": 0.927,
-      "estimated_hours": 2,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 1",
-      "priority": "CRITICAL"
-    },
-    {
-      "id": "SECURITY-032",
-      "category": "SECURITY",
-      "title": "Populate 4 empty critical configs: JWT_SECRET, Stripe keys, SENTRY_AUTH_TOKEN",
-      "description": "4 critical configs are empty in .env.production: JWT_SECRET, STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY, SENTRY_AUTH_TOKEN. Generate secure values and store in GCP Secret Manager.",
-      "status": "pending",
-      "csl_confidence": 0.882,
-      "estimated_hours": 1,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 4"
-    },
-    {
-      "id": "QUALITY-034",
-      "category": "QUALITY",
-      "title": "Fix 2 phi-constant mismatches in .env (vectors and HNSW)",
-      "description": "Env audit found 2 phi-constant mismatches: vector dimensions and HNSW parameters not using phi-derived values. Fix per ENV-AUDIT-REPORT.md Finding 3.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 0.5,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 3"
-    },
-    {
-      "id": "QUALITY-035",
-      "category": "QUALITY",
-      "title": "Remove 5 localhost references from .env files",
-      "description": "5 localhost references found in environment configs. Replace with production URLs per /heady-no-local rule.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 0.5,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 5"
-    },
-    {
-      "id": "SECURITY-033",
-      "category": "SECURITY",
-      "title": "Fix 2 weak secrets: Drupal password and NEXTAUTH_SECRET",
-      "description": "Drupal admin password and NEXTAUTH_SECRET are weak/predictable. Generate cryptographically secure replacements.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 0.5,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 6"
-    },
-    {
-      "id": "INFRASTRUCTURE-125",
-      "category": "INFRASTRUCTURE",
-      "title": "Integrate env-validator.cjs into CI/CD predeploy gate",
-      "description": "665-line env-validator.cjs with 14 checks is now in src/security/. Wire it into package.json predeploy script and CI/CD workflows as a mandatory gate.",
-      "status": "pending",
-      "csl_confidence": 0.718,
-      "estimated_hours": 1,
-      "source": "heady-env-hardening-bundle.zip — MANIFEST.md"
-    },
-    {
-      "id": "QUALITY-036",
-      "category": "QUALITY",
-      "title": "Fix 3 wrong domain URLs in .env",
-      "description": "Env audit found 3 domain URLs that are incorrect or outdated. Fix per ENV-AUDIT-REPORT.md Finding 2.",
-      "status": "pending",
-      "csl_confidence": 0.618,
-      "estimated_hours": 0.5,
-      "source": "heady-env-hardening-bundle.zip — ENV-AUDIT-REPORT Finding 2"
+      "source": "Auto-Success-Engine — 2026-03-30"
     },
     {
       "id": "FIX-029",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-53] 🔴 [P0-INFRA] Deploy Cloudflare Worker (worker-heady-router) — go live on 3 pending domains",
+      "description": "[LINEAR-HEA-53] 🔴 [P0-INFRA] Deploy Cloudflare Worker (worker-heady-router) — go live on 3 pending domains",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-030",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-51] 🔴 [P0-SEC] Fix GitHub Actions billing — unblock ALL CI/CD pipelines",
+      "description": "[LINEAR-HEA-51] 🔴 [P0-SEC] Fix GitHub Actions billing — unblock ALL CI/CD pipelines",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-031",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-50] 🔴 [P0-CICD] Fix phi-Preflight Validation — restore all 16 GitHub Actions workflows",
+      "description": "[LINEAR-HEA-50] 🔴 [P0-CICD] Fix phi-Preflight Validation — restore all 16 GitHub Actions workflows",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-032",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-19] [BUG P0] headyme.com onboarding broken: sign-in invisible + auth redirects to wrong domain",
+      "description": "[LINEAR-HEA-19] [BUG P0] headyme.com onboarding broken: sign-in invisible + auth redirects to wrong domain",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-033",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-16] Validate GCP secret and workload identity configuration",
+      "description": "[LINEAR-HEA-16] Validate GCP secret and workload identity configuration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-034",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-2] Set up your teams",
+      "description": "[LINEAR-HEA-2] Set up your teams",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-035",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-1] Get familiar with Linear",
+      "description": "[LINEAR-HEA-1] Get familiar with Linear",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-036",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-4] Import your data",
+      "description": "[LINEAR-HEA-4] Import your data",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-037",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-3] Connect your tools",
+      "description": "[LINEAR-HEA-3] Connect your tools",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-03-30"
+    },
+    {
+      "id": "FIX-038",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "description": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-039",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "description": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-040",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "description": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-041",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "description": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-042",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "description": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-043",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "description": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-044",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "description": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-045",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "description": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-046",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "description": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-047",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-241] Issues",
+      "description": "[LINEAR-HEA-241] Issues",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-048",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "description": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-049",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "description": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-050",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "description": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-051",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "description": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-052",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "description": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-053",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "description": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-054",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "description": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-055",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "description": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-056",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "description": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-057",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "description": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-058",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "description": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-059",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "description": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-060",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "description": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-061",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "description": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-062",
       "category": "FIX",
       "title": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
       "description": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
@@ -9840,7 +10144,7 @@
       "source": "Auto-Success-Engine — 2026-05-07"
     },
     {
-      "id": "FIX-030",
+      "id": "FIX-063",
       "category": "FIX",
       "title": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
       "description": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
@@ -9850,10 +10154,1932 @@
       "source": "Auto-Success-Engine — 2026-05-07"
     },
     {
-      "id": "FIX-031",
+      "id": "FIX-064",
       "category": "FIX",
       "title": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
       "description": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-065",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "description": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-066",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "description": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-067",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "description": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-068",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "description": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-069",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "description": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-070",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "description": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-071",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "description": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-072",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "description": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-073",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "description": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-074",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "description": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-075",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "description": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-076",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "description": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-077",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "description": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-078",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "description": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-079",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "description": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-080",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "description": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-081",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "description": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-082",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "description": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-083",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "description": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-084",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "description": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-085",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "description": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-086",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "description": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-087",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "description": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-088",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "description": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-089",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "description": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-090",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "description": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-091",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "description": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-092",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "description": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-093",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "description": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-094",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "description": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-095",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "description": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-096",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "description": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-097",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-241] Issues",
+      "description": "[LINEAR-HEA-241] Issues",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-098",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "description": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-099",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "description": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-100",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "description": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-101",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "description": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-102",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "description": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-103",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "description": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-104",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "description": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-105",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "description": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-106",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "description": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-107",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "description": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-108",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "description": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-109",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "description": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-110",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "description": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-111",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "description": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-112",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "description": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-113",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "description": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-114",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "description": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-115",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "description": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-116",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "description": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-117",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "description": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-118",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "description": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-119",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "description": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-120",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "description": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-121",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "description": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-122",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "description": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-123",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "description": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-124",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "description": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-125",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "description": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-126",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "description": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-127",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "description": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-128",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "description": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-129",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "description": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-130",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "description": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-131",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "description": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-132",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "description": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-133",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "description": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-134",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "description": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-135",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "description": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-136",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "description": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-137",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "description": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-138",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "description": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-139",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "description": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-140",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "description": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-141",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "description": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-142",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "description": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-143",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "description": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-144",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "description": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-145",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "description": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-146",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "description": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-147",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-241] Issues",
+      "description": "[LINEAR-HEA-241] Issues",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-148",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "description": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-149",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "description": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-150",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "description": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-151",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "description": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-152",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "description": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-153",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "description": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-154",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "description": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-155",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "description": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-156",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "description": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-157",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "description": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-158",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "description": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-159",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "description": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-160",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "description": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-161",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "description": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-162",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "description": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-163",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "description": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-164",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "description": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-165",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "description": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-166",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "description": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-167",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "description": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-168",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "description": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-169",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "description": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-170",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "description": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-171",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "description": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-172",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "description": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-173",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "description": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-174",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "description": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-175",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "description": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-176",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "description": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-177",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "description": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-178",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "description": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-179",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "description": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-180",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "description": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-181",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "description": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-182",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "description": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-183",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "description": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-184",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "description": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-185",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "description": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-186",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "description": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-187",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "description": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-188",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "description": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-189",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "description": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-190",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "description": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-191",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "description": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-192",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "description": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-193",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "description": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-194",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "description": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-195",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "description": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-196",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "description": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-197",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-241] Issues",
+      "description": "[LINEAR-HEA-241] Issues",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-198",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "description": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-199",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "description": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-200",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "description": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-201",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "description": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-202",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "description": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-203",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "description": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-204",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "description": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-205",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "description": "[LINEAR-HEA-188] [INFRA] Wire Sentry to HeadyMCP Skill Execution Monitoring",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-206",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "description": "[LINEAR-HEA-187] [AUTOMATION] Skill Registry Self-Audit Linter — Continuous Compliance",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-207",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "description": "[LINEAR-HEA-179] [HIGH] Implement HeadyBuddy Cross-Device Bridge & Computer-Use Agent",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-208",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "description": "[LINEAR-HEA-178] [HIGH] Implement Monetization Engine & Heady Connection Marketplace",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-209",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "description": "[LINEAR-HEA-175] [HIGH] Implement Perplexity/Search Integration & Knowledge Retrieval",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-210",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "description": "[LINEAR-HEA-174] [HIGH] Implement LiquidChecks (AI-Powered Code Review as GitHub Status Checks)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-211",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "description": "[LINEAR-HEA-173] [HIGH] Implement Engines-Bee & Engine Orchestration Lifecycle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-212",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "description": "[LINEAR-HEA-172] [HIGH] Implement Device-Provisioner-Bee & Sync-Projection-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-213",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "description": "[LINEAR-HEA-171] [HIGH] Implement Intelligence-Bee, Agents-Bee & Auto-Success-Bee",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-214",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "description": "[LINEAR-HEA-170] [HIGH] Implement Pipeline-Bee, Ops-Bee & Refactor-Bee — Operations Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-215",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "description": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-216",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "description": "[LINEAR-HEA-168] [HIGH] Implement Routes-Bee, Middleware-Bee & API Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-217",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "description": "[LINEAR-HEA-167] [DIRECTIVE] Implement 10 Absolute Rules Enforcement — Lint & CI Gates",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-218",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "description": "[LINEAR-HEA-166] [HIGH] Implement Documentation-Bee — Auto-Documentation Generation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-219",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "description": "[LINEAR-HEA-165] [DIRECTIVE] Implement 8 System Building Directives — Compliance Verification",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-220",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "description": "[LINEAR-HEA-164] [DIRECTIVE] Enforce 3 Unbreakable Laws Across All Code — Validation Framework",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-221",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "description": "[LINEAR-HEA-163] [HIGH] Implement Connectors-Bee & External Service Integration Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-222",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "description": "[LINEAR-HEA-162] [HIGH] Implement Trading-Bee — Financial Trading Operations",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-223",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "description": "[LINEAR-HEA-161] [HIGH] Implement Creative-Bee — Image, Music, Text Generation Pipeline",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-224",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "description": "[LINEAR-HEA-160] [HIGH] Implement Deployment-Bee — Cloudflare Workers & GCP Cloud Run Automation",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-225",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "description": "[LINEAR-HEA-159] [HIGH] Implement Orchestration-Bee & Conductor — Multi-Bee Coordination",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-226",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "description": "[LINEAR-HEA-158] [HIGH] Implement Resilience-Bee — Circuit Breakers, Retry Logic, Self-Healing",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-227",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "description": "[LINEAR-HEA-157] [CRITICAL] Implement Structured Observability & Telemetry System",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "PIPELINE-008",
+      "category": "PIPELINE",
+      "title": "Verify Git Push with Token Auth",
+      "description": "Verify Git Push with Token Auth",
+      "status": "completed",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07",
+      "completedAt": "2026-05-07T19:31:23.750Z",
+      "completedBy": "auto-success-engine-v2"
+    },
+    {
+      "id": "FIX-228",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "description": "[LINEAR-HEA-156] [HIGH] Implement Security-Bee & Governance-Bee — Security Scanning and Policy Enforcement",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-229",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "description": "[LINEAR-HEA-155] [HIGH] Implement Memory-Bee & Vector Operations (PostgreSQL + pgvector)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-230",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "description": "[LINEAR-HEA-154] [HIGH] Implement Brain-Bee LLM Provider Router & Model Selection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-231",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "description": "[LINEAR-HEA-153] [CRITICAL] Implement MCP Gateway & Tool Execution Layer",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-232",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "description": "[LINEAR-HEA-152] [CRITICAL] Implement Auth Provider Federation & Session Management",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-233",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "description": "[LINEAR-HEA-151] [CRITICAL] Implement HCFullPipeline (HCFP) — 8-Stage Execution Engine",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-234",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "description": "[LINEAR-HEA-150] [CRITICAL] Implement A2UI Protocol (Agent-to-UI Communication Bridge)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-235",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "description": "[LINEAR-HEA-149] [CRITICAL] Implement A2A Protocol (Agent-to-Agent Communication)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-236",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "description": "[LINEAR-HEA-144] 🟠 [P1-INFRA] Resolve dual wrangler config conflict — heady-edge-router vs heady-edge-proxy",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-237",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "description": "[LINEAR-HEA-142] 🟡 [P2-DOCS] Update HCFullPipeline — 12 stages documented, 22 actual",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-238",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "description": "[LINEAR-HEA-272] Add Slack reporting and regression alerts",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-239",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "description": "[LINEAR-HEA-271] Generate dashboard output from audit results",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-240",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "description": "[LINEAR-HEA-270] Implement repo health metric collection",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-241",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "description": "[LINEAR-HEA-269] Build daily repo health audit workflow",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-242",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "description": "[LINEAR-HEA-268] [AUTOMATION] Repo Health Dashboard — Daily Audit Across All 78+ HeadyMe Repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-243",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "description": "[LINEAR-HEA-255] Configure Sentry DSN for heady-ai.com deployment",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-244",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "description": "[LINEAR-HEA-252] [INFRA] headybuddy.org and headybot.com serving wrong frontend bundle",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-245",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "description": "[LINEAR-HEA-251] [INFRA] Cloudflare Worker cold-start latency on headysystems.com apex",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-246",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "description": "[LINEAR-HEA-247] [CRITICAL-SEC] Active credential exposure — 81+ secrets in public repos",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-247",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-241] Issues",
+      "description": "[LINEAR-HEA-241] Issues",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-248",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "description": "[LINEAR-HEA-234] [LOW] HuggingFace Spaces not discoverable — zero public visibility",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-249",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "description": "[LINEAR-HEA-223] [HIGH] Add DKIM records for headysystems.com and heady-ai.com",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-250",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "description": "[LINEAR-HEA-213] [CRITICAL] Rotate all exposed secrets in public repos (Heady-Main + Heady-Testing)",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-251",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "description": "[LINEAR-HEA-207] [P1] Connect Qdrant for vector search alongside pgvector",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-252",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "description": "[LINEAR-HEA-204] [P1] Repository consolidation — 521 Dockerfiles, 86 docker-compose files",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-253",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "description": "[LINEAR-HEA-198] [INFRA] Sentry Performance Monitoring for MCP Tool Execution — Phi-Scaled Budgets",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-254",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "description": "[LINEAR-HEA-196] [CRITICAL] Implement Self-Healing Cycle Runtime — 7-Step Resilience Engine with Sentry Integration",
+      "status": "pending",
+      "csl_confidence": 0.882,
+      "estimated_hours": 1,
+      "source": "Auto-Success-Engine — 2026-05-07"
+    },
+    {
+      "id": "FIX-255",
+      "category": "FIX",
+      "title": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
+      "description": "[LINEAR-HEA-169] [HIGH] Implement Config-Bee, Lifecycle-Bee & Services-Bee — Service Catalog",
       "status": "pending",
       "csl_confidence": 0.882,
       "estimated_hours": 1,
