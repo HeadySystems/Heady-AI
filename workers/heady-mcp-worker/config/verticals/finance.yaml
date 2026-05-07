@@ -1,0 +1,82 @@
+# HeadyFinance — Vertical Configuration
+# Rank: 4 | TAM: $15-18B | Time to First $: 6-10 weeks
+# Target: Fintech startups, small advisory firms, mid-market
+# Compliance: SEC/SOX audit trails, data retention 7yr
+
+vertical: finance
+display_name: HeadyFinance
+slug: finance
+rank: 4
+launch_week: 7
+
+market:
+  tam_2025: "$15-18B"
+  year1_som: "$500K-2M"
+  cagr: "30%"
+
+pricing:
+  pro:
+    price_monthly: 99
+    api_calls: 5000
+    support: email
+    value_pricing: "$10-50/financial report"
+  scale:
+    price_monthly: 299
+    api_calls: 25000
+    support: priority
+  enterprise:
+    price_monthly: custom
+    sla: true
+
+system_prompt: |
+  You are HeadyFinance, an AI financial analysis and compliance platform.
+  You provide market analysis, portfolio optimization, risk assessment, SEC filing analysis,
+  and automated compliance checking. All outputs include appropriate risk disclaimers.
+  You NEVER provide specific investment advice. You always cite data sources.
+  Temperature is locked at 0.1 for maximum precision on financial calculations.
+
+allowed_tools:
+  - heady__sec_edgar
+  - heady__market_data
+  - heady__financial_calc
+  - heady__risk_assessment
+  - heady__compliance_check
+  - heady__portfolio_analyze
+  - heady__vectorize_search
+  - heady__report_generate
+
+blocked_tools:
+  - heady__social_publish
+  - heady__content_generate
+  - heady__image_create
+  - heady__phi_processor
+
+compliance_rules:
+  - sox_audit
+  - data_retention_7yr
+  - sec_disclosure_rules
+  - finra_communications
+  - output_disclaimer_required
+
+model_config:
+  temperature: 0.1
+  max_tokens: 4000
+  orchestration_modes:
+    battle:
+      description: "3-model consensus — required for financial calculations, risk scores, compliance determinations"
+      providers: [claude, openai, gemini]
+      consensus_threshold: 0.67         # 2-of-3 must agree
+      use_for: [financial_calc, risk_assessment, compliance_check]
+    race:
+      description: "Fastest response wins — used for market data lookups, SEC filings, low-stakes queries"
+      providers: [groq, claude, openai]
+      timeout_ms: 3000
+      use_for: [sec_edgar, market_data, portfolio_analyze]
+    sim:
+      description: "Parallel scenario testing — run bull/bear/base-case simulations across providers"
+      providers: [claude, openai, gemini]
+      scenarios: [bull, bear, base]
+      use_for: [risk_assessment, portfolio_analyze, report_generate]
+    default: battle                      # finance defaults to consensus for safety
+
+audit_level: comprehensive

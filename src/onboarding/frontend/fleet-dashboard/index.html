@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady™ Fleet Dashboard — Global Kiosk Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="glass-container">
+        <header>
+            <div class="logo">Heady™ <span class="accent">Fleet-Manager</span></div>
+            <nav>
+                <button class="nav-item active">Overview</button>
+                <button class="nav-item">Map</button>
+                <button class="nav-item">Health</button>
+            </nav>
+        </header>
+
+        <main>
+            <section class="kpi-grid">
+                <div class="kpi-card">
+                    <label>Active Kiosks</label>
+                    <div class="value">144</div>
+                </div>
+                <div class="kpi-card">
+                    <label>Network Uptime</label>
+                    <div class="value">99.998%</div>
+                </div>
+                <div class="kpi-card">
+                    <label>Compliance Score</label>
+                    <div class="value">1.0</div>
+                </div>
+            </section>
+
+            <section class="fleet-list">
+                <h3>Regional Fleet Status</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kiosk ID</th>
+                            <th>Region</th>
+                            <th>Status</th>
+                            <th>Temp</th>
+                            <th>Revenue (HDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fleet-body">
+                        <!-- Fleet rows will be injected here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

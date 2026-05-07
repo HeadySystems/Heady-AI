@@ -1,0 +1,37 @@
+{
+  "//": "Heady™ Zero-Trust Tailscale ACLs",
+  "groups": {
+    "group:admin": ["eric@headyme.com"],
+    "group:nodes": ["tag:heady-node"],
+    "group:gateways": ["tag:heady-gateway"]
+  },
+  "tagOwners": {
+    "tag:heady-node": ["group:admin"],
+    "tag:heady-gateway": ["group:admin"]
+  },
+  "acls": [
+    {
+      "action": "accept",
+      "src": ["group:admin"],
+      "dst": ["*:*"]
+    },
+    {
+      "action": "accept",
+      "src": ["group:nodes"],
+      "dst": ["tag:heady-node:6379", "tag:heady-node:5432"]
+    },
+    {
+      "action": "accept",
+      "src": ["group:gateways"],
+      "dst": ["tag:heady-node:8080"]
+    }
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["group:admin"],
+      "dst": ["tag:heady-node"],
+      "users": ["heady-admin"]
+    }
+  ]
+}

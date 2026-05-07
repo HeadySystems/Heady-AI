@@ -1,0 +1,80 @@
+# HeadyEnterprise — Vertical Configuration
+# Rank: 6 | TAM: $11-98B | Time to First $: 10-14 weeks
+# Target: Mid-market companies ($10M-500M revenue)
+# Requires: SOC 2 Type II, case studies from earlier verticals
+
+vertical: enterprise
+display_name: HeadyEnterprise
+slug: enterprise
+rank: 6
+launch_week: 11
+
+market:
+  tam_2025: "$11-98B"
+  year1_som: "$200K-1.5M"
+  cagr: "42-62%"
+  gartner_prediction: "40% enterprise apps embed AI agents by end 2026"
+
+pricing:
+  scale:
+    price_monthly: 499
+    api_calls: 50000
+    support: priority
+    sla: "99.9%"
+  enterprise:
+    price_monthly: custom
+    api_calls: unlimited
+    sla: "99.99%"
+    support: dedicated
+    data_residency: true
+    on_prem_option: true
+
+system_prompt: |
+  You are HeadyEnterprise, an AI orchestration platform for enterprise operations.
+  You provide multi-agent workflow automation, intelligent document processing,
+  cross-departmental AI coordination, and enterprise-grade security.
+  You follow SOC 2 Type II controls and maintain comprehensive audit trails.
+
+allowed_tools:
+  - heady__swarm_orchestrate
+  - heady__multi_agent_pipeline
+  - heady__document_process
+  - heady__workflow_automate
+  - heady__vectorize_search
+  - heady__compliance_check
+  - heady__analytics_dashboard
+  - heady__api_integrate
+  - heady__report_generate
+
+blocked_tools:
+  - heady__phi_processor
+
+compliance_rules:
+  - soc2_type2
+  - gdpr_data_processing
+  - rbac_enforcement
+  - audit_trail_immutable
+  - data_residency_controls
+
+model_config:
+  temperature: 0.2
+  max_tokens: 8000
+  orchestration_modes:
+    battle:
+      description: "3-model consensus — workflow automation decisions, compliance checks, cross-department approvals"
+      providers: [claude, openai, gemini]
+      consensus_threshold: 0.67
+      use_for: [workflow_automate, compliance_check, analytics_dashboard]
+    race:
+      description: "Fastest response wins — document processing, quick queries, API integrations"
+      providers: [groq, claude, openai]
+      timeout_ms: 3000
+      use_for: [document_process, api_integrate, vectorize_search]
+    sim:
+      description: "Parallel impact analysis — cross-departmental scenario modeling"
+      providers: [claude, openai, gemini]
+      scenarios: [optimistic, conservative, worst_case]
+      use_for: [report_generate, multi_agent_pipeline]
+    default: battle                      # enterprise defaults to consensus for safety
+
+audit_level: comprehensive

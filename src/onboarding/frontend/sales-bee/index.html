@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SalesBee™ — Autonomous Monetization Intelligence">
+  <title>SalesBee™ Dashboard | Heady™ Sovereign Intelligence</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="bee-icon">🐝</span>
+        <h1>SalesBee<span>™</span></h1>
+      </div>
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active">
+          <span class="icon">📊</span> Dashboard
+        </a>
+        <a href="#" class="nav-item">
+          <span class="icon">👥</span> Leads
+        </a>
+        <a href="#" class="nav-item">
+          <span class="icon">📨</span> Outreach
+        </a>
+        <a href="#" class="nav-item">
+          <span class="icon">📈</span> Reports
+        </a>
+        <div class="nav-spacer"></div>
+        <a href="#" class="nav-item settings">
+          <span class="icon">⚙️</span> Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search leads, campaigns, or organizations...">
+        </div>
+        <div class="user-profile">
+          <button id="generate-leads-btn" class="btn-generate">
+            <span class="plus">+</span> Generate More Leads
+          </button>
+          <div class="notification-bell">🔔<span class="badge">3</span></div>
+          <div class="avatar">MS</div>
+        </div>
+      </header>
+
+      <section class="dashboard-grid">
+        <!-- Stats Row -->
+        <div class="stats-container">
+          <div class="stat-card glass">
+            <div class="stat-label">Total Leads</div>
+            <div class="stat-value" id="stat-total-leads">0</div>
+            <div class="stat-trend positive">↑ 12.4%</div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-label">Active Outreach</div>
+            <div class="stat-value" id="stat-active-outreach">0</div>
+            <div class="stat-trend">Stable</div>
+          </div>
+          <div class="stat-card glass">
+            <div class="stat-label">Conversion Rate</div>
+            <div class="stat-value" id="stat-conversion-rate">8.4%</div>
+            <div class="stat-trend positive">↑ 1.2%</div>
+          </div>
+          <div class="stat-card glass highlight">
+            <div class="stat-label">Potential MRR</div>
+            <div class="stat-value" id="stat-potential-mrr">$0.00</div>
+            <div class="stat-trend positive">φ-optimized</div>
+          </div>
+        </div>
+
+        <!-- Chart Row -->
+        <div class="chart-section glass">
+          <div class="section-header">
+            <h3>Conversion Rates & Pipeline</h3>
+            <div class="chart-legend">
+              <span class="dot active"></span> Active
+              <span class="dot warm"></span> Warm
+              <span class="dot closed"></span> Closed
+            </div>
+          </div>
+          <div class="chart-placeholder" id="main-chart">
+            <!-- SVG Chart will be injected here -->
+          </div>
+        </div>
+
+        <!-- Leads Table -->
+        <div class="leads-section glass">
+          <div class="section-header">
+            <h3>Enterprise Leads</h3>
+            <button class="btn-icon">•••</button>
+          </div>
+          <div class="table-container">
+            <table id="leads-table">
+              <thead>
+                <tr>
+                  <th>Organization</th>
+                  <th>Contact</th>
+                  <th>Stage</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                  <th>Last Activity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Rows will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
