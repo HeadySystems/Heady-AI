@@ -46,7 +46,7 @@ audit.providers.vercel.score = edgeUsage / vercelConfigs.length;
 // ── Cloudflare Audit ─────────────────────────────────────────────────────────
 const env = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
 const hasCfKeys = env.includes('CLOUDFLARE_API_TOKEN') && env.includes('CLOUDFLARE_ACCOUNT_ID');
-const hasZones = env.includes('CLOUDFLARE_ZONE_ID_HEADY_AI');
+const hasZones = env.includes('CLOUDFLARE_ZONE_ID_HEADYAI') || env.includes('CLOUDFLARE_ZONE_ID_HEADY_AI');
 
 if (hasCfKeys) {
   audit.providers.cloudflare.status = 'active';
@@ -54,6 +54,17 @@ if (hasCfKeys) {
   if (!hasZones) audit.providers.cloudflare.recommendations.push('Populate all domain Zone IDs in .env for automated DNS management.');
 } else {
   audit.providers.cloudflare.status = 'inactive';
+}
+
+// ── GCP Audit ──────────────────────────────────────────────────────────────
+const hasGcpKeys = env.includes('GOOGLE_APPLICATION_CREDENTIALS') || env.includes('GCP_SERVICE_ACCOUNT');
+const hasGcpProject = env.includes('GCP_PROJECT_ID') || env.includes('GOOGLE_CLOUD_PROJECT');
+if (hasGcpKeys) {
+  audit.providers.gcp.status = 'active';
+  audit.providers.gcp.score = hasGcpProject ? 1.0 : 0.5;
+  if (!hasGcpProject) audit.providers.gcp.recommendations.push('Set GCP_PROJECT_ID in .env for resource scoping.');
+} else {
+  audit.providers.gcp.status = 'inactive';
 }
 
 // ── v0/UI Audit ──────────────────────────────────────────────────────────────

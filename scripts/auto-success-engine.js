@@ -25,7 +25,7 @@ const { execSync } = require('child_process');
 const PHI = 1.618033988749895;
 const ROOT = path.join(__dirname, '..');
 const PIPELINE_PATH = path.join(ROOT, 'configs', 'hcfullpipeline-tasks.json');
-const GIT_REMOTES = ['headyai', 'hc-main']; // Push targets
+const GIT_REMOTES = ['headyai', 'hs-main']; // Push targets
 
 // ── Parse CLI args ──────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -89,7 +89,7 @@ function gitPush() {
   const envContent = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
   const tokens = {
     headyai: envContent.match(/GITHUB_TOKEN_HEADYAI=(ghp_[a-zA-Z0-9]+)/)?.[1],
-    'hc-main': envContent.match(/GITHUB_TOKEN_HEADYCONNECTION=(ghp_[a-zA-Z0-9]+)/)?.[1],
+    'hs-main': envContent.match(/GITHUB_TOKEN_HEADYSYSTEMS=(ghp_[a-zA-Z0-9]+)/)?.[1] || envContent.match(/GITHUB_TOKEN=(ghp_[a-zA-Z0-9]+)/)?.[1],
   };
 
   for (const remote of GIT_REMOTES) {
