@@ -15,7 +15,7 @@
 //   node scripts/auto-success-engine.js --report              # Report only, no execution
 //   node scripts/auto-success-engine.js --add-task "title"    # Add a new task
 //
-// © 2026 HeadySystems Inc. — Eric Haywood, Founder
+// © 2026 HeadySystems Inc. — HeadyMe, Founder
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const fs = require('fs');
@@ -84,12 +84,33 @@ function gitPush() {
     info('Push skipped (--no-push or --dry-run)');
     return;
   }
+
+  // Load tokens from .env
+  const envContent = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
+  const tokens = {
+    headyai: envContent.match(/GITHUB_TOKEN_HEADYAI=(ghp_[a-zA-Z0-9]+)/)?.[1],
+    'hc-main': envContent.match(/GITHUB_TOKEN_HEADYCONNECTION=(ghp_[a-zA-Z0-9]+)/)?.[1],
+  };
+
   for (const remote of GIT_REMOTES) {
     try {
-      execSync(`git push ${remote} main --no-verify`, { cwd: ROOT, encoding: 'utf8', stdio: 'pipe', timeout: 30000 });
+      const token = tokens[remote];
+      if (token) {
+        // Construct authenticated URL for push
+        const remoteUrl = execSync(`git remote get-url ${remote}`, { cwd: ROOT, encoding: 'utf8' }).trim();
+        const authUrl = remoteUrl.replace('https://', `https://${token}@`);
+        
+        info(`Pushing to ${remote} (authenticated)...`);
+        execSync(`git push "${authUrl}" main --no-verify`, { cwd: ROOT, encoding: 'utf8', stdio: 'pipe', timeout: 30000 });
+      } else {
+        warn(`No token found for remote ${remote}, attempting standard push...`);
+        execSync(`git push ${remote} main --no-verify`, { cwd: ROOT, encoding: 'utf8', stdio: 'pipe', timeout: 30000 });
+      }
       success(`Pushed to ${remote}`);
     } catch (err) {
-      warn(`Push to ${remote} failed: ${err.message.split('\n')[0]}`);
+      const stderr = err.stderr ? err.stderr.toString().trim() : err.message;
+      warn(`Push to ${remote} failed: ${stderr.split('\n')[0]}`);
+      if (VERBOSE) log(stderr, c.red);
     }
   }
 }
