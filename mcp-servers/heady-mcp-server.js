@@ -23,7 +23,9 @@
  *            mcp-latent, mcp-git, mcp-health, mcp-brain
  */
 
-const sdkRoot = require('path').join(__dirname, '..', 'node_modules', '@modelcontextprotocol', 'sdk', 'dist', 'cjs');
+const fs = require('fs');
+const path = require('path');
+const sdkRoot = path.join(__dirname, '..', 'node_modules', '@modelcontextprotocol', 'sdk', 'dist', 'cjs');
 const { Server } = require(sdkRoot + '/server/index.js');
 const { StdioServerTransport } = require(sdkRoot + '/server/stdio.js');
 const { CallToolRequestSchema, ListToolsRequestSchema } = require(sdkRoot + '/types.js');

@@ -28,7 +28,7 @@ const logger = createLogger('worker');
  * @author Eric Haywood
  * @license Proprietary — HeadySystems Inc.
  */
-// const logger = console;
+const logger = console;
 
 
 // ─── Phi Constants (inlined for edge — no node_modules) ─────────────────────
@@ -59,7 +59,7 @@ const CACHE_TTL = {
 };
 
 // ─── Route Configuration ────────────────────────────────────────────────────
-const ORIGIN_BASE = 'https://heady-api-gen-lang-client-0920560496.us-east1.run.app';
+const ORIGIN_BASE = 'https://heady-mcp-server-1003436179562.us-east1.run.app';
 
 const ROUTES = {
   // Health & readiness
