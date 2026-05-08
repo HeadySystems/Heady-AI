@@ -1,5 +1,7 @@
 import { CSLEngine } from '../csl-engine/csl-engine.js';
-import { PHI_TIMING, CSL_THRESHOLDS, phiThreshold } from '../phi-math.js';
+import { ModelRouter } from './model-router.js';
+
+import { CSL_THRESHOLDS } from '../phi-math.js';
 import { createLogger } from '../../../packages/structured-logger/src/index.js';
 
 const logger = createLogger({ service: 'resonance-orchestrator' });
@@ -7,6 +9,7 @@ const logger = createLogger({ service: 'resonance-orchestrator' });
 export class ResonanceOrchestrator {
     constructor(cslEngine) {
         this.cslEngine = cslEngine || new CSLEngine({ dim: 384 });
+        this.modelRouter = new ModelRouter();
     }
 
     // Mock embedder for intent vectors
@@ -75,8 +78,22 @@ export class ResonanceOrchestrator {
         let contextState = inputContext;
 
         while (currentNode) {
-            executionTrace.push({ node: currentNode.id, action: 'execute', context: contextState });
             logger.info(`Executing node: ${currentNode.id} (${currentNode.agent})`);
+            
+            // Execute the node using the model router
+            const nodeResult = await this.modelRouter.executeNode(currentNode, contextState);
+            
+            executionTrace.push({ 
+                node: currentNode.id, 
+                action: 'execute', 
+                model: nodeResult.model_used,
+                provider: nodeResult.provider,
+                input_context: contextState,
+                output: nodeResult.output
+            });
+
+            // Update context state with the output from this node
+            contextState = nodeResult.output;
 
             // Find outbound edges from current node
             const outboundEdges = schema.csl_edges.filter(e => e.from === currentNode.id);
@@ -96,9 +113,6 @@ export class ResonanceOrchestrator {
                     score: routeResult.activatedEdges.find(e => e.edge === routeResult.bestEdge).score
                 });
                 currentNode = schema.nodes.find(n => n.id === routeResult.bestEdge.to);
-                
-                // Simulate output progression for the next node's context
-                contextState = `${contextState} -> Output from ${currentNode.id}`;
             } else {
                 executionTrace.push({ action: 'route_failed', reason: 'No CSL gates activated above threshold' });
                 logger.warn(`Execution halted at ${currentNode.id}: No resonant edges found.`);

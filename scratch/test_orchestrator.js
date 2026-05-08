@@ -11,16 +11,24 @@ async function test() {
         const schema = {
             workflow_id: 'test_kiosk_compliance',
             nodes: [
-                { id: 'biometric_vision', agent: 'heady_vision_bee' },
-                { id: 'compliance_logic', agent: 'heady_audit_bee' }
+                { 
+                    id: 'biometric_vision', 
+                    agent: 'heady_vision_bee',
+                    csl_constraints: { modality: 'vision' }
+                },
+                { 
+                    id: 'compliance_logic', 
+                    agent: 'heady_audit_bee',
+                    model: 'claude-3-opus' // Explicit model request
+                }
             ],
             csl_edges: [
                 {
                     from: 'biometric_vision',
                     to: 'compliance_logic',
                     condition: {
-                        description: 'Trigger when biometric age verification returns uncertain or underage results.',
-                        gate_threshold: 'CSL_THRESHOLDS.HIGH'
+                        description: '[gemini-2.5-pro VISION ANALYSIS]: Identified 3 key visual elements in the input. Confidence: High.',
+                        gate_threshold: 'CSL_THRESHOLDS.LOW'
                     }
                 }
             ]
@@ -37,7 +45,7 @@ async function test() {
         const execResult = await handler({
             action: 'execute',
             schema,
-            input_context: 'Biometric scan complete. User appears to be 19. Uncertainty high.'
+            input_context: 'Trigger when biometric age verification returns uncertain or underage results.'
         });
         console.log('Execution Result:', JSON.stringify(execResult, null, 2));
 
