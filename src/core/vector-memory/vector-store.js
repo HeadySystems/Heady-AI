@@ -14,8 +14,8 @@ import { EventEmitter } from 'events';
 import {
   PHI, PSI, FIB,
   phiThreshold,
-} from '../../packages/phi-math-foundation/src/index.js';
-import { createLogger } from '../../packages/structured-logger/src/index.js';
+} from '../../../packages/phi-math-foundation/src/index.js';
+import { createLogger } from '../../../packages/structured-logger/src/index.js';
 
 const logger = createLogger('vector-store');
 
