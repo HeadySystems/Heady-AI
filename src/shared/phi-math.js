@@ -80,6 +80,17 @@ const PHI_CUBE = 2 * PHI + 1;
  */
 const GOLDEN_ANGLE = 137.5077640500378;
 
+/**
+ * PHI_TEMPERATURE — Default semantic scaling temperature for CSL gates.
+ * = ψ³ ≈ 0.23606797749978964
+ */
+const PHI_TEMPERATURE = Math.pow(PSI, 3);
+
+/**
+ * EPSILON — Numerical epsilon for CSL gate stability and floating point comparison.
+ */
+const EPSILON = 1e-10;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 2: FIBONACCI SEQUENCE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1026,5 +1037,7 @@ module.exports = {
   placeholderVector,
   POOL_RATIOS,
   getPressureLevel,
-  sacredGeometryPosition
+  sacredGeometryPosition,
+  PHI_TEMPERATURE,
+  EPSILON
 };

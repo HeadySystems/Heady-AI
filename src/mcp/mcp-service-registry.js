@@ -55,25 +55,33 @@ const MCP_SERVICES = {
 
     heady_csl_engine: {
         tool: 'heady_csl_engine',
-        description: 'Continuous Semantic Logic engine — fuzzy gates, resonance, superposition, entanglement',
+        description: 'Continuous Semantic Logic engine — perform geometric logic operations (AND, OR, NOT, IMPLY, XOR, CONSENSUS) on concept vectors or text.',
         category: 'intelligence',
         priority: Math.pow(PHI, 0),
         parameters: {
-            input: { type: 'string', required: true, description: 'Input to evaluate through CSL gates' },
-            gates: { type: 'array', description: 'Specific gates to apply', items: { type: 'string' } },
-            threshold: { type: 'number', description: 'Phi-scaled activation threshold' },
+            operation: { type: 'string', required: true, enum: ['and', 'or', 'not', 'imply', 'xor', 'consensus', 'gate'], description: 'CSL logical operation' },
+            a: { type: 'string', description: 'First concept (text or vector string)' },
+            b: { type: 'string', description: 'Second concept (text or vector string)' },
+            vectors: { type: 'array', items: { type: 'string' }, description: 'Array of concepts for consensus' },
+            weights: { type: 'array', items: { type: 'number' }, description: 'Weights for consensus' },
+            threshold: { type: 'number', description: 'Activation threshold for GATE' },
+            mode: { type: 'string', enum: ['hard', 'soft'], default: 'hard', description: 'Gate activation mode' }
         },
     },
 
     heady_memory_ops: {
         tool: 'heady_memory_ops',
-        description: 'Persistent 3D vector memory — search, store, embed, learn via Heady™Memory',
+        description: 'Persistent 3D vector memory — search, store, recall, and manage semantic knowledge in specific namespaces.',
         category: 'memory',
         priority: Math.pow(PHI, 0),
         parameters: {
-            action: { type: 'string', required: true, enum: ['search', 'store', 'embed', 'recall', 'forget'] },
-            query: { type: 'string', description: 'Search query or content to store' },
-            namespace: { type: 'string', default: 'default', description: 'Memory namespace' },
+            action: { type: 'string', required: true, enum: ['search', 'store', 'recall', 'delete', 'forget'], description: 'Memory action to perform' },
+            query: { type: 'string', description: 'Search query for "search" action' },
+            content: { type: 'string', description: 'Text content to store for "store" action' },
+            key: { type: 'string', description: 'Memory ID for "delete" action' },
+            namespace: { type: 'string', default: 'default', description: 'Memory namespace (e.g., "patents", "architecture")' },
+            metadata: { type: 'object', description: 'Optional metadata for the memory record' },
+            limit: { type: 'number', default: 10, description: 'Number of results for "search" or "recall"' }
         },
     },
 
