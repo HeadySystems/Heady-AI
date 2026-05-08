@@ -12,12 +12,14 @@
 
 import { EventEmitter } from 'events';
 import {
-  PHI, PSI, FIB,
+  PHI, PSI, fibSequence,
   phiThreshold,
-} from '../../../packages/phi-math-foundation/src/index.js';
+} from '../phi-math.js';
 import { createLogger } from '../../../packages/structured-logger/src/index.js';
 
-const logger = createLogger('vector-store');
+const FIB = fibSequence(20);
+
+const logger = createLogger({ service: 'vector-store' });
 
 /** HNSW index parameters (Fibonacci-derived) */
 const HNSW_CONFIG = Object.freeze({

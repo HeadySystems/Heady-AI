@@ -85,6 +85,18 @@ const MCP_SERVICES = {
         },
     },
 
+    heady_orchestrator: {
+        tool: 'heady_orchestrator',
+        description: 'Multi-agent resonance orchestrator. Executes HeadyResonanceSchemas using CSL intent routing.',
+        category: 'intelligence',
+        priority: Math.pow(PHI, 0),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['execute', 'validate'], description: 'Action to perform' },
+            schema: { type: 'object', required: true, description: 'The HeadyResonanceSchema defining the workflow' },
+            input_context: { type: 'string', description: 'The initial input context for the workflow (required for execute)' }
+        },
+    },
+
     // ═══════════════════════════════════════════════════════════
     // TIER 2 — CORE CAPABILITIES (φ^0.25 priority)
     // ═══════════════════════════════════════════════════════════
