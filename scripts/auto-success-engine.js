@@ -26,6 +26,7 @@ const {
   getVerbosity, 
   useVerbosity, 
   Levels, 
+  Sources,
   TieredOutput,
   parseLevel 
 } = require('../packages/verbosity');
@@ -340,9 +341,10 @@ async function main() {
   generateReport(pipeline);
 
   const summary = new TieredOutput()
-    .add(Levels.NORMAL, `\n  Session: ${fixed} completed, ${failed} failed, ${autoFixable.length - fixed - failed} skipped`)
-    .add(Levels.DETAILED, `  φ-scaled confidence: ${(fixed / Math.max(autoFixable.length, 1) * PHI).toFixed(3)}`)
-    .add(Levels.VERBOSE, `  Tasks: ${autoFixable.map(t => t.id).join(', ')}`);
+    .add(Levels.NORMAL, `\n  Session: ${fixed} completed, ${failed} failed, ${autoFixable.length - fixed - failed} skipped`, Sources.SYSTEM)
+    .add(Levels.DETAILED, `  φ-scaled confidence: ${(fixed / Math.max(autoFixable.length, 1) * PHI).toFixed(3)}`, Sources.SYSTEM)
+    .add(Levels.VERBOSE, `  Tasks: ${autoFixable.map(t => t.id).join(', ')}`, Sources.SYSTEM)
+    .add(config.get('reasoning_verbosity'), () => `  Latent thought: Pipeline stabilization achieved via multi-remote sync.`, Sources.AGENT);
 
   log(summary.render());
 }

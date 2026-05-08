@@ -12,6 +12,13 @@ definitions:
     contexts: [ALL]
     default: NORMAL
 
+  reasoning_verbosity:
+    description: "Depth of LLM latent reasoning/thought process output"
+    type: enum
+    values: [SILENT, TERSE, NORMAL, DETAILED, VERBOSE]
+    contexts: [ALL]
+    default: SILENT
+
   runtime_mode:
     description: "Execution environment optimization target"
     type: enum

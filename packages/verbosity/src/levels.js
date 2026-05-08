@@ -12,6 +12,13 @@ const Levels = {
   VERBOSE: 4
 };
 
+const Sources = {
+  SYSTEM: 'HEADY-CORE',
+  AGENT: 'ANTIGRAVITY',
+  SWARM: 'HEADY-SWARM',
+  SERVICE: 'HEADY-SERVICE'
+};
+
 const Aliases = {
   'quiet': Levels.SILENT,
   'q': Levels.SILENT,
@@ -52,6 +59,7 @@ function levelName(level) {
 
 module.exports = {
   Levels,
+  Sources,
   parseLevel,
   levelName
 };

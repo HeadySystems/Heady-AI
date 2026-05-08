@@ -9,12 +9,13 @@
 
 'use strict';
 
-const { Levels, parseLevel, levelName } = require('./src/levels');
+const { Levels, Sources, parseLevel, levelName } = require('./src/levels');
 const { getVerbosity, useVerbosity } = require('./src/context');
 const { TieredOutput, select, project } = require('./src/formatter');
 
 module.exports = {
   Levels,
+  Sources,
   parseLevel,
   levelName,
   getVerbosity,
