@@ -201,8 +201,33 @@ try {
   log.warn("Secrets/Cloudflare not loaded", { errorMessage: err.message });
 }
 
+// ─── Observability & Auth (Enterprise Grade) ────────────────────────
+let obs;
+try {
+  const { getObservability } = require('./src/core/heady-observability');
+  obs = getObservability({ service: 'heady-manager' });
+} catch (e) {
+  log.warn("Observability module not found, using stubs", { error: e.message });
+  obs = {
+    requestMiddleware: () => (req, res, next) => next(),
+    errorMiddleware: () => (err, req, res, next) => next(err),
+    router: () => require('express').Router()
+  };
+}
+
+let auth;
+try {
+  const { AuthManager } = require('./src/07-auth-manager');
+  auth = new AuthManager({ jwtSecret: process.env.JWT_SECRET });
+} catch (e) {
+  log.warn("AuthManager failed to initialize", { error: e.message });
+}
+
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3300;
 const app = express();
+
+// ─── Observability Middleware (MUST be first) ───────────────────────
+app.use(obs.requestMiddleware());
 
 // ─── Middleware ─────────────────────────────────────────────────────
 app.use(helmet({
@@ -448,7 +473,7 @@ app.use("/api", coreApi);
 // ─── Unified MCP Server ─────────────────────────────────────────────
 try {
   const { setupUnifiedMCP } = require('./src/mcp/index');
-  setupUnifiedMCP(app);
+  setupUnifiedMCP(app, { obs, auth });
   log.info("Unified MCP Server: MOUNTED on /mcp");
 } catch (err) {
   log.warn("Unified MCP Server failed to mount", { errorMessage: err.message });
@@ -2643,6 +2668,12 @@ try {
 try {
   const schedulerRouter = require('./src/routes/scheduler-routes');
   app.use('/api/scheduler', schedulerRouter);
+
+  // ─── Observability & Health Endpoints ──────────────────────────────
+  app.use('/api/v1/obs', obs.router());
+
+  // ─── App Level Catch-All & Errors ──────────────────────────────────
+  app.use(obs.errorMiddleware());
   log.info("Scheduler Service: LOADED");
 } catch (err) {
   log.warn("Scheduler routes not loaded", { errorMessage: err.message });

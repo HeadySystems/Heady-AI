@@ -289,6 +289,49 @@ const MCP_SERVICES = {
         },
     },
 
+    heady_render_list_services: {
+        tool: 'heady_render_list_services',
+        description: 'List all Render services for the authenticated account',
+        category: 'deployment',
+        priority: Math.pow(PHI, 0.75),
+        parameters: {
+            limit: { type: 'number', default: 20 },
+        },
+    },
+
+    heady_render_deploy: {
+        tool: 'heady_render_deploy',
+        description: 'Trigger a deploy for a specific Render service',
+        category: 'deployment',
+        priority: Math.pow(PHI, 0.75),
+        parameters: {
+            service_id: { type: 'string', required: true },
+            clear_cache: { type: 'boolean', default: false },
+        },
+    },
+
+    heady_auto_audit: {
+        tool: 'heady_auto_audit',
+        description: 'System-wide health audit — checks domains, registry drift, edge workers, and MCP connectivity',
+        category: 'maintenance',
+        priority: Math.pow(PHI, 1),
+        parameters: {
+            fix_drift: { type: 'boolean', default: false, description: 'Automatically fix registry drift if found' },
+            test_sse: { type: 'boolean', default: true, description: 'Perform end-to-end SSE connectivity test' },
+        },
+    },
+
+    heady_blocks_sync: {
+        tool: 'heady_blocks_sync',
+        description: 'Synchronize Heady system state with blocks.team for external automation and reporting',
+        category: 'orchestration',
+        priority: Math.pow(PHI, 1.25),
+        parameters: {
+            webhook_url: { type: 'string', description: 'blocks.team webhook URL' },
+            payload_type: { type: 'string', enum: ['health', 'audit', 'alert'], default: 'health' },
+        },
+    },
+
     heady_edge_ai: {
         tool: 'heady_edge_ai',
         description: 'Ultra-low latency AI inference on Cloudflare edge — embeddings, chat, classification',

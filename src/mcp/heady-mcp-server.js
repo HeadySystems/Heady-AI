@@ -87,11 +87,17 @@ class HeadyMCPServer {
     try {
       // Route to skill handler
       const result = await this.executeSkill(service, args);
+      const isError = result && result.success === false;
+      
       return this.jsonRpcResponse(id, {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+        isError: isError
       });
     } catch (error) {
-      return this.jsonRpcError(id, -32000, error.message);
+      return this.jsonRpcResponse(id, {
+        content: [{ type: 'text', text: `Tool Execution Error: ${error.message}` }],
+        isError: true
+      });
     }
   }
 
