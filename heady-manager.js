@@ -445,6 +445,15 @@ const coreApi = require('./services/core-api');
  */
 app.use("/api", coreApi);
 
+// ─── Unified MCP Server ─────────────────────────────────────────────
+try {
+  const { setupUnifiedMCP } = require('./src/mcp/index');
+  setupUnifiedMCP(app);
+  log.info("Unified MCP Server: MOUNTED on /mcp");
+} catch (err) {
+  log.warn("Unified MCP Server failed to mount", { errorMessage: err.message });
+}
+
 // ─── Swagger UI Setup ─────────────────────────────────────────────────
 const swaggerDocument = yaml.load(fs.readFileSync('./docs/api/openapi.yaml', 'utf8'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

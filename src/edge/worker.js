@@ -353,27 +353,46 @@ async function handleClassify(request, env) {
 async function handleMCPSSE(request, env, route) {
   const originUrl = `${route.origin}${new URL(request.url).pathname}${new URL(request.url).search}`;
 
-  const originResponse = await fetch(originUrl, {
-    method: request.method,
-    headers: {
-      ...Object.fromEntries(request.headers),
-      'X-Forwarded-For': request.headers.get('CF-Connecting-IP') || '',
-      'X-Heady-Edge-Region': request.cf?.colo || 'unknown'
-    },
-    body: request.method !== 'GET' ? request.body : undefined
-  });
+  try {
+    const originResponse = await fetch(originUrl, {
+      method: request.method,
+      headers: {
+        ...Object.fromEntries(request.headers),
+        'X-Forwarded-For': request.headers.get('CF-Connecting-IP') || '',
+        'X-Heady-Edge-Region': request.cf?.colo || 'unknown',
+        'X-Accel-Buffering': 'no'
+      },
+      body: request.method !== 'GET' ? request.body : undefined
+    });
 
-  // Stream SSE responses through
-  return new Response(originResponse.body, {
-    status: originResponse.status,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      ...corsHeaders(request),
-      ...SECURITY_HEADERS
+    if (!originResponse.ok) {
+      return new Response(originResponse.body, {
+        status: originResponse.status,
+        headers: {
+          ...Object.fromEntries(originResponse.headers),
+          ...corsHeaders(request),
+          ...SECURITY_HEADERS
+        }
+      });
     }
-  });
+
+    return new Response(originResponse.body, {
+      status: originResponse.status,
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'Connection': 'keep-alive',
+        'X-Accel-Buffering': 'no',
+        ...corsHeaders(request),
+        ...SECURITY_HEADERS
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'Edge Proxy Error', message: err.message, code: 1101 }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(request) }
+    });
+  }
 }
 
 // ─── Handler: Proxy to Origin ───────────────────────────────────────────────

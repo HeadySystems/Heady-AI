@@ -146,12 +146,19 @@ class HeadyMCPServer {
   }
 }
 
+/**
+ * Factory function to create a server instance
+ */
+function createMCPServer() {
+  return new HeadyMCPServer();
+}
+
 // ═══════════════════════════════════════════════════════════
-// STDIO TRANSPORT
+// STDIO TRANSPORT (if run directly)
 // ═══════════════════════════════════════════════════════════
 
 if (require.main === module) {
-  const server = new HeadyMCPServer();
+  const server = createMCPServer();
   let buffer = '';
 
   process.stdin.setEncoding('utf8');
@@ -176,4 +183,4 @@ if (require.main === module) {
   process.stderr.write(`Heady™ MCP Server v${server.manifest.version} started — ${server.manifest.total_services} tools available\n`);
 }
 
-module.exports = { HeadyMCPServer };
+module.exports = { HeadyMCPServer, createMCPServer };
