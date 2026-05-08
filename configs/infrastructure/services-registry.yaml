@@ -1,0 +1,207 @@
+# Heady Autonomous Services Registry
+# Maps every external service to its configuration and health check
+
+version: "1.0.0"
+updated: "2026-04-03"
+
+services:
+  neon_postgres:
+    provider: neon
+    purpose: "Primary database — vector memory, agent state, event store, governance"
+    connection_env: DATABASE_URL
+    health_check: "SELECT 1"
+    tables:
+      - heady_vectors
+      - heady_agent_state
+      - heady_pipeline_runs
+      - heady_events
+      - heady_knowledge_edges
+      - heady_governance_log
+      - heady_config_versions
+    features:
+      - pgvector (384D HNSW)
+      - pg_trgm (fuzzy text search)
+      - pgcrypto (UUID generation)
+
+  upstash_redis:
+    provider: upstash
+    purpose: "L2 cache, rate limiting, pub/sub event bus, session store"
+    connection_env: REDIS_URL
+    health_check: PING
+    namespaces:
+      cache: "heady:cache:"
+      sessions: "heady:sess:"
+      rate_limits: "heady:rl:"
+      pubsub: "heady:ps:"
+      config: "heady:cfg:"
+
+  cloudflare:
+    provider: cloudflare
+    purpose: "Edge compute, DNS, KV store, Vectorize, Pages hosting"
+    account_id_env: CLOUDFLARE_ACCOUNT_ID
+    token_env: CLOUDFLARE_API_TOKEN
+    services:
+      workers:
+        - heady-router (edge proxy)
+        - heady-edge-node (inference)
+        - liquid-gateway (MCP gateway)
+      pages:
+        - headyme.com
+        - headysystems.com
+        - heady-ai.com
+        - headymcp.com
+        - headykey.com
+        - headyvault.com
+        - headyconnection.org
+        - headybuddy.com
+        - headybrowser.com
+      kv_namespaces:
+        - RATE_LIMIT_KV
+        - CACHE_KV
+        - CONFIG_KV
+        - PROMPT_CACHE
+      vectorize:
+        index: heady-vectors-384
+
+  firebase:
+    provider: google
+    purpose: "Authentication, OAuth providers, user sessions"
+    project_env: FIREBASE_PROJECT_ID
+    features:
+      - Firebase Auth (27 OAuth providers)
+      - Firestore (user profiles, preferences)
+      - Real-time Database (live state sync)
+
+  sentry:
+    provider: sentry
+    purpose: "Error monitoring, performance tracing, release tracking"
+    org: heady-ai
+    dsn_env: SENTRY_DSN
+    projects:
+      - heady-dynamic-sites
+      - heady-manager
+      - heady-mcp-server
+      - api-gateway
+      - auth-session-server
+      - heady-buddy
+      - liquid-gateway-worker
+      - heady-ai-cloudrun
+
+  stripe:
+    provider: stripe
+    purpose: "Billing, subscriptions, usage metering, payment processing"
+    key_env: STRIPE_SECRET_KEY
+    webhook_env: STRIPE_WEBHOOK_SECRET
+    products:
+      - HeadyRouter (API Gateway)
+      - HeadyGuard (Security)
+      - HeadyMemory (Vector Store)
+      - HeadyBuddy (AI Assistant)
+      - HeadyMCP (Model Context Protocol)
+
+  vercel:
+    provider: vercel
+    purpose: "Edge functions, preview deployments, serverless compute"
+    token_env: VERCEL_TOKEN
+    team_env: VERCEL_TEAM_ID
+
+  github:
+    provider: github
+    purpose: "Source control, CI/CD, package registry, issue tracking"
+    org: HeadyMe
+    repos:
+      primary: heady-production
+      public: Heady-Main
+      sites:
+        - headyai
+        - headyapi
+        - headysystems-com
+        - headysystems-production
+    apps:
+      - Heady CI Bot
+    gists:
+      config_snapshots: true
+
+  google_cloud:
+    provider: gcp
+    purpose: "Cloud Run services, Secret Manager, Cloud Build, BigQuery"
+    project_env: GCP_PROJECT_ID
+    region: us-central1
+    services:
+      cloud_run:
+        - heady-production (main API)
+        - heady-mcp-server
+        - heady-buddy-api
+      secret_manager: true
+      cloud_build: true
+
+  hugging_face:
+    provider: hugging_face
+    purpose: "Model hosting, inference API, Spaces, datasets"
+    org: HeadyMe
+    token_env: HF_TOKEN
+    spaces:
+      - heady-buddy-demo
+    models:
+      embeddings: nomic-embed-text-v1.5
+
+  nomic:
+    provider: nomic
+    purpose: "Primary embedding model — nomic-embed-text-v1.5 (384D)"
+    key_env: NOMIC_API_KEY
+    model: nomic-embed-text-v1.5
+    dimensions: 384
+
+  voyage:
+    provider: voyage
+    purpose: "Secondary embedding provider — code and retrieval embeddings"
+    key_env: VOYAGE_API_KEY
+    models:
+      - voyage-code-3
+      - voyage-3-lite
+
+  context7:
+    provider: context7
+    purpose: "Library documentation context for AI coding"
+    integration: MCP server
+    config: src/mcp/context7-registration.js
+
+  linear:
+    provider: linear
+    purpose: "Issue tracking, project management, sprint planning"
+    team: HEA
+    integration: bidirectional sync
+
+  slack:
+    provider: slack
+    purpose: "Notifications, alerts, team communication"
+    channels:
+      alerts: "#heady-alerts"
+      deploys: "#heady-deploys"
+      errors: "#heady-errors"
+
+  colab:
+    provider: google
+    purpose: "GPU compute — 3 Pro+ runtimes for training and inference"
+    runtimes:
+      - port: 3301 (Vector ops)
+      - port: 3302 (LLM inference)
+      - port: 3303 (Training)
+
+  npmjs:
+    provider: npm
+    purpose: "Package registry for @heady-ai scoped packages"
+    scope: "@heady-ai"
+    packages:
+      - "@heady-ai/semantic-logic"
+      - "@heady-ai/csl-engine"
+      - "@heady-ai/vector-memory"
+
+  tailscale:
+    provider: tailscale
+    purpose: "Mesh VPN for secure inter-service communication"
+    network: heady-mesh
+    features:
+      - MagicDNS
+      - ACL policies
+      - Exit nodes

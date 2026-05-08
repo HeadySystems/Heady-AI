@@ -1,0 +1,92 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HeadyAutoSync — Cloud Run Job for Git Auto-Commit & Push      ║
+# ║  LAYER: infrastructure/automation                               ║
+# ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Option 2: Cloud Run Job for AutoCommitDeploy
+#
+# Unlike the Render web service (which has no writable .git dir or SSH keys),
+# this Cloud Run Job:
+#   - Clones the repo fresh each run with full git access
+#   - Runs auto-commit-deploy logic as a one-shot job
+#   - Has SSH key mounted from Secret Manager for push access
+#   - Scheduled via Cloud Scheduler at φ⁸ interval (~47s, min 1min)
+#
+# Deploy:
+#   gcloud run jobs create heady-auto-sync \
+#     --image=us-central1-docker.pkg.dev/heady-production/heady-docker-repo/heady-auto-sync:latest \
+#     --region=us-central1 \
+#     --task-timeout=120s \
+#     --max-retries=2 \
+#     --set-secrets="SSH_KEY=heady-deploy-ssh-key:latest,GITHUB_TOKEN=heady-github-token:latest" \
+#     --set-env-vars="HEADY_ORG=HeadyMe,HEADY_REPO=heady-production,HEADY_BRANCH=main" \
+#     --memory=512Mi \
+#     --cpu=1
+#
+# Schedule (Cloud Scheduler):
+#   gcloud scheduler jobs create http heady-auto-sync-trigger \
+#     --schedule="*/1 * * * *" \
+#     --uri="https://us-central1-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/heady-production/jobs/heady-auto-sync:run" \
+#     --http-method=POST \
+#     --oauth-service-account-email=heady-auto-sync@heady-production.iam.gserviceaccount.com \
+#     --location=us-central1
+
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: heady-auto-sync
+  namespace: heady-production
+  labels:
+    app: heady-auto-sync
+    tier: orchestration
+    sacred-geometry-layer: middle
+  annotations:
+    run.googleapis.com/launch-stage: GA
+    run.googleapis.com/description: "HeadyAutoSync — φ⁸ interval auto-commit and cross-repo push"
+spec:
+  template:
+    metadata:
+      labels:
+        app: heady-auto-sync
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      taskCount: 1
+      template:
+        spec:
+          maxRetries: 2
+          timeoutSeconds: 120
+          containers:
+            - image: us-central1-docker.pkg.dev/heady-production/heady-docker-repo/heady-auto-sync:latest
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+              env:
+                - name: HEADY_ORG
+                  value: HeadyMe
+                - name: HEADY_REPO
+                  value: heady-production
+                - name: HEADY_BRANCH
+                  value: main
+                - name: NODE_ENV
+                  value: production
+                - name: HEADY_TARGET
+                  value: cloud-run-job
+                - name: HEADY_MODE
+                  value: AUTO_SYNC
+              volumeMounts:
+                - name: ssh-key
+                  mountPath: /secrets/ssh
+                  readOnly: true
+          volumes:
+            - name: ssh-key
+              secret:
+                secretName: heady-deploy-ssh-key
+                items:
+                  - key: latest
+                    path: id_ed25519
+                    mode: 0400

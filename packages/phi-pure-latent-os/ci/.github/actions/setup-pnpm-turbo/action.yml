@@ -1,0 +1,107 @@
+# © 2026 HeadySystems Inc. — φ-Pure Latent OS
+#
+# Composite action: setup-pnpm-turbo
+#
+# Installs the exact pnpm version declared in packageManager (package.json)
+# via Corepack, restores the pnpm content-addressable store from Actions Cache,
+# runs `pnpm install --frozen-lockfile`, then restores the Turborepo local cache.
+#
+# Usage:
+#   - name: Setup pnpm and Turbo
+#     uses: ./.github/actions/setup-pnpm-turbo
+#     with:
+#       node-version: '22.x'
+
+name: Setup pnpm + Turbo
+description: >
+  Installs Node.js via Corepack, restores the pnpm content-addressable store,
+  installs dependencies with a frozen lockfile, and restores the Turborepo cache.
+
+inputs:
+  node-version:
+    description: Node.js version to install (e.g. "20.x" or "22.x")
+    required: false
+    default: '22.x'
+
+  pnpm-version:
+    description: >
+      pnpm version to activate via Corepack. Leave blank to use the version
+      declared in the root package.json `packageManager` field.
+    required: false
+    default: ''
+
+  turbo-cache-dir:
+    description: Path to the Turborepo local cache directory
+    required: false
+    default: '.turbo'
+
+  working-directory:
+    description: Repository root relative to GITHUB_WORKSPACE
+    required: false
+    default: '.'
+
+runs:
+  using: composite
+
+  steps:
+    # ── 1. Node.js ────────────────────────────────────────────────────────────
+    - name: Setup Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    # ── 2. Enable Corepack (ships with Node 16.9+) ───────────────────────────
+    # Corepack reads the `packageManager` field from package.json and activates
+    # the exact pnpm version pinned there. If `pnpm-version` input is provided
+    # it overrides the auto-detected version.
+    - name: Enable Corepack
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        corepack enable
+        if [[ -n "${{ inputs.pnpm-version }}" ]]; then
+          corepack prepare pnpm@${{ inputs.pnpm-version }} --activate
+        else
+          corepack prepare --activate
+        fi
+
+    # ── 3. Resolve pnpm store path (needed for cache key) ────────────────────
+    - name: Get pnpm store path
+      id: pnpm-store
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+    # ── 4. Restore pnpm content-addressable store ─────────────────────────────
+    # Cache key includes the lockfile hash so any lockfile change busts the cache.
+    # A restore-key allows partial hits (avoids full re-download on minor changes).
+    - name: Restore pnpm store cache
+      id: cache-pnpm-store
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: pnpm-store-${{ runner.os }}-node${{ inputs.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          pnpm-store-${{ runner.os }}-node${{ inputs.node-version }}-
+
+    # ── 5. Install dependencies (frozen lockfile) ─────────────────────────────
+    # --frozen-lockfile ensures CI never silently updates the lockfile.
+    # --prefer-offline uses the restored store content first.
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: pnpm install --frozen-lockfile --prefer-offline
+
+    # ── 6. Restore Turborepo local cache ──────────────────────────────────────
+    # The local .turbo cache is keyed on the branch + Node version so that
+    # cache artifacts from different Node versions don't bleed into each other.
+    # Turbo also supports remote caching via TURBO_TOKEN/TURBO_TEAM env vars
+    # which the parent workflow injects — that path is independent of this step.
+    - name: Restore Turborepo cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ inputs.turbo-cache-dir }}
+        key: turbo-${{ runner.os }}-node${{ inputs.node-version }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          turbo-${{ runner.os }}-node${{ inputs.node-version }}-${{ github.ref_name }}-
+          turbo-${{ runner.os }}-node${{ inputs.node-version }}-

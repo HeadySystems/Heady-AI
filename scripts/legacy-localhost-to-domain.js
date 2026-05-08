@@ -44,7 +44,7 @@ const SERVICE_DOMAINS = {
   postgres: 'db.headysystems.com'
 };
 
-const api.headysystems.com_PATTERNS = [
+const apiHeadysystemsComPatterns = [
   /api.headysystems.com:?(\d+)?/g,
   /127\.0\.0\.1:?(\d+)?/g,
   /0\.0\.0\.0:?(\d+)?/g,

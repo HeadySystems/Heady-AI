@@ -21,20 +21,36 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const config = require('../packages/config-core');
+const { 
+  getVerbosity, 
+  useVerbosity, 
+  Levels, 
+  TieredOutput,
+  parseLevel 
+} = require('../packages/verbosity');
 
-const PHI = 1.618033988749895;
+const args = process.argv.slice(2);
+
+// Sync CLI verbosity to config
+let cliVerbosity = config.get('verbosity');
+if (args.includes('--silent') || args.includes('-q')) cliVerbosity = Levels.SILENT;
+if (args.includes('--verbose') || args.includes('-v')) cliVerbosity = Levels.VERBOSE;
+if (args.includes('--vv')) cliVerbosity = Levels.DETAILED;
+config.set('verbosity', cliVerbosity);
+
+const PHI = config.get('phi_scaling') ? 1.618033988749895 : 1.0;
 const ROOT = path.join(__dirname, '..');
 const PIPELINE_PATH = path.join(ROOT, 'configs', 'hcfullpipeline-tasks.json');
 const GIT_REMOTES = ['headyai', 'hs-main']; // Push targets
 
 // ── Parse CLI args ──────────────────────────────────────────────────────────
-const args = process.argv.slice(2);
 const DRY_RUN = args.includes('--dry-run');
 const NO_PUSH = args.includes('--no-push');
 const REPORT_ONLY = args.includes('--report');
 const CATEGORY_FILTER = args.includes('--category') ? args[args.indexOf('--category') + 1] : null;
 const ID_FILTER = args.includes('--id') ? args[args.indexOf('--id') + 1] : null;
-const VERBOSE = args.includes('--verbose') || args.includes('-v');
+
 const ADD_TASK = args.includes('--add-task') ? args[args.indexOf('--add-task') + 1] : null;
 const MARK_DONE = args.includes('--mark-done') ? args[args.indexOf('--mark-done') + 1] : null;
 
@@ -45,7 +61,10 @@ const c = {
   cyan: '\x1b[36m', magenta: '\x1b[35m', white: '\x1b[37m',
 };
 
-function log(msg, color = '') { console.log(`${color}${msg}${c.reset}`); }
+function log(msg, color = '') { 
+  if (getVerbosity() === Levels.SILENT) return;
+  console.log(`${color}${msg}${c.reset}`); 
+}
 function banner(msg) { log(`\n${'═'.repeat(70)}\n${msg}\n${'═'.repeat(70)}`, c.cyan + c.bold); }
 function success(msg) { log(`  ✅ ${msg}`, c.green); }
 function fail(msg) { log(`  ❌ ${msg}`, c.red); }
@@ -86,7 +105,8 @@ function gitPush() {
   }
 
   // Load tokens from .env
-  const envContent = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
+  const envPath = path.join(ROOT, '.env');
+  const envContent = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8') : '';
   const tokens = {
     headyai: envContent.match(/GITHUB_TOKEN_HEADYAI=(ghp_[a-zA-Z0-9]+)/)?.[1],
     'hs-main': envContent.match(/GITHUB_TOKEN_HEADYSYSTEMS=(ghp_[a-zA-Z0-9]+)/)?.[1] || envContent.match(/GITHUB_TOKEN=(ghp_[a-zA-Z0-9]+)/)?.[1],
@@ -110,7 +130,7 @@ function gitPush() {
     } catch (err) {
       const stderr = err.stderr ? err.stderr.toString().trim() : err.message;
       warn(`Push to ${remote} failed: ${stderr.split('\n')[0]}`);
-      if (VERBOSE) log(stderr, c.red);
+      if (getVerbosity() >= Levels.VERBOSE) log(stderr, c.red);
     }
   }
 }
@@ -189,7 +209,7 @@ function executeAutoFix(task) {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
     });
-    if (VERBOSE && output.trim()) info(output.trim().split('\n').slice(0, 5).join('\n'));
+    if (getVerbosity() >= Levels.VERBOSE && output.trim()) info(output.trim().split('\n').slice(0, 5).join('\n'));
     return { success: true, output: output.trim() };
   } catch (err) {
     return { success: false, error: err.message.split('\n')[0] };
@@ -319,8 +339,14 @@ async function main() {
 
   generateReport(pipeline);
 
-  log(`\n  Session: ${fixed} completed, ${failed} failed, ${autoFixable.length - fixed - failed} skipped`, c.bold);
-  log(`  φ-scaled confidence: ${(fixed / Math.max(autoFixable.length, 1) * PHI).toFixed(3)}`, c.dim);
+  const summary = new TieredOutput()
+    .add(Levels.NORMAL, `\n  Session: ${fixed} completed, ${failed} failed, ${autoFixable.length - fixed - failed} skipped`)
+    .add(Levels.DETAILED, `  φ-scaled confidence: ${(fixed / Math.max(autoFixable.length, 1) * PHI).toFixed(3)}`)
+    .add(Levels.VERBOSE, `  Tasks: ${autoFixable.map(t => t.id).join(', ')}`);
+
+  log(summary.render());
 }
 
-main().catch(err => { fail(err.message); process.exit(1); });
+useVerbosity(cliVerbosity, () => {
+  main().catch(err => { fail(err.message); process.exit(1); });
+});

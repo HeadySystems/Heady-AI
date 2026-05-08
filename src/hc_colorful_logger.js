@@ -22,6 +22,7 @@
  */
 
 // 🎨 COLOR PALETTE FOR RAINBOW OUTPUT
+const logger = require('./utils/logger');
 const colors = {
 const logger = require('./utils/logger');
   red: '\x1b[31m',
@@ -214,7 +215,7 @@ class ColorfulLogger {
 module.exports = ColorfulLogger;
 
 // 🎨 CREATE DEFAULT INSTANCE
-const logger = new ColorfulLogger({
+const defaultLogger = new ColorfulLogger({
   enabled: true,
   level: process.env.LOG_LEVEL || 'info',
   useRainbow: true,

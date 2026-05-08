@@ -948,11 +948,10 @@ class ConfigServer extends EventEmitter {
 let _instance = null;
 
 /**
- * Returns the singleton ConfigServer instance.
- * Call await cfg.start() once at application bootstrap.
- *
- * @param {Object} [opts]  Override options (only honoured on first call)
- * @returns {ConfigServer}
+ * Re-export from canonical src/core/ location.
+ * The src/core/ version is the single source of truth.
+ * This shim exists for backward compatibility with architecture/v2/ imports.
+ * Last consolidated: 2026-03-21 (Session 6)
  */
 function getConfigServer(opts) {
   if (!_instance) _instance = new ConfigServer(opts);

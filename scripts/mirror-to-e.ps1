@@ -89,11 +89,8 @@ function Mirror-Section {
     }
 
     if ($DryRun) {
-<<<<<<< HEAD
         $count = (Get-ChildItem -Path $src -Recurse -File).Count
-=======
-        $count = (Get-ChildItem -Path $src -Recurse -Depth 5 -File).Count
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+        $count = (Get-ChildItem -Path $src -Recurse -File).Count
         Write-Host "  WOULD COPY: $Name ($count files)" -ForegroundColor Yellow
     } else {
         Write-Host "  Copying: $Name..." -ForegroundColor Cyan -NoNewline
@@ -109,11 +106,8 @@ function Mirror-Section {
         $exitCode = $LASTEXITCODE
 
         if ($exitCode -le 7) {
-<<<<<<< HEAD
             $count = (Get-ChildItem -Path $dst -Recurse -File -ErrorAction SilentlyContinue).Count
-=======
-            $count = (Get-ChildItem -Path $dst -Recurse -Depth 5 -File -ErrorAction SilentlyContinue).Count
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+            $count = (Get-ChildItem -Path $dst -Recurse -File -ErrorAction SilentlyContinue).Count
             Write-Host " OK ($count files)" -ForegroundColor Green
         } else {
             Write-Host " FAIL (robocopy exit $exitCode)" -ForegroundColor Red
@@ -153,11 +147,8 @@ Write-Host ""
 if ($DryRun) {
     Write-Host "DRY RUN complete. No files were copied." -ForegroundColor Yellow
 } else {
-<<<<<<< HEAD
     $totalFiles = (Get-ChildItem -Path $ETarget -Recurse -File -ErrorAction SilentlyContinue).Count
-=======
-    $totalFiles = (Get-ChildItem -Path $ETarget -Recurse -Depth 5 -File -ErrorAction SilentlyContinue).Count
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+    $totalFiles = (Get-ChildItem -Path $ETarget -Recurse -File -ErrorAction SilentlyContinue).Count
     Write-Host "Mirror complete: $totalFiles files in $ETarget" -ForegroundColor Green
 }
 Write-Host ""

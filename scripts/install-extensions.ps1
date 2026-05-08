@@ -371,11 +371,8 @@ function Main {
     
     # Browser Extensions
     if ($Browser -eq "all") {
-<<<<<<< HEAD
         @("chrome", "edge", "firefox", "brave") | ForEach-Object {
-=======
-        @("chrome", "edge", "firefox", "brave") | ForEach-Object { -Parallel {
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+        @("chrome", "edge", "firefox", "brave") | ForEach-Object {
             Install-BrowserExtensions -BrowserName $_
         }
     } else {

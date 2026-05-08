@@ -33,7 +33,6 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Configuration
-<<<<<<< HEAD
 $HEADY_ROOT = "C:\Users\erich\Heady"
 $E_DRIVE = "C:\Users\erich\CrossDevice\E's OnePlus Open\HeadyStack"
 $F_DRIVE = "F:\HeadyOS"
@@ -48,21 +47,15 @@ New-Item -ItemType Directory -Force -Path $LOG_DIR | Out-Null
 # Device registry
 $DEVICES = @{
     localhost = @{
-=======
-# Cloud-Only Configuration (NO LOCAL STORAGE)
-$HEADY_ROOT = "https://headysystems.com/api/repo"
-$E_DRIVE = "https://headysystems.com/api/crossdevice"
-$F_DRIVE = "https://headysystems.com/api/headyos"
-$CONFIG_DIR = "https://headysystems.com/api/config"
-$LOG_DIR = "https://headysystems.com/api/logs"
-$STATE_FILE = "https://headysystems.com/api/state/device-state.json"
 
-# Cloud paths - No local directory creation needed
+# Ensure directories
+New-Item -ItemType Directory -Force -Path $CONFIG_DIR | Out-Null
+New-Item -ItemType Directory -Force -Path $LOG_DIR | Out-Null
 
 # Device registry
 $DEVICES = @{
     api.headysystems.com = @{
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+    localhost = @{
         name = "Primary Workstation"
         path = $HEADY_ROOT
         type = "primary"
@@ -112,11 +105,8 @@ function Get-DeviceHealth {
             $health.disk_space_gb = [math]::Round($drive.Free / 1GB, 2)
             
             # Check if heady-manager is running (for primary)
-<<<<<<< HEAD
             if ($DeviceKey -eq "localhost") {
-=======
-            if ($DeviceKey -eq "api.headysystems.com") {
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+            if ($DeviceKey -eq "localhost") {
                 $process = Get-Process -Name "node" -ErrorAction SilentlyContinue | 
                     Where-Object { $_.CommandLine -match "heady-manager" }
                 $health.manager_running = $null -ne $process
@@ -162,19 +152,16 @@ function Sync-Device {
             }
         }
         
-<<<<<<< HEAD
         "localhost" {
             # Check local health
             $health = Get-DeviceHealth -DeviceKey $DeviceKey
             if ($health.manager_running) {
                 Write-Host "  ✓ HeadyManager running on localhost:3300" -ForegroundColor Green
-=======
-        "api.headysystems.com" {
+        "localhost" {
             # Check local health
             $health = Get-DeviceHealth -DeviceKey $DeviceKey
             if ($health.manager_running) {
-                Write-Host "  ✓ HeadyManager running on api.headysystems.com:3300" -ForegroundColor Green
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+                Write-Host "  ✓ HeadyManager running on localhost:3300" -ForegroundColor Green
             } else {
                 Write-Host "  ⚠ HeadyManager not running - starting..." -ForegroundColor Yellow
                 Start-HeadyManager
@@ -194,11 +181,8 @@ function Start-HeadyManager {
     if (Test-Path $managerPath) {
         # Start in background
         Start-Process -FilePath "node" -ArgumentList $managerPath -WindowStyle Hidden
-<<<<<<< HEAD
         Start-Sleep -Seconds 3
-=======
-        # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+        Start-Sleep -Seconds 3
         
         # Verify it started
         $process = Get-Process -Name "node" -ErrorAction SilentlyContinue | 
@@ -305,11 +289,8 @@ function Show-DeviceStatus {
                 Write-Host "  Last Sync: Never" -ForegroundColor Yellow
             }
             
-<<<<<<< HEAD
             if ($key -eq "localhost" -and $health.manager_running) {
-=======
-            if ($key -eq "api.headysystems.com" -and $health.manager_running) {
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+            if ($key -eq "localhost" -and $health.manager_running) {
                 Write-Host "  HeadyManager: RUNNING" -ForegroundColor Green
             }
         }

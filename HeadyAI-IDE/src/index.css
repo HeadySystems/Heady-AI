@@ -615,7 +615,6 @@ body {
   cursor: not-allowed;
 }
 
-<<<<<<< HEAD
 /* ═══ IDE Layout (new Windsurf+Antigravity layout) ═══ */
 
 .ide-container {
@@ -926,8 +925,6 @@ body {
   opacity: 0.9;
 }
 
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 /* Sacred Geometry Background */
 .sacred-geometry-background {
   position: fixed;

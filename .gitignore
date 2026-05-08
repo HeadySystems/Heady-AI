@@ -139,6 +139,11 @@ render.yaml.bak
 *.key
 *.p12
 *.pfx
+<<<<<<< HEAD
+=======
+*.gpg
+HEADY_ENV_*.env
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 *.jks
 gcp-*.json
 *-service-account*.json
@@ -175,3 +180,7 @@ secrets_registry.json
 
 # ── Loose credential files ─────────────────────────────
 !package-lock.json
+<<<<<<< HEAD
+=======
+auth-service/node_modules/
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

@@ -1,0 +1,123 @@
+name: Enable Cloudflare Proxy for heady-ai.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (true=print only, false=apply changes)'
+        required: false
+        default: 'false'
+
+jobs:
+  enable-proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable Cloudflare Proxy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          python3 << 'PYEOF'
+          import json
+          import urllib.request
+          import urllib.error
+          import sys
+          import os
+
+          CF_API_BASE = "https://api.cloudflare.com/client/v4"
+          CF_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")
+          if not CF_TOKEN:
+              print("ERROR: No CF token set")
+              sys.exit(1)
+
+          DRY_RUN = os.getenv("DRY_RUN", "false").lower() == "true"
+          print(f"Mode: {'DRY RUN' if DRY_RUN else 'LIVE'}")
+
+          def cf_request(method, path, data=None):
+              url = f"{CF_API_BASE}{path}"
+              headers = {"Authorization": f"Bearer {CF_TOKEN}", "Content-Type": "application/json"}
+              body = json.dumps(data).encode() if data else None
+              req = urllib.request.Request(url, data=body, headers=headers, method=method)
+              try:
+                  with urllib.request.urlopen(req) as resp:
+                      return json.loads(resp.read())
+              except urllib.error.HTTPError as e:
+                  try:
+                      return json.loads(e.read().decode())
+                  except:
+                      return {"success": False, "errors": [str(e)]}
+
+          # Verify token
+          verify = cf_request("GET", "/user/tokens/verify")
+          if not verify.get("success"):
+              print(f"ERROR: Token invalid: {verify.get('errors')}")
+              sys.exit(1)
+          print(f"Token status: {verify.get('result', {}).get('status')}")
+
+          # Get zone ID for heady-ai.com
+          print("\n-- Step 1: Get zone ID for heady-ai.com --")
+          r = cf_request("GET", "/zones?name=heady-ai.com&status=active")
+          if not r.get("success") or not r.get("result"):
+              print(f"ERROR: Could not find zone for heady-ai.com: {r}")
+              sys.exit(1)
+          zone = r["result"][0]
+          zone_id = zone["id"]
+          print(f"Zone ID: {zone_id}")
+          print(f"Zone name: {zone.get('name')}")
+          print(f"Zone status: {zone.get('status')}")
+
+          # List all DNS records
+          print("\n-- Step 2: List all DNS records --")
+          r = cf_request("GET", f"/zones/{zone_id}/dns_records?per_page=100")
+          if not r.get("success"):
+              print(f"ERROR: Could not list DNS records: {r}")
+              sys.exit(1)
+          records = r.get("result", [])
+          print(f"Total records: {len(records)}")
+          for rec in records:
+              print(f"  {rec['type']:6} {rec['name']:40} -> {rec.get('content','')[:50]:50} proxied={rec.get('proxied','N/A')} id={rec['id']}")
+
+          # Find unproxied A/AAAA/CNAME records
+          print("\n-- Step 3: Enable proxy on unproxied A/AAAA/CNAME records --")
+          proxiable_types = {"A", "AAAA", "CNAME"}
+          to_fix = [r for r in records if r["type"] in proxiable_types and r.get("proxied") == False]
+          print(f"Records needing proxy enabled: {len(to_fix)}")
+
+          stats = {"success": 0, "failed": 0, "skipped": 0}
+          for rec in to_fix:
+              print(f"\n  Patching: {rec['type']} {rec['name']} -> {rec.get('content')} (id={rec['id']})")
+              if DRY_RUN:
+                  print(f"  [DRY RUN] Would enable proxy for {rec['name']}")
+                  stats["skipped"] += 1
+                  continue
+              patch = cf_request(
+                  "PATCH",
+                  f"/zones/{zone_id}/dns_records/{rec['id']}",
+                  {"proxied": True}
+              )
+              if patch.get("success"):
+                  result = patch.get("result", {})
+                  print(f"  SUCCESS: {rec['name']} proxied={result.get('proxied')}")
+                  stats["success"] += 1
+              else:
+                  print(f"  FAILED: {patch.get('errors')}")
+                  stats["failed"] += 1
+
+          if not to_fix:
+              print("  No unproxied A/AAAA/CNAME records found (may already be proxied or no records exist)")
+
+          # Verify final state
+          print("\n-- Step 4: Verify final DNS state --")
+          r2 = cf_request("GET", f"/zones/{zone_id}/dns_records?per_page=100")
+          if r2.get("success"):
+              for rec in r2.get("result", []):
+                  if rec["type"] in proxiable_types:
+                      status = "PROXIED" if rec.get("proxied") else "UNPROXIED"
+                      print(f"  [{status}] {rec['type']} {rec['name']} -> {rec.get('content','')}")
+
+          print(f"\nSUMMARY: success={stats['success']} failed={stats['failed']} skipped={stats['skipped']}")
+          if stats["failed"] > 0:
+              sys.exit(1)
+          PYEOF

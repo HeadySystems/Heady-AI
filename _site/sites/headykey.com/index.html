@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeadyKey — Sovereign Identity &amp; Authentication</title>
+<meta name="description" content="HeadyKey is the zero-trust identity layer for the Heady ecosystem. JWT sessions, OAuth2 OIDC, RBAC, API key management, and persistent user storage.">
+<meta property="og:title" content="HeadyKey — Sovereign Identity">
+<meta property="og:description" content="Zero-trust authentication for the Heady AI Operating System. 25+ OAuth providers. Ed25519 receipts. Persistent memory.">
+<meta property="og:url" content="https://headykey.com">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050a;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--text:#e8e8f0;--muted:#9898a8;--accent:#f59e0b;--accent2:#a855f7;--radius:13px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 34px;border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;display:flex;align-items:center;gap:8px}
+.nav-brand span{color:var(--accent)}
+.nav-links{display:flex;gap:21px;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links .cta{background:var(--accent);color:#000;padding:8px 21px;border-radius:8px;font-weight:600}
+.hero{text-align:center;padding:89px 34px 55px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(245,158,11,0.08) 0%,transparent 70%);pointer-events:none}
+.badge{display:inline-block;padding:6px 16px;border:1px solid var(--accent);border-radius:21px;font-size:0.8rem;color:var(--accent);margin-bottom:21px;letter-spacing:0.05em}
+h1{font-family:'Space Grotesk';font-size:3.5rem;font-weight:800;line-height:1.1;margin-bottom:21px;background:linear-gradient(135deg,var(--accent),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:1.15rem;color:var(--muted);max-width:640px;margin:0 auto 34px;line-height:1.6}
+.cta-row{display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+.btn{padding:13px 34px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:1rem;transition:transform 0.3s cubic-bezier(0.618,0,0.382,1)}
+.btn:hover{transform:scale(1.04)}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.stats{display:flex;justify-content:center;gap:55px;padding:55px 34px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-value{font-family:'Space Grotesk';font-size:2.4rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:5px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:21px;padding:34px;max-width:1200px;margin:0 auto}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:34px;transition:border-color 0.3s}
+.card:hover{border-color:rgba(245,158,11,0.3)}
+.card-icon{font-size:2rem;margin-bottom:13px}
+.card h3{font-family:'Space Grotesk';font-size:1.25rem;margin-bottom:8px}
+.card p{color:var(--muted);font-size:0.95rem;line-height:1.6}
+.section{padding:55px 34px;max-width:1000px;margin:0 auto}
+.section h2{font-family:'Space Grotesk';font-size:2rem;margin-bottom:21px;text-align:center}
+.auth-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:13px;margin-top:34px}
+.flow-step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:21px;text-align:center;position:relative}
+.flow-step::after{content:'→';position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:1.5rem}
+.flow-step:last-child::after{display:none}
+.flow-num{display:inline-block;width:34px;height:34px;line-height:34px;border-radius:50%;background:var(--accent);color:#000;font-weight:700;font-size:0.9rem;margin-bottom:8px}
+.flow-step h4{font-size:0.95rem;margin-bottom:5px}
+.flow-step p{font-size:0.8rem;color:var(--muted)}
+.code-block{background:#0d0d15;border:1px solid var(--border);border-radius:var(--radius);padding:21px;font-family:'SF Mono','Fira Code',monospace;font-size:0.85rem;overflow-x:auto;margin:21px 0;color:#a5b4fc}
+.providers{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:21px 0}
+.provider{padding:5px 13px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:0.8rem;color:var(--muted)}
+.endpoints{margin:21px 0}
+.endpoint{display:flex;align-items:center;gap:13px;padding:13px;border-bottom:1px solid var(--border)}
+.method{font-family:monospace;font-weight:700;font-size:0.85rem;padding:3px 8px;border-radius:5px}
+.method.post{background:rgba(34,197,94,0.15);color:#22c55e}
+.method.get{background:rgba(96,165,250,0.15);color:#60a5fa}
+.method.delete{background:rgba(239,68,68,0.15);color:#ef4444}
+.path{font-family:monospace;font-size:0.9rem}
+.path-desc{font-size:0.8rem;color:var(--muted);margin-left:auto}
+.ecosystem{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;padding:34px}
+.eco-link{padding:8px 21px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);text-decoration:none;font-size:0.85rem;transition:border-color 0.3s}
+.eco-link:hover{border-color:var(--accent);color:var(--text)}
+.footer{text-align:center;padding:34px;color:var(--muted);font-size:0.8rem;border-top:1px solid var(--border)}
+@media(max-width:768px){h1{font-size:2.2rem}.stats{gap:21px}.features{grid-template-columns:1fr}.auth-flow{grid-template-columns:1fr}.flow-step::after{display:none}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">🔑 <span>Heady</span>Key</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#auth-flow">Auth Flow</a>
+    <a href="#api">API</a>
+    <a href="#providers">Providers</a>
+    <a href="https://headysystems.com" class="cta">HeadySystems →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">ZERO-TRUST IDENTITY</div>
+  <h1>Sovereign Authentication</h1>
+  <p class="subtitle">HeadyKey is the zero-trust identity layer for the entire Heady ecosystem. JWT sessions, OAuth2 OIDC, RBAC, API key management, Ed25519 trust receipts, and persistent user storage — all φ-scaled.</p>
+  <div class="cta-row">
+    <a href="https://auth.headysystems.com" class="btn btn-primary">Sign In →</a>
+    <a href="#api" class="btn btn-secondary">API Reference</a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">25+</div><div class="stat-label">OAuth Providers</div></div>
+  <div class="stat"><div class="stat-value">4</div><div class="stat-label">RBAC Roles</div></div>
+  <div class="stat"><div class="stat-value">Ed25519</div><div class="stat-label">Trust Receipts</div></div>
+  <div class="stat"><div class="stat-value">φ-scaled</div><div class="stat-label">Session TTLs</div></div>
+</div>
+
+<section id="features" class="features">
+  <div class="card"><div class="card-icon">🔐</div><h3>JWT Access + Refresh Tokens</h3><p>HS256-signed access tokens with 1-hour expiry. 30-day refresh tokens with 34-byte (fib(9)) entropy. Session cookies httpOnly + Secure + SameSite=Strict.</p></div>
+  <div class="card"><div class="card-icon">👥</div><h3>Role-Based Access Control</h3><p>Four-tier RBAC: admin(4), operator(3), user(2), guest(1). Role enforcement middleware checks minimum level on every protected route.</p></div>
+  <div class="card"><div class="card-icon">🗝️</div><h3>API Key Management</h3><p>Generate hdy_ prefixed keys with SHA-256 hashing. Keys are shown once at creation. Revoke, list, and audit through the management API.</p></div>
+  <div class="card"><div class="card-icon">🛡️</div><h3>Zero-Trust CORS</h3><p>23 explicit Heady origins whitelisted. Zero wildcard Access-Control-Allow-Origin. Server-to-server calls (no Origin header) allowed.</p></div>
+  <div class="card"><div class="card-icon">🧠</div><h3>Persistent User Memory</h3><p>Onboarding preferences stored in 384D pgvector memory (user_memory_t2). Buddy configuration, interests, and plan persisted across sessions.</p></div>
+  <div class="card"><div class="card-icon">📋</div><h3>5-Stage Onboarding</h3><p>Identity → Interests → Buddy Config → Plan Selection → Completion. Auto-generates API key. Stores preferences in persistent memory tier.</p></div>
+</section>
+
+<section id="auth-flow" class="section">
+  <h2>Authentication Flow</h2>
+  <div class="auth-flow">
+    <div class="flow-step"><div class="flow-num">1</div><h4>Sign In</h4><p>Email/password or OAuth provider</p></div>
+    <div class="flow-step"><div class="flow-num">2</div><h4>Verify</h4><p>JWT issued + session cookie set</p></div>
+    <div class="flow-step"><div class="flow-num">3</div><h4>Onboard</h4><p>5-stage personalization flow</p></div>
+    <div class="flow-step"><div class="flow-num">4</div><h4>API Key</h4><p>hdy_ key auto-generated</p></div>
+    <div class="flow-step"><div class="flow-num">5</div><h4>Access</h4><p>Full ecosystem access</p></div>
+  </div>
+</section>
+
+<section id="providers" class="section">
+  <h2>OAuth Providers</h2>
+  <div class="providers">
+    <span class="provider">Google</span><span class="provider">GitHub</span><span class="provider">Microsoft</span>
+    <span class="provider">Apple</span><span class="provider">Discord</span><span class="provider">Slack</span>
+    <span class="provider">HuggingFace</span><span class="provider">GitLab</span><span class="provider">LinkedIn</span>
+    <span class="provider">Twitter/X</span><span class="provider">Facebook</span><span class="provider">Notion</span>
+    <span class="provider">Atlassian</span><span class="provider">Okta</span><span class="provider">Auth0</span>
+    <span class="provider">Salesforce</span><span class="provider">Zoom</span><span class="provider">Spotify</span>
+    <span class="provider">Reddit</span><span class="provider">Twitch</span><span class="provider">Figma</span>
+    <span class="provider">Shopify</span><span class="provider">Stripe Connect</span><span class="provider">OneLogin</span>
+    <span class="provider">Bitbucket</span>
+  </div>
+</section>
+
+<section id="api" class="section">
+  <h2>API Endpoints</h2>
+  <div class="code-block">Base URL: https://auth.headysystems.com</div>
+  <div class="endpoints">
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/auth/register</span><span class="path-desc">Create account</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/auth/login</span><span class="path-desc">Authenticate → JWT + refresh</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/auth/refresh</span><span class="path-desc">Refresh access token</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/auth/logout</span><span class="path-desc">Clear session</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="path">/api/auth/me</span><span class="path-desc">Current user profile</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="path">/api/auth/verify</span><span class="path-desc">Verify JWT or API key</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/auth/api-keys</span><span class="path-desc">Generate hdy_ API key</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="path">/api/auth/api-keys</span><span class="path-desc">List your API keys</span></div>
+    <div class="endpoint"><span class="method delete">DEL</span><span class="path">/api/auth/api-keys/:id</span><span class="path-desc">Revoke API key</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/session/start</span><span class="path-desc">Widget session creation</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/api/provider/start</span><span class="path-desc">OAuth provider redirect</span></div>
+    <div class="endpoint"><span class="method post">POST</span><span class="path">/onboarding/complete</span><span class="path-desc">Save onboarding data</span></div>
+    <div class="endpoint"><span class="method get">GET</span><span class="path">/onboarding/status</span><span class="path-desc">Check onboarding progress</span></div>
+  </div>
+  <div class="code-block">// Example: Generate API Key
+curl -X POST https://auth.headysystems.com/api/auth/api-keys \
+  -H "Authorization: Bearer &lt;jwt&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{"description": "My production key"}'
+
+// Response:
+{
+  "id": "abc123",
+  "key": "hdy_8f3a9b2c...",
+  "prefix": "hdy_8f3a9b2c",
+  "role": "user",
+  "warning": "Store this key securely. It cannot be retrieved again."
+}</div>
+</section>
+
+<section class="section">
+  <h2>Token Lifecycle</h2>
+  <div class="features" style="max-width:100%">
+    <div class="card"><h3>Access Token</h3><p>JWT, HS256 signed, 1-hour expiry. Contains userId, email, role. Passed via Authorization: Bearer header.</p></div>
+    <div class="card"><h3>Refresh Token</h3><p>34-byte (fib(9)) CSPRNG hex. 30-day TTL. Hash-indexed in PostgreSQL. Exchange for new access token.</p></div>
+    <div class="card"><h3>Session Cookie</h3><p>__heady_session. 8-hour TTL (fib(6) hours). httpOnly, Secure, SameSite=Strict. LIFO cleanup on logout.</p></div>
+    <div class="card"><h3>API Key</h3><p>hdy_ prefix. SHA-256 hashed in database. Optional TTL. Validated via X-API-Key header. Timing-safe comparison.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>Heady Ecosystem</h2>
+  <div class="ecosystem">
+    <a href="https://headyme.com" class="eco-link">HeadyMe</a>
+    <a href="https://headysystems.com" class="eco-link">HeadySystems</a>
+    <a href="https://heady-ai.com" class="eco-link">HeadyAI</a>
+    <a href="https://headybuddy.org" class="eco-link">HeadyBuddy</a>
+    <a href="https://headyconnection.org" class="eco-link">HeadyConnection</a>
+    <a href="https://headybot.com" class="eco-link">HeadyBot</a>
+    <a href="https://headyapi.com" class="eco-link">HeadyAPI</a>
+    <a href="https://headyio.com" class="eco-link">HeadyIO</a>
+    <a href="https://headymcp.com" class="eco-link">HeadyMCP</a>
+    <a href="https://headyos.com" class="eco-link">HeadyOS</a>
+    <a href="https://headyvault.com" class="eco-link">HeadyVault</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 HeadySystems Inc. — 60+ Provisional Patents — Sacred Geometry v4.0 — φ = 1.618033988749895</p>
+</footer>
+
+<script>(function(){var API="https://api.headysystems.com";var s=document.createElement("div");s.id="heady-buddy-fab";s.innerHTML='<div style="position:fixed;bottom:21px;right:21px;z-index:99999;"><button id="hb-toggle" style="width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#6366F1);border:none;cursor:pointer;box-shadow:0 4px 21px rgba(168,85,247,0.4);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></button><div id="hb-panel" style="display:none;position:absolute;bottom:70px;right:0;width:360px;max-height:500px;background:#0f0f1a;border:1px solid rgba(168,85,247,0.3);border-radius:13px;box-shadow:0 8px 34px rgba(0,0,0,0.6);overflow:hidden;font-family:system-ui;"><div style="padding:13px 16px;background:linear-gradient(135deg,#A855F7,#6366F1);color:white;font-weight:600;font-size:14px;">&#x1F916; HeadyBuddy</div><div id="hb-msgs" style="padding:13px;height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"><div style="background:rgba(168,85,247,0.15);color:#e2e8f0;padding:10px 13px;border-radius:13px;font-size:13px;max-width:85%;">Hey! Ask me about HeadyKey authentication.</div></div><div style="padding:8px 13px 13px;border-top:1px solid rgba(255,255,255,0.05);display:flex;gap:8px;"><input id="hb-input" type="text" placeholder="Ask HeadyBuddy..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:#f1f5f9;font-size:13px;outline:none;" /><button id="hb-send" style="background:linear-gradient(135deg,#A855F7,#6366F1);border:none;border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;">Send</button></div></div></div>';document.body.appendChild(s);var panel=document.getElementById("hb-panel"),msgs=document.getElementById("hb-msgs"),input=document.getElementById("hb-input");document.getElementById("hb-toggle").onclick=function(){panel.style.display=panel.style.display==="none"?"block":"none";};function addMsg(t,u){var d=document.createElement("div");d.style.cssText="padding:10px 13px;border-radius:13px;font-size:13px;max-width:85%;word-wrap:break-word;"+(u?"background:rgba(99,102,241,0.3);color:#e2e8f0;margin-left:auto;":"background:rgba(168,85,247,0.15);color:#e2e8f0;");d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}function send(){var q=input.value.trim();if(!q)return;addMsg(q,true);input.value="";addMsg("Thinking...",false);var last=msgs.lastChild;fetch(API+"/api/buddy/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,domain:location.hostname})}).then(function(r){return r.json();}).then(function(d){last.textContent=d.reply||d.response||"Visit headybuddy.org for more.";}).catch(function(){last.textContent="Visit headybuddy.org for a full chat.";});}document.getElementById("hb-send").onclick=send;input.onkeydown=function(e){if(e.key==="Enter")send();};})();</script>
+</body>
+</html>

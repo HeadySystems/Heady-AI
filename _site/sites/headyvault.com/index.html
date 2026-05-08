@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeadyVault — Secrets &amp; Key Management</title>
+<meta name="description" content="HeadyVault is the cryptographic secrets engine for the Heady ecosystem. Secret rotation, Ed25519 signing, AES-256-GCM encryption, and phi-scheduled key lifecycle management.">
+<meta property="og:title" content="HeadyVault — Secrets & Key Management">
+<meta property="og:description" content="Cryptographic secrets engine for the Heady AI Operating System. Zero plaintext secrets. Ed25519 signing. φ-scheduled rotation.">
+<meta property="og:url" content="https://headyvault.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050a;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--text:#e8e8f0;--muted:#9898a8;--accent:#10b981;--accent2:#6366f1;--radius:13px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 34px;border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Space Grotesk';font-weight:700;font-size:1.25rem;display:flex;align-items:center;gap:8px}
+.nav-brand span{color:var(--accent)}
+.nav-links{display:flex;gap:21px;align-items:center}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.3s}
+.nav-links a:hover{color:var(--text)}
+.nav-links .cta{background:var(--accent);color:#000;padding:8px 21px;border-radius:8px;font-weight:600}
+.hero{text-align:center;padding:89px 34px 55px;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(16,185,129,0.08) 0%,transparent 70%);pointer-events:none}
+.badge{display:inline-block;padding:6px 16px;border:1px solid var(--accent);border-radius:21px;font-size:0.8rem;color:var(--accent);margin-bottom:21px;letter-spacing:0.05em}
+h1{font-family:'Space Grotesk';font-size:3.5rem;font-weight:800;line-height:1.1;margin-bottom:21px;background:linear-gradient(135deg,var(--accent),#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:1.15rem;color:var(--muted);max-width:640px;margin:0 auto 34px;line-height:1.6}
+.cta-row{display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+.btn{padding:13px 34px;border-radius:var(--radius);font-weight:600;text-decoration:none;font-size:1rem;transition:transform 0.3s cubic-bezier(0.618,0,0.382,1)}
+.btn:hover{transform:scale(1.04)}
+.btn-primary{background:var(--accent);color:#000}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.stats{display:flex;justify-content:center;gap:55px;padding:55px 34px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-value{font-family:'Space Grotesk';font-size:2.4rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:0.85rem;color:var(--muted);margin-top:5px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:21px;padding:34px;max-width:1200px;margin:0 auto}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:34px;transition:border-color 0.3s}
+.card:hover{border-color:rgba(16,185,129,0.3)}
+.card-icon{font-size:2rem;margin-bottom:13px}
+.card h3{font-family:'Space Grotesk';font-size:1.25rem;margin-bottom:8px}
+.card p{color:var(--muted);font-size:0.95rem;line-height:1.6}
+.section{padding:55px 34px;max-width:1000px;margin:0 auto}
+.section h2{font-family:'Space Grotesk';font-size:2rem;margin-bottom:21px;text-align:center}
+.code-block{background:#0d0d15;border:1px solid var(--border);border-radius:var(--radius);padding:21px;font-family:'SF Mono','Fira Code',monospace;font-size:0.85rem;overflow-x:auto;margin:21px 0;color:#6ee7b7}
+.rotation-table{width:100%;border-collapse:collapse;margin:21px 0}
+.rotation-table th,.rotation-table td{padding:13px;text-align:left;border-bottom:1px solid var(--border)}
+.rotation-table th{color:var(--accent);font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em}
+.rotation-table td{font-size:0.9rem}
+.rotation-table .phi{color:var(--accent);font-family:monospace}
+.ecosystem{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;padding:34px}
+.eco-link{padding:8px 21px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);text-decoration:none;font-size:0.85rem;transition:border-color 0.3s}
+.eco-link:hover{border-color:var(--accent);color:var(--text)}
+.footer{text-align:center;padding:34px;color:var(--muted);font-size:0.8rem;border-top:1px solid var(--border)}
+@media(max-width:768px){h1{font-size:2.2rem}.stats{gap:21px}.features{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-brand">🔒 <span>Heady</span>Vault</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#rotation">Rotation</a>
+    <a href="#architecture">Architecture</a>
+    <a href="https://headykey.com">HeadyKey →</a>
+    <a href="https://headysystems.com" class="cta">HeadySystems →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">CRYPTOGRAPHIC SECRETS ENGINE</div>
+  <h1>Secrets Never Sleep</h1>
+  <p class="subtitle">HeadyVault is the cryptographic backbone of the Heady ecosystem. Zero plaintext secrets. Ed25519 signing. AES-256-GCM encryption at rest. φ-scheduled key rotation. Every secret has a lifecycle, every rotation has a receipt.</p>
+  <div class="cta-row">
+    <a href="https://headykey.com" class="btn btn-primary">HeadyKey Auth →</a>
+    <a href="#architecture" class="btn btn-secondary">Architecture</a>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">AES-256</div><div class="stat-label">Encryption at Rest</div></div>
+  <div class="stat"><div class="stat-value">Ed25519</div><div class="stat-label">Digital Signatures</div></div>
+  <div class="stat"><div class="stat-value">φ-scaled</div><div class="stat-label">Rotation Intervals</div></div>
+  <div class="stat"><div class="stat-value">0</div><div class="stat-label">Plaintext Secrets</div></div>
+</div>
+
+<section id="features" class="features">
+  <div class="card"><div class="card-icon">🔐</div><h3>Secret Versioning</h3><p>Every secret is versioned with SHA-256 content hashing. Rollback to any previous version. Audit trail with Ed25519-signed receipts for every mutation.</p></div>
+  <div class="card"><div class="card-icon">🔄</div><h3>φ-Scheduled Rotation</h3><p>Automatic key rotation at phi-derived intervals: signing keys every 21 days (fib(8)), encryption keys every 89 days (fib(11)), root keys every 377 days (fib(14)).</p></div>
+  <div class="card"><div class="card-icon">🛡️</div><h3>Envelope Encryption</h3><p>Data Encryption Keys (DEKs) encrypted by Key Encryption Keys (KEKs). KEKs stored in GCP Secret Manager. Zero plaintext key material in application memory.</p></div>
+  <div class="card"><div class="card-icon">📜</div><h3>Audit Receipts</h3><p>Every secret access, rotation, and revocation emits an Ed25519-signed trust receipt to the immutable audit log. Tamper-evident Merkle chain.</p></div>
+  <div class="card"><div class="card-icon">🌐</div><h3>Multi-Service Distribution</h3><p>Secrets distributed to Cloud Run services, Cloudflare Workers, and edge nodes via encrypted channels. Per-service scoping prevents lateral movement.</p></div>
+  <div class="card"><div class="card-icon">⚡</div><h3>Hot/Warm/Cold Tiers</h3><p>Hot secrets in Upstash Redis (sub-ms access). Warm secrets in Neon PostgreSQL. Cold secrets archived with AES-256-GCM. Fibonacci-tiered TTLs.</p></div>
+</section>
+
+<section id="rotation" class="section">
+  <h2>φ-Scheduled Rotation Intervals</h2>
+  <table class="rotation-table">
+    <thead><tr><th>Key Type</th><th>Rotation Period</th><th>Derivation</th><th>Grace Period</th></tr></thead>
+    <tbody>
+      <tr><td>Signing Keys (Ed25519)</td><td class="phi">21 days</td><td>fib(8)</td><td>34 hours (fib(9) hours)</td></tr>
+      <tr><td>Encryption Keys (AES-256)</td><td class="phi">89 days</td><td>fib(11)</td><td>55 hours (fib(10) hours)</td></tr>
+      <tr><td>API Keys (hdy_)</td><td class="phi">Optional TTL</td><td>User-configured</td><td>Immediate revocation</td></tr>
+      <tr><td>Session Tokens</td><td class="phi">8 hours</td><td>fib(6)</td><td>—</td></tr>
+      <tr><td>Root Keys</td><td class="phi">377 days</td><td>fib(14)</td><td>89 days (fib(11))</td></tr>
+      <tr><td>JWT Secret</td><td class="phi">144 days</td><td>fib(12)</td><td>21 days overlap</td></tr>
+    </tbody>
+  </table>
+  <div class="code-block">// Deprecation workflow for key rotation:
+// 1. warn(34 days before expiry)
+// 2. soft-fail(55 days — log warnings, still accept)
+// 3. hard-fail(89 days — reject, force rotation)
+// All intervals are Fibonacci-derived. Zero arbitrary constants.</div>
+</section>
+
+<section id="architecture" class="section">
+  <h2>Architecture</h2>
+  <div class="code-block">┌─────────────────────────────────────────────────────────┐
+│  HeadyVault — Secrets Engine                            │
+│                                                         │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
+│  │ Secret Store │  │ Key Manager  │  │ Audit Chain  │  │
+│  │ ─ Versioned  │  │ ─ Ed25519    │  │ ─ Merkle     │  │
+│  │ ─ Encrypted  │  │ ─ AES-256    │  │ ─ Ed25519    │  │
+│  │ ─ Scoped     │  │ ─ Rotation   │  │ ─ Append     │  │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
+│         │                  │                  │          │
+│  ┌──────┴──────────────────┴──────────────────┴───────┐ │
+│  │ Backing: GCP Secret Manager + Neon + Upstash Redis │ │
+│  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+
+Integration Points:
+  HeadyKey   → JWT secrets, session keys, API key hashes
+  HeadyAuth  → OAuth client secrets, provider credentials
+  HeadyMCP   → Tool execution tokens, MCP transport keys
+  HeadyBuddy → User encryption keys, memory tier keys
+  CloudRun   → Service account keys, deployment secrets
+  Workers    → Edge secrets, KV encryption keys</div>
+</section>
+
+<section class="section">
+  <h2>Heady Ecosystem</h2>
+  <div class="ecosystem">
+    <a href="https://headyme.com" class="eco-link">HeadyMe</a>
+    <a href="https://headysystems.com" class="eco-link">HeadySystems</a>
+    <a href="https://headykey.com" class="eco-link">HeadyKey</a>
+    <a href="https://heady-ai.com" class="eco-link">HeadyAI</a>
+    <a href="https://headybuddy.org" class="eco-link">HeadyBuddy</a>
+    <a href="https://headyconnection.org" class="eco-link">HeadyConnection</a>
+    <a href="https://headybot.com" class="eco-link">HeadyBot</a>
+    <a href="https://headyapi.com" class="eco-link">HeadyAPI</a>
+    <a href="https://headyio.com" class="eco-link">HeadyIO</a>
+    <a href="https://headymcp.com" class="eco-link">HeadyMCP</a>
+    <a href="https://headyos.com" class="eco-link">HeadyOS</a>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 HeadySystems Inc. — 60+ Provisional Patents — Sacred Geometry v4.0 — φ = 1.618033988749895</p>
+</footer>
+
+<script>(function(){var API="https://api.headysystems.com";var s=document.createElement("div");s.id="heady-buddy-fab";s.innerHTML='<div style="position:fixed;bottom:21px;right:21px;z-index:99999;"><button id="hb-toggle" style="width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#6366F1);border:none;cursor:pointer;box-shadow:0 4px 21px rgba(168,85,247,0.4);display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></button><div id="hb-panel" style="display:none;position:absolute;bottom:70px;right:0;width:360px;max-height:500px;background:#0f0f1a;border:1px solid rgba(168,85,247,0.3);border-radius:13px;box-shadow:0 8px 34px rgba(0,0,0,0.6);overflow:hidden;font-family:system-ui;"><div style="padding:13px 16px;background:linear-gradient(135deg,#A855F7,#6366F1);color:white;font-weight:600;font-size:14px;">&#x1F916; HeadyBuddy</div><div id="hb-msgs" style="padding:13px;height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"><div style="background:rgba(168,85,247,0.15);color:#e2e8f0;padding:10px 13px;border-radius:13px;font-size:13px;max-width:85%;">Hey! Ask me about HeadyVault secrets management.</div></div><div style="padding:8px 13px 13px;border-top:1px solid rgba(255,255,255,0.05);display:flex;gap:8px;"><input id="hb-input" type="text" placeholder="Ask HeadyBuddy..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 12px;color:#f1f5f9;font-size:13px;outline:none;" /><button id="hb-send" style="background:linear-gradient(135deg,#A855F7,#6366F1);border:none;border-radius:8px;padding:8px 14px;color:white;cursor:pointer;font-size:13px;">Send</button></div></div></div>';document.body.appendChild(s);var panel=document.getElementById("hb-panel"),msgs=document.getElementById("hb-msgs"),input=document.getElementById("hb-input");document.getElementById("hb-toggle").onclick=function(){panel.style.display=panel.style.display==="none"?"block":"none";};function addMsg(t,u){var d=document.createElement("div");d.style.cssText="padding:10px 13px;border-radius:13px;font-size:13px;max-width:85%;word-wrap:break-word;"+(u?"background:rgba(99,102,241,0.3);color:#e2e8f0;margin-left:auto;":"background:rgba(168,85,247,0.15);color:#e2e8f0;");d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}function send(){var q=input.value.trim();if(!q)return;addMsg(q,true);input.value="";addMsg("Thinking...",false);var last=msgs.lastChild;fetch(API+"/api/buddy/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,domain:location.hostname})}).then(function(r){return r.json();}).then(function(d){last.textContent=d.reply||d.response||"Visit headybuddy.org for more.";}).catch(function(){last.textContent="Visit headybuddy.org for a full chat.";});}document.getElementById("hb-send").onclick=send;input.onkeydown=function(e){if(e.key==="Enter")send();};})();</script>
+</body>
+</html>

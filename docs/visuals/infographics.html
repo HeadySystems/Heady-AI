@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heady — Visual Infographics</title>
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a1a;
+    --bg-card: #0f1028;
+    --bg-card-alt: #121230;
+    --gold: #d4af37;
+    --gold-dim: rgba(212,175,55,0.15);
+    --gold-glow: rgba(212,175,55,0.25);
+    --cyan: #00d4ff;
+    --cyan-dim: rgba(0,212,255,0.12);
+    --cyan-glow: rgba(0,212,255,0.2);
+    --green: #00e676;
+    --yellow: #ffd740;
+    --red: #ff5252;
+    --white: #f0f0f5;
+    --white-dim: rgba(240,240,245,0.7);
+    --white-muted: rgba(240,240,245,0.45);
+    --border: rgba(212,175,55,0.18);
+    --border-cyan: rgba(0,212,255,0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,175,55,0.08);
+    --shadow-glow: 0 0 40px rgba(212,175,55,0.08);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    min-height: 100vh;
+  }
+
+  /* ===== CARD WRAPPER ===== */
+  .card {
+    width: 1200px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 48px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), transparent);
+  }
+
+  .card-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--gold), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .card-subtitle {
+    font-size: 14px;
+    color: var(--white-muted);
+    margin-bottom: 36px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ===== SECTION 1: ECOSYSTEM MAP ===== */
+  .ecosystem-map {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 520px;
+  }
+  .eco-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .eco-ring-outer  { width: 480px; height: 480px; border-color: rgba(0,212,255,0.15); }
+  .eco-ring-middle { width: 360px; height: 360px; border-color: rgba(212,175,55,0.2); }
+  .eco-ring-inner  { width: 240px; height: 240px; border-color: rgba(212,175,55,0.3); }
+
+  .eco-ring-label {
+    position: absolute;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--white-muted);
+    pointer-events: none;
+  }
+
+  .eco-node {
+    position: absolute;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 2;
+  }
+  .eco-node .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .eco-node .dot.live    { background: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.5); }
+  .eco-node .dot.pending { background: var(--yellow); box-shadow: 0 0 8px rgba(255,215,64,0.5); }
+
+  .eco-center {
+    position: absolute;
+    z-index: 3;
+    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(0,212,255,0.1));
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    width: 110px; height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(212,175,55,0.15);
+  }
+  .eco-center .name { font-size: 14px; font-weight: 700; color: var(--gold); }
+  .eco-center .sub { font-size: 10px; color: var(--white-muted); margin-top: 2px; }
+
+  /* ===== SECTION 2: ARCHITECTURE STACK ===== */
+  .arch-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+  .arch-layer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 900px;
+    padding: 18px 28px;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    position: relative;
+  }
+  .arch-layer .layer-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    min-width: 120px;
+  }
+  .arch-layer .layer-name {
+    font-size: 18px;
+    font-weight: 700;
+    flex: 1;
+    text-align: center;
+  }
+  .arch-layer .layer-detail {
+    font-size: 12px;
+    color: var(--white-muted);
+    min-width: 160px;
+    text-align: right;
+  }
+  .arch-layer .layer-icon {
+    font-size: 22px;
+    min-width: 40px;
+    text-align: center;
+  }
+  .arch-arrow {
+    font-size: 18px;
+    color: var(--cyan);
+    text-align: center;
+    line-height: 1;
+  }
+
+  .al-edge     { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+  .al-edge .layer-label { color: var(--cyan); }
+  .al-compute  { background: rgba(212,175,55,0.06); border-color: rgba(212,175,55,0.2); }
+  .al-compute .layer-label { color: var(--gold); }
+  .al-orch     { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+  .al-orch .layer-label { color: var(--cyan); }
+  .al-memory   { background: rgba(212,175,55,0.06); border-color: rgba(212,175,55,0.2); }
+  .al-memory .layer-label { color: var(--gold); }
+  .al-auth     { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+  .al-auth .layer-label { color: var(--cyan); }
+  .al-monitor  { background: rgba(212,175,55,0.06); border-color: rgba(212,175,55,0.2); }
+  .al-monitor .layer-label { color: var(--gold); }
+  .al-billing  { background: rgba(0,212,255,0.06); border-color: rgba(0,212,255,0.2); }
+  .al-billing .layer-label { color: var(--cyan); }
+
+  /* ===== SECTION 3: REVENUE MODEL ===== */
+  .pricing-tiers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .tier-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .tier-card.highlighted {
+    border-color: var(--gold);
+    box-shadow: 0 0 24px rgba(212,175,55,0.12);
+  }
+  .tier-card .tier-badge {
+    position: absolute;
+    top: -10px;
+    background: var(--gold);
+    color: var(--bg);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .tier-card .tier-icon { font-size: 28px; margin-bottom: 12px; }
+  .tier-card .tier-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .tier-card .tier-price {
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+  .tier-card .tier-price span {
+    font-size: 13px;
+    font-weight: 400;
+    -webkit-text-fill-color: var(--white-muted);
+  }
+  .tier-features {
+    list-style: none;
+    text-align: left;
+    width: 100%;
+  }
+  .tier-features li {
+    font-size: 12px;
+    color: var(--white-dim);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tier-features li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .pricing-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: var(--white-muted);
+    font-size: 12px;
+  }
+  .pricing-arrow .arrow-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--cyan), transparent);
+  }
+
+  /* ===== SECTION 4: MARKET OPPORTUNITY ===== */
+  .market-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 28px;
+    height: 340px;
+    padding-top: 40px;
+    position: relative;
+  }
+  .market-chart::before {
+    content: '';
+    position: absolute;
+    bottom: 50px;
+    left: 40px;
+    right: 40px;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+  .market-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .market-bar {
+    width: 100px;
+    border-radius: 8px 8px 2px 2px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 16px;
+  }
+  .market-bar .bar-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--white);
+  }
+  .market-bar .bar-sub {
+    font-size: 10px;
+    color: var(--white-muted);
+    margin-top: 2px;
+  }
+  .market-bar-group .bar-year {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white-dim);
+  }
+  .market-bar-group .bar-label {
+    font-size: 10px;
+    color: var(--white-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .mb1 { height: 60px;  background: linear-gradient(180deg, var(--cyan), rgba(0,212,255,0.3)); }
+  .mb2 { height: 90px; background: linear-gradient(180deg, var(--cyan), rgba(0,212,255,0.35)); }
+  .mb3 { height: 150px; background: linear-gradient(180deg, var(--gold), rgba(212,175,55,0.35)); }
+  .mb4 { height: 210px; background: linear-gradient(180deg, var(--gold), rgba(212,175,55,0.4)); }
+  .mb5 { height: 300px; background: linear-gradient(180deg, var(--gold), var(--cyan)); }
+
+  .market-cagr {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 24px;
+  }
+  .market-cagr-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--white-dim);
+  }
+  .market-cagr-item .cagr-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ===== SECTION 5: VALUATION TIMELINE ===== */
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 60px;
+    right: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--cyan));
+    border-radius: 2px;
+    transform: translateY(-50%);
+  }
+  .timeline-nodes {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+  }
+  .timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 240px;
+  }
+  .timeline-node .tn-top {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .timeline-node .tn-time {
+    font-size: 12px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .timeline-node .tn-stage {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--white);
+    margin-top: 2px;
+  }
+  .timeline-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 16px rgba(212,175,55,0.3);
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .timeline-dot.active {
+    background: var(--gold);
+  }
+  .timeline-node .tn-bottom {
+    text-align: center;
+  }
+  .timeline-node .tn-val {
+    font-size: 20px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .timeline-node .tn-milestones {
+    margin-top: 8px;
+    list-style: none;
+  }
+  .timeline-node .tn-milestones li {
+    font-size: 11px;
+    color: var(--white-muted);
+    padding: 2px 0;
+  }
+
+  /* ===== SECTION 6: SACRED GEOMETRY ===== */
+  .sacred-geo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 520px;
+  }
+  .sg-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .sg-ring-label {
+    position: absolute;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 10px;
+    background: var(--bg-card);
+  }
+  .sg-node {
+    position: absolute;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ===== SECTION 7: COMPETITIVE LANDSCAPE ===== */
+  .comp-matrix {
+    display: grid;
+    grid-template-columns: 40px 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr;
+    gap: 0;
+    height: 480px;
+  }
+  .comp-y-label {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+  }
+  .comp-x-label {
+    grid-column: 2 / 4;
+    grid-row: 1;
+    display: flex;
+    justify-content: center;
+    gap: 120px;
+    padding: 8px 0 12px;
+  }
+  .comp-x-label span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+  }
+  .comp-quadrant {
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    position: relative;
+  }
+  .comp-quadrant .q-label {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    font-size: 10px;
+    color: var(--white-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .comp-chip {
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .comp-chip.heady {
+    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(0,212,255,0.1));
+    border-color: var(--gold);
+    color: var(--gold);
+    font-size: 16px;
+    box-shadow: 0 0 20px rgba(212,175,55,0.15);
+    padding: 14px 28px;
+  }
+  .comp-chip.competitor {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+    color: var(--white-dim);
+  }
+  .comp-axis-line-v {
+    position: absolute;
+    width: 1px;
+    background: rgba(212,175,55,0.2);
+  }
+  .comp-axis-line-h {
+    position: absolute;
+    height: 1px;
+    background: rgba(0,212,255,0.2);
+  }
+
+  /* ===== SECTION 8: SUCCESS FACTORS ===== */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .metric-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .metric-card .metric-icon {
+    font-size: 28px;
+  }
+  .metric-card .metric-label {
+    font-size: 12px;
+    color: var(--white-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+  .metric-card .metric-value {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--gold), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .metric-card .metric-detail {
+    font-size: 12px;
+    color: var(--white-dim);
+  }
+  .metric-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .metric-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+  }
+  .mbf-gold { background: linear-gradient(90deg, var(--gold), rgba(212,175,55,0.4)); }
+  .mbf-cyan { background: linear-gradient(90deg, var(--cyan), rgba(0,212,255,0.4)); }
+  .mbf-green { background: linear-gradient(90deg, var(--green), rgba(0,230,118,0.4)); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    padding: 20px;
+    text-align: center;
+  }
+  footer a {
+    color: var(--white-muted);
+    font-size: 12px;
+    text-decoration: none;
+  }
+  footer a:hover { color: var(--white-dim); }
+</style>
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- SECTION 1: HEADY 9-DOMAIN ECOSYSTEM MAP -->
+<!-- ============================================================= -->
+<section class="card" id="ecosystem">
+  <div class="card-title">🌐 Heady 9-Domain Ecosystem Map</div>
+  <div class="card-subtitle">Sacred Geometry Layer Architecture — Domain Network Topology</div>
+
+  <div class="ecosystem-map">
+    <!-- Rings -->
+    <div class="eco-ring eco-ring-outer">
+      <span class="eco-ring-label" style="top:-12px;">Outer Ring — Autonomy Layer</span>
+    </div>
+    <div class="eco-ring eco-ring-middle">
+      <span class="eco-ring-label" style="top:-12px;">Middle Ring — Experience Layer</span>
+    </div>
+    <div class="eco-ring eco-ring-inner">
+      <span class="eco-ring-label" style="top:-12px;">Inner Ring — Core Infrastructure</span>
+    </div>
+
+    <!-- Center -->
+    <div class="eco-center">
+      <div class="name">headyme.com</div>
+      <div class="sub">⬡ Identity Core</div>
+      <div class="dot live" style="width:8px;height:8px;border-radius:50%;margin-top:6px;background:#00e676;box-shadow:0 0 8px rgba(0,230,118,0.5);"></div>
+    </div>
+
+    <!-- Inner Ring Nodes -->
+    <div class="eco-node" style="top:80px; left:50%; transform:translateX(-50%);">
+      <span class="dot live"></span> headysystems.com
+    </div>
+    <div class="eco-node" style="top:50%; right:30px; transform:translateY(-50%);">
+      <span class="dot live"></span> headyconnection.org
+    </div>
+    <div class="eco-node" style="bottom:80px; left:50%; transform:translateX(-50%);">
+      <span class="dot live"></span> headymcp.com
+    </div>
+    <div class="eco-node" style="top:50%; left:30px; transform:translateY(-50%);">
+      <span class="dot live"></span> headyapi.com
+    </div>
+
+    <!-- Middle Ring Nodes -->
+    <div class="eco-node" style="top:28px; right:100px;">
+      <span class="dot live"></span> headyio.com
+    </div>
+    <div class="eco-node" style="bottom:28px; left:100px;">
+      <span class="dot live"></span> headybuddy.org
+    </div>
+
+    <!-- Outer Ring Node -->
+    <div class="eco-node" style="top:10px; left:100px;">
+      <span class="dot pending"></span> headybot.com
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex; justify-content:center; gap:32px; margin-top:8px;">
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--white-muted);">
+      <span class="dot live" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:#00e676;box-shadow:0 0 8px rgba(0,230,118,0.5);"></span> Live
+    </div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--white-muted);">
+      <span class="dot pending" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:#ffd740;box-shadow:0 0 8px rgba(255,215,64,0.5);"></span> Pending
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 2: ARCHITECTURE STACK DIAGRAM -->
+<!-- ============================================================= -->
+<section class="card" id="architecture">
+  <div class="card-title">🏗️ Architecture Stack Diagram</div>
+  <div class="card-subtitle">Full-Stack Infrastructure — Edge to Billing</div>
+
+  <div class="arch-stack">
+    <div class="arch-layer al-edge">
+      <div class="layer-icon">🌍</div>
+      <div class="layer-label">Edge</div>
+      <div class="layer-name">Cloudflare</div>
+      <div class="layer-detail">CDN, WAF, DNS, DDoS Shield</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-compute">
+      <div class="layer-icon">⚡</div>
+      <div class="layer-label">Compute</div>
+      <div class="layer-name">Google Cloud Run</div>
+      <div class="layer-detail">Auto-scaling containers</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-orch">
+      <div class="layer-icon">🧠</div>
+      <div class="layer-label">Orchestration</div>
+      <div class="layer-name">HCFullPipeline</div>
+      <div class="layer-detail">Multi-agent routing engine</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-memory">
+      <div class="layer-icon">💾</div>
+      <div class="layer-label">Memory</div>
+      <div class="layer-name">384D pgvector</div>
+      <div class="layer-detail">Semantic vector embeddings</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-auth">
+      <div class="layer-icon">🔐</div>
+      <div class="layer-label">Auth</div>
+      <div class="layer-name">Firebase Auth</div>
+      <div class="layer-detail">Identity & session management</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-monitor">
+      <div class="layer-icon">📊</div>
+      <div class="layer-label">Monitoring</div>
+      <div class="layer-name">Sentry</div>
+      <div class="layer-detail">Error tracking & performance</div>
+    </div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-layer al-billing">
+      <div class="layer-icon">💳</div>
+      <div class="layer-label">Billing</div>
+      <div class="layer-name">Stripe</div>
+      <div class="layer-detail">Subscriptions & metered usage</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 3: REVENUE MODEL -->
+<!-- ============================================================= -->
+<section class="card" id="revenue">
+  <div class="card-title">💰 Revenue Model</div>
+  <div class="card-subtitle">SaaS + API Pricing Tiers — Recurring Revenue Architecture</div>
+
+  <div class="pricing-tiers">
+    <!-- Free -->
+    <div class="tier-card">
+      <div class="tier-icon">🆓</div>
+      <div class="tier-name">Free</div>
+      <div class="tier-price">$0<span>/mo</span></div>
+      <ul class="tier-features">
+        <li>5 API calls/day</li>
+        <li>Basic agent access</li>
+        <li>Community support</li>
+        <li>Public documentation</li>
+      </ul>
+    </div>
+    <!-- Developer -->
+    <div class="tier-card">
+      <div class="tier-icon">👨‍💻</div>
+      <div class="tier-name">Developer</div>
+      <div class="tier-price">$29<span>/mo</span></div>
+      <ul class="tier-features">
+        <li>1,000 API calls/day</li>
+        <li>MCP tool access</li>
+        <li>Vector memory (1GB)</li>
+        <li>Email support</li>
+      </ul>
+    </div>
+    <!-- Team -->
+    <div class="tier-card highlighted">
+      <div class="tier-badge">Popular</div>
+      <div class="tier-icon">👥</div>
+      <div class="tier-name">Team</div>
+      <div class="tier-price">$99<span>/mo</span></div>
+      <ul class="tier-features">
+        <li>10,000 API calls/day</li>
+        <li>Full pipeline access</li>
+        <li>Vector memory (10GB)</li>
+        <li>Priority support</li>
+        <li>Team collaboration</li>
+      </ul>
+    </div>
+    <!-- Enterprise -->
+    <div class="tier-card">
+      <div class="tier-icon">🏢</div>
+      <div class="tier-name">Enterprise</div>
+      <div class="tier-price">$499<span>/mo</span></div>
+      <ul class="tier-features">
+        <li>Unlimited API calls</li>
+        <li>Custom agent config</li>
+        <li>Vector memory (100GB)</li>
+        <li>Dedicated support</li>
+        <li>SLA guarantees</li>
+        <li>SSO & RBAC</li>
+      </ul>
+    </div>
+    <!-- API -->
+    <div class="tier-card">
+      <div class="tier-icon">🔌</div>
+      <div class="tier-name">API</div>
+      <div class="tier-price">$2,990<span>/yr</span></div>
+      <ul class="tier-features">
+        <li>White-label access</li>
+        <li>Raw pipeline endpoints</li>
+        <li>Custom embeddings</li>
+        <li>Bulk processing</li>
+        <li>99.9% SLA</li>
+        <li>Dedicated infra</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pricing-arrow">
+    <span class="arrow-line"></span>
+    <span>SCALING PATH →</span>
+    <span class="arrow-line"></span>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 4: MARKET OPPORTUNITY -->
+<!-- ============================================================= -->
+<section class="card" id="market">
+  <div class="card-title">📈 Market Opportunity</div>
+  <div class="card-subtitle">Global AI Agent Market — Total Addressable Market Growth</div>
+
+  <div class="market-chart">
+    <div class="market-bar-group">
+      <div class="market-bar mb1">
+        <div class="bar-value">$7.6B</div>
+      </div>
+      <div class="bar-year">2025</div>
+      <div class="bar-label">Current</div>
+    </div>
+    <div class="market-bar-group">
+      <div class="market-bar mb2">
+        <div class="bar-value">$10.9B</div>
+      </div>
+      <div class="bar-year">2026</div>
+      <div class="bar-label">+43% YoY</div>
+    </div>
+    <div class="market-bar-group">
+      <div class="market-bar mb3">
+        <div class="bar-value">$30B</div>
+        <div class="bar-sub">est.</div>
+      </div>
+      <div class="bar-year">2028</div>
+      <div class="bar-label">+66% CAGR</div>
+    </div>
+    <div class="market-bar-group">
+      <div class="market-bar mb4">
+        <div class="bar-value">$52.6B</div>
+      </div>
+      <div class="bar-year">2030</div>
+      <div class="bar-label">+32% CAGR</div>
+    </div>
+    <div class="market-bar-group">
+      <div class="market-bar mb5">
+        <div class="bar-value">$183B</div>
+      </div>
+      <div class="bar-year">2033</div>
+      <div class="bar-label">Projected</div>
+    </div>
+  </div>
+
+  <div class="market-cagr">
+    <div class="market-cagr-item">
+      <span class="cagr-dot" style="background:var(--cyan);"></span>
+      Near-term (2025–2026)
+    </div>
+    <div class="market-cagr-item">
+      <span class="cagr-dot" style="background:var(--gold);"></span>
+      Mid-term (2028–2030)
+    </div>
+    <div class="market-cagr-item">
+      <span class="cagr-dot" style="background:linear-gradient(135deg, var(--gold), var(--cyan));"></span>
+      Long-term (2033) — 45% CAGR
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 5: VALUATION TIMELINE -->
+<!-- ============================================================= -->
+<section class="card" id="valuation">
+  <div class="card-title">🚀 Valuation Timeline</div>
+  <div class="card-subtitle">Projected Growth Path — Pre-Seed to Series B</div>
+
+  <div class="timeline">
+    <div class="timeline-line"></div>
+    <div class="timeline-nodes">
+      <div class="timeline-node">
+        <div class="tn-top">
+          <div class="tn-time">Now</div>
+          <div class="tn-stage">Pre-Seed</div>
+        </div>
+        <div class="timeline-dot active"></div>
+        <div class="tn-bottom">
+          <div class="tn-val">$5–10M</div>
+          <ul class="tn-milestones">
+            <li>• 9 domains secured</li>
+            <li>• Full pipeline live</li>
+            <li>• 60+ GitHub repos</li>
+            <li>• 6 Stripe products</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="tn-top">
+          <div class="tn-time">+6 Months</div>
+          <div class="tn-stage">Seed</div>
+        </div>
+        <div class="timeline-dot"></div>
+        <div class="tn-bottom">
+          <div class="tn-val">$15–25M</div>
+          <ul class="tn-milestones">
+            <li>• 100+ paying users</li>
+            <li>• $50K MRR</li>
+            <li>• Patent portfolio filed</li>
+            <li>• SOC 2 compliance</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="tn-top">
+          <div class="tn-time">+1 Year</div>
+          <div class="tn-stage">Series A</div>
+        </div>
+        <div class="timeline-dot"></div>
+        <div class="tn-bottom">
+          <div class="tn-val">$50–100M</div>
+          <ul class="tn-milestones">
+            <li>• 1,000+ customers</li>
+            <li>• $500K MRR</li>
+            <li>• Enterprise contracts</li>
+            <li>• International expansion</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-node">
+        <div class="tn-top">
+          <div class="tn-time">+2 Years</div>
+          <div class="tn-stage">Series B</div>
+        </div>
+        <div class="timeline-dot"></div>
+        <div class="tn-bottom">
+          <div class="tn-val">$200–500M</div>
+          <ul class="tn-milestones">
+            <li>• 10,000+ customers</li>
+            <li>• $5M+ MRR</li>
+            <li>• Category leader</li>
+            <li>• AI marketplace live</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 6: SACRED GEOMETRY TOPOLOGY -->
+<!-- ============================================================= -->
+<section class="card" id="sacred-geometry">
+  <div class="card-title">⬡ Sacred Geometry Topology</div>
+  <div class="card-subtitle">Phi-Scaled Concentric Architecture — 7 Layers of System Design</div>
+
+  <div class="sacred-geo">
+    <!-- Rings from outside in, phi-scaled -->
+    <!-- L7 Ops - outermost -->
+    <div class="sg-ring" style="width:490px;height:490px;border-color:rgba(0,212,255,0.1);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--cyan);">Layer 7 — Ops</span>
+    </div>
+    <!-- L6 Memory -->
+    <div class="sg-ring" style="width:420px;height:420px;border-color:rgba(212,175,55,0.12);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--gold);">Layer 6 — Memory</span>
+    </div>
+    <!-- L5 Governance -->
+    <div class="sg-ring" style="width:350px;height:350px;border-color:rgba(0,212,255,0.15);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--cyan);">Layer 5 — Governance</span>
+    </div>
+    <!-- L4 Outer -->
+    <div class="sg-ring" style="width:280px;height:280px;border-color:rgba(212,175,55,0.18);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--gold);">Layer 4 — Outer</span>
+    </div>
+    <!-- L3 Middle -->
+    <div class="sg-ring" style="width:210px;height:210px;border-color:rgba(0,212,255,0.2);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--cyan);">Layer 3 — Middle</span>
+    </div>
+    <!-- L2 Inner -->
+    <div class="sg-ring" style="width:140px;height:140px;border-color:rgba(212,175,55,0.25);">
+      <span class="sg-ring-label" style="top:-12px;color:var(--gold);">Layer 2 — Inner</span>
+    </div>
+    <!-- L1 Center -->
+    <div style="position:absolute;width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(0,212,255,0.15));border:2px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:3;box-shadow:0 0 24px rgba(212,175,55,0.2);">
+      <div style="font-size:10px;font-weight:800;color:var(--gold);">Center</div>
+      <div style="font-size:8px;color:var(--white-muted);">L1 — Core</div>
+    </div>
+
+    <!-- Nodes -->
+    <div class="sg-node" style="top:4px;left:50%;transform:translateX(-50%);color:var(--cyan);">Sentry · Stripe · CI/CD</div>
+    <div class="sg-node" style="bottom:4px;left:50%;transform:translateX(-50%);color:var(--cyan);">Monitoring · Deployment</div>
+
+    <div class="sg-node" style="top:52px;right:60px;color:var(--gold);">pgvector 384D</div>
+    <div class="sg-node" style="bottom:52px;left:60px;color:var(--gold);">Embeddings · Recall</div>
+
+    <div class="sg-node" style="top:90px;left:60px;color:var(--cyan);">RBAC · Auth</div>
+    <div class="sg-node" style="bottom:90px;right:60px;color:var(--cyan);">Policies · ACL</div>
+
+    <div class="sg-node" style="top:50%;right:20px;transform:translateY(-50%);color:var(--gold);">headybot.com</div>
+    <div class="sg-node" style="top:50%;left:20px;transform:translateY(-50%);color:var(--gold);">Agents · Bots</div>
+
+    <div class="sg-node" style="top:170px;left:50%;transform:translateX(-50%);color:var(--cyan);">headyio · headybuddy</div>
+    <div class="sg-node" style="bottom:170px;left:50%;transform:translateX(-50%);color:var(--cyan);">Experience Layer</div>
+
+    <div class="sg-node" style="top:200px;right:150px;color:var(--gold);">headysystems</div>
+    <div class="sg-node" style="bottom:200px;left:150px;color:var(--gold);">headyapi · headymcp</div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 7: COMPETITIVE LANDSCAPE MATRIX -->
+<!-- ============================================================= -->
+<section class="card" id="competitive">
+  <div class="card-title">⚔️ Competitive Landscape Matrix</div>
+  <div class="card-subtitle">Strategic Positioning — Full-Stack Sovereign AI vs. the Field</div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;">
+    <!-- Y-axis top label -->
+    <div style="font-size:12px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">
+      ↑ Open / Sovereign
+    </div>
+
+    <div style="display:flex;align-items:center;gap:16px;">
+      <!-- Y axis label -->
+      <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;color:var(--white-muted);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">
+        Architecture Model
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;width:1000px;height:420px;position:relative;">
+        <!-- Divider lines -->
+        <div style="position:absolute;top:0;bottom:0;left:50%;width:2px;background:linear-gradient(180deg,var(--gold),var(--cyan));opacity:0.3;"></div>
+        <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:linear-gradient(90deg,var(--gold),var(--cyan));opacity:0.3;"></div>
+
+        <!-- Top-left: Open + Middleware -->
+        <div class="comp-quadrant" style="border-radius:var(--radius-sm) 0 0 0;">
+          <div class="q-label">Open + Middleware</div>
+          <div class="comp-chip competitor">🔗 LangChain</div>
+          <div class="comp-chip competitor">🤖 CrewAI</div>
+          <div class="comp-chip competitor">🛠️ AutoGen</div>
+        </div>
+
+        <!-- Top-right: Open + Full-Stack (HEADY) -->
+        <div class="comp-quadrant" style="border-radius:0 var(--radius-sm) 0 0;background:rgba(212,175,55,0.03);">
+          <div class="q-label" style="color:var(--gold);">Sovereign + Full-Stack</div>
+          <div class="comp-chip heady">⬡ HEADY</div>
+          <div style="font-size:11px;color:var(--gold);text-align:center;max-width:280px;line-height:1.6;">
+            Only player with 9-domain sovereign infrastructure + full-stack AI pipeline
+          </div>
+        </div>
+
+        <!-- Bottom-left: Closed + Middleware -->
+        <div class="comp-quadrant" style="border-radius:0 0 0 var(--radius-sm);">
+          <div class="q-label">Closed + Middleware</div>
+          <div class="comp-chip competitor">☁️ AWS Bedrock</div>
+          <div class="comp-chip competitor">🔷 Azure AI</div>
+        </div>
+
+        <!-- Bottom-right: Closed + Full-Stack -->
+        <div class="comp-quadrant" style="border-radius:0 0 var(--radius-sm) 0;">
+          <div class="q-label">Closed + Full-Stack</div>
+          <div class="comp-chip competitor">🟢 OpenAI</div>
+          <div class="comp-chip competitor">🟠 Anthropic</div>
+          <div class="comp-chip competitor">🔵 Google DeepMind</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- X-axis labels -->
+    <div style="display:flex;justify-content:space-between;width:1000px;margin-top:12px;padding:0 100px;">
+      <div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;">
+        ← Middleware
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;">
+        Full-Stack →
+      </div>
+    </div>
+
+    <!-- Y-axis bottom label -->
+    <div style="font-size:12px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:0.1em;margin-top:8px;">
+      ↓ Closed / Proprietary
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+<!-- SECTION 8: SUCCESS FACTORS DASHBOARD -->
+<!-- ============================================================= -->
+<section class="card" id="success">
+  <div class="card-title">🎯 Success Factors Dashboard</div>
+  <div class="card-subtitle">Real-Time Operational Metrics — Platform Health Indicators</div>
+
+  <div class="metrics-grid">
+    <!-- Domains Live -->
+    <div class="metric-card">
+      <div class="metric-icon">🌐</div>
+      <div class="metric-label">Domains Live</div>
+      <div class="metric-value">6/9</div>
+      <div class="metric-detail">67% of ecosystem active</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-gold" style="width:67%;"></div></div>
+    </div>
+    <!-- Sentry Errors -->
+    <div class="metric-card">
+      <div class="metric-icon">🛡️</div>
+      <div class="metric-label">Sentry Errors</div>
+      <div class="metric-value">0</div>
+      <div class="metric-detail">Zero unresolved production errors</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-green" style="width:100%;"></div></div>
+    </div>
+    <!-- GitHub Repos -->
+    <div class="metric-card">
+      <div class="metric-icon">📦</div>
+      <div class="metric-label">GitHub Repos</div>
+      <div class="metric-value">60+</div>
+      <div class="metric-detail">Active repositories in org</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-cyan" style="width:85%;"></div></div>
+    </div>
+    <!-- Stripe Products -->
+    <div class="metric-card">
+      <div class="metric-icon">💳</div>
+      <div class="metric-label">Stripe Products</div>
+      <div class="metric-value">6</div>
+      <div class="metric-detail">Live monetization products</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-gold" style="width:75%;"></div></div>
+    </div>
+    <!-- Linear Issues -->
+    <div class="metric-card">
+      <div class="metric-icon">📋</div>
+      <div class="metric-label">Linear Issues</div>
+      <div class="metric-value">17</div>
+      <div class="metric-detail">Active project management items</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-cyan" style="width:60%;"></div></div>
+    </div>
+    <!-- Patents Pending -->
+    <div class="metric-card">
+      <div class="metric-icon">📜</div>
+      <div class="metric-label">Patents Pending</div>
+      <div class="metric-value">60+</div>
+      <div class="metric-detail">IP filings across AI agent tech</div>
+      <div class="metric-bar"><div class="metric-bar-fill mbf-gold" style="width:90%;"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">
+    Created with Perplexity Computer
+  </a>
+</footer>
+
+</body>
+</html>

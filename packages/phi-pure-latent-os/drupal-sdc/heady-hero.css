@@ -1,0 +1,396 @@
+/**
+ * © 2026 HeadySystems Inc. All Rights Reserved.
+ * PROPRIETARY AND CONFIDENTIAL.
+ *
+ * @component drupal-sdc/heady-hero
+ * @description Heady Hero banner styles.
+ *   Sacred Geometry spacing system (Fibonacci: 5px → 8 → 13 → 21 → 34 → 55 → 89).
+ *   Dark / Light / Glass variants.
+ *   Mobile-first responsive with phi-ratio breakpoints.
+ *
+ *   Breakpoints (phi-ratio, base 640px):
+ *     sm:  640px  — FIB[11]=144 * 4.444 ≈ 640
+ *     md:  1036px — 640 * PHI ≈ 1035
+ *     lg:  1675px — 1036 * PHI ≈ 1676
+ */
+
+/* ─── CSS Custom Properties ──────────────────────────────────────────────────── */
+
+.heady-hero {
+  /* Sacred Geometry Spacing (Fibonacci px values) */
+  --space-xs:   5px;
+  --space-sm:   8px;
+  --space-md:  13px;
+  --space-lg:  21px;
+  --space-xl:  34px;
+  --space-2xl: 55px;
+  --space-3xl: 89px;
+
+  /* Typography Scale (φ-ratio progression) */
+  --text-eyebrow:  0.75rem;    /* 12px */
+  --text-title:    2.618rem;   /* ≈42px — PHI² × base */
+  --text-subtitle: 1.125rem;   /* 18px */
+  --text-cta:      1rem;       /* 16px */
+
+  /* Heady Dark Theme (default) */
+  --hero-bg:               #0a0a0f;
+  --hero-bg-secondary:     #12121a;
+  --hero-text-primary:     #e8e8f0;
+  --hero-text-secondary:   #9898a8;
+  --hero-text-eyebrow:     #00d4aa;
+  --hero-border:           rgba(255, 255, 255, 0.08);
+  --hero-accent:           #00d4aa;
+  --hero-gold:             #d4a017;
+  --hero-cta-bg:           #00d4aa;
+  --hero-cta-text:         #0a0a0f;
+  --hero-cta-hover-bg:     #00b894;
+  --hero-cta-ghost-border: rgba(255, 255, 255, 0.3);
+  --hero-cta-ghost-text:   #e8e8f0;
+  --hero-overlay-start:    rgba(10, 10, 15, 0.72);
+  --hero-overlay-end:      rgba(10, 10, 15, 0.38);
+
+  /* Coherence indicator */
+  --hero-coherence-track:  rgba(255, 255, 255, 0.12);
+  --hero-coherence-bar:    #00d4aa;
+
+  /* Transitions — phi cubic-bezier */
+  --hero-transition: 0.3s cubic-bezier(0.618, 0, 0.382, 1);
+}
+
+/* ─── Block Root ─────────────────────────────────────────────────────────────── */
+
+.heady-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--hero-bg);
+  color: var(--hero-text-primary);
+  padding-block: var(--space-3xl) var(--space-2xl); /* 89px top, 55px bottom */
+  padding-inline: var(--space-lg);                   /* 21px sides — mobile */
+  min-block-size: 61.8vh;                            /* golden-ratio viewport height */
+}
+
+/* ─── Background Layer ────────────────────────────────────────────────────────── */
+
+.heady-hero__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.heady-hero__background-image {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.heady-hero__background-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--hero-overlay-start) 0%,
+    var(--hero-overlay-end)  100%
+  );
+}
+
+/* ─── Inner Wrapper ───────────────────────────────────────────────────────────── */
+
+.heady-hero__inner {
+  position: relative;
+  z-index: 1;
+  inline-size: 100%;
+  max-inline-size: 75rem; /* 1200px — keeps content readable at wide viewports */
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xl); /* 55px between content and coherence indicator */
+}
+
+/* ─── Content Column ─────────────────────────────────────────────────────────── */
+
+.heady-hero__content {
+  flex: 1.618; /* Golden ratio primary column */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg); /* 21px between content blocks */
+}
+
+/* ─── Eyebrow ─────────────────────────────────────────────────────────────────── */
+
+.heady-hero__eyebrow {
+  margin: 0;
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.13em; /* FIB spacing ratio */
+  text-transform: uppercase;
+  color: var(--hero-text-eyebrow);
+}
+
+/* ─── Title ───────────────────────────────────────────────────────────────────── */
+
+.heady-hero__title {
+  margin: 0;
+  font-size: var(--text-title);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--hero-text-primary);
+}
+
+/* ─── Subtitle ────────────────────────────────────────────────────────────────── */
+
+.heady-hero__subtitle {
+  margin: 0;
+  font-size: var(--text-subtitle);
+  line-height: 1.618; /* φ line-height */
+  color: var(--hero-text-secondary);
+  max-inline-size: 55ch; /* φ-harmonic readable line length */
+}
+
+/* ─── CTA Actions ─────────────────────────────────────────────────────────────── */
+
+.heady-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md); /* 13px between buttons */
+  margin-block-start: var(--space-sm); /* 8px extra breathing room */
+}
+
+.heady-hero__cta,
+.heady-hero__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-block:  var(--space-md);  /* 13px */
+  padding-inline: var(--space-xl);  /* 34px */
+  border-radius: var(--space-sm);   /* 8px */
+  font-size: var(--text-cta);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--hero-transition),
+    border-color var(--hero-transition),
+    color var(--hero-transition),
+    transform var(--hero-transition),
+    box-shadow var(--hero-transition);
+  /* Accessibility */
+  outline-offset: 3px;
+}
+
+.heady-hero__cta {
+  background-color: var(--hero-cta-bg);
+  color: var(--hero-cta-text);
+  border: 2px solid transparent;
+}
+
+.heady-hero__cta:hover,
+.heady-hero__cta:focus-visible {
+  background-color: var(--hero-cta-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 var(--space-md) var(--space-xl) rgba(0, 212, 170, 0.3);
+}
+
+.heady-hero__cta:active {
+  transform: translateY(0);
+}
+
+.heady-hero__cta-secondary {
+  background-color: transparent;
+  color: var(--hero-cta-ghost-text);
+  border: 2px solid var(--hero-cta-ghost-border);
+}
+
+.heady-hero__cta-secondary:hover,
+.heady-hero__cta-secondary:focus-visible {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ─── Slot ────────────────────────────────────────────────────────────────────── */
+
+.heady-hero__slot {
+  margin-block-start: var(--space-md); /* 13px */
+  font-size: 0.9375rem;
+  color: var(--hero-text-secondary);
+  line-height: 1.618;
+}
+
+/* ─── Coherence Indicator ─────────────────────────────────────────────────────── */
+
+.heady-hero__coherence {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm); /* 8px */
+  flex-shrink: 0;
+  inline-size: var(--space-3xl); /* 89px */
+}
+
+.heady-hero__coherence-arc {
+  inline-size: var(--space-3xl); /* 89px */
+  block-size: var(--space-3xl);
+  transform: rotate(-90deg); /* Start arc at 12 o'clock */
+}
+
+.heady-hero__coherence-track {
+  stroke: var(--hero-coherence-track);
+}
+
+.heady-hero__coherence-bar {
+  stroke: var(--hero-coherence-bar);
+  transition: stroke-dasharray var(--hero-transition);
+}
+
+.heady-hero__coherence--critical .heady-hero__coherence-bar { stroke: #00d4aa; }
+.heady-hero__coherence--high     .heady-hero__coherence-bar { stroke: #00b894; }
+.heady-hero__coherence--medium   .heady-hero__coherence-bar { stroke: #d4a017; }
+.heady-hero__coherence--low      .heady-hero__coherence-bar { stroke: #d44a00; }
+
+.heady-hero__coherence-value {
+  font-size: var(--text-eyebrow);
+  font-weight: 600;
+  color: var(--hero-accent);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   VARIANTS
+   ════════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Light Variant ───────────────────────────────────────────────────────────── */
+
+.heady-hero--light {
+  --hero-bg:               #fafafa;
+  --hero-bg-secondary:     #f0f0f5;
+  --hero-text-primary:     #1a1a2e;
+  --hero-text-secondary:   #6a6a7a;
+  --hero-text-eyebrow:     #00897b;
+  --hero-border:           rgba(0, 0, 0, 0.08);
+  --hero-accent:           #00897b;
+  --hero-cta-bg:           #00897b;
+  --hero-cta-text:         #ffffff;
+  --hero-cta-hover-bg:     #00695c;
+  --hero-cta-ghost-border: rgba(0, 0, 0, 0.2);
+  --hero-cta-ghost-text:   #1a1a2e;
+  --hero-overlay-start:    rgba(250, 250, 250, 0.72);
+  --hero-overlay-end:      rgba(250, 250, 250, 0.38);
+  --hero-coherence-track:  rgba(0, 0, 0, 0.08);
+  --hero-coherence-bar:    #00897b;
+}
+
+/* ─── Glass Variant ───────────────────────────────────────────────────────────── */
+
+.heady-hero--glass {
+  --hero-bg:               rgba(10, 10, 15, 0.55);
+  --hero-text-primary:     #ffffff;
+  --hero-text-secondary:   rgba(255, 255, 255, 0.7);
+  --hero-text-eyebrow:     #00d4aa;
+  --hero-border:           rgba(255, 255, 255, 0.15);
+  --hero-cta-ghost-border: rgba(255, 255, 255, 0.4);
+}
+
+.heady-hero--glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--hero-border);
+  border-radius: var(--space-md); /* 13px — Fibonacci rounding */
+  box-shadow:
+    0 var(--space-lg) var(--space-2xl) rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Glass inner content adjusts for the rounded container */
+.heady-hero--glass .heady-hero__inner {
+  padding: var(--space-2xl); /* 55px inset padding */
+}
+
+/* ════════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE — Mobile-First, φ-Ratio Breakpoints
+   ════════════════════════════════════════════════════════════════════════════════ */
+
+/* sm: 640px — single column with tighter typography */
+@media (min-width: 640px) {
+  .heady-hero {
+    padding-inline: var(--space-xl); /* 34px */
+  }
+
+  .heady-hero__title {
+    font-size: clamp(2rem, 4vw + 1rem, var(--text-title));
+  }
+}
+
+/* md: 1036px ≈ 640 × φ — two-column layout with coherence indicator visible */
+@media (min-width: 1036px) {
+  .heady-hero {
+    padding-block: calc(var(--space-3xl) + var(--space-xl)); /* 89+34=123px */
+    padding-inline: var(--space-2xl); /* 55px */
+  }
+
+  .heady-hero__inner {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .heady-hero__coherence {
+    display: flex; /* shown at md+ */
+  }
+}
+
+/* Coherence indicator hidden on mobile to avoid clutter */
+@media (max-width: 1035px) {
+  .heady-hero__coherence {
+    display: none;
+  }
+}
+
+/* lg: 1675px ≈ 1036 × φ — expanded typography */
+@media (min-width: 1675px) {
+  .heady-hero__title {
+    font-size: 3.618rem; /* PHI³ × 0.875rem base → wide viewport scale */
+  }
+
+  .heady-hero__subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+/* ─── Reduced Motion ──────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .heady-hero,
+  .heady-hero__cta,
+  .heady-hero__cta-secondary,
+  .heady-hero__coherence-bar {
+    transition: none;
+  }
+}
+
+/* ─── Print ───────────────────────────────────────────────────────────────────── */
+
+@media print {
+  .heady-hero {
+    background: #fff;
+    color: #000;
+    padding: var(--space-xl);
+    min-block-size: auto;
+  }
+
+  .heady-hero__background,
+  .heady-hero__coherence,
+  .heady-hero__cta-secondary {
+    display: none;
+  }
+
+  .heady-hero__cta {
+    border: 2px solid #000;
+    color: #000;
+    background: transparent;
+  }
+}

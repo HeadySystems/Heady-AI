@@ -1,0 +1,71 @@
+# Heady Autonomous Workflow Definitions
+# These workflows run without user intervention
+
+version: "1.0.0"
+
+workflows:
+  health_monitor:
+    schedule: "*/5 * * * *"  # Every 5 minutes
+    description: "Check all service health endpoints"
+    actions:
+      - check_neon_health
+      - check_redis_health
+      - check_cloudflare_workers
+      - check_sentry_issues
+      - report_to_slack_if_degraded
+
+  daily_intelligence:
+    schedule: "0 9 * * *"  # 9 AM daily
+    description: "Daily ecosystem intelligence briefing"
+    actions:
+      - collect_sentry_error_summary
+      - collect_linear_issue_status
+      - collect_github_pr_status
+      - collect_stripe_revenue_metrics
+      - generate_daily_briefing
+      - post_to_slack
+
+  vector_maintenance:
+    schedule: "0 3 * * *"  # 3 AM daily
+    description: "Neon Postgres vector index maintenance"
+    actions:
+      - vacuum_analyze_heady_vectors
+      - check_index_bloat
+      - consolidate_episodic_to_semantic
+      - prune_low_coherence_vectors
+
+  security_sweep:
+    schedule: "0 2 * * 1"  # Monday 2 AM
+    description: "Weekly security audit"
+    actions:
+      - github_dependabot_check
+      - sentry_security_issues
+      - cloudflare_firewall_review
+      - credential_rotation_check
+
+  drift_detection:
+    schedule: "0 */6 * * *"  # Every 6 hours
+    description: "Detect config and semantic drift"
+    actions:
+      - compare_config_hashes
+      - check_embedding_drift
+      - validate_csl_thresholds
+      - alert_on_drift
+
+  backup_cycle:
+    schedule: "0 4 * * *"  # 4 AM daily
+    description: "Database and config backup"
+    actions:
+      - neon_branch_snapshot
+      - export_config_versions
+      - github_gist_config_backup
+
+  cost_tracker:
+    schedule: "0 8 * * *"  # 8 AM daily
+    description: "Track and optimize cloud spend"
+    actions:
+      - collect_stripe_costs
+      - collect_cloudflare_usage
+      - collect_neon_compute_hours
+      - collect_vercel_usage
+      - alert_budget_anomalies

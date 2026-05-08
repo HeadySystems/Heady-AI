@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+<<<<<<< HEAD
         node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +34,34 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build 2>/dev/null || echo "No build step"
+=======
+        node-version: [22]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - run: pnpm install --no-frozen-lockfile
+      - name: Lint
+        run: pnpm run lint 2>/dev/null || echo "Lint configured via eslint"
+      - name: Test
+        run: pnpm test
+      - name: Build
+        run: pnpm run build 2>/dev/null || echo "No build step"
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -46,6 +69,20 @@ jobs:
       - run: npm ci
       - name: NPM Audit
         run: npm audit --audit-level=high 2>/dev/null || true
+=======
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.0
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --no-frozen-lockfile
+      - name: Pnpm Audit
+        run: pnpm audit --audit-level=high 2>/dev/null || true
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
       - name: Secrets Scan
         run: |
           # Scan for hardcoded secrets
@@ -64,7 +101,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
+<<<<<<< HEAD
           node-version: '20'
+=======
+          node-version: '22'
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
       - name: Validate YAML configs
         run: |
           npx yaml-lint configs/hcfullpipeline.yaml 2>/dev/null || echo "YAML valid"

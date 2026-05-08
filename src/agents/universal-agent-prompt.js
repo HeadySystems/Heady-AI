@@ -32,6 +32,8 @@ const logger = createLogger('universal-agent-prompt');
  * @version 1.0.0
  */
 
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('universal-agent-prompt');
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");

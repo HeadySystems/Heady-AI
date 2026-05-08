@@ -1,0 +1,61 @@
+name: Deploy HeadyAuth to Cloud Run
+
+on:
+  push:
+    branches: [main]
+    paths: ['auth-service/**']
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  SERVICE: heady-auth
+
+jobs:
+  deploy:
+    name: 'Build & Deploy HeadyAuth'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+
+      - name: Deploy to Cloud Run
+        working-directory: auth-service
+        run: |
+          cat > /tmp/env.yaml << 'ENVEOF'
+          NODE_ENV: production
+          HEADY_VERSION: "${{ github.sha }}"
+          HEADY_SERVICE: heady-auth
+          SERVICE_NAME: heady-auth
+          CORS_ORIGINS: "https://headyme.com,https://headysystems.com,https://headyconnection.org,https://headybuddy.org,https://headymcp.com,https://headyio.com,https://headybot.com,https://headyapi.com,https://heady-ai.com,https://headykey.com,https://headyvault.com"
+          ENVEOF
+          gcloud run deploy $SERVICE \
+            --source . \
+            --region $REGION \
+            --port=3309 \
+            --set-secrets="JWT_SECRET=heady-jwt-secret:latest,DATABASE_URL=neon-database-url:latest" \
+            --allow-unauthenticated \
+            --min-instances=1 \
+            --max-instances=13 \
+            --memory=256Mi \
+            --cpu=0.25 \
+            --env-vars-file=/tmp/env.yaml
+
+      - name: Verify deployment
+        run: |
+          URL=$(gcloud run services describe $SERVICE --region=$REGION --format='value(status.url)')
+          echo "HeadyAuth deployed to: $URL"
+          curl -sf "$URL/health/live" || exit 1
+          curl -sf "$URL/health/ready" || exit 1
+          echo "HeadyAuth deployment verified!"

@@ -129,12 +129,64 @@ jobs:
             --to-revisions="${{ steps.deploy.outputs.revision }}=100"
           echo "✓ Full deployment complete"
 
+<<<<<<< HEAD
+=======
+      # ── Post-deploy: Health check ────────────────────────────────
+      - name: 'Post-deploy: Health check'
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE \
+            --region=$REGION --format='value(status.url)')
+          for i in 1 2 3 4 5; do
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+              -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+              "$SERVICE_URL/api/health" || echo "000")
+            echo "Attempt $i: /api/health → $HTTP_STATUS"
+            if [ "$HTTP_STATUS" = "200" ]; then break; fi
+            if [ "$i" = "5" ]; then
+              echo "::error::Health check failed after 5 attempts"
+              exit 1
+            fi
+            sleep 10
+          done
+
+      # ── Post-deploy: Setup Sentry alert rules ────────────────────
+      - name: 'Post-deploy: Setup Sentry alert rules'
+        if: success()
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_WEBHOOK_URL: ${{ secrets.CLOUD_RUN_URL }}/api/webhooks/sentry
+        run: node scripts/setup-sentry-alerts.js || echo "::warning::Sentry alert setup failed (non-fatal)"
+
+      # ── Post-deploy: Notify Sentry release ───────────────────────
+      - name: 'Post-deploy: Notify Sentry release'
+        if: success()
+        run: |
+          curl -s -X POST "https://sentry.io/api/0/organizations/${{ secrets.SENTRY_ORG }}/releases/" \
+            -H "Authorization: Bearer ${{ secrets.SENTRY_AUTH_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"version\":\"${{ github.sha }}\",\"projects\":[\"${{ secrets.SENTRY_PROJECT }}\"],\"ref\":\"${{ github.ref_name }}\"}" \
+            || echo "::warning::Sentry release notification failed (non-fatal)"
+
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
       # ── Rollback on failure ─────────────────────────────────────
       - name: 'Rollback on failure'
         if: failure()
         run: |
+<<<<<<< HEAD
           echo "::error::Deployment failed, rolling back to ${{ steps.current.outputs.revision }}"
           gcloud run services update-traffic $SERVICE \
             --region=$REGION \
             --to-revisions="${{ steps.current.outputs.revision }}=100"
           echo "✓ Rollback complete"
+=======
+          if [ "${{ steps.current.outputs.revision }}" != "none" ]; then
+            echo "::error::Deployment failed, rolling back to ${{ steps.current.outputs.revision }}"
+            gcloud run services update-traffic $SERVICE \
+              --region=$REGION \
+              --to-revisions="${{ steps.current.outputs.revision }}=100"
+            echo "✓ Rollback complete"
+          else
+            echo "::warning::No previous revision to roll back to"
+          fi
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

@@ -15,7 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "HeadyBuddy"
 include ':app'
-<<<<<<< HEAD
 include ':core'
-=======
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+include ':core'

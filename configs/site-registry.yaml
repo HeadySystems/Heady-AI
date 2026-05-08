@@ -1,0 +1,178 @@
+# Heady Canonical Site Registry
+# SINGLE SOURCE OF TRUTH — All web properties
+# Last audited: 2026-03-21 16:15 MDT (Session 6)
+# Architecture: Cloudflare Workers → Cloud Run origin (us-central1)
+# Rule: This file is the ONLY authority on what sites exist. Period.
+
+# ── Infrastructure ──
+infrastructure:
+  cloud_provider: gcp
+  project_id: headyme-444017
+  region: us-central1
+  edge_gateway: https://heady-edge-gateway-609590223909.us-central1.run.app
+  cloudflare_account_id: 8b1fa38f282c691423c6399247d53323
+  routing: cloudflare-workers-to-cloud-run
+  legacy_note: "PM2 + Render VPS retired. All domains served via Cloudflare Workers routing to Cloud Run origin."
+
+sites:
+  # ── Primary Branded Domains (10 public domains) ──
+  - id: headyme
+    domain: headyme.com
+    purpose: "Personal AI command center"
+    pool: hot
+    sacred_geometry_layer: center
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headysystems
+    domain: headysystems.com
+    purpose: "Platform operations homepage"
+    pool: hot
+    sacred_geometry_layer: inner
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headyconnection
+    domain: headyconnection.org
+    purpose: "Nonprofit AI for social impact (501c3)"
+    pool: warm
+    sacred_geometry_layer: middle
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headybuddy
+    domain: headybuddy.org
+    purpose: "Personal AI assistant & guide"
+    pool: hot
+    sacred_geometry_layer: inner
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: degraded  # HTTP 522 — worker deploy needed
+
+  - id: headymcp
+    domain: headymcp.com
+    purpose: "MCP protocol hub & marketplace"
+    pool: hot
+    sacred_geometry_layer: inner
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headyio
+    domain: headyio.com
+    purpose: "Developer portal & SDK"
+    pool: warm
+    sacred_geometry_layer: middle
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headyapi
+    domain: headyapi.com
+    purpose: "Interactive API playground & public intelligence interface"
+    pool: hot
+    sacred_geometry_layer: outer
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: degraded  # HTTP 522 — worker deploy needed
+
+  - id: headyai
+    domain: heady-ai.com
+    purpose: "Intelligence routing hub"
+    pool: hot
+    sacred_geometry_layer: inner
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: heady-ai
+    domain: heady-ai.com
+    purpose: "Intelligence routing hub (hyphenated alias)"
+    pool: hot
+    sacred_geometry_layer: inner
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: active  # HTTP 200
+
+  - id: headybot
+    domain: headybot.com
+    purpose: "Automation and agents"
+    pool: warm
+    sacred_geometry_layer: outer
+    cloudflare_worker: worker-heady-router
+    cloud_run_service: headyme-site
+    status: degraded  # HTTP 522 — worker deploy needed
+
+  # ── Internal/Secondary Sites ──
+  - id: headyweb
+    domain: null
+    purpose: "HeadyWeb AI search engine"
+    pool: warm
+    status: internal
+
+  - id: admin-ui
+    domain: null
+    purpose: "Internal admin dashboard"
+    pool: cold
+    status: internal
+
+  - id: headydocs
+    domain: null
+    purpose: "Documentation site"
+    pool: cold
+    status: internal
+
+  # ── Discord Bots ──
+  - id: heady-discord
+    purpose: "Discord bot"
+    status: active
+
+  - id: heady-discord-connection
+    purpose: "Discord HeadyConnection bot"
+    status: active
+
+  # ── HuggingFace Spaces (3) ──
+  - id: hf-brain-demo
+    url: https://huggingface.co/spaces/HeadyMe/heady-ai
+    deploy_script: scripts/deploy-hf-spaces.js
+    status: active
+
+  - id: hf-systems
+    url: https://huggingface.co/spaces/HeadySystems/heady-systems
+    deploy_script: scripts/deploy-hf-spaces.js
+    status: active
+
+  - id: hf-connection
+    url: https://huggingface.co/spaces/HeadyConnection/heady-connection
+    deploy_script: scripts/deploy-hf-spaces.js
+    status: active
+
+# ── Port Scheme (Cloud Run / local development) ──
+# These ports are used when running services locally or on Cloud Run.
+# In production, all public traffic routes through Cloudflare Workers.
+ports:
+  heady-manager: 3301
+  heady-guard: 3302
+  heady-infer: 3303
+  heady-embed: 3304
+  heady-eval: 3305
+  heady-cache: 3306
+  heady-mcp: 3307
+  heady-edge: 3308
+  heady-dashboard: 3309
+  heady-gateway: 3310
+  heady-chain: 3311
+  heady-site: 3312
+  dynamic-site-server: 8080
+
+# ── Summary ──
+# 10 public branded domains (3 degraded — need worker deploy + CF auth)
+# 3 internal/secondary sites
+# 2 Discord bots
+# 3 HuggingFace Spaces
+# = 18 total web properties
+# Architecture: Cloudflare Workers edge → Cloud Run origin (us-central1)
+# Legacy PM2/Render config retired as of Session 4 (2026-03-18)

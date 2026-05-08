@@ -1,0 +1,58 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Heady™ Context & Configuration Manifest v1.0
+# ═══════════════════════════════════════════════════════════════════════════════
+# This manifest defines all valid configuration parameters for the Heady Ecosystem.
+# Use this to understand possible tunables and their contextual defaults.
+
+definitions:
+  verbosity:
+    description: "Level of detail for user-facing output"
+    type: enum
+    values: [SILENT, TERSE, NORMAL, DETAILED, VERBOSE]
+    contexts: [ALL]
+    default: NORMAL
+
+  runtime_mode:
+    description: "Execution environment optimization target"
+    type: enum
+    values: [EDGE, SERVERLESS, PERSISTENT, BATCH]
+    contexts: [ALL]
+    default: PERSISTENT
+
+  phi_scaling:
+    description: "Whether to apply Phi-scaled mathematical timing to operations"
+    type: boolean
+    contexts: [CI, PRODUCTION]
+    default: true
+
+  site_projection_strategy:
+    description: "How sites are rendered and served"
+    type: enum
+    values: [STATIC_PREGEN, DYNAMIC_EDGE, ON_DEMAND]
+    contexts: [VERCEL, CLOUDFLARE]
+    default: STATIC_PREGEN
+
+  auth_gate_level:
+    description: "Strictness of CSL gating for domain access"
+    type: integer
+    range: [0, 5]
+    contexts: [PRODUCTION]
+    default: 1
+
+contexts:
+  LOCAL_DEV:
+    overrides:
+      phi_scaling: false
+      verbosity: DETAILED
+      runtime_mode: PERSISTENT
+  
+  VERCEL_EDGE:
+    overrides:
+      runtime_mode: EDGE
+      site_projection_strategy: DYNAMIC_EDGE
+      verbosity: TERSE
+
+  CI_CD:
+    overrides:
+      verbosity: VERBOSE
+      phi_scaling: true

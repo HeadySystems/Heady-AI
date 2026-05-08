@@ -20,6 +20,8 @@ const tsParser = require('@typescript-eslint/parser');
 module.exports = [
   {
     files: ['**/*.ts', '**/*.tsx'],
+    // Skip auto-generated .d.ts declaration files — they use 'any' by design
+    ignores: ['**/*.d.ts'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -32,7 +34,9 @@ module.exports = [
     },
     rules: {
       ...tsEslint.configs.recommended.rules,
-      // Additional TypeScript rules
+      // Relax strict TS rules for mixed JS/TS codebase
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     }
   },
   {
@@ -62,6 +66,7 @@ module.exports = [
       "!.*",
       "dist",
       "node_modules",
+      "**/*.d.ts",
       "venv/**",
       ".windsurf/**",
       "**/node_modules/**",

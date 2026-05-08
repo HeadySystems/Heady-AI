@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "shared/**/*.ts",
+    "mcp-server/**/*.ts",
+    "redis-streams/**/*.ts",
+    "neon-pgvector/**/*.ts",
+    "pinecone-ops/**/*.ts",
+    "observability/**/*.ts",
+    "vertex-ai/**/*.ts",
+    "runtime/**/*.ts",
+    "vector-ops/**/*.ts",
+    "security/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "cloudflare-edge",
+    "colab-bridge",
+    "drupal-sdc",
+    "specs"
+  ]
+}

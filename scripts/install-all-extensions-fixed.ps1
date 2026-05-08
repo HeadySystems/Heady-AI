@@ -50,11 +50,8 @@ function Import-HeadyConfig {
     }
     
     # Parse YAML (using simple regex for this implementation)
-<<<<<<< HEAD
     $content = Get-Content $Path -Raw
-=======
-    $content = [System.IO.File]::ReadAllText($Path)
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
+    $content = Get-Content $Path -Raw
     
     # Extract extension lists
     $config = @{

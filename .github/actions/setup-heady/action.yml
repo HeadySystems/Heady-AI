@@ -1,12 +1,20 @@
 name: "Setup Heady"
+<<<<<<< HEAD
 description: "Standardizes Node 22 LTS and PNPM 9.15.0 across all Heady pipelines"
+=======
+description: "Standardizes Node 22 LTS and PNPM 10.6.0 across all Heady pipelines"
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 runs:
   using: "composite"
   steps:
     - name: Install pnpm
       uses: pnpm/action-setup@v4
       with:
+<<<<<<< HEAD
         version: 9.15.0
+=======
+        version: 10.6.0
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     - name: Setup Node 22 LTS
       uses: actions/setup-node@v4
       with:

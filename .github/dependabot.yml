@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 # v9.0 Blueprint §7: Dependabot grouped dependency updates
 # Groups patch/minor production deps into one PR, dev deps into another.
 # Auto-merge non-major updates via dependabot/fetch-metadata action.
 
+=======
+# Heady™ Dependabot — Production Config
+# Security updates run weekly; patch auto-merge enabled for low-risk updates
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 version: 2
 updates:
   # npm dependencies — root monorepo
@@ -10,6 +15,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+<<<<<<< HEAD
     open-pull-requests-limit: 5
     groups:
       production-patch-minor:
@@ -18,10 +24,24 @@ updates:
           - "minor"
           - "patch"
       dev-dependencies:
+=======
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
+    groups:
+      # Patch updates for all production deps — auto-mergeable
+      patch-production:
+        dependency-type: "production"
+        update-types:
+          - "patch"
+      # Minor updates for dev deps — auto-mergeable
+      minor-dev:
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
         dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
+<<<<<<< HEAD
     ignore:
       # Ignore archived packages — not deployed
       - dependency-name: "*"
@@ -38,6 +58,21 @@ updates:
     labels:
       - "dependencies"
       - "python"
+=======
+    labels:
+      - "dependencies"
+    # Auto-merge patch PRs; minor/major require manual review
+    ignore:
+      # Never auto-update major versions of critical runtime deps
+      - dependency-name: "express"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "pg"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "ioredis"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@anthropic-ai/sdk"
+        update-types: ["version-update:semver-major"]
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 
   # Python dependencies — midi_bridge
   - package-ecosystem: "pip"
@@ -62,6 +97,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+<<<<<<< HEAD
     labels:
       - "ci"
       - "automated"
+=======
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "ci"
+      - "dependencies"
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

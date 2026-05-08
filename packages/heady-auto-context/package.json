@@ -1,0 +1,21 @@
+{
+  "name": "@heady/auto-context",
+  "version": "1.0.0",
+  "description": "HeadyAutoContext — 3-Pass Pre-Action Context Enrichment Engine",
+  "author": "HeadySystems Inc. <eric@headysystems.com>",
+  "license": "PROPRIETARY",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "pg": "^8.13.0"
+  }
+}

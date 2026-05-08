@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -221,7 +222,7 @@ function buildReplacements() {
         replacements['127.0.0.1'] = config.host;
       }
     }
-    
+
     shouldProcessFile(filePath) {
         // Validate file path to prevent path traversal
         if (!filePath || typeof filePath !== 'string') return false;

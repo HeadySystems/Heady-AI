@@ -16343,3 +16343,1181 @@ Pushed successfully
 Clean — nothing to commit
 [2026-03-21 15:00:01.803 -0600] [32mINFO[39m: [36m[auto-commit] [2026-03-21T21:00:01.802Z] [INFO] No changes to commit. Repository is clean.[39m
     [35mcomponent[39m: "system"
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2
+node:internal/modules/package_json_reader:189
+  const result = modulesBinding.readPackageJSON(nearestParentPackageJSON);
+                                ^
+
+Error: Invalid package config /home/headyme/Heady/package.json.
+    at Object.getNearestParentPackageJSON (node:internal/modules/package_json_reader:189:33)
+    at trySelf (node:internal/modules/cjs/loader:599:33)
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1360:24)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)
+    at Function._load (node:internal/modules/cjs/loader:1192:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+    at Module.require (node:internal/modules/cjs/loader:1463:12)
+    at require (node:internal/modules/helpers:147:16) {
+  code: 'ERR_INVALID_PACKAGE_CONFIG'
+}
+
+Node.js v22.22.2

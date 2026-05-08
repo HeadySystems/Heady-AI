@@ -1,0 +1,166 @@
+{#
+  © 2026 HeadySystems Inc. All Rights Reserved.
+  PROPRIETARY AND CONFIDENTIAL.
+
+  @component drupal-sdc/heady-hero
+  @description Full-width Heady Hero banner with Sacred Geometry spacing.
+
+  BEM structure:
+    .heady-hero                         — root block
+    .heady-hero--dark                   — modifier: dark variant (default)
+    .heady-hero--light                  — modifier: light variant
+    .heady-hero--glass                  — modifier: glass / glassmorphism variant
+    .heady-hero--has-image              — modifier: background image present
+    .heady-hero__background             — background layer (image + overlay)
+    .heady-hero__background-image       — <img> or CSS background element
+    .heady-hero__background-overlay     — gradient overlay for text legibility
+    .heady-hero__inner                  — max-width content wrapper
+    .heady-hero__content                — text + CTA column
+    .heady-hero__eyebrow                — small label above title
+    .heady-hero__title                  — primary heading
+    .heady-hero__subtitle               — supporting text
+    .heady-hero__actions                — CTA button group
+    .heady-hero__cta                    — primary CTA button
+    .heady-hero__cta-secondary          — secondary CTA button (ghost)
+    .heady-hero__slot                   — optional slot content
+    .heady-hero__coherence              — coherence indicator badge
+    .heady-hero__coherence-bar          — visual progress arc
+    .heady-hero__coherence-value        — numeric score text
+#}
+
+{%
+  set classes = [
+    'heady-hero',
+    backgroundVariant ? 'heady-hero--' ~ backgroundVariant : 'heady-hero--dark',
+    backgroundImageUrl ? 'heady-hero--has-image' : '',
+  ] | filter | join(' ')
+%}
+
+<section
+  class="{{ classes }}"
+  aria-label="{{ title }}"
+  data-component="heady-hero"
+  data-variant="{{ backgroundVariant | default('dark') }}"
+>
+  {# ── Background Layer ────────────────────────────────────────────────────── #}
+  {% if backgroundImageUrl %}
+    <div class="heady-hero__background" aria-hidden="true">
+      <img
+        class="heady-hero__background-image"
+        src="{{ backgroundImageUrl }}"
+        alt=""
+        role="presentation"
+        loading="eager"
+        decoding="async"
+      >
+      <div class="heady-hero__background-overlay"></div>
+    </div>
+  {% endif %}
+
+  {# ── Inner Content Wrapper ─────────────────────────────────────────────── #}
+  <div class="heady-hero__inner">
+    <div class="heady-hero__content">
+
+      {# ── Eyebrow ─────────────────────────────────────────────────────────── #}
+      {% if eyebrow %}
+        <p class="heady-hero__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+
+      {# ── Title ───────────────────────────────────────────────────────────── #}
+      <h1 class="heady-hero__title">{{ title }}</h1>
+
+      {# ── Subtitle ────────────────────────────────────────────────────────── #}
+      {% if subtitle %}
+        <p class="heady-hero__subtitle">{{ subtitle }}</p>
+      {% endif %}
+
+      {# ── CTA Actions ─────────────────────────────────────────────────────── #}
+      {% if ctaText or ctaSecondaryText %}
+        <div class="heady-hero__actions">
+
+          {% if ctaText and ctaUrl %}
+            <a
+              class="heady-hero__cta"
+              href="{{ ctaUrl }}"
+              aria-label="{{ ctaText }}"
+            >
+              {{ ctaText }}
+            </a>
+          {% endif %}
+
+          {% if ctaSecondaryText and ctaSecondaryUrl %}
+            <a
+              class="heady-hero__cta-secondary"
+              href="{{ ctaSecondaryUrl }}"
+              aria-label="{{ ctaSecondaryText }}"
+            >
+              {{ ctaSecondaryText }}
+            </a>
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+      {# ── Optional Slot Content ────────────────────────────────────────────── #}
+      {% if content %}
+        <div class="heady-hero__slot">
+          {{ content }}
+        </div>
+      {% endif %}
+
+    </div>{# /.heady-hero__content #}
+
+    {# ── Coherence Indicator ──────────────────────────────────────────────── #}
+    {% if showCoherenceIndicator %}
+      {%
+        set cScore = coherenceScore | default(0.809)
+      %}
+      {%
+        set cLevel = 'medium'
+      %}
+      {%
+        set cLevel = (cScore >= 0.927) ? 'critical' : cLevel
+      %}
+      {%
+        set cLevel = (cScore >= 0.882 and cScore < 0.927) ? 'high' : cLevel
+      %}
+      {%
+        set cLevel = (cScore < 0.691) ? 'low' : cLevel
+      %}
+      <div
+        class="heady-hero__coherence heady-hero__coherence--{{ cLevel }}"
+        aria-label="Semantic coherence: {{ (cScore * 100) | round }}%"
+        role="meter"
+        aria-valuenow="{{ (cScore * 100) | round }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <svg
+          class="heady-hero__coherence-arc"
+          viewBox="0 0 36 36"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <circle
+            class="heady-hero__coherence-track"
+            cx="18" cy="18" r="15.9155"
+            fill="none"
+            stroke-width="2"
+          />
+          <circle
+            class="heady-hero__coherence-bar"
+            cx="18" cy="18" r="15.9155"
+            fill="none"
+            stroke-width="2"
+            stroke-dasharray="{{ (cScore * 100) | round }}, 100"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="heady-hero__coherence-value">
+          φ {{ cScore | number_format(3) }}
+        </span>
+      </div>
+    {% endif %}
+
+  </div>{# /.heady-hero__inner #}
+</section>

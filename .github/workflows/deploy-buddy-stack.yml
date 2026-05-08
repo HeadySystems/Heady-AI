@@ -1,0 +1,14 @@
+name: Deploy Buddy Stack (Auth + API + Widget)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-auth:
+    uses: ./.github/workflows/deploy-auth-server.yml
+    secrets: inherit
+
+  deploy-api:
+    uses: ./.github/workflows/deploy-buddy-api.yml
+    secrets: inherit
+    needs: deploy-auth

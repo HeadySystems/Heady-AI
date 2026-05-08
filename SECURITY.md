@@ -8,7 +8,7 @@
 | 3.x     | ⚠️ Critical fixes only |
 | < 3.0   | ❌ End of life |
 
-## Reporting a Vulnerability
+## Security Standards
 
 **Do NOT create a public GitHub issue for security vulnerabilities.**
 

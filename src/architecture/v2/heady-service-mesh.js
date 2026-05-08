@@ -5,41 +5,10 @@ const logger = createLogger('heady-service-mesh');
 
 const { PHI_TIMING } = require('../../shared/phi-math');
 /**
- * @fileoverview heady-service-mesh.js
- *
- * Heady™ Service Mesh — dynamic service registry, health-aware routing,
- * load balancing, and circuit-breaker management for all nine Heady™
- * domains and the ten core repositories.
- *
- * Replaces the static heady-registry.json + every scattered hard-coded URL
- * found in edge-diffusion.js (line 14), buddy-core.js, and elsewhere.
- *
- * Key capabilities
- * ────────────────
- *  • Centralized service registry (register / deregister / resolve)
- *  • Active health probing with exponential back-off (φ-weighted)
- *  • Three load-balancing strategies: round-robin, least-connections,
- *    phi-weighted (default)
- *  • Per-service circuit breakers (CLOSED → OPEN → HALF_OPEN)
- *  • Retry / hedged-request support
- *  • Express v4 router  — mounts at /api/v1/mesh
- *  • Publishes events to HeadyEventBus (heady:service:* topics)
- *  • Hot-reloadable via heady-config-server
- *
- * Usage
- * ─────
- *   const { getServiceMesh } = require('./heady-service-mesh');
- *   const mesh = getServiceMesh();
- *   await mesh.start();
- *
- *   // Resolve a single healthy endpoint
- *   const url = await mesh.resolve('headyapi');
- *
- *   // Register a new ephemeral instance (e.g. Cloudflare Worker)
- *   mesh.register({ name: 'headyapi', url: 'https://worker.headyapi.com',
- *                   weight: 0.5, tags: ['edge'] });
- *
- * © 2026 Heady™Systems Inc.  PROPRIETARY AND CONFIDENTIAL.
+ * Re-export from canonical src/core/ location.
+ * The src/core/ version is the single source of truth.
+ * This shim exists for backward compatibility with architecture/v2/ imports.
+ * Last consolidated: 2026-03-21 (Session 6)
  */
 
 const EventEmitter = require('events');

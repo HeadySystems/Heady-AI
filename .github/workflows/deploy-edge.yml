@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ============================================================================
 # HEADY CI/CD — Cloudflare Edge Deployment
 # .github/workflows/deploy-edge.yml
@@ -7,6 +8,8 @@
 # LR-005: Validates Host header stripping before deploy
 # ============================================================================
 
+=======
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 name: Deploy Edge Workers
 
 on:
@@ -14,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'cloudflare/**'
+<<<<<<< HEAD
       - 'shared/worker-router.js'
       - 'src/edge/**'
   workflow_dispatch:
@@ -42,10 +46,30 @@ jobs:
           HITS=$(grep -rn "localhost\|127\.0\.0\.1" cloudflare/ --include="*.js" --include="*.ts" || true)
           if [ -n "$HITS" ]; then
             echo "::error::Localhost references in Cloudflare Workers (Law 0)"
+=======
+  workflow_dispatch:
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  validate:
+    name: Validate Edge Workers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Localhost check
+        run: |
+          HITS=$(grep -rn "localhost\\|127\\.0\\.0\\.1" cloudflare/ --include="*.js" --include="*.ts" || true)
+          if [ -n "$HITS" ]; then
+            echo "::error::Localhost references found"
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
             echo "$HITS"
             exit 1
           fi
 
+<<<<<<< HEAD
   deploy-edge-proxy:
     name: 'Deploy heady-edge-proxy'
     runs-on: ubuntu-latest
@@ -71,6 +95,76 @@ jobs:
 
   deploy-ai-gateway:
     name: 'Deploy AI Gateway Worker'
+=======
+  deploy-heady-router:
+    name: Deploy worker-heady-router (Primary)
+    runs-on: ubuntu-latest
+    # Deploy AFTER heady-edge-router so this worker wins shared route ownership
+    needs: [validate, deploy-edge-router-primary]
+    defaults:
+      run:
+        working-directory: cloudflare/worker-heady-router
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy
+        run: wrangler deploy --config wrangler.toml
+
+  deploy-headymcp-edge:
+    name: Deploy headymcp-edge (MCP Website + API)
+    runs-on: ubuntu-latest
+    needs: [validate]
+    defaults:
+      run:
+        working-directory: cloudflare/headymcp-edge
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy
+        run: wrangler deploy --config wrangler.toml
+
+  deploy-edge-router-primary:
+    name: Deploy heady-edge-router (Primary Domain Router)
+    runs-on: ubuntu-latest
+    needs: [validate]
+    defaults:
+      run:
+        working-directory: cloudflare/cloudflare
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy
+        run: wrangler deploy --config wrangler.toml
+
+  deploy-edge-router-cleanup:
+    name: Deploy heady-edge-router-deprecated (Route Cleanup)
+    runs-on: ubuntu-latest
+    needs: [deploy-edge-router-primary]
+    defaults:
+      run:
+        working-directory: cloudflare/heady-edge-router
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install -g wrangler
+      - name: Deploy (removes old routes)
+        run: wrangler deploy --config wrangler.toml --env production
+        continue-on-error: true
+
+  deploy-ai-gateway:
+    name: Deploy AI Gateway Worker
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     runs-on: ubuntu-latest
     needs: [validate]
     defaults:
@@ -84,11 +178,18 @@ jobs:
       - run: npm install -g wrangler
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
+<<<<<<< HEAD
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
   deploy-mcp-telemetry:
     name: 'Deploy MCP Telemetry Worker'
+=======
+        continue-on-error: true
+
+  deploy-mcp-telemetry:
+    name: Deploy MCP Telemetry Worker
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     runs-on: ubuntu-latest
     needs: [validate]
     defaults:
@@ -102,23 +203,41 @@ jobs:
       - run: npm install -g wrangler
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
+<<<<<<< HEAD
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
   deploy-heady-router:
     name: 'Deploy Heady Router Worker'
+=======
+        continue-on-error: true
+
+  deploy-heady-edge-node:
+    name: Deploy heady-edge-node (edge.headysystems.com)
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     runs-on: ubuntu-latest
     needs: [validate]
     defaults:
       run:
+<<<<<<< HEAD
         working-directory: cloudflare/worker-heady-router
+=======
+        working-directory: cloudflare/heady-edge-node
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: npm install -g wrangler
+<<<<<<< HEAD
       - name: Deploy
         run: wrangler deploy --config wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+=======
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Deploy (with explicit route for edge.headysystems.com)
+        run: wrangler deploy --config wrangler.toml
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+
+  "ui": "tui",
+
+  "tasks": {
+    // ── typecheck ──────────────────────────────────────────────────────────
+    // Must run after dependencies' own typecheck so type declarations are
+    // available in downstream packages.
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "outputs": [],
+      "env": ["NODE_ENV", "SENTRY_DSN", "DATABASE_URL"]
+    },
+
+    // ── lint ───────────────────────────────────────────────────────────────
+    // Lint is independent of the build graph; runs in parallel across all
+    // packages that have a lint script.
+    "lint": {
+      "dependsOn": [],
+      "outputs": [],
+      "env": ["NODE_ENV"]
+    },
+
+    // ── build ──────────────────────────────────────────────────────────────
+    // Topological: a package's build must complete before its dependants build.
+    // Outputs are cached; cache is invalidated when source files or env vars change.
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", ".svelte-kit/**"],
+      "env": [
+        "NODE_ENV",
+        "SENTRY_DSN",
+        "SENTRY_RELEASE",
+        "DATABASE_URL",
+        "REDIS_URL",
+        "PINECONE_API_KEY",
+        "PINECONE_INDEX",
+        "GOOGLE_API_KEY",
+        "PORT"
+      ]
+    },
+
+    // ── test ───────────────────────────────────────────────────────────────
+    // Tests depend on the package's own build being complete.
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "env": [
+        "NODE_ENV",
+        "SENTRY_DSN",
+        "DATABASE_URL",
+        "REDIS_URL",
+        "PINECONE_API_KEY",
+        "CI"
+      ],
+      // Do not cache test results when env is CI — always run fresh.
+      "cache": true,
+      "persistent": false
+    },
+
+    // ── test:watch ─────────────────────────────────────────────────────────
+    // Persistent dev task — never cached.
+    "test:watch": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+
+    // ── deploy ─────────────────────────────────────────────────────────────
+    // Deploy depends on build + test completing successfully (in CI).
+    // Local deployments (e.g. wrangler dev) skip test dependency.
+    "deploy": {
+      "dependsOn": ["build", "test"],
+      "outputs": [],
+      "env": [
+        "NODE_ENV",
+        "SENTRY_DSN",
+        "SENTRY_RELEASE",
+        "DATABASE_URL",
+        "REDIS_URL",
+        "PINECONE_API_KEY",
+        "GOOGLE_API_KEY",
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID"
+      ],
+      "cache": false
+    },
+
+    // ── clean ──────────────────────────────────────────────────────────────
+    // Removes build artefacts. Never cached.
+    "clean": {
+      "cache": false,
+      "dependsOn": []
+    },
+
+    // ── dev ────────────────────────────────────────────────────────────────
+    // Long-running local dev server — persistent, never cached.
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    }
+  },
+
+  // ── Remote caching ────────────────────────────────────────────────────────
+  // Enabled by default; the TURBO_TOKEN + TURBO_TEAM env vars (or --token /
+  // --team CLI flags) control the remote cache endpoint. In GitHub Actions
+  // these are supplied by the setup-pnpm-turbo composite action.
+  "remoteCache": {
+    "enabled": true,
+    "signature": true
+  }
+}

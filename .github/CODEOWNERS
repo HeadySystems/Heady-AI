@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Heady™ Latent OS — Code Ownership
 # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
@@ -17,3 +18,31 @@ docker-compose*.yml @erichaywood
 # Content and branding
 content/ @erichaywood
 public/ @erichaywood
+=======
+# CODEOWNERS for Heady Production
+# Eric Haywood owns all security-sensitive paths
+
+# Root config
+/* @HeadyMe/core
+
+# Authentication & Security
+src/auth/ @HeadyMe/core
+src/security/ @HeadyMe/core
+src/bees/security-bee.js @HeadyMe/core
+src/bees/governance-bee.js @HeadyMe/core
+
+# Infrastructure
+.github/ @HeadyMe/core
+Dockerfile* @HeadyMe/core
+docker-compose* @HeadyMe/core
+*.yml @HeadyMe/core
+
+# Payment & Billing
+src/billing/ @HeadyMe/core
+src/bees/trading-bee.js @HeadyMe/core
+
+# Secrets & Environment
+.env* @HeadyMe/core
+*.key @HeadyMe/core
+*.pem @HeadyMe/core
+>>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

@@ -5,13 +5,21 @@ compatibility_date = "2026-02-11"
 # ─── Production Routes ─────────────────────────────────────────────
 # Each product domain routes through this single edge proxy.
 # The worker inspects hostname + path to select the correct origin.
+#
+# FIX (2026-03-30): Removed headysystems.com/api/* route.
+# That pattern was intercepting /api/health before worker-heady-router
+# could handle it, causing a 530 (Origin DNS Error) because the fallback
+# origin 'heady-manager-headysystems.headysystems.com' no longer exists.
+# worker-heady-router (headysystems.com/*) now owns all headysystems.com
+# paths including /api/health, which it handles natively.
 
 [env.production]
 workers_dev = false
 routes = [
   { pattern = "api.heady.systems/*", zone_name = "heady.systems" },
   { pattern = "brain.heady.systems/*", zone_name = "heady.systems" },
-  { pattern = "headysystems.com/api/*", zone_name = "headysystems.com" },
+  # headysystems.com/api/* REMOVED — route caused 530 (stale origin DNS).
+  # worker-heady-router (headysystems.com/*) handles /api/health natively.
   { pattern = "headyme.com/api/*", zone_name = "headyme.com" },
   { pattern = "headyconnection.org/api/*", zone_name = "headyconnection.org" },
   { pattern = "headyweb.com/api/*", zone_name = "headyweb.com" },
@@ -19,7 +27,7 @@ routes = [
 ]
 
 [vars]
-GATEWAY_VERSION = "1.0.0"
+GATEWAY_VERSION = "1.1.0"
 NODE_ENV = "production"
 ENABLE_METRICS = "true"
 ENABLE_CORS = "true"
@@ -43,11 +51,5 @@ binding = "EDGE_METRICS"
 enabled = true
 head_sampling_rate = 1.0
 
-<<<<<<< HEAD
-=======
-[build]
-command = "npx tsc"
-
->>>>>>> heady-testing/claude/autonomous-agent-system-prompt-qarZg
 [limits]
 cpu_ms = 50

@@ -1,0 +1,23 @@
+{
+  "name": "@heady/verbosity",
+  "version": "1.0.0",
+  "description": "Sovereign output verbosity management for Heady AI",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "src"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "heady",
+    "verbosity",
+    "output"
+  ],
+  "author": "HeadySystems Inc.",
+  "license": "Proprietary",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
