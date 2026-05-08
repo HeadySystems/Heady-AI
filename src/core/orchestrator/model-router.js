@@ -1,4 +1,5 @@
 import { createLogger } from '../../../packages/structured-logger/src/index.js';
+import { APIProviderManager } from './api-providers.js';
 
 const logger = createLogger({ service: 'model-router' });
 
@@ -29,6 +30,7 @@ export class ModelRouter {
                 costWeight: 0.3
             }
         };
+        this.apiProvider = new APIProviderManager();
     }
 
     /**
@@ -65,20 +67,8 @@ export class ModelRouter {
         
         logger.info(`Routing task to ${provider} using ${selectedModel}...`);
 
-        // Simulate network delay and processing
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        // Generate context-aware mock response based on modality and model
-        let output = '';
-        const modality = node.csl_constraints?.modality || 'text';
-
-        if (modality === 'vision') {
-            output = `[${selectedModel} VISION ANALYSIS]: Identified 3 key visual elements in the input. Confidence: High.`;
-        } else if (modality === 'deep-reasoning' || selectedModel.includes('claude')) {
-            output = `[${selectedModel} REASONING]: Analyzed constraints. Applied 3-step logical deduction. Conclusion matches compliance requirements.`;
-        } else {
-            output = `[${selectedModel} TEXT GEN]: Processed context successfully.`;
-        }
+        // Execute via the API Provider Manager
+        const output = await this.apiProvider.call(provider, selectedModel, context);
 
         return {
             model_used: selectedModel,
