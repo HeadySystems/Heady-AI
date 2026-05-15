@@ -5,7 +5,7 @@
  * Routes: Agent Marketplace API (Layer 8 PRODUCT)
  *
  * Express/Node.js compatible route handlers for agent marketplace operations.
- * Mount with: app.use('/api/v1/marketplace', require('./routes/marketplace-routes'));
+ * Mount with: app.use('/api/v1/marketplace', require('./marketplace-routes'));
  *
  * Endpoints:
  *   POST   /agents                       — Register/list an agent on the marketplace

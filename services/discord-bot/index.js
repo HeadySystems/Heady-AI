@@ -24,12 +24,46 @@ try { Discord = require('discord.js'); } catch { /* scaffold mode — discord.js
 
 // ─── Config ─────────────────────────────────────────────────────────────────
 const PORT = parseInt(process.env.PORT || '3320', 10);
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || '';
-const CLIENT_ID = process.env.DISCORD_CLIENT_ID || '';
+let BOT_TOKEN = process.env.DISCORD_BOT_TOKEN || '';
+let CLIENT_ID = process.env.DISCORD_CLIENT_ID || '';
 const HEADY_API = process.env.HEADY_API_URL || 'https://manager.headysystems.com';
 const SERVICE_NAME = 'heady-discord-bot';
 const VERSION = '1.0.0';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+
+/**
+ * Hybrid Secret Loader — Fetches from GCP Secret Manager if enabled,
+ * otherwise falls back to environment variables.
+ */
+async function loadSecrets(logger) {
+  if (process.env.USE_GCP_SECRET_MANAGER === 'true') {
+    try {
+      const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+      const client = new SecretManagerServiceClient();
+      const projectId = process.env.GCP_PROJECT_ID || 'gen-lang-client-0920560496';
+      
+      const fetch = async (name) => {
+        const [version] = await client.accessSecretVersion({
+          name: `projects/${projectId}/secrets/heady-${name}/versions/latest`,
+        });
+        return version.payload.data.toString();
+      };
+
+      if (!BOT_TOKEN) {
+        BOT_TOKEN = await fetch('discord-bot-token');
+        logger.info('DISCORD_BOT_TOKEN loaded from GCP Secret Manager');
+      }
+      if (!CLIENT_ID) {
+        CLIENT_ID = await fetch('discord-client-id');
+        logger.info('DISCORD_CLIENT_ID loaded from GCP Secret Manager');
+      }
+    } catch (err) {
+      logger.error({ err: err.message }, 'Failed to load secrets from GCP Secret Manager');
+    }
+  } else {
+    logger.info('GCP Secret Manager disabled, using native environment variables for Discord');
+  }
+}
 
 // ─── 20 AI Nodes ────────────────────────────────────────────────────────────
 const AI_NODES = [
@@ -366,6 +400,9 @@ if (require.main === module) {
   (async () => {
     await app.listen({ port: PORT, host: '0.0.0.0' });
     app.log.info({ port: PORT, api: HEADY_API }, `${SERVICE_NAME} operational`);
+
+    // Load Secrets
+    await loadSecrets(app.log);
 
     // Init Discord client + register commands
     initDiscordClient(app.log);

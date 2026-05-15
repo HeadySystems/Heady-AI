@@ -31,15 +31,39 @@ class HuggingfaceGateway extends LiquidNodeBase {
 
   async onStart() {
 
-    // POST /inference — run inference on a HF model
+    // POST /inference — run inference on a HF model or Heady node
     this.route('POST', '/inference', async (req, res, ctx) => {
       const { model, inputs } = ctx.body || {};
       if (!model || !inputs) return this.sendError(res, 400, 'Missing model and inputs', 'MISSING_INPUT');
-      this.json(res, 200, { model, status: 'queued', estimatedMs: Math.round(PHI * PHI * PHI * 1000) });
+
+      try {
+        const { ResonanceOrchestrator } = await import('../../core/orchestrator/resonance-orchestrator.js');
+        const orchestrator = new ResonanceOrchestrator();
+        
+        // If the model is a heady agent (e.g. heady-buddy-chat), route it correctly
+        const agent = model.includes('heady-buddy') ? 'heady_buddy' : model;
+        
+        const result = await orchestrator.modelRouter.executeNode(
+          { agent, csl_constraints: { modality: 'text' } },
+          `Source: huggingface. Input: ${inputs}`
+        );
+        
+        const responseText = result.response || result.reply || result.text || JSON.stringify(result);
+        this.json(res, 200, { 
+          model, 
+          status: 'success', 
+          output: responseText,
+          estimatedMs: Math.round(PHI * PHI * PHI * 1000) 
+        });
+      } catch (err) {
+        this.log.error(`HF Gateway Inference failed: ${err.message}`, { model });
+        this.json(res, 502, { ok: false, error: err.message, model });
+      }
     });
+
     // GET /models — popular models
     this.route('GET', '/models', async (req, res, ctx) => {
-      this.json(res, 200, { models: ['sentence-transformers/all-MiniLM-L6-v2', 'nomic-ai/nomic-embed-text-v1.5', 'mistralai/Mistral-7B-v0.1'] });
+      this.json(res, 200, { models: ['HeadySystems/heady-buddy-chat', 'sentence-transformers/all-MiniLM-L6-v2', 'nomic-ai/nomic-embed-text-v1.5', 'mistralai/Mistral-7B-v0.1'] });
     });
 
     this.log.info('huggingface-gateway initialized');

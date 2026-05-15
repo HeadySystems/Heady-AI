@@ -97,6 +97,17 @@ const MCP_SERVICES = {
         },
     },
 
+    heady_system_reconfigure: {
+        tool: 'heady_system_reconfigure',
+        description: 'Environment and system-wide configuration self-healing and dynamic tuning.',
+        category: 'infrastructure',
+        priority: Math.pow(PHI, 0),
+        parameters: {
+            action: { type: 'string', required: true, enum: ['apply', 'reset', 'validate', 'tune'], description: 'Reconfiguration action' },
+            config_patch: { type: 'object', description: 'Configuration patch object' },
+        },
+    },
+
     // ═══════════════════════════════════════════════════════════
     // TIER 2 — CORE CAPABILITIES (φ^0.25 priority)
     // ═══════════════════════════════════════════════════════════

@@ -129,8 +129,6 @@ jobs:
             --to-revisions="${{ steps.deploy.outputs.revision }}=100"
           echo "✓ Full deployment complete"
 
-<<<<<<< HEAD
-=======
       # ── Post-deploy: Health check ────────────────────────────────
       - name: 'Post-deploy: Health check'
         run: |
@@ -168,18 +166,10 @@ jobs:
             -d "{\"version\":\"${{ github.sha }}\",\"projects\":[\"${{ secrets.SENTRY_PROJECT }}\"],\"ref\":\"${{ github.ref_name }}\"}" \
             || echo "::warning::Sentry release notification failed (non-fatal)"
 
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
       # ── Rollback on failure ─────────────────────────────────────
       - name: 'Rollback on failure'
         if: failure()
         run: |
-<<<<<<< HEAD
-          echo "::error::Deployment failed, rolling back to ${{ steps.current.outputs.revision }}"
-          gcloud run services update-traffic $SERVICE \
-            --region=$REGION \
-            --to-revisions="${{ steps.current.outputs.revision }}=100"
-          echo "✓ Rollback complete"
-=======
           if [ "${{ steps.current.outputs.revision }}" != "none" ]; then
             echo "::error::Deployment failed, rolling back to ${{ steps.current.outputs.revision }}"
             gcloud run services update-traffic $SERVICE \
@@ -189,4 +179,3 @@ jobs:
           else
             echo "::warning::No previous revision to roll back to"
           fi
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

@@ -57,6 +57,25 @@ const REQUIRED_SECRETS = Object.freeze({
   CLOUDFLARE_API_TOKEN: { name: `${SECRET_PREFIX}cloudflare-api-token`, required: true },
   GH_TOKEN:             { name: `${SECRET_PREFIX}github-token`, required: true },
   
+  // Service Providers (AI Agents)
+  DISCORD_BOT_TOKEN:    { name: `${SECRET_PREFIX}discord-bot-token`, required: false },
+  DISCORD_CLIENT_ID:    { name: `${SECRET_PREFIX}discord-client-id`, required: false },
+  HF_TOKEN:             { name: `${SECRET_PREFIX}huggingface-token`, required: false },
+  HF_TOKEN_1:           { name: `${SECRET_PREFIX}huggingface-token-1`, required: false },
+  HF_TOKEN_2:           { name: `${SECRET_PREFIX}huggingface-token-2`, required: false },
+  HF_TOKEN_3:           { name: `${SECRET_PREFIX}huggingface-token-3`, required: false },
+  HF_API_KEY:           { name: `${SECRET_PREFIX}huggingface-api-key`, required: false },
+  SLACK_TOKEN:          { name: `${SECRET_PREFIX}slack-token`, required: false },
+  SLACK_APP_TOKEN:      { name: `${SECRET_PREFIX}slack-app-token`, required: false },
+  SLACK_TEAM_ID:        { name: `${SECRET_PREFIX}slack-team-id`, required: false },
+  BLOCKS_WEBHOOK_URL:   { name: `${SECRET_PREFIX}blocks-webhook-url`, required: false },
+  ANTHROPIC_SECONDARY_KEY: { name: `${SECRET_PREFIX}anthropic-secondary-key`, required: false },
+  STRIPE_TEST_SECRET_KEY:  { name: `${SECRET_PREFIX}stripe-test-secret-key`, required: false },
+
+  // Task Management (Linear)
+  LINEAR_API_KEY:       { name: `${SECRET_PREFIX}linear-api-key`, required: false },
+  LINEAR_TEAM_ID:       { name: `${SECRET_PREFIX}linear-team-id`, required: false },
+
   // Colab
   COLAB_API_KEY:        { name: `${SECRET_PREFIX}colab-api-key`, required: true },
   
@@ -127,6 +146,11 @@ let secretManagerClient = null;
 async function _getClient() {
   if (secretManagerClient) return secretManagerClient;
   
+  if (process.env.USE_GCP_SECRET_MANAGER !== 'true') {
+    logger.info({ message: 'GCP Secret Manager disabled, using native environment variables' });
+    return null;
+  }
+
   try {
     const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
     secretManagerClient = new SecretManagerServiceClient({
@@ -141,7 +165,21 @@ async function _getClient() {
 }
 
 async function _fetchSecret(secretName, version = 'latest') {
+  // Native Heady Vault / Environment Var Fallback
+  // Try to find the exact env variable that matches the required secret config
+  for (const [envKey, config] of Object.entries(REQUIRED_SECRETS)) {
+    if (config.name === secretName && process.env[envKey]) {
+      logger.info({ message: 'Secret loaded natively from environment', secretName, envKey });
+      return { value: process.env[envKey], version: 'env' };
+    }
+  }
+
   const client = await _getClient();
+  
+  if (!client) {
+    throw new SecretError(`Secret '${secretName}' not found in environment and GCP Secret Manager is disabled.`, 'NOT_FOUND');
+  }
+
   const name = `projects/${GCP_PROJECT_ID}/secrets/${secretName}/versions/${version}`;
   
   let lastError = null;
@@ -152,7 +190,7 @@ async function _fetchSecret(secretName, version = 'latest') {
       const secretVersion = response.name.split('/').pop();
       
       logger.info({
-        message: 'Secret fetched successfully',
+        message: 'Secret fetched successfully from GCP',
         secretName,
         version: secretVersion,
         attempt,

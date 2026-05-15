@@ -58,7 +58,7 @@ function readJsonSafe(filePath) {
 function readYamlSafe(filePath) {
   try {
     const yaml = require('js-yaml');
-    return yaml.load(fs.readFileSync(filePath, 'utf8'));
+    return yaml.loadAll(fs.readFileSync(filePath, 'utf8'));
   } catch { return null; }
 }
 
@@ -360,7 +360,7 @@ function scanDependencyGraph() {
 // LAYER 5 — Runtime Telemetry
 // ═══════════════════════════════════════════════════════════════════════════
 
-function scanRuntimeTelemetry() {
+async function scanRuntimeTelemetry() {
   const results = { layer: 'RuntimeTelemetry', checks: [], passed: 0, failed: 0 };
   const os = require('os');
   const mem = process.memoryUsage();
@@ -412,7 +412,8 @@ function scanRuntimeTelemetry() {
 
   // 5. Try loading SelfAwareness ORS
   try {
-    const { SelfAwareness } = require('./self-awareness');
+    const modulePath = path.resolve(__dirname, './self-awareness.js');
+    const { SelfAwareness } = await import(`file://${modulePath}`);
     const sa = new SelfAwareness({ systemId: 'cssd-probe' });
     const ors = sa.getORS();
     results.checks.push({
@@ -434,7 +435,8 @@ function scanRuntimeTelemetry() {
 
   // 6. Try loading Frequency Interference Detector
   try {
-    const fipl = require('./frequency-interference-detector');
+    const modulePath = path.resolve(__dirname, './frequency-interference-detector.js');
+    const fipl = await import(`file://${modulePath}`);
     results.checks.push({
       name: 'fipl_module_loadable',
       ok: true,
@@ -452,7 +454,8 @@ function scanRuntimeTelemetry() {
 
   // 7. Try loading Drift Detector
   try {
-    const dd = require('./drift-detector');
+    const modulePath = path.resolve(__dirname, './drift-detector.js');
+    const dd = await import(`file://${modulePath}`);
     results.checks.push({
       name: 'drift_detector_loadable',
       ok: true,
@@ -599,7 +602,7 @@ class ComprehensiveSystemDiagnostic {
     const l2 = scanConfigValidation();
     const l3 = scanMCPServerHealth();
     const l4 = scanDependencyGraph();
-    const l5 = scanRuntimeTelemetry();
+    const l5 = await scanRuntimeTelemetry();
 
     // Layer 6 is async (HTTP probes)
     let l6;

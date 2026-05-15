@@ -86,13 +86,13 @@ const bootTimeoutHandle = setTimeout(() => {
 
 // ── Phase 0: Environment Validation ─────────────────────────────────────────
 startupState.phase = 'env-validation';
-const { validateEnvironment } = require('./src/config/env-schema');
+const { validateEnvironment } = require('../../config/env-schema');
 validateEnvironment({ strict: process.env.NODE_ENV === 'production' });
 
 // ── Phase 1: Environment + Globals ──────────────────────────────────────────
 startupState.phase = 'config-globals';
 const { app, eventBus, remoteConfig, secretsManager, cfManager } =
-  require('./src/bootstrap/config-globals');
+  require('../../bootstrap/config-globals');
 
 // ── Phase 2: Metrics Bootstrap ──────────────────────────────────────────────
 // CHANGE: Initialize prom-client before any request handling.
@@ -200,22 +200,22 @@ if (process.env.OTEL_EXPORTER_ENDPOINT) {
 
 // ── Phase 4: Middleware Stack ────────────────────────────────────────────────
 startupState.phase = 'middleware';
-require('./src/bootstrap/middleware-stack')(app, { logger, remoteConfig });
+require('../../bootstrap/middleware-stack')(app, { logger, remoteConfig });
 
 // ── Phase 5: Auth Engine ─────────────────────────────────────────────────────
 startupState.phase = 'auth';
-const { authEngine } = require('./src/bootstrap/auth-engine')(app, {
+const { authEngine } = require('../../bootstrap/auth-engine')(app, {
   logger, secretsManager, cfManager,
 });
 
 // ── Phase 6: Vector Stack ────────────────────────────────────────────────────
 startupState.phase = 'vector-stack';
 const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
-  require('./src/bootstrap/vector-stack')(app, { logger, eventBus });
+  require('../../bootstrap/vector-stack')(app, { logger, eventBus });
 
 // ── Phase 7: Engine Wiring ───────────────────────────────────────────────────
 startupState.phase = 'engines';
-const { wireEngines } = require('./src/bootstrap/engine-wiring');
+const { wireEngines } = require('../../bootstrap/engine-wiring');
 const { loadRegistry } = require('./src/routes/registry');
 const logger = require('../../utils/logger');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
@@ -227,7 +227,7 @@ const _engines = wireEngines(app, {
 
 // ── Phase 8: Pipeline Wiring ──────────────────────────────────────────────────
 startupState.phase = 'pipeline-wiring';
-require('./src/bootstrap/pipeline-wiring')(app, {
+require('../../bootstrap/pipeline-wiring')(app, {
   pipeline, buddy, vectorMemory, selfAwareness, _engines, logger, eventBus,
 });
 
@@ -241,7 +241,7 @@ require('./src/bootstrap/service-registry')(app, {
 
 // ── Phase 10: Inline Routes ───────────────────────────────────────────────────
 startupState.phase = 'inline-routes';
-require('./src/bootstrap/inline-routes')(app, {
+require('../../bootstrap/inline-routes')(app, {
   logger, secretsManager, cfManager, authEngine, _engines,
 });
 
@@ -271,7 +271,7 @@ const { voiceSessions } = require('./src/bootstrap/voice-relay')(app, { logger }
 
 // ── Phase 12: Server Boot ─────────────────────────────────────────────────────
 startupState.phase = 'server-boot';
-const server = require('./src/bootstrap/server-boot')(app, { logger, voiceSessions });
+const server = require('../../bootstrap/server-boot')(app, { logger, voiceSessions });
 
 // ── Startup Complete ──────────────────────────────────────────────────────────
 clearTimeout(bootTimeoutHandle);

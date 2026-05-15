@@ -377,6 +377,58 @@ function registerRoutes(app) {
       });
     }
   });
+
+  // --- HCFullPipeline Stage 0 channel-entry (Widget & Slack) ---
+  const handleStage0Entry = async (req, res, channel) => {
+    try {
+      const { text, user_id, team_id, correlationId } = req.body || {};
+      if (!text) return res.status(400).json({ error: 'text required' });
+
+      // Embed context into the Latent OS
+      const context = buddy.queryContext(text, 3);
+      
+      try {
+        // Dynamically load the Orchestrator (Stage 0 Entry)
+        const { ResonanceOrchestrator } = await import('../core/orchestrator/resonance-orchestrator.js');
+        const orchestrator = new ResonanceOrchestrator();
+        
+        // 3400ms timeout logic per readiness audit
+        const llmPromise = orchestrator.modelRouter.executeNode(
+            { agent: 'heady_buddy', csl_constraints: { modality: 'text' } },
+            `Channel: ${channel}. Context: ${JSON.stringify(context.results)}. User Input: ${text}`
+        );
+        
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('LLM_TIMEOUT')), 3400));
+        
+        const nodeResult = await Promise.race([llmPromise, timeoutPromise]);
+        
+        res.json({
+            ok: true,
+            channel,
+            response: nodeResult.output,
+            telemetry: { user_id, team_id, correlationId, provider: nodeResult.provider }
+        });
+      } catch (llmError) {
+        // Replace hardcoded fallback with graceful retry state
+        res.status(202).json({
+            ok: false,
+            channel,
+            response: "I'm thinking... The Swarm is analyzing your request. Please hold on.",
+            retry_metadata: {
+                status: 'pending_swarm_consensus',
+                suggested_retry_ms: 2000,
+                error: llmError.message
+            }
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+
+  app.post(`${prefix}/chat`, (req, res) => handleStage0Entry(req, res, 'widget'));
+  app.post(`${prefix}/slack`, (req, res) => handleStage0Entry(req, res, 'slack'));
+
   app.post(`${prefix}/executor/position`, async (req, res) => {
     try {
       const {

@@ -4,7 +4,7 @@
  * Routes: Metacognitive Self-Awareness Loop (HS-061)
  *
  * Express/Node.js compatible route handlers for the metacognitive loop.
- * Mount with: app.use('/api/awareness', require('./routes/awareness-routes'));
+ * Mount with: app.use('/api/awareness', require('./awareness-routes'));
  *
  * Endpoints:
  *   POST /events               — Ingest a telemetry event

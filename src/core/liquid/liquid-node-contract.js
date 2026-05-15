@@ -12,7 +12,7 @@
  * NOT a base class (no god class) — it's a mixin factory + validator.
  *
  * Usage:
- *   const { liquidify } = require('../shared/liquid-node-contract');
+ *   const { liquidify } = require('./liquid-node-contract');
  *   class MyService extends EventEmitter { ... }
  *   module.exports = liquidify(new MyService(), {
  *     id: 'my-service',

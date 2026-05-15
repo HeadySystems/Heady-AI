@@ -36,6 +36,7 @@ const CREDENTIAL_ENV_MAP = {
     // ─── Claude / Anthropic ───────────────────────────────────────
     'claude-api-key':           'ANTHROPIC_API_KEY',
     'claude-api-key-secondary': 'CLAUDE_API_KEY',
+    'claude-secondary-key':     'ANTHROPIC_SECONDARY_KEY',
     'claude-code-oauth':        'CLAUDE_CODE_OAUTH_TOKEN',
     'claude-admin-key':         'ANTHROPIC_ADMIN_KEY',
     'claude-dev-admin':         'CLAUDE_DEV_ADMIN_KEY',
@@ -47,6 +48,10 @@ const CREDENTIAL_ENV_MAP = {
 
     // ─── Hugging Face ─────────────────────────────────────────────
     'hf-token':                 'HF_TOKEN',
+    'hf-token-1':               'HF_TOKEN_1',
+    'hf-token-2':               'HF_TOKEN_2',
+    'hf-token-3':               'HF_TOKEN_3',
+    'hf-api-key':               'HF_API_KEY',
 
     // ─── Groq ─────────────────────────────────────────────────────
     'groq-api-key':             'GROQ_API_KEY',
@@ -99,6 +104,7 @@ const CREDENTIAL_ENV_MAP = {
 
     // ─── Stripe ───────────────────────────────────────────────────
     'stripe-secret-key':        'STRIPE_SECRET_KEY',
+    'stripe-test-secret-key':   'STRIPE_TEST_SECRET_KEY',
 
     // ─── 1Password ────────────────────────────────────────────────
     'onepassword-service-account': 'OP_SERVICE_ACCOUNT_TOKEN',
@@ -108,6 +114,10 @@ const CREDENTIAL_ENV_MAP = {
 
     // ─── SSH (path to key, not the key itself) ────────────────────
     'ssh-private-key-path':     'SSH_KEY_PATH',
+
+    // ─── Linear (Task Management) ─────────────────────────────────
+    'linear-api-key':           'LINEAR_API_KEY',
+    'linear-team-id':           'LINEAR_TEAM_ID',
 
     // ─── Domain URLs (projected from vector space at runtime) ─────
     'heady-url-main':           'HEADY_URL',

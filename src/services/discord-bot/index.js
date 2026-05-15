@@ -99,10 +99,13 @@ class DiscordBot extends LiquidNodeBase {
       if (!node) return this.sendError(res, 404, 'Unknown node', 'UNKNOWN_NODE');
 
       try {
-        const result = await this.callService('heady-gateway', `/api/v1/nodes/${nodeId}/invoke`, {
-          method: 'POST',
-          body: { prompt, source: 'discord-api' },
-        });
+        const { ResonanceOrchestrator } = await import('../../core/orchestrator/resonance-orchestrator.js');
+        const orchestrator = new ResonanceOrchestrator();
+        
+        const result = await orchestrator.modelRouter.executeNode(
+          { agent: nodeId, csl_constraints: { modality: 'text' } },
+          `Source: discord-api. Input: ${prompt}`
+        );
         this.json(res, 200, { ok: true, node: node.name, result });
       } catch (err) {
         this.log.error(`Node invocation failed: ${err.message}`, { nodeId });
@@ -192,12 +195,17 @@ class DiscordBot extends LiquidNodeBase {
       await interaction.deferReply();
 
       try {
-        const result = await this.callService('heady-gateway', `/api/v1/nodes/${node.id}/invoke`, {
-          method: 'POST',
-          body: { prompt, userId: interaction.user.id, channel: interaction.channelId, source: 'discord' },
-        });
-        const response = result.response || result.reply || JSON.stringify(result);
-        await interaction.editReply(`${node.emoji} **${node.name}**\n\n${String(response).substring(0, 1900)}`);
+        const { ResonanceOrchestrator } = await import('../../core/orchestrator/resonance-orchestrator.js');
+        const orchestrator = new ResonanceOrchestrator();
+        
+        const result = await orchestrator.modelRouter.executeNode(
+          { agent: node.id, csl_constraints: { modality: 'text' } },
+          `User: ${interaction.user.id}. Channel: ${interaction.channelId}. Source: discord. Input: ${prompt}`
+        );
+        
+        const response = result.response || result.reply || result.text || JSON.stringify(result);
+        const truncated = String(response).substring(0, 1900);
+        await interaction.editReply(`${node.emoji} **${node.name}**\n\n${truncated}`);
       } catch (err) {
         this.log.error(`Node invocation failed: ${err.message}`, { node: node.id });
         await interaction.editReply(`⚠️ ${node.name} is temporarily unavailable. Error: ${err.message}`);

@@ -31,7 +31,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const logger = require('../utils/logger').child('bee-factory');
-const CSL = require('../core/semantic-logic');
+const CSL = require('../../src/core/semantic-logic');
 
 const BEES_DIR = __dirname;
 const _dynamicRegistry = new Map();

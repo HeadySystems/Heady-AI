@@ -16,23 +16,23 @@
  */
 
 // Phase 0: Environment Validation (fail-fast if critical config missing)
-const { validateEnvironment } = require('./src/config/env-schema');
+const { validateEnvironment } = require('../config/env-schema');
 validateEnvironment({ strict: process.env.NODE_ENV === 'production' });
 
 // Phase 1: Environment + Globals (event bus, midi bus, edge cache)
-const { app, logger, eventBus, remoteConfig, secretsManager, cfManager } = require('./src/bootstrap/config-globals');
+const { app, logger, eventBus, remoteConfig, secretsManager, cfManager } = require('../bootstrap/config-globals');
 
 // Phase 2: Middleware Stack (security, CORS, rate limiting, site renderer)
-require('./src/bootstrap/middleware-stack')(app, { logger, remoteConfig });
+require('../bootstrap/middleware-stack')(app, { logger, remoteConfig });
 
 // Phase 3: Auth Engine (HeadyAuth, fallback login, secrets routes)
-const { authEngine } = require('./src/bootstrap/auth-engine')(app, { logger, secretsManager, cfManager });
+const { authEngine } = require('../bootstrap/auth-engine')(app, { logger, secretsManager, cfManager });
 
 // Phase 4: Vector Stack (memory, pipeline, federation, bees, spatial)
-const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } = require('./src/bootstrap/vector-stack')(app, { logger, eventBus });
+const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } = require('../bootstrap/vector-stack')(app, { logger, eventBus });
 
 // Phase 5: Engine Wiring (MC scheduler, patterns, auto-success, scientist, QA)
-const { wireEngines } = require('./src/bootstrap/engine-wiring');
+const { wireEngines } = require('../bootstrap/engine-wiring');
 const { loadRegistry } = require('./src/routes/registry');
 const _engines = wireEngines(app, {
     pipeline,
@@ -43,7 +43,7 @@ const _engines = wireEngines(app, {
 });
 
 // Phase 6: Pipeline binding + self-healing wiring
-require('./src/bootstrap/pipeline-wiring')(app, { pipeline, buddy, vectorMemory, selfAwareness, _engines, logger, eventBus });
+require('../bootstrap/pipeline-wiring')(app, { pipeline, buddy, vectorMemory, selfAwareness, _engines, logger, eventBus });
 
 // Phase 7: Service Registry (40+ services mounted via try/require)
 require('./src/bootstrap/service-registry')(app, {
@@ -53,13 +53,13 @@ require('./src/bootstrap/service-registry')(app, {
 });
 
 // Phase 8: Inline Routes (health, pulse, layer, CSL, edge, telemetry, principles)
-require('./src/bootstrap/inline-routes')(app, { logger, secretsManager, cfManager, authEngine, _engines });
+require('../bootstrap/inline-routes')(app, { logger, secretsManager, cfManager, authEngine, _engines });
 
 // Phase 9: Voice Relay WebSocket System
 const { voiceSessions } = require('./src/bootstrap/voice-relay')(app, { logger });
 
 // Phase 10: Server Boot (HTTP/HTTPS + WebSocket upgrade + listen)
-require('./src/bootstrap/server-boot')(app, { logger, voiceSessions });
+require('../bootstrap/server-boot')(app, { logger, voiceSessions });
 
 
 // --- Auto-Unified Latent Service Pattern (Smart) ---

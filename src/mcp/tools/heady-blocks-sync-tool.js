@@ -4,13 +4,29 @@
  */
 'use strict';
 
+const { getSecret, loadAllSecrets, hasSecret } = require('../../shared/secret-manager');
+
 async function handler(args) {
-    const webhookUrl = args.webhook_url || process.env.BLOCKS_WEBHOOK_URL;
+    let webhookUrl = args.webhook_url;
+    
+    if (!webhookUrl) {
+        try {
+            // Attempt to load from Secret Manager (GCP or Native fallback)
+            if (!hasSecret('BLOCKS_WEBHOOK_URL')) {
+                await loadAllSecrets();
+            }
+            webhookUrl = getSecret('BLOCKS_WEBHOOK_URL');
+        } catch (e) {
+            // Fallback to direct process.env if Secret Manager is not yet initialized or fails
+            webhookUrl = process.env.BLOCKS_WEBHOOK_URL;
+        }
+    }
+
     if (!webhookUrl) {
         return {
             success: false,
             message: 'No blocks.team webhook URL provided or configured in environment',
-            hint: 'Set BLOCKS_WEBHOOK_URL in .env'
+            hint: 'Set BLOCKS_WEBHOOK_URL in .env or GCP Secret Manager'
         };
     }
 

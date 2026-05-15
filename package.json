@@ -4,7 +4,7 @@
   "description": "Self-aware, self-correcting intelligence infrastructure — the Heady Latent OS",
   "main": "heady-manager.js",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=25.0.0"
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
@@ -43,7 +43,7 @@
     "@google/genai": "^1.48.0",
     "@google/generative-ai": "^0.24.1",
     "@heady/phi-math": "workspace:*",
-    "@heady/structured-logger": "workspace:*",
+    "@heady-ai/structured-logger": "workspace:*",
     "@heady/verbosity": "workspace:*",
     "@huggingface/inference": "^4.13.12",
     "@langchain/core": "^1.1.38",

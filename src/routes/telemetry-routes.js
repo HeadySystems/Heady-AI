@@ -8,7 +8,7 @@
  * Express-style route handlers exposing the Neural Stream Telemetry system.
  *
  * Mount in your Express app:
- *   const telRoutes = require('./src/routes/telemetry-routes');
+ *   const telRoutes = require('./telemetry-routes');
  *   app.use('/api/telemetry', telRoutes.createRouter(express.Router()));
  *
  * Endpoints:

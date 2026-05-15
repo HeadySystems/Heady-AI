@@ -46,6 +46,9 @@ const { createAppAuth } = require('@octokit/auth-app');
 const swaggerUi = require('swagger-ui-express');
 const { getLogger } = require('./src/services/structured-logger');
 
+// New Hybrid Secret Manager for Sovereign Autonomy
+const hybridSecretManager = require('./shared/secret-manager');
+
 // Structured logger for heady-manager
 const log = getLogger('heady-manager');
 
@@ -170,36 +173,57 @@ try {
 // ─── Secrets & Cloudflare Management ──────────────────────────────
 let secretsManager = null;
 let cfManager = null;
-try {
-  const { secretsManager: sm, registerSecretsRoutes } = require("./src/hc_secrets_manager");
-  const { CloudflareManager, registerCloudflareRoutes } = require("./src/hc_cloudflare");
-  secretsManager = sm;
-  cfManager = new CloudflareManager(secretsManager);
 
-  // Register non-Cloudflare secrets from manifest
-  const manifestSecrets = [
-    { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
-    { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
-    { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
-    { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
-    { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
-    { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
-    { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
-    { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
-    { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
-    { id: "github_app_id", name: "GitHub App ID", envVar: "GITHUB_APP_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-    { id: "github_app_private_key", name: "GitHub App Private Key", envVar: "GITHUB_APP_PRIVATE_KEY", tags: ["github", "vm"], dependents: ["vm-token"] },
-    { id: "github_app_installation_id", name: "GitHub App Installation ID", envVar: "GITHUB_APP_INSTALLATION_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-  ];
-  for (const s of manifestSecrets) {
-    secretsManager.register({ ...s, source: "env" });
+async function initSecrets() {
+  try {
+    // 1. Load secrets from the hybrid manager (GCP + Native Env fallback)
+    log.info("Initializing Hybrid Secret Manager...");
+    const results = await hybridSecretManager.loadAllSecrets();
+    
+    // 2. Sync to process.env for legacy compatibility across the swarm
+    for (const key of results.loaded) {
+      process.env[key] = hybridSecretManager.getSecret(key);
+    }
+    log.info("Hybrid secrets synced to process.env", { count: results.loaded.length });
+
+    // 3. Initialize legacy metadata tracker
+    const { secretsManager: sm } = require("./src/hc_secrets_manager");
+    const { CloudflareManager } = require("./src/hc_cloudflare");
+    secretsManager = sm;
+    cfManager = new CloudflareManager(secretsManager);
+
+    // Register non-Cloudflare secrets from manifest
+    const manifestSecrets = [
+      { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
+      { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
+      { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
+      { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
+      { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
+      { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
+      { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
+      { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
+      { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
+      { id: "github_app_id", name: "GitHub App ID", envVar: "GITHUB_APP_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
+      { id: "github_app_private_key", name: "GitHub App Private Key", envVar: "GITHUB_APP_PRIVATE_KEY", tags: ["github", "vm"], dependents: ["vm-token"] },
+      { id: "github_app_installation_id", name: "GitHub App Installation ID", envVar: "GITHUB_APP_INSTALLATION_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
+      { id: "discord_bot_token", name: "Discord Bot Token", envVar: "DISCORD_BOT_TOKEN", tags: ["discord", "agent"] },
+      { id: "slack_token", name: "Slack Bot Token", envVar: "SLACK_TOKEN", tags: ["slack", "agent"] },
+      { id: "slack_team_id", name: "Slack Team ID", envVar: "SLACK_TEAM_ID", tags: ["slack", "config"] },
+      { id: "blocks_webhook", name: "Blocks.team Webhook", envVar: "BLOCKS_WEBHOOK_URL", tags: ["blocks", "sync"] },
+    ];
+    for (const s of manifestSecrets) {
+      secretsManager.register({ ...s, source: "hybrid" });
+    }
+    secretsManager.restoreState();
+    log.info("Secrets Manager: LOADED", { secretsCount: secretsManager.getAll().length });
+    log.info("Cloudflare Manager: LOADED", { tokenValid: cfManager.isTokenValid() });
+  } catch (err) {
+    log.warn("Secrets/Cloudflare initialization deferred or partially failed", { errorMessage: err.message });
   }
-  secretsManager.restoreState();
-  log.info("Secrets Manager: LOADED", { secretsCount: secretsManager.getAll().length });
-  log.info("Cloudflare Manager: LOADED", { tokenValid: cfManager.isTokenValid() });
-} catch (err) {
-  log.warn("Secrets/Cloudflare not loaded", { errorMessage: err.message });
 }
+
+// Call initSecrets immediately
+initSecrets();
 
 // ─── Observability & Auth (Enterprise Grade) ────────────────────────
 let obs;

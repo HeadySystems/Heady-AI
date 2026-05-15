@@ -9,7 +9,7 @@
  * endpoints.  Satisfies Claim 9(e) (API layer) and Claim 10 (integration points).
  *
  * Mount in your Express app:
- *   const cslRoutes = require('./src/routes/csl-routes');
+ *   const cslRoutes = require('./csl-routes');
  *   app.use('/api/csl', cslRoutes);
  *
  * Endpoints:
@@ -307,7 +307,7 @@ function postHallucinationGate(req, res) {
  *
  * Usage:
  *   const express = require('express');
- *   const { createRouter } = require('./src/routes/csl-routes');
+ *   const { createRouter } = require('./csl-routes');
  *   app.use('/api/csl', createRouter(express.Router()));
  *
  * @param {object} router — Express Router instance

@@ -1,11 +1,11 @@
 import { createLogger } from '../../../packages/structured-logger/src/index.js';
-// Mocking the HeadyVault for secret retrieval in this context
-// import { SecretManagerBackend } from '../../security/vault/backend.js';
+import { NativeHeadyVault } from '../../security/vault/native-vault.js';
 
 const logger = createLogger({ service: 'api-providers' });
 
 export class APIProviderManager {
     constructor() {
+        this.vault = new NativeHeadyVault();
         this.providers = {
             'google': this.executeGoogle.bind(this),
             'anthropic': this.executeAnthropic.bind(this),
@@ -14,12 +14,9 @@ export class APIProviderManager {
     }
 
     async getApiKey(providerName) {
-        // In production, this pulls from HeadyVault (GCP Secret Manager)
-        // const vault = new SecretManagerBackend();
-        // return await vault.getSecret(`${providerName.toUpperCase()}_API_KEY`);
-        
-        // Mock fallback for current environment
-        return process.env[`${providerName.toUpperCase()}_API_KEY`] || `mock_${providerName}_key`;
+        // Autonomously retrieve the HeadyKey from GCP Secret Manager via HeadyVault
+        // The vault handles caching, latency optimization, and fallback gracefully
+        return await this.vault.getSecret(`${providerName.toUpperCase()}_API_KEY`);
     }
 
     async executeGoogle(model, context) {

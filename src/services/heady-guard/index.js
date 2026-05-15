@@ -16,7 +16,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
  *   stages (toxicity, topic) to minimise latency.
  *
  * Usage:
- *   const guard = require('./heady-guard');
+ *   const guard = require('../heady-guard');
  *   await guard.initialize();
  *   const result = await guard.check({ text, userId });
  */

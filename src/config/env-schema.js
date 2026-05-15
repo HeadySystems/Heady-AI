@@ -5,7 +5,7 @@
  * Fails fast if critical config is missing — never start with half-valid state.
  * 
  * Usage:
- *   const { validateEnvironment } = require('./src/config/env-schema');
+ *   const { validateEnvironment } = require('./env-schema');
  *   validateEnvironment(); // throws if critical vars missing
  */
 const { createLogger } = require('../utils/logger');

@@ -6,7 +6,7 @@
  * and registers default auto-success tasks across all 13 φ-scaled categories.
  *
  * Usage:
- *   const { engine, scheduler, conductor } = require('./bootstrap/hcfp-bootstrap');
+ *   const { engine, scheduler, conductor } = require('./hcfp-bootstrap');
  *
  * @module src/bootstrap/hcfp-bootstrap
  */

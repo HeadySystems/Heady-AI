@@ -1,5 +1,6 @@
 import { CSLEngine } from '../csl-engine/csl-engine.js';
 import { ModelRouter } from './model-router.js';
+import { SystemTelemetryBee } from './system-telemetry.js';
 
 import { CSL_THRESHOLDS } from '../phi-math.js';
 import { createLogger } from '../../../packages/structured-logger/src/index.js';
@@ -10,6 +11,10 @@ export class ResonanceOrchestrator {
     constructor(cslEngine) {
         this.cslEngine = cslEngine || new CSLEngine({ dim: 384 });
         this.modelRouter = new ModelRouter();
+        this.telemetry = new SystemTelemetryBee();
+        
+        // Autonomously initialize the stream if it hasn't been
+        this.telemetry.initializeBriefingStream().catch(e => logger.warn('Failed to init briefing stream:', e));
     }
 
     // Mock embedder for intent vectors
@@ -69,6 +74,11 @@ export class ResonanceOrchestrator {
         if (!validation.valid) throw new Error(`Invalid schema: ${validation.errors.join(', ')}`);
 
         logger.info(`Starting execution of resonance schema: ${schema.workflow_id}`);
+        await this.telemetry.logEvent(
+            'Orchestrator Initialization',
+            { action: 'Executing Schema', workflow_id: schema.workflow_id },
+            `Received a new autonomous workflow requirement. Initializing agent routing for schema: ${schema.workflow_id}.`
+        );
 
         // Find starting node (node with no incoming edges or explicitly marked)
         const incomingEdges = new Set(schema.csl_edges.map(e => e.to));
@@ -92,6 +102,12 @@ export class ResonanceOrchestrator {
                 output: nodeResult.output
             });
 
+            await this.telemetry.logEvent(
+                'Agent Node Execution',
+                { action: 'Executed Node', payload: nodeResult },
+                `The ${currentNode.agent} executed the task successfully using the ${nodeResult.model_used} model via the ${nodeResult.provider} provider. The output is ready for routing.`
+            );
+
             // Update context state with the output from this node
             contextState = nodeResult.output;
 
@@ -107,15 +123,30 @@ export class ResonanceOrchestrator {
             const routeResult = await this.determineRoute(contextState, outboundEdges);
             
             if (routeResult.bestEdge) {
+                const edgeDesc = `${routeResult.bestEdge.from} -> ${routeResult.bestEdge.to}`;
+                const routeScore = routeResult.activatedEdges.find(e => e.edge === routeResult.bestEdge).score;
+                
                 executionTrace.push({ 
                     action: 'route', 
-                    edge: `${routeResult.bestEdge.from} -> ${routeResult.bestEdge.to}`,
-                    score: routeResult.activatedEdges.find(e => e.edge === routeResult.bestEdge).score
+                    edge: edgeDesc,
+                    score: routeScore
                 });
+                
+                await this.telemetry.logEvent(
+                    'CSL Semantic Routing',
+                    { action: 'Activated Path', edge: edgeDesc, confidence_score: routeScore },
+                    `The Continuous Semantic Logic (CSL) engine analyzed the context and determined the next optimal action is to route to the [${routeResult.bestEdge.to}] agent with a confidence score of ${routeScore.toFixed(4)}.`
+                );
+                
                 currentNode = schema.nodes.find(n => n.id === routeResult.bestEdge.to);
             } else {
                 executionTrace.push({ action: 'route_failed', reason: 'No CSL gates activated above threshold' });
                 logger.warn(`Execution halted at ${currentNode.id}: No resonant edges found.`);
+                await this.telemetry.logEvent(
+                    'Orchestrator Halt',
+                    { action: 'No Path Found', current_node: currentNode.id },
+                    `The workflow naturally completed or no logical condition was met to continue routing. The Swarm is standing by.`
+                );
                 break;
             }
         }

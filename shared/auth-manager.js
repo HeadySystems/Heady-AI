@@ -7,8 +7,8 @@
 
 const crypto = require('crypto');
 const logger = require('../../utils/logger');
-const HeadyJWT = require('../../core/heady-jwt');
-const HeadyKV = require('../../core/heady-kv');
+const HeadyJWT = require('../src/core/heady-jwt');
+const HeadyKV = require('../src/core/heady-kv');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

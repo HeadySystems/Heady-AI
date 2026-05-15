@@ -11,7 +11,7 @@
  *   const flags = otel.featureFlags;
  *
  * Bootstrap order:
- *   1. require('./otel-wrappers/otel-setup')   ← SDK init (must be first)
+ *   1. require('./otel-setup')   ← SDK init (must be first)
  *   2. require('./otel-wrappers')              ← Traced modules
  *
  * @module otel-wrappers

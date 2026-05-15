@@ -45,6 +45,7 @@ const HEADY_TOOLS = [
   { name: 'heady_maid', description: 'System cleanup and scheduling.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['clean', 'schedule', 'status'], default: 'status' }, target: { type: 'string' } }, required: ['action'] } },
   { name: 'heady_maintenance', description: 'Health monitoring, backups, updates.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['status', 'backup', 'update', 'restore'], default: 'status' }, service: { type: 'string' } }, required: ['action'] } },
   { name: 'heady_lens', description: 'Visual analysis and image processing.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['analyze', 'process', 'detect'], default: 'analyze' }, image_url: { type: 'string' }, prompt: { type: 'string' } }, required: ['action'] } },
+  { name: 'heady_system_reconfigure', description: 'Autonomous auto-success engine interface. Enables Heady to self-diagnose and modify its own environment configuration, resolve dependency conflicts, or patch configuration files dynamically without manual intervention.', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['auto_resolve_env', 'provision_dependencies', 'patch_config'] }, dependencies: { type: 'array', items: { type: 'string' } }, config_path: { type: 'string' }, patch_data: { type: 'object' } }, required: ['action'] } }
 ];
 
 module.exports = { HEADY_TOOLS };

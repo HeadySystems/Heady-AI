@@ -56,6 +56,9 @@ const DEFAULT_PORT = parseInt(process.env.PORT || '3301', 10);
 
 // ─── Express App ──────────────────────────────────────────────────────────────
 
+const { enforceCors } = require('../shared/middleware/cors-config');
+const { authGuard } = require('../middleware/auth-guard');
+
 const app = express();
 
 // ─── Security Headers (helmet) ───────────────────────────────────────────────
@@ -78,6 +81,9 @@ app.use(helmet({
   referrerPolicy:          { policy: 'strict-origin-when-cross-origin' },
   crossOriginEmbedderPolicy: false,                     // disabled for MCP compatibility
 }));
+
+// ─── Explicit CORS Whitelist ─────────────────────────────────────────────────
+app.use(enforceCors);
 
 // ─── Response Compression (gzip/brotli) ──────────────────────────────────────
 app.use(compression({
@@ -118,19 +124,19 @@ app.use((req, _res, next) => {
 
 // ─── Health Routes ────────────────────────────────────────────────────────────
 
+require('../core/health-cascade').initializeHealthCascade();
 app.use('/', getHealthProbes().createHealthRouter());
 
-// ─── MCP JSON-RPC 2.0 Endpoint ───────────────────────────────────────────────
+// ─── MCP JSON-RPC 2.0 Endpoint (Protected via authGuard) ─────────────────────
 
 /**
- * MCP (Model Context Protocol) JSON-RPC 2.0 stub.
+ * MCP (Model Context Protocol) JSON-RPC 2.0.
  * Accepts POST /mcp with a JSON-RPC 2.0 body.
- * Returns method-not-found for unregistered methods until real
- * MCP dispatcher is wired in by the CSL/Conductor layers.
+ * Now fully wired to the 8 core service tool handlers via MCPServer.
  *
  * Spec: https://spec.modelcontextprotocol.io/specification/
  */
-app.post('/mcp', (req, res) => {
+app.post('/mcp', authGuard(), async (req, res) => {
   const body = req.body;
 
   // Validate JSON-RPC 2.0 envelope
@@ -173,7 +179,7 @@ app.post('/mcp', (req, res) => {
     });
   }
 
-  // Route to EventBus for registered method handlers
+  // Route to EventBus for telemetry tracking
   const { PSI, CSL_THRESHOLDS } = getPhiMath();
   getEventBus().bus.emit('task', {
     type:     'mcp_request',
@@ -183,16 +189,31 @@ app.post('/mcp', (req, res) => {
     spatial:  PSI,                      // 0.618
   });
 
-  // Until the full MCP dispatcher is wired, return method-not-found
-  return res.status(404).json({
-    jsonrpc: '2.0',
-    id,
-    error: {
-      code:    -32601,
-      message: `Method not found: ${method}`,
-    },
-  });
+  try {
+    // Dynamically load the ESM MCP Server and tool registry
+    const { MCPServer } = await import('../mcp/server.js');
+    const { registerAllTools } = await import('../mcp/register-tools.js');
+    
+    // Ensure tools are registered
+    registerAllTools();
+
+    const mcpServer = new MCPServer({ log });
+    const response = await mcpServer.handleRPC(body);
+    
+    return res.status(200).json(response);
+  } catch (error) {
+    log.error('MCP Tool Dispatch Failed', error);
+    return res.status(500).json({
+      jsonrpc: '2.0',
+      id,
+      error: {
+        code: -32000,
+        message: `MCP Dispatch Error: ${error.message}`
+      }
+    });
+  }
 });
+
 
 // ─── Info Route ───────────────────────────────────────────────────────────────
 

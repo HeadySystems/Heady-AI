@@ -6,7 +6,7 @@
  * // RTP: Monte Carlo Simulation - HCFullPipeline Stage
  *
  * Express/Node.js compatible route handlers for Monte Carlo simulation.
- * Mount with: app.use('/api/monte-carlo', require('./routes/monte-carlo-routes'));
+ * Mount with: app.use('/api/monte-carlo', require('./monte-carlo-routes'));
  *
  * Endpoints:
  *   POST /simulate              — Run a full Monte Carlo simulation

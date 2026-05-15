@@ -1,13 +1,9 @@
 # HEADY_BRAND:BEGIN
-<<<<<<< HEAD
-# Cross-Repo Sync — Synchronize HeadyMe, HeadySystems, HeadyAI orgs
-=======
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  Cross-Repo Sync — Synchronize shared files across HeadyMe org ║
 # ║  FIXED: Now actually syncs content (not just checks existence) ║
 # ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
 # ╚══════════════════════════════════════════════════════════════════╝
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 # HEADY_BRAND:END
 
 name: Cross-Repo Sync
@@ -15,13 +11,6 @@ name: Cross-Repo Sync
 on:
   schedule:
     - cron: '0 */6 * * *'
-<<<<<<< HEAD
-  workflow_dispatch:
-
-jobs:
-  sync:
-    name: Sync Heady Organizations
-=======
   push:
     branches: [main]
     paths:
@@ -42,40 +31,10 @@ concurrency:
 jobs:
   sync:
     name: Sync Shared Files to Satellite Repos
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-<<<<<<< HEAD
-          fetch-depth: 0
-
-      - name: Sync shared configs
-        env:
-          GH_TOKEN: ${{ secrets.HEADY_GITHUB_TOKEN }}
-        run: |
-          echo "## Cross-Repo Sync Report" >> $GITHUB_STEP_SUMMARY
-
-          # Shared config files to sync across orgs
-          SHARED_FILES=(
-            "configs/liquid-microservice-architecture.yaml"
-            "src/core/liquid-node-base.js"
-            ".github/workflows/hcfullpipeline-ci.yml"
-            ".github/workflows/liquid-deploy.yml"
-          )
-
-          for file in "${SHARED_FILES[@]}"; do
-            if [ -f "$file" ]; then
-              echo "- ✅ $file exists" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "- ❌ $file missing" >> $GITHUB_STEP_SUMMARY
-            fi
-          done
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Orgs:** HeadyMe, HeadySystems, HeadyAI" >> $GITHUB_STEP_SUMMARY
-          echo "**Branch:** $(git branch --show-current)" >> $GITHUB_STEP_SUMMARY
-=======
           fetch-depth: 1
           token: ${{ secrets.HEADY_GITHUB_TOKEN }}
 
@@ -184,4 +143,3 @@ jobs:
           echo "| ⚠️ Source missing | $TOTAL_MISSING |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "φ = 1.618033988749895 | HeadySystems Inc." >> $GITHUB_STEP_SUMMARY
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

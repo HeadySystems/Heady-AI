@@ -18,11 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-<<<<<<< HEAD
-          node-version: '20'
-=======
           node-version: '22'
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
           cache: 'npm'
 
       - name: Check service manifests

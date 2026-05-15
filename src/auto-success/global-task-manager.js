@@ -41,13 +41,15 @@ const GTM_CONFIG = {
 };
 
 const LINEAR_API = 'https://api.linear.app/graphql';
-const LINEAR_API_KEY = process.env.LINEAR_API_KEY;
-const LINEAR_TEAM_ID = process.env.LINEAR_TEAM_ID;
+// Lazy getters — reads at call time so vault-boot has projected into process.env
+const getLinearApiKey = () => process.env.LINEAR_API_KEY;
+const getLinearTeamId = () => process.env.LINEAR_TEAM_ID || '7ac56e42-6d6b-4c11-a916-0cd4b5b4c19b';
 
 // ─── LINEAR GRAPHQL CLIENT ──────────────────────────────────────────────────
 
 async function linearQuery(query, vars = {}) {
-  if (!LINEAR_API_KEY) {
+  const apiKey = getLinearApiKey();
+  if (!apiKey) {
     return null; // Graceful degradation — no crash
   }
 
@@ -55,7 +57,7 @@ async function linearQuery(query, vars = {}) {
     const res = await fetch(LINEAR_API, {
       method: 'POST',
       headers: {
-        'Authorization': LINEAR_API_KEY,
+        'Authorization': apiKey,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables: vars }),
@@ -151,7 +153,7 @@ class GlobalTaskManager {
    * Updates the internal velocity cache and returns metrics.
    */
   async syncVelocity() {
-    if (!LINEAR_API_KEY) {
+    if (!getLinearApiKey()) {
       return { ok: false, reason: 'LINEAR_API_KEY not configured' };
     }
 
@@ -226,7 +228,7 @@ class GlobalTaskManager {
       velocityCache: this.velocityCache,
       lastSyncTs: this.lastSyncTs ? new Date(this.lastSyncTs).toISOString() : null,
       sentryEnabled: !!sentryModule?.isEnabled,
-      linearEnabled: !!LINEAR_API_KEY,
+      linearEnabled: !!getLinearApiKey(),
       config: GTM_CONFIG,
     };
   }
@@ -241,7 +243,9 @@ class GlobalTaskManager {
   // ─── PRIVATE METHODS ────────────────────────────────────────────────────
 
   async _createLinearIssue(error, context) {
-    if (!LINEAR_API_KEY || !LINEAR_TEAM_ID) return null;
+    const apiKey = getLinearApiKey();
+    const teamId = getLinearTeamId();
+    if (!apiKey || !teamId) return null;
 
     try {
       const title = `[Auto-Success] ${context.category || 'System'}: ${error.message.substring(0, 120)}`;
@@ -283,7 +287,7 @@ class GlobalTaskManager {
       `, {
         title,
         description,
-        teamId: LINEAR_TEAM_ID,
+        teamId: getLinearTeamId(),
         priority: context.severity === 'critical' ? 1 : 2,
       });
 

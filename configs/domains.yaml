@@ -113,12 +113,6 @@ domains:
     worker: "heady-ai-router"
     ssl: true
 
-  # Additional domains
-  heady-ai.com:
-    role: "ai-research"
-    description: "Heady™ AI research and publications"
-    target: "cloudflare-pages"
-    ssl: true
 
 # ─── Cloud Run Services ──────────────────────────────────────────────────────
 
