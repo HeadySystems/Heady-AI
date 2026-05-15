@@ -263,8 +263,9 @@ function scanDependencyGraph() {
     const rel = path.relative(ROOT, file);
     try {
       const content = fs.readFileSync(file, 'utf8');
-      // Extract require() calls
-      const requireMatches = content.match(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/g) || [];
+      // Strip comments before extracting require() calls to avoid false positives
+      const cleanContent = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+      const requireMatches = cleanContent.match(/require\s*\(\s*['"]([^'"]+)['"]\s*\)/g) || [];
       const deps = requireMatches
         .map(m => m.match(/['"]([^'"]+)['"]/)?.[1])
         .filter(Boolean)
