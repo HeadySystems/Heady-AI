@@ -17,8 +17,8 @@
 const {
   fib, CSL_THRESHOLDS, EVICTION_WEIGHTS,
   phiFusionWeights, PSI, PHI,
-} = require('../../shared/phi-math');
-const { cslAND, normalize, topK } = require('../../shared/csl-engine');
+} = require('./shared/phi-math');
+const { cslAND, normalize, topK } = require('./shared/csl-engine');
 
 const DEFAULT_DIM = 384;
 const DEFAULT_CAPACITY = fib(20); // 6765 entries

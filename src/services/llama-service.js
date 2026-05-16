@@ -15,7 +15,7 @@
 // HEADY_BRAND:END
 
 const axios = require('axios');
-const config = require('../configs/llama.yaml');
+const config = require('../../configs/llama.yaml');
 
 class LlamaService {
   constructor() {

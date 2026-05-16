@@ -10,8 +10,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const { createLogger } = require('../logger');
-const { fib, CSL_THRESHOLDS, PHI, PSI } = require('../phi-math');
+const { createLogger } = require('./logger');
+const { fib, CSL_THRESHOLDS, PHI, PSI } = require('./phi-math');
 const { hmacVerify, secureCompare, maskIp, maskSensitive } = require('./encryption');
 
 const logger = createLogger('zero-trust');

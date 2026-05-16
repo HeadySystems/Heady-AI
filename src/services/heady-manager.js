@@ -33,7 +33,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } = require('../b
 
 // Phase 5: Engine Wiring (MC scheduler, patterns, auto-success, scientist, QA)
 const { wireEngines } = require('../bootstrap/engine-wiring');
-const { loadRegistry } = require('./src/routes/registry');
+const { loadRegistry } = require('../core/bee-registry/registry');
 const _engines = wireEngines(app, {
     pipeline,
     loadRegistry,
@@ -46,7 +46,7 @@ const _engines = wireEngines(app, {
 require('../bootstrap/pipeline-wiring')(app, { pipeline, buddy, vectorMemory, selfAwareness, _engines, logger, eventBus });
 
 // Phase 7: Service Registry (40+ services mounted via try/require)
-require('./src/bootstrap/service-registry')(app, {
+require('../boot/service-registry')(app, {
     logger, authEngine, vectorMemory, buddy, pipeline, _engines,
     secretsManager, cfManager, eventBus,
     projectRoot: __dirname,
@@ -56,7 +56,7 @@ require('./src/bootstrap/service-registry')(app, {
 require('../bootstrap/inline-routes')(app, { logger, secretsManager, cfManager, authEngine, _engines });
 
 // Phase 9: Voice Relay WebSocket System
-const { voiceSessions } = require('./src/bootstrap/voice-relay')(app, { logger });
+const { voiceSessions } = require('../bootstrap/voice-relay')(app, { logger });
 
 // Phase 10: Server Boot (HTTP/HTTPS + WebSocket upgrade + listen)
 require('../bootstrap/server-boot')(app, { logger, voiceSessions });

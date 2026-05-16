@@ -8,8 +8,8 @@
 
 'use strict';
 
-const { createLogger } = require('../logger');
-const { fib, EMBEDDING_DIM } = require('../phi-math');
+const { createLogger } = require('./logger');
+const { fib, EMBEDDING_DIM } = require('./phi-math');
 const { ValidationError } = require('./error-handler');
 
 const logger = createLogger('request-validator');

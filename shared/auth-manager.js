@@ -6,7 +6,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const logger = require('../../utils/logger');
+const logger = require('./logger');
 const HeadyJWT = require('../src/core/heady-jwt');
 const HeadyKV = require('../src/core/heady-kv');
 

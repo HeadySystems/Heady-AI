@@ -10,7 +10,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const { fib } = require('../phi-math');
+const { fib } = require('./phi-math');
 
 // ═══════════════════════════════════════════════════════════
 // AES-256-GCM ENCRYPTION

@@ -40,7 +40,7 @@ const path = require('path');
 // ─── Safe Imports (graceful degradation) ────────────────────────────────────
 
 let logger;
-try { logger = require('../utils/logger'); } catch (_) {
+try { logger = require('../../src/utils/logger'); } catch (_) {
     logger = { info: console.log, warn: console.warn, error: console.error, debug: () => { } };
 }
 
@@ -48,7 +48,7 @@ let VectorMemory;
 try { ({ VectorMemory } = require('../vector-memory')); } catch (_) { VectorMemory = null; }
 
 let cosineSimilarity;
-try { ({ cosineSimilarity } = require('../vector-space-ops')); } catch (_) { cosineSimilarity = null; }
+try { ({ cosineSimilarity } = require('../../src/vector-space-ops')); } catch (_) { cosineSimilarity = null; }
 
 // ─── Constants (φ-scaled) ───────────────────────────────────────────────────
 

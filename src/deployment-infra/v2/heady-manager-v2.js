@@ -216,7 +216,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
 // ── Phase 7: Engine Wiring ───────────────────────────────────────────────────
 startupState.phase = 'engines';
 const { wireEngines } = require('../../bootstrap/engine-wiring');
-const { loadRegistry } = require('./src/routes/registry');
+const { loadRegistry } = require('../../core/bee-registry/registry');
 const logger = require('../../utils/logger');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
 const _engines = wireEngines(app, {
@@ -233,7 +233,7 @@ require('../../bootstrap/pipeline-wiring')(app, {
 
 // ── Phase 9: Service Registry ─────────────────────────────────────────────────
 startupState.phase = 'service-registry';
-require('./src/bootstrap/service-registry')(app, {
+require('../../boot/service-registry')(app, {
   logger, authEngine, vectorMemory, buddy, pipeline, _engines,
   secretsManager, cfManager, eventBus,
   projectRoot: __dirname,
@@ -267,7 +267,7 @@ app.get('/health/startup', (req, res) => {
 
 // ── Phase 11: Voice Relay ─────────────────────────────────────────────────────
 startupState.phase = 'voice-relay';
-const { voiceSessions } = require('./src/bootstrap/voice-relay')(app, { logger });
+const { voiceSessions } = require('../../bootstrap/voice-relay')(app, { logger });
 
 // ── Phase 12: Server Boot ─────────────────────────────────────────────────────
 startupState.phase = 'server-boot';
