@@ -25,7 +25,7 @@
  */
 
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');

@@ -24,55 +24,79 @@ class PreTaskProjectionBee {
     }
 
     /**
-     * Project options for a task intent.
+     * Projects execution options for a given intent.
      * 
-     * @param {string} intent - The user's task description
+     * @param {string} intent - The user's task intent
      * @returns {Object} - { intent, options: [], bestRecommendation: {} }
      */
     async project(intent) {
-        logger.info(`🔍 Projecting options for intent: "${intent}"`);
+        try {
+            logger.info(`🔍 Projecting options for intent: "${intent}"`);
 
-        // 1. Get ranked individual bees using CSL
-        const routing = beeFactory.routeBee(intent, { topK: 5, threshold: 0.1 });
-        
-        // 2. Discover available Swarms
-        const allBees = registry.listDomains();
-        const swarms = allBees.filter(b => b.domain.startsWith('swarm-') || b.description.toLowerCase().includes('swarm'));
+            // 1. Get ranked individual bees using CSL
+            logger.info(`[Step 1] Routing bees for intent...`);
+            const routing = beeFactory.routeBee(intent, { topK: 5, threshold: 0.1 });
+            logger.info(`[Step 1] Routing complete. Found ${routing.ranked.length} candidates.`);
+            
+            // 2. Discover available Swarms
+            logger.info(`[Step 2] Listing domains from registry...`);
+            const allBees = registry.listDomains();
+            logger.info(`[Step 2] Found ${allBees.length} total domains.`);
+            const swarms = allBees.filter(b => b.domain.startsWith('swarm-') || b.description.toLowerCase().includes('swarm'));
+            logger.info(`[Step 2] Filtered to ${swarms.length} swarms.`);
 
-        // 3. Score Swarms against intent (Simplified CSL matching)
-        const swarmOptions = swarms.map(s => {
-            const score = this._calculateSimpleResonance(intent, s.domain + ' ' + s.description);
-            return {
-                type: 'swarm',
-                id: s.domain,
-                description: s.description,
-                resonance: +score.toFixed(4),
-                composite: +(score * 0.9).toFixed(4) // Swarms slightly penalized in raw score if not precise
+            // 3. Score Swarms against intent (Simplified CSL matching)
+            logger.info(`[Step 3] Scoring swarms...`);
+            const swarmOptions = swarms.map(s => {
+                const score = this._calculateSimpleResonance(intent, s.domain + ' ' + s.description);
+                return {
+                    type: 'swarm',
+                    id: s.domain,
+                    description: s.description,
+                    resonance: +score.toFixed(4),
+                    composite: +(score * 0.9).toFixed(4) // Swarms slightly penalized in raw score if not precise
+                };
+            }).sort((a, b) => b.composite - a.composite).slice(0, 3);
+            logger.info(`[Step 3] Swarm scoring complete.`);
+
+            // 4. Combine and format options
+            let options = [];
+            try {
+                options = [
+                    ...routing.ranked.map(r => ({
+                        type: 'bee',
+                        id: r.domain,
+                        description: r.description,
+                        resonance: r.resonance,
+                        priority: r.priority,
+                        composite: +(r.resonance * (r.priority || 0.5)).toFixed(4)
+                    })),
+                    ...swarmOptions
+                ].sort((a, b) => b.composite - a.composite);
+                logger.info(`[Step 4] Combined ${options.length} options.`);
+            } catch (err) {
+                logger.error(`[Step 4] Failed to combine options: ${err.message}`);
+                options = [...swarmOptions];
+            }
+
+            const projection = {
+                intent,
+                ts: Date.now(),
+                options,
+                recommendation: options[0] || null,
+                csl: routing.csl
             };
-        }).sort((a, b) => b.composite - a.composite).slice(0, 3);
 
-        // 4. Combine and format options
-        const options = [
-            ...routing.ranked.map(r => ({
-                type: 'bee',
-                id: r.domain,
-                description: r.description,
-                resonance: r.resonance,
-                priority: r.priority,
-                composite: r.composite
-            })),
-            ...swarmOptions
-        ].sort((a, b) => b.composite - a.composite);
-
-        const projection = {
-            intent,
-            ts: Date.now(),
-            options,
-            recommendation: options[0] || null,
-            csl: routing.csl
-        };
-
-        return projection;
+            return projection;
+        } catch (err) {
+            logger.error(`Projection fatal error: ${err.message}`);
+            return {
+                intent,
+                ts: Date.now(),
+                options: [],
+                error: err.message
+            };
+        }
     }
 
     /**

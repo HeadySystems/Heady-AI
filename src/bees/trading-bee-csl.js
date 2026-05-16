@@ -28,10 +28,10 @@
  */
 
 'use strict';
-const logger = require('../utils/logger') || console;
 
 const { EventEmitter } = require('events');
 const crypto = require('crypto');
+const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // § 1  CONSTANTS
@@ -79,7 +79,6 @@ const priority = PSI;
  * @constant {Object} POOLS
  */
 const POOLS = Object.freeze({
-const logger = require('../utils/logger');
     HOT:  { name: 'HOT',  threshold: PSI,  label: 'Immediate execution' },
     WARM: { name: 'WARM', threshold: PSI2, label: 'Queued execution'    },
     COLD: { name: 'COLD', threshold: 0,    label: 'Deferred execution'  },

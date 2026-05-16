@@ -1,4 +1,4 @@
-const logger = require('../utils/logger').createLogger('auto-fix');
+
 const path = require('path');
 const logger = require('../utils/logger');
 const domain = 'deployment';

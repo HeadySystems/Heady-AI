@@ -3,9 +3,10 @@
  */
 
 const toolHandler = require('./src/mcp/tools/heady-project-task-options-tool');
+const logger = require('./src/utils/logger');
 
 async function test() {
-    console.log("🛠 Testing Heady™ MCP Tool: heady_project_task_options...");
+    logger.info("🛠 Testing Heady™ MCP Tool: heady_project_task_options...");
     
     const args = {
         intent: "Initialize the cannabis kiosk blockchain bridge"
@@ -13,8 +14,8 @@ async function test() {
 
     const result = await toolHandler.handler(args);
     
-    console.log("\n--- MCP TOOL RESPONSE ---");
-    console.log(result.text);
+    logger.info("\n--- MCP TOOL RESPONSE ---");
+    logger.info(result.text);
 }
 
 test().catch(console.error);

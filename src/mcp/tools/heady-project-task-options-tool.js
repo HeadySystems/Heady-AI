@@ -45,9 +45,12 @@ async function handler(args) {
                      `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                      `Intent: "${args.intent}"\n\n` +
                      `Best Match: ${output.recommendation ? `${output.recommendation.id} [${output.recommendation.type}]` : 'N/A'}\n` +
-                     `Resonance: ${output.recommendation ? output.recommendation.score.toFixed(4) : '0.0000'}\n\n` +
+                     `Resonance: ${output.recommendation && typeof output.recommendation.score === 'number' ? output.recommendation.score.toFixed(4) : '0.0000'}\n\n` +
                      `Available Execution Paths:\n` +
-                     output.available_options.map((o, i) => `${i+1}. [${o.type.toUpperCase()}] ${o.id.padEnd(25)} | Score: ${o.composite_score.toFixed(4)}`).join('\n') +
+                     output.available_options.map((o, i) => {
+                         const score = typeof o.composite_score === 'number' ? o.composite_score.toFixed(4) : '0.0000';
+                         return `${i+1}. [${o.type.toUpperCase()}] ${o.id.padEnd(25)} | Score: ${score}`;
+                     }).join('\n') +
                      `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
                      `Heady™ Auto-Success Engine: Selecting optimal resonance path.`;
 

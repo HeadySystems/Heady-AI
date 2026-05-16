@@ -23,7 +23,7 @@
  */
 
 'use strict';
-const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
+
 
 const fs = require('fs');
 const path = require('path');
