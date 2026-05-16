@@ -3,7 +3,7 @@
 
 const http = require('http');
 const https = require('https');
-const logger = require('../utils/logger').child('health-projection-bee');
+const logger = require('../utils/logger').child({ component: 'health-projection-bee' });
 const CSL = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------

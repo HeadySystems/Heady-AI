@@ -16,7 +16,7 @@
 
 const { createBee } = require('./bee-factory');
 const vectorMemory = require('../vector-memory');
-const logger = require('../utils/logger').child('auth-platform-bees');
+const logger = require('../utils/logger').child({ component: 'auth-platform-bees' });
 
 // ═══════════════════════════════════════════════════════════════
 // HeadyBee: auth-flow

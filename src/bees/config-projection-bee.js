@@ -4,7 +4,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger').child('config-projection-bee');
+const logger = require('../utils/logger').child({ component: 'config-projection-bee' });
 const CSL = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------

@@ -97,6 +97,17 @@ const MCP_SERVICES = {
         },
     },
 
+    heady_project_task_options: {
+        tool: 'heady_project_task_options',
+        description: 'Instantly project all available execution options (Bees, Swarms, and Work Units) for a given task intent. Use this before committing to a task to see how Heady would solve it and which components are most resonant.',
+        category: 'orchestration',
+        priority: Math.pow(PHI, 0),
+        parameters: {
+            intent: { type: 'string', required: true, description: 'Natural language description of the task intent' },
+            include_history: { type: 'boolean', default: true, description: 'Include past similar executions' },
+        },
+    },
+
     heady_system_reconfigure: {
         tool: 'heady_system_reconfigure',
         description: 'Environment and system-wide configuration self-healing and dynamic tuning.',

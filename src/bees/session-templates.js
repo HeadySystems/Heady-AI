@@ -1,7 +1,7 @@
 const {
   createBee
 } = require('./bee-factory');
-const logger = require('../utils/logger').child('session-templates');
+const logger = require('../utils/logger').child({ component: 'session-templates' });
 
 // ═══════════════════════════════════════════════════════════════
 // HeadyBee: cloud-run-deployer

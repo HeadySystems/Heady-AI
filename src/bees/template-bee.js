@@ -1,7 +1,7 @@
 const path = require("path");
 
 // Structured logger — delegates to StructuredLogger for JSON output
-const _logger = require('../utils/logger').child('template-bee');
+const _logger = require('../utils/logger').child({ component: 'template-bee' });
 const logger = {
   logNodeActivity: (node, msg) => {
     try {

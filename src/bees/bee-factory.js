@@ -33,7 +33,7 @@ const {
 } = require('../shared/phi-math');
 const path = require('path');
 const crypto = require('crypto');
-const logger = require('../utils/logger').child('bee-factory');
+const logger = require('../utils/logger').child({ component: 'bee-factory' });
 const CSL = require('../core/semantic-logic');
 const BEES_DIR = __dirname;
 const _dynamicRegistry = new Map();
@@ -287,6 +287,20 @@ function routeBee(taskDescription, options = {}) {
       gateStats: CSL.getStats()
     }
   };
+}
+
+/**
+ * Direct CSL scoring for an intent against a target description.
+ * Useful for ad-hoc resonance mapping.
+ *
+ * @param {string} intent - The user intent
+ * @param {string} target - The target description to score against
+ * @returns {number} Resonance score (0.0 - 1.0)
+ */
+function scoreIntent(intent, target) {
+  const intentVec = _domainToVec(intent);
+  const targetVec = _domainToVec(target);
+  return CSL.cosine_similarity(intentVec, targetVec);
 }
 
 /**
@@ -726,8 +740,8 @@ module.exports = { domain, description, priority, getWork };
   } catch {/* non-fatal */}
 }
 
-// Export everything — Heady™ can create any bee, anywhere, instantly
 module.exports = {
+
   createBee,
   spawnBee,
   routeBee,
@@ -736,6 +750,7 @@ module.exports = {
   createSwarm,
   listDynamicBees,
   dissolveBee,
+  scoreIntent,
   dynamicRegistry: _dynamicRegistry,
   ephemeralBees: _ephemeralBees,
   _domainToVec

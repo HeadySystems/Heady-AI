@@ -9,7 +9,7 @@
  */
 
 const { createBee, spawnBee } = require('./bee-factory');
-const logger = require('../utils/logger').child('input-task-extractor');
+const logger = require('../utils/logger').child({ component: 'input-task-extractor' });
 
 const ENTERPRISE_TASK_PATTERNS = [
     {

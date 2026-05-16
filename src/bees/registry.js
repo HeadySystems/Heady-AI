@@ -36,13 +36,22 @@ function discover() {
         try {
             const mod = require(path.join(BEES_DIR, file));
             if (mod.domain && typeof mod.getWork === "function") {
-                _registry.set(mod.domain, {
+                const entry = {
                     file,
                     domain: mod.domain,
                     description: mod.description || `${mod.domain} bee worker`,
                     getWork: mod.getWork,
                     priority: mod.priority || 0.5,
+                };
+                _registry.set(mod.domain, entry);
+
+                // Synchronize with vector-aware factory for CSL routing
+                factory.createBee(mod.domain, {
+                    description: entry.description,
+                    priority: entry.priority,
+                    persist: false // Already on disk
                 });
+
                 logger.logNodeActivity("BEE-REGISTRY", `  🐝 Discovered: ${mod.domain} (${file})`);
                 loaded++;
             }
