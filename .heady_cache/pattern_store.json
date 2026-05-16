@@ -1,59 +1,7 @@
 {
-  "lastUpdated": "2026-03-21T18:05:01.420Z",
-  "version": 31,
-  "phi": 1.618033988749895,
-  "resourcePatterns": [
-    {
-      "type": "RESOURCE_STABLE",
-      "confidence": 1,
-      "severity": "LOW",
-      "firstSeen": "2026-03-21T13:50:01.965Z",
-      "lastSeen": "2026-03-21T18:05:01.420Z",
-      "occurrences": 31
-    }
-  ],
-  "gitVelocity": "HIGH",
-  "commitCount24h": 176,
-  "topTopics": [
-    {
-      "word": "chore(auto)",
-      "count": 117
-    },
-    {
-      "word": "[tier=significant]",
-      "count": 86
-    },
-    {
-      "word": "pattern_store.json",
-      "count": 67
-    },
-    {
-      "word": "auto-commit.log",
-      "count": 67
-    },
-    {
-      "word": "hcfp-auto",
-      "count": 47
-    },
-    {
-      "word": "file(s)",
-      "count": 47
-    },
-    {
-      "word": "changed",
-      "count": 47
-    },
-    {
-      "word": "[tier=trivial]",
-      "count": 21
-    },
-    {
-      "word": "package.json",
-      "count": 12
-    },
-    {
-      "word": "index.html",
-      "count": 12
-    }
-  ]
+  "patterns": {},
+  "metadata": {
+    "created": "2026-05-16T09:25:04.443Z",
+    "version": "1.0.0"
+  }
 }
