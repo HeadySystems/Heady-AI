@@ -67069,3 +67069,48 @@ Clean — nothing to commit
 Clean — nothing to commit
 [2026-05-17 14:05:02.006 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-17T20:05:02.005Z] [INFO] No changes to commit. Repository is clean.[39m
     [35mcomponent[39m: "system"
+Committed: 0ac22dfa0 — 
+Push failed: Command failed: git push production main
+remote: warning: See https://gh.io/lfs for more information.        
+remote: warning: File 1c34424497deabca4ae0ebe8e48bee2d19ab75fe is 59.61 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: File d85f68e228b3c29d84d573e7810be1dc87afe9de is 59.64 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: File c9de1812f54f6545eb7824629c5e337abe945079 is 59.63 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+remote: This repository moved. Please use the new location:        
+remote:   https://github.com/HeadyAI/heady-production.git        
+remote: error: GH008: Your push referenced at least 13 unknown Git LFS objects:        
+remote:     6525b4e1526509b5a56a263e60342d54db3a7a218a245ca6b1064dc0cc1d005d        
+remote:     8501bf45bd2eb803941d59e7f1e8871a07690234a0ebc801fe334a5a79dcdc2c        
+remote:     281427bd00ac71aa2f266e2e60267c837aefe3b6a2431f0cf2012a68c5e76964        
+remote:     ...        
+remote: Try to push them with 'git lfs push --all'.        
+To https://github.com/HeadyMe/heady-production.git
+ ! [remote rejected]     main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
+
+[2026-05-17 14:10:01.543 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-17T20:10:01.542Z] [INFO] Committed 0ac22dfa0: HCFP-AUTO: 1 file(s) changed — auto-commit.log[39m
+    [35mcomponent[39m: "system"
+[2026-05-17 14:10:02.339 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-17T20:10:02.339Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+From https://github.com/HeadyMe/heady-production
+ * branch                main       -> FETCH_HEAD
+fatal: Cannot rebase onto multiple branches.
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-17 14:12:29.946 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-17T20:12:29.946Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git push production main
+remote: warning: See https://gh.io/lfs for more information.        
+remote: warning: File 1c34424497deabca4ae0ebe8e48bee2d19ab75fe is 59.61 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: File d85f68e228b3c29d84d573e7810be1dc87afe9de is 59.64 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: File c9de1812f54f6545eb7824629c5e337abe945079 is 59.63 MB; this is larger than GitHub's recommended maximum file size of 50.00 MB        
+remote: warning: GH001: Large files detected. You may want to try Git Large File Storage - https://git-lfs.github.com.        
+remote: This repository moved. Please use the new location:        
+remote:   https://github.com/HeadyAI/heady-production.git        
+remote: error: GH008: Your push referenced at least 13 unknown Git LFS objects:        
+remote:     6525b4e1526509b5a56a263e60342d54db3a7a218a245ca6b1064dc0cc1d005d        
+remote:     8501bf45bd2eb803941d59e7f1e8871a07690234a0ebc801fe334a5a79dcdc2c        
+remote:     281427bd00ac71aa2f266e2e60267c837aefe3b6a2431f0cf2012a68c5e76964        
+remote:     ...        
+remote: Try to push them with 'git lfs push --all'.        
+To https://github.com/HeadyMe/heady-production.git
+ ! [remote rejected]     main -> main (pre-receive hook declined)
+error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
+[39m
