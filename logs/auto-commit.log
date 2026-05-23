@@ -69225,3 +69225,19 @@ Clean — nothing to commit
 Clean — nothing to commit
 [2026-05-22 14:30:01.798 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-22T20:30:01.797Z] [INFO] No changes to commit. Repository is clean.[39m
     [35mcomponent[39m: "system"
+Committed: 8ca70484d — 
+Push failed: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+
+[2026-05-22 19:50:02.057 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-23T01:50:02.057Z] [INFO] Committed 8ca70484d: HCFP-AUTO: 1 file(s) changed — in-watcher.log[39m
+    [35mcomponent[39m: "system"
+[2026-05-22 19:50:02.211 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-23T01:50:02.211Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-22 19:50:02.236 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-23T01:50:02.236Z] [ERROR] Pull --merge also failed: Command failed: git pull --no-rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+[2026-05-22 19:50:02.236 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-23T01:50:02.236Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
