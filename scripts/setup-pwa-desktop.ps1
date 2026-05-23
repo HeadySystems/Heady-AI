@@ -20,7 +20,6 @@
 
 param(
   [string]$HeadyUrl = "http://manager.dev.local.heady.internal:3300",
-  [string]$HeadyUrl = "http://manager.dev.local.heady.internal:3300",
   [string]$AppName = "Heady Systems",
   [string]$ShortcutName = "Heady",
   [switch]$Chrome,

@@ -2,9 +2,6 @@
 # Security Remediation Script — Remove hardcoded secrets from tracked files
 # Run: .\scripts\security-remediation.ps1 [-DryRun] [-Force]
 # HEADY_BRAND:END
-# Security Remediation Script — Remove hardcoded secrets from tracked files
-# Run: .\scripts\security-remediation.ps1 [-DryRun] [-Force]
-# HEADY_BRAND:END
 #>
 
 param(

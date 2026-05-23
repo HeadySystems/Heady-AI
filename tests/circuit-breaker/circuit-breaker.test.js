@@ -4,7 +4,7 @@
  * Validates state transitions, phi-backoff, half-open probing, and registry.
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const PHI = 1.618033988749895;
 const PSI = 1 / PHI;

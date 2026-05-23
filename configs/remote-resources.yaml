@@ -235,7 +235,7 @@ health_checks:
   timeout_ms: 5000
   endpoints:
     - name: self
-      url: "http://127.0.0.1:${PORT:-8080}/health"
+      url: "http://localhost:${PORT:-8080}/health"
       method: GET
       expected_status: 200
     - name: postgres

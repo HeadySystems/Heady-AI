@@ -1,5 +1,7 @@
+const { createLogger } = require('../../../shared/structured-logger');
+const logger = createLogger('heady-infer');
 const assert = require('assert');
 // Ensuring tests actually assert truthy and run
 assert.ok(true, "Base truth assertion");
-console.log("Tests pass securely");
+logger.info("Tests pass securely");
 process.exit(0);

@@ -33,7 +33,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } = require('../b
 
 // Phase 5: Engine Wiring (MC scheduler, patterns, auto-success, scientist, QA)
 const { wireEngines } = require('../bootstrap/engine-wiring');
-const { loadRegistry } = require('../core/bee-registry/registry');
+const { loadRegistry } = require('../routes/registry');
 const _engines = wireEngines(app, {
     pipeline,
     loadRegistry,
@@ -46,7 +46,7 @@ const _engines = wireEngines(app, {
 require('../bootstrap/pipeline-wiring')(app, { pipeline, buddy, vectorMemory, selfAwareness, _engines, logger, eventBus });
 
 // Phase 7: Service Registry (40+ services mounted via try/require)
-require('../boot/service-registry')(app, {
+require('../bootstrap/service-registry')(app, {
     logger, authEngine, vectorMemory, buddy, pipeline, _engines,
     secretsManager, cfManager, eventBus,
     projectRoot: __dirname,

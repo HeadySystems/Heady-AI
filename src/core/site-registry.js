@@ -10,8 +10,8 @@ const HEADY_ALLOWED_ORIGINS = new Set([
   'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
   'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
   'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-  'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-  'https://headyfinance.com', 'https://admin.headysystems.com',
+  'https://headybee.co', 'https://heady-ai.com',
+  'https://headyex.com', 'https://headyfinance.com', 'https://admin.headysystems.com',
   'https://auth.headysystems.com', 'https://api.headysystems.com',
 ]);
 const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));

@@ -8,7 +8,7 @@
  * Express-style route handlers exposing the Vector-Native Security Scanner.
  *
  * Mount in your Express app:
- *   const secRoutes = require('./security-routes');
+ *   const secRoutes = require('./src/routes/security-routes');
  *   app.use('/api/security', secRoutes.createRouter(express.Router()));
  *
  * Endpoints:

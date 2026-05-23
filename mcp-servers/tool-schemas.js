@@ -74,8 +74,4 @@ module.exports = [
   { name: 'heady_docs_freshness', description: 'Check documentation freshness — find stale docs, missing owners', inputSchema: { type: 'object', properties: {} } },
   { name: 'heady_quickfix', description: 'Run quick automated fixes — remove console.logs, fix trailing whitespace', inputSchema: { type: 'object', properties: { fix: { type: 'string', enum: ['console-logs', 'whitespace', 'line-endings', 'dead-imports', 'all'] }, dryRun: { type: 'boolean' } }, required: ['fix'] } },
   { name: 'heady_cost_report', description: 'Generate cost report — API usage, cloud spend, resource budgets', inputSchema: { type: 'object', properties: {} } },
-  
-  // ── MCP Management ──────────────────────────────────
-  { name: 'heady_mcp_config', description: 'Manage Heady MCP configuration — list, add, remove external MCP servers', inputSchema: { type: 'object', properties: { action: { type: 'string', enum: ['list', 'add', 'remove'] }, serverId: { type: 'string' }, config: { type: 'object', description: 'Server config for "add" (command, args, env, etc.)' } }, required: ['action'] } },
-  { name: 'heady_mcp_diagnostic', description: 'Run the Heady MCP diagnostic suite — DNS, TCP, TLS, SSE, Tools', inputSchema: { type: 'object', properties: { targetUrl: { type: 'string' } } } },
 ];

@@ -104,7 +104,6 @@ while (`$true) {
         
         # Simulate pipeline run
         Start-Sleep -Seconds 15
-        Start-Sleep -Seconds 15
         
         # Simulate improvement
         `$improvementTypes = @("Performance", "Reliability", "Code Quality", "Architecture")
@@ -133,7 +132,6 @@ while (`$true) {
         
         Write-Host "Pipeline Run `$runCount`: `$selectedImprovement improvement applied" -ForegroundColor Green
         
-        Start-Sleep -Seconds 30
         Start-Sleep -Seconds 30
     }
     

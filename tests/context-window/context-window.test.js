@@ -4,7 +4,7 @@
  * Validates tiered context, compression, eviction, and capsule creation.
  */
 
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // Inline test doubles (no external dependencies)
 const PHI = 1.618033988749895;

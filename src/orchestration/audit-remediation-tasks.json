@@ -116,13 +116,13 @@
     },
     {
       "id": "audit-p2-headyai-redirect",
-      "name": "Ensure headyai.com serves full content (not just /lander redirect)",
+      "name": "Ensure heady-ai.com serves full content (not just /lander redirect)",
       "category": "content",
       "weight": 1.0,
       "pool": "warm",
       "priority": "P2",
       "executor": "content-checker.validatePage",
-      "args": { "url": "https://headyai.com", "expect": "full-page" },
+      "args": { "url": "https://heady-ai.com", "expect": "full-page" },
       "schedule": "daily"
     },
     {
@@ -221,7 +221,7 @@
       "pool": "cold",
       "priority": "P2",
       "executor": "link-checker.buildConnectivityMatrix",
-      "args": { "domains": ["headyme.com", "headysystems.com", "headyconnection.org", "headybuddy.org", "headymcp.com", "headyio.com", "headybot.com", "headyapi.com", "headyai.com", "headylens.com", "headyfinance.com"] },
+      "args": { "domains": ["headyme.com", "headysystems.com", "headyconnection.org", "headybuddy.org", "headymcp.com", "headyio.com", "headybot.com", "headyapi.com", "heady-ai.com", "headylens.com", "headyfinance.com"] },
       "schedule": "weekly"
     },
     {

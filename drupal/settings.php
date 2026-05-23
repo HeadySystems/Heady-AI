@@ -6,7 +6,4 @@ $databases['default']['default'] = array (
   'host' => 'db.heady.internal',
   'port' => '3306',
   'driver' => 'mysql',
-  'host' => 'db.heady.internal',
-  'port' => '3306',
-  'driver' => 'mysql',
 );

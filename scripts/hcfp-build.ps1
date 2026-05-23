@@ -226,9 +226,6 @@ function Start-CleanBuild {
     # Check for localhost references
     Write-Status "🔍 Scanning for localhost references..." "Cyan"
     $localhostRefs = @()
-    # Check for localhost references
-    Write-Status "🔍 Scanning for localhost references..." "Cyan"
-    $localhostRefs = @()
     
     $jsFiles = Get-ChildItem -Path "src" -Filter "*.js" -Recurse -ErrorAction SilentlyContinue
     $tsFiles = Get-ChildItem -Path "src" -Filter "*.ts" -Recurse -ErrorAction SilentlyContinue
@@ -244,15 +241,6 @@ function Start-CleanBuild {
         Write-Status "⚠️  Found $($localhostRefs.Count) files with localhost references" "Yellow"
         $localhostRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
     } else {
-        Write-Status "✅ No localhost references found in source code" "Green"
-        }
-    }
-    
-    if ($localhostRefs.Count -gt 0) {
-        Write-Status "⚠️  Found $($localhostRefs.Count) files with localhost references" "Yellow"
-        $localhostRefs | ForEach-Object { Write-Status "  - $_" "Yellow" }
-    } else {
-        Write-Status "✅ No api.headysystems.com references found in source code" "Green"
         Write-Status "✅ No localhost references found in source code" "Green"
     }
     
@@ -418,7 +406,6 @@ trap {
     # Alert the user
     Write-Host ""
     Write-Status "🔔 ALERT: Build requires manual intervention" "Magenta"
-    Write-Status "Check logs and fix the issue before retrying" "Yellow"
     Write-Status "Check logs and fix the issue before retrying" "Yellow"
     
     exit 1

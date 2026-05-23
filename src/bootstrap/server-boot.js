@@ -10,7 +10,6 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 const { HeadyWebSocket } = require('../core/heady-server');
-const logger = require('../utils/logger');
 
 module.exports = function bootServer(app, { logger, voiceSessions }) {
     const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;

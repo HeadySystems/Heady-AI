@@ -181,7 +181,6 @@ echo   heady health      - Health check all services
 echo.
 set HEADY_ENV=local
 set HEADY_DOMAIN_ROOT=heady.internal
-set HEADY_DOMAIN_ROOT=heady.internal
 cmd /k
 "@
 
@@ -194,9 +193,6 @@ echo ╚════════════════════════
 echo.
 echo Checking services...
 echo.
-curl -s http://api.manager.local.heady.internal:3300/api/health >nul 2>&1
-if %errorlevel% == 0 (
-    echo   ✅ HeadyManager: RUNNING on api.manager.local.heady.internal:3300
 curl -s http://api.manager.local.heady.internal:3300/api/health >nul 2>&1
 if %errorlevel% == 0 (
     echo   ✅ HeadyManager: RUNNING on api.manager.local.heady.internal:3300
@@ -351,12 +347,6 @@ E:
             <tr><td>HeadyManager</td><td><code>api.manager.local.heady.internal:3300</code></td></tr>
             <tr><td>Frontend</td><td><code>app.local.heady.internal:5173</code></td></tr>
             <tr><td>Database</td><td><code>db.postgres.local.heady.internal:5432</code></td></tr>
-        <p>No more localhost! All services use proper domains:</p>
-        <table>
-            <tr><th>Service</th><th>Domain</th></tr>
-            <tr><td>HeadyManager</td><td><code>api.manager.local.heady.internal:3300</code></td></tr>
-            <tr><td>Frontend</td><td><code>app.local.heady.internal:5173</code></td></tr>
-            <tr><td>Database</td><td><code>db.postgres.local.heady.internal:5432</code></td></tr>
         </table>
     </div>
 
@@ -379,6 +369,7 @@ Write-Success "Created: README.html"
 if (!$WhatIf) {
     $summary = @"
 HEADY SYSTEMS - E FOLDER SETUP COMPLETE
+========================================
 Location: $EFolder
 Created: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
 

@@ -2,6 +2,7 @@
 /**
  * Repo-wide merge-conflict marker scanner (cross-platform).
  * Fails CI if any conflict markers are found.
+ * Detects REAL git conflict blocks: lines starting with <<<<<<<, =======, >>>>>>>
  * @heady/integrity-gate
  */
 import fs from 'fs';
@@ -15,7 +16,11 @@ const INCLUDE_EXT = new Set([
   '.sql', '.sh', '.ps1', '.toml'
 ]);
 
-const markers = ['<<<<<<<', '>>>>>>>', '======='];
+// Real conflict marker patterns: must appear at the START of a line
+const HEAD_RE = /^<{7} /m;
+const SEP_RE = /^={7}\s*$/m;
+const END_RE = /^>{7} /m;
+
 const found = [];
 
 function walk(dir) {
@@ -37,15 +42,34 @@ function walk(dir) {
     try { text = fs.readFileSync(p, 'utf8'); }
     catch { continue; }
 
-    for (const m of markers) {
-      if (text.includes(m)) {
-        const lines = text.split('\n');
-        const lineNums = lines
-          .map((line, i) => line.includes(m) ? i + 1 : null)
-          .filter(Boolean);
-        found.push({ file: path.relative(ROOT, p), marker: m, lines: lineNums });
-        break;
-      }
+    // Only flag files that have ALL THREE real conflict markers at line starts
+    // This avoids false positives from code/docs that merely mention the markers
+    const hasHead = HEAD_RE.test(text);
+    const hasSep = SEP_RE.test(text);
+    const hasEnd = END_RE.test(text);
+
+    if (hasHead && hasSep && hasEnd) {
+      const lines = text.split('\n');
+      const conflictLines = lines
+        .map((line, i) => {
+          if (/^<{7} /.test(line)) return { lineno: i + 1, marker: '<<<<<<<' };
+          if (/^={7}\s*$/.test(line)) return { lineno: i + 1, marker: '=======' };
+          if (/^>{7} /.test(line)) return { lineno: i + 1, marker: '>>>>>>>' };
+          return null;
+        })
+        .filter(Boolean);
+
+      // Group by marker type for reporting
+      const headLines = conflictLines.filter(l => l.marker === '<<<<<<<').map(l => l.lineno);
+      const sepLines = conflictLines.filter(l => l.marker === '=======').map(l => l.lineno);
+      const endLines = conflictLines.filter(l => l.marker === '>>>>>>>').map(l => l.lineno);
+
+      found.push({
+        file: path.relative(ROOT, p),
+        headLines,
+        sepLines,
+        endLines
+      });
     }
   }
 }
@@ -55,7 +79,7 @@ walk(ROOT);
 if (found.length) {
   console.error('::error::Merge-conflict markers found:');
   for (const f of found) {
-    console.error(`  ❌ ${f.file} (marker: ${f.marker}, lines: ${f.lines.join(', ')})`);
+    console.error(`  ❌ ${f.file} (<<<<<<< at lines: ${f.headLines.join(', ')})`);
   }
   process.exit(1);
 } else {

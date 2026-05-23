@@ -85,19 +85,6 @@ while ($Continuous) {
     Write-Host "   🪞 Self-critique" -ForegroundColor Gray
     Start-Sleep -Seconds 2
     
-    Write-Host "   🔍 Code analysis" -ForegroundColor Gray
-    Start-Sleep -Seconds 3
-    
-    Write-Host "   🧠 Pattern recognition" -ForegroundColor Gray
-    Start-Sleep -Seconds 2
-    
-    Write-Host "   🎲 Monte Carlo optimization" -ForegroundColor Gray
-    Start-Sleep -Seconds 4
-    
-    Write-Host "   🪞 Self-critique" -ForegroundColor Gray
-    # Start-Sleep -Seconds 1 # REMOVED FOR SPEED
-    Start-Sleep -Seconds 2
-    
     Write-Host "✅ Pipeline $runCount completed" -ForegroundColor Green
     
     # Apply improvements
@@ -110,7 +97,6 @@ while ($Continuous) {
     
     $selectedImprovement = $improvementTypes | Get-Random
     Write-Host "🔄 Applying improvement: $selectedImprovement" -ForegroundColor Yellow
-    Start-Sleep -Seconds 3
     Start-Sleep -Seconds 3
     
     $improvements += @{

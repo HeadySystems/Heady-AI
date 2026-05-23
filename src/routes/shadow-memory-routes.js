@@ -4,7 +4,7 @@
  * Routes: Shadow Memory Persistence (HS-052)
  *
  * Express/Node.js compatible route handlers for the Exhale/Inhale protocol.
- * Mount with: app.use('/api/shadow-memory', require('./shadow-memory-routes'));
+ * Mount with: app.use('/api/shadow-memory', require('./routes/shadow-memory-routes'));
  *
  * Endpoints:
  *   POST /exhale             — Persist state to vector DB

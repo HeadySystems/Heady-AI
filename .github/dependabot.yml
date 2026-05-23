@@ -1,30 +1,12 @@
-<<<<<<< HEAD
-# v9.0 Blueprint §7: Dependabot grouped dependency updates
-# Groups patch/minor production deps into one PR, dev deps into another.
-# Auto-merge non-major updates via dependabot/fetch-metadata action.
-
-=======
 # Heady™ Dependabot — Production Config
 # Security updates run weekly; patch auto-merge enabled for low-risk updates
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 version: 2
 updates:
-  # npm dependencies — root monorepo
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-<<<<<<< HEAD
-    open-pull-requests-limit: 5
-    groups:
-      production-patch-minor:
-        dependency-type: "production"
-        update-types:
-          - "minor"
-          - "patch"
-      dev-dependencies:
-=======
       time: "06:00"
       timezone: "America/New_York"
     open-pull-requests-limit: 10
@@ -36,29 +18,10 @@ updates:
           - "patch"
       # Minor updates for dev deps — auto-mergeable
       minor-dev:
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
         dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
-<<<<<<< HEAD
-    ignore:
-      # Ignore archived packages — not deployed
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
-    labels:
-      - "dependencies"
-      - "automated"
-
-  # Python dependencies — oracle_service
-  - package-ecosystem: "pip"
-    directory: "/oracle_service"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "python"
-=======
     labels:
       - "dependencies"
     # Auto-merge patch PRs; minor/major require manual review
@@ -72,36 +35,11 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "@anthropic-ai/sdk"
         update-types: ["version-update:semver-major"]
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855
 
-  # Python dependencies — midi_bridge
-  - package-ecosystem: "pip"
-    directory: "/midi_bridge"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "python"
-
-  # Python dependencies — ai_workflow_engine
-  - package-ecosystem: "pip"
-    directory: "/apps/ai_workflow_engine"
-    schedule:
-      interval: "weekly"
-    labels:
-      - "dependencies"
-      - "python"
-
-  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-<<<<<<< HEAD
-    labels:
-      - "ci"
-      - "automated"
-=======
       day: "monday"
       time: "06:00"
       timezone: "America/New_York"
@@ -109,4 +47,3 @@ updates:
     labels:
       - "ci"
       - "dependencies"
->>>>>>> 79480aa1b040606a5eed31af2acc41307fbea855

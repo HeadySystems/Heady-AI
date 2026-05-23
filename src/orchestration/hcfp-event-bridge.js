@@ -88,9 +88,12 @@ let _logger = null;
 try { _logger = require('../utils/logger'); } catch { /* graceful — logger optional */ }
 function log(level, msg, data = {}) {
   const entry = { level, component: 'HCFPEventBridge', msg, ts: new Date().toISOString(), ...data };
-  (_logger ? _logger.logNodeActivity : console[level === 'error' ? 'error' : 'log'])(
-    'HCFP-BRIDGE', typeof _logger === 'object' ? entry : JSON.stringify(entry)
-  );
+  if (_logger && typeof _logger.logNodeActivity === 'function') {
+    _logger.logNodeActivity('HCFP-BRIDGE', entry);
+  } else {
+    const fn = level === 'error' ? console.error : console.log;
+    fn(JSON.stringify(entry));
+  }
 }
 
 // ─── MAIN BRIDGE CLASS ───────────────────────────────────────────────────────

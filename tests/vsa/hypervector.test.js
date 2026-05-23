@@ -2,7 +2,7 @@
  * @fileoverview Hypervector tests
  */
 
-const { Hypervector, DEFAULT_DIMENSIONALITY } = require('../src/vsa/hypervector');
+const { Hypervector, DEFAULT_DIMENSIONALITY } = require('../../src/vsa/hypervector');
 
 describe('Hypervector', () => {
   test('creates random hypervector with correct dimensionality', () => {

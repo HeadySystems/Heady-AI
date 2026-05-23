@@ -88,6 +88,90 @@
     @media(max-width:480px) {
       .eco-map { grid-template-columns: 1fr; }
     }
+    /* Sidebar */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        background: rgba(3,6,18,0.95);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255,255,255,0.06);
+        overflow-y: auto;
+        z-index: 200;
+        padding: 80px 0 24px;
+    }
+    .sidebar-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255,255,255,0.4);
+        padding: 0 24px;
+        margin-bottom: 12px;
+    }
+    .sidebar-nav {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .sidebar-nav a {
+        display: block;
+        color: rgba(255,255,255,0.5);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 24px;
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+    }
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+        color: #e8e8f0;
+        background: rgba(16,185,129,0.06);
+        border-left-color: var(--accent);
+    }
+    .main-content {
+        margin-left: 260px;
+    }
+    .doc-section {
+        border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .section-label {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+        background: var(--accent-subtle);
+        border: 1px solid rgba(16,185,129,0.2);
+        border-radius: 100px;
+        padding: 4px 14px;
+        margin-bottom: 16px;
+    }
+    .section-desc {
+        font-size: 16px;
+        color: rgba(255,255,255,0.5);
+        max-width: 700px;
+        line-height: 1.7;
+        margin-bottom: 36px;
+    }
+    .doc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+    .arch-icon {
+        font-size: 32px;
+        margin-bottom: 16px;
+    }
+    @media(max-width:900px) {
+        .sidebar { display: none; }
+        .main-content { margin-left: 0; }
+    }
   </style>
 </head>
 <body>
@@ -107,6 +191,27 @@
     </div>
   </nav>
 
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Documentation</div>
+    <ul class="sidebar-nav">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#data-model">Data Model</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#api">API Reference</a></li>
+      <li><a href="#webhooks">Webhooks</a></li>
+      <li><a href="#sdks">SDKs & Libraries</a></li>
+      <li><a href="#ecosystem">Ecosystem</a></li>
+      <li><a href="#support">Support</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
   <!-- Hero Section -->
   <section class="hero">
     
@@ -116,6 +221,37 @@
     <div class="hero-cta-row">
       <a href="#deep-dive" class="btn btn-primary">Browse Agents</a>
       <a href="https://auth.headysystems.com/login?redirect=https://headyex.com" class="btn btn-ghost">Sign In →</a>
+    </div>
+  </section>
+
+  <!-- Platform Overview -->
+  <section id="overview" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Overview</div>
+      <h2>Platform Overview</h2>
+      <p class="section-desc">HeadyEX is the decentralized AI agent marketplace where developers list, trade, and deploy intelligent agents powered by HeadyCoin, smart contract escrow, and CSL-driven semantic search.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">🏪</div>
+          <h3>Agent Marketplace</h3>
+          <p>A decentralized exchange for AI agents with verified benchmarks, security audits, and one-click deployment to HeadyOS runtime environments.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🪙</div>
+          <h3>HeadyCoin Token</h3>
+          <p>Native HCOIN utility token for purchases, staking, governance, and community rewards with phi-scaled tokenomics distribution.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🔒</div>
+          <h3>Smart Contract Escrow</h3>
+          <p>Trustless payment protection with automated dispute resolution, performance verification, and transparent fee structures on-chain.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🔍</div>
+          <h3>CSL-Powered Search</h3>
+          <p>Continuous Semantic Logic matches your needs to the most relevant agents using 384-dimensional cosine similarity instead of keyword ranking.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -406,6 +542,280 @@
     </div>
   </section>
 
+  <!-- Quick Start -->
+  <section id="quickstart" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Getting Started</div>
+      <h2>Quick Start</h2>
+      <p class="section-desc">Go from zero to deployed agent in three simple steps. HeadyEX is designed for instant onboarding with HeadyOS runtime integration.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">1️⃣</div>
+          <h3>Create Your Account</h3>
+          <p>Sign up at headyex.com with your email or HeadyOS SSO credentials. Connect your HCOIN wallet or create a new one during onboarding.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">2️⃣</div>
+          <h3>Browse the Marketplace</h3>
+          <p>Use CSL-powered semantic search to discover agents matching your needs. Filter by domain, performance metrics, price, and user ratings.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">3️⃣</div>
+          <h3>Deploy with One Click</h3>
+          <p>Select an agent, confirm payment via HCOIN escrow, and deploy instantly to HeadyOS. Monitor performance from your dashboard in real time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section id="installation" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Setup</div>
+      <h2>Installation</h2>
+      <p class="section-desc">Set up your local development environment with the HeadyOS SDK, CLI tools, and agent development kit for building and testing marketplace agents.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">📦</div>
+          <h3>HeadyOS SDK</h3>
+          <p>Install the core SDK via npm or pip. Provides runtime bindings, agent lifecycle hooks, and marketplace API integration out of the box.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">⌨️</div>
+          <h3>CLI Tools</h3>
+          <p>The <code>heady</code> CLI handles agent scaffolding, local testing, benchmark generation, and marketplace publishing from your terminal.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🛠️</div>
+          <h3>Agent Development Kit</h3>
+          <p>Starter templates, pre-built components, and integration guides for building marketplace-ready agents with security scanning built in.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🐳</div>
+          <h3>Docker Templates</h3>
+          <p>Production-ready Docker Compose configurations for local development, CI/CD pipelines, and self-hosted deployment targets.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture" class="section doc-section">
+    <div class="container">
+      <div class="section-label">System Design</div>
+      <h2>Architecture</h2>
+      <p class="section-desc">HeadyEX is built on a decentralized microservices architecture with phi-scaled resource allocation, sacred geometry routing, and CSL-powered intelligence at every layer.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">🌐</div>
+          <h3>Marketplace Engine</h3>
+          <p>Distributed listing service with CSL semantic indexing, real-time availability, and phi-weighted relevance scoring across all agent categories.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">⛓️</div>
+          <h3>Escrow Layer</h3>
+          <p>Smart contract middleware managing payment holds, automated dispute resolution, and transparent fee distribution on the HCOIN blockchain.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🚀</div>
+          <h3>Deployment Pipeline</h3>
+          <p>One-click deployment orchestration to HeadyOS cloud, Kubernetes clusters, or edge workers with automatic scaling and health monitoring.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">📊</div>
+          <h3>Analytics Service</h3>
+          <p>Real-time performance telemetry, usage tracking, revenue analytics, and marketplace health dashboards for developers and operators.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Model -->
+  <section id="data-model" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Data</div>
+      <h2>Data Model</h2>
+      <p class="section-desc">The HeadyEX data model covers agent listings, HeadyCoin transactions, escrow contracts, performance metrics, and user profiles across the marketplace.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">📋</div>
+          <h3>Agent Listings Schema</h3>
+          <p>Agent metadata including name, description, version, capabilities vector, benchmark scores, security audit status, pricing tiers, and CSL embeddings.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">💰</div>
+          <h3>HCOIN Transactions</h3>
+          <p>Immutable transaction records with sender, receiver, amount, escrow references, fee breakdown, and phi-scaled royalty distribution ledger.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">📝</div>
+          <h3>Escrow Contracts</h3>
+          <p>On-chain contract state including deposit amount, release conditions, dispute history, automated verification results, and settlement timestamps.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">📈</div>
+          <h3>Performance Metrics</h3>
+          <p>Time-series data for accuracy, latency, throughput, error rates, and user satisfaction scores aggregated per agent, version, and deployment target.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security -->
+  <section id="security" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Security</div>
+      <h2>Security</h2>
+      <p class="section-desc">Multi-layered security protects every transaction, agent deployment, and wallet interaction on the HeadyEX platform.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">🛡️</div>
+          <h3>Smart Contract Audits</h3>
+          <p>All escrow and token contracts undergo third-party security audits with formal verification, fuzz testing, and continuous monitoring for vulnerabilities.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🔬</div>
+          <h3>Agent Security Scanning</h3>
+          <p>Automated static analysis, sandbox execution, and behavioral profiling for every agent submission before marketplace listing approval.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🚫</div>
+          <h3>Escrow Fraud Protection</h3>
+          <p>Machine learning-based fraud detection on transaction patterns, automated dispute verification, and community-driven reputation scoring.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🔐</div>
+          <h3>HCOIN Wallet Security</h3>
+          <p>Hardware wallet support, multi-signature transactions, biometric authentication, and time-locked withdrawals for enterprise-grade asset protection.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Reference -->
+  <section id="api" class="section doc-section">
+    <div class="container">
+      <div class="section-label">API</div>
+      <h2>API Reference</h2>
+      <p class="section-desc">RESTful and GraphQL APIs for programmatic access to the HeadyEX marketplace, agent management, HCOIN transactions, and analytics.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">🔗</div>
+          <h3>Marketplace API</h3>
+          <p>Search listings, retrieve agent metadata, check availability, and initiate purchases programmatically with OAuth2 authentication.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🪙</div>
+          <h3>HCOIN API</h3>
+          <p>Token balance queries, transfer initiation, staking operations, and reward claim endpoints with rate limiting and circuit breakers.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🚀</div>
+          <h3>Deployment API</h3>
+          <p>Programmatic agent deployment, scaling controls, health checks, and rollback operations for CI/CD pipeline integration.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">📊</div>
+          <h3>Analytics API</h3>
+          <p>Query performance metrics, usage statistics, revenue data, and marketplace trends with flexible time-range and aggregation parameters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Webhooks -->
+  <section id="webhooks" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Events</div>
+      <h2>Webhooks</h2>
+      <p class="section-desc">Real-time event notifications for agent deployments, transactions, listing updates, and performance alerts delivered to your endpoints.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">🚀</div>
+          <h3>Deployment Events</h3>
+          <p>Receive notifications when agents are deployed, scaled, updated, or terminated. Includes deployment status, target environment, and health check results.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">💸</div>
+          <h3>Transaction Notifications</h3>
+          <p>Instant alerts for HCOIN payments, escrow releases, refund processing, and royalty distributions with full transaction details.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">📢</div>
+          <h3>Listing Updates</h3>
+          <p>Track new agent listings, version updates, price changes, and review submissions across categories you subscribe to.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">⚠️</div>
+          <h3>Performance Alerts</h3>
+          <p>Threshold-based alerts for latency spikes, error rate increases, availability drops, and SLA violations on your deployed agents.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SDKs & Libraries -->
+  <section id="sdks" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Developer Tools</div>
+      <h2>SDKs & Libraries</h2>
+      <p class="section-desc">Official client libraries and development frameworks for building, testing, and integrating with the HeadyEX marketplace ecosystem.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">📘</div>
+          <h3>Agent SDK (TypeScript)</h3>
+          <p>Full-featured TypeScript SDK for building marketplace agents with type-safe APIs, lifecycle management, and built-in CSL embedding generation.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🐍</div>
+          <h3>Agent SDK (Python)</h3>
+          <p>Python SDK with async support, ML framework integrations, and Jupyter notebook compatibility for rapid agent prototyping and benchmarking.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🪙</div>
+          <h3>HeadyCoin SDK</h3>
+          <p>Wallet management, token operations, escrow interactions, and staking APIs for integrating HCOIN payments into your applications.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🧪</div>
+          <h3>Testing Framework</h3>
+          <p>Automated benchmark generation, mock marketplace environments, performance profiling, and security scanning tools for pre-submission validation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support -->
+  <section id="support" class="section doc-section">
+    <div class="container">
+      <div class="section-label">Help</div>
+      <h2>Support</h2>
+      <p class="section-desc">Get help building, listing, and deploying agents on HeadyEX through our developer docs, community channels, and enterprise support.</p>
+      <div class="doc-grid">
+        <div class="glass-card">
+          <div class="arch-icon">📚</div>
+          <h3>Developer Docs</h3>
+          <p>Comprehensive API documentation, tutorials, code samples, and architecture guides at docs.headyex.com with interactive playground.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">💬</div>
+          <h3>Discord Community</h3>
+          <p>Join thousands of agent developers on the HeadyEX Discord for peer support, showcase channels, bounty programs, and live office hours.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🎫</div>
+          <h3>Marketplace Support</h3>
+          <p>Submit tickets for listing issues, transaction disputes, account recovery, and technical problems with guaranteed response SLAs.</p>
+        </div>
+        <div class="glass-card">
+          <div class="arch-icon">🏢</div>
+          <h3>Enterprise Sales</h3>
+          <p>Custom marketplace instances, volume licensing, dedicated support engineers, and SLA-backed deployment for enterprise customers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
@@ -453,6 +863,8 @@
       </div>
     </div>
   </footer>
+
+  </div><!-- /.main-content -->
 
   <!-- Scripts -->
   <script src="../packages/sacred-geometry/sacred-geometry.js"></script>
@@ -549,5 +961,38 @@
         animate();
     })();
     </script>
+
+  <!-- Scroll Spy for Sidebar -->
+  <script>
+    (function() {
+      const sidebarLinks = document.querySelectorAll('.sidebar-nav a');
+      const sections = [];
+      sidebarLinks.forEach(link => {
+        const id = link.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) sections.push({ id, el, link });
+      });
+
+      function updateActive() {
+        let current = '';
+        const scrollY = window.scrollY + 120;
+        for (let i = sections.length - 1; i >= 0; i--) {
+          if (sections[i].el.offsetTop <= scrollY) {
+            current = sections[i].id;
+            break;
+          }
+        }
+        sidebarLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    })();
+  </script>
+
+  <!-- Buddy Widget -->
+  <script src="https://headysystems.com/buddy-widget.js"></script>
     </body>
 </html>

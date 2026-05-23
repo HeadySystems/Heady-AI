@@ -13,7 +13,6 @@
 const logger = require('../utils/logger') || console;
 
 const {
-const logger = require('../utils/logger');
   PSI,
   PSI2,
   PSI3,

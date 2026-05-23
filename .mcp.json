@@ -3,8 +3,18 @@
     "heady": {
       "type": "stdio",
       "command": "node",
-      "args": ["mcp-servers/heady-mcp-server.js"],
-      "description": "Heady MCP Server — 40+ tools for managing the Heady ecosystem (status, configs, deploy, codelock, latent space, git, brain, patterns, secrets, registry)"
+      "args": [
+        "mcp-servers/heady-mcp-server.js"
+      ],
+      "description": "Heady MCP Server \u2014 40+ tools for managing the Heady ecosystem (status, configs, deploy, codelock, latent space, git, brain, patterns, secrets, registry)"
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      },
+      "description": "Context7 Documentation Server \u2014 real-time, version-specific library docs for all coding agents"
     }
   }
 }

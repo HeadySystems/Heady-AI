@@ -48,7 +48,7 @@ content_sources:
       attribution: Not required
     - source: NASA Open APIs
       use: Earth science, imagery, APOD
-      attribution: "'Courtesy NASA' required for imagery"
+      attribution: "Courtesy NASA" required for imagery
     - source: Project Gutenberg (US PD texts)
       use: Internal corpus for reasoning/writing fine-tuning
       attribution: Track provenance; comply with trademark restrictions

@@ -116,7 +116,6 @@ function Clear-HeadyEnvironment {
     $volumes = docker volume ls --filter "name=heady" -q
     if ($volumes) {
         $volumes | ForEach-Object {
-        $volumes | ForEach-Object {
             docker volume rm $_
         }
     }
@@ -125,7 +124,6 @@ function Clear-HeadyEnvironment {
     Write-Host "Removing Heady networks..." -ForegroundColor Blue
     $networks = docker network ls --filter "name=heady" -q
     if ($networks) {
-        $networks | ForEach-Object {
         $networks | ForEach-Object {
             docker network rm $_
         }
@@ -136,7 +134,6 @@ function Clear-HeadyEnvironment {
         Write-Host "Removing Heady images..." -ForegroundColor Blue
         $images = docker images --filter "reference=heady*" -q
         if ($images) {
-            $images | ForEach-Object {
             $images | ForEach-Object {
                 docker rmi $_
             }
@@ -226,7 +223,6 @@ function Wait-ForServices {
     
     $services = @(
         @{name="heady-manager"; url="http://localhost:3300/api/health"},
-        @{name="heady-manager"; url="http://localhost:3300/api/health"},
         @{name="heady-postgres"; command="docker exec heady-postgres pg_isready -U heady"},
         @{name="heady-redis"; command="docker exec heady-redis redis-cli ping"}
     )
@@ -288,23 +284,6 @@ function Show-AccessInfo {
     Write-Host "  • Consul UI:         http://localhost:8500" -ForegroundColor White
     Write-Host ""
     Write-Host "Database Connections:" -ForegroundColor Yellow
-    Write-Host "  • PostgreSQL:        localhost:5432 (heady/heady_secret)" -ForegroundColor White
-    Write-Host "  • Redis:             localhost:6379" -ForegroundColor White
-    Write-Host ""
-    Write-Host "AI Services:" -ForegroundColor Yellow
-    Write-Host "  • Ollama LLM:        http://localhost:11434" -ForegroundColor White
-    Write-Host "  • RAG Service:       http://localhost:8080" -ForegroundColor White
-    Write-Host ""
-    Write-Host "Admin Interfaces:" -ForegroundColor Yellow
-    Write-Host "  • PostgreSQL Admin:  http://localhost:8080" -ForegroundColor White
-    Write-Host "  • Redis Commander:   http://localhost:8081" -ForegroundColor White
-    Write-Host "  • Grafana:           http://localhost:3002" -ForegroundColor White
-    Write-Host "  • Prometheus:        http://localhost:9090" -ForegroundColor White
-    Write-Host "  • Consul UI:         http://localhost:8500" -ForegroundColor White
-    Write-Host ""
-    Write-Host "Database Connections:" -ForegroundColor Yellow
-    Write-Host "  • PostgreSQL:        api.headysystems.com:5432 (heady/heady_secret)" -ForegroundColor White
-    Write-Host "  • Redis:             api.headysystems.com:6379" -ForegroundColor White
     Write-Host "  • PostgreSQL:        localhost:5432 (heady/heady_secret)" -ForegroundColor White
     Write-Host "  • Redis:             localhost:6379" -ForegroundColor White
     Write-Host ""

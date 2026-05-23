@@ -14,14 +14,21 @@
 // HEADY_BRAND:END
 
 /**
- * AutoCommitDeploy — Permanent Pipeline Automation Engine
+ * AutoCommitDeploy — Permanent Pipeline Automation Engine (v2)
  *
  * Required by hc_auto_success.js start() — was missing, causing silent failure.
+ *
+ * v2 CHANGES:
+ *   - Environment-aware: detects Render, Cloud Run, VM, GitHub Actions, Colab
+ *   - On Render (no git): degrades gracefully — logs status, skips commit/push
+ *   - On VM/Cloud Run Job: full auto-commit + push + cross-repo sync
+ *   - On GitHub Actions: defers to workflow, provides status endpoint only
+ *   - Daemon mode (--daemon flag): runs standalone with own process management
  *
  * Responsibilities:
  *  1. Monitor git working tree for uncommitted changes
  *  2. Auto-commit on φ⁸-interval (46,971ms) when changes detected
- *  3. Push to branch claude/heady-platform-improvements-JhdcJ
+ *  3. Push to configured branch
  *  4. Trigger auto-deploy via Cloud Run (gcloud) when commits pushed
  *  5. Emit events to global.eventBus so auto-success engine reacts
  *
@@ -60,7 +67,7 @@ const MAX_MSG_LEN = FIB[10]; // 89 chars
 const CRITICAL_PATTERNS = /auth|billing|password|private.key|DROP\s+TABLE|schema\s+migrat/i;
 
 // Branch — must match session branch
-const AUTO_BRANCH = process.env.HEADY_AUTO_BRANCH || 'claude/heady-platform-improvements-JhdcJ';
+const AUTO_BRANCH = process.env.HEADY_AUTO_BRANCH || 'main';
 
 // Safe auto-merge branch patterns (Dependabot, minor chore branches)
 const SAFE_MERGE_PATTERNS = [
@@ -69,13 +76,62 @@ const SAFE_MERGE_PATTERNS = [
 ];
 
 // Push targets — all configured main remotes across all orgs
-const PUSH_REMOTES = (process.env.HEADY_PUSH_REMOTES || 'hc-main,hs-main,headyai,azure-main').split(',').map(r => r.trim()).filter(Boolean);
+const PUSH_REMOTES = (process.env.HEADY_PUSH_REMOTES || 'origin').split(',').map(r => r.trim()).filter(Boolean);
+
+// ─── ENVIRONMENT DETECTION ──────────────────────────────────────────────────
+const ENVIRONMENT = detectEnvironment();
+
+function detectEnvironment() {
+  // Cloud Run Job
+  if (process.env.HEADY_TARGET === 'cloud-run-job' || process.env.CLOUD_RUN_JOB) {
+    return 'cloud-run-job';
+  }
+  // Cloud Run Service
+  if (process.env.K_SERVICE || process.env.CLOUD_RUN_SERVICE) {
+    return 'cloud-run-service';
+  }
+  // Render
+  if (process.env.RENDER || process.env.RENDER_SERVICE_ID) {
+    return 'render';
+  }
+  // GitHub Actions
+  if (process.env.GITHUB_ACTIONS) {
+    return 'github-actions';
+  }
+  // Colab
+  if (process.env.COLAB_GPU || process.env.COLAB_RELEASE_TAG) {
+    return 'colab';
+  }
+  // Explicit VM target
+  if (process.env.HEADY_TARGET === 'vm') {
+    return 'vm';
+  }
+  // Check if we have a writable .git directory — indicates VM/local
+  try {
+    execSync('git rev-parse --git-dir', { stdio: 'pipe', encoding: 'utf8' });
+    execSync('git remote -v', { stdio: 'pipe', encoding: 'utf8' });
+    return 'vm';
+  } catch {
+    return 'restricted';
+  }
+}
+
+function canDoGitOps() {
+  return ['vm', 'cloud-run-job', 'colab'].includes(ENVIRONMENT);
+}
 
 // ─── LOGGER ──────────────────────────────────────────────────────────────────
 let _logger = null;
 try { _logger = require('../utils/logger'); } catch { /* graceful */ }
 function log(level, msg, data = {}) {
-  const entry = { level, component: 'AutoCommitDeploy', msg, ts: new Date().toISOString(), ...data };
+  const entry = {
+    level,
+    component: 'AutoCommitDeploy',
+    env: ENVIRONMENT,
+    msg,
+    ts: new Date().toISOString(),
+    ...data,
+  };
   if (_logger?.logNodeActivity) {
     _logger.logNodeActivity('AUTO-COMMIT', JSON.stringify(entry));
   } else {
@@ -128,11 +184,14 @@ function buildCommitMessage(files, tier) {
     if (f.file.startsWith('configs/')) return 'config';
     if (f.file.startsWith('packages/')) return 'pkg';
     if (f.file.startsWith('services/')) return 'svc';
+    if (f.file.startsWith('.github/')) return 'ci';
+    if (f.file.startsWith('scripts/')) return 'ops';
+    if (f.file.startsWith('deploy/')) return 'deploy';
     return 'chore';
   }))];
   const prefix = cats[0] || 'chore';
   const summary = files.slice(0, FIB[4]).map(f => path.basename(f.file)).join(', ');
-  const msg = `${prefix}(auto): ${summary} [tier=${tier}]`;
+  const msg = `${prefix}(auto): ${summary} [tier=${tier}] [${ENVIRONMENT}]`;
   return msg.length > MAX_MSG_LEN ? msg.slice(0, MAX_MSG_LEN - 3) + '...' : msg;
 }
 
@@ -153,18 +212,39 @@ class AutoCommitDeploy extends EventEmitter {
     this._lastCommitAt = 0;
     this._lastFetchAt  = 0;
     this._blocked = false; // CRITICAL tier block
+    this._environment = ENVIRONMENT;
+    this._gitCapable = canDoGitOps();
   }
 
   start() {
     if (this._running) return this;
     this._running = true;
 
+    log('info', `AutoCommitDeploy starting in ${ENVIRONMENT} environment`, {
+      gitCapable: this._gitCapable,
+      branch: this._branch,
+      pushRemotes: PUSH_REMOTES,
+    });
+
+    // ─── ENVIRONMENT-SPECIFIC BEHAVIOR ──────────────────────────────────
+    if (!this._gitCapable) {
+      log('warn', `Environment "${ENVIRONMENT}" has no git write access — running in status-only mode`, {
+        reason: ENVIRONMENT === 'render' ? 'Render containers have no writable .git or SSH keys' :
+                ENVIRONMENT === 'cloud-run-service' ? 'Cloud Run services are stateless — use cloud-run-job instead' :
+                ENVIRONMENT === 'github-actions' ? 'Deferring to heady-auto-sync.yml workflow' :
+                'Restricted environment detected',
+        recommendation: ENVIRONMENT === 'render' ?
+          'Deploy auto-sync via: (1) GitHub Actions workflow, (2) Cloud Run Job, or (3) systemd on VM' :
+          'Use a git-capable environment for auto-sync',
+      });
+      this.emit('started', { branch: this._branch, mode: 'status-only', environment: ENVIRONMENT });
+      return this;
+    }
+
     // Wire to global.eventBus if available
     const bus = global.eventBus;
     if (bus) {
-      // React to pipeline completions — check for uncommitted artifacts
       bus.on('pipeline:completed', () => this._checkAndCommit('pipeline:completed'));
-      // React to deploy events
       bus.on('deploy:started', (data) => log('info', 'deploy started', data));
       bus.on('deploy:completed', (data) => {
         this._deployCount++;
@@ -184,13 +264,14 @@ class AutoCommitDeploy extends EventEmitter {
     setTimeout(() => this._checkAndCommit('boot'), bootDelay);
     setTimeout(() => this._fetchAndMerge('boot'), bootDelay + 5000);
 
-    log('info', 'AutoCommitDeploy started', {
+    log('info', 'AutoCommitDeploy started (full mode)', {
       branch: this._branch,
       commitIntervalMs: COMMIT_CHECK_INTERVAL_MS,
       fetchIntervalMs: FETCH_MERGE_INTERVAL_MS,
       pushRemotes: PUSH_REMOTES,
+      environment: ENVIRONMENT,
     });
-    this.emit('started', { branch: this._branch });
+    this.emit('started', { branch: this._branch, mode: 'full', environment: ENVIRONMENT });
     return this;
   }
 
@@ -206,6 +287,7 @@ class AutoCommitDeploy extends EventEmitter {
       deploys: this._deployCount,
       merges: this._mergeCount,
       fetches: this._fetchCount,
+      environment: ENVIRONMENT,
     });
     this.emit('stopped', { commits: this._commitCount, merges: this._mergeCount });
     return this;
@@ -213,12 +295,11 @@ class AutoCommitDeploy extends EventEmitter {
 
   // ─── INBOUND SYNC: Fetch all remotes + auto-merge safe branches ──────────
   async _fetchAndMerge(trigger = 'manual') {
-    if (!this._running || this._blocked) return;
+    if (!this._running || this._blocked || !this._gitCapable) return;
     if (this._fetching) return; // re-entrant guard
     this._fetching = true;
 
     try {
-      // 1. Fetch all remotes
       log('info', `inbound sync started (trigger=${trigger})`);
       const fetchResult = safeExec('git fetch --all --prune', { timeout: 60000 });
       this._fetchCount++;
@@ -229,7 +310,7 @@ class AutoCommitDeploy extends EventEmitter {
         return;
       }
 
-      // 2. Get unmerged remote branches
+      // Get unmerged remote branches
       const unmergedResult = safeExec('git branch -r --no-merged main');
       if (!unmergedResult.success || !unmergedResult.stdout) {
         log('debug', 'no unmerged remote branches');
@@ -241,9 +322,8 @@ class AutoCommitDeploy extends EventEmitter {
         .filter(Boolean)
         .filter(b => !b.includes('HEAD'));
 
-      // 3. Identify safe auto-merge candidates
+      // Identify safe auto-merge candidates
       const safeBranches = unmergedBranches.filter(fullRef => {
-        // Extract branch name without remote prefix (e.g., 'hc-testing/dependabot/pip/...' → 'dependabot/pip/...')
         const branchName = fullRef.replace(/^[^/]+\//, '');
         return SAFE_MERGE_PATTERNS.some(pattern => pattern.test(branchName));
       });
@@ -262,13 +342,12 @@ class AutoCommitDeploy extends EventEmitter {
         branches: safeBranches.slice(0, 10),
       });
 
-      // 4. Auto-merge safe branches (one at a time, abort on conflict)
+      // Auto-merge safe branches (one at a time, abort on conflict)
       let merged = 0;
       let skipped = 0;
       const mergeResults = [];
 
       for (const branch of safeBranches) {
-        // Skip if merge conflicts already exist
         if (hasMergeConflicts()) {
           log('warn', 'merge conflicts exist — stopping auto-merge');
           break;
@@ -282,9 +361,7 @@ class AutoCommitDeploy extends EventEmitter {
           mergeResults.push({ branch, status: 'merged' });
           log('info', `auto-merged: ${branch}`);
         } else {
-          // Check if it's a conflict
           if (mergeResult.stderr?.includes('CONFLICT') || mergeResult.stdout?.includes('CONFLICT')) {
-            // Abort the merge and skip this branch
             safeExec('git merge --abort');
             skipped++;
             mergeResults.push({ branch, status: 'conflict-skipped' });
@@ -297,7 +374,7 @@ class AutoCommitDeploy extends EventEmitter {
         }
       }
 
-      // 5. Push merged changes to all configured remotes
+      // Push merged changes to all configured remotes
       if (merged > 0) {
         const currentBranch = getCurrentBranch();
         for (const remote of PUSH_REMOTES) {
@@ -310,7 +387,7 @@ class AutoCommitDeploy extends EventEmitter {
         }
       }
 
-      // 6. Emit sync report
+      // Emit sync report
       global.eventBus?.emit('sync:completed', {
         source: 'auto-commit-deploy',
         trigger,
@@ -335,7 +412,7 @@ class AutoCommitDeploy extends EventEmitter {
   }
 
   async _checkAndCommit(trigger = 'manual') {
-    if (!this._running || this._blocked) return;
+    if (!this._running || this._blocked || !this._gitCapable) return;
 
     // Re-entrant guard
     if (this._committing) return;
@@ -373,7 +450,6 @@ class AutoCommitDeploy extends EventEmitter {
       }
 
       if (tier === 'SIGNIFICANT') {
-        // Non-blocking — emit for async approval but proceed after φ² seconds
         global.eventBus?.emit('governance:audit', {
           source: 'auto-commit-deploy',
           tier: 'SIGNIFICANT',
@@ -393,10 +469,7 @@ class AutoCommitDeploy extends EventEmitter {
       }
 
       const branch = getCurrentBranch();
-      const sessionUrl = 'https://claude.ai/code/session_01BNXoMENYz7Wknt8FQuMdNz';
-      const fullMsg = `${msg}\n\n${sessionUrl}`;
-
-      const commitResult = safeExec(`git commit -m "${fullMsg.replace(/"/g, '\\"')}"`);
+      const commitResult = safeExec(`git commit -m "${msg.replace(/"/g, '\\"')}"`);
       if (!commitResult.success) {
         log('error', 'git commit failed', { stderr: commitResult.stderr });
         return;
@@ -431,6 +504,9 @@ class AutoCommitDeploy extends EventEmitter {
   getStatus() {
     return {
       running: this._running,
+      environment: ENVIRONMENT,
+      gitCapable: this._gitCapable,
+      mode: this._gitCapable ? 'full' : 'status-only',
       branch: this._branch,
       commitCount: this._commitCount,
       deployCount: this._deployCount,
@@ -469,12 +545,60 @@ module.exports = {
     if (_singleton) _singleton.stop();
   },
   getStatus() {
-    return _singleton ? _singleton.getStatus() : { running: false };
+    return _singleton ? _singleton.getStatus() : { running: false, environment: ENVIRONMENT, gitCapable: canDoGitOps() };
   },
   // Trigger immediate inbound sync (fetch all remotes + auto-merge safe branches)
   async fetchNow() {
     if (_singleton) return _singleton.fetchNow();
     return { error: 'not started' };
   },
+  // Expose environment info
+  ENVIRONMENT,
+  canDoGitOps: canDoGitOps(),
   PHI, PSI, PSI2, FIB, COMMIT_CHECK_INTERVAL_MS, FETCH_MERGE_INTERVAL_MS, PUSH_REMOTES,
 };
+
+// ─── DAEMON MODE ─────────────────────────────────────────────────────────────
+// When run directly with --daemon flag, start as standalone process
+if (require.main === module && process.argv.includes('--daemon')) {
+  log('info', 'Starting AutoCommitDeploy in daemon mode');
+  const instance = new AutoCommitDeploy({
+    projectRoot: process.cwd(),
+    branch: AUTO_BRANCH,
+  });
+  instance.start();
+
+  // Expose health endpoint for monitoring
+  const http = require('http');
+  const HEALTH_PORT = parseInt(process.env.SYNC_HEALTH_PORT || '8130', 10);
+  const healthServer = http.createServer((req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    if (req.url === '/health') {
+      const status = instance.getStatus();
+      res.writeHead(status.running ? 200 : 503);
+      res.end(JSON.stringify({
+        status: status.running ? 'ok' : 'stopped',
+        service: 'heady-auto-sync-daemon',
+        version: '2.0.0',
+        phi: PHI,
+        ...status,
+      }));
+    } else {
+      res.writeHead(404);
+      res.end(JSON.stringify({ error: 'not found' }));
+    }
+  });
+  healthServer.listen(HEALTH_PORT, () => {
+    log('info', `Daemon health endpoint on :${HEALTH_PORT}/health`);
+  });
+
+  // Graceful shutdown
+  const shutdown = (signal) => {
+    log('info', `Received ${signal} — shutting down daemon`);
+    instance.stop();
+    healthServer.close();
+    process.exit(0);
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+}

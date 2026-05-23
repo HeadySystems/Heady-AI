@@ -22,7 +22,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const logger = require('../utils/logger').child({ component: 'context-weaver' });
+const logger = require('../utils/logger').child('context-weaver');
 
 // ── Engine modules ─────────────────────────────────────────────
 const { buildGraph, buildLocalGraph } = require('../context-weaver/dependency-graph');

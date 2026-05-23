@@ -21,7 +21,6 @@ import { randomUUID } from 'crypto';
 import crypto from 'crypto';
 import { HeadyError, AuthError } from './auth-provider.js';
 import { createLogger } from '../utils/logger.js';
-const logger = createLogger('account-provisioner');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

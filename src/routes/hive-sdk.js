@@ -36,7 +36,6 @@ try {
 
 // Internal brain dispatch — calls the real /api/brain/chat endpoint
 const http = require("http");
-const logger = require('../utils/logger');
 function brainChat(message, system, options = {}) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({

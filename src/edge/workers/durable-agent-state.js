@@ -2,7 +2,6 @@ const { createLogger } = require('../../utils/logger');
 const logger = createLogger('durable-agent-state');
 
 const { PHI_TIMING } = require('../../shared/phi-math');
-const logger = require('../../utils/logger');
 /**
  * durable-agent-state.js
  * Heady™ Latent OS — Durable Agent State Object

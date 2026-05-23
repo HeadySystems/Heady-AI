@@ -1,7 +1,7 @@
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
-const logger = require('../utils/logger').child({ component: 'vector-memory-projection-bee' });
+const logger = require('../utils/logger').child('vector-memory-projection-bee');
 const CSL = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import urllib.request
 import urllib.error
 import sys
 
-CF_TOKEN = "zjVU41XyCfx7CndSYxQz0BqR-A766NLULXdKphh8"
+CF_TOKEN = "***REMOVED***"
 TUNNEL_ID = "4a9d0759-49dd-4fc5-b162-9b0b9784c86b"
 TUNNEL_CNAME = f"{TUNNEL_ID}.cfargotunnel.com"
 

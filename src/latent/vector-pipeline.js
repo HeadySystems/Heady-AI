@@ -17,7 +17,6 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 
 const { EventEmitter } = require('events');
 const { normalize, fibonacciShardIndex, isValidVector, DIMS } = require('./vector-space-ops');
-const logger = require('../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Constants

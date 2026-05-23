@@ -18,5 +18,4 @@ const logger = pino({
 });
 
 module.exports = logger;
-module.exports.createLogger = (name) => logger.child({ component: name });
 module.exports.createChildLogger = (name) => logger.child({ component: name });

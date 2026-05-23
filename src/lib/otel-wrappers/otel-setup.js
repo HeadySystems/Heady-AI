@@ -18,7 +18,6 @@ const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus');
 const { BatchSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics');
 const { Resource } = require('@opentelemetry/resources');
-const logger = require('../../utils/logger');
 const {
   SEMRESATTRS_SERVICE_NAME,
   SEMRESATTRS_SERVICE_VERSION,

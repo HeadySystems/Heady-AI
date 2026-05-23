@@ -17,7 +17,6 @@ const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger
 const fs = require('fs');
 const path = require('path');
 const { MemoryStore } = require('./memory-store');
-const logger = require('../../../utils/logger');
 
 const WAL_OP_SET = 'set';
 const WAL_OP_DEL = 'del';

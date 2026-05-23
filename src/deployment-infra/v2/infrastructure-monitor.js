@@ -47,7 +47,6 @@ const http = require('http');
 const net = require('net');
 const { EventEmitter } = require('events');
 const os = require('os');
-const logger = require('../../utils/logger');
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 

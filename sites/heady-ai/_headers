@@ -1,8 +1,8 @@
 /*
-  X-Frame-Options: SAMEORIGIN
+  X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=()
-  X-XSS-Protection: 1; mode=block
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com https://*.headymcp.com https://*.headyai.com https://*.headyapi.com https://*.headyio.com https://*.headybot.com https://*.headybuddy.com https://*.headylens.com https://*.headyfinance.com https://*.headyconnection.org https://*.headyconnection.com
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  X-DNS-Prefetch-Control: off
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.headysystems.com https://*.headyme.com https://*.headymcp.com https://*.heady-ai.com https://*.headyapi.com https://*.headyio.com https://*.headybuddy.com https://*.headyconnection.org; frame-ancestors 'none'; report-uri /api/csp-report

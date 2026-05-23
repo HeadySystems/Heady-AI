@@ -23,13 +23,10 @@
  *            mcp-latent, mcp-git, mcp-health, mcp-brain
  */
 
-const fs = require('fs');
-const path = require('path');
-const sdkRoot = path.join(__dirname, '..', 'node_modules', '@modelcontextprotocol', 'sdk', 'dist', 'cjs');
+const sdkRoot = require('path').join(__dirname, '..', 'node_modules', '@modelcontextprotocol', 'sdk', 'dist', 'cjs');
 const { Server } = require(sdkRoot + '/server/index.js');
 const { StdioServerTransport } = require(sdkRoot + '/server/stdio.js');
 const { CallToolRequestSchema, ListToolsRequestSchema } = require(sdkRoot + '/types.js');
-const axios = require('axios'); // For notifications
 
 // ── Microservice imports ─────────────────────────────────────
 const { McpFileSystem, McpDeploy, McpTranslator, McpCodeLock,
@@ -57,31 +54,11 @@ class HeadyMCPServer {
 
     this._setupHandlers();
 
-    this.server.onerror = (error) => {
-      console.error('[HeadyMCP Error]', error);
-      this._notifyError('MCP_SERVER_ERROR', error.message).catch(() => {});
-    };
-
+    this.server.onerror = (error) => console.error('[HeadyMCP Error]', error);
     process.on('SIGINT', async () => {
       await this.server.close();
       process.exit(0);
     });
-  }
-
-  async _notifyError(type, message) {
-    try {
-      const { SERVICE_PORTS } = require('../shared/phi-math');
-      const port = SERVICE_PORTS.HEADY_NOTIFICATION || 3394;
-      await axios.post(`http://localhost:${port}/notify`, {
-        userId: 'system',
-        channel: 'sse',
-        title: `🚨 MCP ${type}`,
-        message: message,
-        priority: 1
-      });
-    } catch (e) {
-      // Notification service might not be up
-    }
   }
 
   _setupHandlers() {
@@ -94,10 +71,8 @@ class HeadyMCPServer {
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
       try {
-        const result = await this._dispatch(name, args);
-        return result;
+        return await this._dispatch(name, args);
       } catch (error) {
-        await this._notifyError('TOOL_EXECUTION_ERROR', `Tool "${name}" failed: ${error.message}`);
         return { content: [{ type: 'text', text: `Error: ${error.message}` }], isError: true };
       }
     });
@@ -174,50 +149,7 @@ class HeadyMCPServer {
     if (name === 'heady_quickfix')          return this.health.quickFix(args.fix, args?.dryRun !== false);
     if (name === 'heady_cost_report')       return this.health.costReport();
 
-    // ── MCP Management ────────────────────────────────
-    if (name === 'heady_mcp_config')       return this._handleMcpConfig(args);
-    if (name === 'heady_mcp_diagnostic')   return this._handleMcpDiagnostic(args);
-
     throw new Error(`Unknown tool: ${name}`);
-  }
-
-  async _handleMcpConfig(args) {
-    const configPath = path.join(__dirname, '..', '.mcp.json');
-    let config = { mcpServers: {} };
-    try {
-      config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-    } catch (e) {}
-
-    if (args.action === 'list') {
-      return { content: [{ type: 'text', text: JSON.stringify(config.mcpServers, null, 2) }] };
-    }
-
-    if (args.action === 'add') {
-      if (!args.serverId || !args.config) throw new Error('Missing serverId or config');
-      config.mcpServers[args.serverId] = args.config;
-      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-      return { content: [{ type: 'text', text: `Successfully added MCP server: ${args.serverId}` }] };
-    }
-
-    if (args.action === 'remove') {
-      if (!args.serverId) throw new Error('Missing serverId');
-      delete config.mcpServers[args.serverId];
-      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-      return { content: [{ type: 'text', text: `Successfully removed MCP server: ${args.serverId}` }] };
-    }
-  }
-
-  async _handleMcpDiagnostic(args) {
-    const { execSync } = require('child_process');
-    const diagPath = path.join(__dirname, '..', 'utils', 'mcp-diagnostic.js');
-    try {
-      const output = execSync(`node ${diagPath}`, {
-        env: { ...process.env, MCP_GATEWAY_URL: args.targetUrl || process.env.MCP_GATEWAY_URL }
-      }).toString();
-      return { content: [{ type: 'text', text: output }] };
-    } catch (error) {
-      return { content: [{ type: 'text', text: `Diagnostic failed: ${error.message}\n\nOutput:\n${error.stdout?.toString()}` }], isError: true };
-    }
   }
 
   async run() {

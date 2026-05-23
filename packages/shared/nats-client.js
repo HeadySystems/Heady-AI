@@ -9,7 +9,7 @@ const logger = getLogger('nats-client');
 
 class HeadyNatsClient {
   constructor(opts = {}) {
-    this.url = opts.url || process.env.NATS_URL || 'nats://localhost:4222';
+    this.url = opts.url || process.env.NATS_URL;
     this.streamName = opts.streamName || 'HEADY';
     this._connection = null;
     this._jetstream = null;

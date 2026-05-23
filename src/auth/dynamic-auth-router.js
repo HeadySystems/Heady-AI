@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -177,8 +186,8 @@ router.post('/warp', (req, res) => {
 router.post('/verify', (req, res) => {
     const { token } = req.body;
     if (!token) return res.status(400).json({ error: 'Missing token' });
-    const isValid = token.startsWith('hdy_') || token === process.env.HEADY_API_KEY;
-    const tier = token === process.env.HEADY_API_KEY ? 'admin' : token.startsWith('hdy_warp_') ? 'admin' : 'pro';
+    const isValid = token.startsWith('hdy_') || safeCompare(token, process.env.HEADY_API_KEY);
+    const tier = safeCompare(token, process.env.HEADY_API_KEY) ? 'admin' : token.startsWith('hdy_warp_') ? 'admin' : 'pro';
     res.json({ valid: isValid, tier, token: token.substring(0, 12) + '...' });
 });
 

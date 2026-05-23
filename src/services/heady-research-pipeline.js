@@ -31,7 +31,7 @@ const path = require('path');
 let logger;
 try { logger = require('../../shared/logger')('research-pipeline'); } catch (_) {
     try { logger = require('../utils/logger'); } catch (__) {
-        logger = { info: console.log, warn: console.warn, error: console.error, debug: () => { } };
+        logger = { info: () => {}, warn: () => {}, error: () => {}, debug: () => {} }; // L4: No console.log fallback
     }
 }
 

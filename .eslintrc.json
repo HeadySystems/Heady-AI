@@ -28,6 +28,7 @@
     "sites/",
     "*.min.js",
     "*.bundle.js",
+    "*.d.ts",
     "vendors/",
     "headybuddy-mobile/"
   ]

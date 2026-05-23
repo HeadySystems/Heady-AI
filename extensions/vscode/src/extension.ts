@@ -28,7 +28,6 @@ let healthCheckInterval: NodeJS.Timeout | undefined;
 // API endpoints
 const API_ENDPOINTS = {
   local: 'http://manager.dev.local.heady.internal:3300',
-  local: 'http://manager.dev.local.heady.internal:3300',
   'cloud-me': 'https://cloud-me.heady.io',
   'cloud-sys': 'https://cloud-sys.heady.io',
   'cloud-conn': 'https://cloud-conn.heady.io',
@@ -175,7 +174,6 @@ async function checkHealth() {
 async function switchEndpoint() {
   const items = [
     { label: 'Local Dev', description: 'manager.dev.local.heady.internal:3300', endpoint: 'local' },
-    { label: 'Local Dev', description: 'manager.dev.local.heady.internal:3300', endpoint: 'local' },
     { label: 'Cloud - HeadyMe', description: 'cloud-me.heady.io', endpoint: 'cloud-me' },
     { label: 'Cloud - HeadySystems', description: 'cloud-sys.heady.io', endpoint: 'cloud-sys' },
     { label: 'Cloud - HeadyConnection', description: 'cloud-conn.heady.io', endpoint: 'cloud-conn' },
@@ -210,6 +208,5 @@ async function viewTasks() {
 // Get active endpoint from config
 function getActiveEndpoint(): string {
   const config = vscode.workspace.getConfiguration('heady');
-  return config.get('endpoint', API_ENDPOINTS.local);
   return config.get('endpoint', API_ENDPOINTS.local);
 }

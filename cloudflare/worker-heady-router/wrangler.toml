@@ -2,75 +2,199 @@ name = "worker-heady-router"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
 
-[[kv_namespaces]]
-binding = "HEADY_UI_MANIFEST"
-id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
+# KV binding temporarily removed - CF_API_TOKEN needs KV write perms
+# [[kv_namespaces]]
+# binding = "HEADY_UI_MANIFEST"
+# id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
 
 [vars]
-# HEADY_INTERNAL_TOKEN = "set via wrangler secret"
-HEADY_ORIGIN_BASE = "https://heady-manager-1073792900703.us-east1.run.app"
-COLAB_COMPILER_WEBHOOK = "https://heady-manager-1073792900703.us-east1.run.app/api/hologram/compile"
+HEADY_ORIGIN_BASE = "https://heady-edge-gateway-609590223909.us-central1.run.app"
+COLAB_COMPILER_WEBHOOK = "https://heady-edge-gateway-609590223909.us-central1.run.app/api/hologram/compile"
 
-# Active recovery routes managed as infrastructure-as-code.
-# ── AI Platform ──────────────────────────────────────────────────────────
+# ═══════════════════════════════════════════════════════════════════
+# All Heady domain routes (EXCEPT headymcp.com — owned by headymcp-edge)
+# ═══════════════════════════════════════════════════════════════════
+
+# ── AI Platform ──────────────────────────────────────────────────────
 [[routes]]
 pattern = "heady-ai.com/*"
 zone_name = "heady-ai.com"
-
 [[routes]]
 pattern = "www.heady-ai.com/*"
 zone_name = "heady-ai.com"
 
-# ── Companion ────────────────────────────────────────────────────────────
+# ── Companion ────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headybuddy.org/*"
 zone_name = "headybuddy.org"
-
 [[routes]]
 pattern = "www.headybuddy.org/*"
 zone_name = "headybuddy.org"
 
-# ── Bot / Automation ─────────────────────────────────────────────────────
+# ── Bot / Automation ─────────────────────────────────────────────────
 [[routes]]
 pattern = "headybot.com/*"
 zone_name = "headybot.com"
-
 [[routes]]
 pattern = "www.headybot.com/*"
 zone_name = "headybot.com"
 
-# ── API Gateway ──────────────────────────────────────────────────────────
+# ── API Gateway ──────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyapi.com/*"
 zone_name = "headyapi.com"
-
 [[routes]]
 pattern = "www.headyapi.com/*"
 zone_name = "headyapi.com"
 
-# ── OS Portal ────────────────────────────────────────────────────────────
+# ── OS Portal ────────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyos.com/*"
 zone_name = "headyos.com"
-
 [[routes]]
 pattern = "www.headyos.com/*"
 zone_name = "headyos.com"
 
-# ── Executive Hub ────────────────────────────────────────────────────────
+# ── Executive Hub ────────────────────────────────────────────────────
 [[routes]]
 pattern = "headyex.com/*"
 zone_name = "headyex.com"
-
 [[routes]]
 pattern = "www.headyex.com/*"
 zone_name = "headyex.com"
 
-# ── Admin Subdomains ─────────────────────────────────────────────────────
+# ── headysystems.com Subdomains ─────────────────────────────────────
+# All subdomains route to this worker for JSON health intercept + GitHub Pages
+[[routes]]
+pattern = "manager.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "ai.headysystems.com/*"
+zone_name = "headysystems.com"
+# api.headysystems.com — owned by heady-api-production worker (has own JSON health)
+[[routes]]
+pattern = "buddy.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "mcp.headysystems.com/*"
+zone_name = "headysystems.com"
+# edge.headysystems.com — owned by heady-edge-node worker
+[[routes]]
+pattern = "battle.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "stream.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "vector.headysystems.com/*"
+zone_name = "headysystems.com"
 [[routes]]
 pattern = "admin.headysystems.com/*"
 zone_name = "headysystems.com"
-
 [[routes]]
 pattern = "auth.headysystems.com/*"
 zone_name = "headysystems.com"
+[[routes]]
+pattern = "discord.headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "staging.headysystems.com/*"
+zone_name = "headysystems.com"
+
+# ── HeadyIO ─────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyio.com/*"
+zone_name = "headyio.com"
+[[routes]]
+pattern = "www.headyio.com/*"
+zone_name = "headyio.com"
+
+# headymcp.com — owned by headymcp-edge worker (deployed separately)
+
+# ── HeadyConnection.com ─────────────────────────────────────────────
+[[routes]]
+pattern = "headyconnection.com/*"
+zone_name = "headyconnection.com"
+[[routes]]
+pattern = "www.headyconnection.com/*"
+zone_name = "headyconnection.com"
+
+# ── HeadyWeb ────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyweb.com/*"
+zone_name = "headyweb.com"
+[[routes]]
+pattern = "www.headyweb.com/*"
+zone_name = "headyweb.com"
+
+# ── HeadyMusic ──────────────────────────────────────────────────────
+[[routes]]
+pattern = "headymusic.com/*"
+zone_name = "headymusic.com"
+[[routes]]
+pattern = "www.headymusic.com/*"
+zone_name = "headymusic.com"
+
+# ── HeadyStore ──────────────────────────────────────────────────────
+[[routes]]
+pattern = "headystore.com/*"
+zone_name = "headystore.com"
+[[routes]]
+pattern = "www.headystore.com/*"
+zone_name = "headystore.com"
+
+# ── HeadyKey ────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headykey.com/*"
+zone_name = "headykey.com"
+[[routes]]
+pattern = "www.headykey.com/*"
+zone_name = "headykey.com"
+
+# ── HeadyVault ──────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyvault.com/*"
+zone_name = "headyvault.com"
+[[routes]]
+pattern = "www.headyvault.com/*"
+zone_name = "headyvault.com"
+
+# ── Cloud Platform ──────────────────────────────────────────────────
+[[routes]]
+pattern = "headycloud.com/*"
+zone_name = "headycloud.com"
+[[routes]]
+pattern = "www.headycloud.com/*"
+zone_name = "headycloud.com"
+
+# ── HeadyConnection ─────────────────────────────────────────────────
+[[routes]]
+pattern = "headyconnection.org/*"
+zone_name = "headyconnection.org"
+[[routes]]
+pattern = "www.headyconnection.org/*"
+zone_name = "headyconnection.org"
+
+# ── HeadyFinance ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyfinance.com/*"
+zone_name = "headyfinance.com"
+[[routes]]
+pattern = "www.headyfinance.com/*"
+zone_name = "headyfinance.com"
+
+# ── HeadySystems ─────────────────────────────────────────────────────
+[[routes]]
+pattern = "headysystems.com/*"
+zone_name = "headysystems.com"
+[[routes]]
+pattern = "www.headysystems.com/*"
+zone_name = "headysystems.com"
+
+# ── HeadyMe ─────────────────────────────────────────────────────────
+[[routes]]
+pattern = "headyme.com/*"
+zone_name = "headyme.com"
+[[routes]]
+pattern = "www.headyme.com/*"
+zone_name = "headyme.com"

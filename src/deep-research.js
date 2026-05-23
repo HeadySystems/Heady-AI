@@ -219,11 +219,12 @@ Synthesis:`;
       return result.text;
     } catch (err) { // Fallback: return the best single result
       return successful[0].text;
+    }
   }
 
   // ─── Confidence scoring ────────────────────────────────────────────────────
 
-  function _scoreConfidence(analysis, results) {
+  _scoreConfidence(analysis, results) {
     let score = 0.5; // base
     score += analysis.coverage * 0.2;
     if (analysis.consensus) score += 0.2;

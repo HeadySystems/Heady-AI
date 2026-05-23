@@ -25,14 +25,13 @@
  */
 
 'use strict';
-
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const { PHI_TIMING } = require('../shared/phi-math');
 const crypto = require('crypto');
 const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
-const logger = require('../utils/logger');
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

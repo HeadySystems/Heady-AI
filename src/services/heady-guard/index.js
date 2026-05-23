@@ -16,7 +16,7 @@ const { PHI_TIMING } = require('../../shared/phi-math');
  *   stages (toxicity, topic) to minimise latency.
  *
  * Usage:
- *   const guard = require('../heady-guard');
+ *   const guard = require('./heady-guard');
  *   await guard.initialize();
  *   const result = await guard.check({ text, userId });
  */
@@ -28,7 +28,6 @@ const path    = require('path');
 const config   = require('./config');
 const pipeline = require('./pipeline');
 const rules    = require('./rules');
-const logger = require('../../utils/logger');
 
 // ── Audit log ─────────────────────────────────────────────────────────────────
 

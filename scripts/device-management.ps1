@@ -47,15 +47,6 @@ New-Item -ItemType Directory -Force -Path $LOG_DIR | Out-Null
 # Device registry
 $DEVICES = @{
     localhost = @{
-
-# Ensure directories
-New-Item -ItemType Directory -Force -Path $CONFIG_DIR | Out-Null
-New-Item -ItemType Directory -Force -Path $LOG_DIR | Out-Null
-
-# Device registry
-$DEVICES = @{
-    api.headysystems.com = @{
-    localhost = @{
         name = "Primary Workstation"
         path = $HEADY_ROOT
         type = "primary"
@@ -105,7 +96,6 @@ function Get-DeviceHealth {
             $health.disk_space_gb = [math]::Round($drive.Free / 1GB, 2)
             
             # Check if heady-manager is running (for primary)
-            if ($DeviceKey -eq "localhost") {
             if ($DeviceKey -eq "localhost") {
                 $process = Get-Process -Name "node" -ErrorAction SilentlyContinue | 
                     Where-Object { $_.CommandLine -match "heady-manager" }
@@ -157,11 +147,6 @@ function Sync-Device {
             $health = Get-DeviceHealth -DeviceKey $DeviceKey
             if ($health.manager_running) {
                 Write-Host "  ✓ HeadyManager running on localhost:3300" -ForegroundColor Green
-        "localhost" {
-            # Check local health
-            $health = Get-DeviceHealth -DeviceKey $DeviceKey
-            if ($health.manager_running) {
-                Write-Host "  ✓ HeadyManager running on localhost:3300" -ForegroundColor Green
             } else {
                 Write-Host "  ⚠ HeadyManager not running - starting..." -ForegroundColor Yellow
                 Start-HeadyManager
@@ -181,7 +166,6 @@ function Start-HeadyManager {
     if (Test-Path $managerPath) {
         # Start in background
         Start-Process -FilePath "node" -ArgumentList $managerPath -WindowStyle Hidden
-        Start-Sleep -Seconds 3
         Start-Sleep -Seconds 3
         
         # Verify it started
@@ -289,7 +273,6 @@ function Show-DeviceStatus {
                 Write-Host "  Last Sync: Never" -ForegroundColor Yellow
             }
             
-            if ($key -eq "localhost" -and $health.manager_running) {
             if ($key -eq "localhost" -and $health.manager_running) {
                 Write-Host "  HeadyManager: RUNNING" -ForegroundColor Green
             }

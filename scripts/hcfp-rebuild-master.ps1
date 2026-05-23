@@ -44,7 +44,6 @@ function Initialize-HCFP {
     
     # Create directories
     @($Global:ERROR_LOG, $Global:REBUILD_LOG, "$HCFP_ROOT\.hcfp") | ForEach-Object {
-    @($Global:ERROR_LOG, $Global:REBUILD_LOG, "$HCFP_ROOT\.hcfp") | ForEach-Object {
         if (-not (Test-Path $_)) {
             New-Item -ItemType Directory -Path $_ -Force | Out-Null
         }
@@ -56,24 +55,17 @@ function Stop-AllProcesses {
     
     # Stop Node processes
     Get-Process | Where-Object { $_.ProcessName -match "node|npm|yarn|pnpm" } | ForEach-Object {
-    Get-Process | Where-Object { $_.ProcessName -match "node|npm|yarn|pnpm" } | ForEach-Object {
         Write-Host "  Stopping: $($_.ProcessName) (PID: $($_.Id))"
         Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
     }
     
     # Stop Python processes
     Get-Process | Where-Object { $_.ProcessName -match "python|pip" } | ForEach-Object {
-    Get-Process | Where-Object { $_.ProcessName -match "python|pip" } | ForEach-Object {
         Write-Host "  Stopping: $($_.ProcessName) (PID: $($_.Id))"
         Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
     }
     
     # Stop dev servers on common ports
-    @(3000, 3300, 5173, 8000, 8080, 8081) | ForEach-Object {
-        $port = $_
-        Get-NetTCPConnection | Where-Object { 
-            $_.LocalPort -eq $port -and $_.State -eq "Listen" 
-        } | ForEach-Object {
     @(3000, 3300, 5173, 8000, 8080, 8081) | ForEach-Object {
         $port = $_
         Get-NetTCPConnection | Where-Object { 
@@ -130,7 +122,6 @@ function Clear-ScorchedEarth {
     @(
         "node_modules", ".next", "build", "dist", "coverage", ".cache",
         "__pycache__", ".pytest_cache", "*.pyc", "target", "Cargo.lock"
-    ) | ForEach-Object {
     ) | ForEach-Object {
         if (Test-Path $_) {
             Write-Host "  Removing: $_"

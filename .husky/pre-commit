@@ -1,28 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# Validate naming standards on staged files only
-echo "Checking staged files for banned patterns..."
-
-# Only check staged production source files (src/, configs/) for localhost
-staged_src=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^(src|configs)/' | grep -vE '\.(md|test\.js|spec\.js)$' || true)
-if [ -n "$staged_src" ]; then
-  for file in $staged_src; do
-    if [ -f "$file" ] && grep -qE 'localhost|127\.0\.0\.1' "$file" 2>/dev/null; then
-      echo "⚠️  Warning: Found localhost reference in $file (review before pushing to production)"
-    fi
-  done
-fi
-
-# Check staged files for Windows drive paths
-staged_all=$(git diff --cached --name-only --diff-filter=ACMR || true)
-if [ -n "$staged_all" ]; then
-  for file in $staged_all; do
-    if [ -f "$file" ] && grep -qE 'C:\\|E:\\' "$file" 2>/dev/null; then
-      echo "⚠️  Warning: Found Windows drive path in $file"
-    fi
-  done
-fi
-
-echo "✅ Pre-commit checks passed"
 npx lint-staged

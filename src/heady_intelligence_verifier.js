@@ -1,4 +1,4 @@
-const logger = require('./utils/logger');
+const logger = require('../utils/logger');
 // HEADY_BRAND:BEGIN
 // HEADY SYSTEMS :: SACRED GEOMETRY
 // FILE: src/heady_intelligence_verifier.js

@@ -12,7 +12,6 @@ const EventEmitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const config = require('./config');
-const logger = require('../../utils/logger');
 
 // ---------------------------------------------------------------------------
 // Model Registry

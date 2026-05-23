@@ -84,7 +84,6 @@ $registryPath = Join-Path $RepoRoot "heady-registry.json"
 if (Test-Path $registryPath) {
     try {
         $registry = Get-Content $registryPath -Raw | ConvertFrom-Json
-        $registry = Get-Content $registryPath -Raw | ConvertFrom-Json
         Write-Status "Registry loaded: $($registry.components.Count) components"
         
         # Check for missing sourceOfTruth files
@@ -116,7 +115,6 @@ Write-Section "2. Document Freshness"
 $ownersPath = Join-Path $RepoRoot "docs/DOC_OWNERS.yaml"
 if (Test-Path $ownersPath) {
     $today = Get-Date
-    $content = Get-Content $ownersPath -Raw
     $content = Get-Content $ownersPath -Raw
     
     # Simple regex to extract review dates

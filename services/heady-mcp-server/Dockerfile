@@ -1,16 +1,26 @@
-FROM node:20-slim
+FROM node:22-alpine
+
+# Cloud Run metadata
+LABEL service="heady-mcp-server" \
+      version="2.0.0" \
+      sacred_geometry_layer="Protocol"
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --production
+
+# Install dependencies first for layer caching
+COPY package.json ./
+RUN npm install --production
+
+# Copy application code
 COPY . .
-ENV NODE_ENV=production
-ENV PORT=3310
-ENV HEADY_MCP_TRANSPORT=http
-ENV HEADY_MCP_PORT=3310
-RUN groupadd -r heady && useradd -r -g heady heady
-RUN chown -R heady:heady /app
+
+# Cloud Run uses PORT env var
+ENV PORT=3003
+EXPOSE 3003
+
+# Non-root user for security
+RUN addgroup -g 1001 -S heady && \
+    adduser -S heady -u 1001 -G heady
 USER heady
-EXPOSE 3310
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD node -e "fetch('http://localhost:3310/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"
-CMD ["node", "src/index.js"]
+
+CMD ["node", "server.js"]

@@ -87,17 +87,11 @@ class HeadyMCPServer {
     try {
       // Route to skill handler
       const result = await this.executeSkill(service, args);
-      const isError = result && result.success === false;
-      
       return this.jsonRpcResponse(id, {
         content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-        isError: isError
       });
     } catch (error) {
-      return this.jsonRpcResponse(id, {
-        content: [{ type: 'text', text: `Tool Execution Error: ${error.message}` }],
-        isError: true
-      });
+      return this.jsonRpcError(id, -32000, error.message);
     }
   }
 
@@ -152,19 +146,12 @@ class HeadyMCPServer {
   }
 }
 
-/**
- * Factory function to create a server instance
- */
-function createMCPServer() {
-  return new HeadyMCPServer();
-}
-
 // ═══════════════════════════════════════════════════════════
-// STDIO TRANSPORT (if run directly)
+// STDIO TRANSPORT
 // ═══════════════════════════════════════════════════════════
 
 if (require.main === module) {
-  const server = createMCPServer();
+  const server = new HeadyMCPServer();
   let buffer = '';
 
   process.stdin.setEncoding('utf8');
@@ -189,4 +176,4 @@ if (require.main === module) {
   process.stderr.write(`Heady™ MCP Server v${server.manifest.version} started — ${server.manifest.total_services} tools available\n`);
 }
 
-module.exports = { HeadyMCPServer, createMCPServer };
+module.exports = { HeadyMCPServer };

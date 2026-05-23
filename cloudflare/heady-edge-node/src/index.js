@@ -323,9 +323,10 @@ app.get('/', (c) => {
     })
 })
 
-app.get('/health', async (c) => {
+// Health endpoint — canonical path + /api/health alias for monitoring probes
+const healthHandler = async (c) => {
     return c.json({
-        status: 'online',
+        status: 'ok',
         service: 'heady-edge-node',
         version: '2.0.0',
         bindings: {
@@ -337,7 +338,9 @@ app.get('/health', async (c) => {
         region: c.req.raw.cf?.colo || 'unknown',
         ts: new Date().toISOString(),
     })
-})
+}
+app.get('/health', healthHandler)
+app.get('/api/health', healthHandler)
 
 app.get('/mcp/tools', (c) => {
     return c.json({ tools: HEADY_TOOLS, count: HEADY_TOOLS.length })

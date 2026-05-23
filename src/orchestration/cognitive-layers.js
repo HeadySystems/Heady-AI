@@ -35,7 +35,6 @@
 
 const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 const EventEmitter = require('events');
-const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  SECTION 1 — PHI-MATH IMPORTS

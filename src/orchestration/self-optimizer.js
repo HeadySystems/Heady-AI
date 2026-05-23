@@ -26,7 +26,7 @@
  */
 
 const fs = require("fs");
-let { PHI_INTERVALS } = {}; try { { PHI_INTERVALS } = require("./vector-pipeline"); } catch (e) { /* graceful */  }
+let PHI_INTERVALS; try { ({ PHI_INTERVALS } = require("./vector-pipeline")); } catch (e) { /* graceful */  }
 const path = require("path");
 let logger = null; try { logger = require("./utils/logger"); } catch (e) { /* graceful */  }
 

@@ -29,7 +29,6 @@ const {
 } = require('../shared/phi-math');
 const crypto = require('crypto');
 const path = require('path');
-const logger = require('../utils/logger');
 
 // ── Configuration ────────────────────────────────────────────────
 const PORT = parseInt(process.env.PORT || process.env.HEADY_MCP_PORT || '8420');

@@ -60,8 +60,6 @@ function Start-ComprehensiveDataGathering {
     try {
         $fDriveFiles = Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
         $fDriveSize = (Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
-        $fDriveFiles = Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
-        $fDriveSize = (Get-ChildItem "F:\" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
         Write-Log "📊 F:\ Drive: $($fDriveFiles.Count) files, $([math]::Round($fDriveSize, 2)) GB" -Level "SUCCESS"
     } catch {
         Write-Log "⚠️ F:\ Drive analysis incomplete: $_" -Level "WARNING"
@@ -72,8 +70,6 @@ function Start-ComprehensiveDataGathering {
     try {
         $computerFiles = Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
         $computerSize = (Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
-        $computerFiles = Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object
-        $computerSize = (Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1GB
         Write-Log "📊 Computer: $($computerFiles.Count) files, $([math]::Round($computerSize, 2)) GB" -Level "SUCCESS"
     } catch {
         Write-Log "⚠️ Computer files analysis incomplete: $_" -Level "WARNING"
@@ -82,9 +78,6 @@ function Start-ComprehensiveDataGathering {
     # Media Asset Discovery
     Write-Log "🎨 Discovering media assets..." -Level "CYAN"
     try {
-        $images = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.jpg","*.png","*.gif","*.svg","*.jpeg" -ErrorAction SilentlyContinue | Measure-Object
-        $videos = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp4","*.mov","*.avi" -ErrorAction SilentlyContinue | Measure-Object
-        $audio = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp3","*.wav" -ErrorAction SilentlyContinue | Measure-Object
         $images = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.jpg","*.png","*.gif","*.svg","*.jpeg" -ErrorAction SilentlyContinue | Measure-Object
         $videos = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp4","*.mov","*.avi" -ErrorAction SilentlyContinue | Measure-Object
         $audio = Get-ChildItem "C:\Users\erich" -Recurse -File -Include "*.mp3","*.wav" -ErrorAction SilentlyContinue | Measure-Object

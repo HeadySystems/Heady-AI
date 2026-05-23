@@ -1,12 +1,3 @@
-# HEADY CI/CD — Cloudflare Edge Deployment
-# .github/workflows/deploy-edge.yml
-#
-# Deploys Cloudflare Workers (edge proxy, AI gateway, MCP telemetry)
-# LR-001: Uses workingDirectory: cloudflare/heady-edge-proxy
-# LR-005: Validates Host header stripping before deploy
-# ============================================================================
-
-=======
 name: Deploy Edge Workers
 
 on:

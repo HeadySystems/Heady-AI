@@ -40,12 +40,6 @@ $HEADY_STATE_DIR = "$env:USERPROFILE\.heady\state"
 # Ensure directories exist
 New-Item -ItemType Directory -Force -Path $HEADY_LOG_DIR | Out-Null
 New-Item -ItemType Directory -Force -Path $HEADY_STATE_DIR | Out-Null
-$HEADY_LOG_DIR = "$env:USERPROFILE\.heady\logs"
-$HEADY_STATE_DIR = "$env:USERPROFILE\.heady\state"
-
-# Ensure directories exist
-New-Item -ItemType Directory -Force -Path $HEADY_LOG_DIR | Out-Null
-New-Item -ItemType Directory -Force -Path $HEADY_STATE_DIR | Out-Null
 
 # Error classification patterns
 $ERROR_PATTERNS = @{
@@ -325,7 +319,6 @@ function Send-Alert {
     
     # Could integrate with Slack, PagerDuty, email here
     # Invoke-RestMethod -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
-    # Invoke-RestMethod -Uri $env:SLACK_WEBHOOK_URL -Method POST -Body $alertData
 }
 
 function Log-Recovery {
@@ -356,13 +349,11 @@ function Get-ErrorReport {
         $recoveries = Get-Content "$HEADY_LOG_DIR\recoveries.json" | 
             Where-Object { $_ } | 
             ForEach-Object { $_ | ConvertFrom-Json }
-            ForEach-Object { $_ | ConvertFrom-Json }
     }
     
     if (Test-Path "$HEADY_LOG_DIR\alerts.json") {
         $alerts = Get-Content "$HEADY_LOG_DIR\alerts.json" | 
             Where-Object { $_ } | 
-            ForEach-Object { $_ | ConvertFrom-Json }
             ForEach-Object { $_ | ConvertFrom-Json }
     }
     
@@ -379,7 +370,6 @@ function Get-ErrorReport {
     if ($alerts.Count -gt 0) {
         Write-Host ""
         Write-Host "Recent Alerts:" -ForegroundColor Yellow
-        $alerts | Select-Object -Last 5 | ForEach-Object {
         $alerts | Select-Object -Last 5 | ForEach-Object {
             Write-Host "  - $($_.timestamp): $($_.component) - $($_.category) [$($_.severity)]" -ForegroundColor Red
         }
@@ -413,7 +403,6 @@ switch ($Action) {
         }
         
         $content = Get-Content $ErrorLog -Raw
-        $content = Get-Content $ErrorLog -Raw
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category
         
@@ -430,7 +419,6 @@ switch ($Action) {
             exit 1
         }
         
-        $content = Get-Content $ErrorLog -Raw
         $content = Get-Content $ErrorLog -Raw
         $category = Classify-Error -LogContent $content
         $strategy = Get-RecoveryStrategy -ErrorCategory $category

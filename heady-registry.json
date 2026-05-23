@@ -1073,23 +1073,6 @@
         "main": "dev",
         "exp/*": "short-lived"
       }
-    },
-    {
-      "id": "mcp-gateway",
-      "name": "HeadyMCPGateway",
-      "type": "infrastructure",
-      "version": "4.1.0",
-      "sourceOfTruth": "src/mcp/index.js",
-      "endpoint": "https://api.headyme.com/mcp",
-      "transport": "sse",
-      "responsibilities": [
-        "transportBridging",
-        "toolExecution",
-        "securityGating",
-        "auditLogging"
-      ],
-      "status": "active",
-      "criticality": "high"
     }
   ],
   "verticals": [

@@ -1,3 +1,8 @@
+/**
+ * SEC-017: This file contains intentional new Function() calls for code execution.
+ * All calls are sandboxed with forbidden-token validation.
+ * Omnipotence Directive Cycle 1: Audited and documented.
+ */
 'use strict';
 
 /**
@@ -424,6 +429,10 @@ class ToolRegistry {
             Math, JSON, parseInt, parseFloat, String, Number, Boolean, Array, Object,
           };
           try {
+            // SEC-017: Input length guard (fib(13) = 233 max lines)
+            if (code.split('\n').length > 233) {
+              return { error: 'Code exceeds maximum length (233 lines)', language };
+            }
             const fn = new Function(...Object.keys(sandbox), `"use strict"; ${code}`);
             const result = fn(...Object.values(sandbox));
             return { output: logs.join('\n'), result: result !== undefined ? result : null, language };

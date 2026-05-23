@@ -46,9 +46,6 @@ const { createAppAuth } = require('@octokit/auth-app');
 const swaggerUi = require('swagger-ui-express');
 const { getLogger } = require('./src/services/structured-logger');
 
-// New Hybrid Secret Manager for Sovereign Autonomy
-const hybridSecretManager = require('./shared/secret-manager');
-
 // Structured logger for heady-manager
 const log = getLogger('heady-manager');
 
@@ -106,6 +103,28 @@ function preloadPersistentMemory() {
 
 // Preload memory at startup
 preloadPersistentMemory();
+
+// ── Upstash Redis client (for rate-limit store + session cache) ────────────
+let redisClient = null;
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+  // Upstash REST URL format: https://<host> — ioredis needs TLS redis:// URL
+  // Upstash also exposes a direct redis:// endpoint via REDIS_URL env var
+  const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
+  if (redisUrl) {
+    redisClient = new Redis(redisUrl, {
+      tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+      lazyConnect: true,
+      maxRetriesPerRequest: 2,
+      connectTimeout: 5000,
+      enableOfflineQueue: false,
+    });
+    redisClient.on('error', (err) => log.warn('Redis client error', { errorMessage: err.message }));
+    redisClient.connect().catch((err) => {
+      log.warn('Redis connect failed — falling back to in-memory rate limiting', { errorMessage: err.message });
+      redisClient = null;
+    });
+  }
+}
 // Load remote resources config
 let remoteConfig;
 try {
@@ -173,85 +192,39 @@ try {
 // ─── Secrets & Cloudflare Management ──────────────────────────────
 let secretsManager = null;
 let cfManager = null;
+try {
+  const { secretsManager: sm, registerSecretsRoutes } = require("./src/hc_secrets_manager");
+  const { CloudflareManager, registerCloudflareRoutes } = require("./src/hc_cloudflare");
+  secretsManager = sm;
+  cfManager = new CloudflareManager(secretsManager);
 
-async function initSecrets() {
-  try {
-    // 1. Load secrets from the hybrid manager (GCP + Native Env fallback)
-    log.info("Initializing Hybrid Secret Manager...");
-    const results = await hybridSecretManager.loadAllSecrets();
-    
-    // 2. Sync to process.env for legacy compatibility across the swarm
-    for (const key of results.loaded) {
-      process.env[key] = hybridSecretManager.getSecret(key);
-    }
-    log.info("Hybrid secrets synced to process.env", { count: results.loaded.length });
-
-    // 3. Initialize legacy metadata tracker
-    const { secretsManager: sm } = require("./src/hc_secrets_manager");
-    const { CloudflareManager } = require("./src/hc_cloudflare");
-    secretsManager = sm;
-    cfManager = new CloudflareManager(secretsManager);
-
-    // Register non-Cloudflare secrets from manifest
-    const manifestSecrets = [
-      { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
-      { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
-      { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
-      { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
-      { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
-      { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
-      { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
-      { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
-      { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
-      { id: "github_app_id", name: "GitHub App ID", envVar: "GITHUB_APP_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-      { id: "github_app_private_key", name: "GitHub App Private Key", envVar: "GITHUB_APP_PRIVATE_KEY", tags: ["github", "vm"], dependents: ["vm-token"] },
-      { id: "github_app_installation_id", name: "GitHub App Installation ID", envVar: "GITHUB_APP_INSTALLATION_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
-      { id: "discord_bot_token", name: "Discord Bot Token", envVar: "DISCORD_BOT_TOKEN", tags: ["discord", "agent"] },
-      { id: "slack_token", name: "Slack Bot Token", envVar: "SLACK_TOKEN", tags: ["slack", "agent"] },
-      { id: "slack_team_id", name: "Slack Team ID", envVar: "SLACK_TEAM_ID", tags: ["slack", "config"] },
-      { id: "blocks_webhook", name: "Blocks.team Webhook", envVar: "BLOCKS_WEBHOOK_URL", tags: ["blocks", "sync"] },
-    ];
-    for (const s of manifestSecrets) {
-      secretsManager.register({ ...s, source: "hybrid" });
-    }
-    secretsManager.restoreState();
-    log.info("Secrets Manager: LOADED", { secretsCount: secretsManager.getAll().length });
-    log.info("Cloudflare Manager: LOADED", { tokenValid: cfManager.isTokenValid() });
-  } catch (err) {
-    log.warn("Secrets/Cloudflare initialization deferred or partially failed", { errorMessage: err.message });
+  // Register non-Cloudflare secrets from manifest
+  const manifestSecrets = [
+    { id: "render_api_key", name: "Render API Key", envVar: "RENDER_API_KEY", tags: ["render", "api-key"], dependents: ["render-deploy"] },
+    { id: "heady_api_key", name: "Heady API Key", envVar: "HEADY_API_KEY", tags: ["heady", "auth"], dependents: ["api-gateway"] },
+    { id: "admin_token", name: "Admin Token", envVar: "ADMIN_TOKEN", tags: ["heady", "admin"], dependents: ["admin-panel"] },
+    { id: "database_url", name: "PostgreSQL Connection", envVar: "DATABASE_URL", tags: ["database"], dependents: ["persistence"] },
+    { id: "hf_token", name: "Hugging Face Token", envVar: "HF_TOKEN", tags: ["huggingface", "ai"], dependents: ["pythia-node"] },
+    { id: "notion_token", name: "Notion Integration Token", envVar: "NOTION_TOKEN", tags: ["notion"], dependents: ["notion-sync"] },
+    { id: "github_token", name: "GitHub PAT", envVar: "GITHUB_TOKEN", tags: ["github", "vcs"], dependents: ["heady-sync"] },
+    { id: "stripe_secret_key", name: "Stripe Secret Key", envVar: "STRIPE_SECRET_KEY", tags: ["stripe", "payments"], dependents: ["billing"] },
+    { id: "stripe_webhook_secret", name: "Stripe Webhook Secret", envVar: "STRIPE_WEBHOOK_SECRET", tags: ["stripe", "webhook"], dependents: ["billing-webhooks"] },
+    { id: "github_app_id", name: "GitHub App ID", envVar: "GITHUB_APP_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
+    { id: "github_app_private_key", name: "GitHub App Private Key", envVar: "GITHUB_APP_PRIVATE_KEY", tags: ["github", "vm"], dependents: ["vm-token"] },
+    { id: "github_app_installation_id", name: "GitHub App Installation ID", envVar: "GITHUB_APP_INSTALLATION_ID", tags: ["github", "vm"], dependents: ["vm-token"] },
+  ];
+  for (const s of manifestSecrets) {
+    secretsManager.register({ ...s, source: "env" });
   }
-}
-
-// Call initSecrets immediately
-initSecrets();
-
-// ─── Observability & Auth (Enterprise Grade) ────────────────────────
-let obs;
-try {
-  const { getObservability } = require('./src/core/heady-observability');
-  obs = getObservability({ service: 'heady-manager' });
-} catch (e) {
-  log.warn("Observability module not found, using stubs", { error: e.message });
-  obs = {
-    requestMiddleware: () => (req, res, next) => next(),
-    errorMiddleware: () => (err, req, res, next) => next(err),
-    router: () => require('express').Router()
-  };
-}
-
-let auth;
-try {
-  const { AuthManager } = require('./src/07-auth-manager');
-  auth = new AuthManager({ jwtSecret: process.env.JWT_SECRET });
-} catch (e) {
-  log.warn("AuthManager failed to initialize", { error: e.message });
+  secretsManager.restoreState();
+  log.info("Secrets Manager: LOADED", { secretsCount: secretsManager.getAll().length });
+  log.info("Cloudflare Manager: LOADED", { tokenValid: cfManager.isTokenValid() });
+} catch (err) {
+  log.warn("Secrets/Cloudflare not loaded", { errorMessage: err.message });
 }
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3300;
 const app = express();
-
-// ─── Observability Middleware (MUST be first) ───────────────────────
-app.use(obs.requestMiddleware());
 
 // ─── Middleware ─────────────────────────────────────────────────────
 app.use(helmet({
@@ -274,6 +247,16 @@ app.use(helmet({
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   hsts: { maxAge: 31536000, includeSubDomains: true },
 }));
+
+// Report-To header for CSP violation collection
+app.use((req, res, next) => {
+  res.setHeader('Report-To', JSON.stringify({
+    group: 'csp-endpoint',
+    max_age: 86400,
+    endpoints: [{ url: '/api/csp-report' }],
+  }));
+  next();
+});
 app.use(compression());
 
 // Request body size limits
@@ -493,15 +476,6 @@ const coreApi = require('./services/core-api');
  *         description: Service is healthy
  */
 app.use("/api", coreApi);
-
-// ─── Unified MCP Server ─────────────────────────────────────────────
-try {
-  const { setupUnifiedMCP } = require('./src/mcp/index');
-  setupUnifiedMCP(app, { obs, auth });
-  log.info("Unified MCP Server: MOUNTED on /mcp");
-} catch (err) {
-  log.warn("Unified MCP Server failed to mount", { errorMessage: err.message });
-}
 
 // ─── Swagger UI Setup ─────────────────────────────────────────────────
 const swaggerDocument = yaml.load(fs.readFileSync('./docs/api/openapi.yaml', 'utf8'));
@@ -2692,12 +2666,6 @@ try {
 try {
   const schedulerRouter = require('./src/routes/scheduler-routes');
   app.use('/api/scheduler', schedulerRouter);
-
-  // ─── Observability & Health Endpoints ──────────────────────────────
-  app.use('/api/v1/obs', obs.router());
-
-  // ─── App Level Catch-All & Errors ──────────────────────────────────
-  app.use(obs.errorMiddleware());
   log.info("Scheduler Service: LOADED");
 } catch (err) {
   log.warn("Scheduler routes not loaded", { errorMessage: err.message });
@@ -3252,6 +3220,154 @@ app.get("/readiness", (req, res) => {
 app.get("/startup", (req, res) => {
   res.json({ status: 'started', service: 'heady-manager', version: '4.1.0', uptime_ms: process.uptime() * 1000, timestamp: new Date().toISOString() });
 });
+
+// ─── Sentry → Linear Webhook Bridge ─────────────────────────────────
+// Receives Sentry alert webhooks and auto-creates Linear issues.
+// Configure in Sentry: Organization Settings → Integrations → Webhooks
+// Webhook URL: https://<service-url>/api/webhooks/sentry
+// Secret: set SENTRY_WEBHOOK_SECRET env var
+const crypto = require('crypto');
+
+function verifySentrySignature(req) {
+  const secret = process.env.SENTRY_WEBHOOK_SECRET;
+  if (!secret) return true; // skip verification if secret not configured (dev)
+  const sig = req.headers['sentry-hook-signature'] || '';
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(JSON.stringify(req.body));
+  const expected = hmac.digest('hex');
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+}
+
+async function createLinearIssueFromSentry(sentryEvent) {
+  const linearToken = process.env.LINEAR_API_KEY;
+  const linearTeamId = process.env.LINEAR_TEAM_ID;
+  if (!linearToken || !linearTeamId) return null;
+
+  const issue = sentryEvent.data?.issue || sentryEvent.issue || {};
+  const title = `[Sentry] ${issue.title || sentryEvent.message || 'Unknown error'}`;
+  const project = sentryEvent.project_slug || sentryEvent.data?.project?.slug || 'unknown';
+  const issueUrl = issue.web_url || issue.permalink || '';
+  const firstSeen = issue.firstSeen || new Date().toISOString();
+  const culprit = issue.culprit || '';
+
+  const description = [
+    `**Sentry Project:** ${project}`,
+    `**First Seen:** ${firstSeen}`,
+    culprit ? `**Culprit:** \`${culprit}\`` : null,
+    issueUrl ? `**Sentry URL:** ${issueUrl}` : null,
+    '',
+    '**Auto-created by Sentry → Linear webhook bridge.**',
+  ].filter(Boolean).join('\n');
+
+  const mutation = `
+    mutation CreateIssue($teamId: String!, $title: String!, $description: String!, $priority: Int) {
+      issueCreate(input: {teamId: $teamId, title: $title, description: $description, priority: $priority}) {
+        success
+        issue { id identifier url }
+      }
+    }
+  `;
+
+  try {
+    const resp = await fetch('https://api.linear.app/graphql', {
+      method: 'POST',
+      headers: {
+        'Authorization': linearToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: mutation,
+        variables: { teamId: linearTeamId, title, description, priority: 1 },
+      }),
+    });
+    const data = await resp.json();
+    return data?.data?.issueCreate?.issue || null;
+  } catch (err) {
+    log.warn('Failed to create Linear issue from Sentry event', { errorMessage: err.message });
+    return null;
+  }
+}
+
+app.post(
+  '/api/webhooks/sentry',
+  express.json({ type: 'application/json', limit: '256kb' }),
+  async (req, res) => {
+    if (!verifySentrySignature(req)) {
+      return res.status(401).json({ error: 'invalid_signature' });
+    }
+
+    const trigger = req.headers['sentry-hook-resource'] || req.body?.action || 'unknown';
+    const actionable = ['issue', 'event_alert', 'metric_alert'];
+    if (!actionable.includes(trigger)) {
+      return res.status(200).json({ ok: true, skipped: true, trigger });
+    }
+
+    const action = req.body?.action;
+    // Only create Linear issues for new/regression events, not for resolved ones
+    if (action === 'resolved' || action === 'archived') {
+      return res.status(200).json({ ok: true, skipped: true, action });
+    }
+
+    log.info('Sentry webhook received', { trigger, action });
+    const linearIssue = await createLinearIssueFromSentry(req.body);
+    if (linearIssue) {
+      log.info('Linear issue created from Sentry event', { linearIssue });
+    }
+    res.status(200).json({ ok: true, linearIssue });
+  }
+);
+
+// ─── Linear → Sentry Webhook Bridge ─────────────────────────────────
+// Receives Linear webhooks and marks Sentry issues as resolved when
+// Linear issues are completed.
+// Configure in Linear: Settings → API → Webhooks → Add webhook
+// Secret: set LINEAR_WEBHOOK_SECRET env var
+function verifyLinearSignature(req) {
+  const secret = process.env.LINEAR_WEBHOOK_SECRET;
+  if (!secret) return true;
+  const sig = req.headers['linear-signature'] || '';
+  const hmac = crypto.createHmac('sha256', secret);
+  hmac.update(JSON.stringify(req.body));
+  const expected = hmac.digest('hex');
+  try {
+    return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
+
+app.post(
+  '/api/webhooks/linear',
+  express.json({ type: 'application/json', limit: '64kb' }),
+  async (req, res) => {
+    if (!verifyLinearSignature(req)) {
+      return res.status(401).json({ error: 'invalid_signature' });
+    }
+
+    const { type, action, data } = req.body || {};
+    // Only handle issue state changes to completed/canceled
+    if (type !== 'Issue' || !['update'].includes(action)) {
+      return res.status(200).json({ ok: true, skipped: true });
+    }
+
+    const stateName = data?.state?.name?.toLowerCase() || '';
+    const isClosed = ['done', 'completed', 'canceled', 'cancelled', 'duplicate'].includes(stateName);
+
+    if (!isClosed) {
+      return res.status(200).json({ ok: true, skipped: true, stateName });
+    }
+
+    log.info('Linear issue closed — skipping Sentry sync (no Sentry issue ID tracked)', {
+      issueId: data?.id,
+      identifier: data?.identifier,
+      stateName,
+    });
+
+    // Future: if we store Sentry issue ID on Linear issues (as label or description ref),
+    // we can call Sentry API to resolve the corresponding issue here.
+    res.status(200).json({ ok: true, action: 'issue_closed', identifier: data?.identifier });
+  }
+);
 
 // ─── 404 Handler ────────────────────────────────────────────────────
 app.use((req, res) => {

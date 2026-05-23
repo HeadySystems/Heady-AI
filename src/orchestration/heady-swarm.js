@@ -25,7 +25,6 @@ import { execSync, spawn } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createLogger } from '../utils/logger.js';
-const logger = createLogger('heady-swarm');
 
 const PHI = 1.6180339887;
 const PSI = 0.6180339887;

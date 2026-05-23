@@ -51,7 +51,6 @@ function Import-HeadyConfig {
     
     # Parse YAML (using simple regex for this implementation)
     $content = Get-Content $Path -Raw
-    $content = Get-Content $Path -Raw
     
     # Extract extension lists
     $config = @{

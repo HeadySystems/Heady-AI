@@ -216,8 +216,7 @@ const { vectorMemory, buddy, pipeline, selfAwareness, watchdog } =
 // ── Phase 7: Engine Wiring ───────────────────────────────────────────────────
 startupState.phase = 'engines';
 const { wireEngines } = require('../../bootstrap/engine-wiring');
-const { loadRegistry } = require('../../core/bee-registry/registry');
-const logger = require('../../utils/logger');
+const { loadRegistry } = require('../../routes/registry');
 const PORT = process.env.PORT || process.env.HEADY_PORT || 3301;
 const _engines = wireEngines(app, {
   pipeline, loadRegistry, eventBus,
@@ -233,7 +232,7 @@ require('../../bootstrap/pipeline-wiring')(app, {
 
 // ── Phase 9: Service Registry ─────────────────────────────────────────────────
 startupState.phase = 'service-registry';
-require('../../boot/service-registry')(app, {
+require('../../bootstrap/service-registry')(app, {
   logger, authEngine, vectorMemory, buddy, pipeline, _engines,
   secretsManager, cfManager, eventBus,
   projectRoot: __dirname,

@@ -37,8 +37,7 @@ Live API probes reveal a minimal production footprint:
 
 ### 1.2 Repository Structure
 
-The [HeadyMe/Heady-Main](https://github.com/HeadyMe/Heady-Main), [HeadyConnection/Heady-Main](https://github.com/HeadyConnection/Heady-Main), and [HeadySystems/Heady-Main](https://github.com/HeadySystems/Heady-Main) repositories are structurally identical, differing only by commit count (918, 1,064, and 1,011 commits respectively) and one additional `boot/` and `heady-agents/` folder in the HeadyConnection copy. All three contain identical READMEs with **unresolved git merge conflict markers** (`<<<<<<< HEAD`, `=======`, `>>>>>>> 233933e0e0de33ba336efea820f0aba57ae04586`) embedded in production documentation. The repository also lists a `git clone https://github.com/HeadySystems/Heady.git` quick-start that points to a repo not in the confirmed public list.
-
+The [HeadyMe/Heady-Main](https://github.com/HeadyMe/Heady-Main), [HeadyConnection/Heady-Main](https://github.com/HeadyConnection/Heady-Main), and [HeadySystems/Heady-Main](https://github.com/HeadySystems/Heady-Main) repositories are structurally identical, differing only by commit count (918, 1,064, and 1,011 commits respectively) and one additional `boot/` and `heady-agents/` folder in the HeadyConnection copy. All three contain identical READMEs with **unresolved git merge conflict markers** (`
 The [Heady-Testing](https://github.com/HeadyMe/Heady-Testing) repository is structurally identical to Heady-Main — same folder tree, same commit count pattern, same README content. No distinct test suite, test runner configuration, coverage reports, or CI test workflow differentiation is visible at the repo surface.
 
 The [headymcp-core](https://github.com/HeadyMe/headymcp-core) repo has 2 commits, a single `index.js`, `package.json`, `site-config.json`, `Dockerfile`, and one GitHub Actions workflow. There is no evidence of the 31 MCP tools, autonomous orchestration, or zero-latency dispatch described in its README at [headymcp.com](https://headymcp.com).
@@ -191,8 +190,7 @@ The absence of any structured tracing, distributed logging endpoint, or observab
 |---|---|---|
 | Single-origin deployment | High | One Cloud Run host handles all headysystems.com traffic |
 | Zero active sessions at assessment time | Medium | `users: 0, sessions: 0` indicates the system is not under production load |
-| Unresolved merge conflicts in all three main repo forks | High | Raw `<<<<<<< HEAD` markers in production READMEs |
-| Testing repo is identical to main repo | High | Heady-Testing has same folder tree as Heady-Main; no distinct test suite |
+| Unresolved merge conflicts in all three main repo forks | High | Raw `| Testing repo is identical to main repo | High | Heady-Testing has same folder tree as Heady-Main; no distinct test suite |
 | headymcp-core has 2 commits | High | A production MCP server with 31 tools should have significant commit history |
 | HeadyEcosystem repo returns 404 | Medium | Cross-referenced in audit brief as confirmed public; now inaccessible |
 | No published releases on any repo | Medium | All repos show "No releases published" — no versioned artifact trail |
@@ -236,8 +234,7 @@ The specific markers of scaffold-not-production:
 
 ### 7.1 Resolve the Merge Conflict — Immediately
 
-All three Heady-Main forks contain `<<<<<<< HEAD` markers in production READMEs. Run `git status`, resolve the conflict, and commit. This is a 15-minute fix with outsized signal value: it tells every engineer, contributor, and evaluator that the repository is actively maintained.
-
+All three Heady-Main forks contain `
 ```bash
 # In each fork
 git checkout main

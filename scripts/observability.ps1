@@ -202,7 +202,6 @@ function Show-Dashboard {
         $alerts = Get-Content $ALERT_LOG | 
             Where-Object { $_ } | 
             ForEach-Object { $_ | ConvertFrom-Json } |
-            ForEach-Object { $_ | ConvertFrom-Json } |
             Sort-Object timestamp -Descending |
             Select-Object -First 5
         
@@ -238,9 +237,6 @@ function Start-Monitoring {
     if (-not ($hostsContent -match "heady.internal")) {
         Write-Host "⚠️  Warning: Internal domains not found in hosts file" -ForegroundColor Yellow
         Write-Host "   Run: node scripts/localhost-to-domain.js hosts" -ForegroundColor Yellow
-    if (-not ($hostsContent -match "heady.internal")) {
-        Write-Host "⚠️  Warning: Internal domains not found in hosts file" -ForegroundColor Yellow
-        Write-Host "   Run: node scripts/localhost-to-domain.js hosts" -ForegroundColor Yellow
         Write-Host "   Then add output to C:\Windows\System32\drivers\etc\hosts" -ForegroundColor Yellow
     }
     
@@ -264,7 +260,6 @@ function Start-Monitoring {
         }
         
         # Wait before next check
-        Start-Sleep -Seconds 30
         Start-Sleep -Seconds 30
     }
 }

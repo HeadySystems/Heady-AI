@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /**
  * ∞ Auth Engine — Phase 3 Bootstrap
  * Extracted from heady-manager.js lines 396-446
@@ -33,14 +42,14 @@ module.exports = function mountAuth(app, { logger, secretsManager, cfManager }) 
         });
         app.get("/api/auth/policy", (req, res) => {
             const token = req.headers['authorization']?.split(' ')[1];
-            const tier = token === process.env.HEADY_API_KEY ? "admin" : "core";
+            const tier = safeCompare(token, process.env.HEADY_API_KEY) ? "admin" : "core";
             res.json({ active_policy: tier === "admin" ? "UNRESTRICTED" : "STANDARD" });
         });
     }
 
     app.get("/api/services/groups", (req, res) => {
         const token = req.headers['authorization']?.split(' ')[1];
-        const tier = (authEngine && authEngine.verify(token)?.tier) || (token === process.env.HEADY_API_KEY ? "admin" : "core");
+        const tier = (authEngine && authEngine.verify(token)?.tier) || (safeCompare(token, process.env.HEADY_API_KEY) ? "admin" : "core");
         const groups = { core: ["heady_chat", "heady_analyze"], premium: ["heady_battle", "heady_orchestrator", "heady_creative"] };
         if (tier === "admin") {
             res.json({ tier, groups: ["core", "premium"], services: [...groups.core, ...groups.premium] });

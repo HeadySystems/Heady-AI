@@ -1,23 +1,3 @@
-// HEADY_BRAND:BEGIN
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: frontend/vite.config.ts                                                    ║
-// ║  LAYER: ui/frontend                                                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-
-// Removed vite-plugin-obfuscator due to build errors
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -25,7 +5,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3001,
-      "/api": "http://api.headysystems.com:3300",
+    proxy: {
+      "/api": process.env.VITE_API_URL || "http://localhost:3301",
+      "/health": process.env.VITE_API_URL || "http://localhost:3301",
+      "/mcp": process.env.VITE_API_URL || "http://localhost:3301",
+      "/metrics": process.env.VITE_API_URL || "http://localhost:3301",
     },
   },
   build: {

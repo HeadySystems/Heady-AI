@@ -33,7 +33,7 @@ routes = [
   { pattern = "api.headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "headysystems.com/*", zone_name = "headysystems.com" },
   { pattern = "headyme.com/*", zone_name = "headyme.com" },
-  { pattern = "headyai.com/*", zone_name = "headyai.com" },
+  { pattern = "heady-ai.com/*", zone_name = "heady-ai.com" },
   { pattern = "headybuddy.com/*", zone_name = "headybuddy.com" },
   { pattern = "headybuddy.org/*", zone_name = "headybuddy.org" },
   { pattern = "headymcp.com/*", zone_name = "headymcp.com" },

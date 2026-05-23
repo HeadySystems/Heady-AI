@@ -15,7 +15,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 | Layer | Tech | Notes |
 |-------|------|-------|
 | Backend | Node.js ESM, Express (Cloud Run), Hono (CF Workers) | No CommonJS `require()` |
-| Frontend | Vanilla HTML/CSS/JS | No React/Vue/Angular |
+| Frontend | Vanilla HTML/CSS/JS or React (when beneficial) | No Vue/Angular; React allowed when it benefits Heady |
 | Database | Neon Postgres + pgvector | UUID PKs, TIMESTAMPTZ, vector(1536) |
 | Cache | Upstash Redis | Namespace: `tenant:{id}:*` |
 | Auth | Firebase Auth + 27 OAuth | Cross-domain SSO via `auth.headysystems.com` |
@@ -101,7 +101,7 @@ npx wrangler pages deploy dist/
 
 ## Do Not
 
-- Add React, Vue, Angular, or any frontend framework
+- Add Vue, Angular, or other frontend frameworks (React is allowed when it is beneficial for Heady)
 - Use `localhost`, `127.0.0.1`, or hardcoded URLs
 - Write placeholder code, stubs, or TODO comments
 - Use magic numbers — derive from `PHI`, `PSI`, or `FIB[]`

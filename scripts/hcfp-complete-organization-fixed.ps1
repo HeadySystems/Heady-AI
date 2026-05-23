@@ -74,7 +74,6 @@ function Start-ComprehensiveDataGathering {
     # Gather F:\ Drive Data
     Write-Log "📁 Analyzing F:\ drive structure and content..." -Level "CYAN"
     $fDriveAnalysis = Get-ChildItem "F:\" -Recurse -ErrorAction SilentlyContinue | 
-    $fDriveAnalysis = Get-ChildItem "F:\" -Recurse -ErrorAction SilentlyContinue | 
         Select-Object Name, FullName, Length, LastWriteTime, Extension, Attributes |
         Group-Object Extension | 
         Select-Object Name, Count, @{Name="TotalSize";Expression={($_.Group | Measure-Object -Property Length -Sum).Sum}}
@@ -83,7 +82,6 @@ function Start-ComprehensiveDataGathering {
     
     # Gather Computer Files Data
     Write-Log "💻 Analyzing computer files structure..." -Level "CYAN"
-    $computerAnalysis = Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | 
     $computerAnalysis = Get-ChildItem "C:\Users\erich" -Recurse -File -ErrorAction SilentlyContinue | 
         Where-Object { $_.Extension -match '\.(jpg|png|gif|svg|jpeg|bmp|tiff|webp|mp4|mov|avi|mp3|wav|docx?|pdf|txt|ps1|py|js|json|yaml|yml)$' } |
         Group-Object Extension | 
@@ -98,7 +96,6 @@ function Start-ComprehensiveDataGathering {
     
     foreach ($path in $phonePaths) {
         if (Test-Path $path) {
-            $phoneAnalysis = Get-ChildItem $path -Recurse -File -ErrorAction SilentlyContinue |
             $phoneAnalysis = Get-ChildItem $path -Recurse -File -ErrorAction SilentlyContinue |
                 Group-Object Extension |
                 Select-Object Name, Count, @{Name="TotalSize";Expression={($_.Group | Measure-Object -Property Length -Sum).Sum}}
@@ -128,7 +125,6 @@ function Start-ComprehensiveDataGathering {
 
 ### File Type Distribution
 $($fDriveAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([math]::Round($_.TotalSize / 1MB, 2)) MB)" })
-$($fDriveAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([math]::Round($_.TotalSize / 1MB, 2)) MB)" })
 
 ### Total Content
 - **Files**: $($fDriveAnalysis | Measure-Object -Property Count -Sum).Count
@@ -138,7 +134,6 @@ $($fDriveAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([ma
 
 ### Media & Document Distribution
 $($computerAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([math]::Round($_.TotalSize / 1MB, 2)) MB)" })
-$($computerAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([math]::Round($_.TotalSize / 1MB, 2)) MB)" })
 
 ### Total Content
 - **Files**: $($computerAnalysis | Measure-Object -Property Count -Sum).Count
@@ -147,10 +142,6 @@ $($computerAnalysis | ForEach-Object { "- **$($_.Name)**: $($_.Count) files ($([
 ## 📱 Phone Data Analysis
 
 ### Connected Devices
-$($phoneData | ForEach-Object { "- **$($_.Path)**: $($_.Analysis.Count) file types" })
-
-### Phone Content Summary
-$($phoneData | ForEach-Object { 
 $($phoneData | ForEach-Object { "- **$($_.Path)**: $($_.Analysis.Count) file types" })
 
 ### Phone Content Summary

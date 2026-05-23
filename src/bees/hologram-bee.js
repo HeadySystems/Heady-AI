@@ -21,7 +21,7 @@
 'use strict';
 
 const crypto = require('crypto');
-const logger = require('../utils/logger').child({ component: 'hologram-bee' });
+const logger = require('../utils/logger').child('hologram-bee');
 
 // ── Compilation cache (RAM-only, ephemeral) ────────────────────
 const _compilationCache = new Map();    // nodeId → { output, hash, compiledAt }

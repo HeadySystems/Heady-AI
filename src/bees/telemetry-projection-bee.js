@@ -3,7 +3,7 @@
 
 const os     = require('os');
 const v8     = require('v8');
-const logger = require('../utils/logger').child({ component: 'telemetry-projection-bee' });
+const logger = require('../utils/logger').child('telemetry-projection-bee');
 const CSL    = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------

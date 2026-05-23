@@ -23,7 +23,6 @@ const logger = console;
 const path = require('path');
 const fs = require('fs');
 const { execSync } = require('child_process');
-const logger = require('../utils/logger');
 
 const ROOT = path.resolve(__dirname, '..');
 process.chdir(ROOT);

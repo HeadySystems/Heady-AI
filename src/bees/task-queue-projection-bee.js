@@ -1,7 +1,7 @@
 /* © 2026-2026 HeadySystems Inc. All Rights Reserved. PROPRIETARY AND CONFIDENTIAL. */
 'use strict';
 
-const logger = require('../utils/logger').child({ component: 'task-queue-projection-bee' });
+const logger = require('../utils/logger').child('task-queue-projection-bee');
 const CSL    = require('../core/semantic-logic');
 
 // ---------------------------------------------------------------------------

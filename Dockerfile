@@ -45,7 +45,7 @@ COPY --from=builder --chown=heady:heady /app /app
 
 # Security headers
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8080
 
 # Health check — phi-scaled interval (13s check, 8s timeout, 21s start, 5 retries)
 HEALTHCHECK --interval=13s --timeout=8s --start-period=21s --retries=5 \
@@ -55,7 +55,7 @@ HEALTHCHECK --interval=13s --timeout=8s --start-period=21s --retries=5 \
 USER heady
 
 # Expose port
-EXPOSE 3000
+EXPOSE 8080
 
 # Use tini as init system
 ENTRYPOINT ["/sbin/tini", "--"]

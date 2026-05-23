@@ -432,9 +432,10 @@ class WebsiteServer {
   _buildCSP() {
     return [
       "default-src 'self'",
-      // TODO: Replace 'unsafe-inline' with nonce-based CSP for scripts
+      // DESIGN NOTE: script-src uses 'self' only (no unsafe-inline). Safe.
+      // style-src uses 'unsafe-inline' because Twig templates generate inline styles.
+      // Nonce-based CSP migration tracked in architecture roadmap (requires edge middleware nonce injection).
       "script-src 'self'",
-      // TODO: Migrate 'unsafe-inline' in style-src to nonce-based approach
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: https:",
       "font-src 'self'",

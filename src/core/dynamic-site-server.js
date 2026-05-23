@@ -23,7 +23,7 @@ const { SITES, _isHeadyOrigin } = require('./site-registry');
 const { AUTH_PROVIDERS } = require('./auth-providers');
 const {
   resolveIncomingHost, resolveSite,
-  renderSite, renderOnboarding, renderLegalPage,
+  renderSite, renderOnboarding, renderLegalPage, renderPricingPage,
   generateSession, generateApiKey, hashPw
 } = require('./site-renderer');
 
@@ -94,7 +94,7 @@ const server = http.createServer((req, res) => {
           'Content-Type': 'image/png',
           'Content-Length': data.length,
           'Cache-Control': 'public, max-age=604800',
-          'Access-Control-Allow-Origin': '*'
+          'Access-Control-Allow-Origin': (req.headers.origin && ['https://headyme.com','https://headysystems.com','https://heady-ai.com','https://headyconnection.org','https://headybuddy.org','https://headybot.com','https://headyapi.com','https://headyio.com','https://headymcp.com','https://headyos.com','https://headyex.com','https://headyfinance.com','https://admin.headysystems.com','https://auth.headysystems.com','https://api.headysystems.com'].includes(req.headers.origin)) ? req.headers.origin : 'https://headysystems.com'
         });
         return res.end(data);
       }
@@ -128,7 +128,7 @@ function handleEmailAuth(req, res) {
       if (!email || !password) return json(res, { error: 'Email and password required' }, 400);
       const session = generateSession();
       sessions.set(session, { email, loginAt: new Date().toISOString(), method: 'email' });
-      res.setHeader('Set-Cookie', `heady_session=${session}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
+      res.setHeader('Set-Cookie', `heady_session=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
       json(res, { success: true, session, email });
     } catch (e) { json(res, { error: e.message }, 400); }
   });
@@ -143,7 +143,7 @@ function handleApiKeyAuth(req, res) {
       if (!provider || !key) return json(res, { error: 'Provider and key required' }, 400);
       const session = generateSession();
       sessions.set(session, { provider, method: 'apikey', connectedAt: new Date().toISOString() });
-      res.setHeader('Set-Cookie', `heady_session=${session}; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400`);
+      res.setHeader('Set-Cookie', `heady_session=${session}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=86400`);
       json(res, { success: true, session, provider });
     } catch (e) { json(res, { error: e.message }, 400); }
   });
@@ -159,7 +159,7 @@ function handleSession(req, res) {
 function handleLogout(req, res) {
   const cookie = (req.headers.cookie || '').split(';').find(c => c.trim().startsWith('heady_session='));
   if (cookie) sessions.delete(cookie.split('=')[1]?.trim());
-  res.setHeader('Set-Cookie', 'heady_session=; Path=/; HttpOnly; Max-Age=0');
+  res.setHeader('Set-Cookie', 'heady_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0');
   json(res, { success: true });
 }
 

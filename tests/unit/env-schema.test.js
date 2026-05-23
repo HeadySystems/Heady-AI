@@ -1,10 +1,11 @@
-import { vi } from "vitest";
+import { vi, describe, test, expect, beforeEach, afterAll } from "vitest";
+
 /**
  * Heady™ Enterprise Test Suite — Environment Validation
  * PR 6: Unit tests for the env-schema validator
  */
 
-const { validateEnvironment, ENV_SCHEMA } = require('../../src/config/env-schema');
+const { validateEnvironment, ENV_SCHEMA } = await import('../../src/config/env-schema.js');
 
 describe('Environment Schema Validator', () => {
     const originalEnv = process.env;

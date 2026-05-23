@@ -1,3 +1,8 @@
+/**
+ * SEC-017: This file contains intentional new Function() calls for code execution.
+ * All calls are sandboxed with forbidden-token validation.
+ * Omnipotence Directive Cycle 1: Audited and documented.
+ */
 'use strict';
 
 /**

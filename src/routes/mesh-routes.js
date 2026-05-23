@@ -8,7 +8,7 @@
  * Express-style route handlers exposing the Self-Healing Attestation Mesh.
  *
  * Mount in your Express app:
- *   const meshRoutes = require('./mesh-routes');
+ *   const meshRoutes = require('./src/routes/mesh-routes');
  *   app.use('/api/mesh', meshRoutes.createRouter(express.Router()));
  *
  * Endpoints:

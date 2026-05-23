@@ -597,7 +597,7 @@ function wireEngines(app, deps = {}) {
             HCFPRunnerCtor = hcfpMod.HCFPRunner || hcfpMod.default || hcfpMod;
         } catch { /* try alternate path */ }
         if (!HCFPRunnerCtor) {
-            const hcfpMod = require('../orchestration/hcfp-runner');
+            const hcfpMod = require("../../../orchestration/hcfp-runner");
             HCFPRunnerCtor = hcfpMod.HCFPRunner || hcfpMod.default || hcfpMod;
         }
 

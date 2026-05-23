@@ -12,7 +12,7 @@
  *   3. GitHub API Push (tree/blob/commit cycle to each -core repo)
  *
  * Usage:
- *   const pipeline = require('./public-projection-pipeline');
+ *   const pipeline = require('./src/projection/public-projection-pipeline');
  *   await pipeline.projectAll();              // Project all 9 domains
  *   await pipeline.projectAll({ dryRun: true }); // Preview without pushing
  *   await pipeline.projectDomain('headymcp.com'); // Project single domain

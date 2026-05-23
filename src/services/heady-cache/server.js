@@ -37,13 +37,12 @@ const cache = new HeadyCache();
 // ---------------------------------------------------------------------------
 
 const app = express();
-const logger = require('../../utils/logger');
 
 // Security & middleware — strict CORS, no wildcard
 const HEADY_ORIGINS = [
   'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
   'https://headybuddy.org', 'https://headymcp.com', 'https://headyio.com',
-  'https://headybot.com', 'https://headyapi.com', 'https://headyai.com',
+  'https://headybot.com', 'https://headyapi.com', 'https://heady-ai.com',
   'https://headylens.com', 'https://headyfinance.com',
   ...(process.env.NODE_ENV !== 'production' ? [process.env.SERVICE_URL || 'http://0.0.0.0:3000', process.env.SERVICE_URL || 'http://0.0.0.0:3300', process.env.SERVICE_URL || 'http://0.0.0.0:3301'] : [])
 ];

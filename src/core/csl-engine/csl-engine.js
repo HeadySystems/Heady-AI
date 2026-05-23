@@ -881,7 +881,7 @@ class CSLEngine {
 
 // ─── Module Exports ────────────────────────────────────────────────────────────
 
-export {
+module.exports = {
   CSLEngine,
   // Export utility functions for external use
   norm,

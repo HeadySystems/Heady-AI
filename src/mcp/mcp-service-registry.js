@@ -55,67 +55,25 @@ const MCP_SERVICES = {
 
     heady_csl_engine: {
         tool: 'heady_csl_engine',
-        description: 'Continuous Semantic Logic engine — perform geometric logic operations (AND, OR, NOT, IMPLY, XOR, CONSENSUS) on concept vectors or text.',
+        description: 'Continuous Semantic Logic engine — fuzzy gates, resonance, superposition, entanglement',
         category: 'intelligence',
         priority: Math.pow(PHI, 0),
         parameters: {
-            operation: { type: 'string', required: true, enum: ['and', 'or', 'not', 'imply', 'xor', 'consensus', 'gate'], description: 'CSL logical operation' },
-            a: { type: 'string', description: 'First concept (text or vector string)' },
-            b: { type: 'string', description: 'Second concept (text or vector string)' },
-            vectors: { type: 'array', items: { type: 'string' }, description: 'Array of concepts for consensus' },
-            weights: { type: 'array', items: { type: 'number' }, description: 'Weights for consensus' },
-            threshold: { type: 'number', description: 'Activation threshold for GATE' },
-            mode: { type: 'string', enum: ['hard', 'soft'], default: 'hard', description: 'Gate activation mode' }
+            input: { type: 'string', required: true, description: 'Input to evaluate through CSL gates' },
+            gates: { type: 'array', description: 'Specific gates to apply', items: { type: 'string' } },
+            threshold: { type: 'number', description: 'Phi-scaled activation threshold' },
         },
     },
 
     heady_memory_ops: {
         tool: 'heady_memory_ops',
-        description: 'Persistent 3D vector memory — search, store, recall, and manage semantic knowledge in specific namespaces.',
+        description: 'Persistent 3D vector memory — search, store, embed, learn via Heady™Memory',
         category: 'memory',
         priority: Math.pow(PHI, 0),
         parameters: {
-            action: { type: 'string', required: true, enum: ['search', 'store', 'recall', 'delete', 'forget'], description: 'Memory action to perform' },
-            query: { type: 'string', description: 'Search query for "search" action' },
-            content: { type: 'string', description: 'Text content to store for "store" action' },
-            key: { type: 'string', description: 'Memory ID for "delete" action' },
-            namespace: { type: 'string', default: 'default', description: 'Memory namespace (e.g., "patents", "architecture")' },
-            metadata: { type: 'object', description: 'Optional metadata for the memory record' },
-            limit: { type: 'number', default: 10, description: 'Number of results for "search" or "recall"' }
-        },
-    },
-
-    heady_orchestrator: {
-        tool: 'heady_orchestrator',
-        description: 'Multi-agent resonance orchestrator. Executes HeadyResonanceSchemas using CSL intent routing.',
-        category: 'intelligence',
-        priority: Math.pow(PHI, 0),
-        parameters: {
-            action: { type: 'string', required: true, enum: ['execute', 'validate'], description: 'Action to perform' },
-            schema: { type: 'object', required: true, description: 'The HeadyResonanceSchema defining the workflow' },
-            input_context: { type: 'string', description: 'The initial input context for the workflow (required for execute)' }
-        },
-    },
-
-    heady_project_task_options: {
-        tool: 'heady_project_task_options',
-        description: 'Instantly project all available execution options (Bees, Swarms, and Work Units) for a given task intent. Use this before committing to a task to see how Heady would solve it and which components are most resonant.',
-        category: 'orchestration',
-        priority: Math.pow(PHI, 0),
-        parameters: {
-            intent: { type: 'string', required: true, description: 'Natural language description of the task intent' },
-            include_history: { type: 'boolean', default: true, description: 'Include past similar executions' },
-        },
-    },
-
-    heady_system_reconfigure: {
-        tool: 'heady_system_reconfigure',
-        description: 'Environment and system-wide configuration self-healing and dynamic tuning.',
-        category: 'infrastructure',
-        priority: Math.pow(PHI, 0),
-        parameters: {
-            action: { type: 'string', required: true, enum: ['apply', 'reset', 'validate', 'tune'], description: 'Reconfiguration action' },
-            config_patch: { type: 'object', description: 'Configuration patch object' },
+            action: { type: 'string', required: true, enum: ['search', 'store', 'embed', 'recall', 'forget'] },
+            query: { type: 'string', description: 'Search query or content to store' },
+            namespace: { type: 'string', default: 'default', description: 'Memory namespace' },
         },
     },
 
@@ -328,49 +286,6 @@ const MCP_SERVICES = {
             action: { type: 'string', required: true, enum: ['deploy', 'rollback', 'scale', 'health', 'logs'] },
             service: { type: 'string', required: true },
             environment: { type: 'string', default: 'production' },
-        },
-    },
-
-    heady_render_list_services: {
-        tool: 'heady_render_list_services',
-        description: 'List all Render services for the authenticated account',
-        category: 'deployment',
-        priority: Math.pow(PHI, 0.75),
-        parameters: {
-            limit: { type: 'number', default: 20 },
-        },
-    },
-
-    heady_render_deploy: {
-        tool: 'heady_render_deploy',
-        description: 'Trigger a deploy for a specific Render service',
-        category: 'deployment',
-        priority: Math.pow(PHI, 0.75),
-        parameters: {
-            service_id: { type: 'string', required: true },
-            clear_cache: { type: 'boolean', default: false },
-        },
-    },
-
-    heady_auto_audit: {
-        tool: 'heady_auto_audit',
-        description: 'System-wide health audit — checks domains, registry drift, edge workers, and MCP connectivity',
-        category: 'maintenance',
-        priority: Math.pow(PHI, 1),
-        parameters: {
-            fix_drift: { type: 'boolean', default: false, description: 'Automatically fix registry drift if found' },
-            test_sse: { type: 'boolean', default: true, description: 'Perform end-to-end SSE connectivity test' },
-        },
-    },
-
-    heady_blocks_sync: {
-        tool: 'heady_blocks_sync',
-        description: 'Synchronize Heady system state with blocks.team for external automation and reporting',
-        category: 'orchestration',
-        priority: Math.pow(PHI, 1.25),
-        parameters: {
-            webhook_url: { type: 'string', description: 'blocks.team webhook URL' },
-            payload_type: { type: 'string', enum: ['health', 'audit', 'alert'], default: 'health' },
         },
     },
 

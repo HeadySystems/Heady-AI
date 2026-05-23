@@ -4,6 +4,8 @@
  * φ-scaled caching, CSL-adaptive routing, 3D vector space projection
  */
 
+import { withSentry } from '@sentry/cloudflare';
+
 // ── φ Constants ─────────────────────────────────────────────────────
 const PHI = 1.6180339887498949;
 const PSI = 0.6180339887498949; // 1/φ
@@ -127,10 +129,15 @@ interface Env {
   HEADY_CACHE: KVNamespace;
   HEADY_CONFIG: KVNamespace;
   BACKEND_ORIGIN: string;
+  BUDDY_API_ORIGIN: string;
   FIREBASE_API_KEY: string;
   NEON_CONNECTION: string;
   UPSTASH_REDIS_URL: string;
   UPSTASH_REDIS_TOKEN: string;
+  SENTRY_DSN: string;
+  HEADY_ENV: string;
+  HEADY_VERSION: string;
+  WORKER_NAME: string;
 }
 
 // ── Security: Blocked Paths ─────────────────────────────────────────
@@ -177,7 +184,7 @@ function addSecurityHeaders(response: Response): Response {
 }
 
 // ── Main Handler ────────────────────────────────────────────────────
-export default {
+const handler = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const hostname = url.hostname;
@@ -257,7 +264,7 @@ export default {
         { id: 'upstash', name: 'Upstash Redis', type: 'cache', status: env.UPSTASH_REDIS_TOKEN ? 'wired' : 'disconnected', capabilities: ['kv-cache', 'rate-limiting', 'pub-sub', 'vector-store'] },
         { id: 'pinecone', name: 'Pinecone', type: 'vector-db', status: 'configured', capabilities: ['vector-search', 'embeddings-store', 'namespaces'] },
         { id: 'firebase', name: 'Firebase', type: 'auth-platform', status: env.FIREBASE_API_KEY ? 'wired' : 'disconnected', capabilities: ['authentication', 'firestore', 'hosting'] },
-        { id: 'sentry', name: 'Sentry', type: 'monitoring', status: 'configured', capabilities: ['error-tracking', 'performance-monitoring', 'release-tracking'] },
+        { id: 'sentry', name: 'Sentry', type: 'monitoring', status: env.SENTRY_DSN ? 'wired' : 'not-configured', capabilities: ['error-tracking', 'performance-monitoring', 'release-tracking'] },
         { id: 'stripe', name: 'Stripe', type: 'payments', status: 'configured', capabilities: ['payments', 'subscriptions'] },
         { id: 'colab-a', name: 'Colab A (Inference)', type: 'gpu-compute', status: 'standby', capabilities: ['gpu-inference', 'embeddings'], fibConcurrency: 34 },
         { id: 'colab-d', name: 'Colab D (Intelligence)', type: 'gpu-compute', status: 'standby', capabilities: ['continuous-learning', 'self-critique'], fibConcurrency: 8, dedicated: true },
@@ -294,7 +301,7 @@ export default {
           upstash: { type: 'cache', endpoint: env.UPSTASH_REDIS_URL || 'https://finer-sole-64861.upstash.io', status: env.UPSTASH_REDIS_TOKEN ? 'wired' : 'disconnected' },
           neon: { type: 'database', project: 'green-water-91851995', region: 'us-east-2', status: env.NEON_CONNECTION ? 'wired' : 'disconnected' },
           firebase: { type: 'auth', project: 'heady-ai', status: env.FIREBASE_API_KEY ? 'wired' : 'disconnected' },
-          sentry: { type: 'monitoring', org: 'headyconnection-inc', project: 'heady-manager', status: 'configured' },
+          sentry: { type: 'monitoring', org: 'headyconnection-inc', project: 'heady-manager', status: env.SENTRY_DSN ? 'wired' : 'not-configured' },
         },
         phi: PHI, timestamp: Date.now(),
       });
@@ -318,6 +325,25 @@ export default {
       return proxyToDrupal(request, url, env);
     }
 
+    // ── Buddy API routes (auth, chat, vector, history) ──
+    if (isBuddyApiPath(url.pathname)) {
+      return addSecurityHeaders(await proxyToBuddyApi(request, url, env));
+    }
+    
+    // Handle CORS preflight for all API routes
+    if (request.method === 'OPTIONS' && (url.pathname.startsWith('/api/') || url.pathname.startsWith('/v1/'))) {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          'Access-Control-Allow-Origin': request.headers.get('Origin') || '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Session',
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Max-Age': '86400',
+        },
+      });
+    }
+    
     // ── API proxy to backend ──
     if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/v1/')) {
       return proxyToBackend(request, url, env, ctx);
@@ -378,7 +404,16 @@ export default {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     }));
   },
-};
+} satisfies ExportedHandler<Env>;
+
+export default withSentry(
+  (env: Env) => ({
+    dsn: env.SENTRY_DSN || '',
+    environment: env.HEADY_ENV || 'production',
+    release: env.HEADY_VERSION || '4.0.0',
+  }),
+  handler,
+);
 
 // ── Site Serving ────────────────────────────────────────────────────
 async function serveSite(
@@ -527,6 +562,66 @@ async function proxyToDrupal(request: Request, url: URL, env: Env): Promise<Resp
 }
 
 // ── API Proxy ───────────────────────────────────────────────────────
+// ── Heady Buddy API Routing ─────────────────────────────────────────
+const BUDDY_API_PATHS = [
+  '/api/brain/',
+  '/api/vector/',
+  '/api/buddy/',
+  '/api/auth/session',
+  '/api/auth/verify',
+  '/api/auth/logout',
+];
+
+function isBuddyApiPath(pathname: string): boolean {
+  return BUDDY_API_PATHS.some(p => pathname.startsWith(p));
+}
+
+async function proxyToBuddyApi(request: Request, url: URL, env: Env): Promise<Response> {
+  const origin = env.BUDDY_API_ORIGIN || env.BACKEND_ORIGIN || 'https://manager.headysystems.com';
+  const backendUrl = `${origin}${url.pathname}${url.search}`;
+  
+  // Add CORS headers for cross-site widget requests
+  const corsHeaders: Record<string, string> = {
+    'Access-Control-Allow-Origin': request.headers.get('Origin') || '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Session',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+  };
+  
+  // Handle preflight
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+  
+  try {
+    const response = await fetch(backendUrl, {
+      method: request.method,
+      headers: request.headers,
+      body: request.body,
+    });
+    
+    // Add CORS and Heady headers to response
+    const newHeaders = new Headers(response.headers);
+    for (const [k, v] of Object.entries(corsHeaders)) {
+      newHeaders.set(k, v);
+    }
+    newHeaders.set('X-Heady-Route', 'buddy-api');
+    newHeaders.set('X-Heady-Version', '1.0.0');
+    
+    return new Response(response.body, {
+      status: response.status,
+      headers: newHeaders,
+    });
+  } catch (err) {
+    return Response.json({
+      error: 'Buddy API unavailable',
+      message: (err as Error).message,
+      fallback: 'Service starting up — please retry',
+    }, { status: 502, headers: corsHeaders });
+  }
+}
+
 async function proxyToBackend(request: Request, url: URL, env: Env, ctx: ExecutionContext): Promise<Response> {
   const origin = env.BACKEND_ORIGIN || 'https://manager.headysystems.com';
   const backendUrl = `${origin}${url.pathname}${url.search}`;

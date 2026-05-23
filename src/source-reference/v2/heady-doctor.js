@@ -138,7 +138,6 @@ check('Secure Vault', () => {
                         credCount += data.filter(v => v.metadata?.type === 'credential').length;
                     }
                 } catch (e) {
-                  const logger = require('../../utils/logger');
                   logger.error('Unexpected error', { error: e.message, stack: e.stack });
                 }
             }

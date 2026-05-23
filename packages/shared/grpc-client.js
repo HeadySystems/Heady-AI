@@ -8,7 +8,7 @@ const logger = getLogger('grpc-client');
 
 class HeadyGrpcClient {
   constructor(opts = {}) {
-    this.target = opts.target || 'localhost:50051';
+    this.target = opts.target || process.env.GRPC_TARGET;
     this.serviceName = opts.serviceName || 'HeadyService';
     this._client = null;
   }

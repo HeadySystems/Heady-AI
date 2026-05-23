@@ -59,7 +59,6 @@ const path = require('path');
 const http = require('http');
 const dgram = require('dgram');
 const { EventEmitter } = require('events');
-const logger = require('./utils/logger');
 
 const HEADY_ROOT = path.resolve(__dirname, '..');
 

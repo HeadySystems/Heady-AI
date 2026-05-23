@@ -1,3 +1,12 @@
+const { timingSafeEqual } = require('node:crypto');
+
+// SEC: Timing-safe comparison — prevents timing attacks on auth tokens
+const safeCompare = (a, b) => {
+  if (!a || !b) return false;
+  const ab = Buffer.from(String(a)), bb = Buffer.from(String(b));
+  if (ab.length !== bb.length) return false;
+  return timingSafeEqual(ab, bb);
+};
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -47,7 +56,7 @@ class McpSseTransport {
         }
 
         // Fallback: accept raw Heady™ API key
-        if (token === this.apiKey) {
+        if (safeCompare(token, this.apiKey)) {
             return { valid: true, tier: 'admin', scope: 'mcp:tools mcp:resources mcp:prompts', apiKey: token };
         }
 
@@ -157,16 +166,8 @@ class McpSseTransport {
 
     // ── JSON-RPC Handler ─────────────────────────────────────────────
     async _handleJsonRpc(message, auth) {
-        // Delegate to the unified server if available
-        if (this.server) {
-            return await this.server.handleRequest(message);
-        }
-
         const { method, id, params } = message;
-        // ... (rest of old logic as fallback if needed, or just remove if we trust the unified server)
-        // For brevity and correctness, let's assume we want to use the unified server.
-        // If it's missing, we'll keep the old logic as a safety net but mark it as deprecated.
-        
+
         switch (method) {
             case 'initialize':
                 return {
@@ -174,12 +175,58 @@ class McpSseTransport {
                     result: {
                         protocolVersion: '2024-11-05',
                         capabilities: { tools: {}, resources: {}, prompts: {} },
-                        serverInfo: { name: 'heady-mcp-sse-legacy', version: '2.0.0' },
+                        serverInfo: { name: 'heady-mcp', version: '2.0.0' },
                     },
                 };
-            // ... (keep the rest of the switch if we want fallback)
+
+            case 'tools/list':
+                return { jsonrpc: '2.0', id, result: { tools: this._getTools() } };
+
+            case 'tools/call': {
+                const result = await this._executeTool(params.name, params.arguments, auth.apiKey);
+                return { jsonrpc: '2.0', id, result };
+            }
+
+            case 'resources/list':
+                return {
+                    jsonrpc: '2.0', id,
+                    result: {
+                        resources: [
+                            { uri: 'heady://services/catalog', name: 'Heady Service Catalog', mimeType: 'application/json' },
+                            { uri: 'heady://services/health', name: 'Heady™ Health Status', mimeType: 'application/json' },
+                        ],
+                    },
+                };
+
+            case 'resources/read': {
+                const { uri } = params;
+                if (uri === 'heady://services/health') {
+                    const health = await this._headyGet('/api/health', auth.apiKey).catch(e => ({ error: e.message }));
+                    return { jsonrpc: '2.0', id, result: { contents: [{ uri, mimeType: 'application/json', text: JSON.stringify(health) }] } };
+                }
+                return { jsonrpc: '2.0', id, result: { contents: [{ uri, mimeType: 'application/json', text: '{}' }] } };
+            }
+
+            case 'prompts/list':
+                return {
+                    jsonrpc: '2.0', id,
+                    result: {
+                        prompts: [
+                            { name: 'heady_code_review', description: 'Review code with Heady™ Brain' },
+                            { name: 'heady_architect', description: 'Get architectural guidance' },
+                            { name: 'heady_debug', description: 'Debug with Heady™ Brain' },
+                        ],
+                    },
+                };
+
+            case 'notifications/initialized':
+                return null;  // No response needed for notifications
+
+            case 'ping':
+                return { jsonrpc: '2.0', id, result: {} };
+
             default:
-                return { jsonrpc: '2.0', id, error: { code: -32601, message: `Method not found: ${method} (Legacy Mode)` } };
+                return { jsonrpc: '2.0', id, error: { code: -32601, message: `Method not found: ${method}` } };
         }
     }
 
@@ -194,10 +241,10 @@ class McpSseTransport {
 
             const sessionId = crypto.randomBytes(16).toString('hex');
 
-            // SSE headers - Hardened for Heady™
+            // SSE headers
             res.writeHead(200, {
                 'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache, no-transform',
+                'Cache-Control': 'no-cache',
                 'Connection': 'keep-alive',
                 'X-Accel-Buffering': 'no',
             });
@@ -206,11 +253,7 @@ class McpSseTransport {
             this.sessions.set(sessionId, { res, auth, connectedAt: Date.now() });
 
             // Send endpoint event (tells client where to POST messages)
-            // Use req.baseUrl or similar to find the correct endpoint
-            const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-            const host = req.headers['host'];
-            const messageUrl = `${protocol}://${host}/mcp/message?sessionId=${sessionId}`;
-            
+            const messageUrl = `${this.oauthProvider?.issuer || this.baseUrl}/mcp/message?sessionId=${sessionId}`;
             res.write(`event: endpoint\ndata: ${messageUrl}\n\n`);
 
             // Keepalive every 30s
@@ -234,8 +277,12 @@ class McpSseTransport {
             const session = this.sessions.get(sessionId);
 
             if (!session) {
+                // Also allow direct auth for stateless calls
                 const auth = this._authenticate(req);
-                if (!auth) return res.status(401).json({ error: 'unauthorized' });
+                if (!auth) {
+                    return res.status(401).json({ error: 'unauthorized' });
+                }
+                // Stateless mode: handle request directly
                 const response = await this._handleJsonRpc(req.body, auth);
                 if (response) return res.json(response);
                 return res.status(202).end();
@@ -248,6 +295,7 @@ class McpSseTransport {
                 try {
                     session.res.write(`event: message\ndata: ${JSON.stringify(response)}\n\n`);
                 } catch {
+                    // SSE connection dead — cleanup
                     this.sessions.delete(sessionId);
                 }
             }

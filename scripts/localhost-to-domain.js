@@ -14,7 +14,6 @@
 // ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-#!/usr/bin/env node
 /**
  * Localhost-to-Domain Migration Tool
  * Replaces all localhost references with proper internal domain names
@@ -163,7 +162,7 @@ class ServiceDiscovery {
                 const domain = config.domain || `${serviceName}.headysystems.com`;
                 
                 // Create comprehensive mappings
-                const internal.headyio.comPatterns = [
+                const internalHeadyioComPatterns = [
                     `localhost:${port}`,
                     `internal.headyio.com:${port}`,
                     `0.0.0.0:${port}`,
@@ -221,6 +220,15 @@ function buildReplacements() {
         replacements['localhost'] = config.host;
         replacements['127.0.0.1'] = config.host;
       }
+    }
+  }
+  return replacements;
+}
+
+class FileProcessor {
+    constructor(patternMatcher) {
+        this.patternMatcher = patternMatcher;
+        this.stats = { processed: 0, modified: 0, skipped: 0, errors: 0, totalChanges: 0 };
     }
 
     shouldProcessFile(filePath) {
@@ -828,9 +836,6 @@ if (isMainThread) {
         process.exit(1);
     });
   }
-  
-  return replacements;
-}
 
 const REPLACEMENTS = buildReplacements();
 

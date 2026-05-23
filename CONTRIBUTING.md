@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the Heady ecosystem. This documen
 
 Heady is a sovereign AI platform built on:
 - **Node.js / Express** — Dynamic site server
-- **HTML/CSS/JS** — No React/Vue/Angular
+- **HTML/CSS/JS or React (when beneficial)** — No Vue/Angular; React is allowed when it benefits Heady
 - **Cloud Run (GCP)** — Production deployment
 - **Cloudflare** — DNS, CDN, edge security
 - **Sacred Geometry Topology** — phi-scaled orchestration

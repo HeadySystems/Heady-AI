@@ -20,7 +20,6 @@
     Heady Complete Infrastructure Setup (HCIS) - Domain migration and device provisioning
 .DESCRIPTION
     Systematically replaces localhost with service domains and provisions all devices
-    Systematically replaces localhost with service domains and provisions all devices
     with consistent configuration. Clean build on every change with error alerting.
 .PARAMETER Mode
     Operation mode: inventory, migrate, provision, full-setup
@@ -61,7 +60,6 @@ function Send-ErrorAlert {
                 @{
                     type = "section"
                     text = @{ type = "mrkdwn"; text = "```$ErrorMessage```" }
-                    text = @{ type = "mrkdwn"; text = "```$ErrorMessage```" }
                 },
                 @{
                     type = "section"
@@ -71,7 +69,6 @@ function Send-ErrorAlert {
         } | ConvertTo-Json -Depth 10
         
         try {
-            Invoke-RestMethod -Uri $ErrorAlertWebhook -Method Post -Body $payload -ContentType "application/json"
             Invoke-RestMethod -Uri $ErrorAlertWebhook -Method Post -Body $payload -ContentType "application/json"
         } catch {
             Write-Host "Failed to send alert: $_" -ForegroundColor Yellow
@@ -105,13 +102,6 @@ try {
         
         $patterns = @(
             "localhost",
-    # ============================================================================
-    if ($Mode -eq "inventory") {
-        Write-Host "📋 INVENTORY MODE: Scanning for localhost references..." -ForegroundColor Yellow
-        
-        $patterns = @(
-            "api.headysystems.com",
-            "localhost",
             "127\.0\.0\.1",
             "0\.0\.0\.0",
             "::1"
@@ -121,11 +111,6 @@ try {
         $inventory = @()
         
         foreach ($type in $fileTypes) {
-            $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue | 
-                     Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
-            
-            foreach ($file in $files) {
-                $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
             $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue | 
                      Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
             
@@ -165,11 +150,6 @@ try {
         
         # Export to CSV
         $csvPath = "localhost-inventory-$(Get-Date -Format 'yyyyMMdd-HHmmss').csv"
-        Write-Host "`nFound $($inventory.Count) localhost references:`" -ForegroundColor Green
-        $inventory | Format-Table File, Pattern, Matches -AutoSize
-        
-        # Export to CSV
-        $csvPath = "localhost-inventory-$(Get-Date -Format 'yyyyMMdd-HHmmss').csv"
         $inventory | Export-Csv $csvPath -NoTypeInformation
         Write-Host "`n📁 Inventory exported to: $csvPath" -ForegroundColor Green
         
@@ -187,14 +167,6 @@ try {
     # MODE 2: MIGRATE - Replace localhost with domains
     # ============================================================================
     elseif ($Mode -eq "migrate") {
-        Write-Host "🔄 MIGRATE MODE: Replacing localhost with service domains..." -ForegroundColor Yellow
-    }
-
-    # ============================================================================
-    # MODE 2: MIGRATE - Replace localhost with domains
-    # ============================================================================
-    elseif ($Mode -eq "migrate") {
-        Write-Host "🔄 MIGRATE MODE: Replacing api.headysystems.com with service domains..." -ForegroundColor Yellow
         Write-Host "🔄 MIGRATE MODE: Replacing localhost with service domains..." -ForegroundColor Yellow
         
         if (-not $Force) {
@@ -226,11 +198,6 @@ try {
         $fileTypes = @("*.js", "*.json", "*.yaml", "*.yml", "*.md", "*.ps1", "*.sh", "*.env*")
         
         foreach ($type in $fileTypes) {
-            $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue |
-                     Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
-            
-            foreach ($file in $files) {
-                $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
             $files = Get-ChildItem -Path . -Filter $type -Recurse -ErrorAction SilentlyContinue |
                      Where-Object { $_.FullName -notlike "*node_modules*" -and $_.FullName -notlike "*.git*" }
             
@@ -447,14 +414,10 @@ try {
         Write-Host "╚══════════════════════════════════════════════════════════════╝" -ForegroundColor Green
         Write-Host "`nYour device is now configured with:" -ForegroundColor White
         Write-Host "  • Service domains (manager.heady.local, etc.)" -ForegroundColor Gray
-        Write-Host "  • Service domains (manager.heady.local, etc.)" -ForegroundColor Gray
         Write-Host "  • All required applications" -ForegroundColor Gray
         Write-Host "  • VS Code + extensions" -ForegroundColor Gray
         Write-Host "  • Clean build verified" -ForegroundColor Gray
         Write-Host "`nServices accessible at:" -ForegroundColor Yellow
-        Write-Host "  • Manager: http://manager.heady.local:3300" -ForegroundColor Cyan
-        Write-Host "  • Dashboard: http://dashboard.heady.local:3000" -ForegroundColor Cyan
-        Write-Host "  • API: http://api.heady.local" -ForegroundColor Cyan
         Write-Host "  • Manager: http://manager.heady.local:3300" -ForegroundColor Cyan
         Write-Host "  • Dashboard: http://dashboard.heady.local:3000" -ForegroundColor Cyan
         Write-Host "  • API: http://api.heady.local" -ForegroundColor Cyan

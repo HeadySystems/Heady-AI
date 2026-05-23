@@ -5,7 +5,7 @@
  * Fails fast if critical config is missing — never start with half-valid state.
  * 
  * Usage:
- *   const { validateEnvironment } = require('./env-schema');
+ *   const { validateEnvironment } = require('./src/config/env-schema');
  *   validateEnvironment(); // throws if critical vars missing
  */
 const { createLogger } = require('../utils/logger');
@@ -14,7 +14,6 @@ const logger = createLogger('env-schema');
 
 
 const ENV_SCHEMA = {
-const logger = require('../utils/logger');
     // ── Critical (app won't function without these) ──
     critical: [
         { name: 'DATABASE_URL', description: 'Neon Postgres connection string' },

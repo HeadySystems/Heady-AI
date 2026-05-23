@@ -60,7 +60,6 @@ function Test-SystemHealth {
     # Check Heady Manager health
     try {
         $health = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -TimeoutSec 5
-        $health = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -TimeoutSec 5
         Write-Host "✅ Heady Manager: $($health.version) - Uptime: $([math]::Round($health.uptime/60,1))min" -ForegroundColor Green
     } catch {
         Write-Host "❌ Heady Manager: Not responding" -ForegroundColor Red
@@ -68,7 +67,6 @@ function Test-SystemHealth {
     
     # Check Ollama
     try {
-        $models = Invoke-RestMethod -Uri "http://localhost:11434/api/tags" -TimeoutSec 5
         $models = Invoke-RestMethod -Uri "http://localhost:11434/api/tags" -TimeoutSec 5
         Write-Host "✅ Ollama: $($models.models.Count) models available" -ForegroundColor Green
     } catch {
@@ -96,8 +94,6 @@ function Invoke-ProductionTests {
     Write-Host "------------------------------------" -ForegroundColor Yellow
     
     $tests = @(
-        @{name="Heady Manager API"; url="http://localhost:3300/api/health"; expected=200},
-        @{name="Ollama API"; url="http://localhost:11434/api/tags"; expected=200},
         @{name="Heady Manager API"; url="http://localhost:3300/api/health"; expected=200},
         @{name="Ollama API"; url="http://localhost:11434/api/tags"; expected=200},
         @{name="PostgreSQL"; command="docker exec heady-postgres pg_isready -U heady"},
@@ -298,7 +294,6 @@ services:
           cpus: '0.5'
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
-      test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -372,7 +367,6 @@ Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 ## System Status
 - Docker Containers: $((docker ps --filter "name=heady" --format "{{.Names}}" | Measure-Object).Count) running
 - Heady Manager: v3.0.0
-- Ollama Models: $((Invoke-RestMethod -Uri "http://localhost:11434/api/tags" -ErrorAction SilentlyContinue).models.Count) available
 - Ollama Models: $((Invoke-RestMethod -Uri "http://localhost:11434/api/tags" -ErrorAction SilentlyContinue).models.Count) available
 - PyCharm: Configured and ready
 

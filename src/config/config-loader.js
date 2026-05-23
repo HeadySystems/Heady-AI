@@ -11,7 +11,6 @@ const { PHI_TIMING } = require('../shared/phi-math');
 const fs           = require('fs');
 const path         = require('path');
 const EventEmitter = require('events');
-const logger = require('../utils/logger');
 
 // ─────────────────────────────────────────────
 // Defaults

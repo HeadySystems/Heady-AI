@@ -80,17 +80,6 @@ const PHI_CUBE = 2 * PHI + 1;
  */
 const GOLDEN_ANGLE = 137.5077640500378;
 
-/**
- * PHI_TEMPERATURE — Default semantic scaling temperature for CSL gates.
- * = ψ³ ≈ 0.23606797749978964
- */
-const PHI_TEMPERATURE = Math.pow(PSI, 3);
-
-/**
- * EPSILON — Numerical epsilon for CSL gate stability and floating point comparison.
- */
-const EPSILON = 1e-10;
-
 // ─────────────────────────────────────────────────────────────────────────────
 // SECTION 2: FIBONACCI SEQUENCE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -978,6 +967,106 @@ function sacredGeometryPosition(ring, index, total) {
   };
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SECTION 17: HEA-147 FOUNDATION UTILITIES
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Weights a value by PHI raised to the given exponent.
+ * Formula: value × φ^exponent
+ *
+ * @param {number} value - The base value to weight
+ * @param {number} exponent - The phi exponent to apply
+ * @returns {number} The phi-weighted value
+ *
+ * @example
+ * phiWeight(100, 2)  // 100 × φ² ≈ 261.80
+ * phiWeight(1, 4)    // φ⁴ ≈ 6.854
+ */
+function phiWeight(value, exponent) {
+  return value * Math.pow(PHI, exponent);
+}
+
+/**
+ * Finds the nearest Fibonacci number to a given value.
+ * Uses binary search over the precomputed Fibonacci set for efficiency.
+ *
+ * @param {number} n - The target value
+ * @returns {number} The closest Fibonacci number
+ *
+ * @example
+ * fibonacciNearest(10) // 8
+ * fibonacciNearest(50) // 55
+ * fibonacciNearest(100) // 89
+ */
+function fibonacciNearest(n) {
+  if (n <= 0) return 0;
+  if (isFib(n)) return n;
+
+  // Generate Fibonacci numbers until we pass n
+  let prev = 1, curr = 1;
+  while (curr < n) {
+    const next = prev + curr;
+    prev = curr;
+    curr = next;
+  }
+  // prev <= n <= curr — return whichever is closer
+  return (n - prev) <= (curr - n) ? prev : curr;
+}
+
+/**
+ * Scales a base value by PHI raised to the given number of steps.
+ * Useful for generating phi-harmonic progressions.
+ *
+ * @param {number} base - The base value to scale
+ * @param {number} steps - Number of phi steps (can be negative for contraction)
+ * @returns {number} The scaled value: base × φ^steps
+ *
+ * @example
+ * goldenScale(100, 1)  // 100 × φ ≈ 161.80
+ * goldenScale(100, -1) // 100 × ψ ≈ 61.80
+ * goldenScale(100, 3)  // 100 × φ³ ≈ 423.61
+ */
+function goldenScale(base, steps) {
+  return base * Math.pow(PHI, steps);
+}
+
+/**
+ * Fibonacci sequence generator (yields indefinitely).
+ * Produces 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+ *
+ * @generator
+ * @yields {number} The next Fibonacci number in the sequence
+ *
+ * @example
+ * const gen = fibonacciGenerator();
+ * gen.next().value; // 0
+ * gen.next().value; // 1
+ * gen.next().value; // 1
+ * gen.next().value; // 2
+ */
+function* fibonacciGenerator() {
+  let a = 0, b = 1;
+  while (true) {
+    yield a;
+    [a, b] = [b, a + b];
+  }
+}
+
+/**
+ * CSL gate threshold constants for HEA-147 compatibility.
+ * Explicit numeric values matching the specification.
+ * @constant {Object}
+ */
+const CSL_GATE_THRESHOLDS = Object.freeze({
+  MINIMUM: 0.500,
+  LOW: 0.691,
+  MEDIUM: 0.809,
+  HIGH: 0.882,
+  CRITICAL: 0.927,
+  DEDUP: 0.972
+});
+
 // ─── CommonJS Exports ─────────────────────────────────────────────────────────
 module.exports = {
   PHI,
@@ -1038,6 +1127,9 @@ module.exports = {
   POOL_RATIOS,
   getPressureLevel,
   sacredGeometryPosition,
-  PHI_TEMPERATURE,
-  EPSILON
+  phiWeight,
+  fibonacciNearest,
+  goldenScale,
+  fibonacciGenerator,
+  CSL_GATE_THRESHOLDS
 };

@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 rootProject.name = "HeadyBuddy"
 include ':app'
 include ':core'
-include ':core'

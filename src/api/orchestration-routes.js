@@ -23,7 +23,6 @@ const kronos = new KronosAgent();
 const argus = new ArgusAgent();
 const nexus = new NexusAgent();
 const herald = new HeraldAgent();
-const logger = require('../utils/logger');
 
 // Start all agents
 async function initAgents() {

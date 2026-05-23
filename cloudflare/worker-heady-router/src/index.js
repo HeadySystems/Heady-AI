@@ -11,7 +11,7 @@
  */
 
 const CACHE_TTL_SECONDS = 3600;
-const DEFAULT_ORIGIN = 'https://heady-manager-1073792900703.us-east1.run.app';
+const DEFAULT_ORIGIN = 'https://heady-edge-gateway-609590223909.us-central1.run.app';
 const DEFAULT_COMPILER_WEBHOOK = `${DEFAULT_ORIGIN}/api/hologram/compile`;
 
 const DOMAIN_MODULES = {
@@ -41,10 +41,104 @@ const DOMAIN_MODULES = {
   'www.headyos.com': 'os-portal',
   'headyex.com': 'executive-hub',
   'www.headyex.com': 'executive-hub',
+  'headyvault.com': 'secrets-engine',
+  'www.headyvault.com': 'secrets-engine',
+  'headycloud.com': 'cloud-platform',
+  'www.headycloud.com': 'cloud-platform',
+  'headykey.com': 'auth-identity',
+  'www.headykey.com': 'auth-identity',
+  'headyweb.com': 'web-portal',
+  'www.headyweb.com': 'web-portal',
+  'headymusic.com': 'music-studio',
+  'www.headymusic.com': 'music-studio',
+  'headystore.com': 'store-portal',
+  'www.headystore.com': 'store-portal',
+  'manager.headysystems.com': 'systems-portal',
+  'ai.headysystems.com': 'systems-portal',
+  'api.headysystems.com': 'systems-portal',
+  'buddy.headysystems.com': 'systems-portal',
+  'mcp.headysystems.com': 'mcp-dashboard',
+  'edge.headysystems.com': 'systems-portal',
+  'battle.headysystems.com': 'systems-portal',
+  'stream.headysystems.com': 'systems-portal',
+  'vector.headysystems.com': 'systems-portal',
   'admin.headysystems.com': 'admin-portal',
   'auth.headysystems.com': 'auth-portal',
   'heady.headyme.com': 'edge-mcp',
+  'discord.headysystems.com': 'community-hub',
 };
+
+
+// ─── GitHub Pages Repos ────────────────────────────────────────────
+// Sites that are statically served from headyme.github.io/{repo}/
+// This is the primary origin for these static landing pages.
+const GITHUB_PAGES_REPOS = {
+  // ── Active GitHub Pages repos ──
+  'headybuddy.org':           'headybuddy-org',
+  'www.headybuddy.org':       'headybuddy-org',
+  'headybot.com':             'headybot',
+  'www.headybot.com':         'headybot',
+  'headyapi.com':             'headyapi',
+  'www.headyapi.com':         'headyapi',
+  'heady-ai.com':              'headyai',
+  'www.heady-ai.com':          'headyai',
+  'discord.headysystems.com': 'heady-discord',
+  'headyos.com':              'headyos',
+  'www.headyos.com':          'headyos',
+  'headyconnection.org':      'headyconnection',
+  'www.headyconnection.org':  'headyconnection',
+  'headyconnection.com':      'headyconnection-org',
+  'www.headyconnection.com':  'headyconnection-org',
+  'headymcp.com':             'headymcp-com',
+  'www.headymcp.com':         'headymcp-com',
+  'headysystems.com':         'headysystems-com',
+  'www.headysystems.com':     'headysystems-com',
+  // ── New GitHub Pages repos (March 2026) ──
+  'headyex.com':              'headyex-com',
+  'www.headyex.com':          'headyex-com',
+  'headyfinance.com':         'headyfinance-com',
+  'www.headyfinance.com':     'headyfinance-com',
+  'headycloud.com':           'headycloud-com',
+  'www.headycloud.com':       'headycloud-com',
+  'headyme.com':             'headyme-com',
+  'www.headyme.com':          'headyme-com',
+  'headykey.com':             'headykey-com',
+  'www.headykey.com':         'headykey-com',
+  'headyvault.com':           'headyvault-com',
+  'www.headyvault.com':       'headyvault-com',
+  'headyio.com':              'headyio-com',
+  'www.headyio.com':          'headyio-com',
+  'headyweb.com':             'headyweb-com',
+  'www.headyweb.com':         'headyweb-com',
+  'headymusic.com':           'headymusic-com',
+  'www.headymusic.com':       'headymusic-com',
+  'headystore.com':           'headystore-com',
+  'www.headystore.com':       'headystore-com',
+  // admin.headysystems.com — served by Cloud Run origin
+};
+
+async function serveGitHubPages(repo, pathname) {
+  const path = (pathname === '/' || pathname === '') ? '/index.html' : pathname;
+  const url = `https://headyme.github.io/${repo}${path}`;
+  
+  try {
+    const res = await fetch(url, {
+      headers: { 'User-Agent': 'HeadyRouter/2.0', 'Accept': 'text/html,*/*' },
+    });
+    
+    if (!res.ok && !pathname.includes('.')) {
+      // SPA fallback to index.html
+      const fallback = await fetch(`https://headyme.github.io/${repo}/index.html`, {
+        headers: { 'User-Agent': 'HeadyRouter/2.0' },
+      });
+      if (fallback.ok) return fallback;
+    }
+    
+    return res.ok ? res : null;
+  } catch (_e) {
+    return null;
+  }
+}
 
 const MODULE_BRANDS = {
   'mcp-dashboard': {
@@ -151,6 +245,30 @@ const MODULE_BRANDS = {
     ctaLabel: 'Open HeadyEX',
     ctaHref: 'https://headyex.com',
   },
+  'auth-identity': {
+    brand: 'HeadyKey',
+    title: 'Sovereign identity & authentication',
+    description: 'Zero-trust identity layer. JWT sessions, OAuth2, RBAC, API key management.',
+    accent: '#f59e0b',
+    ctaLabel: 'Open auth portal',
+    ctaHref: 'https://headykey.com',
+  },
+  'secrets-engine': {
+    brand: 'HeadyVault',
+    title: 'Secrets & key management',
+    description: 'Cryptographic secrets engine. Ed25519 signing, AES-256-GCM encryption, φ-scheduled rotation.',
+    accent: '#10b981',
+    ctaLabel: 'Open vault portal',
+    ctaHref: 'https://headyvault.com',
+  },
+  'cloud-platform': {
+    brand: 'HeadyCloud',
+    title: 'Cloud infrastructure platform',
+    description: 'Managed cloud infrastructure, edge deployment, and serverless orchestration for the Heady ecosystem.',
+    accent: '#0ea5e9',
+    ctaLabel: 'Open HeadyCloud',
+    ctaHref: 'https://headycloud.com',
+  },
   'admin-portal': {
     brand: 'Heady Admin',
     title: 'Administrative control plane',
@@ -177,6 +295,17 @@ const MODULE_BRANDS = {
   },
 };
 
+/** Validate origin is a Heady domain */
+function isHeadyOrigin(origin) {
+  if (!origin) return false;
+  try {
+    const { hostname } = new URL(origin);
+    const clean = hostname.replace(/^www\./, '');
+    return Object.keys(DOMAIN_MODULES).some(d => d.replace(/^www\./, '') === clean)
+      || clean.endsWith('.run.app');
+  } catch { return false; }
+}
+
 function moduleForHostname(hostname) {
   const clean = hostname.toLowerCase();
   if (DOMAIN_MODULES[clean]) return DOMAIN_MODULES[clean];
@@ -192,6 +321,18 @@ function contentTypeForPath(pathname) {
   return 'text/html; charset=utf-8';
 }
 
+/**
+ * Security headers applied to every edge response.
+ * HSTS is handled by Cloudflare zone settings, so we set the remaining OWASP headers.
+ */
+const SECURITY_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  'X-XSS-Protection': '0', // Modern browsers: CSP is preferred; '0' disables buggy auditor
+};
+
 function commonHeaders(moduleName, source, contentType = 'text/html; charset=utf-8') {
   return {
     'Content-Type': contentType,
@@ -199,6 +340,7 @@ function commonHeaders(moduleName, source, contentType = 'text/html; charset=utf
     'X-Heady-Source': source,
     'X-Heady-Module': moduleName,
     'X-Heady-Edge': 'true',
+    ...SECURITY_HEADERS,
   };
 }
 
@@ -380,14 +522,50 @@ export default {
     const hostname = url.hostname.toLowerCase();
     const moduleName = moduleForHostname(hostname);
 
+    // ── JSON Health Endpoint Interception ──
+    // Return proper JSON health for /api/health and /health on ALL routed domains
+    // This prevents GitHub Pages HTML from being served for health probes
+    if (url.pathname === '/api/health' || url.pathname === '/health') {
+      // Derive a clean service name from the domain (e.g. heady-ai.com → headyai)
+      const baseDomain = hostname.replace(/^www\./, '');
+      const serviceName = baseDomain.replace(/\.(com|org|io|net)$/, '');
+      const healthResponse = {
+        status: 'ok',
+        service: serviceName,
+        domain: hostname,
+        module: moduleName,
+        timestamp: new Date().toISOString(),
+        edge: true,
+        source: `${serviceName}-edge`,
+        version: '2.1.0',
+      };
+      const reqOrigin = request.headers.get('Origin') || '';
+      const corsOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headysystems.com';
+      return new Response(JSON.stringify(healthResponse, null, 2), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store',
+          'Access-Control-Allow-Origin': corsOrigin,
+          'X-Heady-Source': 'health-intercept',
+          'X-Heady-Module': moduleName || 'router',
+          'X-Heady-Edge': 'true',
+          ...SECURITY_HEADERS,
+        },
+      });
+    }
+
     if (request.method === 'OPTIONS') {
+      const reqOrigin = request.headers.get('Origin') || '';
+      const allowedOrigin = isHeadyOrigin(reqOrigin) ? reqOrigin : 'https://headyme.com';
       return new Response(null, {
         status: 204,
         headers: {
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': allowedOrigin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Module',
           'Access-Control-Max-Age': '86400',
+          'Vary': 'Origin',
         },
       });
     }
@@ -403,21 +581,52 @@ export default {
       });
     }
 
+    // ── GitHub Pages first-priority routing ──
+    const ghRepo = GITHUB_PAGES_REPOS[hostname];
+    if (ghRepo) {
+      const ghResponse = await serveGitHubPages(ghRepo, url.pathname);
+      if (ghResponse) {
+        const ct = ghResponse.headers.get('Content-Type') || contentTypeForPath(url.pathname);
+        const headers = new Headers({
+          'Content-Type': ct,
+          'Cache-Control': 'public, max-age=3600',
+          'X-Heady-Source': 'github-pages',
+          'X-Heady-Repo': ghRepo,
+          'X-Heady-Module': moduleName,
+          'X-Heady-Edge': 'true',
+          'Vary': 'Accept-Encoding',
+          ...SECURITY_HEADERS,
+        });
+        return new Response(ghResponse.body, {
+          status: ghResponse.status,
+          headers,
+        });
+      }
+      // Fall through to fallback if GitHub Pages unavailable
+    }
+
     const cacheKey = `hologram:${moduleName}:${url.pathname || '/'}:${url.search || ''}`;
     const contentType = contentTypeForPath(url.pathname);
 
-    const cached = await env.HEADY_UI_MANIFEST.get(cacheKey, { type: 'text' });
-    if (cached) {
-      return new Response(cached, {
-        status: 200,
-        headers: commonHeaders(moduleName, 'edge-cache', contentType),
-      });
+    // KV cache layer (optional - gracefully degrades if KV not bound)
+    if (env.HEADY_UI_MANIFEST) {
+      try {
+        const cached = await env.HEADY_UI_MANIFEST.get(cacheKey, { type: 'text' });
+        if (cached) {
+          return new Response(cached, {
+            status: 200,
+            headers: commonHeaders(moduleName, 'edge-cache', contentType),
+          });
+        }
+      } catch (_e) { /* KV unavailable, continue */ }
     }
 
     try {
       const compiled = await tryCompiler(url, hostname, moduleName, env);
       if (compiled) {
-        await env.HEADY_UI_MANIFEST.put(cacheKey, compiled, { expirationTtl: CACHE_TTL_SECONDS });
+        if (env.HEADY_UI_MANIFEST) {
+          try { await env.HEADY_UI_MANIFEST.put(cacheKey, compiled, { expirationTtl: CACHE_TTL_SECONDS }); } catch (_e) { /* KV unavailable */ }
+        }
         return new Response(compiled, {
           status: 200,
           headers: commonHeaders(moduleName, 'just-compiled', contentType),
@@ -434,6 +643,10 @@ export default {
         headers.set('X-Heady-Source', 'origin-proxy');
         headers.set('X-Heady-Module', moduleName);
         headers.set('X-Heady-Edge', 'true');
+        // Apply security headers — origin may already set some, but we enforce consistency
+        for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+          if (!headers.has(k)) headers.set(k, v);
+        }
         return new Response(originResponse.body, {
           status: originResponse.status,
           headers,

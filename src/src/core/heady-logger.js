@@ -241,7 +241,6 @@ const _registry = new Map();
  */
 function createLogger(moduleName, opts = {}) {
   if (_registry.has(moduleName)) return _registry.get(moduleName);
-  const logger = new HeadyLogger(moduleName, opts);
   _registry.set(moduleName, logger);
   return logger;
 }

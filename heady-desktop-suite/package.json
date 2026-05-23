@@ -16,5 +16,10 @@
     "cross-env": "^7.0.3",
     "electron": "^29.1.5",
     "electron-builder": "^24.13.3"
+  },
+  "overrides": {
+    "tar": ">=6.2.1",
+    "@tootallnate/once": ">=3.0.1",
+    "electron": ">=29.4.7"
   }
 }

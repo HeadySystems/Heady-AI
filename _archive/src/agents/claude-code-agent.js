@@ -502,5 +502,5 @@ class ClaudeCodeAgent {
     };
   }
 }
-module.exports = ClaudeCodeAgent;
-module.exports.ClaudeCodeAgent = ClaudeCodeAgent;
+
+module.exports = { ClaudeCodeAgent, AGENT_ID, AGENT_SKILLS };

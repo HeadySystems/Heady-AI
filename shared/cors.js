@@ -8,8 +8,8 @@
 
 'use strict';
 
-const { createLogger } = require('./logger');
-const { fib } = require('./phi-math');
+const { createLogger } = require('../logger');
+const { fib } = require('../phi-math');
 
 const logger = createLogger('cors');
 

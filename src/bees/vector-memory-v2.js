@@ -23,13 +23,12 @@
  */
 
 'use strict';
-
+const logger = require(require('path').resolve(__dirname, '..', 'utils', 'logger')) || console;
 
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 const crypto = require('crypto');
-const logger = require('../utils/logger');
 
 // ─── Vector Math (inline to avoid circular deps) ────────────────────────────
 

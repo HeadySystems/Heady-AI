@@ -19,7 +19,6 @@ import { readFileSync, existsSync } from 'node:fs';
 import http from 'node:http';
 import https from 'node:https';
 import { createLogger } from '../utils/logger.js';
-const logger = createLogger('server');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

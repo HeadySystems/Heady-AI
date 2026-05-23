@@ -43,7 +43,6 @@ const log = {
 };
 
 const { ColabRuntimeCluster } = require('../colab/colab-runtime-nodes.js');
-const logger = require('../utils/logger');
 const { loadUniversalPrompt, buildAgentPrompt, buildCompactDirective,
         getPromptHash, CSL_GATES, ARCHETYPES, COLAB_RUNTIMES,
         SWARM_MATRIX } = require('../agents/universal-agent-prompt.js');

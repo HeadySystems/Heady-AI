@@ -87,14 +87,12 @@ Write-Host "Scanning: $Path" -ForegroundColor Yellow
 
 # Get all CSS, SCSS, JSX, TSX files
 $files = Get-ChildItem -Path $Path -Include "*.css", "*.scss", "*.jsx", "*.tsx", "*.js", "*.ts" -Recurse -ErrorAction SilentlyContinue
-$files = Get-ChildItem -Path $Path -Include "*.css", "*.scss", "*.jsx", "*.tsx", "*.js", "*.ts" -Recurse -ErrorAction SilentlyContinue
 
 $totalFiles = 0
 $filesWithViolations = 0
 
 foreach ($file in $files) {
     $totalFiles++
-    $content = Get-Content $file.FullName -Raw
     $content = Get-Content $file.FullName -Raw
     $violations = @()
     
