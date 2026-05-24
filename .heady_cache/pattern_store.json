@@ -4,7 +4,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-24T21:40:01.984Z",
+  "lastUpdated": "2026-05-24T21:45:01.092Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -12,8 +12,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-24T21:40:01.984Z",
-      "lastSeen": "2026-05-24T21:40:01.984Z",
+      "firstSeen": "2026-05-24T21:45:01.092Z",
+      "lastSeen": "2026-05-24T21:45:01.092Z",
       "occurrences": 1
     }
   ],
@@ -34,23 +34,15 @@
     },
     {
       "word": "pattern_store.json",
-      "count": 210
+      "count": 211
     },
     {
       "word": "auto-commit.log",
-      "count": 4
+      "count": 3
     },
     {
       "word": "hc_pipeline.log",
       "count": 2
-    },
-    {
-      "word": "package-lock.json",
-      "count": 2
-    },
-    {
-      "word": "1909",
-      "count": 1
     }
   ]
 }
