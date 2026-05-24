@@ -16404,3 +16404,19 @@ To https://github.com/HeadyMe/heady-production.git
  ! [remote rejected]     main -> main (pre-receive hook declined)
 error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
 [39m
+Committed: e405e0fc7 — 
+Push failed: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+
+[2026-05-23 22:10:01.593 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-24T04:10:01.592Z] [INFO] Committed e405e0fc7: HCFP-AUTO: 4 file(s) changed — auto-commit.log, pattern_store.json, hc_pipeline.log[39m
+    [35mcomponent[39m: "system"
+[2026-05-23 22:10:01.747 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-24T04:10:01.747Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-23 22:10:01.771 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-24T04:10:01.771Z] [ERROR] Pull --merge also failed: Command failed: git pull --no-rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+[2026-05-23 22:10:01.771 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-24T04:10:01.771Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
