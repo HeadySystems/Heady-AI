@@ -1,10 +1,59 @@
 {
-  "patterns": {},
+  "patterns": {
+    "reliability::resource:RAM": {
+      "id": "reliability::resource:RAM",
+      "category": "reliability",
+      "name": "resource:RAM",
+      "state": "detected",
+      "createdAt": "2026-05-26T00:41:45.982Z",
+      "lastUpdated": "2026-05-26T00:44:21.015Z",
+      "observations": [
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:41:45.982Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:43:40.998Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:44:21.015Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        }
+      ],
+      "stats": null,
+      "trend": "insufficient_data",
+      "improvementAttempts": 0,
+      "lastImproved": null,
+      "convergedAt": null,
+      "reviewAfter": null,
+      "metadata": {},
+      "tags": [
+        "resource",
+        "RAM"
+      ]
+    }
+  },
   "metadata": {
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T00:40:01.429Z",
+  "lastUpdated": "2026-05-26T00:45:01.489Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -12,8 +61,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-26T00:40:01.429Z",
-      "lastSeen": "2026-05-26T00:40:01.429Z",
+      "firstSeen": "2026-05-26T00:45:01.489Z",
+      "lastSeen": "2026-05-26T00:45:01.489Z",
       "occurrences": 1
     }
   ],
@@ -35,6 +84,10 @@
     {
       "word": "pattern_store.json",
       "count": 288
+    },
+    {
+      "word": "resource-events.jsonl",
+      "count": 1
     },
     {
       "word": "hc_pipeline.log",
