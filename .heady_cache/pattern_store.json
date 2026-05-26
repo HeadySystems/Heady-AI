@@ -4,9 +4,9 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-26T00:49:31.229Z",
+      "lastUpdated": "2026-05-26T00:54:41.404Z",
       "observations": [
         {
           "value": 78,
@@ -169,25 +169,134 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T00:50:11.244Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:50:56.257Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:51:01.269Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:51:06.281Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T00:51:41.296Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T00:51:46.311Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:52:26.330Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:52:31.342Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:53:11.357Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:53:56.367Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T00:54:36.389Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T00:54:41.404Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 78.42857142857143,
+        "mean": 78.67857142857143,
         "median": 78,
-        "stddev": 0.6226998490772391,
+        "stddev": 0.8474150369789051,
         "min": 78,
-        "max": 80,
-        "n": 14
+        "max": 81,
+        "n": 28
       },
-      "trend": "insufficient_data",
-      "improvementAttempts": 0,
+      "trend": "flat",
+      "improvementAttempts": 1,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 13,
-        "burstWindow": "5m"
+        "burstCount": 12,
+        "burstWindow": "5m",
+        "needsInvestigation": true
       },
       "tags": [
         "resource",
@@ -199,7 +308,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T00:50:01.108Z",
+  "lastUpdated": "2026-05-26T00:55:01.787Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [],
@@ -224,11 +333,11 @@
     },
     {
       "word": "resource-events.jsonl",
-      "count": 2
+      "count": 3
     },
     {
       "word": "stories.json",
-      "count": 1
+      "count": 2
     },
     {
       "word": "hc_pipeline.log",
