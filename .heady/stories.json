@@ -6520,45 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "5372371a-b5df-4e8a-b669-c7d4e811c60e",
-        "timestamp": "2026-05-26T01:12:08.845Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 16
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "26997657-e20c-4331-ba06-50be7fb0039d",
-        "timestamp": "2026-05-26T01:14:08.846Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "16b3aa72-082a-4d0a-a104-aa0c6d31bd70",
-        "timestamp": "2026-05-26T01:16:08.847Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 15
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "803bfb3e-69e2-48be-91e3-ad90524ed100",
         "timestamp": "2026-05-26T01:18:08.847Z",
         "type": "ERROR_BURST_DETECTED",
@@ -18753,11 +18714,95 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "39c968a4-19e6-4b48-a2ec-9b12ecf338cd",
+        "timestamp": "2026-05-26T23:30:08.950Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_dependency_freshness",
+            "latency:task:scan_vector_memory_density",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory",
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 15
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "f078ab05-71b4-4e10-957f-fc320e390819",
+        "timestamp": "2026-05-26T23:32:08.948Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_dependency_freshness",
+            "latency:task:scan_vector_memory_density",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory",
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 15
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "d6687a6f-3f86-4b22-847b-5f5e26c674cc",
+        "timestamp": "2026-05-26T23:34:08.949Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_dependency_freshness",
+            "latency:task:scan_vector_memory_density",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory",
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 15
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T23:28:08.945Z"
+    "updatedAt": "2026-05-26T23:34:08.949Z"
   }
 }
