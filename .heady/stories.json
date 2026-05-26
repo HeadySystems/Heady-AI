@@ -6520,32 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "754fb9fe-7645-4a4a-a7b9-f57466628f1f",
-        "timestamp": "2026-03-18T01:38:22.111Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 38
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "c4cca91f-5486-420a-863b-59d984ee34cc",
-        "timestamp": "2026-03-18T01:40:22.110Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 28
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "7a19f2c4-e13a-496f-9cd4-7702f287057d",
         "timestamp": "2026-03-18T01:42:22.110Z",
         "type": "ERROR_BURST_DETECTED",
@@ -18219,11 +18193,45 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "03e476c7-ec94-49d8-8a76-15d2ee90b4b2",
+        "timestamp": "2026-05-26T21:46:08.941Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_vector_memory_density",
+            "latency:task:scan_resource_utilization",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "2bee175a-efc7-46be-af4b-74d785e18beb",
+        "timestamp": "2026-05-26T21:48:08.943Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_vector_memory_density",
+            "latency:task:scan_resource_utilization",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T21:44:08.942Z"
+    "updatedAt": "2026-05-26T21:48:08.943Z"
   }
 }
