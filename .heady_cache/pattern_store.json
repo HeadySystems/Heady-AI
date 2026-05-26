@@ -2914,7 +2914,7 @@
         "n": 20
       },
       "trend": "degrading",
-      "improvementAttempts": 8,
+      "improvementAttempts": 10,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3145,7 +3145,7 @@
         "n": 20
       },
       "trend": "degrading",
-      "improvementAttempts": 8,
+      "improvementAttempts": 10,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -12698,7 +12698,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 319,
+      "improvementAttempts": 321,
       "lastImproved": "2026-05-26T20:58:08.936Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14529,7 +14529,7 @@
         "n": 200
       },
       "trend": "flat",
-      "improvementAttempts": 308,
+      "improvementAttempts": 310,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16360,7 +16360,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 239,
+      "improvementAttempts": 241,
       "lastImproved": "2026-05-26T20:58:08.936Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18192,7 +18192,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 270,
+      "improvementAttempts": 272,
       "lastImproved": "2026-05-26T20:58:08.937Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20023,7 +20023,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 250,
+      "improvementAttempts": 252,
       "lastImproved": "2026-05-26T20:58:08.937Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20040,7 +20040,7 @@
       "id": "performance::latency:pipeline:decompose",
       "category": "performance",
       "name": "latency:pipeline:decompose",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-26T21:14:08.624Z",
       "observations": [
@@ -21854,7 +21854,7 @@
         "n": 200
       },
       "trend": "stable",
-      "improvementAttempts": 278,
+      "improvementAttempts": 279,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23685,7 +23685,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 273,
+      "improvementAttempts": 275,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23702,7 +23702,7 @@
       "id": "performance::latency:pipeline:orchestrate",
       "category": "performance",
       "name": "latency:pipeline:orchestrate",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-26T21:14:08.624Z",
       "observations": [
@@ -25516,7 +25516,7 @@
         "n": 200
       },
       "trend": "stable",
-      "improvementAttempts": 225,
+      "improvementAttempts": 226,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -27364,7 +27364,7 @@
       "id": "performance::latency:pipeline:arena",
       "category": "performance",
       "name": "latency:pipeline:arena",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-26T21:14:08.624Z",
       "observations": [
@@ -29178,7 +29178,7 @@
         "n": 200
       },
       "trend": "stable",
-      "improvementAttempts": 190,
+      "improvementAttempts": 191,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -38333,7 +38333,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 270,
+      "improvementAttempts": 272,
       "lastImproved": "2026-05-26T21:12:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -40164,7 +40164,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 270,
+      "improvementAttempts": 272,
       "lastImproved": "2026-05-26T20:58:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -43827,7 +43827,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 295,
+      "improvementAttempts": 297,
       "lastImproved": "2026-05-26T20:58:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -47490,7 +47490,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 256,
+      "improvementAttempts": 258,
       "lastImproved": "2026-05-26T20:58:08.938Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -49321,7 +49321,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 279,
+      "improvementAttempts": 281,
       "lastImproved": "2026-05-26T21:12:08.939Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -51153,7 +51153,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 206,
+      "improvementAttempts": 208,
       "lastImproved": "2026-05-26T21:12:08.939Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -54624,7 +54624,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T21:15:01.358Z",
+  "lastUpdated": "2026-05-26T21:20:02.006Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -54632,8 +54632,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-26T21:15:01.358Z",
-      "lastSeen": "2026-05-26T21:15:01.358Z",
+      "firstSeen": "2026-05-26T21:20:02.006Z",
+      "lastSeen": "2026-05-26T21:20:02.006Z",
       "occurrences": 1
     }
   ],
@@ -54658,11 +54658,11 @@
     },
     {
       "word": "stories.json",
-      "count": 185
+      "count": 186
     },
     {
       "word": "hc_pipeline.log",
-      "count": 81
+      "count": 82
     },
     {
       "word": "resource-events.jsonl",
