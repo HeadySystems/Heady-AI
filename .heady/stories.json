@@ -6520,19 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "02b3390b-7141-45cf-a1a5-2b612190dbe0",
-        "timestamp": "2026-02-12T02:22:36.359Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 34
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "998d255a-e9a4-4d03-ac08-84ec1d768c64",
         "timestamp": "2026-02-12T02:22:36.383Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -15265,11 +15252,35 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "37936fdf-cfd1-4515-9546-861f6885fa3b",
+        "timestamp": "2026-05-26T07:14:09.513Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:intake",
+            "latency:pipeline:triage",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:arena",
+            "latency:pipeline:judge",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution"
+          ],
+          "count": 11
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T06:42:09.506Z"
+    "updatedAt": "2026-05-26T07:14:09.513Z"
   }
 }
