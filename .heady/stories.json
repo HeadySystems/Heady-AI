@@ -6520,49 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "64092e5c-4278-47a6-b68e-cf2c5f802bcd",
-        "timestamp": "2026-02-14T17:39:19.659Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "c82d24db-7051-456f-81a5-b4bbdf53f747",
-        "timestamp": "2026-02-14T17:41:21.295Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 21
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "e1fd9a86-f8ab-4bda-91b1-34a25745d3fc",
-        "timestamp": "2026-02-14T17:41:21.301Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "1a9b5b8d-88bf-4c8e-8dad-69e2fb7fa317",
         "timestamp": "2026-02-14T17:43:21.767Z",
         "type": "ERROR_BURST_DETECTED",
@@ -16256,11 +16213,80 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "4d9d65f4-59e5-4d21-a8f0-53ea74634883",
+        "timestamp": "2026-05-26T13:30:08.880Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:arena",
+            "latency:pipeline:approve",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "97b80ae6-83db-4e24-9f58-c179ca0d396c",
+        "timestamp": "2026-05-26T13:32:08.880Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:arena",
+            "latency:pipeline:approve",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "862b1c7a-e4a2-49c4-8626-25be7b3b5545",
+        "timestamp": "2026-05-26T13:34:08.880Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:arena",
+            "latency:pipeline:approve",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T13:28:08.879Z"
+    "updatedAt": "2026-05-26T13:34:08.880Z"
   }
 }
