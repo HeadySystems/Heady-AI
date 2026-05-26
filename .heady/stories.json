@@ -6520,45 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "e3af8ad9-d701-4ee4-9b0a-9c203cc87d16",
-        "timestamp": "2026-02-14T16:48:27.660Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 33
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "813210d0-5c5c-4f3c-ba57-b51b8d896155",
-        "timestamp": "2026-02-14T16:48:27.666Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto"
-          ],
-          "count": 13
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "7b6d65eb-4174-43ae-bf94-aa55de57b8e4",
         "timestamp": "2026-02-14T16:50:33.787Z",
         "type": "ERROR_BURST_DETECTED",
@@ -16155,11 +16116,41 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "81e521e5-d32b-402a-9917-faea612cf99e",
+        "timestamp": "2026-05-26T11:56:08.618Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "97674579-79ae-4cc8-a394-8389900487cc",
+        "timestamp": "2026-05-26T11:58:08.619Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T11:54:08.618Z"
+    "updatedAt": "2026-05-26T11:58:08.619Z"
   }
 }
