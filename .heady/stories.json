@@ -6520,33 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "380e5418-b405-4380-a7ae-7df05b156e9d",
-        "timestamp": "2026-02-12T01:03:40.444Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 14
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "ec118027-552d-4728-8552-b48814a79ff5",
         "timestamp": "2026-02-12T01:05:39.366Z",
         "type": "ERROR_BURST_DETECTED",
@@ -14559,11 +14532,33 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "4db4e8e3-1baf-4b48-b808-dd78a4ffa214",
+        "timestamp": "2026-05-26T02:44:09.064Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:intake",
+            "latency:pipeline:triage",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T01:36:08.856Z"
+    "updatedAt": "2026-05-26T02:44:09.064Z"
   }
 }
