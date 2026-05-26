@@ -6520,26 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "3c5d59a3-0f81-47fa-a281-68deff01265f",
-        "timestamp": "2026-02-15T05:02:00.667Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations"
-          ],
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "75077eb1-3048-4da0-98d7-feea373c9590",
         "timestamp": "2026-02-15T05:04:00.672Z",
         "type": "ERROR_BURST_DETECTED",
@@ -17096,11 +17076,35 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "25c20c9c-475c-4b67-85ec-22cedc36c389",
+        "timestamp": "2026-05-26T17:14:08.913Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:approve",
+            "latency:pipeline:execute",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 11
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T16:42:08.908Z"
+    "updatedAt": "2026-05-26T17:14:08.913Z"
   }
 }
