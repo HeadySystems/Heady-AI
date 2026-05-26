@@ -6520,32 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "42704e31-7a8c-48a8-9913-65dd4b86cece",
-        "timestamp": "2026-02-15T04:27:14.789Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 51
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "a72f860d-ae15-4ce7-a492-b946d818bd59",
-        "timestamp": "2026-02-15T04:29:14.791Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 51
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "a9b09105-16d1-4bf6-8964-a791938d1dec",
         "timestamp": "2026-02-15T04:31:14.795Z",
         "type": "ERROR_BURST_DETECTED",
@@ -16841,11 +16815,43 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "78f4cc03-4a37-4e1a-9777-cf981b32e7bf",
+        "timestamp": "2026-05-26T15:46:08.900Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:arena",
+            "latency:pipeline:approve"
+          ],
+          "count": 3
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "b6a44a4b-ac86-4c72-b0b4-08fe3b9c02bf",
+        "timestamp": "2026-05-26T15:48:08.900Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:arena",
+            "latency:pipeline:approve"
+          ],
+          "count": 3
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T15:44:08.900Z"
+    "updatedAt": "2026-05-26T15:48:08.900Z"
   }
 }
