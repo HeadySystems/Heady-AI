@@ -6520,46 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "855f7975-891d-42e3-a756-6fa5ab2ed895",
-        "timestamp": "2026-02-14T17:03:00.144Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 14
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "07cff661-249f-4803-8ec9-0b0fa37d480e",
-        "timestamp": "2026-02-14T17:05:00.126Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 29
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "43812cef-b785-4942-a8b5-be3635ce7f56",
         "timestamp": "2026-02-14T17:05:00.543Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -16130,11 +16090,51 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "c48f803c-37a9-47d4-a5c9-1bfdaac6cb7a",
+        "timestamp": "2026-05-26T12:26:08.874Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 7
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "615f7a3e-6ec4-428a-bb4e-1713f4573dbd",
+        "timestamp": "2026-05-26T12:28:08.873Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search"
+          ],
+          "count": 7
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T12:24:08.874Z"
+    "updatedAt": "2026-05-26T12:28:08.873Z"
   }
 }
