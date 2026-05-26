@@ -6520,37 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "b099a940-ccf3-4e7c-b702-c51e6a252df9",
-        "timestamp": "2026-02-15T05:28:03.081Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:pqc-operations"
-          ],
-          "count": 5
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "0ad87e7d-18f8-4d01-a80b-55486ecbe991",
-        "timestamp": "2026-02-15T05:30:03.083Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 51
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "a788d056-3382-4978-95f4-d198b5e85160",
         "timestamp": "2026-02-15T05:30:03.088Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -17363,11 +17332,41 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "d76dba29-9946-43f3-a261-89943a74250e",
+        "timestamp": "2026-05-26T18:06:08.922Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:decompose"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "8c445787-8e5d-4f96-a541-8b6cbac81d03",
+        "timestamp": "2026-05-26T18:08:08.923Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:decompose"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T18:04:08.923Z"
+    "updatedAt": "2026-05-26T18:08:08.923Z"
   }
 }
