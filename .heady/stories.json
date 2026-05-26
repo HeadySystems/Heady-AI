@@ -6520,19 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "1d5a0345-d13a-4042-b57a-33301d94bde2",
-        "timestamp": "2026-02-12T01:03:39.400Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 27
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "380e5418-b405-4380-a7ae-7df05b156e9d",
         "timestamp": "2026-02-12T01:03:40.444Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -14559,11 +14546,24 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "4b4e5601-107c-4d55-9bb8-3a1d9a6bc97a",
+        "timestamp": "2026-05-26T01:36:08.856Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:RAM",
+          "name": "resource:RAM",
+          "count": 5
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T01:34:08.852Z"
+    "updatedAt": "2026-05-26T01:36:08.856Z"
   }
 }

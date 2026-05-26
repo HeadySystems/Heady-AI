@@ -1536,7 +1536,7 @@
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 16,
+        "burstCount": 5,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -4803,7 +4803,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T01:35:02.078Z",
+  "lastUpdated": "2026-05-26T01:40:01.643Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -4811,37 +4811,37 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-26T01:35:02.078Z",
-      "lastSeen": "2026-05-26T01:35:02.078Z",
+      "firstSeen": "2026-05-26T01:40:01.643Z",
+      "lastSeen": "2026-05-26T01:40:01.643Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 287,
+  "commitCount24h": 288,
   "topTopics": [
     {
       "word": "hcfp-auto",
-      "count": 287
+      "count": 288
     },
     {
       "word": "file(s)",
-      "count": 287
+      "count": 288
     },
     {
       "word": "changed",
-      "count": 287
+      "count": 288
     },
     {
       "word": "pattern_store.json",
-      "count": 287
+      "count": 288
     },
     {
       "word": "stories.json",
-      "count": 10
+      "count": 11
     },
     {
       "word": "resource-events.jsonl",
-      "count": 8
+      "count": 9
     },
     {
       "word": "hc_pipeline.log",
