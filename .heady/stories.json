@@ -6520,29 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "c1e8eef4-d164-45e3-a864-424e54ef7367",
-        "timestamp": "2026-02-12T01:34:26.979Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:plan",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "0f3d6224-a33e-4a64-bfb6-fba805d944f4",
         "timestamp": "2026-02-12T01:36:27.045Z",
         "type": "ERROR_BURST_DETECTED",
@@ -14739,11 +14716,30 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "5b8b7697-afdb-4eb9-b86c-dc786a8ba947",
+        "timestamp": "2026-05-26T04:44:09.412Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:distiller"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T04:12:09.305Z"
+    "updatedAt": "2026-05-26T04:44:09.412Z"
   }
 }
