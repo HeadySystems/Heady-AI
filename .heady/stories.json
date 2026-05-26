@@ -6520,55 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "bfc4252a-f8da-40f7-852a-07b066d0f7ba",
-        "timestamp": "2026-02-12T01:38:27.339Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 31
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "8b070c0b-6453-48fc-ad36-8a59d8d8e96f",
-        "timestamp": "2026-02-12T01:38:27.352Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:plan",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "bfede9d5-1b43-4d0b-8e22-0c160bd125c3",
-        "timestamp": "2026-02-12T01:40:27.300Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 28
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "f92a5024-7a7e-4570-b70a-505ef835f4c4",
         "timestamp": "2026-02-12T01:40:27.311Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -14737,11 +14688,68 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "b05ec656-ff0d-4dd8-bd79-7ec3665cef4a",
+        "timestamp": "2026-05-26T04:50:09.434Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:distiller"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "758f0df6-86d5-4d26-85c9-398ceeed5d2c",
+        "timestamp": "2026-05-26T04:52:09.435Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:distiller"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "5742be70-5226-4c29-ad1d-ae61459a722b",
+        "timestamp": "2026-05-26T04:54:09.435Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:distiller"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T04:48:09.420Z"
+    "updatedAt": "2026-05-26T04:54:09.435Z"
   }
 }
