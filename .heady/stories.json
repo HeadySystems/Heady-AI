@@ -6520,67 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "bdcb90c3-dfef-44ac-85ff-7e834af54e89",
-        "timestamp": "2026-02-14T16:44:25.492Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations"
-          ],
-          "count": 9
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "1700501f-9835-4a2b-8a6d-8ad53e9b2432",
-        "timestamp": "2026-02-14T16:46:25.643Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 38
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "3af93658-cbf1-4d80-89a5-49c8ff4a5e2c",
-        "timestamp": "2026-02-14T16:46:25.647Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto"
-          ],
-          "count": 13
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "e3af8ad9-d701-4ee4-9b0a-9c203cc87d16",
         "timestamp": "2026-02-14T16:48:27.660Z",
         "type": "ERROR_BURST_DETECTED",
@@ -16171,11 +16110,56 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "86258646-8ac5-4b7a-a06b-b64b4c00d0e3",
+        "timestamp": "2026-05-26T11:50:08.618Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "ce14076f-6d38-4ef3-9318-029183ba16fd",
+        "timestamp": "2026-05-26T11:52:08.617Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "961bdf28-111b-45a9-9ebc-16ecf868f326",
+        "timestamp": "2026-05-26T11:54:08.618Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T11:48:08.617Z"
+    "updatedAt": "2026-05-26T11:54:08.618Z"
   }
 }
