@@ -6520,44 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "1dc9191c-d6c9-43e4-ad5c-645e6b3fa1d8",
-        "timestamp": "2026-02-14T17:25:45.419Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:finalize",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 12
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "5dc5c94e-bb2b-4e3d-9e40-6c870cc5ebff",
-        "timestamp": "2026-02-14T17:27:28.120Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 19
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "811e7b95-ebc2-4173-a980-492008c36d12",
         "timestamp": "2026-02-14T17:27:28.137Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -16266,11 +16228,41 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "88a80123-93fc-447d-b17f-9c6011297bb4",
+        "timestamp": "2026-05-26T13:06:08.878Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "1e335769-65f4-4427-8f66-8571b83efbe6",
+        "timestamp": "2026-05-26T13:08:08.878Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:arena"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T13:04:08.877Z"
+    "updatedAt": "2026-05-26T13:08:08.878Z"
   }
 }
