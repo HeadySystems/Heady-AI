@@ -4,9 +4,9 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "active",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-26T01:14:27.615Z",
+      "lastUpdated": "2026-05-26T01:19:52.918Z",
       "observations": [
         {
           "value": 78,
@@ -835,18 +835,207 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 84,
+          "ts": "2026-05-26T01:15:17.633Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-26T01:15:22.653Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:15:27.666Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:16:17.684Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 84,
+          "ts": "2026-05-26T01:16:22.696Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 85,
+          "ts": "2026-05-26T01:16:27.708Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:16:32.720Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-26T01:17:22.734Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-26T01:17:27.749Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:17:32.762Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:17:37.776Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 85,
+          "ts": "2026-05-26T01:18:27.791Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:18:32.809Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:18:37.821Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:18:42.834Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-26T01:19:27.852Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-26T01:19:32.864Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 83,
+          "ts": "2026-05-26T01:19:37.877Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:19:42.889Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:19:47.903Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T01:19:52.918Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 79.7752808988764,
+        "mean": 80.11650485436893,
         "median": 80,
-        "stddev": 1.5704633896320128,
+        "stddev": 2.0014604904011053,
         "min": 78,
-        "max": 84,
-        "n": 89
+        "max": 87,
+        "n": 103
       },
-      "trend": "unstable",
-      "improvementAttempts": 5,
+      "trend": "degrading",
+      "improvementAttempts": 7,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3327,7 +3516,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T01:15:01.399Z",
+  "lastUpdated": "2026-05-26T01:20:01.757Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -3335,8 +3524,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-26T01:15:01.399Z",
-      "lastSeen": "2026-05-26T01:15:01.399Z",
+      "firstSeen": "2026-05-26T01:20:01.757Z",
+      "lastSeen": "2026-05-26T01:20:01.757Z",
       "occurrences": 1
     }
   ],
@@ -3361,7 +3550,7 @@
     },
     {
       "word": "stories.json",
-      "count": 6
+      "count": 7
     },
     {
       "word": "resource-events.jsonl",
@@ -3369,7 +3558,7 @@
     },
     {
       "word": "hc_pipeline.log",
-      "count": 2
+      "count": 3
     }
   ]
 }
