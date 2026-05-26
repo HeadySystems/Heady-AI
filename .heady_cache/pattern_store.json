@@ -3749,12 +3749,12 @@
         }
       ],
       "stats": {
-        "mean": 1.2857142857142858,
+        "mean": 1.1176470588235294,
         "median": 1,
-        "stddev": 1.8294640678379568,
+        "stddev": 1.7109458320292925,
         "min": 0,
         "max": 7,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3933,12 +3933,12 @@
         }
       ],
       "stats": {
-        "mean": 0.5714285714285714,
+        "mean": 0.47058823529411764,
         "median": 0,
-        "stddev": 1.1157499537009508,
+        "stddev": 1.0356951095093534,
         "min": 0,
         "max": 4,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4117,12 +4117,12 @@
         }
       ],
       "stats": {
-        "mean": 25.428571428571427,
+        "mean": 20.941176470588236,
         "median": 0,
-        "stddev": 61.683193225793794,
+        "stddev": 56.80976571830637,
         "min": 0,
         "max": 179,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4301,12 +4301,12 @@
         }
       ],
       "stats": {
-        "mean": 0.5,
+        "mean": 0.4117647058823529,
         "median": 0,
-        "stddev": 0.9063269671749657,
+        "stddev": 0.8442764761416073,
         "min": 0,
         "max": 3,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4485,12 +4485,12 @@
         }
       ],
       "stats": {
-        "mean": 0.42857142857142855,
+        "mean": 0.35294117647058826,
         "median": 0,
-        "stddev": 0.8206518066482897,
+        "stddev": 0.7624400821656306,
         "min": 0,
         "max": 3,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4669,12 +4669,12 @@
         }
       ],
       "stats": {
-        "mean": 0.2857142857142857,
+        "mean": 0.23529411764705882,
         "median": 0,
-        "stddev": 0.5890150893739515,
+        "stddev": 0.5455069703232767,
         "min": 0,
         "max": 2,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4853,12 +4853,12 @@
         }
       ],
       "stats": {
-        "mean": 1,
+        "mean": 0.8823529411764706,
         "median": 0,
-        "stddev": 1.4142135623730951,
+        "stddev": 1.3232025740237638,
         "min": 0,
         "max": 4,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5037,12 +5037,12 @@
         }
       ],
       "stats": {
-        "mean": 0.5714285714285714,
+        "mean": 0.5294117647058824,
         "median": 0,
-        "stddev": 0.7284313590846836,
+        "stddev": 0.6960093862470137,
         "min": 0,
         "max": 2,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5221,12 +5221,12 @@
         }
       ],
       "stats": {
-        "mean": 0.42857142857142855,
+        "mean": 0.35294117647058826,
         "median": 0,
-        "stddev": 0.8206518066482897,
+        "stddev": 0.7624400821656306,
         "min": 0,
         "max": 3,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5405,12 +5405,12 @@
         }
       ],
       "stats": {
-        "mean": 0.42857142857142855,
+        "mean": 0.35294117647058826,
         "median": 0,
-        "stddev": 0.6226998490772391,
+        "stddev": 0.5882352941176471,
         "min": 0,
         "max": 2,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5589,12 +5589,12 @@
         }
       ],
       "stats": {
-        "mean": 0.14285714285714285,
+        "mean": 0.11764705882352941,
         "median": 0,
-        "stddev": 0.3499271061118826,
+        "stddev": 0.32218973970892123,
         "min": 0,
         "max": 1,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5773,12 +5773,12 @@
         }
       ],
       "stats": {
-        "mean": 0.07142857142857142,
+        "mean": 0.058823529411764705,
         "median": 0,
-        "stddev": 0.2575393768188564,
+        "stddev": 0.23529411764705882,
         "min": 0,
         "max": 1,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -5957,12 +5957,12 @@
         }
       ],
       "stats": {
-        "mean": 0.35714285714285715,
+        "mean": 0.35294117647058826,
         "median": 0,
-        "stddev": 0.8112726208286106,
+        "stddev": 0.7624400821656306,
         "min": 0,
         "max": 3,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6141,12 +6141,12 @@
         }
       ],
       "stats": {
-        "mean": 0.35714285714285715,
+        "mean": 0.29411764705882354,
         "median": 0,
-        "stddev": 0.8112726208286106,
+        "stddev": 0.7487012977269327,
         "min": 0,
         "max": 3,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6325,12 +6325,12 @@
         }
       ],
       "stats": {
-        "mean": 1,
-        "median": 1,
-        "stddev": 1.3627702877384937,
+        "mean": 0.8235294117647058,
+        "median": 0,
+        "stddev": 1.2941176470588236,
         "min": 0,
         "max": 5,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6509,12 +6509,12 @@
         }
       ],
       "stats": {
-        "mean": 1.1428571428571428,
+        "mean": 1,
         "median": 1,
-        "stddev": 1.4568627181693672,
+        "stddev": 1.3719886811400708,
         "min": 0,
         "max": 5,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6693,12 +6693,12 @@
         }
       ],
       "stats": {
-        "mean": 0.9285714285714286,
+        "mean": 0.8235294117647058,
         "median": 0,
-        "stddev": 1.6241167144145818,
+        "stddev": 1.5043190414758143,
         "min": 0,
         "max": 6,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6877,12 +6877,12 @@
         }
       ],
       "stats": {
-        "mean": 1.9285714285714286,
+        "mean": 1.7058823529411764,
         "median": 1,
-        "stddev": 3.17274747350183,
+        "stddev": 2.925842380104915,
         "min": 0,
         "max": 11,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -7061,12 +7061,12 @@
         }
       ],
       "stats": {
-        "mean": 0.9285714285714286,
+        "mean": 0.7647058823529411,
         "median": 0,
-        "stddev": 2.120117439950833,
+        "stddev": 1.9562693115665752,
         "min": 0,
         "max": 8,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -7245,12 +7245,12 @@
         }
       ],
       "stats": {
-        "mean": 1.0714285714285714,
+        "mean": 0.8823529411764706,
         "median": 0,
-        "stddev": 1.6241167144145818,
+        "stddev": 1.5294117647058822,
         "min": 0,
         "max": 5,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -7429,12 +7429,12 @@
         }
       ],
       "stats": {
-        "mean": 2.2142857142857144,
+        "mean": 1.8823529411764706,
         "median": 1,
-        "stddev": 4.020990841439305,
+        "stddev": 3.724045127375156,
         "min": 0,
         "max": 12,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -7613,12 +7613,12 @@
         }
       ],
       "stats": {
-        "mean": 0.9285714285714286,
+        "mean": 0.7647058823529411,
         "median": 0,
-        "stddev": 1.9072899889740984,
+        "stddev": 1.7666655785507304,
         "min": 0,
         "max": 6,
-        "n": 14
+        "n": 17
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -8197,7 +8197,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T02:30:01.243Z",
+  "lastUpdated": "2026-05-26T02:35:01.961Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -8205,8 +8205,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-26T02:30:01.243Z",
-      "lastSeen": "2026-05-26T02:30:01.243Z",
+      "firstSeen": "2026-05-26T02:35:01.961Z",
+      "lastSeen": "2026-05-26T02:35:01.961Z",
       "occurrences": 1
     }
   ],
@@ -8239,7 +8239,7 @@
     },
     {
       "word": "hc_pipeline.log",
-      "count": 7
+      "count": 8
     }
   ]
 }
