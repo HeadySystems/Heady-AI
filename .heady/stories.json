@@ -6520,69 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "8d81a68c-e3b9-4993-afcd-67f45889f11b",
-        "timestamp": "2026-02-14T15:39:25.394Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 12
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "299595fe-0fa3-48fa-9479-cda147389035",
-        "timestamp": "2026-02-14T15:41:30.025Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 39
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "6bb3fc7f-a3e5-4d54-a6a2-de412b6b737d",
-        "timestamp": "2026-02-14T15:41:30.030Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:ingest",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority",
-            "latency:pipeline:pqc-operations",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 12
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "171f245f-1ecf-48a6-a3c4-b3d699003933",
         "timestamp": "2026-02-14T15:43:31.905Z",
         "type": "ERROR_BURST_DETECTED",
@@ -15758,11 +15695,56 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "35509aa1-39cc-47fe-bb8d-fb362618ec65",
+        "timestamp": "2026-05-26T09:30:08.534Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "fcc0dfb7-3960-45f0-bd99-4bef5b77795a",
+        "timestamp": "2026-05-26T09:32:08.536Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "7314275e-137a-4f09-bbdd-25c3f789bd31",
+        "timestamp": "2026-05-26T09:34:08.540Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T09:28:08.534Z"
+    "updatedAt": "2026-05-26T09:34:08.540Z"
   }
 }
