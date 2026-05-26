@@ -6520,38 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "0af8949f-35fd-40d5-a947-aec8f665cf2b",
-        "timestamp": "2026-02-14T16:15:41.517Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 47
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "b8552cfd-5595-4289-8405-6a711f4aa890",
-        "timestamp": "2026-02-14T16:15:41.521Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:self-critique",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:sync_priority_changes",
-            "latency:pipeline:deploy_priority"
-          ],
-          "count": 6
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "a5ba9dd0-fc46-4327-9a9a-72d4a1603d82",
         "timestamp": "2026-02-14T16:17:42.345Z",
         "type": "ERROR_BURST_DETECTED",
@@ -15961,11 +15929,41 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "bafc0ff0-3776-4ac7-8c73-d14dd098258f",
+        "timestamp": "2026-05-26T10:40:08.610Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "85ad0255-6aaa-4bcd-be1c-38748d291181",
+        "timestamp": "2026-05-26T10:42:08.610Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:recon",
+            "latency:pipeline:decompose"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-26T10:38:08.609Z"
+    "updatedAt": "2026-05-26T10:42:08.610Z"
   }
 }
