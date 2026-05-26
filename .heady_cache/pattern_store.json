@@ -7603,7 +7603,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T02:15:01.863Z",
+  "lastUpdated": "2026-05-26T02:20:01.831Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -7611,8 +7611,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-26T02:15:01.863Z",
-      "lastSeen": "2026-05-26T02:15:01.863Z",
+      "firstSeen": "2026-05-26T02:20:01.831Z",
+      "lastSeen": "2026-05-26T02:20:01.831Z",
       "occurrences": 1
     }
   ],
@@ -7645,7 +7645,7 @@
     },
     {
       "word": "hc_pipeline.log",
-      "count": 6
+      "count": 7
     }
   ]
 }
