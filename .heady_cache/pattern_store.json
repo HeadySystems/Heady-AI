@@ -4,9 +4,9 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "degrading",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-26T00:59:31.602Z",
+      "lastUpdated": "2026-05-26T01:04:41.841Z",
       "observations": [
         {
           "value": 78,
@@ -385,24 +385,177 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 84,
+          "ts": "2026-05-26T01:00:16.616Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:00:21.630Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:01:06.647Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:01:11.659Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T01:01:16.673Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:01:56.690Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:02:01.702Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:02:06.718Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:02:46.735Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:02:51.751Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:02:56.762Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T01:03:01.774Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-26T01:03:41.789Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-26T01:03:46.802Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T01:03:51.816Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:04:36.828Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T01:04:41.841Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 79.24324324324324,
-        "median": 79,
-        "stddev": 1.3029157614263729,
+        "mean": 79.70175438596492,
+        "median": 80,
+        "stddev": 1.532855519915985,
         "min": 78,
-        "max": 82,
-        "n": 37
+        "max": 84,
+        "n": 57
       },
-      "trend": "degrading",
-      "improvementAttempts": 3,
+      "trend": "flat",
+      "improvementAttempts": 4,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 11,
+        "burstCount": 17,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -2679,10 +2832,19 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T01:00:01.457Z",
+  "lastUpdated": "2026-05-26T01:05:01.262Z",
   "version": 1,
   "phi": 1.618033988749895,
-  "resourcePatterns": [],
+  "resourcePatterns": [
+    {
+      "type": "RESOURCE_RISING",
+      "confidence": 0.75,
+      "severity": "MEDIUM",
+      "firstSeen": "2026-05-26T01:05:01.262Z",
+      "lastSeen": "2026-05-26T01:05:01.262Z",
+      "occurrences": 1
+    }
+  ],
   "gitVelocity": "HIGH",
   "commitCount24h": 288,
   "topTopics": [
@@ -2703,16 +2865,16 @@
       "count": 288
     },
     {
+      "word": "stories.json",
+      "count": 4
+    },
+    {
       "word": "resource-events.jsonl",
       "count": 4
     },
     {
-      "word": "stories.json",
-      "count": 3
-    },
-    {
       "word": "hc_pipeline.log",
-      "count": 1
+      "count": 2
     }
   ]
 }
