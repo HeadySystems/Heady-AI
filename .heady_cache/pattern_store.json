@@ -4,9 +4,9 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "detected",
+      "state": "active",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-26T00:44:21.015Z",
+      "lastUpdated": "2026-05-26T00:49:31.229Z",
       "observations": [
         {
           "value": 78,
@@ -34,15 +34,161 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:45:01.028Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:45:06.044Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:45:11.057Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:45:46.069Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:45:51.082Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:46:26.098Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:46:31.112Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-26T00:46:36.123Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T00:47:11.139Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:47:56.156Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:48:01.170Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:48:41.187Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:48:46.198Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-26T00:49:26.215Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-26T00:49:31.229Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
-      "stats": null,
+      "stats": {
+        "mean": 78.42857142857143,
+        "median": 78,
+        "stddev": 0.6226998490772391,
+        "min": 78,
+        "max": 80,
+        "n": 14
+      },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
-      "metadata": {},
+      "metadata": {
+        "errorBurst": true,
+        "burstCount": 13,
+        "burstWindow": "5m"
+      },
       "tags": [
         "resource",
         "RAM"
@@ -53,19 +199,10 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-26T00:45:01.489Z",
+  "lastUpdated": "2026-05-26T00:50:01.108Z",
   "version": 1,
   "phi": 1.618033988749895,
-  "resourcePatterns": [
-    {
-      "type": "RESOURCE_STABLE",
-      "confidence": 0.85,
-      "severity": "LOW",
-      "firstSeen": "2026-05-26T00:45:01.489Z",
-      "lastSeen": "2026-05-26T00:45:01.489Z",
-      "occurrences": 1
-    }
-  ],
+  "resourcePatterns": [],
   "gitVelocity": "HIGH",
   "commitCount24h": 288,
   "topTopics": [
@@ -87,6 +224,10 @@
     },
     {
       "word": "resource-events.jsonl",
+      "count": 2
+    },
+    {
+      "word": "stories.json",
       "count": 1
     },
     {
