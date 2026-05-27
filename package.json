@@ -6,6 +6,10 @@
   "engines": {
     "node": ">=22.0.0"
   },
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "start": "node heady-manager.js",
