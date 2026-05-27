@@ -5,9 +5,20 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import {
-  PHI, PSI, PSI2, PSI3, CSL_THRESHOLDS, FIB,
-  cosineSimilarity, normalize, sigmoid, cslGate, sha256,
-  deterministicRandom, SEED
+  PHI,
+  PSI,
+  PSI2,
+  PSI3,
+  CSL_THRESHOLDS,
+  FIB,
+  cosineSimilarity,
+  normalize,
+  sigmoid,
+  cslGate,
+  cslBlend,
+  sha256,
+  deterministicRandom,
+  SEED,
 } from './phi-math-v2.js';
 
 const DIMENSIONS = FIB[14] - FIB[5]; // 384 - 5 = 379... use exact 384
@@ -28,14 +39,14 @@ function cslOR(a, b) {
 function cslNOT(a, b) {
   const dot = a.reduce((s, v, i) => s + v * b[i], 0);
   const bMag = b.reduce((s, v) => s + v * v, 0);
-  const proj = bMag === 0 ? b : b.map(v => v * (dot / bMag));
+  const proj = bMag === 0 ? b : b.map((v) => v * (dot / bMag));
   return normalize(a.map((v, i) => v - proj[i]));
 }
 
 function cslIMPLY(a, b) {
   const dot = a.reduce((s, v, i) => s + v * b[i], 0);
   const bMag = b.reduce((s, v) => s + v * v, 0);
-  return bMag === 0 ? b : b.map(v => v * (dot / bMag));
+  return bMag === 0 ? b : b.map((v) => v * (dot / bMag));
 }
 
 function cslXOR(a, b) {
@@ -117,11 +128,21 @@ function toTernary(cosScore, threshold = CSL_THRESHOLDS.MINIMUM) {
   return TERNARY.UNKNOWN;
 }
 
-function kleeneAND(a, b) { return Math.min(a, b); }
-function kleeneOR(a, b) { return Math.max(a, b); }
-function kleeneNOT(a) { return -a; }
-function lukasiewiczAND(a, b) { return Math.max(-1, a + b - 1); }
-function lukasiewiczOR(a, b) { return Math.min(1, a + b + 1); }
+function kleeneAND(a, b) {
+  return Math.min(a, b);
+}
+function kleeneOR(a, b) {
+  return Math.max(a, b);
+}
+function kleeneNOT(a) {
+  return -a;
+}
+function lukasiewiczAND(a, b) {
+  return Math.max(-1, a + b - 1);
+}
+function lukasiewiczOR(a, b) {
+  return Math.min(1, a + b + 1);
+}
 
 // ─── MOE CSL ROUTER ─────────────────────────────────────────────────────────
 
@@ -136,21 +157,21 @@ class MoECSLRouter {
     this.#topK = FIB[3]; // 2
     this.#antiCollapseWeight = Math.pow(PSI, 8);
     this.#expertGates = Array.from({ length: numExperts }, (_, i) =>
-      generateRandomVector(dim, SEED + i + 1)
+      generateRandomVector(dim, SEED + i + 1),
     );
   }
 
   route(inputVec) {
-    const scores = this.#expertGates.map(gate => cosineSimilarity(inputVec, gate));
+    const scores = this.#expertGates.map((gate) => cosineSimilarity(inputVec, gate));
     const maxScore = Math.max(...scores);
-    const expScores = scores.map(s => Math.exp((s - maxScore) / this.#temperature));
+    const expScores = scores.map((s) => Math.exp((s - maxScore) / this.#temperature));
     const sumExp = expScores.reduce((a, b) => a + b, 0);
-    const probs = expScores.map(e => e / sumExp);
+    const probs = expScores.map((e) => e / sumExp);
     const indexed = probs.map((p, i) => ({ index: i, prob: p }));
     indexed.sort((a, b) => b.prob - a.prob);
     const selected = indexed.slice(0, this.#topK);
     const selectedSum = selected.reduce((a, s) => a + s.prob, 0);
-    return selected.map(s => ({ expertIndex: s.index, weight: s.prob / selectedSum }));
+    return selected.map((s) => ({ expertIndex: s.index, weight: s.prob / selectedSum }));
   }
 
   detectCollapse() {
@@ -165,9 +186,15 @@ class MoECSLRouter {
     return minDist < Math.pow(PSI, 9);
   }
 
-  getExpertCount() { return this.#expertGates.length; }
-  getTopK() { return this.#topK; }
-  getTemperature() { return this.#temperature; }
+  getExpertCount() {
+    return this.#expertGates.length;
+  }
+  getTopK() {
+    return this.#topK;
+  }
+  getTemperature() {
+    return this.#temperature;
+  }
 }
 
 // ─── EMBEDDINGS UTILITY ─────────────────────────────────────────────────────
@@ -185,23 +212,63 @@ async function hashEmbedding(embedding) {
 }
 
 export {
-  DIM, PHI_TEMPERATURE,
-  cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS, cslGATE,
-  phiGATE, adaptiveGATE,
-  hdcBind, hdcBundle, hdcPermute,
-  generateRandomVector, textToEmbedding, hashEmbedding,
-  TERNARY, toTernary,
-  kleeneAND, kleeneOR, kleeneNOT, lukasiewiczAND, lukasiewiczOR,
+  DIM,
+  PHI_TEMPERATURE,
+  cslAND,
+  cslOR,
+  cslNOT,
+  cslIMPLY,
+  cslXOR,
+  cslCONSENSUS,
+  cslGATE,
+  phiGATE,
+  adaptiveGATE,
+  hdcBind,
+  hdcBundle,
+  hdcPermute,
+  generateRandomVector,
+  textToEmbedding,
+  hashEmbedding,
+  TERNARY,
+  toTernary,
+  kleeneAND,
+  kleeneOR,
+  kleeneNOT,
+  lukasiewiczAND,
+  lukasiewiczOR,
   MoECSLRouter,
+  cslGate,
+  cslBlend,
+  cosineSimilarity,
 };
 
 export default {
-  DIM, PHI_TEMPERATURE,
-  cslAND, cslOR, cslNOT, cslIMPLY, cslXOR, cslCONSENSUS, cslGATE,
-  phiGATE, adaptiveGATE,
-  hdcBind, hdcBundle, hdcPermute,
-  generateRandomVector, textToEmbedding, hashEmbedding,
-  TERNARY, toTernary,
-  kleeneAND, kleeneOR, kleeneNOT, lukasiewiczAND, lukasiewiczOR,
+  DIM,
+  PHI_TEMPERATURE,
+  cslAND,
+  cslOR,
+  cslNOT,
+  cslIMPLY,
+  cslXOR,
+  cslCONSENSUS,
+  cslGATE,
+  phiGATE,
+  adaptiveGATE,
+  hdcBind,
+  hdcBundle,
+  hdcPermute,
+  generateRandomVector,
+  textToEmbedding,
+  hashEmbedding,
+  TERNARY,
+  toTernary,
+  kleeneAND,
+  kleeneOR,
+  kleeneNOT,
+  lukasiewiczAND,
+  lukasiewiczOR,
   MoECSLRouter,
+  cslGate,
+  cslBlend,
+  cosineSimilarity,
 };

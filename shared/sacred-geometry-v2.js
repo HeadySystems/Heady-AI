@@ -4,16 +4,39 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import {
-  PHI, PSI, PSI2, FIB, CSL_THRESHOLDS,
-  cosineSimilarity, normalize, phiFusionWeights, phiThreshold,
+  PHI,
+  PSI,
+  PSI2,
+  FIB,
+  CSL_THRESHOLDS,
+  cosineSimilarity,
+  normalize,
+  phiFusionWeights,
+  phiThreshold,
 } from './phi-math-v2.js';
 
 const RINGS = Object.freeze({
   CENTRAL: { name: 'Central Hub', radius: 0, nodes: ['HeadySoul'] },
-  INNER:   { name: 'Inner Ring', radius: PSI, nodes: ['HeadyBrains', 'HeadyConductor', 'HeadyVinci'] },
-  MIDDLE:  { name: 'Middle Ring', radius: 1, nodes: ['JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS', 'PYTHIA'] },
-  OUTER:   { name: 'Outer Ring', radius: PHI, nodes: ['BRIDGE', 'MUSE', 'SENTINEL', 'NOVA', 'JANITOR', 'SOPHIA', 'CIPHER', 'LENS'] },
-  GOVERNANCE: { name: 'Governance Shell', radius: PHI * PHI, nodes: ['HeadyCheck', 'HeadyAssure', 'HeadyAware', 'HeadyPatterns', 'HeadyMC', 'HeadyRisk'] },
+  INNER: {
+    name: 'Inner Ring',
+    radius: PSI,
+    nodes: ['HeadyBrains', 'HeadyConductor', 'HeadyVinci'],
+  },
+  MIDDLE: {
+    name: 'Middle Ring',
+    radius: 1,
+    nodes: ['JULES', 'BUILDER', 'OBSERVER', 'MURPHY', 'ATLAS', 'PYTHIA'],
+  },
+  OUTER: {
+    name: 'Outer Ring',
+    radius: PHI,
+    nodes: ['BRIDGE', 'MUSE', 'SENTINEL', 'NOVA', 'JANITOR', 'SOPHIA', 'CIPHER', 'LENS'],
+  },
+  GOVERNANCE: {
+    name: 'Governance Shell',
+    radius: PHI * PHI,
+    nodes: ['HeadyCheck', 'HeadyAssure', 'HeadyAware', 'HeadyPatterns', 'HeadyMC', 'HeadyRisk'],
+  },
 });
 
 function getNodePosition(nodeName) {
@@ -39,9 +62,7 @@ function geometricDistance(nodeA, nodeB) {
   const posB = typeof nodeB === 'string' ? getNodePosition(nodeB) : nodeB;
   if (!posA || !posB) return Infinity;
   return Math.sqrt(
-    Math.pow(posA.x - posB.x, 2) +
-    Math.pow(posA.y - posB.y, 2) +
-    Math.pow(posA.z - posB.z, 2)
+    Math.pow(posA.x - posB.x, 2) + Math.pow(posA.y - posB.y, 2) + Math.pow(posA.z - posB.z, 2),
   );
 }
 
@@ -92,27 +113,27 @@ function detectDrift(nodeEmbeddings, threshold = CSL_THRESHOLDS.LOW) {
   return drifted;
 }
 
-const FIBONACCI_SPACING = FIB.slice(0, FIB[6]).map(f => f);
+const FIBONACCI_SPACING = FIB.slice(0, FIB[6]).map((f) => f);
 const TYPOGRAPHY_SCALE = [1, PHI, PHI * PHI, PHI * PHI * PHI, PHI * PHI * PHI * PHI];
 
 function goldenLayout(totalWidth, totalHeight) {
   return {
-    primary:   { width: totalWidth * PSI, height: totalHeight },
+    primary: { width: totalWidth * PSI, height: totalHeight },
     secondary: { width: totalWidth * PSI2, height: totalHeight },
-    golden:    { width: totalWidth, height: totalWidth / PHI },
+    golden: { width: totalWidth, height: totalWidth / PHI },
   };
 }
 
 function colorHarmony(baseHue, count = FIB[5]) {
   const colors = [];
   for (let i = 0; i < count; i++) {
-    colors.push((baseHue + i * 360 / PHI) % 360);
+    colors.push((baseHue + (i * 360) / PHI) % 360);
   }
   return colors;
 }
 
 function getAllNodes() {
-  return Object.values(RINGS).flatMap(r => r.nodes);
+  return Object.values(RINGS).flatMap((r) => r.nodes);
 }
 
 function getNodeRing(nodeName) {
@@ -122,18 +143,42 @@ function getNodeRing(nodeName) {
   return null;
 }
 
+const sacredTopology = RINGS;
+
+function fibonacciSpacing(count) {
+  return FIB.slice(0, count).map((f) => f);
+}
+
 export {
-  RINGS, getNodePosition, geometricDistance, shortestGeometricPath,
-  systemCoherence, detectDrift,
-  FIBONACCI_SPACING, TYPOGRAPHY_SCALE,
-  goldenLayout, colorHarmony,
-  getAllNodes, getNodeRing,
+  RINGS,
+  getNodePosition,
+  geometricDistance,
+  shortestGeometricPath,
+  systemCoherence,
+  detectDrift,
+  FIBONACCI_SPACING,
+  TYPOGRAPHY_SCALE,
+  goldenLayout,
+  colorHarmony,
+  getAllNodes,
+  getNodeRing,
+  fibonacciSpacing,
+  sacredTopology,
 };
 
 export default {
-  RINGS, getNodePosition, geometricDistance, shortestGeometricPath,
-  systemCoherence, detectDrift,
-  FIBONACCI_SPACING, TYPOGRAPHY_SCALE,
-  goldenLayout, colorHarmony,
-  getAllNodes, getNodeRing,
+  RINGS,
+  getNodePosition,
+  geometricDistance,
+  shortestGeometricPath,
+  systemCoherence,
+  detectDrift,
+  FIBONACCI_SPACING,
+  TYPOGRAPHY_SCALE,
+  goldenLayout,
+  colorHarmony,
+  getAllNodes,
+  getNodeRing,
+  fibonacciSpacing,
+  sacredTopology,
 };

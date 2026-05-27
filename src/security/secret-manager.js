@@ -41,9 +41,21 @@ class SecretManager {
 
   get(name) {
     const entry = this.#secrets.get(name);
-    if (!entry) return null;
-    const value = entry._value;
-    return { name, value, classification: entry.classification, version: entry.version };
+    if (entry) {
+      return { name, value: entry._value, classification: entry.classification, version: entry.version };
+    }
+    return process.env[name] || null;
+  }
+
+  require(name) {
+    const val = this.get(name);
+    const value = val && typeof val === 'object' ? val.value : val;
+    if (!value) {
+      const err = new Error(`Secret missing: ${name}`);
+      err.code = 'HEADY-SECRET-MISSING';
+      throw err;
+    }
+    return value;
   }
 
   async rotate(name, newValue) {

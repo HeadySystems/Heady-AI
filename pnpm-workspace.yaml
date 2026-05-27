@@ -1,5 +1,10 @@
 packages:
   - packages/*
+  - '!packages/heady-auth'
+  - '!packages/heady-conductor'
+  - '!packages/heady-guard'
+  - '!packages/sacred-geometry-sdk'
+  - '!packages/heady-types'
   - services/*
   - workers/*
   - apps/*

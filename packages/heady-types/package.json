@@ -1,5 +1,5 @@
 {
-  "name": "@heady-ai/types",
+  "name": "@heady-ai/types-legacy",
   "version": "1.0.0",
   "description": "HEADY platform shared TypeScript type definitions for services, authentication, CSL, and events",
   "main": "dist/index.js",

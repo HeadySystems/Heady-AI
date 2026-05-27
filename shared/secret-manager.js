@@ -140,7 +140,44 @@ async function _getClient() {
   }
 }
 
+function _domainFromName(name) {
+  const prefixMap = {
+    'github': 'github', 'claude': 'claude', 'openai': 'openai',
+    'hf': 'huggingface', 'groq': 'groq', 'cf': 'cloudflare',
+    'sentry': 'sentry', 'neon': 'neon', 'upstash': 'upstash',
+    'pinecone': 'pinecone', 'stripe': 'stripe', 'onepassword': 'onepassword',
+    'gai': 'googleai', 'gcp': 'gcloud', 'heady': 'heady',
+    'perplexity': 'perplexity', 'npm': 'npm', 'ssh': 'ssh',
+  };
+  for (const [prefix, domain] of Object.entries(prefixMap)) {
+    if (name.startsWith(prefix)) return domain;
+  }
+  return 'custom';
+}
+
 async function _fetchSecret(secretName, version = 'latest') {
+  // 1. Try Native HeadyVault first!
+  try {
+    const vaultModule = require('../src/services/secure-key-vault');
+    const vault = vaultModule.vault;
+    if (!vault.isUnlocked() && process.env.VAULT_PASSPHRASE) {
+      logger.info({ message: 'Unlocking native HeadyVault using VAULT_PASSPHRASE' });
+      await vault.unlock(process.env.VAULT_PASSPHRASE);
+    }
+    if (vault.isUnlocked()) {
+      // Derive domain from name
+      const domain = _domainFromName(secretName);
+      const cred = await vault.get(secretName, domain);
+      if (cred) {
+        logger.info({ message: 'Secret fetched successfully from native HeadyVault', secretName });
+        return { value: cred.value, version: 'native' };
+      }
+    }
+  } catch (err) {
+    logger.debug({ message: 'Native HeadyVault check skipped or failed', error: err.message });
+  }
+
+  // 2. Fallback to GCP Secret Manager
   const client = await _getClient();
   const name = `projects/${GCP_PROJECT_ID}/secrets/${secretName}/versions/${version}`;
   
@@ -152,7 +189,7 @@ async function _fetchSecret(secretName, version = 'latest') {
       const secretVersion = response.name.split('/').pop();
       
       logger.info({
-        message: 'Secret fetched successfully',
+        message: 'Secret fetched successfully from GCP Secret Manager',
         secretName,
         version: secretVersion,
         attempt,
@@ -173,7 +210,7 @@ async function _fetchSecret(secretName, version = 'latest') {
       if (attempt < MAX_FETCH_RETRIES - 1) {
         const delay = phiBackoffWithJitter(attempt);
         logger.warn({
-          message: 'Secret fetch retry',
+          message: 'Secret fetch retry from GCP Secret Manager',
           secretName,
           attempt,
           nextRetryMs: delay,
@@ -195,7 +232,7 @@ async function _fetchSecret(secretName, version = 'latest') {
 // ═══════════════════════════════════════════════════════════
 
 async function loadAllSecrets() {
-  logger.info({ message: 'Loading all required secrets from GCP Secret Manager' });
+  logger.info({ message: 'Loading all required secrets. Prioritizing native process.env and HeadyVault.' });
   
   const results = { loaded: [], failed: [], skipped: [] };
   
@@ -207,6 +244,17 @@ async function loadAllSecrets() {
     const batch = entries.slice(i, i + batchSize);
     const promises = batch.map(async ([envKey, config]) => {
       try {
+        // 1. Check if the secret is already in process.env and is valid (not a weak/default placeholder)
+        if (process.env[envKey] && process.env[envKey].trim() !== '') {
+          const value = process.env[envKey];
+          const processedValue = config.json ? JSON.parse(value) : value;
+          secretCache.set(envKey, processedValue, 'env');
+          results.loaded.push(envKey);
+          logger.info({ message: 'Loaded secret from process.env', key: envKey });
+          return;
+        }
+
+        // 2. Fetch from Native HeadyVault (or fallback to GCP Secret Manager)
         const { value, version } = await _fetchSecret(config.name);
         const processedValue = config.json ? JSON.parse(value) : value;
         secretCache.set(envKey, processedValue, version);

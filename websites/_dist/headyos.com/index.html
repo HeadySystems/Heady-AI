@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeadyWeb — The Web Platform</title>
-    <meta name="description" content="HeadyWeb — The Web Platform. Web Apps, Components, SSR, Edge deployment.">
+    <title>HeadyOS — The Operating System</title>
+    <meta name="description" content="HeadyOS — The Operating System. OS Architecture, Services, Kernel, Device Support.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         /* ══════════════════════════════════════════════════════════════
-           HEADY WEB — DODECAHEDRON SACRED GEOMETRY THEME
+           HEADY OS — ICOSAHEDRON SACRED GEOMETRY THEME
            ══════════════════════════════════════════════════════════════ */
         :root {
             --bg-base: #050510;
             --bg-deep: #08081a;
             --bg-card: rgba(15, 15, 40, 0.45);
             --bg-card-hover: rgba(25, 25, 60, 0.55);
-            --glass-border: rgba(233, 30, 99, 0.15);
+            --glass-border: rgba(0, 230, 118, 0.15);
             --glass-shine: rgba(255, 255, 255, 0.03);
             --text-primary: #e8eaf6;
             --text-secondary: #9a9cc0;
             --text-muted: #5a5c8a;
-            --accent-1: #e91e63;
-            --accent-2: #f06292;
-            --accent-3: #f8bbd0;
-            --accent-4: #ad1457;
-            --accent-5: #ff4081;
-            --accent-6: #ce93d8;
-            --glow-pink: rgba(233, 30, 99, 0.4);
-            --glow-rose: rgba(240, 98, 146, 0.3);
-            --glow-magenta: rgba(255, 64, 129, 0.3);
-            --orb-1: #e91e63;
-            --orb-2: #f06292;
-            --orb-3: #ce93d8;
+            --accent-1: #00e676;
+            --accent-2: #00c853;
+            --accent-3: #69f0ae;
+            --accent-4: #b2ff59;
+            --accent-5: #76ff03;
+            --accent-6: #00bfa5;
+            --glow-green: rgba(0, 230, 118, 0.4);
+            --glow-emerald: rgba(0, 200, 83, 0.3);
+            --glow-lime: rgba(178, 255, 89, 0.2);
+            --orb-1: #00e676;
+            --orb-2: #00c853;
+            --orb-3: #69f0ae;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,39 +53,39 @@
 
         nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%); background: rgba(5, 5, 16, 0.75); border-bottom: 1px solid var(--glass-border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; text-decoration: none; color: var(--text-primary); }
-        .nav-brand .logo-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; color: #fff; }
-        .nav-brand span { color: var(--accent-2); }
+        .nav-brand .logo-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; color: #050510; }
+        .nav-brand span { color: var(--accent-1); }
         .nav-links { display: flex; gap: 2rem; align-items: center; }
         .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.3s; }
         .nav-links a:hover { color: var(--text-primary); }
-        .nav-links .btn-nav { padding: 8px 18px; border-radius: 8px; font-size: 0.82rem; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; font-weight: 600; transition: all 0.3s; box-shadow: 0 2px 15px var(--glow-pink); }
-        .nav-links .btn-nav:hover { transform: translateY(-1px); box-shadow: 0 4px 25px var(--glow-pink); }
+        .nav-links .btn-nav { padding: 8px 18px; border-radius: 8px; font-size: 0.82rem; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #050510; font-weight: 600; transition: all 0.3s; box-shadow: 0 2px 15px var(--glow-green); }
+        .nav-links .btn-nav:hover { transform: translateY(-1px); box-shadow: 0 4px 25px var(--glow-green); }
 
-        .gradient-divider { height: 2px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-2), var(--accent-6), transparent); margin: 0; border: none; opacity: 0.5; }
-        .gradient-divider-thin { height: 1px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-6), transparent); margin: 60px auto; max-width: 600px; border: none; opacity: 0.3; }
+        .gradient-divider { height: 2px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-3), var(--accent-4), transparent); margin: 0; border: none; opacity: 0.5; }
+        .gradient-divider-thin { height: 1px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-4), transparent); margin: 60px auto; max-width: 600px; border: none; opacity: 0.3; }
 
         .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 120px 2rem 80px; position: relative; }
         .hero-inner { max-width: 900px; position: relative; z-index: 2; }
-        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 50px; background: rgba(233, 30, 99, 0.1); border: 1px solid rgba(233, 30, 99, 0.25); color: var(--accent-2); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 30px; }
-        .hero-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-5); animation: badgePulse 2s ease-in-out infinite; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 50px; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.25); color: var(--accent-3); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 30px; }
+        .hero-badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-1); animation: badgePulse 2s ease-in-out infinite; }
         @keyframes badgePulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        .gradient-text { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.04em; background: linear-gradient(135deg, #e8eaf6 0%, #e91e63 25%, #f06292 50%, #ce93d8 75%, #f8bbd0 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 8s ease infinite; margin-bottom: 24px; }
+        .gradient-text { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.04em; background: linear-gradient(135deg, #e8eaf6 0%, #00e676 25%, #00c853 50%, #69f0ae 75%, #b2ff59 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientShift 8s ease infinite; margin-bottom: 24px; }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         .hero-subtitle { font-size: 1.25rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto 40px; line-height: 1.8; }
         .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
         .btn { padding: 14px 32px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; border: none; cursor: pointer; }
-        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: white; box-shadow: 0 4px 25px var(--glow-pink); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px var(--glow-pink); }
+        .btn-primary { background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); color: #050510; box-shadow: 0 4px 25px var(--glow-green); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 40px var(--glow-green); }
         .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); }
         .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--accent-1); transform: translateY(-2px); }
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; }
         .section { padding: 100px 0; position: relative; }
-        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; background: linear-gradient(135deg, var(--accent-1), var(--accent-6)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: block; }
-        .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 20px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-1) 60%, var(--accent-6) 100%); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 10s ease infinite; }
+        .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; background: linear-gradient(135deg, var(--accent-1), var(--accent-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; display: block; }
+        .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 20px; background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-1) 60%, var(--accent-3) 100%); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 10s ease infinite; }
         .section-desc { font-size: 1.1rem; color: var(--text-secondary); max-width: 700px; line-height: 1.8; margin-bottom: 50px; }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 40px; }
@@ -93,46 +93,54 @@
         .glass-card { background: var(--bg-card); backdrop-filter: blur(20px) saturate(150%); border: 1px solid var(--glass-border); border-radius: 16px; padding: 32px; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .glass-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-shine), var(--accent-1), var(--glass-shine), transparent); opacity: 0; transition: opacity 0.4s; }
         .glass-card:hover::before { opacity: 1; }
-        .glass-card:hover { border-color: rgba(233, 30, 99, 0.3); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--glow-pink); }
+        .glass-card:hover { border-color: rgba(0, 230, 118, 0.3); transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px var(--glow-green); }
 
-        .card-geo-bg { position: absolute; top: -20px; right: -20px; width: 160px; height: 160px; opacity: 0.04; animation: spinSlow 30s linear infinite; pointer-events: none; }
+        .card-geo-bg { position: absolute; top: -20px; right: -20px; width: 160px; height: 160px; opacity: 0.04; animation: spinSlow 25s linear infinite; pointer-events: none; }
         @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .glass-card .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; position: relative; z-index: 2; }
         .glass-card h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; color: var(--text-primary); position: relative; z-index: 2; }
         .glass-card p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; position: relative; z-index: 2; }
 
-        .icon-pink { background: linear-gradient(135deg, rgba(233, 30, 99, 0.2), rgba(233, 30, 99, 0.05)); color: var(--accent-1); }
-        .icon-rose { background: linear-gradient(135deg, rgba(240, 98, 146, 0.2), rgba(240, 98, 146, 0.05)); color: var(--accent-2); }
-        .icon-blush { background: linear-gradient(135deg, rgba(248, 187, 208, 0.2), rgba(248, 187, 208, 0.05)); color: var(--accent-3); }
-        .icon-magenta { background: linear-gradient(135deg, rgba(173, 20, 87, 0.2), rgba(173, 20, 87, 0.05)); color: var(--accent-4); }
-        .icon-hot { background: linear-gradient(135deg, rgba(255, 64, 129, 0.2), rgba(255, 64, 129, 0.05)); color: var(--accent-5); }
-        .icon-lavender { background: linear-gradient(135deg, rgba(206, 147, 216, 0.2), rgba(206, 147, 216, 0.05)); color: var(--accent-6); }
+        .icon-green { background: linear-gradient(135deg, rgba(0, 230, 118, 0.2), rgba(0, 230, 118, 0.05)); color: var(--accent-1); }
+        .icon-emerald { background: linear-gradient(135deg, rgba(0, 200, 83, 0.2), rgba(0, 200, 83, 0.05)); color: var(--accent-2); }
+        .icon-mint { background: linear-gradient(135deg, rgba(105, 240, 174, 0.2), rgba(105, 240, 174, 0.05)); color: var(--accent-3); }
+        .icon-lime { background: linear-gradient(135deg, rgba(178, 255, 89, 0.2), rgba(178, 255, 89, 0.05)); color: var(--accent-4); }
+        .icon-neon { background: linear-gradient(135deg, rgba(118, 255, 3, 0.2), rgba(118, 255, 3, 0.05)); color: var(--accent-5); }
+        .icon-teal { background: linear-gradient(135deg, rgba(0, 191, 165, 0.2), rgba(0, 191, 165, 0.05)); color: var(--accent-6); }
 
         .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 60px 0; }
         .stat-card { text-align: center; padding: 30px 20px; background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; }
-        .stat-number { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--accent-1), var(--accent-6)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+        .stat-number { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, var(--accent-1), var(--accent-4)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
         .stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
 
         .code-block { background: rgba(5, 5, 20, 0.8); border: 1px solid var(--glass-border); border-radius: 12px; padding: 24px; overflow-x: auto; margin: 30px 0; position: relative; }
-        .code-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-6), transparent); opacity: 0.4; }
-        .code-block code { color: var(--accent-2); font-size: 0.88rem; line-height: 1.8; }
+        .code-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-1), var(--accent-3), transparent); opacity: 0.4; }
+        .code-block code { color: var(--accent-3); font-size: 0.88rem; line-height: 1.8; }
 
         .ecosystem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; margin-top: 40px; }
         .eco-card { display: flex; align-items: center; gap: 16px; padding: 20px; background: var(--bg-card); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 12px; transition: all 0.3s; text-decoration: none; }
-        .eco-card:hover { border-color: rgba(233, 30, 99, 0.3); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
-        .eco-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; color: white; flex-shrink: 0; }
+        .eco-card:hover { border-color: rgba(0, 230, 118, 0.3); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+        .eco-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; color: #050510; flex-shrink: 0; }
         .eco-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
         .eco-info p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Kernel layer visualization */
+        .kernel-layers { display: flex; flex-direction: column; gap: 4px; margin: 40px 0; }
+        .kernel-layer { padding: 20px 28px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s; }
+        .kernel-layer:hover { transform: translateX(8px); }
+        .kernel-layer h4 { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .kernel-layer p { font-size: 0.85rem; color: var(--text-muted); }
+        .kernel-layer .layer-badge { padding: 4px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
         footer { padding: 80px 0 40px; position: relative; z-index: 10; }
         .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 50px; }
         .footer-col h4 { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.08em; }
         .footer-col ul { list-style: none; } .footer-col li { margin-bottom: 12px; }
         .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.88rem; transition: color 0.3s; }
-        .footer-col a:hover { color: var(--accent-2); }
+        .footer-col a:hover { color: var(--accent-1); }
         .footer-bottom { text-align: center; padding-top: 30px; border-top: 1px solid var(--glass-border); color: var(--text-muted); font-size: 0.82rem; }
-        .footer-bottom a { color: var(--accent-2); text-decoration: none; }
+        .footer-bottom a { color: var(--accent-1); text-decoration: none; }
 
         .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
         .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -143,24 +151,29 @@
     <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"Heady Systems","url":"https://headysystems.com","description":"AI-powered cognitive orchestration platform","founder":{"@type":"Person","name":"Eric Haywood"},"sameAs":["https://github.com/HeadyAI"]}
 </script>
-    <link rel="canonical" href="https://headyweb.com/">
+    <link rel="canonical" href="https://headyos.com/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
-<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <canvas id="sacred-canvas"></canvas>
 <canvas id="particle-field"></canvas>
 
 <div class="page-content">
     <nav>
-        <a href="https://headyweb.com" class="nav-brand"><div class="logo-icon">HW</div>Heady<span>Web</span></a>
+        <a href="https://headyos.com" class="nav-brand">
+            <div class="logo-icon">OS</div>
+            Heady<span>OS</span>
+        </a>
         <div class="nav-links">
-            <a href="#webapps">Web Apps</a>
-            <a href="#components">Components</a>
-            <a href="#ssr">SSR</a>
-            <a href="#edge">Edge</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#services">Services</a>
+            <a href="#kernel">Kernel</a>
+            <a href="#devices">Device Support</a>
             <a href="https://headysystems.com" class="btn-nav">Heady Platform</a>
         </div>
     </nav>
@@ -168,8 +181,8 @@
     <div class="page-wrapper">
         <section class="hero">
             <div class="container">
-                <h1>HeadyWeb</h1>
-                <p>Web platform and frontend delivery network</p>
+                <h1>HeadyOS</h1>
+                <p>OS interface — interactive HeadyLatentOS management and monitoring</p>
                 <div class="hero-actions">
                     <a href="#docs-start" class="btn btn-primary">Read Documentation →</a>
                     <a href="#api" class="btn btn-secondary">API Reference</a>
@@ -211,10 +224,10 @@
                 <main class="docs-content">
                     <section id="overview">
                         <div class="section-label">Overview</div>
-                        <h2>Introduction to HeadyWeb</h2>
-                        <p>Welcome to the official documentation for <strong>HeadyWeb</strong>. This platform serves as the web platform and frontend delivery network. It is a core component of the broader Heady ecosystem, built on principles of sacred geometry, organic systems, and breathing interfaces.</p>
+                        <h2>Introduction to HeadyOS</h2>
+                        <p>Welcome to the official documentation for <strong>HeadyOS</strong>. This platform serves as the os interface — interactive headylatentos management and monitoring. It is a core component of the broader Heady ecosystem, built on principles of sacred geometry, organic systems, and breathing interfaces.</p>
 
-                        <p>Our infrastructure is designed to provide unparalleled performance, security, and scalability. By deeply integrating with the Heady Model Context Protocol (MCP) and the HCFullPipeline, HeadyWeb ensures seamless operation across all layers of the stack.</p>
+                        <p>Our infrastructure is designed to provide unparalleled performance, security, and scalability. By deeply integrating with the Heady Model Context Protocol (MCP) and the HCFullPipeline, HeadyOS ensures seamless operation across all layers of the stack.</p>
 
                         <div class="card-grid">
                             <div class="feature-card">
@@ -235,13 +248,13 @@
                     <section id="architecture">
                         <div class="section-label">Architecture</div>
                         <h2>System Architecture</h2>
-                        <p>HeadyWeb utilizes a microservices-based architecture deployed across multiple global regions. The system is conceptually divided into several key layers:</p>
+                        <p>HeadyOS utilizes a microservices-based architecture deployed across multiple global regions. The system is conceptually divided into several key layers:</p>
 
                         <ul>
                             <li><strong>Edge Layer:</strong> Handles global routing, DDoS protection, and TLS termination via Cloudflare.</li>
                             <li><strong>Gateway Layer:</strong> API Gateway that validates requests, enforces rate limits, and performs JWT verification.</li>
                             <li><strong>Orchestration Layer:</strong> The HCSysOrchestrator manages the flow of data between services based on cognitive load and system health.</li>
-                            <li><strong>Service Layer:</strong> The core business logic specific to headyweb.com.</li>
+                            <li><strong>Service Layer:</strong> The core business logic specific to headyos.com.</li>
                             <li><strong>Data Layer:</strong> Distributed Postgres databases with real-time replication and vector stores for AI embeddings.</li>
                         </ul>
 
@@ -258,11 +271,11 @@ const topology = {
                     <section id="api">
                         <div class="section-label">Integration</div>
                         <h2>API Reference</h2>
-                        <p>Interact with HeadyWeb programmatically using our REST and MCP APIs. All endpoints require authentication via a standard Bearer token.</p>
+                        <p>Interact with HeadyOS programmatically using our REST and MCP APIs. All endpoints require authentication via a standard Bearer token.</p>
 
                         <h3>Authentication</h3>
                         <p>Include your API key in the Authorization header of your requests:</p>
-                        <pre><code>curl -H "Authorization: Bearer hdy_your_api_key" https://api.headyweb.com/v1/status</code></pre>
+                        <pre><code>curl -H "Authorization: Bearer hdy_your_api_key" https://api.headyos.com/v1/status</code></pre>
 
                         <h3>Common Endpoints</h3>
                         <table class="server-table">
@@ -301,7 +314,7 @@ const topology = {
                     <section id="ecosystem">
                         <div class="section-label">Ecosystem</div>
                         <h2>The Heady Network</h2>
-                        <p>HeadyWeb is just one piece of the puzzle. Explore the rest of the Heady ecosystem to see how our platforms connect.</p>
+                        <p>HeadyOS is just one piece of the puzzle. Explore the rest of the Heady ecosystem to see how our platforms connect.</p>
 
                         <table class="server-table">
                             <thead>
@@ -397,41 +410,47 @@ const topology = {
     <section class="section">
         <div class="container">
             <div class="stats-row reveal">
-                <div class="stat-card"><div class="stat-number">7</div><div class="stat-label">Micro-Frontends</div></div>
-                <div class="stat-card"><div class="stat-number">144</div><div class="stat-label">Components</div></div>
-                <div class="stat-card"><div class="stat-number">&lt;100ms</div><div class="stat-label">TTI (Edge)</div></div>
-                <div class="stat-card"><div class="stat-number">300+</div><div class="stat-label">Global PoPs</div></div>
+                <div class="stat-card"><div class="stat-number">6</div><div class="stat-label">Kernel Layers</div></div>
+                <div class="stat-card"><div class="stat-number">175</div><div class="stat-label">System Services</div></div>
+                <div class="stat-card"><div class="stat-number">384D</div><div class="stat-label">Vector Space</div></div>
+                <div class="stat-card"><div class="stat-number">21</div><div class="stat-label">Pipeline Stages</div></div>
             </div>
         </div>
     </section>
 
-    <!-- Web Apps Section -->
-    <section class="section" id="webapps">
+    <!-- Architecture Section -->
+    <section class="section" id="architecture">
         <div class="container">
             <div class="reveal">
-                <span class="section-label">Web Applications</span>
-                <h2 class="section-title">Sacred Geometry Web Experiences</h2>
-                <p class="section-desc">HeadyWeb powers the web layer of the Heady ecosystem through a Comet/Chromium hybrid browser architecture with 7 micro-frontends. Every application is built with sacred geometry design principles: phi-proportioned layouts, organic curves, and breathing animations.</p>
+                <span class="section-label">OS Architecture</span>
+                <h2 class="section-title">Liquid Latent Operating System</h2>
+                <p class="section-desc">HeadyOS is not a traditional operating system. It is a Liquid Latent OS where all components map into continuous 3D vector space with 384D embeddings. The icosahedron's 12 vertices represent the core subsystems, its 20 faces the interaction surfaces.</p>
             </div>
 
             <div class="card-grid">
                 <div class="glass-card reveal">
-                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,5 80,25 80,60 50,80 20,60 20,25" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,15 72,30 72,55 50,70 28,55 28,30" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,25 64,35 64,50 50,60 36,50 36,35" fill="none" stroke="currentColor" stroke-width="0.5"/></svg>
-                    <div class="card-icon icon-pink">MFE</div>
-                    <h3>Module Federation</h3>
-                    <p>Webpack Module Federation enables independent deployment of 7 micro-frontends. Each module loads on demand with shared dependencies, reducing bundle size by 60% across the Heady web platform.</p>
+                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,10 90,35 90,65 50,90 10,65 10,35" fill="none" stroke="currentColor" stroke-width="0.5"/><line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" stroke-width="0.3"/><line x1="10" y1="35" x2="90" y2="65" stroke="currentColor" stroke-width="0.3"/><line x1="90" y1="35" x2="10" y2="65" stroke="currentColor" stroke-width="0.3"/></svg>
+                    <div class="card-icon icon-green">VEC</div>
+                    <h3>Vector-Space Routing</h3>
+                    <p>Every system call, every process, every resource allocation is represented as a vector in 384D space. Routing decisions use cosine similarity to find the optimal path through the system topology.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,5 80,25 80,60 50,80 20,60 20,25" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,15 72,30 72,55 50,70 28,55 28,30" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,25 64,35 64,50 50,60 36,50 36,35" fill="none" stroke="currentColor" stroke-width="0.5"/></svg>
-                    <div class="card-icon icon-rose">PWA</div>
-                    <h3>Progressive Web Apps</h3>
-                    <p>Full PWA support with service workers, offline caching, and push notifications. HeadyWeb apps work offline with CRDT-based conflict resolution when reconnecting to the HeadyOS persistence layer.</p>
+                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,10 90,35 90,65 50,90 10,65 10,35" fill="none" stroke="currentColor" stroke-width="0.5"/><line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" stroke-width="0.3"/><line x1="10" y1="35" x2="90" y2="65" stroke="currentColor" stroke-width="0.3"/><line x1="90" y1="35" x2="10" y2="65" stroke="currentColor" stroke-width="0.3"/></svg>
+                    <div class="card-icon icon-emerald">PHI</div>
+                    <h3>Phi-Derived Thresholds</h3>
+                    <p>All system thresholds derive from the golden ratio: CPU allocation pools at Hot=34%, Warm=21%, Cold=13%, Reserve=8%, Governance=5%. Backoff uses PHI^attempt with 38.2% jitter.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,5 80,25 80,60 50,80 20,60 20,25" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,15 72,30 72,55 50,70 28,55 28,30" fill="none" stroke="currentColor" stroke-width="0.5"/><polygon points="50,25 64,35 64,50 50,60 36,50 36,35" fill="none" stroke="currentColor" stroke-width="0.5"/></svg>
-                    <div class="card-icon icon-lavender">IDE</div>
-                    <h3>HeadyAI-IDE</h3>
-                    <p>The integrated development environment built with React and Monaco Editor. A Windsurf/Antigravity hybrid running on port 3320, providing AI-assisted coding with full MCP integration.</p>
+                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,10 90,35 90,65 50,90 10,65 10,35" fill="none" stroke="currentColor" stroke-width="0.5"/><line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" stroke-width="0.3"/><line x1="10" y1="35" x2="90" y2="65" stroke="currentColor" stroke-width="0.3"/><line x1="90" y1="35" x2="10" y2="65" stroke="currentColor" stroke-width="0.3"/></svg>
+                    <div class="card-icon icon-mint">CSL</div>
+                    <h3>CSL Gate System</h3>
+                    <p>Continuous Semantic Logic gates every operation. Confidence thresholds from 0.500 (MINIMUM) to 0.927 (CRITICAL) determine which operations proceed, ensuring semantic coherence across all layers.</p>
+                </div>
+                <div class="glass-card reveal">
+                    <svg class="card-geo-bg" viewBox="0 0 100 100"><polygon points="50,10 90,35 90,65 50,90 10,65 10,35" fill="none" stroke="currentColor" stroke-width="0.5"/><line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" stroke-width="0.3"/><line x1="10" y1="35" x2="90" y2="65" stroke="currentColor" stroke-width="0.3"/><line x1="90" y1="35" x2="10" y2="65" stroke="currentColor" stroke-width="0.3"/></svg>
+                    <div class="card-icon icon-lime">ORC</div>
+                    <h3>Conductor-Orchestrator</h3>
+                    <p>The HeadyConductor manages task routing and node selection across the sacred geometry topology. From HeadySoul at center through Inner, Middle, and Outer rings to the Governance layer.</p>
                 </div>
             </div>
         </div>
@@ -439,108 +458,107 @@ const topology = {
 
     <div class="container"><hr class="gradient-divider-thin"></div>
 
-    <!-- Components Section -->
-    <section class="section" id="components">
+    <!-- Services Section -->
+    <section class="section" id="services">
         <div class="container">
             <div class="reveal">
-                <span class="section-label">Component Library</span>
-                <h2 class="section-title">144 Sacred Geometry Components</h2>
-                <p class="section-desc">The HeadyWeb component library implements the sacred geometry design system with 144 production-ready React components. Glass-morphism cards, phi-proportioned grids, breathing animations, and cosmic dark palettes.</p>
+                <span class="section-label">System Services</span>
+                <h2 class="section-title">175 Orchestrated Services</h2>
+                <p class="section-desc">HeadyOS runs 175 registered services, each with its own /health endpoint returning status, coherenceScore, and version. Services communicate through the sacred geometry topology with CSL-gated routing.</p>
             </div>
 
             <div class="card-grid">
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-pink">GLS</div>
-                    <h3>Glass-Morphism Suite</h3>
-                    <p>Frosted glass cards, panels, modals, and popovers with configurable blur, saturation, and border opacity. Every glass component supports the sacred geometry SVG background system.</p>
+                    <div class="card-icon icon-green">GW</div>
+                    <h3>Gateway Service</h3>
+                    <p>The central API Gateway running on port 3330. Handles CSL-routed requests with phi-scaled rate limiting. All external traffic enters through this service before being distributed to internal nodes.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-hot">ANM</div>
-                    <h3>Animation System</h3>
-                    <p>Breathing animations, scroll reveals, particle fields, pulsing orbs, and gradient text effects. All timing functions use phi-derived easing curves for natural, organic motion.</p>
+                    <div class="card-icon icon-teal">MGR</div>
+                    <h3>Manager Service</h3>
+                    <p>The MCP server and API gateway on port 3301. Manages MCP protocol connections, routes requests to brain nodes, and maintains the service registry for all 175 registered services.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-lavender">LYT</div>
-                    <h3>Layout Primitives</h3>
-                    <p>Phi-proportioned grid system, golden ratio spacing scale, and responsive breakpoints. Layouts automatically adjust following sacred geometry proportions across all viewport sizes.</p>
+                    <div class="card-icon icon-mint">BRN</div>
+                    <h3>Brain Service</h3>
+                    <p>The cognitive processing center on port 3302. Handles AI inference, embedding generation, and semantic reasoning. Connected to vector stores and the latent space tunnels at vector.headyos.com.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-rose">FRM</div>
-                    <h3>Form Components</h3>
-                    <p>Inputs, selects, toggles, sliders, and date pickers with cosmic dark theming. Every form element includes built-in validation with CSL confidence-scored error messages.</p>
+                    <div class="card-icon icon-emerald">CND</div>
+                    <h3>Conductor Service</h3>
+                    <p>Task routing and node selection on port 3303. The TypeScript-based conductor evaluates CSL confidence scores to route tasks to the optimal node in the sacred geometry topology.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-magenta">VIZ</div>
-                    <h3>Data Visualization</h3>
-                    <p>Charts, graphs, and data tables with sacred geometry aesthetics. Radial charts use the Flower of Life pattern, line charts use phi-curved interpolation, and tables use glass-morphism rows.</p>
+                    <div class="card-icon icon-neon">PRS</div>
+                    <h3>Persistence Service</h3>
+                    <p>User state persistence on port 3340. Implements CRDT synchronization for conflict-free distributed state management across sessions with phi-proportioned garbage collection intervals.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-blush">NAV</div>
-                    <h3>Navigation Components</h3>
-                    <p>Glassmorphism nav bars, sidebars, breadcrumbs, and tab groups. The navigation system integrates with the HeadyOS routing layer for seamless cross-platform navigation.</p>
+                    <div class="card-icon icon-lime">BDY</div>
+                    <h3>Buddy Service</h3>
+                    <p>The HeadyBuddy backend on port 3310. Powers the AI companion interface across web widget, Android app (island-style work profile), and Tauri desktop application.</p>
                 </div>
             </div>
 
             <div class="code-block reveal">
-                <code><pre>{% raw %}// HeadyWeb Component Usage
-import { GlassCard, GradientText, ParticleField } from '@heady/sacred-ui';
-import { useScrollReveal, useBreathingAnimation } from '@heady/sacred-hooks';
+                <code><pre>// HeadyOS Service Health Check
+const healthCheck = await fetch('http://localhost:3330/health');
+const status = await healthCheck.json();
 
-function FeatureSection() {
-  const ref = useScrollReveal({ threshold: 0.1 });
-  const breathe = useBreathingAnimation({ period: 8000 });
-
-  return (
-    &lt;section ref={ref} style={{ transform: `scale(${breathe})` }}&gt;
-      &lt;GradientText
-        colors={['#e91e63', '#f06292', '#ce93d8']}
-        animationDuration="8s"
-      &gt;
-        HeadyWeb Components
-      &lt;/GradientText>
-
-      &lt;GlassCard
-        blur={20}
-        saturation={150}
-        borderColor="rgba(233, 30, 99, 0.15)"
-        geometryBackground="dodecahedron"
-      &gt;
-        &lt;ParticleField count={80} color="#e91e63" /&gt;
-        &lt;p&gt;Sacred geometry-infused web components&lt;/p&gt;
-      &lt;/GlassCard&gt;
-    &lt;/section&gt;
-  );
-}{% endraw %}</pre></code>
+// Response format for every service:
+{
+  "status": "healthy",
+  "coherenceScore": 0.891,
+  "version": "7.2.1",
+  "uptime": 1547832,
+  "services": 175,
+  "activeNodes": {
+    "center": "HeadySoul",
+    "inner": ["Conductor", "Brains", "Vinci", "AutoSuccess"],
+    "middle": ["JULES", "BUILDER", "OBSERVER", "MURPHY", "ATLAS", "PYTHIA"],
+    "outer": ["BRIDGE", "MUSE", "SENTINEL", "NOVA", "JANITOR", "SOPHIA"],
+    "governance": ["Check", "Assure", "Aware", "Patterns", "MC", "Risks"]
+  }
+}</pre></code>
             </div>
         </div>
     </section>
 
     <div class="container"><hr class="gradient-divider-thin"></div>
 
-    <!-- SSR Section -->
-    <section class="section" id="ssr">
+    <!-- Kernel Section -->
+    <section class="section" id="kernel">
         <div class="container">
             <div class="reveal">
-                <span class="section-label">Server-Side Rendering</span>
-                <h2 class="section-title">SSR at the Speed of Light</h2>
-                <p class="section-desc">HeadyWeb supports multiple rendering strategies: SSR, SSG, ISR, and streaming SSR. Every rendering path flows through the HCFullPipeline to ensure semantic coherence of the generated HTML.</p>
+                <span class="section-label">Kernel</span>
+                <h2 class="section-title">6-Layer Liquid Kernel</h2>
+                <p class="section-desc">The HeadyOS kernel boots through a 6-layer sequence, each layer initializing a deeper level of system capability. The boot sequence follows Fibonacci timing for each layer's initialization window.</p>
             </div>
 
-            <div class="card-grid">
-                <div class="glass-card reveal">
-                    <div class="card-icon icon-pink">SSR</div>
-                    <h3>Streaming SSR</h3>
-                    <p>React 18 streaming server-side rendering with Suspense boundaries. HTML streams to the client progressively, showing content as fast as possible with phi-timed hydration chunks.</p>
+            <div class="kernel-layers reveal">
+                <div class="kernel-layer" style="background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.2);">
+                    <div><h4>Layer 1: Hardware Abstraction</h4><p>Device drivers, memory management, I/O scheduling</p></div>
+                    <span class="layer-badge" style="background: rgba(0, 230, 118, 0.15); color: var(--accent-1);">BOOT 0ms</span>
                 </div>
-                <div class="glass-card reveal">
-                    <div class="card-icon icon-rose">ISR</div>
-                    <h3>Incremental Static Regeneration</h3>
-                    <p>Pages regenerate on demand with Fibonacci-indexed revalidation intervals. Popular pages revalidate every 8 seconds, less-visited pages every 89 seconds, following the golden ratio decay.</p>
+                <div class="kernel-layer" style="background: rgba(0, 200, 83, 0.07); border: 1px solid rgba(0, 200, 83, 0.18);">
+                    <div><h4>Layer 2: Vector Space Init</h4><p>384D embedding space, HNSW index, similarity engine</p></div>
+                    <span class="layer-badge" style="background: rgba(0, 200, 83, 0.15); color: var(--accent-2);">BOOT 1ms</span>
                 </div>
-                <div class="glass-card reveal">
-                    <div class="card-icon icon-lavender">HYD</div>
-                    <h3>Selective Hydration</h3>
-                    <p>Components hydrate based on viewport visibility and interaction priority. The hydration scheduler uses CSL confidence scoring to determine which components need client-side interactivity first.</p>
+                <div class="kernel-layer" style="background: rgba(105, 240, 174, 0.06); border: 1px solid rgba(105, 240, 174, 0.15);">
+                    <div><h4>Layer 3: CSL Engine</h4><p>Confidence scoring, semantic gates, threshold calibration</p></div>
+                    <span class="layer-badge" style="background: rgba(105, 240, 174, 0.15); color: var(--accent-3);">BOOT 2ms</span>
+                </div>
+                <div class="kernel-layer" style="background: rgba(178, 255, 89, 0.05); border: 1px solid rgba(178, 255, 89, 0.12);">
+                    <div><h4>Layer 4: Service Mesh</h4><p>Service discovery, health monitors, topology mapping</p></div>
+                    <span class="layer-badge" style="background: rgba(178, 255, 89, 0.15); color: var(--accent-4);">BOOT 3ms</span>
+                </div>
+                <div class="kernel-layer" style="background: rgba(118, 255, 3, 0.04); border: 1px solid rgba(118, 255, 3, 0.10);">
+                    <div><h4>Layer 5: Conductor Init</h4><p>Task routing, node selection, sacred geometry topology</p></div>
+                    <span class="layer-badge" style="background: rgba(118, 255, 3, 0.15); color: var(--accent-5);">BOOT 5ms</span>
+                </div>
+                <div class="kernel-layer" style="background: rgba(0, 191, 165, 0.04); border: 1px solid rgba(0, 191, 165, 0.10);">
+                    <div><h4>Layer 6: Pipeline Ready</h4><p>HCFullPipeline v7 online, all 21 stages active</p></div>
+                    <span class="layer-badge" style="background: rgba(0, 191, 165, 0.15); color: var(--accent-6);">BOOT 8ms</span>
                 </div>
             </div>
         </div>
@@ -548,30 +566,30 @@ function FeatureSection() {
 
     <div class="container"><hr class="gradient-divider-thin"></div>
 
-    <!-- Edge Section -->
-    <section class="section" id="edge">
+    <!-- Device Support Section -->
+    <section class="section" id="devices">
         <div class="container">
             <div class="reveal">
-                <span class="section-label">Edge Deployment</span>
-                <h2 class="section-title">Global Edge Network</h2>
-                <p class="section-desc">HeadyWeb deploys to Cloudflare's global edge network with 300+ points of presence. Static assets, SSR pages, and API routes all run at the edge for sub-100ms Time to Interactive worldwide.</p>
+                <span class="section-label">Device Support</span>
+                <h2 class="section-title">Run Everywhere</h2>
+                <p class="section-desc">HeadyOS runs across multiple form factors through its modular kernel. From cloud instances to edge devices, the Liquid Latent OS adapts its resource allocation using phi-proportioned pools.</p>
             </div>
 
             <div class="card-grid">
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-hot">CDN</div>
-                    <h3>Edge CDN</h3>
-                    <p>Cloudflare Pages delivers static assets with automatic cache invalidation. Sacred geometry SVGs, fonts, and images are optimized and compressed at the edge with Brotli compression.</p>
+                    <div class="card-icon icon-green">CLD</div>
+                    <h3>Cloud Instances</h3>
+                    <p>Full HeadyOS deployment on Cloud Run (us-east1) with auto-scaling. GKE clusters manage container orchestration with phi-scaled resource limits for each pod and namespace.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-magenta">WKR</div>
-                    <h3>Workers Runtime</h3>
-                    <p>Cloudflare Workers handle SSR, API routes, and middleware at the edge. Each worker runs within V8 isolates with phi-scaled CPU time limits and KV storage for session management.</p>
+                    <div class="card-icon icon-mint">EDG</div>
+                    <h3>Edge Devices</h3>
+                    <p>Lightweight HeadyOS kernel for Cloudflare Workers, Durable Objects, and edge compute nodes. Runs the FAST_PATH 7-stage pipeline for sub-millisecond inference at 300+ global PoPs.</p>
                 </div>
                 <div class="glass-card reveal">
-                    <div class="card-icon icon-blush">DRO</div>
-                    <h3>Durable Objects</h3>
-                    <p>Stateful edge computing with Durable Objects for real-time collaboration, WebSocket management, and CRDT synchronization. Each object represents a node in the sacred geometry topology.</p>
+                    <div class="card-icon icon-teal">DSK</div>
+                    <h3>Desktop & Mobile</h3>
+                    <p>HeadyBuddy Desktop (Tauri) and HeadyBuddy Android (island-style work profile) bring HeadyOS to personal devices. Full MCP connectivity with offline-first CRDT synchronization.</p>
                 </div>
             </div>
         </div>
@@ -584,15 +602,15 @@ function FeatureSection() {
             <div class="reveal">
                 <span class="section-label">Ecosystem</span>
                 <h2 class="section-title">The Heady Network</h2>
-                <p class="section-desc">HeadyWeb provides the frontend delivery layer for all Heady platforms.</p>
+                <p class="section-desc">HeadyOS powers the infrastructure layer for the entire Heady ecosystem.</p>
             </div>
             <div class="ecosystem-grid reveal">
-                <a href="https://headyme.com" class="eco-card"><div class="eco-icon">HM</div><div class="eco-info"><h4>HeadyMe</h4><p>Command center dashboard</p></div></a>
+                <a href="https://headyme.com" class="eco-card"><div class="eco-icon">HM</div><div class="eco-info"><h4>HeadyMe</h4><p>Command center and dashboard</p></div></a>
                 <a href="https://headysystems.com" class="eco-card"><div class="eco-icon">HS</div><div class="eco-info"><h4>HeadySystems</h4><p>Core architecture docs</p></div></a>
                 <a href="https://heady-ai.com" class="eco-card"><div class="eco-icon">AI</div><div class="eco-info"><h4>HeadyAI</h4><p>AI intelligence platform</p></div></a>
-                <a href="https://headyos.com" class="eco-card"><div class="eco-icon">OS</div><div class="eco-info"><h4>HeadyOS</h4><p>Operating system</p></div></a>
                 <a href="https://headyconnection.com" class="eco-card"><div class="eco-icon">HC</div><div class="eco-info"><h4>HeadyConnection</h4><p>Integration hub</p></div></a>
                 <a href="https://headyconnection.org" class="eco-card"><div class="eco-icon">HO</div><div class="eco-info"><h4>HeadyConnection Community</h4><p>Open source hub</p></div></a>
+                <a href="https://headyweb.com" class="eco-card"><div class="eco-icon">HW</div><div class="eco-info"><h4>HeadyWeb</h4><p>Web platform</p></div></a>
                 <a href="https://headyex.com" class="eco-card"><div class="eco-icon">HX</div><div class="eco-info"><h4>HeadyEX</h4><p>Plugin marketplace</p></div></a>
                 <a href="https://headyio.com" class="eco-card"><div class="eco-icon">IO</div><div class="eco-info"><h4>HeadyIO</h4><p>API gateway</p></div></a>
             </div>
@@ -646,7 +664,7 @@ function FeatureSection() {
 
 <script>
 // ══════════════════════════════════════════════════════════════
-// DODECAHEDRON — 3D Wireframe Sacred Geometry Renderer
+// ICOSAHEDRON — 3D Wireframe Sacred Geometry Renderer
 // ══════════════════════════════════════════════════════════════
 (function() {
     const canvas = document.getElementById('sacred-canvas');
@@ -655,63 +673,70 @@ function FeatureSection() {
     function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
     resize(); window.addEventListener('resize', resize);
 
+    // Icosahedron vertices (12 vertices, 30 edges, 20 faces)
     const PHI = (1 + Math.sqrt(5)) / 2;
-    const iPHI = 1 / PHI;
-    // Dodecahedron has 20 vertices
     const rawVerts = [
-        [1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],
-        [-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1],
-        [0,iPHI,PHI],[0,iPHI,-PHI],[0,-iPHI,PHI],[0,-iPHI,-PHI],
-        [iPHI,PHI,0],[iPHI,-PHI,0],[-iPHI,PHI,0],[-iPHI,-PHI,0],
-        [PHI,0,iPHI],[PHI,0,-iPHI],[-PHI,0,iPHI],[-PHI,0,-iPHI]
+        [-1, PHI, 0], [1, PHI, 0], [-1, -PHI, 0], [1, -PHI, 0],
+        [0, -1, PHI], [0, 1, PHI], [0, -1, -PHI], [0, 1, -PHI],
+        [PHI, 0, -1], [PHI, 0, 1], [-PHI, 0, -1], [-PHI, 0, 1]
     ];
-    const mag = Math.sqrt(3);
+    // Normalize
+    const mag = Math.sqrt(1 + PHI * PHI);
     const verts = rawVerts.map(v => v.map(c => c / mag));
 
-    // Dodecahedron edges
     const edges = [
-        [0,8],[0,12],[0,16],[8,4],[8,10],[4,14],[4,18],[10,2],[10,6],
-        [2,13],[2,16],[6,15],[6,18],[12,1],[12,14],[14,5],[16,17],
-        [1,9],[1,17],[9,5],[9,11],[5,19],[17,3],[3,11],[3,13],
-        [11,7],[7,15],[7,19],[13,15],[18,19]
+        [0,1],[0,5],[0,7],[0,10],[0,11],[1,5],[1,7],[1,8],[1,9],
+        [2,3],[2,4],[2,6],[2,10],[2,11],[3,4],[3,6],[3,8],[3,9],
+        [4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[6,10],
+        [7,8],[7,10],[8,9],[10,11]
     ];
 
-    function drawDodecahedron(t) {
+    function drawIcosahedron(t) {
         const cx = W / 2, cy = H / 2;
-        const scale = Math.min(W, H) * 0.28;
-        const rotY = t * 0.00025;
-        const rotX = t * 0.00018;
-        const rotZ = Math.sin(t * 0.00012) * 0.2;
+        const scale = Math.min(W, H) * 0.3;
+        const rotY = t * 0.0003;
+        const rotX = t * 0.0002;
+        const rotZ = Math.sin(t * 0.0001) * 0.3;
+
         const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
         const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
         const cosZ = Math.cos(rotZ), sinZ = Math.sin(rotZ);
         const perspective = 4;
 
         const projected = verts.map(([x, y, z]) => {
-            let x1 = x * cosY + z * sinY, z1 = -x * sinY + z * cosY;
-            let y1 = y * cosX - z1 * sinX, z2 = y * sinX + z1 * cosX;
-            let x2 = x1 * cosZ - y1 * sinZ, y2 = x1 * sinZ + y1 * cosZ;
+            // Rotate Y
+            let x1 = x * cosY + z * sinY;
+            let z1 = -x * sinY + z * cosY;
+            // Rotate X
+            let y1 = y * cosX - z1 * sinX;
+            let z2 = y * sinX + z1 * cosX;
+            // Rotate Z
+            let x2 = x1 * cosZ - y1 * sinZ;
+            let y2 = x1 * sinZ + y1 * cosZ;
+
             const s = perspective / (perspective + z2);
             return [cx + x2 * scale * s, cy + y2 * scale * s, s];
         });
 
-        ctx.lineWidth = 0.6;
+        // Draw edges
+        ctx.lineWidth = 0.7;
         for (const [a, b] of edges) {
             const pa = projected[a], pb = projected[b];
-            const alpha = ((pa[2] + pb[2]) / 2 - 0.5) * 0.18;
-            ctx.strokeStyle = `rgba(233, 30, 99, ${Math.max(0.02, Math.min(0.1, alpha))})`;
+            const alpha = ((pa[2] + pb[2]) / 2 - 0.5) * 0.2;
+            ctx.strokeStyle = `rgba(0, 230, 118, ${Math.max(0.02, Math.min(0.12, alpha))})`;
             ctx.beginPath();
             ctx.moveTo(pa[0], pa[1]);
             ctx.lineTo(pb[0], pb[1]);
             ctx.stroke();
         }
 
+        // Draw vertices
         for (const p of projected) {
-            const r = 1.8 * p[2];
-            const alpha = (p[2] - 0.5) * 0.2;
+            const r = 2 * p[2];
+            const alpha = (p[2] - 0.5) * 0.25;
             ctx.beginPath();
             ctx.arc(p[0], p[1], Math.max(0.5, r), 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(240, 98, 146, ${Math.max(0.02, Math.min(0.12, alpha))})`;
+            ctx.fillStyle = `rgba(105, 240, 174, ${Math.max(0.02, Math.min(0.15, alpha))})`;
             ctx.fill();
         }
     }
@@ -719,7 +744,7 @@ function FeatureSection() {
     function animate(timestamp) {
         time = timestamp || 0;
         ctx.clearRect(0, 0, W, H);
-        drawDodecahedron(time);
+        drawIcosahedron(time);
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
@@ -729,20 +754,22 @@ function FeatureSection() {
 (function() {
     const canvas = document.getElementById('particle-field');
     const ctx = canvas.getContext('2d');
-    let W, H; const particles = []; const COUNT = 75;
+    let W, H; const particles = []; const COUNT = 70;
     function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
     resize(); window.addEventListener('resize', resize);
     for (let i = 0; i < COUNT; i++) particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, r: Math.random() * 1.5 + 0.5, alpha: Math.random() * 0.3 + 0.1 });
     function animate() {
         ctx.clearRect(0, 0, W, H);
-        for (const p of particles) { p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x = W; if (p.x > W) p.x = 0; if (p.y < 0) p.y = H; if (p.y > H) p.y = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(233, 30, 99, ${p.alpha})`; ctx.fill(); }
-        for (let i = 0; i < particles.length; i++) for (let j = i + 1; j < particles.length; j++) { const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy); if (dist < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(240, 98, 146, ${0.06 * (1 - dist / 120)})`; ctx.lineWidth = 0.5; ctx.stroke(); } }
+        for (const p of particles) { p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x = W; if (p.x > W) p.x = 0; if (p.y < 0) p.y = H; if (p.y > H) p.y = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(0, 230, 118, ${p.alpha})`; ctx.fill(); }
+        for (let i = 0; i < particles.length; i++) for (let j = i + 1; j < particles.length; j++) { const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy); if (dist < 120) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = `rgba(0, 200, 83, ${0.06 * (1 - dist / 120)})`; ctx.lineWidth = 0.5; ctx.stroke(); } }
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
 })();
 
+// SCROLL REVEAL
 (function() { const r = document.querySelectorAll('.reveal'); const o = new IntersectionObserver((e) => { e.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }); r.forEach(el => o.observe(el)); })();
+// SMOOTH SCROLL
 document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { e.preventDefault(); const t = document.querySelector(a.getAttribute('href')); if (t) t.scrollIntoView({ behavior: 'smooth' }); }); });
 </script>
 </body>

@@ -4,6 +4,31 @@ title: HeadyMCP — Manager Control Plane
 heroTitle: HeadyMCP
 heroSubtitle: The Manager Control Plane that orchestrates all Heady services, AI nodes, pipelines, and infrastructure as one unified, intelligent system.
 order: 2
+services:
+  - name: HeadyChrono
+    desc: Temporal intelligence & event replay
+    color: "#7c3aed"
+    building: false
+  - name: HeadyCartograph
+    desc: Dependency & impact mapping
+    color: "#06b6d4"
+    building: false
+  - name: HeadySynapse
+    desc: Semantic agent pub/sub bus
+    color: "#d946ef"
+    building: false
+  - name: HeadyVault
+    desc: GCP Secret Manager vault
+    color: "#fbbf24"
+    building: false
+  - name: HeadyOuroboros
+    desc: Auto-Success self-healing engine
+    color: "#10b981"
+    building: true
+  - name: HeadyAegis
+    desc: Security posture & compliance
+    color: "#f43f5e"
+    building: false
 ---
 
 <div class="cta-row" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;">
@@ -69,19 +94,19 @@ order: 2
     </tr>
   </thead>
   <tbody>
-    {% apiEndpoint "GET" "/api/health" "System health check" %}
-    {% apiEndpoint "GET" "/api/system/status" "Full system status with capabilities" %}
-    {% apiEndpoint "POST" "/api/pipeline/run" "Trigger a pipeline run" %}
-    {% apiEndpoint "GET" "/api/pipeline/state" "Current pipeline execution state" %}
-    {% apiEndpoint "GET" "/api/registry" "Full HeadyRegistry catalog" %}
-    {% apiEndpoint "GET" "/api/nodes" "List all AI nodes" %}
-    {% apiEndpoint "GET" "/api/brain/status" "Brain status and readiness score" %}
-    {% apiEndpoint "GET" "/api/supervisor/status" "Multi-agent supervisor status" %}
-    {% apiEndpoint "GET" "/api/readiness/evaluate" "Run operational readiness probes" %}
-    {% apiEndpoint "POST" "/api/checkpoint/analyze" "Run checkpoint analysis" %}
-    {% apiEndpoint "GET" "/api/subsystems" "All subsystem status overview" %}
-    {% apiEndpoint "GET" "/api/context/health" "AutoContext service health" %}
-    {% apiEndpoint "POST" "/api/context/enrich" "5-pass enrichment pipeline" %}
-    {% apiEndpoint "GET" "/api/memory/stats" "Memory tier statistics" %}
+    {% apiEndpoint "GET", "/api/health", "System health check" %}
+    {% apiEndpoint "GET", "/api/system/status", "Full system status with capabilities" %}
+    {% apiEndpoint "POST", "/api/pipeline/run", "Trigger a pipeline run" %}
+    {% apiEndpoint "GET", "/api/pipeline/state", "Current pipeline execution state" %}
+    {% apiEndpoint "GET", "/api/registry", "Full HeadyRegistry catalog" %}
+    {% apiEndpoint "GET", "/api/nodes", "List all AI nodes" %}
+    {% apiEndpoint "GET", "/api/brain/status", "Brain status and readiness score" %}
+    {% apiEndpoint "GET", "/api/supervisor/status", "Multi-agent supervisor status" %}
+    {% apiEndpoint "GET", "/api/readiness/evaluate", "Run operational readiness probes" %}
+    {% apiEndpoint "POST", "/api/checkpoint/analyze", "Run checkpoint analysis" %}
+    {% apiEndpoint "GET", "/api/subsystems", "All subsystem status overview" %}
+    {% apiEndpoint "GET", "/api/context/health", "AutoContext service health" %}
+    {% apiEndpoint "POST", "/api/context/enrich", "5-pass enrichment pipeline" %}
+    {% apiEndpoint "GET", "/api/memory/stats", "Memory tier statistics" %}
   </tbody>
 </table>

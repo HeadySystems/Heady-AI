@@ -47,7 +47,7 @@ ENDPOINTS=(
     "headyme.com"
     "heady-ai.com"
     "headyconnection.com"
-    "headybuddy.com"
+    "headybuddy.org"
     "headymcp.com"
 )
 
@@ -208,11 +208,11 @@ check_dns_resolution() {
         printf "  %-40s " "$endpoint"
     fi
 
-    local ip=$(dig +short "$endpoint" 2>/dev/null | head -1)
+    local ip=$(dig +short "$endpoint" 2>/dev/null | grep -E '^[0-9.]+$|^[a-zA-Z0-9.-]+\.$' | head -1)
 
     if [ -z "$ip" ]; then
         # Fallback to nslookup if dig is not available
-        ip=$(nslookup "$endpoint" 2>/dev/null | grep "Address:" | tail -1 | awk '{print $NF}')
+        ip=$(nslookup "$endpoint" 2>/dev/null | awk '/^Name:/,0 {if ($1 == "Address:") print $2}' | tail -1)
     fi
 
     if [ -z "$ip" ]; then

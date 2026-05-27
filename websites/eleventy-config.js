@@ -39,11 +39,15 @@ module.exports = function(eleventyConfig) {
     return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   });
 
+  // ─── Ignores ───────────────────────────────────────────────────
+  eleventyConfig.ignores.add('sites/headyio.com/index.html');
+  eleventyConfig.ignores.add('sites/headymcp.com/index.html');
+
   // ─── Shortcodes ────────────────────────────────────────────────
   eleventyConfig.addShortcode('year', () => `${new Date().getFullYear()}`);
 
-  eleventyConfig.addShortcode('sacredCard', (title, description) => {
-    return `<div class="sacred-card"><h3>${title}</h3><p>${description}</p></div>`;
+  eleventyConfig.addPairedShortcode('sacredCard', (content, title) => {
+    return `<div class="sacred-card"><h3>${title}</h3><p>${content}</p></div>`;
   });
 
   eleventyConfig.addShortcode('apiEndpoint', (method, path, description) => {

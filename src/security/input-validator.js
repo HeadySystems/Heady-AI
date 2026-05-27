@@ -279,8 +279,45 @@ class InputValidator {
     };
   }
 }
+
+const MAX_INPUT_LENGTH = 1597;
+const MAX_JSON_DEPTH = 13;
+const MAX_ARRAY_ITEMS = 377;
+
+function validateInput(value) {
+  const threats = [];
+  if (typeof value !== 'string') return { safe: false, threats: ['INVALID_TYPE'] };
+  
+  if (value.length > MAX_INPUT_LENGTH) {
+    threats.push('SIZE_LIMIT_EXCEEDED');
+  }
+  
+  const patterns = {
+    SQL_INJECTION: [/(\b(SELECT|INSERT|UPDATE|DELETE|DROP|UNION|ALTER|CREATE|EXEC|EXECUTE)\b\s)/i, /('|"|;)\s*(OR|AND)\s+\d+\s*=\s*\d+/i, /(\bOR\b\s+\d+\s*=\s*\d+|1\s*=\s*1)/i, /--\s*$/m, /\/\*[\s\S]*?\*\//],
+    XSS_SCRIPT: [/<script[\s>]/i, /javascript\s*:/i, /on(?:load|error|click|mouseover|focus|blur)\s*=/i, /<(?:img|svg|iframe|object|embed|link|style|meta|base)\b/i]
+  };
+  
+  for (const [category, regexList] of Object.entries(patterns)) {
+    for (const pattern of regexList) {
+      if (pattern.test(value)) {
+        threats.push(category);
+        break;
+      }
+    }
+  }
+  
+  return {
+    safe: threats.length === 0,
+    threats
+  };
+}
+
 module.exports = {
   InputValidator,
   THREAT_PATTERNS,
-  BLOCKED_CIDRS
+  BLOCKED_CIDRS,
+  validateInput,
+  MAX_INPUT_LENGTH,
+  MAX_JSON_DEPTH,
+  MAX_ARRAY_ITEMS
 };
