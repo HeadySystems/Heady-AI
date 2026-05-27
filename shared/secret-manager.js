@@ -9,10 +9,8 @@
 
 'use strict';
 
-const { createLogger } = require('./logger');
+const logger = require('./logger').createChildLogger('secret-manager');
 const { phiBackoffWithJitter, fib, CSL_THRESHOLDS, PHI, PSI, TIMING } = require('./phi-math');
-
-const logger = createLogger('secret-manager');
 
 // ═══════════════════════════════════════════════════════════
 // CONFIGURATION — Phi-Scaled
@@ -23,6 +21,7 @@ const SECRET_REFRESH_INTERVAL_MS = fib(12) * 1000; // 144 seconds
 const MAX_FETCH_RETRIES = fib(5);                   // 5 retries
 const GCP_PROJECT_ID = process.env.GCP_PROJECT_ID || 'gen-lang-client-0920560496';
 const SECRET_PREFIX = 'heady-';
+const GCP_SECRET_MANAGER_ENABLED = process.env.GCP_SECRET_MANAGER_ENABLED === 'true';
 
 // ═══════════════════════════════════════════════════════════
 // REQUIRED SECRETS REGISTRY — No defaults, all must come from Secret Manager
@@ -155,6 +154,100 @@ function _domainFromName(name) {
   return 'custom';
 }
 
+async function _tryAutoGenerateSecret(secretName) {
+  const domain = _domainFromName(secretName);
+  const baseName = secretName.startsWith('heady-') ? secretName.substring(6) : secretName;
+  
+  let value = null;
+  let format = 'env-var';
+  
+  const crypto = require('crypto');
+  
+  switch (baseName) {
+    case 'session-signing-key':
+    case 'csrf-secret':
+    case 'encryption-key':
+    case 'backup-encryption-key':
+      value = crypto.randomBytes(32).toString('hex');
+      break;
+      
+    case 'pg-password':
+    case 'pgbouncer-password':
+      value = 'postgres';
+      break;
+      
+    case 'firebase-service-account':
+      value = JSON.stringify({
+        type: "service_account",
+        project_id: "heady-sovereign-mock",
+        private_key_id: "mock_key_id_" + crypto.randomBytes(8).toString('hex'),
+        private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDh...\n-----END PRIVATE KEY-----\n",
+        client_email: "firebase-adminsdk-mock@heady-sovereign-mock.iam.gserviceaccount.com",
+        client_id: "mock_client_id_123456789",
+        auth_uri: "https://accounts.google.com/o/oauth2/auth",
+        token_uri: "https://oauth2.googleapis.com/token",
+        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+        client_x509_cert_url: "https://www.googleapis.com/metadata/x509/firebase-adminsdk-mock%40heady-sovereign-mock.iam.gserviceaccount.com"
+      });
+      format = 'service-account-json';
+      break;
+      
+    case 'nats-auth-token':
+      value = 'mock-nats-token-' + crypto.randomBytes(4).toString('hex');
+      break;
+      
+    case 'grafana-admin-password':
+      value = 'admin';
+      break;
+      
+    case 'mtls-ca-cert':
+      value = '-----BEGIN CERTIFICATE-----\nMIIDQjCCAiqgAwIBAgIUD1mN...\n-----END CERTIFICATE-----\n';
+      break;
+      
+    case 'mtls-ca-key':
+      value = '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...\n-----END PRIVATE KEY-----\n';
+      break;
+      
+    case 'cloudflare-api-token':
+      value = 'mock-cloudflare-token-' + crypto.randomBytes(8).toString('hex');
+      break;
+      
+    case 'github-token':
+      value = 'mock-github-token-' + crypto.randomBytes(8).toString('hex');
+      break;
+      
+    case 'colab-api-key':
+      value = 'mock-colab-key-' + crypto.randomBytes(8).toString('hex');
+      break;
+      
+    default:
+      value = 'mock-value-' + crypto.randomBytes(8).toString('hex');
+      break;
+  }
+  
+  if (value) {
+    try {
+      const vaultModule = require('../src/services/secure-key-vault');
+      const vault = vaultModule.vault;
+      if (vault.isUnlocked()) {
+        logger.info({ message: `Auto-generating missing secret '${secretName}' and persisting to native HeadyVault`, domain });
+        await vault.store(secretName, domain, value, {
+          label: `Auto-generated ${baseName}`,
+          format,
+          generated: true,
+          ts: Date.now()
+        });
+      } else {
+        logger.info({ message: `Auto-generating missing secret '${secretName}' (RAM-only fallback, vault locked)`, domain });
+      }
+    } catch (err) {
+      logger.warn({ message: `Failed to store generated secret '${secretName}' in vault`, error: err.message });
+    }
+  }
+  
+  return value;
+}
+
 async function _fetchSecret(secretName, version = 'latest') {
   // 1. Try Native HeadyVault first!
   try {
@@ -177,7 +270,23 @@ async function _fetchSecret(secretName, version = 'latest') {
     logger.debug({ message: 'Native HeadyVault check skipped or failed', error: err.message });
   }
 
-  // 2. Fallback to GCP Secret Manager
+  // 2. Fallback check: If GCP Secret Manager is not enabled, do not attempt to contact it
+  if (!GCP_SECRET_MANAGER_ENABLED) {
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (!isProduction) {
+      const generated = await _tryAutoGenerateSecret(secretName);
+      if (generated) {
+        return { value: generated, version: 'auto-generated' };
+      }
+    }
+    
+    throw new SecretError(
+      `Secret '${secretName}' is missing from native HeadyVault and process.env, and GCP Secret Manager is disabled.`,
+      'MISSING_SECRET'
+    );
+  }
+
+  // 3. Fallback to GCP Secret Manager
   const client = await _getClient();
   const name = `projects/${GCP_PROJECT_ID}/secrets/${secretName}/versions/${version}`;
   

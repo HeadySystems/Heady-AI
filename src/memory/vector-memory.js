@@ -483,7 +483,9 @@ async function ingestMemory({ content, metadata = {}, embedding = null }) {
     schedulePersist(shardIdx);
 
     // Fan-out to remote tiers
-    if (federation) federation.federatedInsert(entry).catch(() => { });
+    if (federation && typeof federation.federatedInsert === 'function') {
+        federation.federatedInsert(entry).catch(() => { });
+    }
 
     return entry.id;
 }

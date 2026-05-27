@@ -267,6 +267,9 @@ class SecureKeyVault {
         }
 
         const entry = results[0].metadata;
+        if (entry.credentialId !== credentialId) {
+            return null;
+        }
         try {
             const value = this._decrypt({
                 encrypted: entry.encrypted,
