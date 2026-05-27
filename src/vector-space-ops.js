@@ -231,6 +231,16 @@ function pca(vectors, targetDims) {
 
 // ─── Exports ─────────────────────────────────────────────────────────────────
 
+const {
+  VectorSpaceOps,
+  AntiSprawlEngine,
+  VectorSecurityScanner,
+  VectorMaintenanceOps,
+  PreDeployValidator,
+  ProjectionManager,
+  PHI_INTERVALS
+} = require('./memory/vector-space-ops');
+
 module.exports = {
   EMBEDDING_DIM,
   cosineSimilarity,
@@ -245,4 +255,12 @@ module.exports = {
   lerp,
   randomVector,
   pca,
+  // Conductor compatibility
+  VectorSpaceOps,
+  AntiSprawlEngine,
+  VectorSecurityScanner,
+  VectorMaintenanceOps,
+  PreDeployValidator,
+  ProjectionManager,
+  PHI_INTERVALS
 };
