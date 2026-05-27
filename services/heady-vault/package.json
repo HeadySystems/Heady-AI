@@ -8,6 +8,10 @@
     "dev": "node --watch src/index.js",
     "test": "node --test src/**/*.test.js"
   },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pino": "^9.1.0"
+  },
   "heady": {
     "port": 3421,
     "category": "security",
