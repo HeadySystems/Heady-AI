@@ -57,7 +57,7 @@ echo ""
 # ─── Cloud Run ────────────────────────────────────────────────────────────
 
 echo -e "${CYAN}## Cloud Run Services${NC}"
-check_url "heady-manager" "https://heady-manager-609590223909.us-central1.run.app/health/live"
+check_url "heady-manager" "https://heady-manager-1003436179562.us-central1.run.app/api/health"
 echo ""
 
 # ─── Cloudflare Edge ──────────────────────────────────────────────────────

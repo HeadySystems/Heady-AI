@@ -51,7 +51,7 @@ binding = "HEADY_ANALYTICS"
 ENVIRONMENT = "production"
 LOG_LEVEL = "info"
 PHI_RATIO = "1.618033988749895"
-DEFAULT_ORIGIN = "https://heady-edge-gateway-609590223909.us-central1.run.app"
+DEFAULT_ORIGIN = "https://heady-edge-gateway-1003436179562.us-central1.run.app"
 
 [env.staging.vars]
 ENVIRONMENT = "staging"

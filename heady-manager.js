@@ -365,7 +365,7 @@ const allowedOrigins = [
 
   // Cloud Run deployment URLs
   'https://headyme-site-667608982461.us-central1.run.app',
-  'https://heady-edge-gateway-609590223909.us-central1.run.app',
+  'https://heady-edge-gateway-1003436179562.us-central1.run.app',
 ];
 
 app.use((req, res, next) => {

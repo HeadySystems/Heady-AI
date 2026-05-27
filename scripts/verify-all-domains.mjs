@@ -81,14 +81,13 @@ const DOMAINS = [
     healthPath: '/health',
     subdomains: [],
   },
-  // Domains with known issues (from health check)
+  // Domains with active cloud targets
   {
     domain: 'headyos.com',
     role: 'OS Runtime Layer',
     expectedTitle: null,
     healthPath: '/health',
     subdomains: ['kernel.headyos.com', 'runtime.headyos.com', 'scheduler.headyos.com', 'memory.headyos.com'],
-    knownIssue: '530 — no origin configured',
   },
   {
     domain: 'headycloud.com',
@@ -96,19 +95,10 @@ const DOMAINS = [
     expectedTitle: null,
     healthPath: '/health',
     subdomains: ['orchestrator.headycloud.com', 'deploy.headycloud.com', 'console.headycloud.com', 'monitor.headycloud.com'],
-    knownIssue: '403 — WAF/Access blocking',
-  },
-  {
-    domain: 'heady-ai.com',
-    role: 'AI Research Portal',
-    expectedTitle: null,
-    healthPath: '/health',
-    subdomains: [],
-    knownIssue: 'DNS failure — no zone',
   },
   // Cloud Run service
   {
-    domain: 'heady-manager-609590223909.us-central1.run.app',
+    domain: 'heady-manager-1003436179562.us-central1.run.app',
     role: 'Cloud Run — heady-manager',
     expectedTitle: null,
     healthPath: '/health',
@@ -121,7 +111,6 @@ const DOMAINS = [
     expectedTitle: null,
     healthPath: null,
     subdomains: [],
-    knownIssue: 'Space sleeping/paused',
   },
   {
     domain: 'headyme-heady-demo.hf.space',
@@ -129,7 +118,6 @@ const DOMAINS = [
     expectedTitle: null,
     healthPath: null,
     subdomains: [],
-    knownIssue: 'Space sleeping/paused',
   },
 ];
 

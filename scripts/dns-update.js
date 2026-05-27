@@ -3,7 +3,7 @@ const logger = pino();
 // const fetch = require('node-fetch'); // Not required in Node.js >= 18
 const token = process.env.CLOUDFLARE_API_TOKEN;
 const zoneId = process.env.CLOUDFLARE_ZONE_ID;
-const target = "heady-manager-609590223909.us-central1.run.app";
+const target = "heady-manager-1003436179562.us-central1.run.app";
 
 async function updateDNS(id, name) {
     const url = `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records/${id}`;

@@ -19,7 +19,7 @@ const ENDPOINTS = {
     { url: 'https://headybot.com', name: 'HeadyBot', required: true },
   ],
   backend: [
-    { url: 'https://heady-manager-609590223909.us-central1.run.app/health', name: 'Heady Manager', required: false },
+    { url: 'https://heady-manager-1003436179562.us-central1.run.app/health', name: 'Heady Manager', required: false },
     { url: 'https://heady.headyme.com', name: 'Edge Proxy', required: false },
   ],
   deprecated: [
