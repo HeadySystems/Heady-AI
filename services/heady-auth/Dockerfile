@@ -14,6 +14,8 @@ RUN pnpm install --filter=@heady-ai/heady-auth... --prod --ignore-scripts
 ENV NODE_ENV=production
 ENV SERVICE_NAME=heady-auth
 ENV PORT=3309
+ENV SERVICE_VERSION=3.2.3
+ENV HEADY_DOMAIN=headysystems.com
 
 EXPOSE 3309
 EXPOSE 9464
