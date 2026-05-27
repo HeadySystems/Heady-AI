@@ -6520,66 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "499507ad-a829-43d5-a070-77c7069b9685",
-        "timestamp": "2026-05-26T07:44:09.517Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:intake",
-            "latency:pipeline:triage",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt"
-          ],
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "79e37f3e-7b2e-4d20-a8f4-8b2dcfef90b2",
-        "timestamp": "2026-05-26T07:46:09.518Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:intake",
-            "latency:pipeline:triage",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt"
-          ],
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "9538a44c-e535-44c6-85b7-4e151485fad7",
         "timestamp": "2026-05-26T07:48:09.518Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -19409,11 +19349,53 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "fbc4f9d7-65e0-49c3-8de3-18895be935a7",
+        "timestamp": "2026-05-27T02:56:08.969Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_cost_trajectory",
+            "latency:task:ingest_news_feeds",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:compare_trial_results",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:compress_memory_store",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "29ab32aa-a112-468b-ae46-1ca60971e69f",
+        "timestamp": "2026-05-27T02:58:08.971Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_cost_trajectory",
+            "latency:task:ingest_news_feeds",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:compare_trial_results",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:compress_memory_store",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-27T02:54:08.970Z"
+    "updatedAt": "2026-05-27T02:58:08.971Z"
   }
 }
