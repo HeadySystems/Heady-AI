@@ -19,4 +19,5 @@ EXPOSE 3309
 EXPOSE 9464
 
 USER node
-CMD ["pnpm", "--filter", "@heady-ai/heady-auth", "start"]
+WORKDIR /app/services/heady-auth
+CMD ["node", "--experimental-vm-modules", "src/index.js"]
