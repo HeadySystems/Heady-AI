@@ -6520,54 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "4f67714f-d75f-40e9-8eb7-175d37ce10db",
-        "timestamp": "2026-05-26T13:16:08.878Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:triage",
-            "latency:pipeline:arena"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "0e75f455-d359-4eb1-8c8d-a008514e7998",
-        "timestamp": "2026-05-26T13:18:08.879Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:triage",
-            "latency:pipeline:arena"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "b8885b36-649e-42ce-928f-38373080b34e",
-        "timestamp": "2026-05-26T13:20:08.880Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:triage",
-            "latency:pipeline:arena"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "969b2af9-3593-4ede-86ff-14f9152a8342",
         "timestamp": "2026-05-26T13:22:08.879Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -21648,11 +21600,145 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "c1e3b4c4-6932-4ab1-9c03-97f50ec59386",
+        "timestamp": "2026-05-27T07:40:08.998Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_service_health_matrix",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:select_winner",
+            "latency:task:record_trial_learnings",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:detect_over_provisioned",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:execute_routine_maintenance",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques",
+            "latency:task:propose_integrations",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:select_tools_per_subtask",
+            "latency:task:measure_trial_outcomes",
+            "latency:task:detect_unused_endpoints",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 37
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "7f0cd56c-a343-4ecb-bae3-075b73277a02",
+        "timestamp": "2026-05-27T07:42:08.995Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_service_health_matrix",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:select_winner",
+            "latency:task:record_trial_learnings",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:detect_over_provisioned",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:execute_routine_maintenance",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques",
+            "latency:task:propose_integrations",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:select_tools_per_subtask",
+            "latency:task:measure_trial_outcomes",
+            "latency:task:detect_unused_endpoints",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 37
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "d5e10a8f-900b-4239-8ea5-731a08e7b9d0",
+        "timestamp": "2026-05-27T07:44:08.995Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_service_health_matrix",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:select_winner",
+            "latency:task:record_trial_learnings",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:detect_over_provisioned",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:execute_routine_maintenance",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques",
+            "latency:task:propose_integrations",
+            "latency:task:select_tools_per_subtask",
+            "latency:task:measure_trial_outcomes",
+            "latency:task:detect_unused_endpoints",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 21
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-27T07:38:08.993Z"
+    "updatedAt": "2026-05-27T07:44:08.995Z"
   }
 }
