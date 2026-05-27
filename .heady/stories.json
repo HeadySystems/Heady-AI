@@ -6520,38 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "a887e3e8-50ab-4fa4-bf55-0b64d78e375b",
-        "timestamp": "2026-05-26T09:16:08.535Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:judge"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "e88b66b5-7bfd-4efc-93e5-81428898c40b",
-        "timestamp": "2026-05-26T09:18:08.535Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:judge"
-          ],
-          "count": 3
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "74fd85e6-6a23-474e-adaf-efc715c2a4d0",
         "timestamp": "2026-05-26T09:20:08.535Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -19663,11 +19631,109 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "80e96607-5d2d-40eb-8547-2bf0ed029b38",
+        "timestamp": "2026-05-27T03:56:08.975Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory",
+            "latency:task:ingest_news_feeds",
+            "latency:task:ingest_repo_changes",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:compare_trial_results",
+            "latency:task:select_winner",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:compress_memory_store",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques",
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 36
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "bb0e447d-c630-4744-8455-45b28c45a7c1",
+        "timestamp": "2026-05-27T03:58:08.975Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory",
+            "latency:task:ingest_news_feeds",
+            "latency:task:ingest_repo_changes",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:compare_trial_results",
+            "latency:task:select_winner",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:compress_memory_store",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques",
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:analyze_cost_per_request"
+          ],
+          "count": 36
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-27T03:54:08.975Z"
+    "updatedAt": "2026-05-27T03:58:08.975Z"
   }
 }
