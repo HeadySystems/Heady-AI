@@ -1805,7 +1805,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 0,
-      "lastImproved": "2026-05-27T15:28:08.970Z",
+      "lastImproved": "2026-05-27T15:34:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2134,7 +2134,7 @@
         "n": 30
       },
       "trend": "degrading",
-      "improvementAttempts": 90,
+      "improvementAttempts": 93,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -2475,7 +2475,7 @@
         "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 90,
+      "improvementAttempts": 93,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -2776,7 +2776,7 @@
         "n": 27
       },
       "trend": "degrading",
-      "improvementAttempts": 248,
+      "improvementAttempts": 251,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3137,7 +3137,7 @@
         "n": 33
       },
       "trend": "degrading",
-      "improvementAttempts": 458,
+      "improvementAttempts": 461,
       "lastImproved": "2026-05-27T04:12:08.974Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3528,7 +3528,7 @@
         "n": 36
       },
       "trend": "degrading",
-      "improvementAttempts": 277,
+      "improvementAttempts": 280,
       "lastImproved": "2026-05-27T13:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3929,7 +3929,7 @@
         "n": 37
       },
       "trend": "degrading",
-      "improvementAttempts": 240,
+      "improvementAttempts": 243,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4330,7 +4330,7 @@
         "n": 37
       },
       "trend": "degrading",
-      "improvementAttempts": 270,
+      "improvementAttempts": 273,
       "lastImproved": "2026-05-27T13:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4711,7 +4711,7 @@
         "n": 35
       },
       "trend": "degrading",
-      "improvementAttempts": 247,
+      "improvementAttempts": 250,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5054,15 +5054,15 @@
         }
       ],
       "stats": {
-        "mean": 169.19354838709677,
+        "mean": 169.65625,
         "median": 169,
-        "stddev": 16.617944740820057,
+        "stddev": 16.557870815340358,
         "min": 127,
         "max": 199,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 337,
+      "improvementAttempts": 340,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -5406,15 +5406,15 @@
         }
       ],
       "stats": {
-        "mean": 169.93548387096774,
+        "mean": 170.40625,
         "median": 170,
-        "stddev": 16.78312417352423,
+        "stddev": 16.725465940819106,
         "min": 127,
         "max": 201,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 300,
+      "improvementAttempts": 303,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -5758,15 +5758,15 @@
         }
       ],
       "stats": {
-        "mean": 2.774193548387097,
+        "mean": 2.78125,
         "median": 3,
-        "stddev": 0.9404761120718225,
+        "stddev": 0.9264979425233496,
         "min": 2,
         "max": 6,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 218,
+      "improvementAttempts": 221,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6109,15 +6109,15 @@
         }
       ],
       "stats": {
-        "mean": 3.225806451612903,
+        "mean": 3.21875,
         "median": 3,
-        "stddev": 1.1834797630867187,
+        "stddev": 1.1655035124357198,
         "min": 1,
         "max": 6,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 255,
+      "improvementAttempts": 258,
       "lastImproved": "2026-05-27T06:58:08.988Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6460,15 +6460,15 @@
         }
       ],
       "stats": {
-        "mean": 3.2580645161290325,
+        "mean": 3.25,
         "median": 3,
-        "stddev": 1.0149763046807918,
+        "stddev": 1,
         "min": 2,
         "max": 5,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 150,
+      "improvementAttempts": 153,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6811,15 +6811,15 @@
         }
       ],
       "stats": {
-        "mean": 3.6129032258064515,
+        "mean": 3.59375,
         "median": 3,
-        "stddev": 1.0679319585320548,
+        "stddev": 1.0565088440235604,
         "min": 2,
         "max": 6,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 150,
+      "improvementAttempts": 153,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -7162,15 +7162,15 @@
         }
       ],
       "stats": {
-        "mean": 4.096774193548387,
+        "mean": 4.09375,
         "median": 4,
-        "stddev": 1.1174521339154047,
+        "stddev": 1.0999822441748777,
         "min": 2,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 218,
+      "improvementAttempts": 221,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -7513,15 +7513,15 @@
         }
       ],
       "stats": {
-        "mean": 4.129032258064516,
+        "mean": 4.125,
         "median": 4,
-        "stddev": 1.09961680961673,
+        "stddev": 1.0825317547305484,
         "min": 2,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 218,
+      "improvementAttempts": 221,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8005,15 +8005,15 @@
         }
       ],
       "stats": {
-        "mean": 1.5483870967741935,
+        "mean": 1.5625,
         "median": 2,
-        "stddev": 0.4976531813077905,
+        "stddev": 0.49607837082461076,
         "min": 1,
         "max": 2,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -8358,13 +8358,13 @@
       "stats": {
         "mean": 2,
         "median": 2,
-        "stddev": 0.5679618342470648,
+        "stddev": 0.5590169943749475,
         "min": 1,
         "max": 3,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -8707,15 +8707,15 @@
         }
       ],
       "stats": {
-        "mean": 1.3548387096774193,
+        "mean": 1.34375,
         "median": 1,
-        "stddev": 0.9349275320122219,
+        "stddev": 0.9222721602108567,
         "min": 1,
         "max": 6,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 412,
+      "improvementAttempts": 415,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9058,15 +9058,15 @@
         }
       ],
       "stats": {
-        "mean": 1.935483870967742,
+        "mean": 1.9375,
         "median": 2,
-        "stddev": 1.0452807578077192,
+        "stddev": 1.0288798520721456,
         "min": 1,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -9409,15 +9409,15 @@
         }
       ],
       "stats": {
-        "mean": 2.225806451612903,
+        "mean": 2.25,
         "median": 2,
-        "stddev": 1.0067410667307894,
+        "stddev": 1,
         "min": 1,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 293,
+      "improvementAttempts": 296,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9760,15 +9760,15 @@
         }
       ],
       "stats": {
-        "mean": 2.935483870967742,
+        "mean": 2.9375,
         "median": 3,
-        "stddev": 1.1052801096136657,
+        "stddev": 1.0879309490955758,
         "min": 1,
         "max": 8,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -10111,15 +10111,15 @@
         }
       ],
       "stats": {
-        "mean": 3.129032258064516,
+        "mean": 3.15625,
         "median": 3,
-        "stddev": 1.0698789646307743,
+        "stddev": 1.0638777831593251,
         "min": 1,
         "max": 8,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -10372,15 +10372,15 @@
         }
       ],
       "stats": {
-        "mean": 1.0909090909090908,
+        "mean": 1.0869565217391304,
         "median": 1,
-        "stddev": 0.28747978728803447,
+        "stddev": 0.2817713347133852,
         "min": 1,
         "max": 2,
-        "n": 22
+        "n": 23
       },
       "trend": "degrading",
-      "improvementAttempts": 113,
+      "improvementAttempts": 116,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -10723,15 +10723,15 @@
         }
       ],
       "stats": {
-        "mean": 1.1935483870967742,
+        "mean": 1.1875,
         "median": 1,
-        "stddev": 0.46968450898583985,
+        "stddev": 0.46351240544347894,
         "min": 1,
         "max": 3,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 150,
+      "improvementAttempts": 153,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10748,7 +10748,7 @@
       "id": "performance::latency:task:tune_pipeline_parameters",
       "category": "performance",
       "name": "latency:task:tune_pipeline_parameters",
-      "state": "stagnant",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.750Z",
       "lastUpdated": "2026-05-27T15:29:08.851Z",
       "observations": [
@@ -11074,21 +11074,21 @@
         }
       ],
       "stats": {
-        "mean": 1.4838709677419355,
+        "mean": 1.5,
         "median": 1,
-        "stddev": 0.5605853934510571,
+        "stddev": 0.5590169943749475,
         "min": 1,
         "max": 3,
-        "n": 31
+        "n": 32
       },
-      "trend": "flat",
-      "improvementAttempts": 189,
+      "trend": "degrading",
+      "improvementAttempts": 192,
       "lastImproved": "2026-05-27T14:12:08.956Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "isBottleneck": true,
-        "suggestion": "latency:task:tune_pipeline_parameters is stagnant at 1ms. Run Monte Carlo plan search for faster alternatives."
+        "suggestion": "latency:task:tune_pipeline_parameters is getting slower. Re-optimize: try parallelization or caching."
       },
       "tags": [
         "monte_carlo",
@@ -11425,15 +11425,15 @@
         }
       ],
       "stats": {
-        "mean": 1.8709677419354838,
+        "mean": 1.875,
         "median": 2,
-        "stddev": 0.5531105870800724,
+        "stddev": 0.5448623679425842,
         "min": 1,
         "max": 3,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 337,
+      "improvementAttempts": 340,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -11776,15 +11776,15 @@
         }
       ],
       "stats": {
-        "mean": 2.2903225806451615,
+        "mean": 2.3125,
         "median": 2,
-        "stddev": 0.5788502724169794,
+        "stddev": 0.582961190818051,
         "min": 2,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 113,
+      "improvementAttempts": 116,
       "lastImproved": "2026-05-27T11:42:08.666Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12127,15 +12127,15 @@
         }
       ],
       "stats": {
-        "mean": 2.6451612903225805,
+        "mean": 2.65625,
         "median": 3,
-        "stddev": 0.54170502012086,
+        "stddev": 0.5367363761661771,
         "min": 2,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 300,
+      "improvementAttempts": 303,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12478,15 +12478,15 @@
         }
       ],
       "stats": {
-        "mean": 1.7096774193548387,
+        "mean": 1.6875,
         "median": 2,
-        "stddev": 0.5201456611805515,
+        "stddev": 0.5266343608235224,
         "min": 1,
         "max": 3,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 405,
+      "improvementAttempts": 408,
       "lastImproved": "2026-05-27T01:58:08.963Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12829,15 +12829,15 @@
         }
       ],
       "stats": {
-        "mean": 2.096774193548387,
+        "mean": 2.0625,
         "median": 2,
-        "stddev": 0.5300540879082254,
+        "stddev": 0.5555121510822243,
         "min": 1,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 225,
+      "improvementAttempts": 228,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13180,15 +13180,15 @@
         }
       ],
       "stats": {
-        "mean": 2.7096774193548385,
+        "mean": 2.6875,
         "median": 3,
-        "stddev": 0.681248776836867,
+        "stddev": 0.6817945071647321,
         "min": 1,
         "max": 5,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -13531,15 +13531,15 @@
         }
       ],
       "stats": {
-        "mean": 2.935483870967742,
+        "mean": 2.90625,
         "median": 3,
-        "stddev": 0.5642856672430934,
+        "stddev": 0.5787580992953792,
         "min": 2,
         "max": 5,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 218,
+      "improvementAttempts": 221,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13872,15 +13872,15 @@
         }
       ],
       "stats": {
-        "mean": 1.1333333333333333,
+        "mean": 1.1290322580645162,
         "median": 1,
-        "stddev": 0.42687494916218993,
+        "stddev": 0.4205937035614612,
         "min": 1,
         "max": 3,
-        "n": 30
+        "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 293,
+      "improvementAttempts": 296,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14223,15 +14223,15 @@
         }
       ],
       "stats": {
-        "mean": 1.4516129032258065,
+        "mean": 1.46875,
         "median": 1,
-        "stddev": 0.6642342026443225,
+        "stddev": 0.6606992034958117,
         "min": 1,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -14574,15 +14574,15 @@
         }
       ],
       "stats": {
-        "mean": 2.129032258064516,
+        "mean": 2.15625,
         "median": 2,
-        "stddev": 0.7927874662867423,
+        "stddev": 0.7948810838735565,
         "min": 1,
         "max": 6,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 255,
+      "improvementAttempts": 258,
       "lastImproved": "2026-05-27T06:58:08.989Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14925,15 +14925,15 @@
         }
       ],
       "stats": {
-        "mean": 2.4838709677419355,
+        "mean": 2.5,
         "median": 2,
-        "stddev": 0.9794984806896114,
+        "stddev": 0.9682458365518543,
         "min": 2,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 293,
+      "improvementAttempts": 296,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15276,15 +15276,15 @@
         }
       ],
       "stats": {
-        "mean": 2.7419354838709675,
+        "mean": 2.75,
         "median": 3,
-        "stddev": 1.0149763046807916,
+        "stddev": 1,
         "min": 2,
         "max": 7,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 293,
+      "improvementAttempts": 296,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15627,15 +15627,15 @@
         }
       ],
       "stats": {
-        "mean": 1.1935483870967742,
+        "mean": 1.1875,
         "median": 1,
-        "stddev": 0.39507899077148034,
+        "stddev": 0.3903123748998999,
         "min": 1,
         "max": 2,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -15978,15 +15978,15 @@
         }
       ],
       "stats": {
-        "mean": 1.5483870967741935,
+        "mean": 1.53125,
         "median": 1,
-        "stddev": 0.6642342026443225,
+        "stddev": 0.6606992034958117,
         "min": 1,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 368,
+      "improvementAttempts": 371,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16329,15 +16329,15 @@
         }
       ],
       "stats": {
-        "mean": 2.032258064516129,
+        "mean": 2.03125,
         "median": 2,
-        "stddev": 0.6467721824439812,
+        "stddev": 0.63661089960823,
         "min": 1,
         "max": 4,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 293,
+      "improvementAttempts": 296,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16680,15 +16680,15 @@
         }
       ],
       "stats": {
-        "mean": 2.4516129032258065,
+        "mean": 2.4375,
         "median": 2,
-        "stddev": 0.7111421833886645,
+        "stddev": 0.7043392293490403,
         "min": 2,
         "max": 5,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 368,
+      "improvementAttempts": 371,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17031,15 +17031,15 @@
         }
       ],
       "stats": {
-        "mean": 2.935483870967742,
+        "mean": 2.9375,
         "median": 3,
-        "stddev": 0.7155184842844785,
+        "stddev": 0.7043392293490403,
         "min": 2,
         "max": 5,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 368,
+      "improvementAttempts": 371,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17167,7 +17167,7 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 9
+        "n": 10
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -17487,10 +17487,10 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 28
+        "n": 29
       },
       "trend": "flat",
-      "improvementAttempts": 368,
+      "improvementAttempts": 371,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -17833,15 +17833,15 @@
         }
       ],
       "stats": {
-        "mean": 1.1290322580645162,
+        "mean": 1.15625,
         "median": 1,
-        "stddev": 0.33523564017462143,
+        "stddev": 0.3630921887069453,
         "min": 1,
         "max": 2,
-        "n": 31
+        "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 446,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -17889,7 +17889,7 @@
       "id": "performance::latency:pipeline:channel-entry",
       "category": "performance",
       "name": "latency:pipeline:channel-entry",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -19695,16 +19695,16 @@
         }
       ],
       "stats": {
-        "mean": 0.6,
+        "mean": 0.605,
         "median": 0,
-        "stddev": 1.322875655532295,
+        "stddev": 1.3224881852024237,
         "min": 0,
         "max": 10,
         "n": 200
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 626,
-      "lastImproved": "2026-05-27T14:58:08.963Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -19720,7 +19720,7 @@
       "id": "performance::latency:pipeline:recon",
       "category": "performance",
       "name": "latency:pipeline:recon",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -21533,9 +21533,9 @@
         "max": 5,
         "n": 200
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 608,
-      "lastImproved": "2026-05-27T15:12:08.971Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -23357,16 +23357,16 @@
         }
       ],
       "stats": {
-        "mean": 11.935,
+        "mean": 12.885,
         "median": 0,
-        "stddev": 44.74584645528566,
+        "stddev": 46.48668384602198,
         "min": 0,
         "max": 206,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 511,
-      "lastImproved": "2026-05-27T15:28:08.971Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -23383,7 +23383,7 @@
       "id": "performance::latency:pipeline:classify",
       "category": "performance",
       "name": "latency:pipeline:classify",
-      "state": "improving",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -25189,15 +25189,15 @@
         }
       ],
       "stats": {
-        "mean": 0.35,
+        "mean": 0.375,
         "median": 0,
-        "stddev": 0.8351646544245033,
+        "stddev": 0.8569568250501305,
         "min": 0,
         "max": 5,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 494,
+      "trend": "degrading",
+      "improvementAttempts": 497,
       "lastImproved": "2026-05-27T15:28:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -27020,16 +27020,16 @@
         }
       ],
       "stats": {
-        "mean": 0.33,
+        "mean": 0.335,
         "median": 0,
-        "stddev": 0.7688302803610169,
+        "stddev": 0.7891609468289724,
         "min": 0,
         "max": 5,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 514,
-      "lastImproved": "2026-05-27T15:28:08.971Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -28851,16 +28851,16 @@
         }
       ],
       "stats": {
-        "mean": 0.255,
+        "mean": 0.265,
         "median": 0,
-        "stddev": 0.6708017590913133,
+        "stddev": 0.6817440868830473,
         "min": 0,
         "max": 3,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 542,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -30682,16 +30682,16 @@
         }
       ],
       "stats": {
-        "mean": 0.455,
+        "mean": 0.48,
         "median": 0,
-        "stddev": 1.1392870577690244,
+        "stddev": 1.1830469136936204,
         "min": 0,
         "max": 8,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 558,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -30707,7 +30707,7 @@
       "id": "performance::latency:pipeline:orchestrate",
       "category": "performance",
       "name": "latency:pipeline:orchestrate",
-      "state": "improving",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -32513,15 +32513,15 @@
         }
       ],
       "stats": {
-        "mean": 0.255,
+        "mean": 0.27,
         "median": 0,
-        "stddev": 0.6480547816350098,
+        "stddev": 0.6760917097554149,
         "min": 0,
         "max": 3,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 472,
+      "trend": "degrading",
+      "improvementAttempts": 475,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -32538,7 +32538,7 @@
       "id": "performance::latency:pipeline:monte-carlo",
       "category": "performance",
       "name": "latency:pipeline:monte-carlo",
-      "state": "stagnant",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -34344,15 +34344,15 @@
         }
       ],
       "stats": {
-        "mean": 0.2,
+        "mean": 0.215,
         "median": 0,
-        "stddev": 0.5196152422706634,
+        "stddev": 0.5373778931068899,
         "min": 0,
         "max": 2,
         "n": 200
       },
-      "trend": "flat",
-      "improvementAttempts": 433,
+      "trend": "degrading",
+      "improvementAttempts": 436,
       "lastImproved": "2026-05-27T15:12:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -34369,7 +34369,7 @@
       "id": "performance::latency:pipeline:arena",
       "category": "performance",
       "name": "latency:pipeline:arena",
-      "state": "improving",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -36175,15 +36175,15 @@
         }
       ],
       "stats": {
-        "mean": 0.205,
+        "mean": 0.22,
         "median": 0,
-        "stddev": 0.5504316487993763,
+        "stddev": 0.5844655678480982,
         "min": 0,
         "max": 3,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 401,
+      "trend": "degrading",
+      "improvementAttempts": 404,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -36200,7 +36200,7 @@
       "id": "performance::latency:pipeline:judge",
       "category": "performance",
       "name": "latency:pipeline:judge",
-      "state": "improving",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -38006,15 +38006,15 @@
         }
       ],
       "stats": {
-        "mean": 0.17,
+        "mean": 0.18,
         "median": 0,
-        "stddev": 0.4594562003064058,
+        "stddev": 0.4770744176750624,
         "min": 0,
         "max": 2,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 497,
+      "trend": "degrading",
+      "improvementAttempts": 500,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -38031,7 +38031,7 @@
       "id": "performance::latency:pipeline:approve",
       "category": "performance",
       "name": "latency:pipeline:approve",
-      "state": "stagnant",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -39837,15 +39837,15 @@
         }
       ],
       "stats": {
-        "mean": 0.195,
+        "mean": 0.2,
         "median": 0,
-        "stddev": 0.5166962357130156,
+        "stddev": 0.5196152422706634,
         "min": 0,
         "max": 3,
         "n": 200
       },
-      "trend": "flat",
-      "improvementAttempts": 480,
+      "trend": "degrading",
+      "improvementAttempts": 483,
       "lastImproved": "2026-05-27T15:12:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -39862,7 +39862,7 @@
       "id": "performance::latency:pipeline:execute",
       "category": "performance",
       "name": "latency:pipeline:execute",
-      "state": "improving",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -41668,15 +41668,15 @@
         }
       ],
       "stats": {
-        "mean": 0.23,
+        "mean": 0.245,
         "median": 0,
-        "stddev": 0.6058877783880444,
+        "stddev": 0.6363764609097351,
         "min": 0,
         "max": 3,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 410,
+      "trend": "flat",
+      "improvementAttempts": 413,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -43499,16 +43499,16 @@
         }
       ],
       "stats": {
-        "mean": 0.385,
+        "mean": 0.395,
         "median": 0,
-        "stddev": 1.0182214886752292,
+        "stddev": 1.033912472117442,
         "min": 0,
         "max": 6,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 503,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.971Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -43524,7 +43524,7 @@
       "id": "performance::latency:pipeline:self-awareness",
       "category": "performance",
       "name": "latency:pipeline:self-awareness",
-      "state": "improving",
+      "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -45330,15 +45330,15 @@
         }
       ],
       "stats": {
-        "mean": 0.63,
+        "mean": 0.66,
         "median": 0,
-        "stddev": 1.7097075773359607,
+        "stddev": 1.7675972391922319,
         "min": 0,
         "max": 15,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 545,
+      "trend": "degrading",
+      "improvementAttempts": 548,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -47161,16 +47161,16 @@
         }
       ],
       "stats": {
-        "mean": 0.555,
+        "mean": 0.58,
         "median": 0,
-        "stddev": 1.4788424527311896,
+        "stddev": 1.5111584959890874,
         "min": 0,
         "max": 8,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 532,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -48993,16 +48993,16 @@
         }
       ],
       "stats": {
-        "mean": 0.645,
+        "mean": 0.68,
         "median": 0,
-        "stddev": 1.4383932007625728,
+        "stddev": 1.5058552387264859,
         "min": 0,
         "max": 7,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 578,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -50824,16 +50824,16 @@
         }
       ],
       "stats": {
-        "mean": 1.355,
+        "mean": 1.405,
         "median": 1,
-        "stddev": 2.9015470011702376,
+        "stddev": 2.980096474948421,
         "min": 0,
         "max": 17,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 573,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -50850,7 +50850,7 @@
       "id": "performance::latency:pipeline:continuous-search",
       "category": "performance",
       "name": "latency:pipeline:continuous-search",
-      "state": "improving",
+      "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
       "lastUpdated": "2026-05-27T15:29:08.900Z",
       "observations": [
@@ -52656,15 +52656,15 @@
         }
       ],
       "stats": {
-        "mean": 0.57,
+        "mean": 0.595,
         "median": 0,
-        "stddev": 1.3802535998866292,
+        "stddev": 1.4145582349270744,
         "min": 0,
         "max": 7,
         "n": 200
       },
-      "trend": "improving",
-      "improvementAttempts": 564,
+      "trend": "flat",
+      "improvementAttempts": 567,
       "lastImproved": "2026-05-27T15:28:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -54487,16 +54487,16 @@
         }
       ],
       "stats": {
-        "mean": 0.545,
+        "mean": 0.575,
         "median": 0,
-        "stddev": 1.3068951755974925,
+        "stddev": 1.3432702632009685,
         "min": 0,
         "max": 7,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 512,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -56318,16 +56318,16 @@
         }
       ],
       "stats": {
-        "mean": 1.3,
+        "mean": 1.36,
         "median": 1,
-        "stddev": 3.143246729100342,
+        "stddev": 3.249676907017067,
         "min": 0,
         "max": 16,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 568,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -58150,16 +58150,16 @@
         }
       ],
       "stats": {
-        "mean": 0.575,
+        "mean": 0.605,
         "median": 0,
-        "stddev": 1.4609500333686978,
+        "stddev": 1.5096274374825067,
         "min": 0,
         "max": 7,
         "n": 200
       },
       "trend": "improving",
       "improvementAttempts": 462,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -58499,7 +58499,7 @@
         "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 120,
+      "improvementAttempts": 123,
       "lastImproved": "2026-05-27T11:28:08.664Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -58677,7 +58677,7 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 14
+        "n": 15
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -58937,10 +58937,10 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 22
+        "n": 23
       },
       "trend": "flat",
-      "improvementAttempts": 113,
+      "improvementAttempts": 116,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -59198,10 +59198,10 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 22
+        "n": 23
       },
       "trend": "flat",
-      "improvementAttempts": 113,
+      "improvementAttempts": 116,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -59534,15 +59534,15 @@
         }
       ],
       "stats": {
-        "mean": 1.1333333333333333,
+        "mean": 1.1290322580645162,
         "median": 1,
-        "stddev": 0.33993463423951903,
+        "stddev": 0.33523564017462143,
         "min": 1,
         "max": 2,
-        "n": 30
+        "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 405,
+      "improvementAttempts": 408,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -59750,7 +59750,7 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 17
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -60045,16 +60045,16 @@
         }
       ],
       "stats": {
-        "mean": 1.0384615384615385,
+        "mean": 1.037037037037037,
         "median": 1,
-        "stddev": 0.1923076923076923,
+        "stddev": 0.18885257457751053,
         "min": 1,
         "max": 2,
-        "n": 26
+        "n": 27
       },
       "trend": "improving",
       "improvementAttempts": 68,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -60070,7 +60070,7 @@
       "id": "performance::latency:task:route_to_agents",
       "category": "performance",
       "name": "latency:task:route_to_agents",
-      "state": "stagnant",
+      "state": "improving",
       "createdAt": "2026-05-26T02:14:08.763Z",
       "lastUpdated": "2026-05-27T15:29:08.850Z",
       "observations": [
@@ -60316,20 +60316,20 @@
         }
       ],
       "stats": {
-        "mean": 1.0869565217391304,
+        "mean": 1.0833333333333333,
         "median": 1,
-        "stddev": 0.2817713347133852,
+        "stddev": 0.2763853991962833,
         "min": 1,
         "max": 2,
-        "n": 23
+        "n": 24
       },
-      "trend": "flat",
+      "trend": "improving",
       "improvementAttempts": 187,
-      "lastImproved": null,
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
-        "isBottleneck": true,
+        "isBottleneck": false,
         "suggestion": "latency:task:route_to_agents is stagnant at 1ms. Run Monte Carlo plan search for faster alternatives."
       },
       "tags": [
@@ -60657,15 +60657,15 @@
         }
       ],
       "stats": {
-        "mean": 1.2666666666666666,
+        "mean": 1.2580645161290323,
         "median": 1,
-        "stddev": 0.44221663871405337,
+        "stddev": 0.43756967633066246,
         "min": 1,
         "max": 2,
-        "n": 30
+        "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 368,
+      "improvementAttempts": 371,
       "lastImproved": "2026-05-27T05:42:08.980Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -60998,15 +60998,15 @@
         }
       ],
       "stats": {
-        "mean": 1.6333333333333333,
+        "mean": 1.6451612903225807,
         "median": 2,
-        "stddev": 0.5467073155618907,
+        "stddev": 0.5417050201208602,
         "min": 1,
         "max": 3,
-        "n": 30
+        "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 150,
+      "improvementAttempts": 153,
       "lastImproved": "2026-05-27T10:28:08.656Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -61728,7 +61728,7 @@
         "n": 28
       },
       "trend": "degrading",
-      "improvementAttempts": 330,
+      "improvementAttempts": 333,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -61745,7 +61745,7 @@
       "id": "performance::latency:task:analyze_cost_per_request",
       "category": "performance",
       "name": "latency:task:analyze_cost_per_request",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-26T02:14:08.766Z",
       "lastUpdated": "2026-05-27T15:29:08.852Z",
       "observations": [
@@ -62061,20 +62061,20 @@
         }
       ],
       "stats": {
-        "mean": 1.4,
+        "mean": 1.3870967741935485,
         "median": 1,
-        "stddev": 0.48989794855663577,
+        "stddev": 0.4870860925981129,
         "min": 1,
         "max": 2,
-        "n": 30
+        "n": 31
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 405,
-      "lastImproved": null,
+      "lastImproved": "2026-05-27T15:34:08.972Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
-        "isBottleneck": true,
+        "isBottleneck": false,
         "suggestion": "latency:task:analyze_cost_per_request is getting slower. Re-optimize: try parallelization or caching."
       },
       "tags": [
@@ -62462,16 +62462,16 @@
         }
       ],
       "stats": {
-        "mean": 1.0952380952380953,
+        "mean": 1.0909090909090908,
         "median": 1,
-        "stddev": 0.29354352395090366,
+        "stddev": 0.28747978728803447,
         "min": 1,
         "max": 2,
-        "n": 21
+        "n": 22
       },
       "trend": "improving",
       "improvementAttempts": 0,
-      "lastImproved": "2026-05-27T15:28:08.972Z",
+      "lastImproved": "2026-05-27T15:34:08.973Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -62969,10 +62969,10 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 20
+        "n": 21
       },
       "trend": "flat",
-      "improvementAttempts": 38,
+      "improvementAttempts": 41,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -63491,7 +63491,7 @@
         "stddev": 0,
         "min": 1,
         "max": 1,
-        "n": 6
+        "n": 7
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -64313,7 +64313,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-27T15:30:01.426Z",
+  "lastUpdated": "2026-05-27T15:35:01.805Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -64321,8 +64321,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-27T15:30:01.427Z",
-      "lastSeen": "2026-05-27T15:30:01.427Z",
+      "firstSeen": "2026-05-27T15:35:01.805Z",
+      "lastSeen": "2026-05-27T15:35:01.805Z",
       "occurrences": 1
     }
   ],
