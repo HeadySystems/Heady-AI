@@ -6,7 +6,7 @@
  */
 
 const GITHUB_PAGES_REPO = 'headymcp-com';
-const ORIGIN_URL = 'https://heady-edge-gateway-609590223909.us-central1.run.app';
+const ORIGIN_URL = 'https://heady-manager-1003436179562.us-central1.run.app';
 
 async function serveGitHubPages(pathname) {
   const path = (pathname === '/' || pathname === '') ? '/index.html' : pathname;

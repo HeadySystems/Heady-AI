@@ -15,4 +15,4 @@ pattern = "www.headymcp.com/*"
 zone_name = "headymcp.com"
 
 [vars]
-ORIGIN_URL = "https://heady-edge-gateway-609590223909.us-central1.run.app"
+ORIGIN_URL = "https://heady-manager-1003436179562.us-central1.run.app"

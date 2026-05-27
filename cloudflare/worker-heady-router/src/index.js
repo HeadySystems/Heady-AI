@@ -11,7 +11,7 @@
  */
 
 const CACHE_TTL_SECONDS = 3600;
-const DEFAULT_ORIGIN = 'https://heady-edge-gateway-609590223909.us-central1.run.app';
+const DEFAULT_ORIGIN = 'https://heady-manager-1003436179562.us-central1.run.app';
 const DEFAULT_COMPILER_WEBHOOK = `${DEFAULT_ORIGIN}/api/hologram/compile`;
 
 const DOMAIN_MODULES = {
