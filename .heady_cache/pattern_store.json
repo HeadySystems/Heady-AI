@@ -2145,7 +2145,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 0,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.952Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2564,7 +2564,7 @@
         "n": 22
       },
       "trend": "flat",
-      "improvementAttempts": 73,
+      "improvementAttempts": 75,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -2815,7 +2815,7 @@
         "n": 22
       },
       "trend": "degrading",
-      "improvementAttempts": 73,
+      "improvementAttempts": 75,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3076,7 +3076,7 @@
         "n": 23
       },
       "trend": "degrading",
-      "improvementAttempts": 103,
+      "improvementAttempts": 105,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3337,7 +3337,7 @@
         "n": 23
       },
       "trend": "degrading",
-      "improvementAttempts": 103,
+      "improvementAttempts": 105,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -3578,7 +3578,7 @@
         "n": 21
       },
       "trend": "degrading",
-      "improvementAttempts": 43,
+      "improvementAttempts": 45,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -11849,35 +11849,8 @@
       "name": "latency:pipeline:channel-entry",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "channel-entry"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "channel-entry"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "channel-entry"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -13650,6 +13623,33 @@
             "stage_timing",
             "channel-entry"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "channel-entry"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "channel-entry"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "channel-entry"
+          ]
         }
       ],
       "stats": {
@@ -13662,7 +13662,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 370,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -13680,35 +13680,8 @@
       "name": "latency:pipeline:recon",
       "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "recon"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "recon"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "recon"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -15481,6 +15454,33 @@
             "stage_timing",
             "recon"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "recon"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "recon"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "recon"
+          ]
         }
       ],
       "stats": {
@@ -15492,7 +15492,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 365,
+      "improvementAttempts": 367,
       "lastImproved": "2026-05-26T23:42:08.947Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15511,35 +15511,8 @@
       "name": "latency:pipeline:intake",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "intake"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "intake"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "intake"
-          ]
-        },
         {
           "value": 1,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -17312,6 +17285,33 @@
             "stage_timing",
             "intake"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "intake"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "intake"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "intake"
+          ]
         }
       ],
       "stats": {
@@ -17324,7 +17324,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 290,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -17343,35 +17343,8 @@
       "name": "latency:pipeline:classify",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "classify"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "classify"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "classify"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -19144,6 +19117,33 @@
             "stage_timing",
             "classify"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "classify"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "classify"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "classify"
+          ]
         }
       ],
       "stats": {
@@ -19156,7 +19156,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 299,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -19174,35 +19174,8 @@
       "name": "latency:pipeline:triage",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "triage"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "triage"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "triage"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -20975,6 +20948,33 @@
             "stage_timing",
             "triage"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "triage"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "triage"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "triage"
+          ]
         }
       ],
       "stats": {
@@ -20987,7 +20987,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 288,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -21005,35 +21005,8 @@
       "name": "latency:pipeline:decompose",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "decompose"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "decompose"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "decompose"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -22806,6 +22779,33 @@
             "stage_timing",
             "decompose"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "decompose"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "decompose"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "decompose"
+          ]
         }
       ],
       "stats": {
@@ -22818,7 +22818,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 317,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -22836,35 +22836,8 @@
       "name": "latency:pipeline:trial-and-error",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "trial-and-error"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "trial-and-error"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "trial-and-error"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -24637,6 +24610,33 @@
             "stage_timing",
             "trial-and-error"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "trial-and-error"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "trial-and-error"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "trial-and-error"
+          ]
         }
       ],
       "stats": {
@@ -24649,7 +24649,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 325,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -24667,35 +24667,8 @@
       "name": "latency:pipeline:orchestrate",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "orchestrate"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "orchestrate"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "orchestrate"
-          ]
-        },
         {
           "value": 1,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -26463,6 +26436,33 @@
         {
           "value": 0,
           "ts": "2026-05-27T00:14:08.629Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "orchestrate"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "orchestrate"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "orchestrate"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -26480,7 +26480,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 255,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -26498,35 +26498,8 @@
       "name": "latency:pipeline:monte-carlo",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "monte-carlo"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "monte-carlo"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "monte-carlo"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -28299,6 +28272,33 @@
             "stage_timing",
             "monte-carlo"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "monte-carlo"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "monte-carlo"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "monte-carlo"
+          ]
         }
       ],
       "stats": {
@@ -28311,7 +28311,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 268,
-      "lastImproved": "2026-05-27T00:24:08.952Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -28329,35 +28329,8 @@
       "name": "latency:pipeline:arena",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "arena"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "arena"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "arena"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -30130,6 +30103,33 @@
             "stage_timing",
             "arena"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "arena"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "arena"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "arena"
+          ]
         }
       ],
       "stats": {
@@ -30142,7 +30142,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 229,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -30160,35 +30160,8 @@
       "name": "latency:pipeline:judge",
       "state": "stagnant",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "judge"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "judge"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "judge"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -31961,6 +31934,33 @@
             "stage_timing",
             "judge"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "judge"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "judge"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "judge"
+          ]
         }
       ],
       "stats": {
@@ -31972,7 +31972,7 @@
         "n": 200
       },
       "trend": "flat",
-      "improvementAttempts": 299,
+      "improvementAttempts": 301,
       "lastImproved": "2026-05-26T23:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -31991,35 +31991,8 @@
       "name": "latency:pipeline:approve",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "approve"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "approve"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "approve"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -33792,6 +33765,33 @@
             "stage_timing",
             "approve"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "approve"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "approve"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "approve"
+          ]
         }
       ],
       "stats": {
@@ -33804,7 +33804,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 308,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -33822,35 +33822,8 @@
       "name": "latency:pipeline:execute",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "execute"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "execute"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "execute"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -35623,6 +35596,33 @@
             "stage_timing",
             "execute"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "execute"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "execute"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "execute"
+          ]
         }
       ],
       "stats": {
@@ -35635,7 +35635,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 220,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -35653,35 +35653,8 @@
       "name": "latency:pipeline:verify",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "verify"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "verify"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "verify"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -37454,6 +37427,33 @@
             "stage_timing",
             "verify"
           ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "verify"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "verify"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "verify"
+          ]
         }
       ],
       "stats": {
@@ -37466,7 +37466,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 279,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -37484,35 +37484,8 @@
       "name": "latency:pipeline:self-awareness",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-awareness"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-awareness"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-awareness"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -39285,6 +39258,33 @@
             "stage_timing",
             "self-awareness"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-awareness"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-awareness"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-awareness"
+          ]
         }
       ],
       "stats": {
@@ -39297,7 +39297,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 329,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -39315,35 +39315,8 @@
       "name": "latency:pipeline:self-critique",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-critique"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-critique"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-critique"
-          ]
-        },
         {
           "value": 1,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -41116,6 +41089,33 @@
             "stage_timing",
             "self-critique"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-critique"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-critique"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-critique"
+          ]
         }
       ],
       "stats": {
@@ -41128,7 +41128,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 329,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -41147,35 +41147,8 @@
       "name": "latency:pipeline:mistake-analysis",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "mistake-analysis"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "mistake-analysis"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "mistake-analysis"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -42948,6 +42921,33 @@
             "stage_timing",
             "mistake-analysis"
           ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "mistake-analysis"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "mistake-analysis"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "mistake-analysis"
+          ]
         }
       ],
       "stats": {
@@ -42960,7 +42960,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 323,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.954Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -42978,35 +42978,8 @@
       "name": "latency:pipeline:optimization-ops",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "optimization-ops"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "optimization-ops"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "optimization-ops"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -44779,6 +44752,33 @@
             "stage_timing",
             "optimization-ops"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "optimization-ops"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "optimization-ops"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "optimization-ops"
+          ]
         }
       ],
       "stats": {
@@ -44791,7 +44791,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 346,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.955Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -44810,35 +44810,8 @@
       "name": "latency:pipeline:continuous-search",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "continuous-search"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "continuous-search"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "continuous-search"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -46611,6 +46584,33 @@
             "stage_timing",
             "continuous-search"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "continuous-search"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "continuous-search"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "continuous-search"
+          ]
         }
       ],
       "stats": {
@@ -46623,7 +46623,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 330,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.955Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -46641,35 +46641,8 @@
       "name": "latency:pipeline:evolution",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "evolution"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "evolution"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "evolution"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -48442,6 +48415,33 @@
             "stage_timing",
             "evolution"
           ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "evolution"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "evolution"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "evolution"
+          ]
         }
       ],
       "stats": {
@@ -48454,7 +48454,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 307,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.955Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -48472,35 +48472,8 @@
       "name": "latency:pipeline:receipt",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "receipt"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "receipt"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "receipt"
-          ]
-        },
         {
           "value": 1,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -50273,6 +50246,33 @@
             "stage_timing",
             "receipt"
           ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "receipt"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "receipt"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "receipt"
+          ]
         }
       ],
       "stats": {
@@ -50285,7 +50285,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 338,
-      "lastImproved": "2026-05-27T00:24:08.953Z",
+      "lastImproved": "2026-05-27T00:28:08.955Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -50304,35 +50304,8 @@
       "name": "latency:pipeline:distiller",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-27T00:14:08.629Z",
+      "lastUpdated": "2026-05-27T00:29:08.626Z",
       "observations": [
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.525Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "distiller"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:44:08.542Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "distiller"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-26T07:59:08.506Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "distiller"
-          ]
-        },
         {
           "value": 0,
           "ts": "2026-05-26T07:59:08.526Z",
@@ -52105,6 +52078,33 @@
             "stage_timing",
             "distiller"
           ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-27T00:29:08.590Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "distiller"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.610Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "distiller"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-27T00:29:08.626Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "distiller"
+          ]
         }
       ],
       "stats": {
@@ -52117,7 +52117,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 244,
-      "lastImproved": "2026-05-27T00:24:08.954Z",
+      "lastImproved": "2026-05-27T00:28:08.955Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -55888,7 +55888,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-27T00:25:01.151Z",
+  "lastUpdated": "2026-05-27T00:30:01.120Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -55896,8 +55896,8 @@
       "type": "RESOURCE_RISING",
       "confidence": 0.75,
       "severity": "MEDIUM",
-      "firstSeen": "2026-05-27T00:25:01.151Z",
-      "lastSeen": "2026-05-27T00:25:01.151Z",
+      "firstSeen": "2026-05-27T00:30:01.120Z",
+      "lastSeen": "2026-05-27T00:30:01.120Z",
       "occurrences": 1
     }
   ],
@@ -55922,7 +55922,7 @@
     },
     {
       "word": "stories.json",
-      "count": 223
+      "count": 224
     },
     {
       "word": "hc_pipeline.log",
