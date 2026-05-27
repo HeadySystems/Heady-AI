@@ -144,9 +144,9 @@ async function bootVault() {
         for (const [credName, envVar] of Object.entries(CREDENTIAL_ENV_MAP)) {
             try {
                 const domain = _domainFromName(credName);
-                const value = await vault.get(credName, domain);
-                if (value) {
-                    process.env[envVar] = value;
+                const cred = await vault.get(credName, domain);
+                if (cred && cred.value) {
+                    process.env[envVar] = cred.value;
                     projected++;
                     projectedKeys.push(envVar);
                 }

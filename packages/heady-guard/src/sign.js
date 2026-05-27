@@ -53,14 +53,20 @@ export async function verifyReceipt(receipt, params) {
 }
 
 /**
- * Fetch a secret from GCP Secret Manager (or env var fallback).
+ * Fetch a secret from native HeadyVault (via process.env projection) or GCP Secret Manager.
+ * In sovereign mode (default), only process.env is used — vault-boot projects all credentials at startup.
  * @param {string} secretName
  * @returns {Promise<string>}
  */
 async function getSecretFromGCP(secretName) {
-  // Env var fallback
+  // Env var fallback (populated by vault-boot from native HeadyVault)
   const envKey = secretName.replace(/-/g, '_').toUpperCase();
   if (process.env[envKey]) return process.env[envKey];
+
+  // Only attempt GCP if explicitly enabled
+  if (process.env.GCP_SECRET_MANAGER_ENABLED !== 'true') {
+    throw new Error(`Secret ${secretName} not found in process.env and GCP Secret Manager is disabled (sovereign mode).`);
+  }
 
   try {
     const { SecretManagerServiceClient } = await import('@google-cloud/secret-manager');
