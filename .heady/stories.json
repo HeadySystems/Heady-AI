@@ -6520,110 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "f3d2e065-3a48-45ad-992a-abae353cc291",
-        "timestamp": "2026-05-28T00:14:09.035Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:task:resolve_channel_and_identity",
-            "latency:task:scan_service_health_matrix",
-            "latency:task:scan_dependency_freshness",
-            "latency:task:scan_vector_memory_density",
-            "latency:task:scan_resource_utilization",
-            "latency:task:scan_cost_trajectory",
-            "latency:task:ingest_news_feeds",
-            "latency:task:ingest_repo_changes",
-            "latency:task:ingest_external_apis",
-            "latency:task:ingest_health_metrics",
-            "latency:task:ingest_channel_events",
-            "latency:task:ingest_connection_health",
-            "latency:task:ingest_system_state",
-            "latency:task:ingest_resource_usage",
-            "latency:task:adjust_worker_pool_concurrency",
-            "latency:task:update_channel_optimizations",
-            "latency:task:tune_pipeline_parameters",
-            "latency:task:compress_memory_store",
-            "latency:task:reconcile_cost_actuals",
-            "latency:task:profile_service_performance",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_competitor_innovations",
-            "latency:task:search_security_advisories",
-            "latency:task:search_performance_techniques",
-            "latency:task:absorb_high_value_findings",
-            "latency:pipeline:recon",
-            "latency:pipeline:classify",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:judge",
-            "latency:pipeline:approve",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:distiller",
-            "latency:task:route_to_agents",
-            "latency:task:monitor_agent_execution",
-            "latency:task:collect_agent_results",
-            "latency:task:emit_knowledge_gap_alerts"
-          ],
-          "count": 39
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "e4dca89a-4b4c-4a03-8484-24190bb217cd",
-        "timestamp": "2026-05-28T00:16:09.034Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:task:resolve_channel_and_identity",
-            "latency:task:scan_service_health_matrix",
-            "latency:task:scan_dependency_freshness",
-            "latency:task:scan_vector_memory_density",
-            "latency:task:scan_resource_utilization",
-            "latency:task:scan_cost_trajectory",
-            "latency:task:ingest_news_feeds",
-            "latency:task:ingest_repo_changes",
-            "latency:task:ingest_external_apis",
-            "latency:task:ingest_health_metrics",
-            "latency:task:ingest_channel_events",
-            "latency:task:ingest_connection_health",
-            "latency:task:ingest_system_state",
-            "latency:task:ingest_resource_usage",
-            "latency:task:adjust_worker_pool_concurrency",
-            "latency:task:update_channel_optimizations",
-            "latency:task:tune_pipeline_parameters",
-            "latency:task:compress_memory_store",
-            "latency:task:reconcile_cost_actuals",
-            "latency:task:profile_service_performance",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_competitor_innovations",
-            "latency:task:search_security_advisories",
-            "latency:task:search_performance_techniques",
-            "latency:task:absorb_high_value_findings",
-            "latency:pipeline:recon",
-            "latency:pipeline:classify",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:judge",
-            "latency:pipeline:approve",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:distiller",
-            "latency:task:route_to_agents",
-            "latency:task:monitor_agent_execution",
-            "latency:task:collect_agent_results",
-            "latency:task:emit_knowledge_gap_alerts"
-          ],
-          "count": 39
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "b9503358-3598-4925-a7ea-0da4a1b2cdc9",
         "timestamp": "2026-05-28T00:18:09.035Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -26954,11 +26850,41 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "cafeb973-79c2-438a-8dd5-de82697a9378",
+        "timestamp": "2026-05-28T21:30:24.823Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "dc2fb919-5b83-4bef-8acb-69326a14a00e",
+        "timestamp": "2026-05-28T21:32:24.823Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon"
+          ],
+          "count": 2
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-28T21:28:24.821Z"
+    "updatedAt": "2026-05-28T21:32:24.823Z"
   }
 }
