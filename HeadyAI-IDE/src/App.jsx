@@ -14,7 +14,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // State management
@@ -35,11 +35,16 @@ import SacredGeometryBackground from './components/SacredGeometryBackground';
 
 // Cloud service
 import { useCloudConnection } from './hooks/useCloudConnection';
+import fileSystemService from './services/FileSystemService';
 
 const IDELayout = () => {
   const { state } = useIDE();
   const actions = useIDEActions();
   const cloud = useCloudConnection();
+  const [fileTree, setFileTree] = useState(null);
+  const [terminalLines, setTerminalLines] = useState([]);
+  const [terminalInput, setTerminalInput] = useState('');
+  const terminalInputRef = useRef(null);
 
   const {
     activeView, sidebarOpen, openTabs, activeTabId,
@@ -49,6 +54,81 @@ const IDELayout = () => {
   } = state;
 
   const activeTab = openTabs.find(t => t.id === activeTabId);
+
+  // Load demo file tree on mount
+  useEffect(() => {
+    const demoTree = fileSystemService.getDemoFileTree();
+    setFileTree(demoTree);
+  }, []);
+
+  // Handle file selection — load content into a tab
+  const handleFileSelect = useCallback(async (file) => {
+    if (file.isDirectory) return;
+    const content = await fileSystemService.readFile(file.path);
+    const lang = file.name.split('.').pop() || 'text';
+    actions.openTab({
+      id: file.path,
+      name: file.name,
+      path: file.path,
+      content,
+      language: lang,
+      isDirty: false,
+    });
+  }, [actions]);
+
+  // Handle Open Folder
+  const handleOpenFolder = useCallback(async () => {
+    const tree = await fileSystemService.openFolder();
+    if (tree) setFileTree(tree);
+  }, []);
+
+  // Terminal command handler
+  const handleTerminalCommand = useCallback((cmd) => {
+    const trimmed = cmd.trim();
+    if (!trimmed) return;
+    const newLines = [...terminalLines, { type: 'input', text: `heady@cloud:~$ ${trimmed}` }];
+
+    // Simulate commands
+    if (trimmed === 'help') {
+      newLines.push({ type: 'output', text: 'HeadyAI-IDE Terminal v1.0.0' });
+      newLines.push({ type: 'output', text: 'Available commands: help, clear, ls, pwd, echo, whoami, date, neofetch' });
+    } else if (trimmed === 'clear') {
+      setTerminalLines([]);
+      setTerminalInput('');
+      return;
+    } else if (trimmed === 'ls') {
+      if (fileTree?.children) {
+        const names = fileTree.children.map(c => (c.isDirectory ? `\x1b[34m${c.name}/\x1b[0m` : c.name));
+        newLines.push({ type: 'output', text: names.join('  ') });
+      }
+    } else if (trimmed === 'pwd') {
+      newLines.push({ type: 'output', text: fileTree?.path || '/heady-project' });
+    } else if (trimmed.startsWith('echo ')) {
+      newLines.push({ type: 'output', text: trimmed.slice(5) });
+    } else if (trimmed === 'whoami') {
+      newLines.push({ type: 'output', text: 'heady@headysystems.com (HeadyAI-IDE)' });
+    } else if (trimmed === 'date') {
+      newLines.push({ type: 'output', text: new Date().toString() });
+    } else if (trimmed === 'neofetch') {
+      newLines.push({ type: 'output', text: '  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗' });
+      newLines.push({ type: 'output', text: '  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝' });
+      newLines.push({ type: 'output', text: '  ███████║█████╗  ███████║██║  ██║ ╚████╔╝ ' });
+      newLines.push({ type: 'output', text: '  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  ' });
+      newLines.push({ type: 'output', text: '  ██║  ██║███████╗██║  ██║██████╔╝   ██║   ' });
+      newLines.push({ type: 'output', text: '  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   ' });
+      newLines.push({ type: 'output', text: '' });
+      newLines.push({ type: 'output', text: '  OS: HeadyOS v5.0.0 (Liquid Architecture)' });
+      newLines.push({ type: 'output', text: '  Kernel: Latent Space v9.0' });
+      newLines.push({ type: 'output', text: '  Shell: HeadyAI-IDE Terminal v1.0' });
+      newLines.push({ type: 'output', text: `  φ: ${(1 + Math.sqrt(5)) / 2}` });
+    } else {
+      newLines.push({ type: 'error', text: `heady: command not found: ${trimmed}` });
+      newLines.push({ type: 'hint', text: 'Type "help" for available commands' });
+    }
+
+    setTerminalLines(newLines);
+    setTerminalInput('');
+  }, [terminalLines, fileTree]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -111,7 +191,7 @@ const IDELayout = () => {
   const renderSidebarContent = () => {
     switch (activeView) {
       case VIEWS.EXPLORER:
-        return <FileExplorer files={[]} onFileSelect={(f) => actions.openTab(f)} activeFile={activeTab} />;
+        return <FileExplorer fileTree={fileTree} onFileSelect={handleFileSelect} activeFile={activeTab} onOpenFolder={handleOpenFolder} onRefresh={() => setFileTree(fileSystemService.getDemoFileTree())} />;
       case VIEWS.SEARCH:
         return <SearchPanel />;
       case VIEWS.GIT:
@@ -314,13 +394,23 @@ const IDELayout = () => {
                 </div>
                 <div className="bottom-panel-content">
                   {activeBottomPanel === PANELS.TERMINAL && (
-                    <div className="terminal-content">
-                      <div className="terminal-line">
+                    <div className="terminal-content" onClick={() => terminalInputRef.current?.focus()}>
+                      {terminalLines.map((line, i) => (
+                        <div key={i} className={`terminal-line ${line.type}`}>
+                          <span className={line.type === 'input' ? 'terminal-cmd' : line.type === 'error' ? 'terminal-error' : line.type === 'hint' ? 'terminal-hint' : 'terminal-output'}>{line.text}</span>
+                        </div>
+                      ))}
+                      <div className="terminal-line terminal-active">
                         <span className="terminal-prompt">heady@cloud:~$</span>
-                        <span className="terminal-cursor">_</span>
-                      </div>
-                      <div className="terminal-info">
-                        Connected to Heady Cloud Compute • {connectionStatus}
+                        <input
+                          ref={terminalInputRef}
+                          className="terminal-input"
+                          value={terminalInput}
+                          onChange={(e) => setTerminalInput(e.target.value)}
+                          onKeyDown={(e) => { if (e.key === 'Enter') handleTerminalCommand(terminalInput); }}
+                          spellCheck={false}
+                          autoComplete="off"
+                        />
                       </div>
                     </div>
                   )}
