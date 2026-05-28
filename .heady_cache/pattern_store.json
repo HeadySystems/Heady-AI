@@ -4,325 +4,10 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-28T02:56:06.228Z",
+      "lastUpdated": "2026-05-28T03:19:57.150Z",
       "observations": [
-        {
-          "value": 88,
-          "ts": "2026-05-26T01:30:43.726Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 86,
-          "ts": "2026-05-26T01:30:48.738Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-26T01:30:53.751Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 92,
-          "ts": "2026-05-26T01:31:38.764Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 95,
-          "ts": "2026-05-26T01:31:43.786Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-26T01:31:48.800Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 84,
-          "ts": "2026-05-26T01:31:53.819Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 84,
-          "ts": "2026-05-26T01:31:58.833Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:40:06.692Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T02:40:11.716Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 83,
-          "ts": "2026-05-28T02:40:16.743Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 85,
-          "ts": "2026-05-28T02:40:21.774Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 84,
-          "ts": "2026-05-28T02:40:26.790Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 83,
-          "ts": "2026-05-28T02:40:31.810Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:40:36.853Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:40:41.872Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:40:46.891Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:40:51.914Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:40:56.936Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:41:01.951Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:41:06.977Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T02:41:11.999Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:17.022Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:22.042Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:27.060Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:32.079Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:37.113Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:42.139Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:41:47.173Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T02:41:52.201Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T02:41:57.224Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:42:02.242Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:42:07.256Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T02:42:12.280Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T02:42:17.306Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
         {
           "value": 82,
           "ts": "2026-05-28T02:42:22.326Z",
@@ -1807,24 +1492,339 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:17:06.408Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:17:11.427Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:17:16.458Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:17:21.480Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:17:26.505Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:17:31.527Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:17:36.547Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:17:41.566Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:17:46.579Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:17:51.604Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:17:56.631Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:18:01.651Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:18:06.674Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:18:11.694Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T03:18:16.713Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:18:21.735Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:18:26.755Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:18:31.782Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:18:36.810Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:18:41.831Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:18:46.861Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:18:51.881Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:18:56.899Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:01.927Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:06.946Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:11.967Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:19:16.985Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T03:19:22.006Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:27.023Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:32.045Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:37.069Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T03:19:42.089Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T03:19:47.109Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T03:19:52.130Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T03:19:57.150Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 85.245,
+        "mean": 84.79,
         "median": 85,
-        "stddev": 4.096947034073056,
+        "stddev": 4.266837236173886,
         "min": 78,
-        "max": 95,
+        "max": 94,
         "n": 200
       },
-      "trend": "degrading",
-      "improvementAttempts": 26,
-      "lastImproved": null,
+      "trend": "improving",
+      "improvementAttempts": 27,
+      "lastImproved": "2026-05-28T03:18:10.465Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 12,
+        "burstCount": 13,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -2162,7 +2162,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 0,
-      "lastImproved": "2026-05-28T03:14:10.464Z",
+      "lastImproved": "2026-05-28T03:18:10.465Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2572,7 +2572,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 382,
-      "lastImproved": "2026-05-28T03:14:10.464Z",
+      "lastImproved": "2026-05-28T03:18:10.465Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2993,7 +2993,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 382,
-      "lastImproved": "2026-05-28T03:14:10.464Z",
+      "lastImproved": "2026-05-28T03:18:10.465Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -3363,7 +3363,7 @@
         "n": 34
       },
       "trend": "degrading",
-      "improvementAttempts": 511,
+      "improvementAttempts": 513,
       "lastImproved": "2026-05-27T20:58:09.016Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3834,7 +3834,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 781,
+      "improvementAttempts": 783,
       "lastImproved": "2026-05-28T02:28:09.054Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4325,7 +4325,7 @@
         "n": 46
       },
       "trend": "flat",
-      "improvementAttempts": 630,
+      "improvementAttempts": 632,
       "lastImproved": "2026-05-27T13:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4836,7 +4836,7 @@
         "n": 48
       },
       "trend": "degrading",
-      "improvementAttempts": 593,
+      "improvementAttempts": 595,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5348,7 +5348,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 600,
-      "lastImproved": "2026-05-28T03:14:10.466Z",
+      "lastImproved": "2026-05-28T03:18:10.466Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -5838,7 +5838,7 @@
         "n": 46
       },
       "trend": "flat",
-      "improvementAttempts": 600,
+      "improvementAttempts": 602,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6279,7 +6279,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 690,
+      "improvementAttempts": 692,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -6721,7 +6721,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 653,
+      "improvementAttempts": 655,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -7163,7 +7163,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 571,
+      "improvementAttempts": 573,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -7604,7 +7604,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 608,
+      "improvementAttempts": 610,
       "lastImproved": "2026-05-27T06:58:08.988Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8045,7 +8045,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 503,
+      "improvementAttempts": 505,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8486,7 +8486,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 503,
+      "improvementAttempts": 505,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8927,7 +8927,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 571,
+      "improvementAttempts": 573,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9368,7 +9368,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 571,
+      "improvementAttempts": 573,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9950,7 +9950,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 796,
+      "improvementAttempts": 798,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -10391,7 +10391,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 646,
+      "improvementAttempts": 648,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10833,7 +10833,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 599,
-      "lastImproved": "2026-05-28T03:14:10.467Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -11274,7 +11274,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 630,
-      "lastImproved": "2026-05-28T03:14:10.467Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -11715,7 +11715,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 480,
-      "lastImproved": "2026-05-28T03:14:10.467Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -12155,7 +12155,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 646,
+      "improvementAttempts": 648,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12596,7 +12596,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 646,
+      "improvementAttempts": 648,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12937,7 +12937,7 @@
         "n": 31
       },
       "trend": "flat",
-      "improvementAttempts": 466,
+      "improvementAttempts": 468,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -13378,7 +13378,7 @@
         "n": 41
       },
       "trend": "flat",
-      "improvementAttempts": 503,
+      "improvementAttempts": 505,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13819,7 +13819,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 542,
+      "improvementAttempts": 544,
       "lastImproved": "2026-05-27T14:12:08.956Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14260,7 +14260,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 690,
+      "improvementAttempts": 692,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14701,7 +14701,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 466,
+      "improvementAttempts": 468,
       "lastImproved": "2026-05-27T11:42:08.666Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15142,7 +15142,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 653,
+      "improvementAttempts": 655,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15583,7 +15583,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 571,
+      "improvementAttempts": 573,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16025,7 +16025,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 412,
-      "lastImproved": "2026-05-28T03:14:10.467Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -16465,7 +16465,7 @@
         "n": 41
       },
       "trend": "flat",
-      "improvementAttempts": 684,
+      "improvementAttempts": 686,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16906,7 +16906,7 @@
         "n": 41
       },
       "trend": "flat",
-      "improvementAttempts": 459,
+      "improvementAttempts": 461,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17338,7 +17338,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 555,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -17779,7 +17779,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 705,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -18220,7 +18220,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 517,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -18661,7 +18661,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 555,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -19102,7 +19102,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 555,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.467Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -19542,7 +19542,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 796,
+      "improvementAttempts": 798,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -19983,7 +19983,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 721,
+      "improvementAttempts": 723,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20424,7 +20424,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 646,
+      "improvementAttempts": 648,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20865,7 +20865,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 721,
+      "improvementAttempts": 723,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -21306,7 +21306,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 721,
+      "improvementAttempts": 723,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -21867,7 +21867,7 @@
         "n": 37
       },
       "trend": "degrading",
-      "improvementAttempts": 721,
+      "improvementAttempts": 723,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -22309,7 +22309,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 555,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.468Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -24171,7 +24171,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 799,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.468Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -26002,7 +26002,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 820,
-      "lastImproved": "2026-05-28T03:14:10.468Z",
+      "lastImproved": "2026-05-28T03:18:10.468Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -27832,7 +27832,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 692,
+      "improvementAttempts": 694,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -29664,7 +29664,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 669,
+      "improvementAttempts": 671,
       "lastImproved": "2026-05-28T01:42:09.047Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -31495,7 +31495,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 696,
+      "improvementAttempts": 698,
       "lastImproved": "2026-05-28T02:28:09.056Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -33326,7 +33326,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 708,
+      "improvementAttempts": 710,
       "lastImproved": "2026-05-28T02:28:09.056Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -35157,7 +35157,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 694,
+      "improvementAttempts": 696,
       "lastImproved": "2026-05-28T02:28:09.056Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -36988,7 +36988,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 653,
+      "improvementAttempts": 655,
       "lastImproved": "2026-05-28T02:28:09.056Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -38819,7 +38819,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 614,
+      "improvementAttempts": 616,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -40650,7 +40650,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 537,
+      "improvementAttempts": 539,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -42481,7 +42481,7 @@
         "n": 200
       },
       "trend": "flat",
-      "improvementAttempts": 680,
+      "improvementAttempts": 682,
       "lastImproved": "2026-05-28T01:42:09.047Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -44312,7 +44312,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 656,
+      "improvementAttempts": 658,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -46143,7 +46143,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 576,
+      "improvementAttempts": 578,
       "lastImproved": "2026-05-28T02:28:09.056Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -47974,7 +47974,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 668,
+      "improvementAttempts": 670,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -49805,7 +49805,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 733,
+      "improvementAttempts": 735,
       "lastImproved": "2026-05-28T02:42:09.065Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -51636,7 +51636,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 705,
+      "improvementAttempts": 707,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -53468,7 +53468,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 788,
+      "improvementAttempts": 790,
       "lastImproved": "2026-05-28T01:42:09.048Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -55299,7 +55299,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 775,
+      "improvementAttempts": 777,
       "lastImproved": "2026-05-28T02:28:09.057Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -57131,7 +57131,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 729,
+      "improvementAttempts": 731,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -58962,7 +58962,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 708,
+      "improvementAttempts": 710,
       "lastImproved": "2026-05-28T02:28:09.057Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -60793,7 +60793,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 750,
+      "improvementAttempts": 752,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -62625,7 +62625,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 650,
+      "improvementAttempts": 652,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -63027,7 +63027,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 322,
-      "lastImproved": "2026-05-28T03:14:10.471Z",
+      "lastImproved": "2026-05-28T03:18:10.471Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -63257,7 +63257,7 @@
         "n": 20
       },
       "trend": "flat",
-      "improvementAttempts": 16,
+      "improvementAttempts": 18,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -63598,7 +63598,7 @@
         "n": 31
       },
       "trend": "degrading",
-      "improvementAttempts": 466,
+      "improvementAttempts": 468,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -63949,7 +63949,7 @@
         "n": 32
       },
       "trend": "flat",
-      "improvementAttempts": 466,
+      "improvementAttempts": 468,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -64380,7 +64380,7 @@
         "n": 40
       },
       "trend": "degrading",
-      "improvementAttempts": 683,
+      "improvementAttempts": 685,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -64631,7 +64631,7 @@
         "n": 22
       },
       "trend": "flat",
-      "improvementAttempts": 278,
+      "improvementAttempts": 280,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -64992,7 +64992,7 @@
         "n": 33
       },
       "trend": "degrading",
-      "improvementAttempts": 121,
+      "improvementAttempts": 123,
       "lastImproved": "2026-05-28T01:28:09.039Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -65343,7 +65343,7 @@
         "n": 32
       },
       "trend": "degrading",
-      "improvementAttempts": 428,
+      "improvementAttempts": 430,
       "lastImproved": "2026-05-27T19:12:09.009Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -65774,7 +65774,7 @@
         "n": 40
       },
       "trend": "degrading",
-      "improvementAttempts": 721,
+      "improvementAttempts": 723,
       "lastImproved": "2026-05-27T05:42:08.980Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -66205,7 +66205,7 @@
         "n": 40
       },
       "trend": "degrading",
-      "improvementAttempts": 503,
+      "improvementAttempts": 505,
       "lastImproved": "2026-05-27T10:28:08.656Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -67136,7 +67136,7 @@
         "n": 36
       },
       "trend": "degrading",
-      "improvementAttempts": 683,
+      "improvementAttempts": 685,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -67567,7 +67567,7 @@
         "n": 40
       },
       "trend": "degrading",
-      "improvementAttempts": 534,
+      "improvementAttempts": 536,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -68108,7 +68108,7 @@
         "n": 30
       },
       "trend": "degrading",
-      "improvementAttempts": 316,
+      "improvementAttempts": 318,
       "lastImproved": "2026-05-27T16:42:08.981Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -68711,7 +68711,7 @@
         "n": 28
       },
       "trend": "flat",
-      "improvementAttempts": 391,
+      "improvementAttempts": 393,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -68952,7 +68952,7 @@
         "n": 21
       },
       "trend": "flat",
-      "improvementAttempts": 53,
+      "improvementAttempts": 55,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -70608,7 +70608,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T03:15:01.899Z",
+  "lastUpdated": "2026-05-28T03:20:02.215Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -70616,33 +70616,33 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T03:15:01.900Z",
-      "lastSeen": "2026-05-28T03:15:01.900Z",
+      "firstSeen": "2026-05-28T03:20:02.215Z",
+      "lastSeen": "2026-05-28T03:20:02.215Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 284,
+  "commitCount24h": 283,
   "topTopics": [
     {
       "word": "hcfp-auto",
-      "count": 284
+      "count": 283
     },
     {
       "word": "file(s)",
-      "count": 284
+      "count": 283
     },
     {
       "word": "changed",
-      "count": 284
+      "count": 283
     },
     {
       "word": "pattern_store.json",
-      "count": 284
+      "count": 283
     },
     {
       "word": "stories.json",
-      "count": 282
+      "count": 281
     },
     {
       "word": "hc_pipeline.log",
