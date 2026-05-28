@@ -4,487 +4,10 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "improving",
+      "state": "active",
       "createdAt": "2026-05-26T00:41:45.982Z",
-      "lastUpdated": "2026-05-28T07:45:23.476Z",
+      "lastUpdated": "2026-05-28T07:55:01.426Z",
       "observations": [
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:31:30.376Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:31:35.405Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:31:40.427Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:31:45.447Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:31:50.485Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:31:55.505Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:00.523Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:05.587Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:10.607Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:15.633Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:32:20.668Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:25.695Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:32:30.715Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:35.743Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:40.764Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:32:45.791Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:50.823Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:32:55.849Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:00.875Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:05.899Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:33:10.926Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:15.943Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:20.961Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 91,
-          "ts": "2026-05-28T03:33:25.982Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 91,
-          "ts": "2026-05-28T03:33:31.006Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 91,
-          "ts": "2026-05-28T03:33:36.024Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:41.044Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 91,
-          "ts": "2026-05-28T03:33:46.062Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 91,
-          "ts": "2026-05-28T03:33:51.087Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:33:56.107Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:01.126Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:06.145Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 89,
-          "ts": "2026-05-28T03:34:11.167Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:16.185Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:21.202Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:26.222Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 90,
-          "ts": "2026-05-28T03:34:31.247Z",
-          "severity": "CRITICAL",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-05-28T03:55:01.409Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 78,
-          "ts": "2026-05-28T03:55:06.427Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:11.463Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:16.490Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T03:55:21.515Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 80,
-          "ts": "2026-05-28T03:55:26.545Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:31.565Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:36.582Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:41.602Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:46.622Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:51.657Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 81,
-          "ts": "2026-05-28T03:55:56.681Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T03:56:01.707Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T03:56:06.729Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T03:56:11.747Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
-        {
-          "value": 82,
-          "ts": "2026-05-28T03:56:16.762Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
         {
           "value": 82,
           "ts": "2026-05-28T03:56:21.782Z",
@@ -1807,24 +1330,501 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:50:09.156Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:50:14.202Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:50:19.269Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:50:54.294Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:50:59.322Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:51:04.359Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:51:09.377Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 78,
+          "ts": "2026-05-28T07:51:14.400Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:51:19.429Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:51:24.456Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:51:29.503Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:51:34.522Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:51:39.549Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:51:44.575Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:51:49.593Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:51:54.614Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:51:59.632Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:52:04.676Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:52:09.701Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:52:14.740Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-28T07:52:19.768Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:52:24.784Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:52:29.808Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:52:34.832Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-28T07:52:39.851Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:52:44.874Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:52:49.912Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:52:54.929Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-28T07:52:59.956Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:05.001Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:53:10.800Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:53:15.800Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:20.848Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:25.869Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:30.915Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:53:35.945Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:40.959Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:53:45.981Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:51.015Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:53:56.059Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:01.084Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 79,
+          "ts": "2026-05-28T07:54:06.110Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:11.134Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:54:16.172Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:54:21.213Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:26.234Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:54:31.267Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 82,
+          "ts": "2026-05-28T07:54:36.301Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:54:41.328Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:46.347Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:51.371Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 80,
+          "ts": "2026-05-28T07:54:56.395Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 81,
+          "ts": "2026-05-28T07:55:01.426Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 84,
-        "median": 84,
-        "stddev": 4.038564101261734,
+        "mean": 82.51,
+        "median": 81,
+        "stddev": 3.445272122779276,
         "min": 78,
         "max": 91,
         "n": 200
       },
-      "trend": "improving",
+      "trend": "unstable",
       "improvementAttempts": 133,
-      "lastImproved": "2026-05-28T07:49:00.542Z",
+      "lastImproved": "2026-05-28T07:50:59.265Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 8,
+        "burstCount": 30,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -2201,7 +2201,7 @@
         "n": 29
       },
       "trend": "degrading",
-      "improvementAttempts": 103,
+      "improvementAttempts": 105,
       "lastImproved": "2026-05-28T04:28:30.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -2642,7 +2642,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 485,
+      "improvementAttempts": 487,
       "lastImproved": "2026-05-28T04:28:30.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3103,7 +3103,7 @@
         "n": 43
       },
       "trend": "degrading",
-      "improvementAttempts": 455,
+      "improvementAttempts": 457,
       "lastImproved": "2026-05-28T06:42:31.233Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3504,7 +3504,7 @@
         "n": 37
       },
       "trend": "degrading",
-      "improvementAttempts": 638,
+      "improvementAttempts": 640,
       "lastImproved": "2026-05-27T20:58:09.016Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4005,7 +4005,7 @@
         "n": 47
       },
       "trend": "degrading",
-      "improvementAttempts": 908,
+      "improvementAttempts": 910,
       "lastImproved": "2026-05-28T02:28:09.054Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4526,7 +4526,7 @@
         "n": 49
       },
       "trend": "degrading",
-      "improvementAttempts": 757,
+      "improvementAttempts": 759,
       "lastImproved": "2026-05-27T13:28:08.953Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5077,7 +5077,7 @@
         "n": 52
       },
       "trend": "degrading",
-      "improvementAttempts": 720,
+      "improvementAttempts": 722,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5628,7 +5628,7 @@
         "n": 52
       },
       "trend": "degrading",
-      "improvementAttempts": 659,
+      "improvementAttempts": 661,
       "lastImproved": "2026-05-28T05:56:30.630Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6159,7 +6159,7 @@
         "n": 50
       },
       "trend": "degrading",
-      "improvementAttempts": 727,
+      "improvementAttempts": 729,
       "lastImproved": "2026-05-27T12:28:08.944Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6640,7 +6640,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 817,
+      "improvementAttempts": 819,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -7122,7 +7122,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 780,
+      "improvementAttempts": 782,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -7604,7 +7604,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 698,
+      "improvementAttempts": 700,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8085,7 +8085,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 735,
+      "improvementAttempts": 737,
       "lastImproved": "2026-05-27T06:58:08.988Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8566,7 +8566,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 630,
+      "improvementAttempts": 632,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9047,7 +9047,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 630,
+      "improvementAttempts": 632,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -9528,7 +9528,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 698,
+      "improvementAttempts": 700,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10009,7 +10009,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 698,
+      "improvementAttempts": 700,
       "lastImproved": "2026-05-27T08:12:08.992Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10651,7 +10651,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 923,
+      "improvementAttempts": 925,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -11132,7 +11132,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 773,
+      "improvementAttempts": 775,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -11613,7 +11613,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 643,
+      "improvementAttempts": 645,
       "lastImproved": "2026-05-28T06:26:30.719Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12094,7 +12094,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 674,
+      "improvementAttempts": 676,
       "lastImproved": "2026-05-28T06:26:30.719Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12575,7 +12575,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 524,
+      "improvementAttempts": 526,
       "lastImproved": "2026-05-28T06:26:30.719Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13056,7 +13056,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 773,
+      "improvementAttempts": 775,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13537,7 +13537,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 773,
+      "improvementAttempts": 775,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13918,7 +13918,7 @@
         "n": 35
       },
       "trend": "flat",
-      "improvementAttempts": 593,
+      "improvementAttempts": 595,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -14399,7 +14399,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 630,
+      "improvementAttempts": 632,
       "lastImproved": "2026-05-27T10:28:08.655Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14880,7 +14880,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 669,
+      "improvementAttempts": 671,
       "lastImproved": "2026-05-27T14:12:08.956Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15361,7 +15361,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 817,
+      "improvementAttempts": 819,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15842,7 +15842,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 593,
+      "improvementAttempts": 595,
       "lastImproved": "2026-05-27T11:42:08.666Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16323,7 +16323,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 780,
+      "improvementAttempts": 782,
       "lastImproved": "2026-05-27T09:14:08.509Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16804,7 +16804,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 698,
+      "improvementAttempts": 700,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17285,7 +17285,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 517,
+      "improvementAttempts": 519,
       "lastImproved": "2026-05-28T03:58:10.480Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17766,7 +17766,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 811,
+      "improvementAttempts": 813,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18247,7 +18247,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 586,
+      "improvementAttempts": 588,
       "lastImproved": "2026-05-28T02:42:09.064Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18718,7 +18718,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 660,
+      "improvementAttempts": 662,
       "lastImproved": "2026-05-28T03:58:10.481Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -19199,7 +19199,7 @@
         "n": 45
       },
       "trend": "flat",
-      "improvementAttempts": 749,
+      "improvementAttempts": 751,
       "lastImproved": "2026-05-28T06:26:30.720Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -19680,7 +19680,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 523,
+      "improvementAttempts": 525,
       "lastImproved": "2026-05-28T07:42:31.250Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20161,7 +20161,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 561,
+      "improvementAttempts": 563,
       "lastImproved": "2026-05-28T07:42:31.250Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20642,7 +20642,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 599,
+      "improvementAttempts": 601,
       "lastImproved": "2026-05-28T06:26:30.720Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -21123,7 +21123,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 923,
+      "improvementAttempts": 925,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -21604,7 +21604,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 848,
+      "improvementAttempts": 850,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -22085,7 +22085,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 773,
+      "improvementAttempts": 775,
       "lastImproved": "2026-05-27T05:42:08.979Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -22566,7 +22566,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 848,
+      "improvementAttempts": 850,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23047,7 +23047,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 848,
+      "improvementAttempts": 850,
       "lastImproved": "2026-05-27T03:12:08.969Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23678,7 +23678,7 @@
         "n": 41
       },
       "trend": "degrading",
-      "improvementAttempts": 848,
+      "improvementAttempts": 850,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -24159,7 +24159,7 @@
         "n": 45
       },
       "trend": "degrading",
-      "improvementAttempts": 599,
+      "improvementAttempts": 601,
       "lastImproved": "2026-05-28T06:26:30.720Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -24209,7 +24209,7 @@
       "name": "latency:pipeline:channel-entry",
       "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -25985,8 +25985,8 @@
           ]
         },
         {
-          "value": 14,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 18,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -25995,7 +25995,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -26004,7 +26004,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -26021,7 +26021,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 872,
+      "improvementAttempts": 874,
       "lastImproved": "2026-05-28T06:42:31.235Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -26040,7 +26040,7 @@
       "name": "latency:pipeline:recon",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -27816,8 +27816,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 4,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -27826,7 +27826,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -27834,8 +27834,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -27853,7 +27853,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 873,
-      "lastImproved": "2026-05-28T07:49:00.545Z",
+      "lastImproved": "2026-05-28T07:53:05.910Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -27871,7 +27871,7 @@
       "name": "latency:pipeline:intake",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -29648,16 +29648,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "intake"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -29666,7 +29657,16 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.446Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "intake"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -29684,7 +29684,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 746,
-      "lastImproved": "2026-05-28T07:49:00.545Z",
+      "lastImproved": "2026-05-28T07:53:05.910Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -29703,7 +29703,7 @@
       "name": "latency:pipeline:classify",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -31480,7 +31480,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -31489,7 +31489,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -31497,8 +31497,8 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -31516,7 +31516,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 727,
-      "lastImproved": "2026-05-28T07:49:00.545Z",
+      "lastImproved": "2026-05-28T07:53:05.912Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -31534,7 +31534,7 @@
       "name": "latency:pipeline:triage",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -33310,8 +33310,8 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 32,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -33320,7 +33320,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -33329,7 +33329,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -33347,7 +33347,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 758,
-      "lastImproved": "2026-05-28T07:49:00.545Z",
+      "lastImproved": "2026-05-28T07:53:05.912Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -33365,7 +33365,7 @@
       "name": "latency:pipeline:decompose",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -35142,7 +35142,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -35151,7 +35151,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -35160,7 +35160,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -35178,7 +35178,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 765,
-      "lastImproved": "2026-05-28T07:49:00.545Z",
+      "lastImproved": "2026-05-28T07:53:05.912Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -35196,7 +35196,7 @@
       "name": "latency:pipeline:trial-and-error",
       "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -36972,8 +36972,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -36981,8 +36981,8 @@
           ]
         },
         {
-          "value": 47,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -36991,7 +36991,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -37008,7 +37008,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 749,
+      "improvementAttempts": 751,
       "lastImproved": "2026-05-28T07:47:46.540Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -37027,7 +37027,7 @@
       "name": "latency:pipeline:orchestrate",
       "state": "degrading",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -38804,16 +38804,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:00.954Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "orchestrate"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -38822,7 +38813,16 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.446Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "orchestrate"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -38839,7 +38839,7 @@
         "n": 200
       },
       "trend": "degrading",
-      "improvementAttempts": 694,
+      "improvementAttempts": 696,
       "lastImproved": "2026-05-28T07:47:46.540Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -38858,7 +38858,7 @@
       "name": "latency:pipeline:monte-carlo",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -40634,8 +40634,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -40644,7 +40644,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -40653,7 +40653,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -40671,7 +40671,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 654,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -40689,7 +40689,7 @@
       "name": "latency:pipeline:arena",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -42465,8 +42465,8 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -42475,7 +42475,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -42484,7 +42484,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -42502,7 +42502,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 616,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -42520,7 +42520,7 @@
       "name": "latency:pipeline:judge",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -44296,8 +44296,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.954Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -44306,7 +44306,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -44315,7 +44315,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -44333,7 +44333,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 738,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -44351,7 +44351,7 @@
       "name": "latency:pipeline:approve",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -46128,7 +46128,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -46137,7 +46137,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -46146,7 +46146,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -46164,7 +46164,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 729,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -46182,7 +46182,7 @@
       "name": "latency:pipeline:execute",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -47959,7 +47959,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -47968,7 +47968,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -47976,8 +47976,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -47995,7 +47995,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 617,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -48013,7 +48013,7 @@
       "name": "latency:pipeline:verify",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -49789,8 +49789,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -49798,8 +49798,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -49807,8 +49807,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -49826,7 +49826,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 723,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -49844,7 +49844,7 @@
       "name": "latency:pipeline:self-awareness",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -51620,8 +51620,17 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.413Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-awareness"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -51630,16 +51639,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.049Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-awareness"
-          ]
-        },
-        {
-          "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -51657,7 +51657,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 790,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -51675,7 +51675,7 @@
       "name": "latency:pipeline:self-critique",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -53452,16 +53452,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "self-critique"
-          ]
-        },
-        {
-          "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -53470,7 +53461,16 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.446Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "self-critique"
+          ]
+        },
+        {
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -53488,7 +53488,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 766,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -53507,7 +53507,7 @@
       "name": "latency:pipeline:mistake-analysis",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -55284,7 +55284,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -55293,7 +55293,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -55301,8 +55301,8 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -55320,7 +55320,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 845,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -55338,7 +55338,7 @@
       "name": "latency:pipeline:optimization-ops",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -57115,16 +57115,7 @@
         },
         {
           "value": 2,
-          "ts": "2026-05-28T07:49:00.955Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "optimization-ops"
-          ]
-        },
-        {
-          "value": 2,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -57133,7 +57124,16 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.446Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "optimization-ops"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -57151,7 +57151,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 829,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -57170,7 +57170,7 @@
       "name": "latency:pipeline:continuous-search",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 1,
@@ -58947,7 +58947,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -58956,7 +58956,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -58965,7 +58965,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -58983,7 +58983,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 790,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -59001,7 +59001,7 @@
       "name": "latency:pipeline:evolution",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -60777,8 +60777,8 @@
           ]
         },
         {
-          "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "value": 0,
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -60787,7 +60787,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -60796,7 +60796,7 @@
         },
         {
           "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -60814,7 +60814,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 765,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -60832,7 +60832,7 @@
       "name": "latency:pipeline:receipt",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -62609,16 +62609,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
-          "tags": [
-            "pipeline",
-            "stage_timing",
-            "receipt"
-          ]
-        },
-        {
-          "value": 2,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -62627,7 +62618,16 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "ts": "2026-05-28T07:53:06.446Z",
+          "tags": [
+            "pipeline",
+            "stage_timing",
+            "receipt"
+          ]
+        },
+        {
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -62645,7 +62645,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 809,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -62664,7 +62664,7 @@
       "name": "latency:pipeline:distiller",
       "state": "improving",
       "createdAt": "2026-05-26T00:59:08.754Z",
-      "lastUpdated": "2026-05-28T07:49:01.086Z",
+      "lastUpdated": "2026-05-28T07:53:06.480Z",
       "observations": [
         {
           "value": 0,
@@ -64441,7 +64441,7 @@
         },
         {
           "value": 1,
-          "ts": "2026-05-28T07:49:00.955Z",
+          "ts": "2026-05-28T07:53:06.413Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -64449,8 +64449,8 @@
           ]
         },
         {
-          "value": 2,
-          "ts": "2026-05-28T07:49:01.049Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.446Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -64458,8 +64458,8 @@
           ]
         },
         {
-          "value": 0,
-          "ts": "2026-05-28T07:49:01.086Z",
+          "value": 1,
+          "ts": "2026-05-28T07:53:06.480Z",
           "tags": [
             "pipeline",
             "stage_timing",
@@ -64477,7 +64477,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 699,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -64878,7 +64878,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 322,
-      "lastImproved": "2026-05-28T07:49:00.546Z",
+      "lastImproved": "2026-05-28T07:53:05.913Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -65148,7 +65148,7 @@
         "n": 24
       },
       "trend": "flat",
-      "improvementAttempts": 143,
+      "improvementAttempts": 145,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -65529,7 +65529,7 @@
         "n": 35
       },
       "trend": "degrading",
-      "improvementAttempts": 593,
+      "improvementAttempts": 595,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -65910,7 +65910,7 @@
         "n": 35
       },
       "trend": "degrading",
-      "improvementAttempts": 593,
+      "improvementAttempts": 595,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -66381,7 +66381,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 810,
+      "improvementAttempts": 812,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -66672,7 +66672,7 @@
         "n": 26
       },
       "trend": "degrading",
-      "improvementAttempts": 405,
+      "improvementAttempts": 407,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -67073,7 +67073,7 @@
         "n": 37
       },
       "trend": "degrading",
-      "improvementAttempts": 248,
+      "improvementAttempts": 250,
       "lastImproved": "2026-05-28T01:28:09.039Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -67464,7 +67464,7 @@
         "n": 36
       },
       "trend": "degrading",
-      "improvementAttempts": 555,
+      "improvementAttempts": 557,
       "lastImproved": "2026-05-27T19:12:09.009Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -67935,7 +67935,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 848,
+      "improvementAttempts": 850,
       "lastImproved": "2026-05-27T05:42:08.980Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -68406,7 +68406,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 630,
+      "improvementAttempts": 632,
       "lastImproved": "2026-05-27T10:28:08.656Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -68837,7 +68837,7 @@
         "n": 21
       },
       "trend": "degrading",
-      "improvementAttempts": 44,
+      "improvementAttempts": 46,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -69478,7 +69478,7 @@
         "n": 40
       },
       "trend": "degrading",
-      "improvementAttempts": 810,
+      "improvementAttempts": 812,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -69949,7 +69949,7 @@
         "n": 44
       },
       "trend": "degrading",
-      "improvementAttempts": 661,
+      "improvementAttempts": 663,
       "lastImproved": "2026-05-28T02:42:09.066Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -70180,7 +70180,7 @@
         "n": 20
       },
       "trend": "flat",
-      "improvementAttempts": 6,
+      "improvementAttempts": 8,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -70551,7 +70551,7 @@
         "n": 34
       },
       "trend": "degrading",
-      "improvementAttempts": 443,
+      "improvementAttempts": 445,
       "lastImproved": "2026-05-27T16:42:08.981Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -71204,7 +71204,7 @@
         "n": 32
       },
       "trend": "flat",
-      "improvementAttempts": 518,
+      "improvementAttempts": 520,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -71465,7 +71465,7 @@
         "n": 23
       },
       "trend": "flat",
-      "improvementAttempts": 180,
+      "improvementAttempts": 182,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -71706,7 +71706,7 @@
         "n": 21
       },
       "trend": "degrading",
-      "improvementAttempts": 81,
+      "improvementAttempts": 83,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -72278,7 +72278,7 @@
         "n": 20
       },
       "trend": "flat",
-      "improvementAttempts": 120,
+      "improvementAttempts": 122,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
@@ -73357,7 +73357,7 @@
     "created": "2026-05-23T21:10:03.320Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T07:50:01.974Z",
+  "lastUpdated": "2026-05-28T07:55:01.993Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -73365,8 +73365,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T07:50:01.974Z",
-      "lastSeen": "2026-05-28T07:50:01.974Z",
+      "firstSeen": "2026-05-28T07:55:01.993Z",
+      "lastSeen": "2026-05-28T07:55:01.993Z",
       "occurrences": 1
     }
   ],
@@ -73391,11 +73391,11 @@
     },
     {
       "word": "stories.json",
-      "count": 276
+      "count": 275
     },
     {
       "word": "hc_pipeline.log",
-      "count": 94
+      "count": 95
     },
     {
       "word": "resource-events.jsonl",
@@ -73410,7 +73410,7 @@
       "count": 2
     },
     {
-      "word": "headyvaultservice.js",
+      "word": "index.json",
       "count": 1
     }
   ]

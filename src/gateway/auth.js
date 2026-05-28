@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import { logger } from '../utils/logger.js';
+import loggerPkg from '../utils/logger.js';
+const { logger } = loggerPkg;
 function authenticateJWT(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {

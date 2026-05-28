@@ -1,5 +1,6 @@
 import https from 'https';
-import { logger } from '../utils/logger.js';
+import loggerPkg from '../utils/logger.js';
+const { logger } = loggerPkg;
 import { rateLimiter } from './rate-limiter.js';
 import { authenticateJWT } from './auth.js';
 import { createRequire } from 'node:module';

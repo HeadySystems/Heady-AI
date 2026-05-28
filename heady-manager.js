@@ -453,7 +453,6 @@ app.use("/api/auth/login", rateLimit({
   legacyHeaders: false,
   message: { error: 'too_many_requests', message: 'Too many login attempts' },
   ...redisStoreOptions,
-  keyPrefix: 'rl:auth:',
 }));
 
 app.use("/api/", rateLimit({
@@ -462,7 +461,6 @@ app.use("/api/", rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   ...redisStoreOptions,
-  keyPrefix: 'rl:api:',
 }));
 
 const coreApi = require('./services/core-api');
@@ -499,6 +497,16 @@ try {
 if (claudeRoutes) {
   app.use("/api/claude", claudeRoutes);
 }
+
+// ─── AI Gateway ───────────────────────────────────────────────────
+const aiGatewayRouter = express.Router();
+app.use(aiGatewayRouter);
+import("./src/gateway/ai-gateway.js").then(({ setupGateway }) => {
+  setupGateway(aiGatewayRouter);
+  log.info("AI Gateway: ROUTES LOADED");
+}).catch(err => {
+  log.error("AI Gateway failed to load", { errorMessage: err.message, errorStack: err.stack });
+});
 
 // ─── VM Token Routes ─────────────────────────────────────────────
 let vmTokenRoutes = null;
