@@ -227,6 +227,10 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3300;
 const app = express();
 
 // ─── Middleware ─────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  console.log(`[DEBUG-EARLY] ${req.method} ${req.originalUrl}`);
+  next();
+});
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
