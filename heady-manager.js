@@ -499,6 +499,10 @@ if (claudeRoutes) {
 }
 
 // ─── AI Gateway ───────────────────────────────────────────────────
+app.post('/api/ai/chat', (req, res, next) => {
+  console.log("[DEBUG-MANAGER] Intercepted POST /api/ai/chat directly in manager!");
+  next();
+});
 const aiGatewayRouter = express.Router();
 app.use(aiGatewayRouter);
 import("./src/gateway/ai-gateway.js").then(({ setupGateway }) => {
