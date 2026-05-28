@@ -17133,3 +17133,21 @@ To https://github.com/HeadyMe/heady-production.git
  ! [remote rejected]     main -> main (pre-receive hook declined)
 error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
 [39m
+Committed: 966f519b5 — 
+Push failed: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+
+[2026-05-28 02:15:01.645 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-28T08:15:01.644Z] [WARN] Removing stale lock from dead PID 3780755[39m
+    [35mcomponent[39m: "system"
+[2026-05-28 02:15:02.514 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-28T08:15:02.514Z] [INFO] Committed 966f519b5: HCFP-AUTO: 6 file(s) changed — pattern_store.json, hc_pipeline.log, stories.json[39m
+    [35mcomponent[39m: "system"
+[2026-05-28 02:15:02.583 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-28T08:15:02.583Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-28 02:15:02.608 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-28T08:15:02.608Z] [ERROR] Pull --merge also failed: Command failed: git pull --no-rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+[2026-05-28 02:15:02.608 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-28T08:15:02.608Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
