@@ -499,18 +499,28 @@ if (claudeRoutes) {
 }
 
 // ─── AI Gateway ───────────────────────────────────────────────────
+app.use((req, res, next) => {
+  console.log(`[DEBUG-MANAGER] REQ at line 502: ${req.method} ${req.path} ${req.originalUrl}`);
+  next();
+});
 app.post('/api/ai/chat', (req, res, next) => {
-  console.log("[DEBUG-MANAGER] Intercepted POST /api/ai/chat directly in manager!");
+  console.log("[DEBUG-MANAGER] MATCHED POST /api/ai/chat!");
   next();
 });
 const aiGatewayRouter = express.Router();
 app.use(aiGatewayRouter);
-import("./src/gateway/ai-gateway.js").then(({ setupGateway }) => {
+console.log("[DEBUG-MANAGER] Calling dynamic import for ai-gateway.js...");
+import("./src/gateway/ai-gateway.js").then((mod) => {
+  console.log("[DEBUG-MANAGER] Dynamic import resolved:", !!mod);
+  const { setupGateway } = mod;
   setupGateway(aiGatewayRouter);
   log.info("AI Gateway: ROUTES LOADED");
+  console.log("[DEBUG-MANAGER] setupGateway completed.");
 }).catch(err => {
+  console.log("[DEBUG-MANAGER] Dynamic import REJECTED:", err);
   log.error("AI Gateway failed to load", { errorMessage: err.message, errorStack: err.stack });
 });
+console.log("[DEBUG-MANAGER] Dynamic import call submitted.");
 
 // ─── VM Token Routes ─────────────────────────────────────────────
 let vmTokenRoutes = null;
