@@ -14,7 +14,8 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
-import React, { createContext, useContext, useReducer, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
+import storageService from '../services/StorageService';
 
 // Activity bar views
 export const VIEWS = {
@@ -107,6 +108,9 @@ const initialState = {
 
 function ideReducer(state, action) {
   switch (action.type) {
+    case 'HYDRATE_STATE':
+      return { ...state, ...action.payload };
+
     // View management
     case 'SET_ACTIVE_VIEW':
       return {
@@ -285,6 +289,20 @@ const IDEContext = createContext(null);
 
 export function IDEProvider({ children }) {
   const [state, dispatch] = useReducer(ideReducer, initialState);
+
+  // Load state on mount
+  useEffect(() => {
+    storageService.loadState().then(savedState => {
+      if (savedState) {
+        dispatch({ type: 'HYDRATE_STATE', payload: savedState });
+      }
+    });
+  }, []);
+
+  // Save state on change
+  useEffect(() => {
+    storageService.saveState(state);
+  }, [state]);
 
   return (
     <IDEContext.Provider value={{ state, dispatch }}>

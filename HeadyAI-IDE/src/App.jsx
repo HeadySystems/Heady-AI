@@ -27,6 +27,7 @@ import Breadcrumbs from './components/Breadcrumbs';
 import Editor from './components/Editor';
 import FileExplorer from './components/FileExplorer';
 import AIChat from './components/AIChat';
+import Terminal from './components/Terminal';
 import SearchPanel from './components/SearchPanel';
 import GitPanel from './components/GitPanel';
 import CommandPalette from './components/CommandPalette';
@@ -42,9 +43,6 @@ const IDELayout = () => {
   const actions = useIDEActions();
   const cloud = useCloudConnection();
   const [fileTree, setFileTree] = useState(null);
-  const [terminalLines, setTerminalLines] = useState([]);
-  const [terminalInput, setTerminalInput] = useState('');
-  const terminalInputRef = useRef(null);
 
   const {
     activeView, sidebarOpen, openTabs, activeTabId,
@@ -82,53 +80,45 @@ const IDELayout = () => {
     if (tree) setFileTree(tree);
   }, []);
 
-  // Terminal command handler
-  const handleTerminalCommand = useCallback((cmd) => {
+  // xterm.js command handler
+  const handleTerminalCommand = useCallback((cmd, term) => {
     const trimmed = cmd.trim();
     if (!trimmed) return;
-    const newLines = [...terminalLines, { type: 'input', text: `heady@cloud:~$ ${trimmed}` }];
 
-    // Simulate commands
     if (trimmed === 'help') {
-      newLines.push({ type: 'output', text: 'HeadyAI-IDE Terminal v1.0.0' });
-      newLines.push({ type: 'output', text: 'Available commands: help, clear, ls, pwd, echo, whoami, date, neofetch' });
+      term.writeln('Available commands: help, clear, ls, pwd, echo, whoami, date, neofetch');
     } else if (trimmed === 'clear') {
-      setTerminalLines([]);
-      setTerminalInput('');
-      return;
+      term.clear();
     } else if (trimmed === 'ls') {
       if (fileTree?.children) {
         const names = fileTree.children.map(c => (c.isDirectory ? `\x1b[34m${c.name}/\x1b[0m` : c.name));
-        newLines.push({ type: 'output', text: names.join('  ') });
+        term.writeln(names.join('  '));
       }
     } else if (trimmed === 'pwd') {
-      newLines.push({ type: 'output', text: fileTree?.path || '/heady-project' });
+      term.writeln(fileTree?.path || '/heady-project');
     } else if (trimmed.startsWith('echo ')) {
-      newLines.push({ type: 'output', text: trimmed.slice(5) });
+      term.writeln(trimmed.slice(5));
     } else if (trimmed === 'whoami') {
-      newLines.push({ type: 'output', text: 'heady@headysystems.com (HeadyAI-IDE)' });
+      term.writeln('heady@headysystems.com (HeadyAI-IDE)');
     } else if (trimmed === 'date') {
-      newLines.push({ type: 'output', text: new Date().toString() });
+      term.writeln(new Date().toString());
     } else if (trimmed === 'neofetch') {
-      newLines.push({ type: 'output', text: '  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗' });
-      newLines.push({ type: 'output', text: '  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝' });
-      newLines.push({ type: 'output', text: '  ███████║█████╗  ███████║██║  ██║ ╚████╔╝ ' });
-      newLines.push({ type: 'output', text: '  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  ' });
-      newLines.push({ type: 'output', text: '  ██║  ██║███████╗██║  ██║██████╔╝   ██║   ' });
-      newLines.push({ type: 'output', text: '  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   ' });
-      newLines.push({ type: 'output', text: '' });
-      newLines.push({ type: 'output', text: '  OS: HeadyOS v5.0.0 (Liquid Architecture)' });
-      newLines.push({ type: 'output', text: '  Kernel: Latent Space v9.0' });
-      newLines.push({ type: 'output', text: '  Shell: HeadyAI-IDE Terminal v1.0' });
-      newLines.push({ type: 'output', text: `  φ: ${(1 + Math.sqrt(5)) / 2}` });
+      term.writeln('  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗');
+      term.writeln('  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝');
+      term.writeln('  ███████║█████╗  ███████║██║  ██║ ╚████╔╝ ');
+      term.writeln('  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  ');
+      term.writeln('  ██║  ██║███████╗██║  ██║██████╔╝   ██║   ');
+      term.writeln('  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   ');
+      term.writeln('');
+      term.writeln('  OS: HeadyOS v5.0.0 (Liquid Architecture)');
+      term.writeln('  Kernel: Latent Space v9.0');
+      term.writeln('  Shell: HeadyAI-IDE Terminal v1.0');
+      term.writeln(`  φ: ${(1 + Math.sqrt(5)) / 2}`);
     } else {
-      newLines.push({ type: 'error', text: `heady: command not found: ${trimmed}` });
-      newLines.push({ type: 'hint', text: 'Type "help" for available commands' });
+      term.writeln(`\x1b[31mheady: command not found: ${trimmed}\x1b[0m`);
+      term.writeln('\x1b[3mType "help" for available commands\x1b[0m');
     }
-
-    setTerminalLines(newLines);
-    setTerminalInput('');
-  }, [terminalLines, fileTree]);
+  }, [fileTree]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -394,25 +384,7 @@ const IDELayout = () => {
                 </div>
                 <div className="bottom-panel-content">
                   {activeBottomPanel === PANELS.TERMINAL && (
-                    <div className="terminal-content" onClick={() => terminalInputRef.current?.focus()}>
-                      {terminalLines.map((line, i) => (
-                        <div key={i} className={`terminal-line ${line.type}`}>
-                          <span className={line.type === 'input' ? 'terminal-cmd' : line.type === 'error' ? 'terminal-error' : line.type === 'hint' ? 'terminal-hint' : 'terminal-output'}>{line.text}</span>
-                        </div>
-                      ))}
-                      <div className="terminal-line terminal-active">
-                        <span className="terminal-prompt">heady@cloud:~$</span>
-                        <input
-                          ref={terminalInputRef}
-                          className="terminal-input"
-                          value={terminalInput}
-                          onChange={(e) => setTerminalInput(e.target.value)}
-                          onKeyDown={(e) => { if (e.key === 'Enter') handleTerminalCommand(terminalInput); }}
-                          spellCheck={false}
-                          autoComplete="off"
-                        />
-                      </div>
-                    </div>
+                    <Terminal onCommand={handleTerminalCommand} />
                   )}
                   {activeBottomPanel === PANELS.OUTPUT && (
                     <div className="output-content">

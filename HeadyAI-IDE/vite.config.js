@@ -25,12 +25,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          monaco: ['@monaco-editor/react'],
-          ui: ['framer-motion', 'lucide-react'],
-          router: ['react-router-dom']
-        }
+        // manualChunks are handled automatically by rolldown/vite
       }
     }
   },
