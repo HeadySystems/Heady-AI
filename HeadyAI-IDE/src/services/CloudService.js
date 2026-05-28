@@ -14,6 +14,8 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
+import headyVaultService from './HeadyVaultService';
+
 const PHI = 1.618033988749895;
 const WS_URL = 'wss://manager.headysystems.com/ws/ide';
 const API_URL = 'https://manager.headysystems.com/api';
@@ -29,14 +31,20 @@ class CloudService {
     this.reconnectTimer = null;
     this.connected = false;
     this.messageQueue = [];
+    
+    // Will be initialized via Vault
     this.sessionId = null;
     this.userId = null;
   }
 
   // WebSocket connection management
-  connect(sessionId, userId) {
-    this.sessionId = sessionId || crypto.randomUUID();
-    this.userId = userId || 'local-user';
+  connect() {
+    // Rely on HeadyVault for identity
+    const vaultToken = headyVaultService.getToken();
+    const vaultUser = headyVaultService.getUser();
+    
+    this.sessionId = vaultToken || crypto.randomUUID();
+    this.userId = vaultUser?.id || 'local-user';
 
     if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
       return;
@@ -293,9 +301,10 @@ class CloudService {
   // HTTP helpers
   async _apiGet(path) {
     try {
+      const token = headyVaultService.getToken() || this.sessionId;
       const response = await fetch(`${API_URL}${path}`, {
         headers: {
-          'Authorization': `Bearer ${this.sessionId}`,
+          'Authorization': `Bearer ${token}`,
           'X-Heady-Session': this.sessionId,
         },
       });
@@ -309,11 +318,12 @@ class CloudService {
 
   async _apiPost(path, body) {
     try {
+      const token = headyVaultService.getToken() || this.sessionId;
       const response = await fetch(`${API_URL}${path}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.sessionId}`,
+          'Authorization': `Bearer ${token}`,
           'X-Heady-Session': this.sessionId,
         },
         body: JSON.stringify(body),

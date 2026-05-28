@@ -97,6 +97,24 @@ const CodeEditor = ({ file, onFileChange }) => {
     }
   };
 
+  const handleEditorWillMount = (monaco) => {
+    monaco.editor.defineTheme('cosmic-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#0a0d18',
+        'editor.foreground': '#e2e8f0',
+        'editor.lineHighlightBackground': '#1e293b50',
+        'editorLineNumber.foreground': '#475569',
+        'editorCursor.foreground': '#22d3ee',
+        'editor.selectionBackground': '#6366f14d',
+        'editorIndentGuide.background': '#1e293b',
+        'editorIndentGuide.activeBackground': '#334155',
+      }
+    });
+  };
+
   if (!file) {
     return (
       <div className="editor-placeholder">
@@ -136,7 +154,8 @@ const CodeEditor = ({ file, onFileChange }) => {
           language={language}
           value={code}
           onChange={handleEditorChange}
-          theme="vs-dark"
+          beforeMount={handleEditorWillMount}
+          theme="cosmic-dark"
           options={{
             minimap: { enabled: false },
             fontSize: 14,

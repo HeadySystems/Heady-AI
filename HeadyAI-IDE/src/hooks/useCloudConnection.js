@@ -16,6 +16,7 @@
 
 import { useEffect, useCallback, useRef } from 'react';
 import cloudService from '../services/CloudService';
+import headyVaultService from '../services/HeadyVaultService';
 import { useIDEActions } from '../stores/ideStore';
 
 export function useCloudConnection() {
@@ -23,8 +24,17 @@ export function useCloudConnection() {
   const cleanupRef = useRef([]);
 
   useEffect(() => {
-    // Connect on mount
-    cloudService.connect();
+    // Initialize Vault and then connect
+    headyVaultService.initialize().then(() => {
+      // If not authenticated, we could trigger an auth flow. For now, Sovereign Boot mock applies:
+      if (!headyVaultService.isAuthenticated) {
+        headyVaultService.authenticate().then(() => {
+          cloudService.connect();
+        });
+      } else {
+        cloudService.connect();
+      }
+    });
 
     // Listen for connection status changes
     const unsub1 = cloudService.on('connection', (data) => {
