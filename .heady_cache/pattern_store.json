@@ -469,15 +469,15 @@
         }
       ],
       "stats": {
-        "mean": 1.0625,
+        "mean": 1.0196078431372548,
         "median": 0,
-        "stddev": 2.6093282181435127,
+        "stddev": 2.539802339680072,
         "min": 0,
         "max": 14,
-        "n": 48
+        "n": 51
       },
       "trend": "degrading",
-      "improvementAttempts": 30,
+      "improvementAttempts": 33,
       "lastImproved": "2026-05-28T11:28:08.775Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -960,15 +960,15 @@
         }
       ],
       "stats": {
-        "mean": 0.6875,
+        "mean": 0.7058823529411765,
         "median": 0,
-        "stddev": 1.386786603386885,
+        "stddev": 1.3473884347144691,
         "min": 0,
         "max": 7,
-        "n": 48
+        "n": 51
       },
       "trend": "degrading",
-      "improvementAttempts": 37,
+      "improvementAttempts": 40,
       "lastImproved": "2026-05-28T11:28:08.775Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -985,7 +985,7 @@
       "id": "performance::latency:pipeline:intake",
       "category": "performance",
       "name": "latency:pipeline:intake",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -1450,16 +1450,16 @@
         }
       ],
       "stats": {
-        "mean": 12.041666666666666,
+        "mean": 11.333333333333334,
         "median": 0,
-        "stddev": 45.56632452322171,
+        "stddev": 44.296534926966324,
         "min": 0,
         "max": 198,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 30,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -1475,7 +1475,7 @@
       "id": "performance::latency:pipeline:classify",
       "category": "performance",
       "name": "latency:pipeline:classify",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -1940,16 +1940,16 @@
         }
       ],
       "stats": {
-        "mean": 0.2916666666666667,
+        "mean": 0.27450980392156865,
         "median": 0,
-        "stddev": 0.7058780977540591,
+        "stddev": 0.6882325009719311,
         "min": 0,
         "max": 3,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 45,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -1965,7 +1965,7 @@
       "id": "performance::latency:pipeline:triage",
       "category": "performance",
       "name": "latency:pipeline:triage",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -2430,16 +2430,16 @@
         }
       ],
       "stats": {
-        "mean": 1.1875,
+        "mean": 1.1176470588235294,
         "median": 0,
-        "stddev": 4.944088431315389,
+        "stddev": 4.804601792577243,
         "min": 0,
         "max": 31,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 22,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2455,7 +2455,7 @@
       "id": "performance::latency:pipeline:decompose",
       "category": "performance",
       "name": "latency:pipeline:decompose",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -2920,16 +2920,16 @@
         }
       ],
       "stats": {
-        "mean": 0.2916666666666667,
+        "mean": 0.27450980392156865,
         "median": 0,
-        "stddev": 0.6441510347391795,
+        "stddev": 0.6286752761522116,
         "min": 0,
         "max": 3,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 38,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -2945,7 +2945,7 @@
       "id": "performance::latency:pipeline:trial-and-error",
       "category": "performance",
       "name": "latency:pipeline:trial-and-error",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -3410,16 +3410,16 @@
         }
       ],
       "stats": {
-        "mean": 0.4166666666666667,
+        "mean": 0.4117647058823529,
         "median": 0,
-        "stddev": 0.9965217285917831,
+        "stddev": 0.973702668073344,
         "min": 0,
         "max": 4,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 45,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -3900,16 +3900,16 @@
         }
       ],
       "stats": {
-        "mean": 0.3541666666666667,
+        "mean": 0.35294117647058826,
         "median": 0,
-        "stddev": 0.6611096521926012,
+        "stddev": 0.6514999108171039,
         "min": 0,
         "max": 3,
-        "n": 48
+        "n": 51
       },
       "trend": "improving",
       "improvementAttempts": 38,
-      "lastImproved": "2026-05-28T11:58:08.779Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -3925,7 +3925,7 @@
       "id": "performance::latency:pipeline:monte-carlo",
       "category": "performance",
       "name": "latency:pipeline:monte-carlo",
-      "state": "stagnant",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -4390,16 +4390,16 @@
         }
       ],
       "stats": {
-        "mean": 0.14583333333333334,
+        "mean": 0.13725490196078433,
         "median": 0,
-        "stddev": 0.3529390488770296,
+        "stddev": 0.3441162504859656,
         "min": 0,
         "max": 1,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 16,
-      "lastImproved": "2026-05-28T11:42:08.777Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -4415,7 +4415,7 @@
       "id": "performance::latency:pipeline:arena",
       "category": "performance",
       "name": "latency:pipeline:arena",
-      "state": "stagnant",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -4880,16 +4880,16 @@
         }
       ],
       "stats": {
-        "mean": 0.16666666666666666,
+        "mean": 0.1568627450980392,
         "median": 0,
-        "stddev": 0.372677996249965,
+        "stddev": 0.3636713135488511,
         "min": 0,
         "max": 1,
-        "n": 48
+        "n": 51
       },
-      "trend": "flat",
+      "trend": "improving",
       "improvementAttempts": 46,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -5370,15 +5370,15 @@
         }
       ],
       "stats": {
-        "mean": 0.14583333333333334,
+        "mean": 0.13725490196078433,
         "median": 0,
-        "stddev": 0.40771637064126937,
+        "stddev": 0.3970285633591488,
         "min": 0,
         "max": 2,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
-      "improvementAttempts": 30,
+      "trend": "flat",
+      "improvementAttempts": 33,
       "lastImproved": "2026-05-28T11:28:08.776Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5395,7 +5395,7 @@
       "id": "performance::latency:pipeline:approve",
       "category": "performance",
       "name": "latency:pipeline:approve",
-      "state": "stagnant",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -5860,16 +5860,16 @@
         }
       ],
       "stats": {
-        "mean": 0.125,
+        "mean": 0.11764705882352941,
         "median": 0,
-        "stddev": 0.3886407938787006,
+        "stddev": 0.3781823827840375,
         "min": 0,
         "max": 2,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 23,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -5885,7 +5885,7 @@
       "id": "performance::latency:pipeline:execute",
       "category": "performance",
       "name": "latency:pipeline:execute",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -6350,16 +6350,16 @@
         }
       ],
       "stats": {
-        "mean": 0.1875,
+        "mean": 0.17647058823529413,
         "median": 0,
-        "stddev": 0.44046613566387444,
+        "stddev": 0.429586319611895,
         "min": 0,
         "max": 2,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 44,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -6375,7 +6375,7 @@
       "id": "performance::latency:pipeline:verify",
       "category": "performance",
       "name": "latency:pipeline:verify",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -6840,16 +6840,16 @@
         }
       ],
       "stats": {
-        "mean": 0.3125,
+        "mean": 0.29411764705882354,
         "median": 0,
-        "stddev": 0.8454843286542927,
+        "stddev": 0.823529411764706,
         "min": 0,
         "max": 4,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 30,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -6865,7 +6865,7 @@
       "id": "performance::latency:pipeline:self-awareness",
       "category": "performance",
       "name": "latency:pipeline:self-awareness",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -7330,16 +7330,16 @@
         }
       ],
       "stats": {
-        "mean": 0.4791666666666667,
+        "mean": 0.47058823529411764,
         "median": 0,
-        "stddev": 1.3383693955290852,
+        "stddev": 1.3038847112585332,
         "min": 0,
         "max": 7,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 31,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -7355,7 +7355,7 @@
       "id": "performance::latency:pipeline:self-critique",
       "category": "performance",
       "name": "latency:pipeline:self-critique",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -7820,16 +7820,16 @@
         }
       ],
       "stats": {
-        "mean": 0.7083333333333334,
+        "mean": 0.6666666666666666,
         "median": 0,
-        "stddev": 1.4854619558313238,
+        "stddev": 1.4507153971054048,
         "min": 0,
         "max": 8,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 37,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -7845,7 +7845,7 @@
       "id": "performance::latency:pipeline:mistake-analysis",
       "category": "performance",
       "name": "latency:pipeline:mistake-analysis",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -8310,16 +8310,16 @@
         }
       ],
       "stats": {
-        "mean": 0.4791666666666667,
+        "mean": 0.47058823529411764,
         "median": 0,
-        "stddev": 1.2245676674737995,
+        "stddev": 1.1939872429520257,
         "min": 0,
         "max": 5,
-        "n": 48
+        "n": 51
       },
-      "trend": "stable",
+      "trend": "improving",
       "improvementAttempts": 23,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -8335,7 +8335,7 @@
       "id": "performance::latency:pipeline:optimization-ops",
       "category": "performance",
       "name": "latency:pipeline:optimization-ops",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -8800,16 +8800,16 @@
         }
       ],
       "stats": {
-        "mean": 1.0208333333333333,
+        "mean": 1,
         "median": 0,
-        "stddev": 2.3760049043626896,
+        "stddev": 2.309401076758503,
         "min": 0,
         "max": 11,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 38,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -8826,7 +8826,7 @@
       "id": "performance::latency:pipeline:continuous-search",
       "category": "performance",
       "name": "latency:pipeline:continuous-search",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -9291,16 +9291,16 @@
         }
       ],
       "stats": {
-        "mean": 0.4583333333333333,
+        "mean": 0.47058823529411764,
         "median": 0,
-        "stddev": 1.3063679505492403,
+        "stddev": 1.2734535593042757,
         "min": 0,
         "max": 6,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 38,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -9316,7 +9316,7 @@
       "id": "performance::latency:pipeline:evolution",
       "category": "performance",
       "name": "latency:pipeline:evolution",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -9781,16 +9781,16 @@
         }
       ],
       "stats": {
-        "mean": 0.5,
+        "mean": 0.47058823529411764,
         "median": 0,
-        "stddev": 1,
+        "stddev": 0.9772498662256559,
         "min": 0,
         "max": 4,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 37,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -9806,7 +9806,7 @@
       "id": "performance::latency:pipeline:receipt",
       "category": "performance",
       "name": "latency:pipeline:receipt",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -10271,20 +10271,20 @@
         }
       ],
       "stats": {
-        "mean": 1.2291666666666667,
+        "mean": 1.1764705882352942,
         "median": 1,
-        "stddev": 2.5758460044981124,
+        "stddev": 2.510416591886937,
         "min": 0,
         "max": 11,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 30,
-      "lastImproved": "2026-05-28T11:28:08.776Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
-        "isBottleneck": true,
+        "isBottleneck": false,
         "suggestion": "latency:pipeline:receipt is getting slower. Re-optimize: try parallelization or caching."
       },
       "tags": [
@@ -10297,7 +10297,7 @@
       "id": "performance::latency:pipeline:distiller",
       "category": "performance",
       "name": "latency:pipeline:distiller",
-      "state": "degrading",
+      "state": "improving",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T11:59:08.487Z",
       "observations": [
@@ -10762,16 +10762,16 @@
         }
       ],
       "stats": {
-        "mean": 0.625,
+        "mean": 0.5882352941176471,
         "median": 0,
-        "stddev": 1.378782675647858,
+        "stddev": 1.3456752891587052,
         "min": 0,
         "max": 6,
-        "n": 48
+        "n": 51
       },
-      "trend": "degrading",
+      "trend": "improving",
       "improvementAttempts": 38,
-      "lastImproved": "2026-05-28T11:12:08.500Z",
+      "lastImproved": "2026-05-28T12:04:08.780Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -10915,12 +10915,12 @@
         }
       ],
       "stats": {
-        "mean": 2.3333333333333335,
+        "mean": 2,
         "median": 3,
-        "stddev": 0.9428090415820634,
+        "stddev": 1,
         "min": 1,
         "max": 3,
-        "n": 3
+        "n": 4
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -14169,13 +14169,22 @@
           ]
         }
       ],
-      "stats": null,
+      "stats": {
+        "mean": 1,
+        "median": 1,
+        "stddev": 0,
+        "min": 1,
+        "max": 1,
+        "n": 3
+      },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
       "lastImproved": null,
       "convergedAt": null,
       "reviewAfter": null,
-      "metadata": {},
+      "metadata": {
+        "isBottleneck": false
+      },
       "tags": [
         "monte_carlo",
         "execution"
@@ -14392,7 +14401,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T12:00:01.161Z",
+  "lastUpdated": "2026-05-28T12:05:01.429Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -14400,8 +14409,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T12:00:01.161Z",
-      "lastSeen": "2026-05-28T12:00:01.161Z",
+      "firstSeen": "2026-05-28T12:05:01.429Z",
+      "lastSeen": "2026-05-28T12:05:01.429Z",
       "occurrences": 1
     }
   ],
