@@ -1875,7 +1875,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T08:35:01.837Z",
+  "lastUpdated": "2026-05-28T08:40:01.344Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -1883,8 +1883,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T08:35:01.837Z",
-      "lastSeen": "2026-05-28T08:35:01.837Z",
+      "firstSeen": "2026-05-28T08:40:01.344Z",
+      "lastSeen": "2026-05-28T08:40:01.344Z",
       "occurrences": 1
     }
   ],
@@ -1909,7 +1909,7 @@
     },
     {
       "word": "stories.json",
-      "count": 272
+      "count": 271
     },
     {
       "word": "hc_pipeline.log",
