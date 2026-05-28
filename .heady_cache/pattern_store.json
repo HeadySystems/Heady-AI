@@ -172,12 +172,12 @@
         }
       ],
       "stats": {
-        "mean": 1.6666666666666667,
+        "mean": 1.9444444444444444,
         "median": 1,
-        "stddev": 3.515047020390418,
+        "stddev": 3.658661294672657,
         "min": 0,
         "max": 14,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -365,12 +365,12 @@
         }
       ],
       "stats": {
-        "mean": 0.7333333333333333,
+        "mean": 0.7777777777777778,
         "median": 0,
-        "stddev": 1.4817407180595246,
+        "stddev": 1.3966450099973928,
         "min": 0,
         "max": 6,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -558,12 +558,12 @@
         }
       ],
       "stats": {
-        "mean": 13.066666666666666,
+        "mean": 11,
         "median": 1,
-        "stddev": 47.02264230016098,
+        "stddev": 43.174066289845804,
         "min": 0,
         "max": 189,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -751,12 +751,12 @@
         }
       ],
       "stats": {
-        "mean": 0.26666666666666666,
+        "mean": 0.2777777777777778,
         "median": 0,
-        "stddev": 0.7717224601860151,
+        "stddev": 0.7307192465536615,
         "min": 0,
         "max": 3,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -944,12 +944,12 @@
         }
       ],
       "stats": {
-        "mean": 2.2,
+        "mean": 2.7777777777777777,
         "median": 0,
-        "stddev": 7.713192162349732,
+        "stddev": 7.75711541142536,
         "min": 0,
         "max": 31,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -1137,12 +1137,12 @@
         }
       ],
       "stats": {
-        "mean": 0.4,
+        "mean": 0.3888888888888889,
         "median": 0,
-        "stddev": 0.8,
+        "stddev": 0.7556372504853025,
         "min": 0,
         "max": 3,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -1330,12 +1330,12 @@
         }
       ],
       "stats": {
-        "mean": 0.4,
+        "mean": 0.3888888888888889,
         "median": 0,
-        "stddev": 1.019803902718557,
+        "stddev": 0.950957931590205,
         "min": 0,
         "max": 4,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -1525,10 +1525,10 @@
       "stats": {
         "mean": 0.3333333333333333,
         "median": 0,
-        "stddev": 0.7888106377466155,
+        "stddev": 0.7453559924999299,
         "min": 0,
         "max": 3,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -1716,12 +1716,12 @@
         }
       ],
       "stats": {
-        "mean": 0.13333333333333333,
+        "mean": 0.1111111111111111,
         "median": 0,
-        "stddev": 0.33993463423951903,
+        "stddev": 0.31426968052735443,
         "min": 0,
         "max": 1,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -1909,12 +1909,12 @@
         }
       ],
       "stats": {
-        "mean": 0.2,
+        "mean": 0.16666666666666666,
         "median": 0,
-        "stddev": 0.4,
+        "stddev": 0.372677996249965,
         "min": 0,
         "max": 1,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -2102,12 +2102,12 @@
         }
       ],
       "stats": {
-        "mean": 0.13333333333333333,
+        "mean": 0.16666666666666666,
         "median": 0,
-        "stddev": 0.33993463423951903,
+        "stddev": 0.372677996249965,
         "min": 0,
         "max": 1,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -2295,12 +2295,12 @@
         }
       ],
       "stats": {
-        "mean": 0.13333333333333333,
+        "mean": 0.16666666666666666,
         "median": 0,
-        "stddev": 0.33993463423951903,
+        "stddev": 0.372677996249965,
         "min": 0,
         "max": 1,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -2488,12 +2488,12 @@
         }
       ],
       "stats": {
-        "mean": 0.13333333333333333,
+        "mean": 0.1111111111111111,
         "median": 0,
-        "stddev": 0.33993463423951903,
+        "stddev": 0.31426968052735443,
         "min": 0,
         "max": 1,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -2683,10 +2683,10 @@
       "stats": {
         "mean": 0.3333333333333333,
         "median": 0,
-        "stddev": 0.7888106377466155,
+        "stddev": 0.7453559924999299,
         "min": 0,
         "max": 3,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -2874,12 +2874,12 @@
         }
       ],
       "stats": {
-        "mean": 0.6666666666666666,
+        "mean": 0.5555555555555556,
         "median": 0,
-        "stddev": 1.7384539747207062,
+        "stddev": 1.606314699422329,
         "min": 0,
         "max": 7,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3067,12 +3067,12 @@
         }
       ],
       "stats": {
-        "mean": 0.6666666666666666,
+        "mean": 0.6111111111111112,
         "median": 0,
-        "stddev": 1.247219128924647,
+        "stddev": 1.1613636089092707,
         "min": 0,
         "max": 5,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3260,12 +3260,12 @@
         }
       ],
       "stats": {
-        "mean": 0.6666666666666666,
+        "mean": 0.6111111111111112,
         "median": 0,
-        "stddev": 1.247219128924647,
+        "stddev": 1.1613636089092707,
         "min": 0,
         "max": 5,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3453,12 +3453,12 @@
         }
       ],
       "stats": {
-        "mean": 1.2666666666666666,
+        "mean": 1.1111111111111112,
         "median": 1,
-        "stddev": 2.6449112566503166,
+        "stddev": 2.4469683939494713,
         "min": 0,
         "max": 11,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3646,12 +3646,12 @@
         }
       ],
       "stats": {
-        "mean": 0.4,
+        "mean": 0.3888888888888889,
         "median": 0,
-        "stddev": 1.2543258481484518,
+        "stddev": 1.1613636089092705,
         "min": 0,
         "max": 5,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -3839,12 +3839,12 @@
         }
       ],
       "stats": {
-        "mean": 0.4,
+        "mean": 0.3888888888888889,
         "median": 0,
-        "stddev": 1.019803902718557,
+        "stddev": 0.950957931590205,
         "min": 0,
         "max": 4,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4032,12 +4032,12 @@
         }
       ],
       "stats": {
-        "mean": 1.4,
+        "mean": 1.3333333333333333,
         "median": 1,
-        "stddev": 2.6280537792569363,
+        "stddev": 2.403700850309326,
         "min": 0,
         "max": 11,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -4225,12 +4225,12 @@
         }
       ],
       "stats": {
-        "mean": 0.7333333333333333,
+        "mean": 0.7222222222222222,
         "median": 0,
-        "stddev": 1.4817407180595246,
+        "stddev": 1.3664859862498715,
         "min": 0,
         "max": 6,
-        "n": 15
+        "n": 18
       },
       "trend": "insufficient_data",
       "improvementAttempts": 0,
@@ -6049,7 +6049,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T09:15:02.022Z",
+  "lastUpdated": "2026-05-28T09:20:01.489Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -6057,29 +6057,29 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T09:15:02.022Z",
-      "lastSeen": "2026-05-28T09:15:02.022Z",
+      "firstSeen": "2026-05-28T09:20:01.489Z",
+      "lastSeen": "2026-05-28T09:20:01.489Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 278,
+  "commitCount24h": 279,
   "topTopics": [
     {
       "word": "hcfp-auto",
-      "count": 278
+      "count": 279
     },
     {
       "word": "file(s)",
-      "count": 278
+      "count": 279
     },
     {
       "word": "changed",
-      "count": 278
+      "count": 279
     },
     {
       "word": "pattern_store.json",
-      "count": 278
+      "count": 279
     },
     {
       "word": "stories.json",
@@ -6087,7 +6087,7 @@
     },
     {
       "word": "hc_pipeline.log",
-      "count": 97
+      "count": 98
     },
     {
       "word": "auto-commit.log",
