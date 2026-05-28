@@ -1503,7 +1503,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 199,
+      "improvementAttempts": 201,
       "lastImproved": "2026-05-28T22:32:24.831Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3021,7 +3021,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 163,
-      "lastImproved": "2026-05-28T23:24:24.839Z",
+      "lastImproved": "2026-05-28T23:28:24.846Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -4536,7 +4536,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 131,
+      "improvementAttempts": 133,
       "lastImproved": "2026-05-28T23:18:24.839Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6053,7 +6053,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 171,
+      "improvementAttempts": 173,
       "lastImproved": "2026-05-28T23:18:24.839Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10601,7 +10601,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 168,
+      "improvementAttempts": 170,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12117,7 +12117,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 159,
+      "improvementAttempts": 161,
       "lastImproved": "2026-05-28T23:18:24.839Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15149,7 +15149,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 176,
+      "improvementAttempts": 178,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18181,7 +18181,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 156,
+      "improvementAttempts": 158,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -22729,7 +22729,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 162,
+      "improvementAttempts": 164,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -25761,7 +25761,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 137,
+      "improvementAttempts": 139,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -27277,7 +27277,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 177,
+      "improvementAttempts": 179,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -28794,7 +28794,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 184,
+      "improvementAttempts": 186,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -30310,7 +30310,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 173,
+      "improvementAttempts": 175,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -31826,7 +31826,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 167,
+      "improvementAttempts": 169,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -33343,7 +33343,7 @@
         "n": 165
       },
       "trend": "degrading",
-      "improvementAttempts": 183,
+      "improvementAttempts": 185,
       "lastImproved": "2026-05-28T23:02:24.838Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -42354,7 +42354,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T23:25:01.231Z",
+  "lastUpdated": "2026-05-28T23:30:01.361Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -42362,8 +42362,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T23:25:01.231Z",
-      "lastSeen": "2026-05-28T23:25:01.231Z",
+      "firstSeen": "2026-05-28T23:30:01.361Z",
+      "lastSeen": "2026-05-28T23:30:01.361Z",
       "occurrences": 1
     }
   ],
