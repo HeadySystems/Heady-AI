@@ -856,7 +856,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 106,
-      "lastImproved": "2026-05-28T15:34:08.805Z",
+      "lastImproved": "2026-05-28T15:38:08.805Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -1725,7 +1725,7 @@
       },
       "trend": "improving",
       "improvementAttempts": 81,
-      "lastImproved": "2026-05-28T15:34:08.805Z",
+      "lastImproved": "2026-05-28T15:38:08.805Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -3460,7 +3460,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 86,
+      "improvementAttempts": 88,
       "lastImproved": "2026-05-28T14:58:08.802Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6064,7 +6064,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 85,
+      "improvementAttempts": 87,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6932,7 +6932,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 93,
+      "improvementAttempts": 95,
       "lastImproved": "2026-05-28T14:58:08.802Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10404,7 +10404,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 87,
+      "improvementAttempts": 89,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12140,7 +12140,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 78,
+      "improvementAttempts": 80,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13008,7 +13008,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 86,
+      "improvementAttempts": 88,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14744,7 +14744,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 71,
+      "improvementAttempts": 73,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15612,7 +15612,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 94,
+      "improvementAttempts": 96,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16481,7 +16481,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 94,
+      "improvementAttempts": 96,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17349,7 +17349,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 93,
+      "improvementAttempts": 95,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18217,7 +18217,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 86,
+      "improvementAttempts": 88,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -19086,7 +19086,7 @@
         "n": 93
       },
       "trend": "degrading",
-      "improvementAttempts": 94,
+      "improvementAttempts": 96,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -24824,7 +24824,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T15:35:01.244Z",
+  "lastUpdated": "2026-05-28T15:40:01.390Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -24832,8 +24832,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T15:35:01.244Z",
-      "lastSeen": "2026-05-28T15:35:01.244Z",
+      "firstSeen": "2026-05-28T15:40:01.390Z",
+      "lastSeen": "2026-05-28T15:40:01.390Z",
       "occurrences": 1
     }
   ],
