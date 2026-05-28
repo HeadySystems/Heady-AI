@@ -11,14 +11,19 @@
   },
   "rules": {
     "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "no-console": "off",
+    "no-console": "warn",
     "no-empty": ["warn", { "allowEmptyCatch": true }],
     "no-constant-condition": "warn",
     "prefer-const": "warn",
     "no-var": "error",
     "eqeqeq": ["warn", "always"],
     "curly": ["warn", "multi-line"],
-    "no-throw-literal": "warn"
+    "no-throw-literal": "warn",
+    "complexity": ["warn", { "max": 15 }],
+    "max-lines": ["warn", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    "max-depth": ["warn", { "max": 4 }],
+    "max-params": ["warn", { "max": 4 }]
   },
   "ignorePatterns": [
     "node_modules/",

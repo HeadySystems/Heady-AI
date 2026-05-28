@@ -1,17 +1,28 @@
 {
   "name": "@heady-ai/phi-math",
-  "version": "4.0.0",
-  "description": "Phi and Fibonacci scaling primitives, CSL bands, and vector helpers for HeadyOS.",
+  "version": "5.0.0",
+  "description": "Phi and Fibonacci scaling primitives, CSL bands, stage timeouts, and vector helpers for HeadyOS.",
   "main": "index.js",
+  "module": "index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "license": "UNLICENSED",
   "files": [
+    "index.js",
+    "index.mjs",
     "dist",
     "README.md"
   ],
   "scripts": {
     "build": "tsc -b",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "node --test test/"
   },
   "dependencies": {},
   "engines": {
