@@ -828,7 +828,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 99,
+      "improvementAttempts": 101,
       "lastImproved": "2026-05-28T15:12:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -1670,7 +1670,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 74,
+      "improvementAttempts": 76,
       "lastImproved": "2026-05-28T14:28:08.799Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -1687,7 +1687,7 @@
       "id": "performance::latency:pipeline:intake",
       "category": "performance",
       "name": "latency:pipeline:intake",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T15:14:08.490Z",
       "observations": [
@@ -2511,7 +2511,7 @@
         "n": 90
       },
       "trend": "stable",
-      "improvementAttempts": 68,
+      "improvementAttempts": 69,
       "lastImproved": "2026-05-28T15:12:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3352,7 +3352,7 @@
         "n": 90
       },
       "trend": "flat",
-      "improvementAttempts": 76,
+      "improvementAttempts": 78,
       "lastImproved": "2026-05-28T14:58:08.802Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4210,7 +4210,7 @@
       "id": "performance::latency:pipeline:decompose",
       "category": "performance",
       "name": "latency:pipeline:decompose",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T15:14:08.490Z",
       "observations": [
@@ -5034,7 +5034,7 @@
         "n": 90
       },
       "trend": "stable",
-      "improvementAttempts": 83,
+      "improvementAttempts": 84,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5875,7 +5875,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 75,
+      "improvementAttempts": 77,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -7557,7 +7557,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 62,
+      "improvementAttempts": 64,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8415,7 +8415,7 @@
       "id": "performance::latency:pipeline:judge",
       "category": "performance",
       "name": "latency:pipeline:judge",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-28T08:12:14.319Z",
       "lastUpdated": "2026-05-28T15:14:08.490Z",
       "observations": [
@@ -9239,7 +9239,7 @@
         "n": 90
       },
       "trend": "stable",
-      "improvementAttempts": 68,
+      "improvementAttempts": 69,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10080,7 +10080,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 77,
+      "improvementAttempts": 79,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -11762,7 +11762,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 68,
+      "improvementAttempts": 70,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -12603,7 +12603,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 76,
+      "improvementAttempts": 78,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13444,7 +13444,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 69,
+      "improvementAttempts": 71,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -14285,7 +14285,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 61,
+      "improvementAttempts": 63,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15126,7 +15126,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 84,
+      "improvementAttempts": 86,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15968,7 +15968,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 84,
+      "improvementAttempts": 86,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16809,7 +16809,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 83,
+      "improvementAttempts": 85,
       "lastImproved": "2026-05-28T15:12:08.804Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -17650,7 +17650,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 76,
+      "improvementAttempts": 78,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18492,7 +18492,7 @@
         "n": 90
       },
       "trend": "degrading",
-      "improvementAttempts": 84,
+      "improvementAttempts": 86,
       "lastImproved": "2026-05-28T14:58:08.803Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -24230,7 +24230,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T15:15:01.632Z",
+  "lastUpdated": "2026-05-28T15:20:01.298Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -24238,8 +24238,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T15:15:01.632Z",
-      "lastSeen": "2026-05-28T15:15:01.632Z",
+      "firstSeen": "2026-05-28T15:20:01.298Z",
+      "lastSeen": "2026-05-28T15:20:01.298Z",
       "occurrences": 1
     }
   ],
