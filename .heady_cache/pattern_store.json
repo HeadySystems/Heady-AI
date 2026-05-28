@@ -1530,7 +1530,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 204,
+      "improvementAttempts": 206,
       "lastImproved": "2026-05-28T22:32:24.831Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -3074,7 +3074,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 164,
+      "improvementAttempts": 166,
       "lastImproved": "2026-05-28T23:32:24.850Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -4617,7 +4617,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 136,
+      "improvementAttempts": 138,
       "lastImproved": "2026-05-28T23:18:24.839Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10790,7 +10790,7 @@
         "n": 168
       },
       "trend": "flat",
-      "improvementAttempts": 173,
+      "improvementAttempts": 175,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15419,7 +15419,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 181,
+      "improvementAttempts": 183,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18505,7 +18505,7 @@
         "n": 168
       },
       "trend": "flat",
-      "improvementAttempts": 161,
+      "improvementAttempts": 163,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23134,7 +23134,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 167,
+      "improvementAttempts": 169,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -26220,7 +26220,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 142,
+      "improvementAttempts": 144,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -27763,7 +27763,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 182,
+      "improvementAttempts": 184,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -29307,7 +29307,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 189,
+      "improvementAttempts": 191,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -30850,7 +30850,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 178,
+      "improvementAttempts": 180,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -32393,7 +32393,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 172,
+      "improvementAttempts": 174,
       "lastImproved": "2026-05-28T23:18:24.840Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -33937,7 +33937,7 @@
         "n": 168
       },
       "trend": "degrading",
-      "improvementAttempts": 188,
+      "improvementAttempts": 190,
       "lastImproved": "2026-05-28T23:02:24.838Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -43058,7 +43058,7 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-28T23:35:01.915Z",
+  "lastUpdated": "2026-05-28T23:40:02.034Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
@@ -43066,8 +43066,8 @@
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-28T23:35:01.915Z",
-      "lastSeen": "2026-05-28T23:35:01.915Z",
+      "firstSeen": "2026-05-28T23:40:02.034Z",
+      "lastSeen": "2026-05-28T23:40:02.034Z",
       "occurrences": 1
     }
   ],
@@ -43092,11 +43092,11 @@
     },
     {
       "word": "stories.json",
-      "count": 215
+      "count": 214
     },
     {
       "word": "hc_pipeline.log",
-      "count": 91
+      "count": 92
     },
     {
       "word": "resource-events.jsonl",
@@ -43107,11 +43107,11 @@
       "count": 9
     },
     {
-      "word": "in-watcher.log",
+      "word": "index.mjs",
       "count": 1
     },
     {
-      "word": "index.json",
+      "word": "in-watcher.log",
       "count": 1
     }
   ]
