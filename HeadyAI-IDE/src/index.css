@@ -14,10 +14,6 @@
 /* ╚══════════════════════════════════════════════════════════════════╝
 /* HEADY_BRAND:END */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* HeadyAI-IDE Custom Styles */
 :root {
   --heady-primary: #6366f1;
