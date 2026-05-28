@@ -37,7 +37,7 @@
 
 ## Technology Stack
 
-- **Runtime**: Node.js 20+, Python 3.11+ (hybrid)
+- **Runtime**: Node.js 22+, Python 3.11+ (hybrid)
 - **Package Manager**: pnpm 8+ with workspaces
 - **Build System**: Turborepo 1.12+
 - **Languages**: JavaScript (ES2022), TypeScript 5.3+ (strict mode)
@@ -55,7 +55,7 @@
 ### Root Config Files
 
 ```
-package.json          # heady-systems v3.2.2
+package.json          # heady-latent-os v5.0.0
 turbo.json            # Turborepo pipeline (build, test, lint)
 pnpm-workspace.yaml   # Workspace: apps/*, packages/*, services/*, infrastructure/*
 tsconfig.base.json    # Base TypeScript config (ES2022, strict)

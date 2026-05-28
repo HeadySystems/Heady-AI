@@ -1,6 +1,6 @@
 # Heady™ Master Context — For Perplexity Computer Prompts
 >
-> **Version:** 3.2.3 | **Date:** 2026-03-08 | **Owner:** HeadySystems Inc. / HeadyMe
+> **Version:** 5.0.0 | **Date:** 2026-05-27 | **Owner:** HeadySystems Inc. / HeadyMe
 
 ---
 
@@ -9,9 +9,9 @@
 - **Company:** HeadySystems Inc.
 - **Founder / CEO:** Eric Haywood (eric-head / headyme)
 - **GitHub Org:** <https://github.com/HeadyMe> (32 repositories)
-- **Main Repo:** `HeadyMe/Heady-pre-production-9f2f0642` (public, JavaScript, 21 open issues)
-- **Package Name:** `heady-systems` v3.2.3
-- **Architecture:** Continuous Latent Architecture (CLA) with Sacred Geometry (φ = 1.618)
+- **Main Repo:** `HeadyMe/Heady-Testing` (public, JavaScript)
+- **Package Name:** `heady-latent-os` v5.0.0
+- **Architecture:** Liquid Architecture v9.0 with Sacred Geometry (φ = 1.618)
 - **IP:** 60+ provisional patents filed with USPTO
 - **Monorepo Root:** `/home/headyme/Heady/`
 
@@ -88,40 +88,35 @@
 
 ```
 /home/headyme/Heady/
-├── services/                    # 25 service directories
-│   ├── api-gateway.js           # Standalone gateway
-│   ├── heady-brain/             # AI reasoning core (7 files)
-│   ├── heady-buddy/             # AI companion widget (7 files)
-│   ├── heady-cache/             # Caching layer (16 files)
-│   ├── heady-chain/             # Blockchain/chain ops (16 files)
-│   ├── heady-conductor/         # Auto-success orchestrator (7 files)
-│   ├── heady-embed/             # Embedding service (11 files)
-│   ├── heady-eval/              # Evaluation engine (20 files)
-│   ├── heady-federation/        # Federation service (1 file)
-│   ├── heady-guard/             # Security guard (18 files)
-│   ├── heady-health/            # Health checks (12 files)
-│   ├── heady-hive/              # Hive orchestration (1 file)
-│   ├── heady-infer/             # Inference engine (21 files)
-│   ├── heady-mcp/               # MCP protocol server (3 files)
-│   ├── heady-midi/              # MIDI/music AI (24 files)
-│   ├── heady-onboarding/        # Next.js auth + onboarding (71 files)
-│   ├── heady-orchestration/     # Orchestration layer (2 files)
-│   ├── heady-pilot-onboarding/  # Pilot onboarding flow (3 files)
-│   ├── heady-projection/        # Projection engine (21 files)
-│   ├── heady-security/          # Security services (6 files)
-│   ├── heady-testing/           # Test framework (4 files)
-│   ├── heady-ui/                # UI components + generative engine (9 files)
-│   ├── heady-vector/            # Vector memory ops (15 files)
-│   └── heady-web/               # Web portal + 12 sites + remotes (103 files)
-├── packages/                    # 21 shared packages
+├── services/                    # 297 service directories
+│   ├── heady-brain/             # AI reasoning core
+│   ├── heady-buddy/             # AI companion widget
+│   ├── heady-cache/             # Caching layer
+│   ├── heady-chain/             # Blockchain/chain ops
+│   ├── heady-conductor/         # Auto-success orchestrator
+│   ├── heady-embed/             # Embedding service
+│   ├── heady-eval/              # Evaluation engine
+│   ├── heady-guard/             # Security guard
+│   ├── heady-health/            # Health checks
+│   ├── heady-infer/             # Inference engine
+│   ├── heady-mcp/               # MCP protocol server
+│   ├── heady-midi/              # MIDI/music AI
+│   ├── heady-onboarding/        # Next.js auth + onboarding
+│   ├── heady-projection/        # Projection engine
+│   ├── heady-soul/              # Soul orchestrator
+│   ├── heady-vault/             # Secrets management
+│   ├── heady-web/               # Web portal + sites + remotes
+│   └── ...                      # 280+ additional service modules
+├── packages/                    # 78 shared packages
 │   ├── agent-identity/          # Agent ID management
+│   ├── csl-engine/              # CSL engine package
 │   ├── csl-router/              # CSL routing engine
 │   ├── gateway/                 # Gateway package
-│   ├── heady-sacred-geometry-sdk/ # Sacred Geometry SDK (21 files)
-│   ├── heady-semantic-logic/    # Semantic logic (6 files)
-│   ├── heady-semantic-logic-python/ # Python semantic logic
+│   ├── heady-sacred-geometry-sdk/ # Sacred Geometry SDK
+│   ├── heady-semantic-logic/    # Semantic logic
 │   ├── kernel/                  # OS kernel
 │   ├── latent-boundary/         # Latent boundary enforcement
+│   ├── liquid-architecture/     # Liquid architecture package
 │   ├── mcp-server/              # MCP server package
 │   ├── memory-stream/           # Memory stream module
 │   ├── observability-kernel/    # Observability
@@ -130,42 +125,58 @@
 │   ├── phi-math-foundation/     # Full phi math foundation
 │   ├── redis/                   # Redis client
 │   ├── sdk/                     # Heady SDK
-│   ├── shared/                  # Shared utilities (8 files)
+│   ├── shared/                  # Shared utilities
 │   ├── spatial-events/          # Spatial event system
 │   ├── types/                   # TypeScript types
-│   └── vector-memory/           # Vector memory package
-├── src/                         # 2040 source files
+│   ├── vector-memory/           # Vector memory package
+│   └── ...                      # 57+ additional packages
+├── src/                         # 8,850 source files
 │   ├── core/                    # CSL engine, API gateway v2
 │   ├── services/                # Inference gateway, edge diffusion
 │   ├── hcfp/                    # Continuous Fusion Protocol
 │   ├── mcp/                     # MCP server + gateway
-│   ├── edge-workers/            # Edge compute workers
+│   ├── bees/                    # Bee swarm agents
+│   ├── liquid-nodes/            # Liquid node implementations
 │   ├── prompts/                 # System prompts
 │   └── shared/                  # Phi-math, service connector
-├── workers/                     # Cloudflare Workers
+├── workers/                     # 19 Cloudflare Worker directories
 │   ├── api-gateway/             # API gateway worker
 │   ├── auth-service/            # Auth worker
 │   ├── edge-composer/           # Edge composition worker
-│   └── mcp-transport/           # MCP transport worker
-├── cloudflare/                  # Cloudflare configs
-│   ├── heady-edge-node/         # Edge node (6 files)
+│   ├── heady-edge/              # Edge node worker
+│   ├── heady-mcp-worker/        # MCP worker
+│   ├── liquid-gateway-worker/   # Liquid gateway
+│   ├── mcp-transport/           # MCP transport worker
+│   ├── secret-service/          # Secret service worker
+│   └── ...                      # 11+ additional workers
+├── cloudflare/                  # 9 Cloudflare config directories
+│   ├── heady-edge-node/         # Edge node
+│   ├── heady-edge-proxy/        # Edge proxy
+│   ├── heady-edge-router/       # Edge router
+│   ├── headymcp-edge/           # MCP edge
 │   ├── worker-ai-gateway/       # AI gateway worker
 │   ├── worker-heady-router/     # Main router worker
 │   ├── worker-mcp-telemetry/    # MCP telemetry worker
-│   └── worker.js                # 22KB master worker
-├── apps/                        # Web applications
-│   ├── headyweb/                # Main HeadyWeb app (61 files)
+│   └── worker.js                # 25KB master worker
+├── apps/                        # 28 web application directories
+│   ├── headyweb/                # Main HeadyWeb app
+│   ├── headysystems/            # HeadySystems site
+│   ├── headyme/                 # HeadyMe site
+│   ├── headyos/                 # HeadyOS site
+│   ├── headyfinance/            # HeadyFinance site
+│   ├── headyex/                 # HeadyEX site
 │   ├── gateway/                 # Gateway app
 │   ├── command-center/          # Command center UI
 │   ├── heady-io-docs/           # HeadyIO documentation
-│   └── heady-mcp-portal/        # MCP portal UI
+│   ├── heady-mcp-portal/        # MCP portal UI
+│   └── ...                      # 18+ additional apps
 ├── platform-fixes/              # CF worker hotfixes (28 files)
-├── infra/                       # Infrastructure (103 files)
+├── infra/                       # Infrastructure (448 files)
 ├── enterprise/                  # Enterprise features (94 files)
-├── configs/                     # Config files (273 files)
-├── docs/                        # Documentation (567 files)
-├── scripts/                     # Build/deploy scripts (73 files)
-├── tests/                       # Test suites (226 files)
+├── configs/                     # Config files (510 files)
+├── docs/                        # Documentation (1,854 files)
+├── scripts/                     # Build/deploy scripts (572 files)
+├── tests/                       # Test suites (389 files)
 └── templates/                   # Templates (60 files)
 ```
 
@@ -200,24 +211,24 @@ headyweb, admin-ui, headydocs, instant, 1ime1
 
 ## 6. Technology Stack
 
-- **Runtime:** Node.js 20+
+- **Runtime:** Node.js 22+ (ESM only, zero `require()`)
 - **Frontend:** Next.js 14 (onboarding), React (remotes/apps), vanilla JS (sites)
 - **Cloud:** Google Cloud Run, Cloudflare Workers, Cloudflare Pages
-- **AI Providers:** Groq, Gemini, Claude, OpenAI, HuggingFace
+- **AI Providers:** Groq, Gemini, Claude, OpenAI, HuggingFace, Perplexity
 - **Math Foundation:** Sacred Geometry — φ (1.618), Fibonacci sequences, CSL gates
-- **Database:** PostgreSQL with pgvector, Redis, DuckDB
-- **Observability:** OpenTelemetry, structured logging, health probes
-- **Edge:** Cloudflare Workers with KV caching, Durable Objects
+- **Database:** Neon PostgreSQL with pgvector, Upstash Redis, DuckDB
+- **Observability:** OpenTelemetry, Sentry, Langfuse, structured logging, health probes
+- **Edge:** Cloudflare Workers with KV caching, Durable Objects, Workers AI
 - **CI/CD:** GitHub Actions, Cloud Build, TruffleHog, CodeQL
 - **Containerization:** Docker with φ-scaled resource limits
-- **Package Manager:** pnpm (workspace)
+- **Package Manager:** pnpm 9.15+ (workspace)
 - **Build:** Webpack 5 with Module Federation
 
 ---
 
 ## 7. Docker Production Services
 
-From `docker-compose.production.yml` (v3.2.2):
+From `docker-compose.production.yml` (v4.0.0):
 
 - **postgres** — pgvector-enabled, φ-tuned settings (max_connections=55, random_page_cost=1.618)
 - **redis** — allkeys-lru, 512MB, φ-tuned keepalive/hz
@@ -260,20 +271,20 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 
 | File | Purpose |
 |------|---------|
-| `package.json` | heady-systems v3.2.3 monorepo root |
-| `heady-registry.json` | Platform registry (services, deployments, projections) |
-| `heady-manager.js` | Main entry point / micro-module manager |
+| `package.json` | heady-latent-os v5.0.0 monorepo root |
+| `heady-registry.json` | Platform registry v5.0.0 (services, deployments, projections) |
+| `heady-manager.js` | Main entry point / micro-module manager (127KB, 3422 lines) |
 | `services/heady-onboarding/src/app/api/brain/chat/route.ts` | Buddy chat backend |
 | `services/heady-ui/generative-engine.js` | CSL-gated UI component factory |
 | `src/services/inference-gateway.js` | Multi-provider AI gateway |
 | `src/core/csl-engine/csl-engine.js` | Continuous Semantic Logic engine |
 | `src/mcp/heady-mcp-server.js` | MCP stdio/SSE server |
-| `configs/_domains/site-registry.yaml` | Canonical 24-site registry |
+| `configs/_domains/site-registry.yaml` | Canonical site registry |
 | `src/sites/site-registry.json` | Full site config with branding/features |
-| `docker-compose.production.yml` | φ-scaled production Docker stack |
+| `docker-compose.production.yml` | φ-scaled production Docker stack (v4.0.0) |
 | `Dockerfile.production` | Production multi-stage Dockerfile |
 | `cloudbuild.yaml` | GCP Cloud Build pipeline |
-| `cloudflare/worker.js` | 22KB master Cloudflare worker |
+| `cloudflare/worker.js` | 25KB master Cloudflare worker |
 | `cloudflare/wrangler.toml` | Wrangler configuration |
 | `workers/wrangler.toml` | Workers gateway config |
 | `ecosystem.config.cjs` | PM2 process management |
@@ -290,18 +301,15 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 - Worker naming: `worker-{purpose}` (e.g., `worker-ai-gateway`, `worker-heady-router`)
 - Site IDs match domain slugs (e.g., `headysystems` for `headysystems.com`)
 
-### Known Naming Inconsistencies to Fix
+### Known Naming Inconsistencies (Historical)
 
-- `heady-registry.json` says version `3.0.1` but `package.json` says `3.2.3`
-- `docker-compose.production.yml` references `v3.2.2`
-- `heady-registry.json` says region `us-central1` but HEADY_CONTEXT says `us-east1`
 - Some repos use `heady-rebuild-*` naming (archived battle arena)
 - Mix of `-core` suffix repos and `-production` suffix repos
 - Legacy `HeadyBuddy`, `HeadyAI-IDE`, `HeadyWeb` repos are PascalCase (archived)
 - `headyconnection.org` vs `headyconnection.com` — two separate sites
 - PM2 process names inconsistent: `site-headysystems` vs `site-headysystems-com`
-- `src/sites/site-registry.json` has 12+ sites, `configs/_domains/site-registry.yaml` has 24
 - Worker dir has `api-gateway/` but cloudflare dir also has `worker-ai-gateway/`
+- `docs/context/` snapshot files still reference v3.x — treated as historical snapshots
 
 ---
 
@@ -311,15 +319,11 @@ HeadyBrain, HeadySwarm, HeadyCoder, HeadyCodex, HeadyCopilot, HeadyRefactor, Hea
 
 ---
 
-## 13. Current Known Issues (Pre-Production → Production)
+## 13. Current Known Issues
 
-1. `heady-registry.json` environment says `"pre-production"` — needs `"production"`
-2. Version mismatch: 3.0.1 (registry) vs 3.2.2 (docker) vs 3.2.3 (package.json)
-3. Region mismatch: `us-central1` (registry) vs `us-east1` (HEADY_CONTEXT)
-4. Several services have minimal file counts (heady-federation: 1, heady-hive: 1, heady-orchestration: 2)
-5. `heady-pilot-onboarding` only has 3 files — may be incomplete
-6. Workers and cloudflare directories have overlapping gateway configs
-7. Some site directories in `~/sites/` may not match monorepo `services/heady-web/sites/`
-8. Discord bots need deployment verification
-9. HuggingFace spaces need content sync
-10. `heady-buddy` exists both as top-level dir AND inside `services/`
+1. `docs/context/` contains snapshot copies of root config files at v3.x — these are stale historical artifacts
+2. Workers and cloudflare directories have overlapping gateway configs
+3. Some site directories in `~/sites/` may not match monorepo `services/heady-web/sites/`
+4. Discord bots need deployment verification
+5. HuggingFace spaces need content sync
+6. `heady-buddy` exists both as top-level dir AND inside `services/`

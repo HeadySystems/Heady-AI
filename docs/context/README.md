@@ -7,7 +7,7 @@
 | File | Source | Purpose |
 |------|--------|---------|
 | `00-HEADY-MASTER-CONTEXT.md` | Generated | Complete ecosystem overview — READ FIRST |
-| `package.json` | `/home/headyme/Heady/package.json` | Monorepo root package (v3.2.3) |
+| `package.json` | `/home/headyme/Heady/package.json` | Monorepo root package (v5.0.0) |
 | `heady-registry.json` | `/home/headyme/Heady/heady-registry.json` | Platform service registry |
 | `HEADY_CONTEXT.md` | `/home/headyme/Heady/HEADY_CONTEXT.md` | Auto-generated project context |
 | `site-registry.yaml` | `/home/headyme/Heady/configs/_domains/site-registry.yaml` | 24 web property registry |

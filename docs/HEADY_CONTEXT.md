@@ -7,7 +7,7 @@
 
 - **Name:** HeadySystems Inc.
 - **Founder:** Eric Haywood (eric-head / headyme)
-- **Package:** `heady-systems` v3.2.3
+- **Package:** `heady-latent-os` v5.0.0
 - **Monorepo:** `/home/headyme/Heady/`
 - **Architecture:** Continuous Latent Architecture (CLA) with Sacred Geometry (φ = 1.618)
 
@@ -67,7 +67,7 @@
 ├── docs/                     # VSA reference, patent research, strategic valuation
 ├── site-registry.json        # 9-site projection registry
 ├── .env                      # API keys (NEVER commit to git)
-└── package.json              # heady-systems v3.2.3
+└── package.json              # heady-latent-os v5.0.0
 ```
 
 ## Key Files You MUST Know
@@ -84,7 +84,7 @@
 
 ## Technology Stack
 
-- **Runtime:** Node.js 20+
+- **Runtime:** Node.js 22+
 - **Frontend:** Next.js 14 (onboarding), vanilla JS (sites), React (remotes)
 - **Cloud:** Google Cloud Run, Cloudflare Workers, Cloudflare Pages
 - **AI Providers:** Groq (free), Gemini (credits), Claude (quality), OpenAI, HuggingFace

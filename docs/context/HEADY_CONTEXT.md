@@ -1,15 +1,15 @@
 # Heady™ Project Context — Auto-Generated
 >
 > **READ THIS FIRST, EVERY TIME, NO EXCEPTIONS.**
-> Last scanned: 2026-03-07T21:52:00Z | Version: 3.2.3
+> Last scanned: 2026-05-27T23:59:00Z | Version: 5.0.0
 
 ## Identity
 
 - **Name:** HeadySystems Inc.
-- **Founder:** Eric Head (eric-head / headyme)
-- **Package:** `heady-systems` v3.2.3
+- **Founder:** Eric Haywood (eric-head / headyme)
+- **Package:** `heady-latent-os` v5.0.0
 - **Monorepo:** `/home/headyme/Heady/`
-- **Architecture:** Continuous Latent Architecture (CLA) with Sacred Geometry (φ = 1.618)
+- **Architecture:** Liquid Architecture v9.0 with Sacred Geometry (φ = 1.618)
 
 ## Live Infrastructure — NEVER USE LOCALHOST
 
@@ -42,32 +42,35 @@
 
 ```
 /home/headyme/Heady/
-├── services/
+├── services/                # 297 service directories
 │   ├── heady-onboarding/     # Next.js — Auth, Buddy, Brain/Chat, Pilot Onboarding
 │   ├── heady-ui/             # UI components, generative-engine.js
 │   ├── heady-buddy/          # Buddy widget (deployed via dist/ in sites)
 │   ├── heady-web/            # Web portal shell + remotes
-│   │   ├── sites/            # 9 static sites (headyme, headyos, headybuddy, etc.)
-│   │   └── remotes/          # heady-ide, landing, dashboard, etc.
 │   ├── heady-conductor/      # Auto-success orchestration engine
-│   └── heady-manager/        # Micro-module manager (refactored from unified)
-├── src/
+│   ├── heady-soul/           # Soul orchestrator
+│   ├── heady-vault/          # Secrets management
+│   └── ...                   # 290+ additional services
+├── src/                     # 8,850 source files
 │   ├── core/                 # CSL engine, API gateway v2, ternary orchestration
 │   ├── services/             # Inference gateway, edge diffusion, gateway
 │   ├── hcfp/                 # Heady Continuous Fusion Protocol
 │   ├── mcp/                  # MCP server + gateway
-│   ├── edge-workers/         # Edge compute workers
+│   ├── bees/                 # Bee swarm agents
+│   ├── liquid-nodes/         # Liquid node implementations
 │   ├── prompts/              # System prompts, comparison prompts
 │   └── shared/               # Phi-math, service connector
-├── packages/
-│   └── phi-math-foundation/  # φ mathematics library
+├── packages/                # 78 shared packages
+│   └── phi-math-foundation/  # φ mathematics library (+ 77 others)
+├── apps/                    # 28 web application directories
+├── workers/                 # 19 Cloudflare Worker directories
+├── cloudflare/              # 9 Cloudflare config directories
 ├── platform-fixes/           # CF worker source (fix-2, fix-3, fix-4)
-├── infra/kubernetes/         # K8s configs for pilot deploy
+├── infra/                   # Infrastructure (448 files)
 ├── extensions/               # Chrome extension (HeadyBuddy)
-├── docs/                     # VSA reference, patent research, strategic valuation
-├── site-registry.json        # 9-site projection registry
+├── docs/                     # Documentation (1,854 files)
 ├── .env                      # API keys (NEVER commit to git)
-└── package.json              # heady-systems v3.2.3
+└── package.json              # heady-latent-os v5.0.0
 ```
 
 ## Key Files You MUST Know
@@ -84,10 +87,10 @@
 
 ## Technology Stack
 
-- **Runtime:** Node.js 20+
+- **Runtime:** Node.js 22+ (ESM only, zero `require()`)
 - **Frontend:** Next.js 14 (onboarding), vanilla JS (sites), React (remotes)
 - **Cloud:** Google Cloud Run, Cloudflare Workers, Cloudflare Pages
-- **AI Providers:** Groq (free), Gemini (credits), Claude (quality), OpenAI, HuggingFace
+- **AI Providers:** Groq, Gemini, Claude, OpenAI, HuggingFace, Perplexity
 - **Math Foundation:** Sacred Geometry — φ (1.618), Fibonacci sequences, CSL gates
 - **IP:** 60+ provisional patents filed with USPTO
 
@@ -114,15 +117,14 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/8b1fa38f282c691423c63
 ```
 
 ## Current State (auto-updated by context-scan.sh)
-- **Scanned:** 2026-03-08T04:57:38Z
-- **Package:** heady-systems v3.2.3
+- **Scanned:** 2026-05-27T23:59:00Z
+- **Package:** heady-latent-os v5.0.0
 - **Branch:** main
-- **Last commit:** 24a054a0d feat: permanent project context system
-- **Dirty files:** 3
-- **Total files:** 6407 (2269 JS, 674 TS/TSX)
-- **Services:** api-gateway.js,discord-bot,heady-brain,heady-buddy,heady-cache,heady-chain,heady-conductor,heady-embed,heady-eval,heady-federation,heady-guard,heady-health,heady-hive,heady-infer,heady-mcp,heady-midi,heady-onboarding,heady-orchestration,heady-pilot-onboarding,heady-projection,heady-security,heady-testing,heady-ui,heady-vector,heady-web
-- **Sites:** admin-portal,heady-ai,headycloud,headyconnection-com,headyconnection-org,headyex,headyfinance,headyme,headyos,headystore,headysystems,headyweb
+- **Services:** 297 service directories in `/services`
+- **Packages:** 78 shared packages in `/packages`
+- **Source files:** 8,850 in `/src`
+- **Apps:** 28 web application directories in `/apps`
+- **Workers:** 19 Cloudflare Worker directories in `/workers`
+- **Docs:** 1,854 documentation files
 - **Cloud Run services:**
-  - heady-ide: https://heady-ide-bf4q4zywhq-ue.a.run.app
-  - heady-onboarding: https://heady-onboarding-bf4q4zywhq-ue.a.run.app
-  - headyweb-ide: https://headyweb-ide-bf4q4zywhq-ue.a.run.app
+  - heady-onboarding: https://heady-onboarding-609590223909.us-east1.run.app
