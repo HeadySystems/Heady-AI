@@ -1,6 +1,5 @@
 import https from 'https';
-import loggerPkg from '../utils/logger.js';
-const { logger } = loggerPkg;
+import logger from '../utils/logger.js';
 import { rateLimiter } from './rate-limiter.js';
 import { authenticateJWT } from './auth.js';
 import { createRequire } from 'node:module';
@@ -146,6 +145,7 @@ function setupGateway(app) {
 
   // ── HeadyBuddy Chat — simplified endpoint for chat widget ──
   app.post('/api/ai/chat', async (req, res, next) => {
+    console.log("[DEBUG] Hit /api/ai/chat!", req.body);
     try {
       const { message, session, site, host, model } = req.body;
       if (!message) {
@@ -193,6 +193,7 @@ function setupGateway(app) {
 
   // Provider status — never leak env key names
   app.get('/api/ai/providers', (req, res) => {
+    console.log("[DEBUG] Hit /api/ai/providers!");
     const providers = require('../../config/providers.json');
     const withStatus = providers.providers.map(p => ({
       id: p.id,
