@@ -121,7 +121,7 @@ if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) 
     redisClient.on('error', (err) => log.warn('Redis client error', { errorMessage: err.message }));
     redisClient.connect().catch((err) => {
       log.warn('Redis connect failed — falling back to in-memory rate limiting', { errorMessage: err.message });
-      redisClient = null;
+      // Keep redisClient instantiated but it will reject commands which rate-limit-redis handles.
     });
   }
 }
