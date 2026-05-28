@@ -16796,3 +16796,19 @@ fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Coul
 [2026-05-27 22:40:01.791 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-28T04:40:01.791Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git pull --rebase production main
 fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
 [39m
+Committed: 219560485 — 
+Push failed: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+
+[2026-05-27 22:45:02.602 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-28T04:45:02.601Z] [INFO] Committed 219560485: HCFP-AUTO: 4 file(s) changed — pattern_store.json, hc_pipeline.log, stories.json[39m
+    [35mcomponent[39m: "system"
+[2026-05-27 22:45:02.670 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-28T04:45:02.670Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-27 22:45:02.694 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-28T04:45:02.694Z] [ERROR] Pull --merge also failed: Command failed: git pull --no-rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
+[2026-05-27 22:45:02.694 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-28T04:45:02.694Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — Command failed: git pull --rebase production main
+fatal: unable to access 'https://github.com/HeadyMe/heady-production.git/': Could not resolve host: github.com
+[39m
