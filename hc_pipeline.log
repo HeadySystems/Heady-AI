@@ -222612,3 +222612,786 @@
 [2026-05-29T01:04:24.583Z] [INFO] [distiller] Stage 'Distiller' completed
 [2026-05-29T01:04:24.584Z] [INFO] [distiller] Checkpoint cp_distiller_1780016664583 saved
 [2026-05-29T01:04:24.584Z] [INFO] [distiller] Pipeline run run_1780016664561_4515e2 finished: completed
+[2026-05-29T01:19:24.492Z] [INFO] [system] Pipeline run run_1780017564491_7fa8be started
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Stage 'Channel Entry' started
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Task 'sync_cross_device_context' served from cache
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Task 'determine_launch_mode' served from cache
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Task 'scan_3d_persistent_vector_storage' served from cache
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Task 'resolve_channel_and_identity' served from cache
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Task 'route_to_pipeline_branch' served from cache
+[2026-05-29T01:19:24.492Z] [INFO] [channel-entry] Stage 'Channel Entry' completed
+[2026-05-29T01:19:24.492Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' started
+[2026-05-29T01:19:24.492Z] [INFO] [recon] Task 'scan_codebase_state' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_config_drift' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_service_health_matrix' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_attack_surface' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_dependency_freshness' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_vector_memory_density' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_resource_utilization' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'scan_cost_trajectory' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Task 'build_environment_map' served from cache
+[2026-05-29T01:19:24.493Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' completed
+[2026-05-29T01:19:24.494Z] [INFO] [recon] Checkpoint cp_recon_1780017564493 saved
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Stage 'Intake' started
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_news_feeds' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_repo_changes' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_external_apis' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_health_metrics' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_channel_events' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_connection_health' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_system_state' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_resource_usage' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_security_logs' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'ingest_public_domain_patterns' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Task 'retrieve_3d_vector_context' served from cache
+[2026-05-29T01:19:24.494Z] [INFO] [intake] Stage 'Intake' completed
+[2026-05-29T01:19:24.495Z] [INFO] [intake] Checkpoint cp_intake_1780017564494 saved
+[2026-05-29T01:19:24.495Z] [INFO] [classify] Stage 'Classify' started
+[2026-05-29T01:19:24.495Z] [INFO] [classify] Task 'classify_intent' served from cache
+[2026-05-29T01:19:24.495Z] [INFO] [classify] Task 'classify_domain' served from cache
+[2026-05-29T01:19:24.495Z] [INFO] [classify] Task 'compute_csl_resonance' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [classify] Task 'select_swarm_assignment' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [classify] Task 'check_public_domain_inspiration' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [classify] Stage 'Classify' completed
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Stage 'Triage' started
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Task 'assign_context_scope' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Task 'compute_risk_score' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Task 'select_pipeline_path' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Task 'estimate_cost_preflight' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Task 'validate_governance_policies' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [triage] Stage 'Triage' completed
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Stage 'Decompose' started
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'generate_task_graph' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'assign_subtask_scope' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'allocate_resource_slots' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'select_tools_per_subtask' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'estimate_subtask_costs' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Task 'validate_completion_criteria' served from cache
+[2026-05-29T01:19:24.496Z] [INFO] [decompose] Stage 'Decompose' completed
+[2026-05-29T01:19:24.497Z] [INFO] [decompose] Checkpoint cp_decompose_1780017564496 saved
+[2026-05-29T01:19:24.497Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' started
+[2026-05-29T01:19:24.497Z] [INFO] [trial-and-error] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.497Z] [INFO] [trial-and-error] Task 'setup_sandbox_environments' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'execute_trials_parallel' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'measure_trial_outcomes' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'compare_trial_results' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'select_winner' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'record_trial_learnings' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Task 'cleanup_sandboxes' served from cache
+[2026-05-29T01:19:24.498Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' completed
+[2026-05-29T01:19:24.499Z] [INFO] [trial-and-error] Checkpoint cp_trial-and-error_1780017564498 saved
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Stage 'Orchestrate' started
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Task 'dispatch_subtasks' served from cache
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Task 'spawn_bee_workers' served from cache
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Task 'route_to_agents' served from cache
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Task 'monitor_agent_execution' served from cache
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Task 'collect_agent_results' served from cache
+[2026-05-29T01:19:24.499Z] [INFO] [orchestrate] Stage 'Orchestrate' completed
+[2026-05-29T01:19:24.500Z] [INFO] [orchestrate] Checkpoint cp_orchestrate_1780017564499 saved
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Stage 'Monte Carlo' started
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Task 'run_monte_carlo_simulation' served from cache
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Task 'rank_simulation_outcomes' served from cache
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Task 'prune_low_confidence_paths' served from cache
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Task 'feed_mc_results_to_pattern_engine' served from cache
+[2026-05-29T01:19:24.500Z] [INFO] [monte-carlo] Stage 'Monte Carlo' completed
+[2026-05-29T01:19:24.501Z] [INFO] [monte-carlo] Checkpoint cp_monte-carlo_1780017564500 saved
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Stage 'Arena' started
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Task 'run_arena_battle' served from cache
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Task 'select_arena_winner' served from cache
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Task 'record_arena_learnings' served from cache
+[2026-05-29T01:19:24.501Z] [INFO] [arena] Stage 'Arena' completed
+[2026-05-29T01:19:24.502Z] [INFO] [arena] Checkpoint cp_arena_1780017564501 saved
+[2026-05-29T01:19:24.502Z] [INFO] [judge] Stage 'Judge' started
+[2026-05-29T01:19:24.502Z] [INFO] [judge] Task 'score_candidate_outputs' served from cache
+[2026-05-29T01:19:24.502Z] [INFO] [judge] Task 'apply_confidence_threshold' served from cache
+[2026-05-29T01:19:24.502Z] [INFO] [judge] Task 'log_judgement_event' served from cache
+[2026-05-29T01:19:24.503Z] [INFO] [judge] Stage 'Judge' completed
+[2026-05-29T01:19:24.504Z] [INFO] [judge] Checkpoint cp_judge_1780017564503 saved
+[2026-05-29T01:19:24.504Z] [INFO] [approve] Stage 'Approve' started
+[2026-05-29T01:19:24.504Z] [INFO] [approve] Task 'evaluate_approval_gate' served from cache
+[2026-05-29T01:19:24.504Z] [INFO] [approve] Task 'request_human_approval' served from cache
+[2026-05-29T01:19:24.504Z] [INFO] [approve] Task 'resolve_approval_response' served from cache
+[2026-05-29T01:19:24.504Z] [INFO] [approve] Stage 'Approve' completed
+[2026-05-29T01:19:24.505Z] [INFO] [approve] Checkpoint cp_approve_1780017564504 saved
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Stage 'Execute' started
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Task 'assess_metacognitive_confidence' served from cache
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Task 'execute_final_plan' served from cache
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Task 'collect_execution_artifacts' served from cache
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Task 'enforce_output_safety' served from cache
+[2026-05-29T01:19:24.506Z] [INFO] [execute] Stage 'Execute' completed
+[2026-05-29T01:19:24.507Z] [INFO] [execute] Checkpoint cp_execute_1780017564506 saved
+[2026-05-29T01:19:24.507Z] [INFO] [verify] Stage 'Verify' started
+[2026-05-29T01:19:24.507Z] [INFO] [verify] Task 'evaluate_failures' served from cache
+[2026-05-29T01:19:24.507Z] [INFO] [verify] Task 'run_verification_assertions' served from cache
+[2026-05-29T01:19:24.507Z] [INFO] [verify] Task 'check_system_integrity' served from cache
+[2026-05-29T01:19:24.508Z] [INFO] [verify] Task 'apply_saga_compensation' served from cache
+[2026-05-29T01:19:24.508Z] [INFO] [verify] Task 'mc_replan_failed_tasks' served from cache
+[2026-05-29T01:19:24.508Z] [INFO] [verify] Task 'retry_recoverable' served from cache
+[2026-05-29T01:19:24.508Z] [INFO] [verify] Task 'escalate_unrecoverable' served from cache
+[2026-05-29T01:19:24.508Z] [INFO] [verify] Stage 'Verify' completed
+[2026-05-29T01:19:24.509Z] [INFO] [verify] Checkpoint cp_verify_1780017564508 saved
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' started
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'reflect_on_execution' served from cache
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'assess_confidence_calibration' served from cache
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'identify_blind_spots' served from cache
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'evaluate_cognitive_load' served from cache
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'check_assumption_validity' served from cache
+[2026-05-29T01:19:24.509Z] [INFO] [self-awareness] Task 'measure_prediction_accuracy' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Task 'detect_confirmation_bias' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Task 'assess_knowledge_boundaries' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Task 'update_self_state_model' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Task 'log_awareness_snapshot' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Task 'generate_self_awareness_report' served from cache
+[2026-05-29T01:19:24.510Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' completed
+[2026-05-29T01:19:24.511Z] [INFO] [self-awareness] Checkpoint cp_self-awareness_1780017564510 saved
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Stage 'Self-Critique' started
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'record_run_critique' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'diagnose_bottlenecks' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'check_all_connection_health' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'identify_improvement_candidates' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'run_meta_analysis' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'critique_own_output' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'detect_reasoning_biases' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'generate_critique_score' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'identify_system_gaps' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'analyze_resource_waste' served from cache
+[2026-05-29T01:19:24.511Z] [INFO] [self-critique] Task 'evaluate_security_posture' served from cache
+[2026-05-29T01:19:24.512Z] [INFO] [self-critique] Stage 'Self-Critique' completed
+[2026-05-29T01:19:24.512Z] [INFO] [self-critique] Checkpoint cp_self-critique_1780017564512 saved
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' started
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'detect_mistakes_in_session' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'catalog_current_run_failures' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'retrieve_historical_failures' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'perform_root_cause_analysis' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'detect_recurring_patterns' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'generate_prevention_rules' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'update_anti_regression_guards' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'compute_mistake_cost' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'update_wisdom_json' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'immunize_pipeline' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Task 'log_mistake_report' served from cache
+[2026-05-29T01:19:24.513Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' completed
+[2026-05-29T01:19:24.514Z] [INFO] [mistake-analysis] Checkpoint cp_mistake-analysis_1780017564513 saved
+[2026-05-29T01:19:24.514Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' started
+[2026-05-29T01:19:24.514Z] [INFO] [optimization-ops] Task 'apply_pattern_improvements' served from cache
+[2026-05-29T01:19:24.514Z] [INFO] [optimization-ops] Task 'adjust_mc_strategy_weights' served from cache
+[2026-05-29T01:19:24.514Z] [INFO] [optimization-ops] Task 'adjust_worker_pool_concurrency' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'update_channel_optimizations' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'tune_pipeline_parameters' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'compress_memory_store' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'reconcile_cost_actuals' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'profile_service_performance' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_dead_code' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_unused_services' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_unused_endpoints' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'analyze_cost_per_request' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_over_provisioned' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_under_utilized_workers' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_redundant_data' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'detect_suboptimal_configs' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'rank_optimization_impact' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'generate_optimization_plan' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'apply_optimization_ops_plan' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'apply_mistake_prevention_rules' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'invalidate_stale_caches' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'cleanup_orphaned_resources' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'execute_routine_maintenance' served from cache
+[2026-05-29T01:19:24.515Z] [INFO] [optimization-ops] Task 'optimize_storage_utilization' served from cache
+[2026-05-29T01:19:24.516Z] [INFO] [optimization-ops] Task 'enforce_cost_boundaries' served from cache
+[2026-05-29T01:19:24.516Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' completed
+[2026-05-29T01:19:24.517Z] [INFO] [optimization-ops] Checkpoint cp_optimization-ops_1780017564516 saved
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' started
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'run_continuous_search_queries' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'index_search_results' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'emit_knowledge_gap_alerts' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_new_tools_and_libraries' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_ai_research_papers' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_competitor_innovations' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_security_advisories' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_performance_techniques' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'search_architecture_patterns' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'evaluate_discoveries' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'absorb_high_value_findings' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Task 'propose_integrations' served from cache
+[2026-05-29T01:19:24.517Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' completed
+[2026-05-29T01:19:24.518Z] [INFO] [continuous-search] Checkpoint cp_continuous-search_1780017564517 saved
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Stage 'Evolution & Mutation' started
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Task 'simulate_evolved_strategies' served from cache
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Task 'select_evolution_candidates' served from cache
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Task 'commit_evolution_deltas' served from cache
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Task 'analyze_evolution_candidates' served from cache
+[2026-05-29T01:19:24.518Z] [INFO] [evolution] Task 'generate_mutations' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Task 'measure_mutation_fitness' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Task 'select_beneficial_mutations' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Task 'promote_to_config' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Task 'record_evolution_history' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Task 'update_mutation_strategy' served from cache
+[2026-05-29T01:19:24.519Z] [INFO] [evolution] Stage 'Evolution & Mutation' completed
+[2026-05-29T01:19:24.520Z] [INFO] [evolution] Checkpoint cp_evolution_1780017564519 saved
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Stage 'Receipt' started
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'persist_results' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'sync_registry_and_docs' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'validate_notebook_integrity' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'check_doc_owner_freshness' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'record_pipeline_improvements' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'log_run_config_hash' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'feed_stage_timing_to_mc' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'feed_task_timing_to_patterns' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'publish_metrics_to_channels' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'check_cross_channel_seamlessness' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'propose_micro_upgrades' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'archive_run_to_history' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'sign_pipeline_receipt' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'emit_response_to_caller' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'close_session_log' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'persist_evolution_outcomes' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'persist_mistake_learnings' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'persist_search_discoveries' served from cache
+[2026-05-29T01:19:24.520Z] [INFO] [receipt] Task 'update_concept_index' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'compute_readiness_score' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'run_security_audit' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'perform_system_backup' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'scan_for_threats' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'verify_data_integrity' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Task 'send_checkpoint_email' served from cache
+[2026-05-29T01:19:24.521Z] [INFO] [receipt] Stage 'Receipt' completed
+[2026-05-29T01:19:24.522Z] [INFO] [receipt] Checkpoint cp_receipt_1780017564521 saved
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Stage 'Distiller' started
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'extract_execution_trace' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'identify_decision_points' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'compress_to_tier1_recipe' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'compress_to_tier2_recipe' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'synthesize_tier3_meta_recipe' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'score_recipe_quality' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'store_recipe_in_skills' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'update_skill_manifest' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'feed_recipes_to_memory' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'emit_distillation_metrics' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'check_recipe_determinism' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Task 'archive_trace_to_cold_storage' served from cache
+[2026-05-29T01:19:24.522Z] [INFO] [distiller] Stage 'Distiller' completed
+[2026-05-29T01:19:24.524Z] [INFO] [distiller] Checkpoint cp_distiller_1780017564522 saved
+[2026-05-29T01:19:24.524Z] [INFO] [distiller] Pipeline run run_1780017564491_7fa8be finished: completed
+[2026-05-29T01:19:24.531Z] [INFO] [system] Pipeline run run_1780017564530_bfebf6 started
+[2026-05-29T01:19:24.531Z] [INFO] [channel-entry] Stage 'Channel Entry' started
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Task 'sync_cross_device_context' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Task 'determine_launch_mode' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Task 'scan_3d_persistent_vector_storage' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Task 'resolve_channel_and_identity' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Task 'route_to_pipeline_branch' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [channel-entry] Stage 'Channel Entry' completed
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' started
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_codebase_state' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_config_drift' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_service_health_matrix' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_attack_surface' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_dependency_freshness' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_vector_memory_density' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_resource_utilization' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'scan_cost_trajectory' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Task 'build_environment_map' served from cache
+[2026-05-29T01:19:24.532Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' completed
+[2026-05-29T01:19:24.533Z] [INFO] [recon] Checkpoint cp_recon_1780017564532 saved
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Stage 'Intake' started
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_news_feeds' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_repo_changes' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_external_apis' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_health_metrics' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_channel_events' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_connection_health' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_system_state' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_resource_usage' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_security_logs' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'ingest_public_domain_patterns' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Task 'retrieve_3d_vector_context' served from cache
+[2026-05-29T01:19:24.533Z] [INFO] [intake] Stage 'Intake' completed
+[2026-05-29T01:19:24.534Z] [INFO] [intake] Checkpoint cp_intake_1780017564533 saved
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Stage 'Classify' started
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Task 'classify_intent' served from cache
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Task 'classify_domain' served from cache
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Task 'compute_csl_resonance' served from cache
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Task 'select_swarm_assignment' served from cache
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Task 'check_public_domain_inspiration' served from cache
+[2026-05-29T01:19:24.534Z] [INFO] [classify] Stage 'Classify' completed
+[2026-05-29T01:19:24.534Z] [INFO] [triage] Stage 'Triage' started
+[2026-05-29T01:19:24.534Z] [INFO] [triage] Task 'assign_context_scope' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [triage] Task 'compute_risk_score' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [triage] Task 'select_pipeline_path' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [triage] Task 'estimate_cost_preflight' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [triage] Task 'validate_governance_policies' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [triage] Stage 'Triage' completed
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Stage 'Decompose' started
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'generate_task_graph' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'assign_subtask_scope' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'allocate_resource_slots' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'select_tools_per_subtask' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'estimate_subtask_costs' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Task 'validate_completion_criteria' served from cache
+[2026-05-29T01:19:24.535Z] [INFO] [decompose] Stage 'Decompose' completed
+[2026-05-29T01:19:24.536Z] [INFO] [decompose] Checkpoint cp_decompose_1780017564535 saved
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' started
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'setup_sandbox_environments' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'execute_trials_parallel' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'measure_trial_outcomes' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'compare_trial_results' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'select_winner' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'record_trial_learnings' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Task 'cleanup_sandboxes' served from cache
+[2026-05-29T01:19:24.536Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' completed
+[2026-05-29T01:19:24.537Z] [INFO] [trial-and-error] Checkpoint cp_trial-and-error_1780017564536 saved
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Stage 'Orchestrate' started
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Task 'dispatch_subtasks' served from cache
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Task 'spawn_bee_workers' served from cache
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Task 'route_to_agents' served from cache
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Task 'monitor_agent_execution' served from cache
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Task 'collect_agent_results' served from cache
+[2026-05-29T01:19:24.537Z] [INFO] [orchestrate] Stage 'Orchestrate' completed
+[2026-05-29T01:19:24.538Z] [INFO] [orchestrate] Checkpoint cp_orchestrate_1780017564537 saved
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Stage 'Monte Carlo' started
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Task 'run_monte_carlo_simulation' served from cache
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Task 'rank_simulation_outcomes' served from cache
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Task 'prune_low_confidence_paths' served from cache
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Task 'feed_mc_results_to_pattern_engine' served from cache
+[2026-05-29T01:19:24.539Z] [INFO] [monte-carlo] Stage 'Monte Carlo' completed
+[2026-05-29T01:19:24.540Z] [INFO] [monte-carlo] Checkpoint cp_monte-carlo_1780017564539 saved
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Stage 'Arena' started
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Task 'run_arena_battle' served from cache
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Task 'select_arena_winner' served from cache
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Task 'record_arena_learnings' served from cache
+[2026-05-29T01:19:24.540Z] [INFO] [arena] Stage 'Arena' completed
+[2026-05-29T01:19:24.541Z] [INFO] [arena] Checkpoint cp_arena_1780017564540 saved
+[2026-05-29T01:19:24.541Z] [INFO] [judge] Stage 'Judge' started
+[2026-05-29T01:19:24.541Z] [INFO] [judge] Task 'score_candidate_outputs' served from cache
+[2026-05-29T01:19:24.541Z] [INFO] [judge] Task 'apply_confidence_threshold' served from cache
+[2026-05-29T01:19:24.541Z] [INFO] [judge] Task 'log_judgement_event' served from cache
+[2026-05-29T01:19:24.541Z] [INFO] [judge] Stage 'Judge' completed
+[2026-05-29T01:19:24.542Z] [INFO] [judge] Checkpoint cp_judge_1780017564541 saved
+[2026-05-29T01:19:24.542Z] [INFO] [approve] Stage 'Approve' started
+[2026-05-29T01:19:24.542Z] [INFO] [approve] Task 'evaluate_approval_gate' served from cache
+[2026-05-29T01:19:24.542Z] [INFO] [approve] Task 'request_human_approval' served from cache
+[2026-05-29T01:19:24.542Z] [INFO] [approve] Task 'resolve_approval_response' served from cache
+[2026-05-29T01:19:24.542Z] [INFO] [approve] Stage 'Approve' completed
+[2026-05-29T01:19:24.543Z] [INFO] [approve] Checkpoint cp_approve_1780017564542 saved
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Stage 'Execute' started
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Task 'assess_metacognitive_confidence' served from cache
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Task 'execute_final_plan' served from cache
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Task 'collect_execution_artifacts' served from cache
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Task 'enforce_output_safety' served from cache
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Stage 'Execute' completed
+[2026-05-29T01:19:24.543Z] [INFO] [execute] Checkpoint cp_execute_1780017564543 saved
+[2026-05-29T01:19:24.543Z] [INFO] [verify] Stage 'Verify' started
+[2026-05-29T01:19:24.543Z] [INFO] [verify] Task 'evaluate_failures' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'run_verification_assertions' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'check_system_integrity' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'apply_saga_compensation' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'mc_replan_failed_tasks' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'retry_recoverable' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Task 'escalate_unrecoverable' served from cache
+[2026-05-29T01:19:24.544Z] [INFO] [verify] Stage 'Verify' completed
+[2026-05-29T01:19:24.545Z] [INFO] [verify] Checkpoint cp_verify_1780017564544 saved
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' started
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'reflect_on_execution' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'assess_confidence_calibration' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'identify_blind_spots' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'evaluate_cognitive_load' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'check_assumption_validity' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'measure_prediction_accuracy' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'detect_confirmation_bias' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'assess_knowledge_boundaries' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'update_self_state_model' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'log_awareness_snapshot' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Task 'generate_self_awareness_report' served from cache
+[2026-05-29T01:19:24.545Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' completed
+[2026-05-29T01:19:24.546Z] [INFO] [self-awareness] Checkpoint cp_self-awareness_1780017564545 saved
+[2026-05-29T01:19:24.546Z] [INFO] [self-critique] Stage 'Self-Critique' started
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'record_run_critique' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'diagnose_bottlenecks' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'check_all_connection_health' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'identify_improvement_candidates' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'run_meta_analysis' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'critique_own_output' served from cache
+[2026-05-29T01:19:24.547Z] [INFO] [self-critique] Task 'detect_reasoning_biases' served from cache
+[2026-05-29T01:19:24.548Z] [INFO] [self-critique] Task 'generate_critique_score' served from cache
+[2026-05-29T01:19:24.548Z] [INFO] [self-critique] Task 'identify_system_gaps' served from cache
+[2026-05-29T01:19:24.548Z] [INFO] [self-critique] Task 'analyze_resource_waste' served from cache
+[2026-05-29T01:19:24.548Z] [INFO] [self-critique] Task 'evaluate_security_posture' served from cache
+[2026-05-29T01:19:24.548Z] [INFO] [self-critique] Stage 'Self-Critique' completed
+[2026-05-29T01:19:24.549Z] [INFO] [self-critique] Checkpoint cp_self-critique_1780017564548 saved
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' started
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'detect_mistakes_in_session' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'catalog_current_run_failures' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'retrieve_historical_failures' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'perform_root_cause_analysis' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'detect_recurring_patterns' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'generate_prevention_rules' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'update_anti_regression_guards' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'compute_mistake_cost' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'update_wisdom_json' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'immunize_pipeline' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Task 'log_mistake_report' served from cache
+[2026-05-29T01:19:24.549Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' completed
+[2026-05-29T01:19:24.550Z] [INFO] [mistake-analysis] Checkpoint cp_mistake-analysis_1780017564549 saved
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' started
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'apply_pattern_improvements' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'adjust_mc_strategy_weights' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'adjust_worker_pool_concurrency' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'update_channel_optimizations' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'tune_pipeline_parameters' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'compress_memory_store' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'reconcile_cost_actuals' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'profile_service_performance' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_dead_code' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_unused_services' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_unused_endpoints' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'analyze_cost_per_request' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_over_provisioned' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_under_utilized_workers' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_redundant_data' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'detect_suboptimal_configs' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'rank_optimization_impact' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'generate_optimization_plan' served from cache
+[2026-05-29T01:19:24.550Z] [INFO] [optimization-ops] Task 'apply_optimization_ops_plan' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'apply_mistake_prevention_rules' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'invalidate_stale_caches' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'cleanup_orphaned_resources' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'execute_routine_maintenance' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'optimize_storage_utilization' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Task 'enforce_cost_boundaries' served from cache
+[2026-05-29T01:19:24.551Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' completed
+[2026-05-29T01:19:24.552Z] [INFO] [optimization-ops] Checkpoint cp_optimization-ops_1780017564551 saved
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' started
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'run_continuous_search_queries' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'index_search_results' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'emit_knowledge_gap_alerts' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_new_tools_and_libraries' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_ai_research_papers' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_competitor_innovations' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_security_advisories' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_performance_techniques' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'search_architecture_patterns' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'evaluate_discoveries' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'absorb_high_value_findings' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Task 'propose_integrations' served from cache
+[2026-05-29T01:19:24.552Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' completed
+[2026-05-29T01:19:24.553Z] [INFO] [continuous-search] Checkpoint cp_continuous-search_1780017564552 saved
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Stage 'Evolution & Mutation' started
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'simulate_evolved_strategies' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'select_evolution_candidates' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'commit_evolution_deltas' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'analyze_evolution_candidates' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'generate_mutations' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'measure_mutation_fitness' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'select_beneficial_mutations' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'promote_to_config' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'record_evolution_history' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Task 'update_mutation_strategy' served from cache
+[2026-05-29T01:19:24.553Z] [INFO] [evolution] Stage 'Evolution & Mutation' completed
+[2026-05-29T01:19:24.555Z] [INFO] [evolution] Checkpoint cp_evolution_1780017564553 saved
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Stage 'Receipt' started
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'persist_results' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'sync_registry_and_docs' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'validate_notebook_integrity' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'check_doc_owner_freshness' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'record_pipeline_improvements' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'log_run_config_hash' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'feed_stage_timing_to_mc' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'feed_task_timing_to_patterns' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'publish_metrics_to_channels' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'check_cross_channel_seamlessness' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'propose_micro_upgrades' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'archive_run_to_history' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'sign_pipeline_receipt' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'emit_response_to_caller' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'close_session_log' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'persist_evolution_outcomes' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'persist_mistake_learnings' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'persist_search_discoveries' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'update_concept_index' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'compute_readiness_score' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'run_security_audit' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'perform_system_backup' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'scan_for_threats' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'verify_data_integrity' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Task 'send_checkpoint_email' served from cache
+[2026-05-29T01:19:24.555Z] [INFO] [receipt] Stage 'Receipt' completed
+[2026-05-29T01:19:24.556Z] [INFO] [receipt] Checkpoint cp_receipt_1780017564555 saved
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Stage 'Distiller' started
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Task 'extract_execution_trace' served from cache
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Task 'identify_decision_points' served from cache
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Task 'compress_to_tier1_recipe' served from cache
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Task 'compress_to_tier2_recipe' served from cache
+[2026-05-29T01:19:24.556Z] [INFO] [distiller] Task 'synthesize_tier3_meta_recipe' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'score_recipe_quality' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'store_recipe_in_skills' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'update_skill_manifest' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'feed_recipes_to_memory' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'emit_distillation_metrics' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'check_recipe_determinism' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Task 'archive_trace_to_cold_storage' served from cache
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Stage 'Distiller' completed
+[2026-05-29T01:19:24.557Z] [INFO] [distiller] Checkpoint cp_distiller_1780017564557 saved
+[2026-05-29T01:19:24.558Z] [INFO] [distiller] Pipeline run run_1780017564530_bfebf6 finished: completed
+[2026-05-29T01:19:24.563Z] [INFO] [system] Pipeline run run_1780017564562_d5757f started
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Stage 'Channel Entry' started
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Task 'sync_cross_device_context' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Task 'determine_launch_mode' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Task 'scan_3d_persistent_vector_storage' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Task 'resolve_channel_and_identity' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Task 'route_to_pipeline_branch' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [channel-entry] Stage 'Channel Entry' completed
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' started
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_codebase_state' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_config_drift' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_service_health_matrix' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_attack_surface' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_dependency_freshness' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_vector_memory_density' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_resource_utilization' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'scan_cost_trajectory' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Task 'build_environment_map' served from cache
+[2026-05-29T01:19:24.563Z] [INFO] [recon] Stage 'Reconnaissance & Deep Scan' completed
+[2026-05-29T01:19:24.564Z] [INFO] [recon] Checkpoint cp_recon_1780017564563 saved
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Stage 'Intake' started
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_news_feeds' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_repo_changes' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_external_apis' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_health_metrics' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_channel_events' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_connection_health' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_system_state' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_resource_usage' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_security_logs' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'ingest_public_domain_patterns' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Task 'retrieve_3d_vector_context' served from cache
+[2026-05-29T01:19:24.564Z] [INFO] [intake] Stage 'Intake' completed
+[2026-05-29T01:19:24.565Z] [INFO] [intake] Checkpoint cp_intake_1780017564564 saved
+[2026-05-29T01:19:24.565Z] [INFO] [classify] Stage 'Classify' started
+[2026-05-29T01:19:24.565Z] [INFO] [classify] Task 'classify_intent' served from cache
+[2026-05-29T01:19:24.565Z] [INFO] [classify] Task 'classify_domain' served from cache
+[2026-05-29T01:19:24.565Z] [INFO] [classify] Task 'compute_csl_resonance' served from cache
+[2026-05-29T01:19:24.565Z] [INFO] [classify] Task 'select_swarm_assignment' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [classify] Task 'check_public_domain_inspiration' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [classify] Stage 'Classify' completed
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Stage 'Triage' started
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Task 'assign_context_scope' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Task 'compute_risk_score' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Task 'select_pipeline_path' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Task 'estimate_cost_preflight' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Task 'validate_governance_policies' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [triage] Stage 'Triage' completed
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Stage 'Decompose' started
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'generate_task_graph' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'assign_subtask_scope' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'allocate_resource_slots' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'select_tools_per_subtask' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'estimate_subtask_costs' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Task 'validate_completion_criteria' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Stage 'Decompose' completed
+[2026-05-29T01:19:24.566Z] [INFO] [decompose] Checkpoint cp_decompose_1780017564566 saved
+[2026-05-29T01:19:24.566Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' started
+[2026-05-29T01:19:24.566Z] [INFO] [trial-and-error] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.566Z] [INFO] [trial-and-error] Task 'setup_sandbox_environments' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'execute_trials_parallel' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'measure_trial_outcomes' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'compare_trial_results' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'select_winner' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'record_trial_learnings' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Task 'cleanup_sandboxes' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Stage 'Trial & Error Sandbox' completed
+[2026-05-29T01:19:24.567Z] [INFO] [trial-and-error] Checkpoint cp_trial-and-error_1780017564567 saved
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Stage 'Orchestrate' started
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Task 'dispatch_subtasks' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Task 'spawn_bee_workers' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Task 'route_to_agents' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Task 'monitor_agent_execution' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Task 'collect_agent_results' served from cache
+[2026-05-29T01:19:24.567Z] [INFO] [orchestrate] Stage 'Orchestrate' completed
+[2026-05-29T01:19:24.568Z] [INFO] [orchestrate] Checkpoint cp_orchestrate_1780017564567 saved
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Stage 'Monte Carlo' started
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Task 'run_monte_carlo_simulation' served from cache
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Task 'rank_simulation_outcomes' served from cache
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Task 'prune_low_confidence_paths' served from cache
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Task 'feed_mc_results_to_pattern_engine' served from cache
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Stage 'Monte Carlo' completed
+[2026-05-29T01:19:24.568Z] [INFO] [monte-carlo] Checkpoint cp_monte-carlo_1780017564568 saved
+[2026-05-29T01:19:24.568Z] [INFO] [arena] Stage 'Arena' started
+[2026-05-29T01:19:24.568Z] [INFO] [arena] Task 'generate_candidate_solutions' served from cache
+[2026-05-29T01:19:24.568Z] [INFO] [arena] Task 'run_arena_battle' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [arena] Task 'select_arena_winner' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [arena] Task 'record_arena_learnings' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [arena] Stage 'Arena' completed
+[2026-05-29T01:19:24.569Z] [INFO] [arena] Checkpoint cp_arena_1780017564569 saved
+[2026-05-29T01:19:24.569Z] [INFO] [judge] Stage 'Judge' started
+[2026-05-29T01:19:24.569Z] [INFO] [judge] Task 'score_candidate_outputs' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [judge] Task 'apply_confidence_threshold' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [judge] Task 'log_judgement_event' served from cache
+[2026-05-29T01:19:24.569Z] [INFO] [judge] Stage 'Judge' completed
+[2026-05-29T01:19:24.570Z] [INFO] [judge] Checkpoint cp_judge_1780017564569 saved
+[2026-05-29T01:19:24.570Z] [INFO] [approve] Stage 'Approve' started
+[2026-05-29T01:19:24.570Z] [INFO] [approve] Task 'evaluate_approval_gate' served from cache
+[2026-05-29T01:19:24.570Z] [INFO] [approve] Task 'request_human_approval' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [approve] Task 'resolve_approval_response' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [approve] Stage 'Approve' completed
+[2026-05-29T01:19:24.571Z] [INFO] [approve] Checkpoint cp_approve_1780017564571 saved
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Stage 'Execute' started
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Task 'assess_metacognitive_confidence' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Task 'execute_final_plan' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Task 'collect_execution_artifacts' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Task 'enforce_output_safety' served from cache
+[2026-05-29T01:19:24.571Z] [INFO] [execute] Stage 'Execute' completed
+[2026-05-29T01:19:24.572Z] [INFO] [execute] Checkpoint cp_execute_1780017564571 saved
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Stage 'Verify' started
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'evaluate_failures' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'run_verification_assertions' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'check_system_integrity' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'apply_saga_compensation' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'mc_replan_failed_tasks' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'retry_recoverable' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Task 'escalate_unrecoverable' served from cache
+[2026-05-29T01:19:24.572Z] [INFO] [verify] Stage 'Verify' completed
+[2026-05-29T01:19:24.573Z] [INFO] [verify] Checkpoint cp_verify_1780017564572 saved
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' started
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'reflect_on_execution' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'assess_confidence_calibration' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'identify_blind_spots' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'evaluate_cognitive_load' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'check_assumption_validity' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'measure_prediction_accuracy' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'detect_confirmation_bias' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'assess_knowledge_boundaries' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'update_self_state_model' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'log_awareness_snapshot' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Task 'generate_self_awareness_report' served from cache
+[2026-05-29T01:19:24.573Z] [INFO] [self-awareness] Stage 'Self-Awareness Assessment' completed
+[2026-05-29T01:19:24.574Z] [INFO] [self-awareness] Checkpoint cp_self-awareness_1780017564574 saved
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Stage 'Self-Critique' started
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'record_run_critique' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'diagnose_bottlenecks' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'check_all_connection_health' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'identify_improvement_candidates' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'run_meta_analysis' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'critique_own_output' served from cache
+[2026-05-29T01:19:24.574Z] [INFO] [self-critique] Task 'detect_reasoning_biases' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Task 'generate_critique_score' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Task 'identify_system_gaps' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Task 'analyze_resource_waste' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Task 'evaluate_security_posture' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Stage 'Self-Critique' completed
+[2026-05-29T01:19:24.575Z] [INFO] [self-critique] Checkpoint cp_self-critique_1780017564575 saved
+[2026-05-29T01:19:24.575Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' started
+[2026-05-29T01:19:24.575Z] [INFO] [mistake-analysis] Task 'detect_mistakes_in_session' served from cache
+[2026-05-29T01:19:24.575Z] [INFO] [mistake-analysis] Task 'catalog_current_run_failures' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'retrieve_historical_failures' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'perform_root_cause_analysis' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'detect_recurring_patterns' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'generate_prevention_rules' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'update_anti_regression_guards' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'compute_mistake_cost' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'update_wisdom_json' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'immunize_pipeline' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Task 'log_mistake_report' served from cache
+[2026-05-29T01:19:24.576Z] [INFO] [mistake-analysis] Stage 'Mistake Analysis & Prevention' completed
+[2026-05-29T01:19:24.577Z] [INFO] [mistake-analysis] Checkpoint cp_mistake-analysis_1780017564576 saved
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' started
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'apply_pattern_improvements' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'adjust_mc_strategy_weights' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'adjust_worker_pool_concurrency' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'update_channel_optimizations' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'tune_pipeline_parameters' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'compress_memory_store' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'reconcile_cost_actuals' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'profile_service_performance' served from cache
+[2026-05-29T01:19:24.577Z] [INFO] [optimization-ops] Task 'detect_dead_code' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_unused_services' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_unused_endpoints' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'analyze_cost_per_request' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_over_provisioned' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_under_utilized_workers' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_redundant_data' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'detect_suboptimal_configs' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'rank_optimization_impact' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'generate_optimization_plan' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'apply_optimization_ops_plan' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'apply_mistake_prevention_rules' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'invalidate_stale_caches' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'cleanup_orphaned_resources' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'execute_routine_maintenance' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'optimize_storage_utilization' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Task 'enforce_cost_boundaries' served from cache
+[2026-05-29T01:19:24.578Z] [INFO] [optimization-ops] Stage 'Optimization Ops Scanning' completed
+[2026-05-29T01:19:24.579Z] [INFO] [optimization-ops] Checkpoint cp_optimization-ops_1780017564578 saved
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' started
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'run_continuous_search_queries' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'index_search_results' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'emit_knowledge_gap_alerts' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_new_tools_and_libraries' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_ai_research_papers' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_competitor_innovations' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_security_advisories' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_performance_techniques' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'search_architecture_patterns' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'evaluate_discoveries' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'absorb_high_value_findings' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Task 'propose_integrations' served from cache
+[2026-05-29T01:19:24.579Z] [INFO] [continuous-search] Stage 'Continuous Search & Discovery' completed
+[2026-05-29T01:19:24.580Z] [INFO] [continuous-search] Checkpoint cp_continuous-search_1780017564579 saved
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Stage 'Evolution & Mutation' started
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'simulate_evolved_strategies' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'select_evolution_candidates' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'commit_evolution_deltas' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'analyze_evolution_candidates' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'generate_mutations' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'measure_mutation_fitness' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'select_beneficial_mutations' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'promote_to_config' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'record_evolution_history' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Task 'update_mutation_strategy' served from cache
+[2026-05-29T01:19:24.580Z] [INFO] [evolution] Stage 'Evolution & Mutation' completed
+[2026-05-29T01:19:24.581Z] [INFO] [evolution] Checkpoint cp_evolution_1780017564580 saved
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Stage 'Receipt' started
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'persist_results' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'sync_registry_and_docs' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'validate_notebook_integrity' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'check_doc_owner_freshness' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'record_pipeline_improvements' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'log_run_config_hash' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'feed_stage_timing_to_mc' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'feed_task_timing_to_patterns' served from cache
+[2026-05-29T01:19:24.581Z] [INFO] [receipt] Task 'publish_metrics_to_channels' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'check_cross_channel_seamlessness' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'propose_micro_upgrades' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'archive_run_to_history' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'sign_pipeline_receipt' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'emit_response_to_caller' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'close_session_log' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'persist_evolution_outcomes' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'persist_mistake_learnings' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'persist_search_discoveries' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'update_concept_index' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'compute_readiness_score' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'run_security_audit' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'perform_system_backup' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'scan_for_threats' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'verify_data_integrity' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Task 'send_checkpoint_email' served from cache
+[2026-05-29T01:19:24.582Z] [INFO] [receipt] Stage 'Receipt' completed
+[2026-05-29T01:19:24.583Z] [INFO] [receipt] Checkpoint cp_receipt_1780017564582 saved
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Stage 'Distiller' started
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'extract_execution_trace' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'identify_decision_points' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'compress_to_tier1_recipe' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'compress_to_tier2_recipe' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'synthesize_tier3_meta_recipe' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'score_recipe_quality' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'store_recipe_in_skills' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'update_skill_manifest' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'feed_recipes_to_memory' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'emit_distillation_metrics' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'check_recipe_determinism' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Task 'archive_trace_to_cold_storage' served from cache
+[2026-05-29T01:19:24.583Z] [INFO] [distiller] Stage 'Distiller' completed
+[2026-05-29T01:19:24.585Z] [INFO] [distiller] Checkpoint cp_distiller_1780017564583 saved
+[2026-05-29T01:19:24.585Z] [INFO] [distiller] Pipeline run run_1780017564562_d5757f finished: completed
