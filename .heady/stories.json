@@ -6520,96 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "fb9096e5-9118-44e7-94a3-f72a9b7e4bb6",
-        "timestamp": "2026-05-28T19:40:24.601Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:intake",
-            "latency:pipeline:classify",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller"
-          ],
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "3cdb8bd6-dbb4-4ae6-8da5-4a399c52fce5",
-        "timestamp": "2026-05-28T19:42:24.601Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:intake",
-            "latency:pipeline:classify",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller"
-          ],
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "93155b50-0545-4791-80ec-a240b72474d2",
-        "timestamp": "2026-05-28T19:44:24.601Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:pipeline:intake",
-            "latency:pipeline:classify",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller"
-          ],
-          "count": 17
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "8139d8bf-ffe9-43c7-aeda-873961fd545c",
         "timestamp": "2026-05-28T19:46:24.602Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -21718,11 +21628,74 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "72247a46-68a7-4f8c-b5e5-643374a8691d",
+        "timestamp": "2026-05-29T15:00:09.764Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "a1f1ef3f-ce51-4f5b-90ee-89004829ff15",
+        "timestamp": "2026-05-29T15:02:09.768Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "9c33f9f8-60fd-4008-b711-20841fdd7465",
+        "timestamp": "2026-05-29T15:04:09.771Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T14:58:09.754Z"
+    "updatedAt": "2026-05-29T15:04:09.771Z"
   }
 }
