@@ -6520,53 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "8ea35913-972e-40eb-9e58-5f601ee0a5cf",
-        "timestamp": "2026-05-29T00:12:24.874Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 15
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "be32b930-aa82-4bf0-9f9a-b0c78d670b98",
-        "timestamp": "2026-05-29T00:12:24.882Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:classify",
-            "latency:pipeline:decompose",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:verify",
-            "latency:pipeline:continuous-search",
-            "latency:pipeline:distiller"
-          ],
-          "count": 8
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "add9020a-d56f-4c20-bce4-6e9be9101872",
-        "timestamp": "2026-05-29T00:14:24.870Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 39
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "0f47215d-e37e-4a0f-8a05-33cb500e63e8",
         "timestamp": "2026-05-29T00:14:24.876Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -22220,11 +22173,68 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "7efc4dac-d3f3-4e78-a784-af8d75078be5",
+        "timestamp": "2026-05-29T18:30:10.114Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "9582b6a6-9342-41f0-a894-8ce7d30126e0",
+        "timestamp": "2026-05-29T18:32:10.112Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "be9a047f-a3f2-4135-82ae-54f232a54277",
+        "timestamp": "2026-05-29T18:34:10.112Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 6
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T18:28:10.110Z"
+    "updatedAt": "2026-05-29T18:34:10.112Z"
   }
 }
