@@ -6520,78 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "25743646-a7f3-490a-aa0c-b5b76b43b2f7",
-        "timestamp": "2026-05-28T23:12:24.840Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:approve",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique"
-          ],
-          "count": 11
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "d6be609a-11e2-4066-a246-1331d4965ce1",
-        "timestamp": "2026-05-28T23:14:24.840Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:approve",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique"
-          ],
-          "count": 11
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "7f3ae26b-bb9b-4cae-ac12-759c880b3b0e",
-        "timestamp": "2026-05-28T23:16:24.840Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:approve",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique"
-          ],
-          "count": 11
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "d0d941f0-7aa9-4ed2-9bed-37940f2fddfa",
         "timestamp": "2026-05-28T23:18:24.840Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -22025,11 +21953,74 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "de752eb8-6e52-4b25-b440-8c3cf3cea797",
+        "timestamp": "2026-05-29T17:30:10.101Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:update_channel_optimizations",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "85eceb9b-c25f-43d6-bd56-454313fc493a",
+        "timestamp": "2026-05-29T17:32:10.096Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:update_channel_optimizations",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "6ceff120-340b-4e9d-877c-7ba3354084a2",
+        "timestamp": "2026-05-29T17:34:10.097Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:update_channel_optimizations",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories",
+            "latency:task:search_performance_techniques"
+          ],
+          "count": 8
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T17:28:10.094Z"
+    "updatedAt": "2026-05-29T17:34:10.097Z"
   }
 }
