@@ -6520,36 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "607dd3e8-ce68-44fa-8cd6-94fae8ec1310",
-        "timestamp": "2026-05-28T09:54:08.492Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:triage"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "c174bdcf-db0a-4657-b39a-aadf0e444ccf",
-        "timestamp": "2026-05-28T09:56:08.492Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:triage"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "d7cd80ba-2a4a-4494-8a8d-e0a0e24882ac",
         "timestamp": "2026-05-28T09:58:08.492Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -18826,11 +18796,45 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "cdc7b9fd-af55-4a5d-a8c3-468b25051989",
+        "timestamp": "2026-05-29T08:46:25.269Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:arena",
+            "latency:task:scan_attack_surface",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "865195e5-5b80-4d17-952c-131d42e444a4",
+        "timestamp": "2026-05-29T08:48:25.270Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:arena",
+            "latency:task:scan_attack_surface",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T08:44:25.263Z"
+    "updatedAt": "2026-05-29T08:48:25.270Z"
   }
 }
