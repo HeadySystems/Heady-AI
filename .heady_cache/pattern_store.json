@@ -1657,16 +1657,16 @@
         }
       ],
       "stats": {
-        "mean": 0.75,
+        "mean": 0.7377049180327869,
         "median": 0,
-        "stddev": 2.078661428259382,
+        "stddev": 2.0637514730303232,
         "min": 0,
         "max": 18,
-        "n": 180
+        "n": 183
       },
       "trend": "improving",
       "improvementAttempts": 226,
-      "lastImproved": "2026-05-29T00:48:24.874Z",
+      "lastImproved": "2026-05-29T00:54:24.875Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
@@ -3336,15 +3336,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5944444444444444,
+        "mean": 0.5956284153005464,
         "median": 0,
-        "stddev": 1.2503209464516714,
+        "stddev": 1.2415319787563015,
         "min": 0,
         "max": 7,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 186,
+      "improvementAttempts": 189,
       "lastImproved": "2026-05-29T00:32:24.871Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -5014,15 +5014,15 @@
         }
       ],
       "stats": {
-        "mean": 14.061111111111112,
+        "mean": 13.836065573770492,
         "median": 0,
-        "stddev": 53.24692624293902,
+        "stddev": 52.83747024712593,
         "min": 0,
         "max": 341,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 158,
+      "improvementAttempts": 161,
       "lastImproved": "2026-05-29T00:18:24.870Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -6693,15 +6693,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5388888888888889,
+        "mean": 0.5355191256830601,
         "median": 0,
-        "stddev": 3.0611615240857857,
+        "stddev": 3.0366784464837773,
         "min": 0,
         "max": 40,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 198,
+      "improvementAttempts": 201,
       "lastImproved": "2026-05-29T00:02:24.863Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -8371,15 +8371,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5,
+        "mean": 0.5027322404371585,
         "median": 0,
-        "stddev": 2.686385427794505,
+        "stddev": 2.6650425045870536,
         "min": 0,
         "max": 31,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 112,
+      "improvementAttempts": 115,
       "lastImproved": "2026-05-29T00:18:24.871Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -10049,15 +10049,15 @@
         }
       ],
       "stats": {
-        "mean": 0.3,
+        "mean": 0.29508196721311475,
         "median": 0,
-        "stddev": 0.8556998435328956,
+        "stddev": 0.8495115078823509,
         "min": 0,
         "max": 8,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 151,
+      "improvementAttempts": 154,
       "lastImproved": "2026-05-28T23:02:24.836Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -11727,15 +11727,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5111111111111111,
+        "mean": 0.5027322404371585,
         "median": 0,
-        "stddev": 1.0566660824861105,
+        "stddev": 1.0499769289158867,
         "min": 0,
         "max": 6,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 202,
+      "improvementAttempts": 205,
       "lastImproved": "2026-05-29T00:18:24.871Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -13405,15 +13405,15 @@
         }
       ],
       "stats": {
-        "mean": 0.3277777777777778,
+        "mean": 0.3224043715846995,
         "median": 0,
-        "stddev": 0.6483359516275796,
+        "stddev": 0.6443454851577564,
         "min": 0,
         "max": 3,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 193,
+      "improvementAttempts": 196,
       "lastImproved": "2026-05-28T23:18:24.839Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -15083,15 +15083,15 @@
         }
       ],
       "stats": {
-        "mean": 0.21666666666666667,
+        "mean": 0.2185792349726776,
         "median": 0,
-        "stddev": 0.529937103186155,
+        "stddev": 0.5292371590296502,
         "min": 0,
         "max": 3,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 152,
+      "improvementAttempts": 155,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -16761,15 +16761,15 @@
         }
       ],
       "stats": {
-        "mean": 0.20555555555555555,
+        "mean": 0.20218579234972678,
         "median": 0,
-        "stddev": 0.5021865769061249,
+        "stddev": 0.4987367960264323,
         "min": 0,
         "max": 3,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 211,
+      "improvementAttempts": 214,
       "lastImproved": "2026-05-29T00:02:24.864Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -18439,15 +18439,15 @@
         }
       ],
       "stats": {
-        "mean": 0.16111111111111112,
+        "mean": 0.16393442622950818,
         "median": 0,
-        "stddev": 0.44924490832320074,
+        "stddev": 0.4501485317293763,
         "min": 0,
         "max": 3,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 145,
+      "improvementAttempts": 148,
       "lastImproved": "2026-05-29T00:18:24.872Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -20117,15 +20117,15 @@
         }
       ],
       "stats": {
-        "mean": 0.16111111111111112,
+        "mean": 0.15846994535519127,
         "median": 0,
-        "stddev": 0.44924490832320074,
+        "stddev": 0.4460168071565435,
         "min": 0,
         "max": 3,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 191,
+      "improvementAttempts": 194,
       "lastImproved": "2026-05-29T00:02:24.864Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -21795,15 +21795,15 @@
         }
       ],
       "stats": {
-        "mean": 0.2222222222222222,
+        "mean": 0.22950819672131148,
         "median": 0,
-        "stddev": 0.5533288710217215,
+        "stddev": 0.5549610124528117,
         "min": 0,
         "max": 4,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 164,
+      "improvementAttempts": 167,
       "lastImproved": "2026-05-29T00:18:24.872Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -23473,15 +23473,15 @@
         }
       ],
       "stats": {
-        "mean": 0.43333333333333335,
+        "mean": 0.43169398907103823,
         "median": 0,
-        "stddev": 1.1160446028522137,
+        "stddev": 1.1085760444137431,
         "min": 0,
         "max": 10,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 187,
+      "improvementAttempts": 190,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -25151,15 +25151,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5055555555555555,
+        "mean": 0.5027322404371585,
         "median": 0,
-        "stddev": 1.2494319697020642,
+        "stddev": 1.2408102277145332,
         "min": 0,
         "max": 7,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 189,
+      "improvementAttempts": 192,
       "lastImproved": "2026-05-29T00:18:24.872Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -26829,15 +26829,15 @@
         }
       ],
       "stats": {
-        "mean": 0.6277777777777778,
+        "mean": 0.6229508196721312,
         "median": 0,
-        "stddev": 1.42606901638952,
+        "stddev": 1.4161126011799485,
         "min": 0,
         "max": 8,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 173,
+      "improvementAttempts": 176,
       "lastImproved": "2026-05-29T00:18:24.873Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -28507,15 +28507,15 @@
         }
       ],
       "stats": {
-        "mean": 0.5833333333333334,
+        "mean": 0.5737704918032787,
         "median": 0,
-        "stddev": 1.425462887782227,
+        "stddev": 1.4156697199803197,
         "min": 0,
         "max": 10,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 164,
+      "improvementAttempts": 167,
       "lastImproved": "2026-05-29T00:18:24.873Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -30185,15 +30185,15 @@
         }
       ],
       "stats": {
-        "mean": 1.261111111111111,
+        "mean": 1.2459016393442623,
         "median": 1,
-        "stddev": 2.7615693784691993,
+        "stddev": 2.7420370815226764,
         "min": 0,
         "max": 21,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 204,
+      "improvementAttempts": 207,
       "lastImproved": "2026-05-29T00:18:24.873Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -31864,15 +31864,15 @@
         }
       ],
       "stats": {
-        "mean": 0.65,
+        "mean": 0.644808743169399,
         "median": 0,
-        "stddev": 1.3762872762133154,
+        "stddev": 1.3668850318138617,
         "min": 0,
         "max": 8,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 226,
+      "improvementAttempts": 229,
       "lastImproved": "2026-05-28T23:02:24.837Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -33542,15 +33542,15 @@
         }
       ],
       "stats": {
-        "mean": 0.55,
+        "mean": 0.5409836065573771,
         "median": 0,
-        "stddev": 1.111930253608062,
+        "stddev": 1.1049877554172105,
         "min": 0,
         "max": 6,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 208,
+      "improvementAttempts": 211,
       "lastImproved": "2026-05-29T00:02:24.865Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -35220,15 +35220,15 @@
         }
       ],
       "stats": {
-        "mean": 1.4166666666666667,
+        "mean": 1.4262295081967213,
         "median": 1,
-        "stddev": 3.156782820812636,
+        "stddev": 3.1369071280227043,
         "min": 0,
         "max": 19,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 202,
+      "improvementAttempts": 205,
       "lastImproved": "2026-05-29T00:02:24.865Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -36899,15 +36899,15 @@
         }
       ],
       "stats": {
-        "mean": 0.7333333333333333,
+        "mean": 0.726775956284153,
         "median": 0,
-        "stddev": 1.9849433241279204,
+        "stddev": 1.9701859747092474,
         "min": 0,
         "max": 19,
-        "n": 180
+        "n": 183
       },
       "trend": "degrading",
-      "improvementAttempts": 218,
+      "improvementAttempts": 221,
       "lastImproved": "2026-05-29T00:02:24.865Z",
       "convergedAt": null,
       "reviewAfter": null,
@@ -46726,19 +46726,10 @@
       "id": "reliability::resource:RAM",
       "category": "reliability",
       "name": "resource:RAM",
-      "state": "active",
+      "state": "stagnant",
       "createdAt": "2026-05-29T00:05:15.754Z",
-      "lastUpdated": "2026-05-29T00:49:58.899Z",
+      "lastUpdated": "2026-05-29T00:55:00.162Z",
       "observations": [
-        {
-          "value": 80,
-          "ts": "2026-05-29T00:05:15.754Z",
-          "severity": "WARN_HARD",
-          "tags": [
-            "resource",
-            "RAM"
-          ]
-        },
         {
           "value": 80,
           "ts": "2026-05-29T00:10:10.793Z",
@@ -47998,24 +47989,564 @@
             "resource",
             "RAM"
           ]
+        },
+        {
+          "value": 84,
+          "ts": "2026-05-29T00:50:03.917Z",
+          "severity": "WARN_HARD",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:50:08.937Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 91,
+          "ts": "2026-05-29T00:50:13.969Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:50:18.990Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:50:24.014Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 85,
+          "ts": "2026-05-29T00:50:29.033Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 85,
+          "ts": "2026-05-29T00:50:34.049Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:50:39.070Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:50:44.092Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:50:49.112Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:50:54.138Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:50:59.167Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:04.179Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:51:09.200Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 86,
+          "ts": "2026-05-29T00:51:14.222Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:19.253Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:24.277Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:29.299Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:34.319Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:39.342Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:51:44.358Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:49.384Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:54.407Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 87,
+          "ts": "2026-05-29T00:51:59.432Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:52:04.455Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:52:09.472Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:52:14.490Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:52:19.507Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:52:24.523Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:52:29.539Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:52:34.551Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:52:39.572Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:52:44.594Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:52:49.618Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:52:54.642Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:52:59.672Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:53:04.689Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:09.717Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:14.744Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:19.766Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:24.782Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:29.798Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:34.817Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:39.838Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:53:44.855Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:53:49.871Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:53:54.895Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 88,
+          "ts": "2026-05-29T00:53:59.912Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:04.935Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:54:09.959Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:14.982Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:20.003Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 89,
+          "ts": "2026-05-29T00:54:25.016Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:30.052Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:35.069Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:40.089Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:45.111Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:50.128Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:54:55.146Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
+        },
+        {
+          "value": 90,
+          "ts": "2026-05-29T00:55:00.162Z",
+          "severity": "CRITICAL",
+          "tags": [
+            "resource",
+            "RAM"
+          ]
         }
       ],
       "stats": {
-        "mean": 80.6311475409836,
-        "median": 80,
-        "stddev": 1.8913124061285902,
+        "mean": 82.85492227979275,
+        "median": 82,
+        "stddev": 3.677362357162626,
         "min": 78,
-        "max": 86,
-        "n": 122
+        "max": 91,
+        "n": 193
       },
-      "trend": "unstable",
-      "improvementAttempts": 2,
+      "trend": "flat",
+      "improvementAttempts": 4,
       "lastImproved": "2026-05-29T00:46:24.879Z",
       "convergedAt": null,
       "reviewAfter": null,
       "metadata": {
         "errorBurst": true,
-        "burstCount": 40,
+        "burstCount": 59,
         "burstWindow": "5m",
         "needsInvestigation": true
       },
@@ -48091,53 +48622,45 @@
     "created": "2026-05-28T08:12:13.950Z",
     "version": "1.0.0"
   },
-  "lastUpdated": "2026-05-29T00:50:01.935Z",
+  "lastUpdated": "2026-05-29T00:55:02.065Z",
   "version": 1,
   "phi": 1.618033988749895,
   "resourcePatterns": [
     {
-      "type": "MEMORY_PRESSURE",
-      "confidence": 0.9,
-      "severity": "HIGH",
-      "firstSeen": "2026-05-29T00:50:01.935Z",
-      "lastSeen": "2026-05-29T00:50:01.935Z",
-      "occurrences": 1
-    },
-    {
       "type": "RESOURCE_STABLE",
       "confidence": 0.85,
       "severity": "LOW",
-      "firstSeen": "2026-05-29T00:50:01.935Z",
-      "lastSeen": "2026-05-29T00:50:01.935Z",
+      "firstSeen": "2026-05-29T00:55:02.065Z",
+      "lastSeen": "2026-05-29T00:55:02.065Z",
       "occurrences": 1
     }
   ],
   "gitVelocity": "HIGH",
-  "commitCount24h": 259,
+  "commitCount24h": 258,
   "topTopics": [
     {
       "word": "hcfp-auto",
-      "count": 259
+      "count": 258
     },
     {
       "word": "file(s)",
-      "count": 259
+      "count": 258
     },
     {
       "word": "changed",
-      "count": 259
+      "count": 258
     },
     {
       "word": "pattern_store.json",
-      "count": 259
+      "count": 258
     },
     {
       "word": "stories.json",
-      "count": 214
+      "count": 213
     },
     {
       "word": "hc_pipeline.log",
-      "count": 91
+      "count": 92
     },
     {
       "word": "resource-events.jsonl",
