@@ -6520,46 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "7a975cd8-9c85-43d8-8724-22f112da144f",
-        "timestamp": "2026-05-28T10:04:08.491Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:execute",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:evolution"
-          ],
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "80b35361-478d-4969-bfd8-903ca8346a4e",
-        "timestamp": "2026-05-28T10:06:08.492Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:execute",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:evolution"
-          ],
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "e485d667-88f3-472f-b4af-c531e522504d",
         "timestamp": "2026-05-28T10:08:08.491Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -18826,11 +18786,45 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "1cfd2e77-b04e-4afe-853b-34f5ac2accdb",
+        "timestamp": "2026-05-29T08:56:25.297Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:judge",
+            "latency:task:scan_attack_surface",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "e76863a1-3d77-4aaf-8d9a-abaab8fbdf9b",
+        "timestamp": "2026-05-29T08:58:25.302Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:judge",
+            "latency:task:scan_attack_surface",
+            "latency:task:scan_resource_utilization",
+            "latency:task:scan_cost_trajectory"
+          ],
+          "count": 4
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T08:54:25.284Z"
+    "updatedAt": "2026-05-29T08:58:25.302Z"
   }
 }
