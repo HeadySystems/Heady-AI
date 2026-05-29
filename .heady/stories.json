@@ -6520,36 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "689042a1-9e81-4dd4-b4b5-b0a57bb9f2f4",
-        "timestamp": "2026-05-28T21:26:24.821Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "b2720533-6baf-47b7-ad9b-82270456c225",
-        "timestamp": "2026-05-28T21:28:24.821Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "cafeb973-79c2-438a-8dd5-de82697a9378",
         "timestamp": "2026-05-28T21:30:24.823Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -21768,11 +21738,55 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "dffb8434-7d99-4f92-bff1-25470f748b2d",
+        "timestamp": "2026-05-29T16:16:09.977Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:classify",
+            "latency:pipeline:judge",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "314da05c-4bb2-4bb5-8df2-360c6af0d7ca",
+        "timestamp": "2026-05-29T16:18:09.984Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:classify",
+            "latency:pipeline:judge",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T16:14:09.974Z"
+    "updatedAt": "2026-05-29T16:18:09.984Z"
   }
 }
