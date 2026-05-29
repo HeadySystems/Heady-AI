@@ -6520,48 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "3da5d3c1-8b6f-497e-b5e0-c6ad3d385bc3",
-        "timestamp": "2026-05-28T21:52:24.826Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:intake",
-            "latency:pipeline:triage",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:distiller"
-          ],
-          "count": 8
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "d35a8318-f88e-4895-ac00-cc592e0f0bfc",
-        "timestamp": "2026-05-28T21:54:24.825Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:intake",
-            "latency:pipeline:triage",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:arena",
-            "latency:pipeline:judge",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:distiller"
-          ],
-          "count": 8
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "7a8d5420-0c3c-41b8-9220-399771a69544",
         "timestamp": "2026-05-28T21:56:24.825Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -21797,11 +21755,55 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "05949916-a7d9-4aa2-8b99-124db70a47d7",
+        "timestamp": "2026-05-29T16:26:09.998Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:classify",
+            "latency:pipeline:judge",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "827a97a4-8f96-45d1-94e5-bcd362a1701c",
+        "timestamp": "2026-05-29T16:28:10.003Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:classify",
+            "latency:pipeline:judge",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_ai_research_papers",
+            "latency:task:search_competitor_innovations",
+            "latency:task:search_security_advisories"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T16:24:09.994Z"
+    "updatedAt": "2026-05-29T16:28:10.003Z"
   }
 }
