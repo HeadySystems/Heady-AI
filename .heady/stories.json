@@ -6520,47 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "7f9e0fcc-ef9d-495e-89c1-3e996c31a161",
-        "timestamp": "2026-05-29T01:08:24.880Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 53
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "d098eabe-4b1b-4bb2-a0c9-758b1dac5f63",
-        "timestamp": "2026-05-29T01:08:24.887Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:recon"
-          ],
-          "count": 2
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "27d1b542-e9e6-44c7-824f-988e877568f4",
-        "timestamp": "2026-05-29T01:10:24.878Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 29
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "7020e7dd-e316-426d-8284-2a64676860cf",
         "timestamp": "2026-05-29T01:10:24.886Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -22393,11 +22352,80 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "0f5e4db1-479d-4457-ae3a-ea7e09865765",
+        "timestamp": "2026-05-29T20:00:10.130Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_external_apis",
+            "latency:task:ingest_health_metrics",
+            "latency:task:ingest_channel_events",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "ad54e620-716b-415e-96a6-7eb9c00aee28",
+        "timestamp": "2026-05-29T20:02:10.130Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_external_apis",
+            "latency:task:ingest_health_metrics",
+            "latency:task:ingest_channel_events",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "0942a6cb-0043-4444-9961-2ec731124ffc",
+        "timestamp": "2026-05-29T20:04:10.131Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:ingest_external_apis",
+            "latency:task:ingest_health_metrics",
+            "latency:task:ingest_channel_events",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_resource_usage",
+            "latency:task:compare_trial_results",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:search_new_tools_and_libraries",
+            "latency:task:search_ai_research_papers"
+          ],
+          "count": 10
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-05-29T19:58:10.128Z"
+    "updatedAt": "2026-05-29T20:04:10.131Z"
   }
 }
