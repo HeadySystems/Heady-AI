@@ -35,13 +35,14 @@ import ModelSelector from './components/ModelSelector';
 import SacredGeometryBackground from './components/SacredGeometryBackground';
 
 // Cloud service
-import { useCloudConnection } from './hooks/useCloudConnection';
+import { useCloudConnection, useKeyboardShortcuts } from './hooks/useCloudConnection';
 import fileSystemService from './services/FileSystemService';
 
 const IDELayout = () => {
   const { state } = useIDE();
   const actions = useIDEActions();
   const cloud = useCloudConnection();
+  useKeyboardShortcuts();
   const [fileTree, setFileTree] = useState(null);
 
   const {
@@ -74,10 +75,62 @@ const IDELayout = () => {
   }, [actions]);
 
   // Handle Open Folder
-  const handleOpenFolder = useCallback(async () => {
-    const tree = await fileSystemService.openFolder();
+  const handleOpenFolder = useCallback(async (refresh = false) => {
+    const tree = await fileSystemService.openFolder(refresh === true || refresh?.type === 'click');
     if (tree) setFileTree(tree);
   }, []);
+
+  const handleCreateFile = useCallback(async () => {
+    if (!fileTree) return;
+    const fileName = prompt('Enter file name:');
+    if (!fileName) return;
+
+    let targetDir = fileTree.path;
+    if (activeTab) {
+      const parts = activeTab.path.split(/[/\\]/);
+      parts.pop(); // Remove file name
+      targetDir = parts.join('/');
+    }
+
+    const fullPath = targetDir.endsWith('/') || targetDir.endsWith('\\')
+      ? `${targetDir}${fileName}`
+      : `${targetDir}/${fileName}`;
+
+    const success = await fileSystemService.createFile(fullPath, '');
+    if (success) {
+      const updatedTree = await fileSystemService.openFolder(true);
+      if (updatedTree) setFileTree(updatedTree);
+      
+      handleFileSelect({
+        name: fileName,
+        path: fullPath,
+        isDirectory: false
+      });
+    }
+  }, [fileTree, activeTab, handleFileSelect]);
+
+  const handleCreateFolder = useCallback(async () => {
+    if (!fileTree) return;
+    const folderName = prompt('Enter folder name:');
+    if (!folderName) return;
+
+    let targetDir = fileTree.path;
+    if (activeTab) {
+      const parts = activeTab.path.split(/[/\\]/);
+      parts.pop(); // Remove file name
+      targetDir = parts.join('/');
+    }
+
+    const fullPath = targetDir.endsWith('/') || targetDir.endsWith('\\')
+      ? `${targetDir}${folderName}`
+      : `${targetDir}/${folderName}`;
+
+    const success = await fileSystemService.createDirectory(fullPath);
+    if (success) {
+      const updatedTree = await fileSystemService.openFolder(true);
+      if (updatedTree) setFileTree(updatedTree);
+    }
+  }, [fileTree, activeTab]);
 
   // xterm.js command handler
   const handleTerminalCommand = useCallback((cmd, term) => {
@@ -119,69 +172,36 @@ const IDELayout = () => {
     }
   }, [fileTree]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts event handlers
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Command Palette: Ctrl+Shift+P
-      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
-        e.preventDefault();
-        actions.toggleCommandPalette();
-      }
-      // Toggle sidebar: Ctrl+B
-      if (e.ctrlKey && e.key === 'b') {
-        e.preventDefault();
-        actions.toggleSidebar();
-      }
-      // Toggle terminal: Ctrl+`
-      if (e.ctrlKey && e.key === '`') {
-        e.preventDefault();
-        actions.toggleBottomPanel();
-      }
-      // Toggle AI: Ctrl+Shift+I
-      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-        e.preventDefault();
-        actions.toggleAIChat();
-      }
-      // Save: Ctrl+S
-      if (e.ctrlKey && e.key === 's') {
-        e.preventDefault();
-        if (activeTab && activeTab.isDirty) {
-          fileSystemService.writeFile(activeTab.path, activeTab.content).then(() => {
-            actions.markTabSaved(activeTab.id);
-          });
-        }
-      }
-      // Close tab: Ctrl+W
-      if (e.ctrlKey && e.key === 'w') {
-        e.preventDefault();
-        if (activeTabId) actions.closeTab(activeTabId);
-      }
-      // Explorer: Ctrl+Shift+E
-      if (e.ctrlKey && e.shiftKey && e.key === 'E') {
-        e.preventDefault();
-        actions.setActiveView(VIEWS.EXPLORER);
-      }
-      // Search: Ctrl+Shift+F
-      if (e.ctrlKey && e.shiftKey && e.key === 'F') {
-        e.preventDefault();
-        actions.setActiveView(VIEWS.SEARCH);
-      }
-      // Git: Ctrl+Shift+G
-      if (e.ctrlKey && e.shiftKey && e.key === 'G') {
-        e.preventDefault();
-        actions.setActiveView(VIEWS.GIT);
+    const handleSave = () => {
+      if (activeTab && activeTab.isDirty) {
+        fileSystemService.writeFile(activeTab.path, activeTab.content).then(() => {
+          actions.markTabSaved(activeTab.id);
+        });
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [actions, activeTab, activeTabId, cloud]);
+    const handleCloseTab = () => {
+      if (activeTabId) {
+        actions.closeTab(activeTabId);
+      }
+    };
+
+    window.addEventListener('heady:save', handleSave);
+    window.addEventListener('heady:close-tab', handleCloseTab);
+
+    return () => {
+      window.removeEventListener('heady:save', handleSave);
+      window.removeEventListener('heady:close-tab', handleCloseTab);
+    };
+  }, [actions, activeTab, activeTabId]);
 
   // Render sidebar content based on active view
   const renderSidebarContent = () => {
     switch (activeView) {
       case VIEWS.EXPLORER:
-        return <FileExplorer fileTree={fileTree} onFileSelect={handleFileSelect} activeFile={activeTab} onOpenFolder={handleOpenFolder} onRefresh={handleOpenFolder} />;
+        return <FileExplorer fileTree={fileTree} onFileSelect={handleFileSelect} activeFile={activeTab} onOpenFolder={handleOpenFolder} onRefresh={handleOpenFolder} onCreateFile={handleCreateFile} onCreateFolder={handleCreateFolder} />;
       case VIEWS.SEARCH:
         return <SearchPanel />;
       case VIEWS.GIT:

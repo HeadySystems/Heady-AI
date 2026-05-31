@@ -13,7 +13,7 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -80,17 +80,19 @@ app.on('window-all-closed', () => {
 ipcMain.handle('read-dir', async (event, dirPath) => {
   try {
     const files = await fs.promises.readdir(dirPath);
-    const fileDetails = await Promise.all(files.map(async (file) => {
-      const filePath = path.join(dirPath, file);
-      const stats = await fs.promises.stat(filePath);
-      return {
-        name: file,
-        path: filePath,
-        isDirectory: stats.isDirectory(),
-        size: stats.size,
-        modified: stats.mtime,
-      };
-    }));
+    const fileDetails = await Promise.all(
+      files.map(async (file) => {
+        const filePath = path.join(dirPath, file);
+        const stats = await fs.promises.stat(filePath);
+        return {
+          name: file,
+          path: filePath,
+          isDirectory: stats.isDirectory(),
+          size: stats.size,
+          modified: stats.mtime,
+        };
+      }),
+    );
     return fileDetails;
   } catch (error) {
     console.error('[HeadyAI-IDE] Error reading directory:', error);
@@ -118,6 +120,51 @@ ipcMain.handle('write-file', async (event, filePath, content) => {
   }
 });
 
+ipcMain.handle('select-folder', async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+    });
+    if (result.canceled) {
+      return null;
+    }
+    return result.filePaths[0];
+  } catch (error) {
+    console.error('[HeadyAI-IDE] Error selecting folder:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('create-folder', async (event, dirPath) => {
+  try {
+    await fs.promises.mkdir(dirPath, { recursive: true });
+    return { success: true };
+  } catch (error) {
+    console.error('[HeadyAI-IDE] Error creating folder:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('delete-file', async (event, filePath) => {
+  try {
+    await fs.promises.unlink(filePath);
+    return { success: true };
+  } catch (error) {
+    console.error('[HeadyAI-IDE] Error deleting file:', error);
+    throw error;
+  }
+});
+
+ipcMain.handle('delete-folder', async (event, dirPath) => {
+  try {
+    await fs.promises.rm(dirPath, { recursive: true, force: true });
+    return { success: true };
+  } catch (error) {
+    console.error('[HeadyAI-IDE] Error deleting folder:', error);
+    throw error;
+  }
+});
+
 // Heady AI integration
 ipcMain.handle('heady-ai-chat', async (event, message, context) => {
   try {
@@ -133,7 +180,7 @@ ipcMain.handle('heady-ai-chat', async (event, message, context) => {
         model: 'heady-brain',
       }),
     });
-    
+
     const result = await response.json();
     return result;
   } catch (error) {
@@ -143,4 +190,3 @@ ipcMain.handle('heady-ai-chat', async (event, message, context) => {
 });
 
 console.log('[HeadyAI-IDE] HeadyAI-IDE main process initialized');
-

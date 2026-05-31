@@ -156,19 +156,23 @@ export function initSacredGeometry(config = {}) {
       name: 'package.json',
       path: '/heady-project/package.json',
       isDirectory: false,
-      content: JSON.stringify({
-        name: 'heady-project',
-        version: '1.0.0',
-        type: 'module',
-        description: 'A Heady™ project with Sacred Geometry design principles',
-        main: 'src/index.js',
-        scripts: {
-          dev: 'node src/index.js',
-          test: 'vitest run',
-          build: 'vite build',
+      content: JSON.stringify(
+        {
+          name: 'heady-project',
+          version: '1.0.0',
+          type: 'module',
+          description: 'A Heady™ project with Sacred Geometry design principles',
+          main: 'src/index.js',
+          scripts: {
+            dev: 'node src/index.js',
+            test: 'vitest run',
+            build: 'vite build',
+          },
+          dependencies: {},
         },
-        dependencies: {},
-      }, null, 2),
+        null,
+        2,
+      ),
     },
     {
       name: 'README.md',
@@ -224,9 +228,32 @@ import cloudService from './CloudService';
 class FileSystemService {
   constructor() {
     this.directoryHandle = null;
+    this.directoryPath = null;
     this.fileHandles = new Map();
     this.fileTree = null;
     this.useNativeFS = typeof window !== 'undefined' && 'showDirectoryPicker' in window;
+  }
+
+  // Check if running in Electron
+  isElectron() {
+    return (
+      typeof window !== 'undefined' &&
+      window.process &&
+      window.process.versions &&
+      window.process.versions.electron
+    );
+  }
+
+  // Get ipcRenderer if in Electron
+  getIpcRenderer() {
+    if (this.isElectron()) {
+      try {
+        return window.require('electron').ipcRenderer;
+      } catch (e) {
+        console.error('[FileSystemService] Failed to load Electron ipcRenderer:', e);
+      }
+    }
+    return null;
   }
 
   // Helper to extract workspace and key from path
@@ -246,7 +273,7 @@ class FileSystemService {
       name: wsName,
       path: `/${wsName}`,
       isDirectory: true,
-      children: []
+      children: [],
     };
 
     for (const file of files) {
@@ -260,13 +287,13 @@ class FileSystemService {
         currentPath = `${currentPath}/${part}`;
         const isLast = i === parts.length - 1;
 
-        let existing = current.children.find(child => child.name === part);
+        let existing = current.children.find((child) => child.name === part);
         if (!existing) {
           existing = {
             name: part,
             path: currentPath,
             isDirectory: !isLast,
-            children: isLast ? undefined : []
+            children: isLast ? undefined : [],
           };
           current.children.push(existing);
         }
@@ -295,8 +322,62 @@ class FileSystemService {
     return DEMO_FILES;
   }
 
+  async _buildElectronTree(dirPath, parentPath = '') {
+    const ipc = this.getIpcRenderer();
+    if (!ipc) return null;
+
+    // Get the last component of the path as the folder name
+    const parts = dirPath.split(/[/\\]/).filter(Boolean);
+    const folderName = parts[parts.length - 1] || dirPath;
+
+    const node = {
+      name: folderName,
+      path: dirPath,
+      isDirectory: true,
+      children: [],
+    };
+
+    try {
+      const files = await ipc.invoke('read-dir', dirPath);
+      // Sort files: directories first, then alphabetical
+      const sortedFiles = [...files].sort((a, b) => {
+        if (a.isDirectory !== b.isDirectory) {
+          return a.isDirectory ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      for (const file of sortedFiles) {
+        if (
+          file.name.startsWith('.') ||
+          file.name === 'node_modules' ||
+          file.name === 'build' ||
+          file.name === 'dist'
+        ) {
+          continue;
+        }
+        if (file.isDirectory) {
+          const childNode = await this._buildElectronTree(file.path, node.path);
+          if (childNode) {
+            node.children.push(childNode);
+          }
+        } else {
+          node.children.push({
+            name: file.name,
+            path: file.path,
+            isDirectory: false,
+          });
+        }
+      }
+      return node;
+    } catch (err) {
+      console.error('[FileSystemService] Error building Electron tree for ' + dirPath, err);
+      return null;
+    }
+  }
+
   // Open folder using File System Access API or Cloud Service
-  async openFolder() {
+  async openFolder(refresh = false) {
     if (cloudService.isConnected) {
       try {
         const result = await cloudService.listFiles('default');
@@ -309,13 +390,37 @@ class FileSystemService {
       }
     }
 
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          let selectedPath = this.directoryPath;
+          if (!selectedPath || !refresh) {
+            selectedPath = await ipc.invoke('select-folder');
+          }
+          if (selectedPath) {
+            this.directoryPath = selectedPath;
+            this.fileTree = await this._buildElectronTree(selectedPath);
+            return this.fileTree;
+          }
+          return this.fileTree || this.getDemoFileTree();
+        } catch (err) {
+          console.error('[FileSystemService] Failed to select folder in Electron:', err);
+        }
+      }
+    }
+
     if (this.useNativeFS) {
       try {
-        this.directoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        let handle = this.directoryHandle;
+        if (!handle || !refresh) {
+          handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+        }
+        this.directoryHandle = handle;
         this.fileTree = await this._buildTree(this.directoryHandle, '');
         return this.fileTree;
       } catch (err) {
-        if (err.name === 'AbortError') return null;
+        if (err.name === 'AbortError') return this.fileTree || this.getDemoFileTree();
         throw err;
       }
     }
@@ -366,6 +471,18 @@ class FileSystemService {
       }
     }
 
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          return await ipc.invoke('read-file', path);
+        } catch (err) {
+          console.error('[FileSystemService] Failed to read file in Electron:', err);
+          return '';
+        }
+      }
+    }
+
     // Check native FS first
     const handle = this.fileHandles.get(path);
     if (handle && handle.kind === 'file') {
@@ -387,6 +504,19 @@ class FileSystemService {
       } catch (err) {
         console.error('[FileSystemService] Failed to write cloud file:', err);
         return false;
+      }
+    }
+
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          await ipc.invoke('write-file', path, content);
+          return true;
+        } catch (err) {
+          console.error('[FileSystemService] Failed to write file in Electron:', err);
+          return false;
+        }
       }
     }
 
@@ -418,6 +548,72 @@ class FileSystemService {
         return false;
       }
     }
+
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          await ipc.invoke('write-file', path, content);
+          return true;
+        } catch (err) {
+          console.error('[FileSystemService] Failed to create file in Electron:', err);
+          return false;
+        }
+      }
+    }
+
+    if (this.directoryHandle) {
+      try {
+        const parts = path.split('/').filter(Boolean);
+        let currentHandle = this.directoryHandle;
+        for (let i = 0; i < parts.length - 1; i++) {
+          currentHandle = await currentHandle.getDirectoryHandle(parts[i], { create: true });
+        }
+        const fileHandle = await currentHandle.getFileHandle(parts[parts.length - 1], {
+          create: true,
+        });
+        const writable = await fileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to create file locally:', err);
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  // Create directory
+  async createDirectory(path) {
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          await ipc.invoke('create-folder', path);
+          return true;
+        } catch (err) {
+          console.error('[FileSystemService] Failed to create directory in Electron:', err);
+          return false;
+        }
+      }
+    }
+
+    if (this.directoryHandle) {
+      try {
+        const parts = path.split('/').filter(Boolean);
+        let currentHandle = this.directoryHandle;
+        for (const part of parts) {
+          currentHandle = await currentHandle.getDirectoryHandle(part, { create: true });
+        }
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to create directory locally:', err);
+        return false;
+      }
+    }
+
     return false;
   }
 
@@ -433,6 +629,68 @@ class FileSystemService {
         return false;
       }
     }
+
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          await ipc.invoke('delete-file', path);
+          return true;
+        } catch (err) {
+          console.error('[FileSystemService] Failed to delete file in Electron:', err);
+          return false;
+        }
+      }
+    }
+
+    if (this.directoryHandle) {
+      try {
+        const parts = path.split('/').filter(Boolean);
+        let currentHandle = this.directoryHandle;
+        for (let i = 0; i < parts.length - 1; i++) {
+          currentHandle = await currentHandle.getDirectoryHandle(parts[i]);
+        }
+        await currentHandle.removeEntry(parts[parts.length - 1]);
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to delete file locally:', err);
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  // Delete directory
+  async deleteDirectory(path) {
+    if (this.isElectron()) {
+      const ipc = this.getIpcRenderer();
+      if (ipc) {
+        try {
+          await ipc.invoke('delete-folder', path);
+          return true;
+        } catch (err) {
+          console.error('[FileSystemService] Failed to delete directory in Electron:', err);
+          return false;
+        }
+      }
+    }
+
+    if (this.directoryHandle) {
+      try {
+        const parts = path.split('/').filter(Boolean);
+        let currentHandle = this.directoryHandle;
+        for (let i = 0; i < parts.length - 1; i++) {
+          currentHandle = await currentHandle.getDirectoryHandle(parts[i]);
+        }
+        await currentHandle.removeEntry(parts[parts.length - 1], { recursive: true });
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to delete directory locally:', err);
+        return false;
+      }
+    }
+
     return false;
   }
 

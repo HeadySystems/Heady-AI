@@ -130,7 +130,7 @@ const TreeNode = ({ node, depth = 0, onFileSelect, activeFile, expandedFolders, 
   );
 };
 
-const FileExplorer = ({ fileTree, onFileSelect, activeFile, onOpenFolder, onRefresh }) => {
+const FileExplorer = ({ fileTree, onFileSelect, activeFile, onOpenFolder, onRefresh, onCreateFile, onCreateFolder }) => {
   const [expandedFolders, setExpandedFolders] = useState(new Set([
     fileTree?.path,
     ...(fileTree?.children?.filter(c => c.isDirectory).map(c => c.path) || []),
@@ -153,10 +153,10 @@ const FileExplorer = ({ fileTree, onFileSelect, activeFile, onOpenFolder, onRefr
       <div className="panel-header">
         <h3 className="panel-title">EXPLORER</h3>
         <div className="panel-actions">
-          <button className="panel-action-btn" title="New File" onClick={() => {}}>
+          <button className="panel-action-btn" title="New File" onClick={onCreateFile}>
             <FilePlus size={14} />
           </button>
-          <button className="panel-action-btn" title="New Folder" onClick={() => {}}>
+          <button className="panel-action-btn" title="New Folder" onClick={onCreateFolder}>
             <FolderPlus size={14} />
           </button>
           <button className="panel-action-btn" title="Refresh" onClick={onRefresh}>
