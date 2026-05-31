@@ -1357,4 +1357,57 @@ function getToolsByCategory() {
   }, {});
 }
 
-module.exports = { TOOLS, getAllTools, getTool, executeTool, getToolsByCategory };
+// ─── CODEBASE TOOLS (file ops, shell, search) ──────────────────────────────
+let CODEBASE_TOOLS = [];
+try {
+  CODEBASE_TOOLS = require('./tools/heady-codebase-tools').CODEBASE_TOOLS || [];
+  logger.info(`[mcp-tools] Loaded ${CODEBASE_TOOLS.length} codebase tools`);
+} catch (e) {
+  logger.warn(`[mcp-tools] Codebase tools not loaded: ${e.message}`);
+}
+const ALL_TOOLS = TOOLS.concat(CODEBASE_TOOLS);
+
+/**
+ * Returns all tool definitions (core + codebase).
+ * @returns {Array<Object>}
+ */
+function getAllTools() {
+  return ALL_TOOLS;
+}
+
+/**
+ * Finds a tool by name.
+ * @param {string} name
+ * @returns {Object|undefined}
+ */
+function getTool(name) {
+  return ALL_TOOLS.find((t) => t.name === name);
+}
+
+/**
+ * Executes a tool by name with given parameters.
+ * @param {string} name
+ * @param {Object} params
+ * @returns {Promise<Object>}
+ */
+async function executeTool(name, params = {}) {
+  const tool = getTool(name);
+  if (!tool) {
+    throw new Error(`Tool '${name}' not found. Available: ${ALL_TOOLS.map((t) => t.name).join(', ')}`);
+  }
+  return safeExec(name, tool.handler, params);
+}
+
+/**
+ * Returns tools grouped by category.
+ * @returns {Object.<string, Array<Object>>}
+ */
+function getToolsByCategory() {
+  return ALL_TOOLS.reduce((acc, t) => {
+    if (!acc[t.category]) acc[t.category] = [];
+    acc[t.category].push({ name: t.name, description: t.description });
+    return acc;
+  }, {});
+}
+
+module.exports = { TOOLS: ALL_TOOLS, getAllTools, getTool, executeTool, getToolsByCategory };

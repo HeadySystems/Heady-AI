@@ -15,6 +15,15 @@
         "HEADY_MCP_TRANSPORT": "stdio",
         "NODE_ENV": "development"
       }
+    },
+    "heady-codebase": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/src/mcp/heady-mcp-server.js"],
+      "env": {
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "development"
+      }
     }
   }
 }

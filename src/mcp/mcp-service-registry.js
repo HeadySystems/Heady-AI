@@ -15,6 +15,84 @@ const PHI = 1.618033988749895;
  */
 const MCP_SERVICES = {
     // ═══════════════════════════════════════════════════════════
+    // TIER 0 — CODEBASE OPERATIONS (highest priority)
+    // Direct file read/write/edit/list/search + shell execution
+    // ═══════════════════════════════════════════════════════════
+
+    heady_file_read: {
+        tool: 'heady_file_read',
+        description: 'Read the contents of a file in the Heady workspace with optional line range',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1), // Highest priority — inverse phi
+        parameters: {
+            path: { type: 'string', required: true, description: 'File path relative to workspace root' },
+            startLine: { type: 'number', description: 'Optional start line (1-indexed)' },
+            endLine: { type: 'number', description: 'Optional end line (1-indexed, inclusive)' },
+        },
+    },
+
+    heady_file_write: {
+        tool: 'heady_file_write',
+        description: 'Write content to a file — creates parent directories, refuses overwrite unless explicit',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1),
+        parameters: {
+            path: { type: 'string', required: true, description: 'File path relative to workspace root' },
+            content: { type: 'string', required: true, description: 'Full file content to write' },
+            overwrite: { type: 'boolean', default: false, description: 'Allow overwriting existing files' },
+        },
+    },
+
+    heady_file_edit: {
+        tool: 'heady_file_edit',
+        description: 'Apply targeted search-and-replace edits to a file — atomic, all succeed or none applied',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1),
+        parameters: {
+            path: { type: 'string', required: true, description: 'File path' },
+            edits: { type: 'array', required: true, description: 'Array of {search, replace} objects' },
+            dryRun: { type: 'boolean', default: false, description: 'Preview without writing' },
+        },
+    },
+
+    heady_file_list: {
+        tool: 'heady_file_list',
+        description: 'List files and directories with depth control and extension filtering',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1),
+        parameters: {
+            path: { type: 'string', default: '.', description: 'Directory path' },
+            depth: { type: 'number', default: 2, description: 'Max recursion depth' },
+            extensions: { type: 'array', description: 'Filter by extensions (e.g. [".js", ".md"])' },
+        },
+    },
+
+    heady_shell_exec: {
+        tool: 'heady_shell_exec',
+        description: 'Execute a shell command in the workspace — returns stdout, stderr, exit code',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1),
+        parameters: {
+            command: { type: 'string', required: true, description: 'Command to execute' },
+            cwd: { type: 'string', description: 'Working directory (relative to workspace root)' },
+            timeout: { type: 'number', default: 30000, description: 'Timeout in ms (max 120s)' },
+        },
+    },
+
+    heady_file_search: {
+        tool: 'heady_file_search',
+        description: 'Search for text patterns across workspace files — returns matching lines with file paths',
+        category: 'codebase',
+        priority: Math.pow(PHI, -1),
+        parameters: {
+            query: { type: 'string', required: true, description: 'Text or regex pattern' },
+            path: { type: 'string', default: '.', description: 'Directory to search' },
+            extensions: { type: 'array', description: 'File extensions to include' },
+            caseSensitive: { type: 'boolean', default: false },
+        },
+    },
+
+    // ═══════════════════════════════════════════════════════════
     // TIER 1 — CRITICAL INFRASTRUCTURE (φ^0 priority)
     // ═══════════════════════════════════════════════════════════
 
