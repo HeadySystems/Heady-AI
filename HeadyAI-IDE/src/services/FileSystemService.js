@@ -219,6 +219,8 @@ NODE_ENV=production
   ],
 };
 
+import cloudService from './CloudService';
+
 class FileSystemService {
   constructor() {
     this.directoryHandle = null;
@@ -227,13 +229,86 @@ class FileSystemService {
     this.useNativeFS = typeof window !== 'undefined' && 'showDirectoryPicker' in window;
   }
 
+  // Helper to extract workspace and key from path
+  _parseCloudPath(path) {
+    const parts = path.split('/').filter(Boolean);
+    if (parts.length >= 1) {
+      const wsName = parts[0];
+      const key = parts.slice(1).join('/');
+      return { wsName, key };
+    }
+    return { wsName: 'default', key: path };
+  }
+
+  // Convert flat files array from R2 to nested tree
+  convertFlatListToTree(files, wsName = 'default') {
+    const root = {
+      name: wsName,
+      path: `/${wsName}`,
+      isDirectory: true,
+      children: []
+    };
+
+    for (const file of files) {
+      const parts = file.key.split('/');
+      let current = root;
+      let currentPath = `/${wsName}`;
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (!part) continue;
+        currentPath = `${currentPath}/${part}`;
+        const isLast = i === parts.length - 1;
+
+        let existing = current.children.find(child => child.name === part);
+        if (!existing) {
+          existing = {
+            name: part,
+            path: currentPath,
+            isDirectory: !isLast,
+            children: isLast ? undefined : []
+          };
+          current.children.push(existing);
+        }
+        current = existing;
+      }
+    }
+
+    const sortTree = (node) => {
+      if (node.children) {
+        node.children.sort((a, b) => {
+          if (a.isDirectory !== b.isDirectory) {
+            return a.isDirectory ? -1 : 1;
+          }
+          return a.name.localeCompare(b.name);
+        });
+        node.children.forEach(sortTree);
+      }
+    };
+    sortTree(root);
+
+    return root;
+  }
+
   // Get demo file tree for immediate use
   getDemoFileTree() {
     return DEMO_FILES;
   }
 
-  // Open folder using File System Access API
+  // Open folder using File System Access API or Cloud Service
   async openFolder() {
+    if (cloudService.isConnected) {
+      try {
+        const result = await cloudService.listFiles('default');
+        if (result && result.files) {
+          this.fileTree = this.convertFlatListToTree(result.files, 'default');
+          return this.fileTree;
+        }
+      } catch (err) {
+        console.error('[FileSystemService] Failed to load cloud workspace tree:', err);
+      }
+    }
+
     if (this.useNativeFS) {
       try {
         this.directoryHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
@@ -282,6 +357,15 @@ class FileSystemService {
 
   // Read file content
   async readFile(path) {
+    if (cloudService.isConnected) {
+      const { wsName, key } = this._parseCloudPath(path);
+      try {
+        return await cloudService.readFile(key, wsName);
+      } catch (err) {
+        console.error('[FileSystemService] Failed to read cloud file:', err);
+      }
+    }
+
     // Check native FS first
     const handle = this.fileHandles.get(path);
     if (handle && handle.kind === 'file') {
@@ -295,6 +379,17 @@ class FileSystemService {
 
   // Write file content
   async writeFile(path, content) {
+    if (cloudService.isConnected) {
+      const { wsName, key } = this._parseCloudPath(path);
+      try {
+        await cloudService.writeFile(key, content, wsName);
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to write cloud file:', err);
+        return false;
+      }
+    }
+
     const handle = this.fileHandles.get(path);
     if (handle && handle.kind === 'file') {
       const writable = await handle.createWritable();
@@ -307,6 +402,36 @@ class FileSystemService {
     if (node) {
       node.content = content;
       return true;
+    }
+    return false;
+  }
+
+  // Create file
+  async createFile(path, content = '') {
+    if (cloudService.isConnected) {
+      const { wsName, key } = this._parseCloudPath(path);
+      try {
+        await cloudService.createFile(key, content, wsName);
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to create cloud file:', err);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  // Delete file
+  async deleteFile(path) {
+    if (cloudService.isConnected) {
+      const { wsName, key } = this._parseCloudPath(path);
+      try {
+        await cloudService.deleteFile(key, wsName);
+        return true;
+      } catch (err) {
+        console.error('[FileSystemService] Failed to delete cloud file:', err);
+        return false;
+      }
     }
     return false;
   }

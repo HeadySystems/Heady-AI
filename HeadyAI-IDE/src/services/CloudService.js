@@ -16,9 +16,30 @@
 
 import headyVaultService from './HeadyVaultService';
 
-const PHI = 1.618033988749895;
-const WS_URL = 'wss://manager.headysystems.com/ws/ide';
-const API_URL = 'https://manager.headysystems.com/api';
+const getWSUrl = () => {
+  if (import.meta.env.VITE_WS_URL) return import.meta.env.VITE_WS_URL;
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return `${protocol}//${window.location.hostname}:8080/ws/terminal`;
+    }
+  }
+  return 'wss://manager.headysystems.com/ws/terminal';
+};
+
+const getAPIUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return `${protocol}//${window.location.hostname}:8080`;
+    }
+  }
+  return 'https://manager.headysystems.com/api';
+};
+
+const WS_URL = getWSUrl();
+const API_URL = getAPIUrl();
 
 // Fibonacci-based reconnect delays: 1s, 1s, 2s, 3s, 5s, 8s, 13s
 const RECONNECT_DELAYS = [1000, 1000, 2000, 3000, 5000, 8000, 13000];
@@ -149,7 +170,9 @@ class CloudService {
 
   // Terminal operations
   sendTerminalInput(data) {
-    this.send('terminal:input', { data });
+    if (this.connected && this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type: 'input', data }));
+    }
   }
 
   resizeTerminal(cols, rows) {
@@ -162,27 +185,32 @@ class CloudService {
 
   // AI operations
   async aiChat(message, context = {}) {
-    return this._apiPost('/ai/chat', { message, context, model: context.model || 'heady-brain' });
+    const messages = context.messages || [{ role: 'user', content: message }];
+    return this._apiPost('/api/chat', {
+      messages,
+      provider: context.model || undefined,
+      options: context.options || context
+    });
   }
 
   async aiComplete(code, position, language) {
-    return this._apiPost('/ai/complete', { code, position, language });
+    return this.aiChat(`Autocomplete the following ${language} code at character position ${position}:\n\n\`\`\`${language}\n${code}\n\`\`\``);
   }
 
   async aiExplain(code, language) {
-    return this._apiPost('/ai/explain', { code, language });
+    return this.aiChat(`Explain the following ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``);
   }
 
   async aiRefactor(code, instruction, language) {
-    return this._apiPost('/ai/refactor', { code, instruction, language });
+    return this.aiChat(`Refactor the following ${language} code based on these instructions: ${instruction}\n\nCode:\n\`\`\`${language}\n${code}\n\`\`\``);
   }
 
   async aiDetectBugs(code, language) {
-    return this._apiPost('/ai/detect-bugs', { code, language });
+    return this.aiChat(`Detect any bugs or potential issues in this ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``);
   }
 
   async aiGenerateTests(code, language, framework) {
-    return this._apiPost('/ai/generate-tests', { code, language, framework });
+    return this.aiChat(`Generate unit tests using ${framework} for this ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``);
   }
 
   // Collaboration (CRDT)
@@ -203,32 +231,44 @@ class CloudService {
   }
 
   // File operations (REST API)
-  async listFiles(path = '/') {
-    return this._apiGet(`/files/list?path=${encodeURIComponent(path)}`);
+  async listFiles(wsName = 'default') {
+    return this._apiGet(`/api/fs-tree?ws=${encodeURIComponent(wsName)}`);
   }
 
-  async readFile(path) {
-    return this._apiGet(`/files/read?path=${encodeURIComponent(path)}`);
+  async readFile(path, wsName = 'default') {
+    return this._apiGetText(`/api/fs/${encodeURIComponent(path)}?ws=${encodeURIComponent(wsName)}`);
   }
 
-  async writeFile(path, content) {
-    return this._apiPost('/files/write', { path, content });
+  async writeFile(path, content, wsName = 'default') {
+    return this._apiPut(`/api/fs/${encodeURIComponent(path)}?ws=${encodeURIComponent(wsName)}`, { content });
   }
 
-  async createFile(path, content = '') {
-    return this._apiPost('/files/create', { path, content });
+  async createFile(path, content = '', wsName = 'default') {
+    return this._apiPut(`/api/fs/${encodeURIComponent(path)}?ws=${encodeURIComponent(wsName)}`, { content });
   }
 
-  async deleteFile(path) {
-    return this._apiPost('/files/delete', { path });
+  async deleteFile(path, wsName = 'default') {
+    return this._apiDelete(`/api/fs/${encodeURIComponent(path)}?ws=${encodeURIComponent(wsName)}`);
   }
 
-  async renameFile(oldPath, newPath) {
-    return this._apiPost('/files/rename', { oldPath, newPath });
+  async renameFile(oldPath, newPath, wsName = 'default') {
+    const content = await this.readFile(oldPath, wsName);
+    await this.createFile(newPath, content, wsName);
+    await this.deleteFile(oldPath, wsName);
+    return { success: true };
   }
 
-  async searchFiles(query, path = '/') {
-    return this._apiGet(`/files/search?query=${encodeURIComponent(query)}&path=${encodeURIComponent(path)}`);
+  async searchFiles(query, wsName = 'default') {
+    const tree = await this.listFiles(wsName);
+    const results = [];
+    if (tree && tree.files) {
+      for (const file of tree.files) {
+        if (file.key.toLowerCase().includes(query.toLowerCase())) {
+          results.push({ name: file.key.split('/').pop(), path: `/${wsName}/${file.key}`, isDirectory: false });
+        }
+      }
+    }
+    return results;
   }
 
   // Git operations (REST API)
@@ -316,6 +356,23 @@ class CloudService {
     }
   }
 
+  async _apiGetText(path) {
+    try {
+      const token = headyVaultService.getToken() || this.sessionId;
+      const response = await fetch(`${API_URL}${path}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'X-Heady-Session': this.sessionId,
+        },
+      });
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      return await response.text();
+    } catch (error) {
+      console.error(`[CloudService] GET TEXT ${path} error:`, error);
+      throw error;
+    }
+  }
+
   async _apiPost(path, body) {
     try {
       const token = headyVaultService.getToken() || this.sessionId;
@@ -336,10 +393,50 @@ class CloudService {
     }
   }
 
+  async _apiPut(path, body) {
+    try {
+      const token = headyVaultService.getToken() || this.sessionId;
+      const response = await fetch(`${API_URL}${path}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'X-Heady-Session': this.sessionId,
+        },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error(`[CloudService] PUT ${path} error:`, error);
+      throw error;
+    }
+  }
+
+  async _apiDelete(path) {
+    try {
+      const token = headyVaultService.getToken() || this.sessionId;
+      const response = await fetch(`${API_URL}${path}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'X-Heady-Session': this.sessionId,
+        },
+      });
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.error(`[CloudService] DELETE ${path} error:`, error);
+      throw error;
+    }
+  }
+
   get isConnected() {
     return this.connected;
   }
 }
+
+const PHI = 1.618033988749895;
 
 // Singleton
 const cloudService = new CloudService();

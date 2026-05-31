@@ -53,11 +53,10 @@ const IDELayout = () => {
 
   const activeTab = openTabs.find(t => t.id === activeTabId);
 
-  // Load demo file tree on mount
+  // Load file tree on mount and when connection status changes
   useEffect(() => {
-    const demoTree = fileSystemService.getDemoFileTree();
-    setFileTree(demoTree);
-  }, []);
+    handleOpenFolder();
+  }, [connectionStatus, handleOpenFolder]);
 
   // Handle file selection — load content into a tab
   const handleFileSelect = useCallback(async (file) => {
@@ -147,8 +146,9 @@ const IDELayout = () => {
       if (e.ctrlKey && e.key === 's') {
         e.preventDefault();
         if (activeTab && activeTab.isDirty) {
-          cloud.saveFile(activeTab.path, activeTab.content);
-          actions.markTabSaved(activeTab.id);
+          fileSystemService.writeFile(activeTab.path, activeTab.content).then(() => {
+            actions.markTabSaved(activeTab.id);
+          });
         }
       }
       // Close tab: Ctrl+W
@@ -181,7 +181,7 @@ const IDELayout = () => {
   const renderSidebarContent = () => {
     switch (activeView) {
       case VIEWS.EXPLORER:
-        return <FileExplorer fileTree={fileTree} onFileSelect={handleFileSelect} activeFile={activeTab} onOpenFolder={handleOpenFolder} onRefresh={() => setFileTree(fileSystemService.getDemoFileTree())} />;
+        return <FileExplorer fileTree={fileTree} onFileSelect={handleFileSelect} activeFile={activeTab} onOpenFolder={handleOpenFolder} onRefresh={handleOpenFolder} />;
       case VIEWS.SEARCH:
         return <SearchPanel />;
       case VIEWS.GIT:

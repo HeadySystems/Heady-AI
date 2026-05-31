@@ -1,23 +1,14 @@
-// HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: HeadyAI-IDE/src/components/Terminal.jsx                   ║
-// ║  LAYER: frontend/src/components                                  ║
+// ║  HEADY™ Terminal Component v1.0.0                                ║
+// ║  Terminal UI component with cloud backend sync integration        ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
 // ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Terminal as XTerm } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { WebLinksAddon } from 'xterm-addon-web-links';
+import cloudService from '../services/CloudService';
 import 'xterm/css/xterm.css';
 
 export default function Terminal({ onCommand }) {
@@ -72,7 +63,11 @@ export default function Terminal({ onCommand }) {
     fitAddonRef.current = fitAddon;
 
     term.writeln('HeadyAI-IDE Terminal \x1b[36mv1.0.0\x1b[0m');
-    term.writeln('Connected to Heady Cloud Compute (Local fallback active).');
+    if (cloudService.isConnected) {
+      term.writeln('Connected to Heady Cloud Compute via WebSockets.');
+    } else {
+      term.writeln('Connected to Heady Cloud Compute (Local fallback active).');
+    }
     term.write('\r\n\x1b[36mheady@cloud\x1b[0m:~$ ');
 
     const handleResize = () => {
@@ -80,44 +75,81 @@ export default function Terminal({ onCommand }) {
     };
     window.addEventListener('resize', handleResize);
 
-    // Basic local echo logic to simulate terminal
+    // Subscribe to cloud output if connected
+    const unsubscribeCloud = cloudService.on('output', (data) => {
+      term.write(data.data);
+      term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
+    });
+
+    // Basic echo and routing logic
     let currentLine = '';
 
     term.onData(e => {
-      switch (e) {
-        case '\r': // Enter
-          term.write('\r\n');
-          if (currentLine.trim()) {
-            if (onCommand) {
-              onCommand(currentLine.trim(), term);
+      if (cloudService.isConnected) {
+        switch (e) {
+          case '\r': // Enter
+            term.write('\r\n');
+            if (currentLine.trim()) {
+              cloudService.sendTerminalInput(currentLine);
             } else {
-              term.writeln(`\x1b[31mCommand not found: ${currentLine}\x1b[0m`);
+              term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
             }
-          }
-          currentLine = '';
-          term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
-          break;
-        case '\u007F': // Backspace
-          if (currentLine.length > 0) {
-            term.write('\b \b');
-            currentLine = currentLine.slice(0, -1);
-          }
-          break;
-        case '\u0003': // Ctrl+C
-          term.write('^C\r\n');
-          currentLine = '';
-          term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
-          break;
-        default:
-          if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
-            currentLine += e;
-            term.write(e);
-          }
+            currentLine = '';
+            break;
+          case '\u007F': // Backspace
+            if (currentLine.length > 0) {
+              term.write('\b \b');
+              currentLine = currentLine.slice(0, -1);
+            }
+            break;
+          case '\u0003': // Ctrl+C
+            term.write('^C\r\n');
+            currentLine = '';
+            term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
+            break;
+          default:
+            if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
+              currentLine += e;
+              term.write(e);
+            }
+        }
+      } else {
+        switch (e) {
+          case '\r': // Enter
+            term.write('\r\n');
+            if (currentLine.trim()) {
+              if (onCommand) {
+                onCommand(currentLine.trim(), term);
+              } else {
+                term.writeln(`\x1b[31mCommand not found: ${currentLine}\x1b[0m`);
+              }
+            }
+            currentLine = '';
+            term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
+            break;
+          case '\u007F': // Backspace
+            if (currentLine.length > 0) {
+              term.write('\b \b');
+              currentLine = currentLine.slice(0, -1);
+            }
+            break;
+          case '\u0003': // Ctrl+C
+            term.write('^C\r\n');
+            currentLine = '';
+            term.write('\x1b[36mheady@cloud\x1b[0m:~$ ');
+            break;
+          default:
+            if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
+              currentLine += e;
+              term.write(e);
+            }
+        }
       }
     });
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      unsubscribeCloud();
       term.dispose();
     };
   }, [onCommand]);
