@@ -17434,3 +17434,16 @@ To https://github.com/HeadyMe/heady-production.git
  ! [remote rejected]     main -> main (pre-receive hook declined)
 error: failed to push some refs to 'https://github.com/HeadyMe/heady-production.git'
 [39m
+[Sun May 31 01:05:01 PM MDT 2026] Skipped: another auto-commit instance is running
+Committed: 341d4fab5 — 
+Push failed: spawnSync /bin/sh ETIMEDOUT
+[2026-05-31 13:00:03.686 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-31T19:00:03.685Z] [INFO] Committed 341d4fab5: HCFP-AUTO: 5 file(s) changed — stories.json, pattern_store.json, hc_pipeline.log[39m
+    [35mcomponent[39m: "system"
+[2026-05-31 13:00:04.622 -0600] [32mINFO[39m: [36m[auto-commit] [2026-05-31T19:00:04.622Z] [WARN] Pull --rebase failed (conflict), will try merge: Command failed: git pull --rebase production main
+From https://github.com/HeadyMe/heady-production
+ * branch                main       -> FETCH_HEAD
+error: cannot rebase: You have unstaged changes.
+error: Please commit or stash them.
+[39m
+    [35mcomponent[39m: "system"
+[2026-05-31 13:05:05.442 -0600] [31mERROR[39m: [36m[auto-commit] [2026-05-31T19:05:05.442Z] [ERROR] Push failed (attempt 1), next backoff: 2000ms — spawnSync /bin/sh ETIMEDOUT[39m
