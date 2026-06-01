@@ -46,53 +46,54 @@
 // =============================================================================
 const DOMAIN_ROUTES = new Map([
   // ── Core Platform ──────────────────────────────────────────────────────
-  ['headyme.com',              '/app'],
-  ['www.headyme.com',          '/app'],
-  ['headysystems.com',         '/systems'],
-  ['www.headysystems.com',     '/systems'],
+  ['headyme.com', '/app'],
+  ['www.headyme.com', '/app'],
+  ['headysystems.com', '/systems'],
+  ['www.headysystems.com', '/systems'],
   // ── Community & Connection ─────────────────────────────────────────────
-  ['headyconnection.org',      '/connection'],
-  ['www.headyconnection.org',  '/connection'],
-  ['headyconnection.com',      '/connection-com'],
-  ['www.headyconnection.com',  '/connection-com'],
+  ['headyconnection.org', '/connection'],
+  ['www.headyconnection.org', '/connection'],
+  ['headyconnection.com', '/connection-com'],
+  ['www.headyconnection.com', '/connection-com'],
   // ── Companion ──────────────────────────────────────────────────────────
-  ['headybuddy.org',           '/buddy'],
-  ['www.headybuddy.org',       '/buddy'],
-  ['headybot.com',             '/bot'],
-  ['www.headybot.com',         '/bot'],
+  ['headybuddy.org', '/buddy'],
+  ['www.headybuddy.org', '/buddy'],
+  ['headybot.com', '/bot'],
+  ['www.headybot.com', '/bot'],
   // ── Developer & API ────────────────────────────────────────────────────
-  ['headymcp.com',             '/mcp'],
-  ['www.headymcp.com',         '/mcp'],
-  ['headyio.com',              '/io'],
-  ['www.headyio.com',          '/io'],
-  ['headyapi.com',             '/api'],
-  ['www.headyapi.com',         '/api'],
+  ['headymcp.com', '/mcp'],
+  ['www.headymcp.com', '/mcp'],
+  ['headyio.com', '/io'],
+  ['www.headyio.com', '/io'],
+  ['headyapi.com', '/api'],
+  ['www.headyapi.com', '/api'],
   // ── Research & OS ──────────────────────────────────────────────────────
-  ['heady-ai.com',             '/ai'],
-  ['www.heady-ai.com',         '/ai'],
-  ['headyos.com',              '/os'],
-  ['www.headyos.com',          '/os'],
+  ['heady-ai.com', '/ai'],
+  ['www.heady-ai.com', '/ai'],
+  ['headyos.com', '/os'],
+  ['www.headyos.com', '/os'],
   // ── Infrastructure ─────────────────────────────────────────────────────
-  ['headycloud.com',           '/cloud'],
-  ['www.headycloud.com',       '/cloud'],
-  ['headyweb.com',             '/web'],
-  ['www.headyweb.com',         '/web'],
+  ['headycloud.com', '/cloud'],
+  ['www.headycloud.com', '/cloud'],
+  ['headyweb.com', '/web'],
+  ['www.headyweb.com', '/web'],
   // ── Verticals ──────────────────────────────────────────────────────────
-  ['headyfinance.com',         '/finance'],
-  ['www.headyfinance.com',     '/finance'],
-  ['headymusic.com',           '/music'],
-  ['www.headymusic.com',       '/music'],
+  ['headyfinance.com', '/finance'],
+  ['www.headyfinance.com', '/finance'],
+  ['headymusic.com', '/music'],
+  ['www.headymusic.com', '/music'],
   // ── Marketplace & Exchange ─────────────────────────────────────────────
-  ['headystore.com',           '/store'],
-  ['www.headystore.com',       '/store'],
-  ['headyex.com',              '/ex'],
-  ['www.headyex.com',          '/ex'],
+  ['headystore.com', '/store'],
+  ['www.headystore.com', '/store'],
+  ['headyex.com', '/ex'],
+  ['www.headyex.com', '/ex'],
 ]);
 
 // =============================================================================
 // Static asset patterns — cache for 1 year
 // =============================================================================
-const STATIC_ASSET_PATTERN = /\.(js|jsx|ts|tsx|css|scss|woff|woff2|ttf|eot|otf|png|jpg|jpeg|gif|svg|ico|webp|avif|mp4|webm|ogg|mp3|pdf|zip)(\?.*)?$/i;
+const STATIC_ASSET_PATTERN =
+  /\.(js|jsx|ts|tsx|css|scss|woff|woff2|ttf|eot|otf|png|jpg|jpeg|gif|svg|ico|webp|avif|mp4|webm|ogg|mp3|pdf|zip)(\?.*)?$/i;
 
 // API path patterns — respect Cache-Control from origin, no default caching
 const API_PATH_PATTERN = /^\/api\//i;
@@ -107,17 +108,39 @@ const WEBSOCKET_PATH_PATTERN = /^\/(ws|socket|realtime|live|events)/i;
 // Bot signatures to block (extended list)
 // =============================================================================
 const BAD_BOT_PATTERNS = [
-  /sqlmap/i, /nikto/i, /masscan/i, /nmap/i, /zgrab/i,
-  /python-requests/i, /go-http-client/i, /curl\/[0-4]\./i,
-  /libwww-perl/i, /scrapy/i, /crawl/i, /harvest/i, /extract/i,
-  /spam/i, /ahrefsbot/i, /semrushbot/i, /dotbot/i,
+  /sqlmap/i,
+  /nikto/i,
+  /masscan/i,
+  /nmap/i,
+  /zgrab/i,
+  /python-requests/i,
+  /go-http-client/i,
+  /curl\/[0-4]\./i,
+  /libwww-perl/i,
+  /scrapy/i,
+  /crawl/i,
+  /harvest/i,
+  /extract/i,
+  /spam/i,
+  /ahrefsbot/i,
+  /semrushbot/i,
+  /dotbot/i,
 ];
 
 // Allowed good bots (search engines, monitoring)
 const ALLOWED_BOT_PATTERNS = [
-  /googlebot/i, /bingbot/i, /slurp/i, /duckduckbot/i,
-  /baiduspider/i, /yandexbot/i, /facebot/i, /twitterbot/i,
-  /linkedinbot/i, /pingdom/i, /uptimerobot/i, /datadoghq/i,
+  /googlebot/i,
+  /bingbot/i,
+  /slurp/i,
+  /duckduckbot/i,
+  /baiduspider/i,
+  /yandexbot/i,
+  /facebot/i,
+  /twitterbot/i,
+  /linkedinbot/i,
+  /pingdom/i,
+  /uptimerobot/i,
+  /datadoghq/i,
 ];
 
 // =============================================================================
@@ -177,7 +200,7 @@ const SECURITY_HEADERS = {
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "upgrade-insecure-requests",
+    'upgrade-insecure-requests',
   ].join('; '),
 };
 
@@ -205,10 +228,10 @@ export default {
 // Core request handler
 // =============================================================================
 async function handleRequest(request, env, ctx) {
-  const url      = new URL(request.url);
+  const url = new URL(request.url);
   const hostname = url.hostname.toLowerCase();
   const pathname = url.pathname;
-  const method   = request.method.toUpperCase();
+  const method = request.method.toUpperCase();
 
   // ── Maintenance mode ──────────────────────────────────────────────────────
   if (env.MAINTENANCE_MODE === '1') {
@@ -236,7 +259,7 @@ async function handleRequest(request, env, ctx) {
   if (env.RATE_LIMIT_KV) {
     const limited = await checkRateLimit(request, env, ctx);
     if (limited) {
-      return rateLimitResponse();
+      return rateLimitResponse(env);
     }
   }
 
@@ -259,13 +282,13 @@ async function handleRequest(request, env, ctx) {
   // Rewrite path: /<domain-prefix><original-path>
   // e.g. headyme.com/dashboard → /app/dashboard
   const rewrittenPath = pathPrefix + (pathname === '/' ? '' : pathname) + url.search;
-  const originUrl     = origin + rewrittenPath;
+  const originUrl = origin + rewrittenPath;
 
   // Forward request to origin
   const originRequest = new Request(originUrl, {
-    method:  request.method,
+    method: request.method,
     headers: buildOriginHeaders(request, hostname),
-    body:    ['GET', 'HEAD'].includes(method) ? null : request.body,
+    body: ['GET', 'HEAD'].includes(method) ? null : request.body,
     redirect: 'follow',
   });
 
@@ -273,10 +296,11 @@ async function handleRequest(request, env, ctx) {
   const cacheKey = new Request(originUrl, originRequest);
 
   // Never cache health, auth, or POST/PUT/DELETE
-  const isCacheable = ['GET', 'HEAD'].includes(method)
-    && !HEALTH_PATH_PATTERN.test(pathname)
-    && !pathname.includes('/auth/')
-    && !pathname.includes('/session');
+  const isCacheable =
+    ['GET', 'HEAD'].includes(method) &&
+    !HEALTH_PATH_PATTERN.test(pathname) &&
+    !pathname.includes('/auth/') &&
+    !pathname.includes('/session');
 
   if (isCacheable) {
     const cache = caches.default;
@@ -297,9 +321,9 @@ async function handleRequest(request, env, ctx) {
     originResponse = await fetch(originRequest, {
       cf: {
         // Cloudflare-specific options
-        cacheTtl: 0,                  // Let our cache logic handle TTL
-        cacheEverything: false,       // We manage caching manually
-        resolveOverride: undefined,   // Use normal DNS resolution
+        cacheTtl: 0, // Let our cache logic handle TTL
+        cacheEverything: false, // We manage caching manually
+        resolveOverride: undefined, // Use normal DNS resolution
       },
     });
   } catch (err) {
@@ -315,9 +339,9 @@ async function handleRequest(request, env, ctx) {
   responseHeaders.set('X-Heady-Prefix', pathPrefix);
 
   const response = new Response(originResponse.body, {
-    status:     originResponse.status,
+    status: originResponse.status,
     statusText: originResponse.statusText,
-    headers:    responseHeaders,
+    headers: responseHeaders,
   });
 
   // ── Cache storage ─────────────────────────────────────────────────────────
@@ -329,9 +353,9 @@ async function handleRequest(request, env, ctx) {
       responseToCache.headers.set('Cache-Control', `public, max-age=${cacheTtl}, immutable`);
 
       ctx.waitUntil(
-        caches.default.put(cacheKey, responseToCache).catch(err =>
-          console.error('[HeadyEdgeRouter] Cache put failed:', err.message)
-        )
+        caches.default
+          .put(cacheKey, responseToCache)
+          .catch((err) => console.error('[HeadyEdgeRouter] Cache put failed:', err.message)),
       );
     }
   }
@@ -343,10 +367,10 @@ async function handleRequest(request, env, ctx) {
 // WebSocket passthrough
 // =============================================================================
 async function handleWebSocket(request, env, pathPrefix, pathname) {
-  const origin      = env.CLOUD_RUN_ORIGIN || 'https://heady-production-uc.a.run.app';
-  const wsOrigin    = origin.replace(/^https?:\/\//, 'wss://');
-  const url         = new URL(request.url);
-  const rewritten   = wsOrigin + pathPrefix + pathname + url.search;
+  const origin = env.CLOUD_RUN_ORIGIN || 'https://heady-production-uc.a.run.app';
+  const wsOrigin = origin.replace(/^https?:\/\//, 'wss://');
+  const url = new URL(request.url);
+  const rewritten = wsOrigin + pathPrefix + pathname + url.search;
 
   // Use Cloudflare's WebSocket API to proxy the upgrade
   const [client, server] = Object.values(new WebSocketPair());
@@ -358,7 +382,7 @@ async function handleWebSocket(request, env, pathPrefix, pathname) {
   const originWs = await fetch(rewritten, {
     headers: buildOriginHeaders(request, url.hostname),
     cf: { resolveOverride: undefined },
-  }).catch(err => {
+  }).catch((err) => {
     console.error('[HeadyEdgeRouter] WebSocket origin failed:', err.message);
     return null;
   });
@@ -372,8 +396,8 @@ async function handleWebSocket(request, env, pathPrefix, pathname) {
   const originSocket = originWs.webSocket;
   originSocket.accept();
 
-  server.addEventListener('message', e => originSocket.send(e.data));
-  originSocket.addEventListener('message', e => server.send(e.data));
+  server.addEventListener('message', (e) => originSocket.send(e.data));
+  originSocket.addEventListener('message', (e) => server.send(e.data));
   server.addEventListener('close', () => originSocket.close());
   originSocket.addEventListener('close', () => server.close());
 
@@ -385,17 +409,18 @@ async function handleWebSocket(request, env, pathPrefix, pathname) {
 // =============================================================================
 function handleCors(request, env) {
   const origin = request.headers.get('Origin') || '';
-  const isHeadyDomain = [...DOMAIN_ROUTES.keys()].some(d => origin.includes(d));
+  const isHeadyDomain = [...DOMAIN_ROUTES.keys()].some((d) => origin.includes(d));
 
   return new Response(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin':      isHeadyDomain ? origin : 'https://headyme.com',
-      'Access-Control-Allow-Methods':     'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers':     'Content-Type, Authorization, X-Requested-With, X-Heady-Client',
+      'Access-Control-Allow-Origin': isHeadyDomain ? origin : 'https://headyme.com',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers':
+        'Content-Type, Authorization, X-Requested-With, X-Heady-Client',
       'Access-Control-Allow-Credentials': 'true',
-      'Access-Control-Max-Age':           '86400',
-      'Vary': 'Origin',
+      'Access-Control-Max-Age': '86400',
+      Vary: 'Origin',
     },
   });
 }
@@ -404,25 +429,26 @@ function handleCors(request, env) {
 // Rate limiting (Cloudflare KV-backed)
 // =============================================================================
 async function checkRateLimit(request, env, ctx) {
-  const ip      = request.headers.get('CF-Connecting-IP') || 'unknown';
-  const window  = parseInt(env.RATE_LIMIT_WINDOW || '60');
-  const max     = parseInt(env.RATE_LIMIT_MAX    || '100');
-  const now     = Math.floor(Date.now() / 1000);
-  const bucket  = Math.floor(now / window);
-  const key     = `rl:${ip}:${bucket}`;
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const window = parseInt(env.RATE_LIMIT_WINDOW || '60');
+  const max = parseInt(env.RATE_LIMIT_MAX || '100');
+  const now = Math.floor(Date.now() / 1000);
+  const bucket = Math.floor(now / window);
+  const key = `rl:${ip}:${bucket}`;
 
   try {
     const currentRaw = await env.RATE_LIMIT_KV.get(key);
-    const current    = currentRaw ? parseInt(currentRaw) : 0;
+    const current = currentRaw ? parseInt(currentRaw) : 0;
 
     if (current >= max) {
-      return true;   // Rate limited
+      return true; // Rate limited
     }
 
     // Increment counter asynchronously
     ctx.waitUntil(
-      env.RATE_LIMIT_KV.put(key, String(current + 1), { expirationTtl: window * 2 })
-        .catch(() => {})
+      env.RATE_LIMIT_KV.put(key, String(current + 1), { expirationTtl: window * 2 }).catch(
+        () => {},
+      ),
     );
 
     return false;
@@ -440,12 +466,12 @@ function checkBotProtection(request) {
   const ua = request.headers.get('User-Agent') || '';
 
   // Allow known good bots first
-  if (ALLOWED_BOT_PATTERNS.some(p => p.test(ua))) {
+  if (ALLOWED_BOT_PATTERNS.some((p) => p.test(ua))) {
     return { blocked: false };
   }
 
   // Block known bad bots
-  if (BAD_BOT_PATTERNS.some(p => p.test(ua))) {
+  if (BAD_BOT_PATTERNS.some((p) => p.test(ua))) {
     return { blocked: true, reason: 'bad-bot' };
   }
 
@@ -465,7 +491,7 @@ function checkGeographicBlock(request, env) {
   if (!blocked) return { blocked: false };
 
   const country = request.headers.get('CF-IPCountry') || '';
-  const blockedList = blocked.split(',').map(c => c.trim().toUpperCase());
+  const blockedList = blocked.split(',').map((c) => c.trim().toUpperCase());
 
   if (blockedList.includes(country.toUpperCase())) {
     return { blocked: true, country };
@@ -486,7 +512,7 @@ function getCacheTtl(pathname, response) {
 
   // Static assets — 1 year (immutable)
   if (STATIC_ASSET_PATTERN.test(pathname)) {
-    return 31_536_000;   // 365 days
+    return 31_536_000; // 365 days
   }
 
   // API paths — never cache at edge beyond origin's directive
@@ -495,8 +521,8 @@ function getCacheTtl(pathname, response) {
     return match ? parseInt(match[1]) : 0;
   }
 
-  // HTML pages — 5 minutes
-  return 300;
+  // HTML pages — 377 seconds (Fibonacci 14)
+  return 377;
 }
 
 // =============================================================================
@@ -506,16 +532,16 @@ function buildOriginHeaders(request, hostname) {
   const headers = new Headers(request.headers);
 
   // Add forwarding headers
-  headers.set('X-Forwarded-Host',  hostname);
+  headers.set('X-Forwarded-Host', hostname);
   headers.set('X-Forwarded-Proto', 'https');
-  headers.set('X-Real-IP',         request.headers.get('CF-Connecting-IP') || '');
-  headers.set('X-Heady-Domain',    hostname);
-  headers.set('X-Heady-Ray',       request.headers.get('CF-Ray') || '');
+  headers.set('X-Real-IP', request.headers.get('CF-Connecting-IP') || '');
+  headers.set('X-Heady-Domain', hostname);
+  headers.set('X-Heady-Ray', request.headers.get('CF-Ray') || '');
 
   // Country and region for geo-aware routing in the app
-  headers.set('X-Heady-Country',   request.headers.get('CF-IPCountry') || '');
-  headers.set('X-Heady-Region',    request.cf?.region || '');
-  headers.set('X-Heady-City',      request.cf?.city   || '');
+  headers.set('X-Heady-Country', request.headers.get('CF-IPCountry') || '');
+  headers.set('X-Heady-Region', request.cf?.region || '');
+  headers.set('X-Heady-City', request.cf?.city || '');
 
   // Remove hop-by-hop headers that shouldn't be forwarded
   headers.delete('CF-Connecting-IP');
@@ -545,16 +571,18 @@ function errorResponse(status, message) {
   return new Response(JSON.stringify({ error: message, status }), { status, headers });
 }
 
-function rateLimitResponse() {
+function rateLimitResponse(env) {
+  const window = parseInt(env?.RATE_LIMIT_WINDOW || '55');
+  const max = parseInt(env?.RATE_LIMIT_MAX || '89');
   const headers = new Headers({
-    'Content-Type':  'application/json',
-    'Retry-After':   '60',
-    'X-RateLimit-Limit': String(100),
+    'Content-Type': 'application/json',
+    'Retry-After': String(window),
+    'X-RateLimit-Limit': String(max),
   });
   addSecurityHeaders(headers);
   return new Response(
-    JSON.stringify({ error: 'Too many requests', status: 429, retryAfter: 60 }),
-    { status: 429, headers }
+    JSON.stringify({ error: 'Too many requests', status: 429, retryAfter: window }),
+    { status: 429, headers },
   );
 }
 
@@ -585,10 +613,10 @@ function maintenancePage() {
 </html>`;
 
   return new Response(html, {
-    status:  503,
+    status: 503,
     headers: {
-      'Content-Type':  'text/html; charset=utf-8',
-      'Retry-After':   '300',
+      'Content-Type': 'text/html; charset=utf-8',
+      'Retry-After': '300',
       'Cache-Control': 'no-store',
     },
   });
@@ -621,10 +649,10 @@ function originDownPage() {
 </html>`;
 
   return new Response(html, {
-    status:  503,
+    status: 503,
     headers: {
-      'Content-Type':  'text/html; charset=utf-8',
-      'Retry-After':   '30',
+      'Content-Type': 'text/html; charset=utf-8',
+      'Retry-After': '30',
       'Cache-Control': 'no-store',
     },
   });

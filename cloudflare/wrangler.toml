@@ -18,7 +18,7 @@ account_id = "8b1fa38f282c691423c6399247d53323"
 command = ""
 
 [limits]
-cpu_ms = 50
+cpu_ms = 55              # fib(10) — Golden ratio scaled CPU budget
 
 # Production routes are handled by worker-heady-router. This config retains the
 # canonical binding inventory and staging routes for the edge router worker.
@@ -41,8 +41,8 @@ preview_id = "e01e028313d7407db2fdd700c7764dde"
 
 [vars]
 CLOUD_RUN_ORIGIN = "https://heady-production-uc.a.run.app"
-RATE_LIMIT_WINDOW = "60"
-RATE_LIMIT_MAX = "100"
+RATE_LIMIT_WINDOW = "55"   # fib(10) — High-density sampling window
+RATE_LIMIT_MAX = "89"     # fib(11) — Nominal traffic threshold
 MAINTENANCE_MODE = "0"
 BLOCKED_COUNTRIES = ""
 HEADY_ENV = "production"
@@ -72,8 +72,8 @@ routes = [
 
 [env.staging.vars]
 CLOUD_RUN_ORIGIN = "https://heady-staging-uc.a.run.app"
-RATE_LIMIT_WINDOW = "60"
-RATE_LIMIT_MAX = "200"
+RATE_LIMIT_WINDOW = "55"   # fib(10)
+RATE_LIMIT_MAX = "233"    # fib(13) — Testing burst buffer threshold
 MAINTENANCE_MODE = "0"
 BLOCKED_COUNTRIES = ""
 HEADY_ENV = "staging"
@@ -98,15 +98,15 @@ name = "heady-edge-router-dev"
 
 [env.dev.vars]
 CLOUD_RUN_ORIGIN = "https://heady-production-uc.a.run.app"
-RATE_LIMIT_WINDOW = "60"
-RATE_LIMIT_MAX = "1000"
+RATE_LIMIT_WINDOW = "55"   # fib(10)
+RATE_LIMIT_MAX = "987"    # fib(16) — Uncapped concurrency budget
 MAINTENANCE_MODE = "0"
 BLOCKED_COUNTRIES = ""
 HEADY_ENV = "development"
 
 [observability]
 enabled = true
-head_sampling_rate = 0.1
+head_sampling_rate = 0.089  # fib(11) / 1000 — high fidelity telemetry sampling rate
 
 [placement]
 mode = "smart"

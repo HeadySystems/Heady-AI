@@ -27,7 +27,7 @@ command = ""             # No build step needed — pure Worker JS
 # Worker limits
 # ---------------------------------------------------------------------------
 [limits]
-cpu_ms = 50              # 50ms CPU budget per request (free plan: 10ms)
+cpu_ms = 55              # fib(10) — Golden ratio scaled CPU budget (free plan: 10ms)
 
 # ---------------------------------------------------------------------------
 # Routes — all 17 Heady domains, www + apex
@@ -78,8 +78,8 @@ routes = []
 # ---------------------------------------------------------------------------
 [vars]
 CLOUD_RUN_ORIGIN   = "https://heady-production-uc.a.run.app"
-RATE_LIMIT_WINDOW  = "60"
-RATE_LIMIT_MAX     = "100"
+RATE_LIMIT_WINDOW  = "55"   # fib(10) — High-density sampling window
+RATE_LIMIT_MAX     = "89"     # fib(11) — Nominal traffic threshold
 MAINTENANCE_MODE   = "0"
 BLOCKED_COUNTRIES  = ""
 HEADY_ENV          = "production"
@@ -123,8 +123,8 @@ routes = [
 
 [env.staging.vars]
 CLOUD_RUN_ORIGIN   = "https://heady-staging-uc.a.run.app"
-RATE_LIMIT_WINDOW  = "60"
-RATE_LIMIT_MAX     = "200"
+RATE_LIMIT_WINDOW  = "55"   # fib(10)
+RATE_LIMIT_MAX     = "233"    # fib(13) — Testing burst buffer threshold
 MAINTENANCE_MODE   = "0"
 BLOCKED_COUNTRIES  = ""
 HEADY_ENV          = "staging"
@@ -152,8 +152,8 @@ name = "heady-edge-router-dev"
 
 [env.dev.vars]
 CLOUD_RUN_ORIGIN   = "https://heady-production-uc.a.run.app"
-RATE_LIMIT_WINDOW  = "60"
-RATE_LIMIT_MAX     = "1000"
+RATE_LIMIT_WINDOW  = "55"   # fib(10)
+RATE_LIMIT_MAX     = "987"    # fib(16) — Uncapped concurrency budget
 MAINTENANCE_MODE   = "0"
 BLOCKED_COUNTRIES  = ""
 HEADY_ENV          = "development"
@@ -170,7 +170,7 @@ HEADY_ENV          = "development"
 # ---------------------------------------------------------------------------
 [observability]
 enabled = true
-head_sampling_rate = 0.1   # Sample 10% of requests for tracing
+head_sampling_rate = 0.089   # Sample fib(11) / 1000 of requests for tracing
 
 # ---------------------------------------------------------------------------
 # Tail workers (for logging to external sinks)
