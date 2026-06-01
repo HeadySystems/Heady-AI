@@ -15,6 +15,8 @@
 // HEADY_BRAND:END
 import React, { useState, useEffect } from 'react';
 
+const HEADY_API = import.meta.env.VITE_HEADY_API || "https://manager.headysystems.com";
+
 export default function CrossDeviceSync({ userId }) {
   const [devices, setDevices] = useState([]);
   const [activeDevice, setActiveDevice] = useState(null);
@@ -23,7 +25,7 @@ export default function CrossDeviceSync({ userId }) {
     // Fetch user's devices from Heady API
     const fetchDevices = async () => {
       try {
-        const response = await fetch(`http://api.heady.io:3300/api/users/${userId}/devices`);
+        const response = await fetch(`${HEADY_API}/api/users/${userId}/devices`);
         const data = await response.json();
         setDevices(data.devices);
         setActiveDevice(data.activeDevice);
@@ -39,7 +41,7 @@ export default function CrossDeviceSync({ userId }) {
 
   const switchDevice = async (deviceId) => {
     try {
-      await fetch(`http://api.heady.io:3300/api/users/${userId}/active-device`, {
+      await fetch(`${HEADY_API}/api/users/${userId}/active-device`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ deviceId })

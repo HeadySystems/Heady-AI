@@ -73,24 +73,33 @@ const PROVIDER_DISPATCH = {
 
 function httpsPost(hostname, path, body, headers) {
   return new Promise((resolve, reject) => {
-    const req = https.request({
-      hostname, path, method: 'POST', headers: {
-        ...headers,
-        'Content-Length': Buffer.byteLength(body),
-      }
-    }, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        if (res.statusCode >= 400) {
-          reject(new Error(`Provider returned ${res.statusCode}: ${data.slice(0, 200)}`));
-        } else {
-          resolve(data);
-        }
-      });
-    });
+    const req = https.request(
+      {
+        hostname,
+        path,
+        method: 'POST',
+        headers: {
+          ...headers,
+          'Content-Length': Buffer.byteLength(body),
+        },
+      },
+      (res) => {
+        let data = '';
+        res.on('data', (chunk) => (data += chunk));
+        res.on('end', () => {
+          if (res.statusCode >= 400) {
+            reject(new Error(`Provider returned ${res.statusCode}: ${data.slice(0, 200)}`));
+          } else {
+            resolve(data);
+          }
+        });
+      },
+    );
     req.on('error', reject);
-    req.setTimeout(30000, () => { req.destroy(); reject(new Error('Provider request timed out')); });
+    req.setTimeout(30000, () => {
+      req.destroy();
+      reject(new Error('Provider request timed out'));
+    });
     req.write(body);
     req.end();
   });
@@ -99,7 +108,7 @@ function httpsPost(hostname, path, body, headers) {
 function selectProvider(task, providers) {
   const mapping = providers.routing?.taskMapping?.[task] || providers.routing?.fallbackChain || [];
   for (const providerId of mapping) {
-    const provider = providers.providers.find(p => p.id === providerId);
+    const provider = providers.providers.find((p) => p.id === providerId);
     if (provider && process.env[provider.envKey]) {
       return provider;
     }
@@ -112,18 +121,30 @@ function setupGateway(app) {
     try {
       const { task, prompt, options = {} } = req.body;
       if (!task || !prompt) {
-        return res.status(400).json({ error: { code: 'BAD_REQUEST', message: 'task and prompt are required' } });
+        return res
+          .status(400)
+          .json({ error: { code: 'BAD_REQUEST', message: 'task and prompt are required' } });
       }
       const providers = require('../../config/providers.json');
       const selected = selectProvider(task, providers);
 
       if (!selected) {
-        return res.status(503).json({ error: { code: 'NO_PROVIDER', message: 'No AI provider available with a configured API key' } });
+        return res.status(503).json({
+          error: {
+            code: 'NO_PROVIDER',
+            message: 'No AI provider available with a configured API key',
+          },
+        });
       }
 
       const dispatch = PROVIDER_DISPATCH[selected.id];
       if (!dispatch) {
-        return res.status(503).json({ error: { code: 'UNSUPPORTED_PROVIDER', message: `Provider "${selected.id}" dispatch not implemented` } });
+        return res.status(503).json({
+          error: {
+            code: 'UNSUPPORTED_PROVIDER',
+            message: `Provider "${selected.id}" dispatch not implemented`,
+          },
+        });
       }
 
       logger.info(`[AIGateway] Routing "${task}" to ${selected.name} (${selected.id})`);
@@ -145,7 +166,7 @@ function setupGateway(app) {
 
   // ── HeadyBuddy Chat — simplified endpoint for chat widget ──
   app.post('/api/ai/chat', async (req, res, next) => {
-    console.log("[DEBUG] Hit /api/ai/chat!", req.body);
+    console.log('[DEBUG] Hit /api/ai/chat!', req.body);
     try {
       const { message, session, site, host, model } = req.body;
       if (!message) {
@@ -165,7 +186,10 @@ function setupGateway(app) {
         const dispatch = PROVIDER_DISPATCH[providerId];
         if (!dispatch) continue;
         try {
-          result = await dispatch(fullPrompt, { maxTokens: 256, model: model === 'auto' ? undefined : model });
+          result = await dispatch(fullPrompt, {
+            maxTokens: 256,
+            model: model === 'auto' ? undefined : model,
+          });
           usedProvider = providerId;
           break;
         } catch (err) {
@@ -175,7 +199,10 @@ function setupGateway(app) {
       }
 
       if (!result) {
-        return res.status(503).json({ error: 'No AI provider available. Check API keys.', response: `I'm running in local mode on ${site || 'Heady'}. Connect an AI provider key to enable full cloud chat.` });
+        return res.status(503).json({
+          error: 'No AI provider available. Check API keys.',
+          response: `I'm running in local mode on ${site || 'Heady'}. Connect an AI provider key to enable full cloud chat.`,
+        });
       }
 
       res.json({
@@ -193,9 +220,9 @@ function setupGateway(app) {
 
   // Provider status — never leak env key names
   app.get('/api/ai/providers', (req, res) => {
-    console.log("[DEBUG] Hit /api/ai/providers!");
+    console.log('[DEBUG] Hit /api/ai/providers!');
     const providers = require('../../config/providers.json');
-    const withStatus = providers.providers.map(p => ({
+    const withStatus = providers.providers.map((p) => ({
       id: p.id,
       name: p.name,
       models: p.models,
@@ -208,4 +235,28 @@ function setupGateway(app) {
   });
 }
 
-export { setupGateway };
+async function generateHeadyBuddyResponse(message, site = 'Heady') {
+  const systemPrompt = `You are HeadyBuddy, the AI companion for ${site}. You are helpful, concise, and knowledgeable about everything in the Heady™ ecosystem. Keep responses brief (1-3 sentences) unless asked for detail. Be warm and personal.`;
+  const fullPrompt = `${systemPrompt}\n\nUser: ${message}\n\nHeadyBuddy:`;
+
+  const providerOrder = ['groq', 'openai', 'anthropic'];
+  for (const providerId of providerOrder) {
+    const dispatch = PROVIDER_DISPATCH[providerId];
+    if (!dispatch) continue;
+    try {
+      const result = await dispatch(fullPrompt, { maxTokens: 256 });
+      return {
+        reply: result.result,
+        provider: providerId,
+        model: result.model,
+      };
+    } catch (err) {
+      logger.warn(
+        `[AIGateway] generateHeadyBuddyResponse: ${providerId} unavailable (${err.message})`,
+      );
+    }
+  }
+  return null;
+}
+
+export { setupGateway, generateHeadyBuddyResponse };

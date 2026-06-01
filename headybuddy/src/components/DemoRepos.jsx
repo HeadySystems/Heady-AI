@@ -15,6 +15,8 @@
 // HEADY_BRAND:END
 import React, { useState, useEffect } from 'react';
 
+const HEADY_API = import.meta.env.VITE_HEADY_API || "https://manager.headysystems.com";
+
 export default function DemoRepos() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ export default function DemoRepos() {
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await fetch('http://api.heady.io:3300/api/registry/demo-repos');
+        const response = await fetch(`${HEADY_API}/api/registry/demo-repos`);
         const data = await response.json();
         setRepos(data.repos);
         setLoading(false);
@@ -37,7 +39,7 @@ export default function DemoRepos() {
 
   const runDemo = async (repoId) => {
     try {
-      await fetch(`http://api.heady.io:3300/api/demo/${repoId}/run`, { method: 'POST' });
+      await fetch(`${HEADY_API}/api/demo/${repoId}/run`, { method: 'POST' });
       alert(`Demo started for ${repoId}`);
     } catch (error) {
       console.error('Error starting demo:', error);
