@@ -67,7 +67,7 @@
     "groq-sdk": "^0.37.0",
     "helmet": "^8.1.0",
     "ioredis": "^5.4.1",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.2.0",
     "jsonwebtoken": "^9.0.3",
     "langchain": "^1.2.35",
     "node-cron": "^3.0.2",
@@ -119,7 +119,7 @@
     "lodash": ">=4.17.21",
     "underscore": ">=1.13.7",
     "tar": ">=6.2.1",
-    "js-yaml": "^4.1.1",
+    "js-yaml": "^4.2.0",
     "minimatch": ">=3.0.5",
     "slug": ">=9.1.0"
   },
