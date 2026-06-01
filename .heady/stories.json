@@ -6520,46 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "cc387d21-4ae9-497b-8995-2c0acd190422",
-        "timestamp": "2026-05-29T18:56:10.113Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:collect_agent_results",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers"
-          ],
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "1283a9ea-47cf-4636-af55-401af7a25fcc",
-        "timestamp": "2026-05-29T18:58:10.113Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:recon",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:collect_agent_results",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers"
-          ],
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "46f4fc1d-f98e-42cb-bd0f-21a6c52287e4",
         "timestamp": "2026-05-29T19:00:10.116Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -33254,11 +33214,113 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "5ec6bb09-10c9-4f43-a1ac-9506da6f810e",
+        "timestamp": "2026-06-01T06:01:30.505Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:execute",
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_external_apis",
+            "latency:task:ingest_health_metrics",
+            "latency:task:ingest_channel_events",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_system_state",
+            "latency:task:ingest_resource_usage",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:select_tools_per_subtask",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:select_winner",
+            "latency:task:record_trial_learnings",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:update_channel_optimizations",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:compress_memory_store",
+            "latency:task:reconcile_cost_actuals",
+            "latency:task:profile_service_performance",
+            "latency:task:analyze_cost_per_request",
+            "latency:task:detect_over_provisioned",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:detect_redundant_data",
+            "latency:task:detect_suboptimal_configs",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:execute_routine_maintenance",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:scan_service_health_matrix",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 38
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "dee2a8d0-83e4-4ffa-94a5-568353525d73",
+        "timestamp": "2026-06-01T06:03:30.506Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:execute",
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_external_apis",
+            "latency:task:ingest_health_metrics",
+            "latency:task:ingest_channel_events",
+            "latency:task:ingest_connection_health",
+            "latency:task:ingest_system_state",
+            "latency:task:ingest_resource_usage",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:select_tools_per_subtask",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:select_winner",
+            "latency:task:record_trial_learnings",
+            "latency:task:setup_sandbox_environments",
+            "latency:task:cleanup_sandboxes",
+            "latency:task:update_channel_optimizations",
+            "latency:task:tune_pipeline_parameters",
+            "latency:task:compress_memory_store",
+            "latency:task:reconcile_cost_actuals",
+            "latency:task:profile_service_performance",
+            "latency:task:analyze_cost_per_request",
+            "latency:task:detect_over_provisioned",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:detect_redundant_data",
+            "latency:task:detect_suboptimal_configs",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:invalidate_stale_caches",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:execute_routine_maintenance",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:scan_service_health_matrix",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 38
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-01T05:59:30.505Z"
+    "updatedAt": "2026-06-01T06:03:30.506Z"
   }
 }
