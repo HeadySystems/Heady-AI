@@ -199,3 +199,24 @@ zone_name = "headyme.com"
 [[routes]]
 pattern = "www.headyme.com/*"
 zone_name = "headyme.com"
+
+# ═══════════════════════════════════════════════════════════════════
+# Premium Edge Services bindings (Graceful degradation supported)
+# ═══════════════════════════════════════════════════════════════════
+
+[ai]
+binding = "AI"
+
+[[r2_buckets]]
+binding = "ASSET_BUCKET"
+bucket_name = "heady-edge-assets"
+preview_bucket_name = "heady-edge-assets-preview"
+
+[[d1_databases]]
+binding = "EDGE_SQL"
+database_name = "heady_edge_db"
+database_id = "8f24bfa1-cc36-4078-bfdd-b7cc81ab1926"
+
+[[vectorize]]
+binding = "EDGE_VECTOR_INDEX"
+index_name = "heady-edge-index"

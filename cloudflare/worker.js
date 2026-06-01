@@ -263,8 +263,37 @@ async function handleRequest(request, env, ctx) {
     }
   }
 
+  // ── R2 Storage Zero-Egress CDN Serving ─────────────────────────────────────
+  if (env.ASSET_BUCKET && STATIC_ASSET_PATTERN.test(pathname)) {
+    const r2Response = await serveR2Asset(pathname, env);
+    if (r2Response) {
+      addSecurityHeaders(r2Response.headers);
+      return r2Response;
+    }
+  }
+
   // ── Domain routing ────────────────────────────────────────────────────────
-  const pathPrefix = DOMAIN_ROUTES.get(hostname);
+  let pathPrefix = DOMAIN_ROUTES.get(hostname);
+
+  // Try dynamic routing lookup in D1 database if not in hardcoded DOMAIN_ROUTES
+  if (!pathPrefix && env.EDGE_SQL) {
+    const dynamicRoute = await getTenantConfig(hostname, env);
+    if (dynamicRoute && dynamicRoute.module) {
+      pathPrefix = dynamicRoute.module;
+    }
+  }
+
+  // If still not matched, try CSL semantic routing using Workers AI + Vectorize
+  if (!pathPrefix && env.AI && env.EDGE_VECTOR_INDEX) {
+    const queryVector = await getEdgeEmbedding(hostname, env);
+    if (queryVector) {
+      const semanticRoute = await matchSemanticRoute(queryVector, env);
+      if (semanticRoute) {
+        pathPrefix = semanticRoute;
+      }
+    }
+  }
+
   if (!pathPrefix) {
     // Unknown domain — return 404
     return errorResponse(404, `Unknown Heady domain: ${hostname}`);
@@ -558,6 +587,90 @@ function buildOriginHeaders(request, hostname) {
 function addSecurityHeaders(headers) {
   for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
     headers.set(key, value);
+  }
+}
+
+// =============================================================================
+// Premium Edge Services Helpers (Graceful degradation supported)
+// =============================================================================
+
+/**
+ * Serves an asset directly from the R2 bucket.
+ */
+async function serveR2Asset(pathname, env) {
+  if (!env.ASSET_BUCKET) return null;
+  const key = pathname.replace(/^\//, '');
+  if (!key || key === '') return null;
+
+  try {
+    const object = await env.ASSET_BUCKET.get(key);
+    if (!object) return null;
+
+    const headers = new Headers();
+    object.writeHttpMetadata(headers);
+    headers.set('ETag', object.httpEtag);
+    headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    headers.set('X-Heady-Source', 'edge-r2-bucket');
+
+    return new Response(object.body, { headers });
+  } catch (err) {
+    console.error('[HeadyEdgeRouter] R2 asset retrieval failed:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Generates float32 text embeddings using Workers AI.
+ */
+async function getEdgeEmbedding(text, env) {
+  if (!env.AI) return null;
+  try {
+    const response = await env.AI.run('@cf/baai/bge-large-en-v1.5', {
+      text: [text]
+    });
+    return response.data[0];
+  } catch (err) {
+    console.error('[HeadyEdgeRouter] Workers AI embedding failed:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Queries the edge vector index using CSL cosine similarity gates.
+ */
+async function matchSemanticRoute(queryVector, env) {
+  if (!env.EDGE_VECTOR_INDEX) return null;
+  try {
+    const matches = await env.EDGE_VECTOR_INDEX.query(queryVector, {
+      topK: 3,
+      returnValues: true,
+      returnMetadata: true
+    });
+    
+    // Apply CSL Cosine Gate (threshold = 0.89)
+    if (matches.matches && matches.matches.length > 0 && matches.matches[0].score >= 0.89) {
+      return matches.matches[0].metadata.route;
+    }
+    return null;
+  } catch (err) {
+    console.error('[HeadyEdgeRouter] Vectorize query failed:', err.message);
+    return null;
+  }
+}
+
+/**
+ * Queries edge SQL metadata cache for dynamic configurations.
+ */
+async function getTenantConfig(hostname, env) {
+  if (!env.EDGE_SQL) return null;
+  try {
+    const { results } = await env.EDGE_SQL.prepare(
+      "SELECT module, cta_url FROM tenants WHERE domain = ?"
+    ).bind(hostname).all();
+    return results && results[0] ? results[0] : null;
+  } catch (err) {
+    console.error('[HeadyEdgeRouter] D1 database query failed:', err.message);
+    return null;
   }
 }
 
