@@ -6520,73 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "305522a2-d7d4-4f7a-99c3-83e68c00de9c",
-        "timestamp": "2026-05-29T21:10:10.148Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:detect_suboptimal_configs",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories"
-          ],
-          "count": 9
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "71493102-de0c-4f5f-ae0b-4894b530a786",
-        "timestamp": "2026-05-29T21:12:10.144Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:detect_suboptimal_configs",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories"
-          ],
-          "count": 9
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "9f4dac29-ab71-4159-af7a-02ec29ee7ec6",
-        "timestamp": "2026-05-29T21:14:10.143Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:orchestrate",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:detect_suboptimal_configs",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "f50f28e5-56ab-4c2a-8d0d-6e524403521f",
         "timestamp": "2026-05-29T21:16:10.143Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -34072,11 +34005,146 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "3c31cf89-7620-45e0-8042-e9225f3ad364",
+        "timestamp": "2026-06-01T08:15:30.532Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 32
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "915020cb-7b57-406b-a18d-e7d191fe2eb7",
+        "timestamp": "2026-06-01T08:17:30.533Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 32
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "400d8bee-063b-4e66-811c-92c76f5b3c3d",
+        "timestamp": "2026-06-01T08:19:30.539Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller",
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 32
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-01T08:13:30.529Z"
+    "updatedAt": "2026-06-01T08:19:30.539Z"
   }
 }
