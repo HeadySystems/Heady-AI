@@ -9,7 +9,7 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@sentry/cloudflare": "^9.0.0"
+    "@sentry/cloudflare": "^10.55.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250303.0",
