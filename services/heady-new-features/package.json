@@ -24,7 +24,7 @@
     "types": "tsc --noEmit"
   },
   "dependencies": {
-    "zod": "^3.23.8",
+    "zod": "^4.4.3",
     "uuid": "^10.0.0",
     "pino": "^9.5.0",
     "hono": "^4.12.7"
