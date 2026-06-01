@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
-    "@google/genai": "^1.48.0",
+    "@google/genai": "^2.7.0",
     "@google/generative-ai": "^0.24.1",
     "@heady-ai/phi-math": "file:./packages/phi-math",
     "@heady-ai/structured-logger": "file:./packages/structured-logger",
