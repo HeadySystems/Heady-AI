@@ -6520,78 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "02efaa10-9b89-4ae5-9a79-420242bf5bfc",
-        "timestamp": "2026-05-31T18:03:30.642Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 5
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "3e61bc0e-e459-470f-8c26-c82b3348138e",
-        "timestamp": "2026-05-31T18:03:30.647Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:triage",
-            "latency:pipeline:decompose",
-            "latency:pipeline:trial-and-error",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:monte-carlo",
-            "latency:pipeline:judge",
-            "latency:pipeline:approve",
-            "latency:pipeline:execute",
-            "latency:pipeline:verify",
-            "latency:pipeline:self-awareness",
-            "latency:pipeline:self-critique",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:optimization-ops",
-            "latency:pipeline:evolution",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller",
-            "latency:task:determine_launch_mode",
-            "latency:task:resolve_channel_and_identity",
-            "latency:task:ingest_news_feeds",
-            "latency:task:ingest_repo_changes",
-            "latency:task:select_tools_per_subtask",
-            "latency:task:compare_trial_results",
-            "latency:task:record_trial_learnings",
-            "latency:task:setup_sandbox_environments",
-            "latency:task:apply_mistake_prevention_rules",
-            "latency:task:emit_knowledge_gap_alerts",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories",
-            "latency:task:scan_service_health_matrix",
-            "latency:task:scan_attack_surface",
-            "latency:task:scan_resource_utilization",
-            "latency:task:measure_trial_outcomes"
-          ],
-          "count": 33
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "9ad3c9f4-faac-472b-9455-16843853065b",
-        "timestamp": "2026-05-31T18:05:30.643Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 7
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "c9957e94-ace1-410f-b0ab-d79a0c706d1b",
         "timestamp": "2026-05-31T18:05:30.649Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -34180,11 +34108,85 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "7fd319be-89b5-4dd3-ae97-d0a152f4d516",
+        "timestamp": "2026-06-01T10:10:10.665Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "6fa06262-61f6-4e30-ba10-ce7a522a8ba2",
+        "timestamp": "2026-06-01T10:12:10.664Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 9
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "59faa2c5-8ea0-4e01-addf-fa9a3ad84021",
+        "timestamp": "2026-06-01T10:14:11.011Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:decompose",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:execute",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:distiller",
+            "latency:task:determine_launch_mode",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:monitor_agent_execution",
+            "latency:task:collect_agent_results",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:adjust_worker_pool_concurrency"
+          ],
+          "count": 17
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-01T10:08:10.636Z"
+    "updatedAt": "2026-06-01T10:14:11.011Z"
   }
 }
