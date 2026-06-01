@@ -1,8 +1,5 @@
 {
-  "domains": [
-    "headyconnection.org",
-    "headysystems.com"
-  ],
+  "domains": ["headyconnection.org", "headysystems.com"],
   "environments": {
     "production": {
       "account_id": "YOUR_ACCOUNT_ID",
@@ -12,9 +9,7 @@
       "account_id": "YOUR_STAGING_ACCOUNT_ID",
       "zone_id": "YOUR_STAGING_ZONE_ID"
     }
-  }
-}
-,
+  },
   "mcpServers": {
     "beneficial": {
       "command": "node",
@@ -22,3 +17,4 @@
       "env": {}
     }
   }
+}

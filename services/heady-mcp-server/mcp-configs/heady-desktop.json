@@ -1,19 +1,16 @@
 {
   "mcpServers": {
-    "heady": {
+    "heady-mcp-remote": {
       "transport": "streamable-http",
       "url": "https://headymcp.com/mcp",
       "headers": {
         "Authorization": "Bearer ${HEADY_API_KEY}"
-      }
+      },
+      "description": "Remote Heady MCP Server Stream"
     },
     "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "../../.."
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "../../.."]
     }
   },
   "taskPipeline": {

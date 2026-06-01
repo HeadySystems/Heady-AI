@@ -1,20 +1,39 @@
 {
   "mcpServers": {
-    "heady": {
-      "type": "stdio",
+    "heady-mcp": {
       "command": "node",
-      "args": [
-        "mcp-servers/heady-mcp-server.js"
-      ],
-      "description": "Heady MCP Server \u2014 40+ tools for managing the Heady ecosystem (status, configs, deploy, codelock, latent space, git, brain, patterns, secrets, registry)"
+      "args": ["/home/headyme/Heady/mcp-servers/heady-mcp-server.js"],
+      "description": "Core Heady MCP Server — 45 tools for status, config, security, deploy, latent space"
     },
-    "context7": {
-      "type": "http",
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
-      },
-      "description": "Context7 Documentation Server \u2014 real-time, version-specific library docs for all coding agents"
+    "heady-liquid-nodes": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/liquid-nodes-mcp-server.js"],
+      "description": "Liquid Nodes — GitHub, Cloudflare, Vertex AI, Colab, Latent Space connectors"
+    },
+    "heady-orchestration": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-orchestration-mcp-server.js"],
+      "description": "Orchestration — Swarms, Bees, CSL routing, Pipelines, Task Graphs"
+    },
+    "heady-intelligence": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-intelligence-mcp-server.js"],
+      "description": "Intelligence — Battle Arena, Monte Carlo, Patterns, AutoContext, ORS"
+    },
+    "heady-memory": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-memory-mcp-server.js"],
+      "description": "Memory — 3-tier (T0/T1/T2), 384D vectors, φ-decay consolidation"
+    },
+    "heady-governance": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-governance-mcp-server.js"],
+      "description": "Governance — Policies, Cost Tracking, RBAC, Audit, Story Driver"
+    },
+    "heady-unified": {
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-unified-mcp-server.js"],
+      "description": "Unified — Message Bus, Service Mesh, Ecosystem, Evolution Engine"
     }
   }
 }
