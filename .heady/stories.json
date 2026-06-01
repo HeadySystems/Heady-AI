@@ -6520,52 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "d7f41b2a-a413-4c63-9e70-e2698471d16a",
-        "timestamp": "2026-05-29T21:26:10.146Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:orchestrate",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:detect_suboptimal_configs",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "e1f56c37-bb2d-4bc1-a367-23dccf3fa6ed",
-        "timestamp": "2026-05-29T21:28:10.147Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:orchestrate",
-            "latency:task:ingest_resource_usage",
-            "latency:task:compare_trial_results",
-            "latency:task:monitor_agent_execution",
-            "latency:task:detect_suboptimal_configs",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_new_tools_and_libraries",
-            "latency:task:search_ai_research_papers",
-            "latency:task:search_security_advisories"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "cc55530f-3771-4525-b551-04a8a529aa77",
         "timestamp": "2026-05-29T21:30:10.148Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -34231,11 +34185,63 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "96045118-7f51-4763-ae1b-ef8de6f635fd",
+        "timestamp": "2026-06-01T08:31:30.574Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 13
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "9183e4ae-7576-44c6-8aec-8559729d2829",
+        "timestamp": "2026-06-01T08:33:30.583Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 13
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-01T08:29:30.572Z"
+    "updatedAt": "2026-06-01T08:33:30.583Z"
   }
 }
