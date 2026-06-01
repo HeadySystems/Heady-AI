@@ -6520,52 +6520,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "ae696383-493f-4c86-85b1-f1be2e89b9ba",
-        "timestamp": "2026-05-29T21:36:10.149Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:triage",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:judge",
-            "latency:pipeline:verify",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller",
-            "latency:task:compare_trial_results",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_ai_research_papers"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "ddbe0534-15a2-4f55-adfc-c265a49c2c36",
-        "timestamp": "2026-05-29T21:38:10.148Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:triage",
-            "latency:pipeline:orchestrate",
-            "latency:pipeline:judge",
-            "latency:pipeline:verify",
-            "latency:pipeline:mistake-analysis",
-            "latency:pipeline:receipt",
-            "latency:pipeline:distiller",
-            "latency:task:compare_trial_results",
-            "latency:task:invalidate_stale_caches",
-            "latency:task:search_ai_research_papers"
-          ],
-          "count": 10
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
         "id": "2e94f8dd-8953-4438-81b9-5a60c7e4c0dd",
         "timestamp": "2026-05-29T21:40:10.151Z",
         "type": "CORRELATED_SLOWDOWN",
@@ -34246,11 +34200,63 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "d23ee7cd-88e6-4c86-bb9a-4d52ce19c5d6",
+        "timestamp": "2026-06-01T08:41:30.617Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 13
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "dfe6d778-d9c4-4842-af25-c8cf07556dd1",
+        "timestamp": "2026-06-01T08:43:30.625Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:task:determine_launch_mode",
+            "latency:task:resolve_channel_and_identity",
+            "latency:task:ingest_public_domain_patterns",
+            "latency:task:estimate_subtask_costs",
+            "latency:task:validate_completion_criteria",
+            "latency:task:detect_under_utilized_workers",
+            "latency:task:apply_mistake_prevention_rules",
+            "latency:task:cleanup_orphaned_resources",
+            "latency:task:optimize_storage_utilization",
+            "latency:task:emit_knowledge_gap_alerts",
+            "latency:task:adjust_worker_pool_concurrency",
+            "latency:task:allocate_resource_slots",
+            "latency:task:measure_trial_outcomes"
+          ],
+          "count": 13
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-01T08:39:30.607Z"
+    "updatedAt": "2026-06-01T08:43:30.625Z"
   }
 }
