@@ -43,7 +43,7 @@ module.exports = {
     },
     {
       name: 'api-gateway',
-      script: 'src/gateway/index.js',
+      script: 'src/services/api-gateway/index.js',
       instances: 2,
       exec_mode: 'cluster',
       max_memory_restart: '256M',
@@ -57,7 +57,7 @@ module.exports = {
     },
     {
       name: 'domain-router',
-      script: 'src/routing/domain-router.js',
+      script: 'src/services/domain-router/index.js',
       instances: 1,
       max_memory_restart: '256M',
       env_production: { NODE_ENV: 'production', PORT: 4311 },
