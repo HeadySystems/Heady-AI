@@ -113,7 +113,7 @@ jobs:
           CANARY_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
             --region ${{ env.GCP_REGION }} \
             --format='value(status.traffic[0].url)' 2>/dev/null || echo "")
-          
+
           # Wait φ⁵ seconds (~11s) then check health
           sleep 12
           HEALTH=$(curl -sf "https://canary---${SERVICE_NAME}-uc.a.run.app/health" || echo '{"status":"unknown"}')
@@ -164,9 +164,11 @@ jobs:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
       - uses: google-github-actions/setup-gcloud@v2
       - run: |
+          CANARY_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} --format='value(REVISION)' --limit=1)
           gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
             --region ${{ env.GCP_REGION }} \
-            --to-latest
+            --to-revisions "${CANARY_REV}=100"
 
   # ── Full deploy (skip canary) ───────────────────────────────────
   deploy-full:
@@ -189,3 +191,32 @@ jobs:
             --cpu 2 \
             --timeout 3600 \
             --allow-unauthenticated
+
+  # ── Rollback on failure ─────────────────────────────────────────
+  rollback:
+    name: Rollback on failure
+    needs: [deploy-canary, promote-25, promote-50, promote-100]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: Rollback to previous stable revision
+        run: |
+          echo "Rolling back ${{ env.SERVICE_NAME }}..."
+          NEW_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} --region=${{ env.GCP_REGION }} --format='value(REVISION)' --limit=1)
+          STABLE_REV=$(gcloud run revisions list --service=${{ env.SERVICE_NAME }} \
+            --region=${{ env.GCP_REGION }} \
+            --sort-by="~metadata.creationTimestamp" \
+            --format="value(metadata.name)" | grep -v "$NEW_REV" | head -n 1)
+          if [ -n "$STABLE_REV" ]; then
+            echo "Rolling back to stable revision: $STABLE_REV"
+            gcloud run services update-traffic ${{ env.SERVICE_NAME }} \
+              --region=${{ env.GCP_REGION }} \
+              --to-revisions="${STABLE_REV}=100"
+            echo "✓ Rollback complete"
+          else
+            echo "No stable revision found to roll back to"
+          fi

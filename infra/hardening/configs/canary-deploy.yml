@@ -44,8 +44,17 @@ jobs:
           ERROR_RATE=$(curl -s "https://${{ inputs.service }}.run.app/health" | jq '.errorRate // 0')
           if (( $(echo "$ERROR_RATE > $MAX_ERROR_RATE" | bc -l) )); then
             echo "❌ Error rate $ERROR_RATE exceeds threshold — rolling back"
-            gcloud run services update-traffic ${{ inputs.service }} \
-              --region=$GCP_REGION --to-latest
+            STABLE_REV=$(gcloud run revisions list --service=${{ inputs.service }} \
+              --region=$GCP_REGION \
+              --sort-by="~metadata.creationTimestamp" \
+              --format="value(metadata.name)" | grep -v "${{ inputs.image_tag }}" | head -n 1)
+            if [ -n "$STABLE_REV" ]; then
+              gcloud run services update-traffic ${{ inputs.service }} \
+                --region=$GCP_REGION \
+                --to-revisions="${STABLE_REV}=100"
+            else
+              echo "No stable revision found to roll back to"
+            fi
             exit 1
           fi
           echo "✅ Canary 5% healthy"

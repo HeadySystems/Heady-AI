@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: '20'
   GCP_PROJECT: heady-platform
   GCP_REGION: us-central1
   ARTIFACT_REGISTRY: us-central1-docker.pkg.dev/heady-platform/heady
@@ -104,13 +104,13 @@ jobs:
         run: echo "TAG=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
 
       # Step 1: 6.18% canary (≈PSI² × 0.1618)
-      - name: "Canary Step 1: ${{ env.CANARY_STEP_1 }}% traffic"
+      - name: 'Canary Step 1: ${{ env.CANARY_STEP_1 }}% traffic'
         run: |
           gcloud run services update-traffic ${{ matrix.service }} \
             --region=${{ env.GCP_REGION }} \
             --to-revisions=${{ matrix.service }}-${{ steps.tag.outputs.TAG }}=${{ env.CANARY_STEP_1 }}
 
-      - name: "Verify canary step 1 (wait 21s = FIB[8])"
+      - name: 'Verify canary step 1 (wait 21s = FIB[8])'
         run: |
           sleep 21
           SERVICE_URL=$(gcloud run services describe ${{ matrix.service }} \
@@ -123,13 +123,13 @@ jobs:
           echo "Canary step 1 healthy"
 
       # Step 2: 38.2% canary (≈PSI²)
-      - name: "Canary Step 2: ${{ env.CANARY_STEP_2 }}% traffic"
+      - name: 'Canary Step 2: ${{ env.CANARY_STEP_2 }}% traffic'
         run: |
           gcloud run services update-traffic ${{ matrix.service }} \
             --region=${{ env.GCP_REGION }} \
             --to-revisions=${{ matrix.service }}-${{ steps.tag.outputs.TAG }}=${{ env.CANARY_STEP_2 }}
 
-      - name: "Verify canary step 2 (wait 21s)"
+      - name: 'Verify canary step 2 (wait 21s)'
         run: |
           sleep 21
           SERVICE_URL=$(gcloud run services describe ${{ matrix.service }} \
@@ -137,19 +137,28 @@ jobs:
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/health")
           if [ "$HTTP_CODE" != "200" ]; then
             echo "::error::Canary step 2 health check failed — rolling back"
-            gcloud run services update-traffic ${{ matrix.service }} \
-              --region=${{ env.GCP_REGION }} --to-latest
+            STABLE_REV=$(gcloud run revisions list --service=${{ matrix.service }} \
+              --region=${{ env.GCP_REGION }} \
+              --sort-by="~metadata.creationTimestamp" \
+              --format="value(metadata.name)" | grep -v "${{ matrix.service }}-${{ steps.tag.outputs.TAG }}" | head -n 1)
+            if [ -n "$STABLE_REV" ]; then
+              gcloud run services update-traffic ${{ matrix.service }} \
+                --region=${{ env.GCP_REGION }} \
+                --to-revisions="${STABLE_REV}=100"
+            else
+              echo "No stable revision found to roll back to"
+            fi
             exit 1
           fi
 
       # Step 3: 61.8% canary (≈PSI)
-      - name: "Canary Step 3: ${{ env.CANARY_STEP_3 }}% traffic"
+      - name: 'Canary Step 3: ${{ env.CANARY_STEP_3 }}% traffic'
         run: |
           gcloud run services update-traffic ${{ matrix.service }} \
             --region=${{ env.GCP_REGION }} \
             --to-revisions=${{ matrix.service }}-${{ steps.tag.outputs.TAG }}=${{ env.CANARY_STEP_3 }}
 
-      - name: "Verify canary step 3 (wait 21s)"
+      - name: 'Verify canary step 3 (wait 21s)'
         run: |
           sleep 21
           SERVICE_URL=$(gcloud run services describe ${{ matrix.service }} \
@@ -157,19 +166,28 @@ jobs:
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/health")
           if [ "$HTTP_CODE" != "200" ]; then
             echo "::error::Canary step 3 health check failed — rolling back"
-            gcloud run services update-traffic ${{ matrix.service }} \
-              --region=${{ env.GCP_REGION }} --to-latest
+            STABLE_REV=$(gcloud run revisions list --service=${{ matrix.service }} \
+              --region=${{ env.GCP_REGION }} \
+              --sort-by="~metadata.creationTimestamp" \
+              --format="value(metadata.name)" | grep -v "${{ matrix.service }}-${{ steps.tag.outputs.TAG }}" | head -n 1)
+            if [ -n "$STABLE_REV" ]; then
+              gcloud run services update-traffic ${{ matrix.service }} \
+                --region=${{ env.GCP_REGION }} \
+                --to-revisions="${STABLE_REV}=100"
+            else
+              echo "No stable revision found to roll back to"
+            fi
             exit 1
           fi
 
       # Step 4: 100% — full rollout
-      - name: "Full rollout: 100% traffic"
+      - name: 'Full rollout: 100% traffic'
         run: |
           gcloud run services update-traffic ${{ matrix.service }} \
             --region=${{ env.GCP_REGION }} \
             --to-revisions=${{ matrix.service }}-${{ steps.tag.outputs.TAG }}=100
 
-      - name: "Final verification"
+      - name: 'Final verification'
         run: |
           sleep 13
           SERVICE_URL=$(gcloud run services describe ${{ matrix.service }} \
@@ -177,8 +195,17 @@ jobs:
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$SERVICE_URL/health")
           if [ "$HTTP_CODE" != "200" ]; then
             echo "::error::Post-deploy health check failed — rolling back"
-            gcloud run services update-traffic ${{ matrix.service }} \
-              --region=${{ env.GCP_REGION }} --to-latest
+            STABLE_REV=$(gcloud run revisions list --service=${{ matrix.service }} \
+              --region=${{ env.GCP_REGION }} \
+              --sort-by="~metadata.creationTimestamp" \
+              --format="value(metadata.name)" | grep -v "${{ matrix.service }}-${{ steps.tag.outputs.TAG }}" | head -n 1)
+            if [ -n "$STABLE_REV" ]; then
+              gcloud run services update-traffic ${{ matrix.service }} \
+                --region=${{ env.GCP_REGION }} \
+                --to-revisions="${STABLE_REV}=100"
+            else
+              echo "No stable revision found to roll back to"
+            fi
             exit 1
           fi
           echo "Deployment complete for ${{ matrix.service }}"
@@ -212,6 +239,15 @@ jobs:
       - name: Rollback to previous revision
         run: |
           echo "Rolling back ${{ matrix.service }}..."
-          gcloud run services update-traffic ${{ matrix.service }} \
-            --region=${{ env.GCP_REGION }} --to-latest
+          STABLE_REV=$(gcloud run revisions list --service=${{ matrix.service }} \
+            --region=${{ env.GCP_REGION }} \
+            --sort-by="~metadata.creationTimestamp" \
+            --format="value(metadata.name)" | grep -v "${{ matrix.service }}-${{ github.event.release.tag_name }}" | head -n 1)
+          if [ -n "$STABLE_REV" ]; then
+            gcloud run services update-traffic ${{ matrix.service }} \
+              --region=${{ env.GCP_REGION }} \
+              --to-revisions="${STABLE_REV}=100"
+          else
+            echo "No stable revision found to roll back to"
+          fi
           echo "Rollback complete for ${{ matrix.service }}"
