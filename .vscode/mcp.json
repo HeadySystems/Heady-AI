@@ -4,7 +4,7 @@
       "type": "http",
       "url": "https://headymcp.com/mcp",
       "headers": {
-        "Authorization": "Bearer hdy_int_71589764cb98ea40bb384a4534999996ec5a06629bcbd346"
+        "Authorization": "Bearer YOUR_HEADY_API_KEY"
       }
     },
     "heady-local": {

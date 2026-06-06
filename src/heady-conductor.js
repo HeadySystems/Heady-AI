@@ -253,7 +253,12 @@ class HeadyConductor extends EventEmitter {
 
     _requireAdminMutation(req, res, next) {
         const expectedAdminToken = process.env.ADMIN_TOKEN || process.env.HEADY_ADMIN_TOKEN || "";
-        if (!expectedAdminToken) return next();
+        if (!expectedAdminToken) {
+            if (process.env.NODE_ENV === "production") {
+                return res.status(500).json({ ok: false, error: "Configuration Error: Admin Token is not set." });
+            }
+            return next();
+        }
         const authHeader = req.headers.authorization || "";
         const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
         const providedToken = req.headers["x-admin-token"] || bearerToken;

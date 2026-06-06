@@ -1,3 +1,8 @@
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ Antigravity UI v1.0.0                                    ║
+// ║  Premium 3D Vector Space and Swarm Monitor Dashboard             ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
     Shield,
@@ -107,7 +112,7 @@ const HEADY_API = {
     EDGE: 'https://heady.headyme.com',
     BRAIN: 'https://manager.headysystems.com',
     BUDDY: 'https://headybuddy.org',
-    KEY: import.meta.env.VITE_HEADY_API_KEY || 'hdy_int_4d2d3fe4becc8ad3eea4c9c9b25ba68a83b28335143b89ab',
+    KEY: import.meta.env.VITE_HEADY_API_KEY || '',
 };
 
 const headyFetch = async (url, options = {}) => {
