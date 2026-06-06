@@ -23,6 +23,8 @@ logger.logSystem = (msg, ...args) => logger.info({ component: 'system' }, msg, .
 logger.logBuild = (msg, ...args) => logger.info({ component: 'build' }, msg, ...args);
 logger.logPipeline = (msg, ...args) => logger.info({ component: 'pipeline' }, msg, ...args);
 logger.logLearn = (msg, ...args) => logger.info({ component: 'learning' }, msg, ...args);
+logger.logError = (component, msg, ...args) => logger.error({ component }, msg, ...args);
+logger.logNodeActivity = (node, ...msg) => logger.info({ node }, ...msg);
 
 // Add backward capability for components expecting createLogger
 logger.createLogger = (name) => logger.child({ name });

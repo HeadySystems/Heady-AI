@@ -115,6 +115,6 @@ app.get('/api/status', (_req, res) => {
 });
 
 // ─── Catch-all → SPA ───
-app.get('*', (_req, res) => res.sendFile(join(__dirname, 'public', 'index.html')));
+app.get('/*', (_req, res) => res.sendFile(join(__dirname, 'public', 'index.html')));
 
 app.listen(PORT, () => console.log(`⚡ Heady Admin UI running on port ${PORT}`));

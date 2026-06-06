@@ -124,37 +124,106 @@ const CREDENTIAL_ENV_MAP = {
 };
 
 /**
+ * Retrieve a secret directly from GCP Secret Manager as a fallback.
+ */
+async function _fetchFromGCPSecretManager(credName, envVar) {
+    const projectId = process.env.GCP_PROJECT_ID || process.env.GCLOUD_PROJECT_ID;
+    try {
+        const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+        const client = new SecretManagerServiceClient();
+        const resolvedProjectId = projectId || await client.getProjectId();
+        if (!resolvedProjectId) {
+            return null;
+        }
+
+        const candidateNames = [
+            `heady-${credName}`,
+            credName,
+            `heady-${envVar.toLowerCase().replace(/_/g, '-')}`,
+            envVar.toLowerCase().replace(/_/g, '-'),
+            envVar
+        ];
+
+        const uniqueCandidates = [...new Set(candidateNames)];
+
+        for (const secretName of uniqueCandidates) {
+            try {
+                const name = `projects/${resolvedProjectId}/secrets/${secretName}/versions/latest`;
+                const [response] = await client.accessSecretVersion({ name });
+                const payload = response.payload.data.toString('utf8');
+                if (payload) {
+                    logger.logSystem(`  🔑 Vault Boot (GCP SM fallback): Resolved '${secretName}' for ${envVar}`);
+                    return payload;
+                }
+            } catch (err) {
+                // Try next candidate silently
+            }
+        }
+    } catch (err) {
+        logger.logError('VAULT', `GCP SM Client initialization failed: ${err.message}`);
+    }
+    return null;
+}
+
+/**
  * Boot the vault: unlock, retrieve all credentials, project into process.env.
  * Call this EARLY in the app bootstrap (before any service needs API keys).
  */
 async function bootVault() {
     const passphrase = process.env.VAULT_PASSPHRASE;
+    let vaultUnlocked = false;
+    let vault = null;
+
     if (!passphrase) {
-        logger.logError('VAULT', 'VAULT_PASSPHRASE not set — credentials will not be available');
-        return { ok: false, projected: 0, reason: 'No passphrase' };
+        logger.logError('VAULT', 'VAULT_PASSPHRASE not set — local vector vault remains locked. Proceeding with GCP Secret Manager failover.');
+    } else {
+        try {
+            vault = require('./secure-key-vault').vault;
+            await vault.unlock(passphrase);
+            vaultUnlocked = true;
+        } catch (err) {
+            logger.logError('VAULT', `Vault unlock failed: ${err.message}. Proceeding with GCP Secret Manager failover.`, err);
+        }
     }
 
     try {
-        const { vault } = require('./secure-key-vault');
-        await vault.unlock(passphrase);
-
         let projected = 0;
         const projectedKeys = [];
 
         for (const [credName, envVar] of Object.entries(CREDENTIAL_ENV_MAP)) {
-            try {
-                const domain = _domainFromName(credName);
-                const cred = await vault.get(credName, domain);
-                if (cred && cred.value) {
-                    process.env[envVar] = cred.value;
-                    projected++;
-                    projectedKeys.push(envVar);
+            let value = null;
+
+            // Try local secure vault first if unlocked
+            if (vaultUnlocked && vault) {
+                try {
+                    const domain = _domainFromName(credName);
+                    const cred = await vault.get(credName, domain);
+                    if (cred && cred.value) {
+                        value = cred.value;
+                    }
+                } catch (e) {
+                    // Skip silently to try failover
                 }
-            } catch (e) { /* Credential not found in vault — skip silently */ }
+            }
+
+            // Failover to GCP Secret Manager if local vault didn't return a value
+            if (!value) {
+                try {
+                    value = await _fetchFromGCPSecretManager(credName, envVar);
+                } catch (e) {
+                    logger.logError('VAULT', `GCP SM lookup failed for ${credName}: ${e.message}`, e);
+                }
+            }
+
+            if (value) {
+                process.env[envVar] = value;
+                projected++;
+                projectedKeys.push(envVar);
+            }
         }
 
         logger.logSystem(`  🔐 Vault Boot: ${projected} credentials projected into process.env`);
-        return { ok: true, projected, keys: projectedKeys };
+        return { ok: projected > 0, projected, keys: projectedKeys };
     } catch (err) {
         logger.logError('VAULT', `Boot failed: ${err.message}`, err);
         return { ok: false, projected: 0, reason: err.message };
