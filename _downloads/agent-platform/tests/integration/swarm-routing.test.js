@@ -49,9 +49,9 @@ describe('Swarm Routing Integration', () => {
     expect(result.swarmId).toBe('research-herald');
   });
 
-  test('Returns high-confidence routing strategy', async () => {
+  test('Returns routing with threshold classification', async () => {
     const task = { description: 'Implement sorting algorithm in JavaScript' };
     const result = await router.route(task);
-    expect(['csl-high', 'csl-medium', 'csl-low']).toContain(result.strategy);
+    expect(['HIGH', 'MEDIUM', 'LOW', 'BELOW_THRESHOLD']).toContain(result.threshold);
   });
 });
