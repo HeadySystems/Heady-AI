@@ -1885,6 +1885,105 @@ try {
   log.warn('HCSysOrchestrator not loaded', { errorMessage: err.message });
 }
 
+// ─── Native Agent Orchestration Platform ────────────────────────────
+let agentPlatform = null;
+import('@heady-ai/agent-platform')
+  .then(async (mod) => {
+    try {
+      const { createOrchestrator } = mod;
+      const configPath = path.join(__dirname, 'packages/heady-agent-platform/config/swarm-definitions.json');
+      if (fs.existsSync(configPath)) {
+        agentPlatform = await createOrchestrator(configPath);
+        log.info('Native Agent Orchestration Platform: LOADED and INITIALIZED');
+        
+        const platformRouter = express.Router();
+        const yaml = require('js-yaml');
+        const loadYaml = (filename) => {
+          const fp = path.join(__dirname, 'configs', filename);
+          if (!fs.existsSync(fp)) return null;
+          try { return yaml.load(fs.readFileSync(fp, 'utf8')); } catch (e) { return null; }
+        };
+
+        platformRouter.get('/health', (req, res) => {
+          res.json(agentPlatform.getHealth());
+        });
+        platformRouter.post('/route', async (req, res) => {
+          try {
+            const result = await agentPlatform.routeTask(req.body);
+            res.json(result);
+          } catch (err) {
+            res.status(500).json({ error: err.message });
+          }
+        });
+        platformRouter.get('/brains', (req, res) => {
+          const bp = loadYaml('brain-profiles.yaml');
+          if (!bp || !bp.profiles) return res.status(503).json({ error: 'Brain profiles not loaded' });
+          const brains = Object.entries(bp.profiles).map(([id, p]) => ({
+            id, product: p.product, workspace_type: p.workspace_type,
+            description: p.description, agents: (p.agents || []).map(a => a.role),
+            model_preference: p.model_policy?.preference,
+          }));
+          res.json({ ok: true, count: brains.length, brains, ts: new Date().toISOString() });
+        });
+        platformRouter.get('/layers', (req, res) => {
+          const cl = loadYaml('cloud-layers.yaml');
+          if (!cl || !cl.layers) return res.status(503).json({ error: 'Cloud layers not loaded' });
+          const layers = Object.entries(cl.layers).map(([id, l]) => ({
+            id, description: l.description, dns_zone: l.dns_zone,
+            providers: l.providers, brain_profile: l.brain_profile, services: l.services,
+          }));
+          res.json({ ok: true, count: layers.length, layers, ts: new Date().toISOString() });
+        });
+        platformRouter.get('/contract', (req, res) => {
+          const fc = loadYaml('foundation-contract.yaml');
+          if (!fc) return res.status(503).json({ error: 'Foundation contract not loaded' });
+          res.json({ ok: true, contract: fc, ts: new Date().toISOString() });
+        });
+        platformRouter.get('/rebuild-status', (req, res) => {
+          const rd = loadYaml('iterative-rebuild-directive.yaml');
+          if (!rd) return res.status(503).json({ error: 'Rebuild directive not loaded' });
+          res.json({ ok: true, directive: rd.mandate, phases: Object.keys(rd.phases || {}), foundation_first: rd.foundation_first, ts: new Date().toISOString() });
+        });
+        platformRouter.get('/agents', (req, res) => {
+          let ac = loadYaml('../packages/agents/catalog.yaml') || loadYaml('agents-catalog.yaml');
+          const brainId = req.query.brain;
+          let agents = ac?.agents ? Object.entries(ac.agents) : [];
+          if (brainId) agents = agents.filter(([, a]) => (a.brain_profiles || []).includes(brainId));
+          res.json({ ok: true, count: agents.length, agents: agents.map(([id, a]) => ({
+            id, category: a.category, description: a.description, capabilities: a.capabilities,
+            tools: a.tools, resource_tier: a.resource_tier, brain_profiles: a.brain_profiles,
+          })), ts: new Date().toISOString() });
+        });
+        platformRouter.post('/execute', async (req, res) => {
+          try {
+            const task = { ...req.body, id: `task-${Date.now()}` };
+            const result = await agentPlatform.routeTask(task);
+            res.json({
+              ok: true,
+              execution: result,
+              routing_latency_ms: 0,
+              status: 'routed_via_native',
+              next: 'Task routed through native @heady-ai/agent-platform',
+              ts: new Date().toISOString()
+            });
+          } catch(err) {
+            res.status(500).json({ ok: false, error: 'Execution routing failed', message: err.message, ts: new Date().toISOString() });
+          }
+        });
+        
+        app.use('/api/v2/orchestrator', platformRouter);
+        log.info('Native Agent Orchestrator endpoints available: /api/v2/orchestrator/health, /route, /brains, /layers, /contract, /rebuild-status, /agents, /execute');
+      } else {
+        log.warn('Swarm definitions not found, Native Agent Orchestration Platform not initialized.');
+      }
+    } catch (err) {
+      log.error('Failed to initialize Native Agent Orchestration Platform', { errorMessage: err.message });
+    }
+  })
+  .catch((err) => {
+    log.warn('@heady-ai/agent-platform module not found or failed to load', { errorMessage: err.message });
+  });
+
 // ─── HeadyBrain API — Per-Layer Intelligence ────────────────────────
 let brainApiRoutes = null;
 try {

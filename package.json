@@ -48,6 +48,7 @@
     "@google/generative-ai": "^0.24.1",
     "@heady-ai/phi-math": "file:./packages/phi-math",
     "@heady-ai/structured-logger": "file:./packages/structured-logger",
+    "@heady-ai/agent-platform": "file:./packages/heady-agent-platform",
     "@huggingface/inference": "^4.13.12",
     "@langchain/core": "^1.1.38",
     "@modelcontextprotocol/sdk": "^1.29.0",

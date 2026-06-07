@@ -28,9 +28,9 @@ export class CSLRouter extends EventEmitter {
   constructor(embedFn) {
     super();
     this._embedFn = embedFn;
-    this._swarmEmbeddings = new Map(); // swarmId → { domain, embedding }
-    this._routeCache = new Map(); // taskHash → { swarmId, score, timestamp }
-    this._cacheMaxSize = 89; // F(11)
+    this._swarmEmbeddings = new Map();   // swarmId → { domain, embedding }
+    this._routeCache = new Map();         // taskHash → { swarmId, score, timestamp }
+    this._cacheMaxSize = 89;              // F(11)
     this._cacheTtlMs = PHI * PHI * 10000; // ~26.2s
   }
 
@@ -56,7 +56,7 @@ export class CSLRouter extends EventEmitter {
     // Check cache
     const cacheKey = this._hashTask(taskText);
     const cached = this._routeCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < this._cacheTtlMs) {
+    if (cached && (Date.now() - cached.timestamp < this._cacheTtlMs)) {
       return { ...cached, fromCache: true };
     }
 
@@ -150,7 +150,7 @@ export class CSLRouter extends EventEmitter {
   cslOr(a, b) {
     const sum = a.map((ai, i) => ai + b[i]);
     const norm = Math.sqrt(sum.reduce((s, v) => s + v * v, 0));
-    return norm > 0 ? sum.map((v) => v / norm) : sum;
+    return norm > 0 ? sum.map(v => v / norm) : sum;
   }
 
   /**
@@ -166,9 +166,7 @@ export class CSLRouter extends EventEmitter {
   _cosineSimilarity(a, b) {
     if (!a || !b || a.length !== b.length) return 0;
 
-    let dot = 0,
-      normA = 0,
-      normB = 0;
+    let dot = 0, normA = 0, normB = 0;
     for (let i = 0; i < a.length; i++) {
       dot += a[i] * b[i];
       normA += a[i] * a[i];
@@ -190,16 +188,16 @@ export class CSLRouter extends EventEmitter {
     let hash = 0;
     for (let i = 0; i < text.length; i++) {
       const char = text.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
+      hash = ((hash << 5) - hash) + char;
       hash |= 0;
     }
     return `task_${hash}`;
   }
 
   _getThreshold(score) {
-    if (score >= PlatformConfig.csl.high) return 'HIGH';
+    if (score >= PlatformConfig.csl.high)   return 'HIGH';
     if (score >= PlatformConfig.csl.medium) return 'MEDIUM';
-    if (score >= PlatformConfig.csl.low) return 'LOW';
+    if (score >= PlatformConfig.csl.low)    return 'LOW';
     return 'BELOW_THRESHOLD';
   }
 }

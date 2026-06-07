@@ -81,7 +81,7 @@ export class HeadyOrchestrator extends EventEmitter {
     // Start health monitoring
     this._healthMonitor.startMonitoring(
       Array.from(this._swarms.keys()),
-      PlatformConfig.healthCheckMs,
+      PlatformConfig.healthCheckMs
     );
 
     this._running = true;
@@ -167,11 +167,7 @@ export class HeadyOrchestrator extends EventEmitter {
         dag = PatternEngine.generatorCritic(config.generator, config.critic, config.maxCycles);
         break;
       case 'iterative':
-        dag = PatternEngine.iterativeRefinement(
-          config.refiner,
-          config.maxIterations,
-          config.exitCondition,
-        );
+        dag = PatternEngine.iterativeRefinement(config.refiner, config.maxIterations, config.exitCondition);
         break;
       case 'human-in-loop':
         dag = PatternEngine.humanInTheLoop(config.worker, config.gate, config.finalizer);
@@ -217,13 +213,11 @@ export class HeadyOrchestrator extends EventEmitter {
             pressure: this._backpressure.getPressure(id),
             health: this._healthMonitor.getSwarmHealth(id),
           },
-        ]),
+        ])
       ),
       metrics: {
         ...this._metrics,
-        throughput:
-          this._metrics.tasksCompleted /
-          Math.max(1, (Date.now() - (this._metrics.startTime || Date.now())) / 1000),
+        throughput: this._metrics.tasksCompleted / Math.max(1, (Date.now() - (this._metrics.startTime || Date.now())) / 1000),
       },
       globalPressure: this._backpressure.getGlobalPressure(),
     };
@@ -281,7 +275,7 @@ export class HeadyOrchestrator extends EventEmitter {
     const bee = await this._beeFactory.spawnBee(
       task.beeType || swarm.config.beeTypes[0],
       swarmId,
-      task.priority ? task.priority / 10 : 0.7,
+      task.priority ? task.priority / 10 : 0.7
     );
 
     // Execute via agent runtime
@@ -335,7 +329,8 @@ export class HeadyOrchestrator extends EventEmitter {
   }
 
   async _findAlternativeSwarm(task, excludeId) {
-    const alternatives = Array.from(this._swarms.keys()).filter((id) => id !== excludeId);
+    const alternatives = Array.from(this._swarms.keys())
+      .filter(id => id !== excludeId);
 
     for (const altId of alternatives) {
       const pressure = this._backpressure.getPressure(altId);

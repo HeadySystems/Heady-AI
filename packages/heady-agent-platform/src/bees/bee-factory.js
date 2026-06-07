@@ -25,10 +25,10 @@ const PSI = 0.6180339887498949;
 export class BeeFactory extends EventEmitter {
   constructor() {
     super();
-    this._bees = new Map(); // beeId → BeeState
-    this._swarmBees = new Map(); // swarmId → Set<beeId>
-    this._templates = new Map(); // beeType → BeeTemplate
-    this._performanceLog = new Map(); // beeId → PerformanceStats
+    this._bees = new Map();             // beeId → BeeState
+    this._swarmBees = new Map();        // swarmId → Set<beeId>
+    this._templates = new Map();         // beeType → BeeTemplate
+    this._performanceLog = new Map();    // beeId → PerformanceStats
   }
 
   /**
@@ -83,7 +83,7 @@ export class BeeFactory extends EventEmitter {
       tools: template?.tools || [],
       systemPrompt: template?.systemPrompt || null,
       model: template?.model || null,
-      state: 'idle', // idle | active | draining | retired
+      state: 'idle',  // idle | active | draining | retired
       cslScore,
       spawnedAt: Date.now(),
       lastActiveAt: null,
@@ -127,7 +127,7 @@ export class BeeFactory extends EventEmitter {
 
     // Auto-retire consistently failing bees (success rate < PSI ≈ 61.8%)
     const total = stats.successes + stats.failures;
-    if (total >= 5 && stats.successes / total < PSI) {
+    if (total >= 5 && (stats.successes / total) < PSI) {
       this._retireBee(beeId, 'poor-performance');
     }
   }
@@ -139,8 +139,8 @@ export class BeeFactory extends EventEmitter {
     const beeIds = this._swarmBees.get(swarmId);
     if (!beeIds) return [];
     return Array.from(beeIds)
-      .map((id) => this._bees.get(id))
-      .filter((b) => b && b.state !== 'retired');
+      .map(id => this._bees.get(id))
+      .filter(b => b && b.state !== 'retired');
   }
 
   /**
@@ -169,10 +169,10 @@ export class BeeFactory extends EventEmitter {
     const allBees = Array.from(this._bees.values());
     return {
       totalBees: allBees.length,
-      activeBees: allBees.filter((b) => b.state !== 'retired').length,
-      retiredBees: allBees.filter((b) => b.state === 'retired').length,
+      activeBees: allBees.filter(b => b.state !== 'retired').length,
+      retiredBees: allBees.filter(b => b.state === 'retired').length,
       swarmCounts: Object.fromEntries(
-        Array.from(this._swarmBees.entries()).map(([id, set]) => [id, set.size]),
+        Array.from(this._swarmBees.entries()).map(([id, set]) => [id, set.size])
       ),
       templates: Array.from(this._templates.keys()),
     };

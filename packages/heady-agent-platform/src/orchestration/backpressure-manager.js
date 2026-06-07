@@ -45,7 +45,7 @@ export class BackpressureManager extends EventEmitter {
       lastUpdateMs: Date.now(),
     });
     this._circuitBreakers.set(swarmId, {
-      state: 'closed', // closed | open | half-open
+      state: 'closed',   // closed | open | half-open
       failures: 0,
       lastFailureMs: 0,
       maxQueueSize,
@@ -151,7 +151,7 @@ export class BackpressureManager extends EventEmitter {
 
     // Remove from queue
     const queue = this._swarmQueues.get(swarmId);
-    const idx = queue.findIndex((t) => t.id === taskId);
+    const idx = queue.findIndex(t => t.id === taskId);
     if (idx !== -1) queue.splice(idx, 1);
 
     this._updateGlobalPressure();
@@ -183,17 +183,13 @@ export class BackpressureManager extends EventEmitter {
     let level, factor;
 
     if (ratio <= thresholds.normal) {
-      level = 'NORMAL';
-      factor = 1.0;
+      level = 'NORMAL'; factor = 1.0;
     } else if (ratio <= thresholds.elevated) {
-      level = 'ELEVATED';
-      factor = PHI;
+      level = 'ELEVATED'; factor = PHI;
     } else if (ratio <= thresholds.high) {
-      level = 'HIGH';
-      factor = PHI * PHI;
+      level = 'HIGH'; factor = PHI * PHI;
     } else {
-      level = 'CRITICAL';
-      factor = PHI * PHI * PHI;
+      level = 'CRITICAL'; factor = PHI * PHI * PHI;
     }
 
     return {
@@ -216,7 +212,7 @@ export class BackpressureManager extends EventEmitter {
       ratio: this._globalPressure,
       swarmCount: this._swarmQueues.size,
       swarms: Object.fromEntries(
-        Array.from(this._swarmQueues.keys()).map((id) => [id, this.getPressure(id)]),
+        Array.from(this._swarmQueues.keys()).map(id => [id, this.getPressure(id)])
       ),
     };
   }
@@ -237,8 +233,7 @@ export class BackpressureManager extends EventEmitter {
     // Simple string-based dedup (full semantic dedup would use embeddings)
     if (this._dedupCache.has(key)) {
       const entry = this._dedupCache.get(key);
-      if (now - entry.timestamp < 30000) {
-        // 30s dedup window
+      if (now - entry.timestamp < 30000) { // 30s dedup window
         return true;
       }
     }
@@ -266,7 +261,7 @@ export class BackpressureManager extends EventEmitter {
       return;
     }
 
-    const pressures = Array.from(this._swarmQueues.keys()).map((id) => {
+    const pressures = Array.from(this._swarmQueues.keys()).map(id => {
       const p = this.getPressure(id);
       return p.ratio;
     });

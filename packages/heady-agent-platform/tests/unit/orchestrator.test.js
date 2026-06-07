@@ -81,13 +81,7 @@ describe('DAGExecutor', () => {
 
   it('should handle node failures in non-critical nodes', async () => {
     dag.addNode('good', async () => ({ good: true }));
-    dag.addNode(
-      'bad',
-      async () => {
-        throw new Error('boom');
-      },
-      { critical: false },
-    );
+    dag.addNode('bad', async () => { throw new Error('boom'); }, { critical: false });
     dag.addNode('after', async () => ({ after: true }));
 
     dag.addEdge('good', 'bad');
@@ -95,7 +89,7 @@ describe('DAGExecutor', () => {
 
     const { state, trace } = await dag.execute();
     expect(state.good).toBe(true);
-    const failedStep = trace.find((t) => t.nodeId === 'bad');
+    const failedStep = trace.find(t => t.nodeId === 'bad');
     expect(failedStep.status).toBe('failed');
   });
 
@@ -155,7 +149,7 @@ describe('PatternEngine', () => {
         { id: 'w1', handler: async () => ({ r1: 42 }) },
         { id: 'w2', handler: async () => ({ r2: 84 }) },
       ],
-      { id: 'gather', handler: async (s) => ({ total: (s.r1 || 0) + (s.r2 || 0) }) },
+      { id: 'gather', handler: async (s) => ({ total: (s.r1 || 0) + (s.r2 || 0) }) }
     );
 
     const { state } = await dag.execute();
@@ -180,7 +174,7 @@ describe('PatternEngine', () => {
           feedback: state.quality >= 0.9 ? 'good' : 'needs work',
         }),
       },
-      5,
+      5
     );
 
     // The pattern creates gen→critic and critic→gen (conditional)
@@ -199,7 +193,7 @@ describe('PatternEngine', () => {
       (results) => {
         // Judge: pick the fast one
         return 'fast';
-      },
+      }
     );
 
     const { state } = await dag.execute();
@@ -239,9 +233,7 @@ describe('BackpressureManager', () => {
 
   it('should open circuit breaker after threshold failures', () => {
     let opened = false;
-    bp.on('circuit:open', () => {
-      opened = true;
-    });
+    bp.on('circuit:open', () => { opened = true; });
 
     for (let i = 0; i < 5; i++) {
       bp.submit('code-artisan', { id: `task-${i}`, description: `test-${i}` });
@@ -289,7 +281,7 @@ describe('CSLRouter', () => {
       vec[i % dims] += text.charCodeAt(i);
     }
     const norm = Math.sqrt(vec.reduce((s, v) => s + v * v, 0));
-    return norm > 0 ? vec.map((v) => v / norm) : vec;
+    return norm > 0 ? vec.map(v => v / norm) : vec;
   };
 
   beforeEach(async () => {
@@ -300,10 +292,7 @@ describe('CSLRouter', () => {
   });
 
   it('should route coding tasks to code-artisan', async () => {
-    const result = await router.route({
-      id: 't1',
-      description: 'write code for development feature',
-    });
+    const result = await router.route({ id: 't1', description: 'write code for development feature' });
     expect(result.swarmId).toBeDefined();
     expect(result.score).toBeGreaterThan(0);
     expect(result.scores.length).toBeGreaterThan(0);
@@ -336,7 +325,7 @@ describe('CSLRouter', () => {
   it('should support multi-route for broadcast', async () => {
     const matches = await router.multiRoute(
       { description: 'code deployment infrastructure' },
-      0, // Low threshold to get all
+      0 // Low threshold to get all
     );
     expect(matches.length).toBeGreaterThanOrEqual(1);
   });
@@ -375,9 +364,7 @@ describe('BeeFactory', () => {
   it('should auto-retire poor performers', async () => {
     const bee = await factory.spawnBee('coder', 'code-artisan');
     let retired = false;
-    factory.on('bee:retired', () => {
-      retired = true;
-    });
+    factory.on('bee:retired', () => { retired = true; });
 
     // Simulate poor performance (>5 tasks, <61.8% success)
     for (let i = 0; i < 6; i++) {
@@ -415,18 +402,14 @@ describe('SwarmMessageBus', () => {
 
   it('should deliver messages to exact topic subscribers', () => {
     let received = null;
-    bus.subscribe('code.task', (envelope) => {
-      received = envelope.message;
-    });
+    bus.subscribe('code.task', (envelope) => { received = envelope.message; });
     bus.publish('code.task', { action: 'build' });
     expect(received.action).toBe('build');
   });
 
   it('should support wildcard subscriptions', () => {
     let received = [];
-    bus.subscribe('code.*', (envelope) => {
-      received.push(envelope.message);
-    });
+    bus.subscribe('code.*', (envelope) => { received.push(envelope.message); });
     bus.publish('code.task', { type: 'task' });
     bus.publish('code.result', { type: 'result' });
     expect(received.length).toBe(2);
@@ -515,11 +498,10 @@ describe('HandoffRouter', () => {
 
   it('should accept valid handoffs above CSL threshold', () => {
     const result = router.handoff(
-      'cognition-core',
-      'code-artisan',
+      'cognition-core', 'code-artisan',
       { id: 't1', type: 'code' },
       { analysis: 'done' },
-      0.85,
+      0.85
     );
     expect(result.accepted).toBe(true);
     expect(result.handoffId).toBeDefined();
@@ -527,11 +509,10 @@ describe('HandoffRouter', () => {
 
   it('should reject handoffs below CSL threshold', () => {
     const result = router.handoff(
-      'cognition-core',
-      'code-artisan',
+      'cognition-core', 'code-artisan',
       { id: 't1', type: 'code' },
       {},
-      0.3,
+      0.3
     );
     expect(result.accepted).toBe(false);
     expect(result.reason).toContain('CSL score');
@@ -571,9 +552,7 @@ describe('HealthMonitor', () => {
 
   it('should mark unhealthy after 3 consecutive failures', () => {
     let unhealthyEmitted = false;
-    monitor.on('swarm:unhealthy', () => {
-      unhealthyEmitted = true;
-    });
+    monitor.on('swarm:unhealthy', () => { unhealthyEmitted = true; });
 
     monitor.reportHealth('code-artisan', false);
     monitor.reportHealth('code-artisan', false);
@@ -639,16 +618,12 @@ describe('AgentRuntime', () => {
   });
 
   it('should execute with stub provider (dev mode)', async () => {
-    const result = await runtime.execute(
-      'code-artisan',
-      {
-        id: 'task-1',
-        description: 'Write a hello world function',
-      },
-      {
-        model: PlatformConfig.models.operational,
-      },
-    );
+    const result = await runtime.execute('code-artisan', {
+      id: 'task-1',
+      description: 'Write a hello world function',
+    }, {
+      model: PlatformConfig.models.operational,
+    });
 
     expect(result.success).toBe(true);
     expect(result.result).toBeDefined();
@@ -660,16 +635,12 @@ describe('AgentRuntime', () => {
       usage: { inputTokens: 100, outputTokens: 50 },
     }));
 
-    const result = await runtime.execute(
-      'code-artisan',
-      {
-        id: 'task-2',
-        description: 'Generate code',
-      },
-      {
-        model: { primary: 'claude-sonnet-4-20250514', fallback: 'gemini-2.5-pro' },
-      },
-    );
+    const result = await runtime.execute('code-artisan', {
+      id: 'task-2',
+      description: 'Generate code',
+    }, {
+      model: { primary: 'claude-sonnet-4-20250514', fallback: 'gemini-2.5-pro' },
+    });
 
     expect(result.success).toBe(true);
     expect(result.provider).toBe('anthropic');
@@ -682,16 +653,12 @@ describe('AgentRuntime', () => {
     });
     // Fallback to stub (gemini not registered)
 
-    const result = await runtime.execute(
-      'code-artisan',
-      {
-        id: 'task-3',
-        description: 'Generate code',
-      },
-      {
-        model: { primary: 'claude-sonnet-4-20250514', fallback: 'gemini-2.0-flash' },
-      },
-    );
+    const result = await runtime.execute('code-artisan', {
+      id: 'task-3',
+      description: 'Generate code',
+    }, {
+      model: { primary: 'claude-sonnet-4-20250514', fallback: 'gemini-2.0-flash' },
+    });
 
     // Should fallback to stub since google provider not registered
     expect(result.success).toBe(true);
@@ -699,21 +666,17 @@ describe('AgentRuntime', () => {
   });
 
   it('should build messages with bee context', async () => {
-    const result = await runtime.execute(
-      'code-artisan',
-      {
-        id: 'task-4',
-        description: 'Build API',
+    const result = await runtime.execute('code-artisan', {
+      id: 'task-4',
+      description: 'Build API',
+    }, {
+      model: PlatformConfig.models.operational,
+      bee: {
+        role: 'Senior Engineer',
+        goal: 'Build scalable APIs',
+        backstory: '15 years of backend experience',
       },
-      {
-        model: PlatformConfig.models.operational,
-        bee: {
-          role: 'Senior Engineer',
-          goal: 'Build scalable APIs',
-          backstory: '15 years of backend experience',
-        },
-      },
-    );
+    });
 
     expect(result.success).toBe(true);
   });

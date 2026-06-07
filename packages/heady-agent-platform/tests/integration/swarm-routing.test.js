@@ -26,9 +26,7 @@ describe('Swarm Routing Integration', () => {
     const mockEmbed = async (text) => {
       // Simple hash-based mock embedding
       const hash = Array.from(text).reduce((h, c) => h + c.charCodeAt(0), 0);
-      return Array(384)
-        .fill(0)
-        .map((_, i) => Math.sin(hash + i) / 10);
+      return Array(384).fill(0).map((_, i) => Math.sin(hash + i) / 10);
     };
 
     router = new CSLRouter(mockEmbed);

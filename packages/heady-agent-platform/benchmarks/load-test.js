@@ -41,13 +41,11 @@ class LoadTester {
     };
 
     // Generate tasks
-    const tasks = Array(taskCount)
-      .fill(0)
-      .map((_, i) => ({
-        id: `load-test-${i}`,
-        description: `Test task ${i}`,
-        priority: Math.floor(Math.random() * 10) + 1,
-      }));
+    const tasks = Array(taskCount).fill(0).map((_, i) => ({
+      id: `load-test-${i}`,
+      description: `Test task ${i}`,
+      priority: Math.floor(Math.random() * 10) + 1,
+    }));
 
     // Execute with concurrency limit
     const chunks = [];
@@ -57,14 +55,13 @@ class LoadTester {
 
     for (const chunk of chunks) {
       const start = performance.now();
-      const promises = chunk.map((task) =>
-        this.coordinator
-          .routeTask(task)
+      const promises = chunk.map(task => 
+        this.coordinator.routeTask(task)
           .then(() => {
             results.completed++;
             results.latencies.push(performance.now() - start);
           })
-          .catch(() => results.failed++),
+          .catch(() => results.failed++)
       );
       await Promise.allSettled(promises);
       results.totalTasks += chunk.length;

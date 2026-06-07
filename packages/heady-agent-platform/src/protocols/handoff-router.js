@@ -21,8 +21,8 @@ export class HandoffRouter extends EventEmitter {
     super();
     this._messageBus = messageBus;
     this._handoffHistory = [];
-    this._handoffRules = new Map(); // fromSwarm → { toSwarm, condition }[]
-    this._maxHistory = 89; // F(11)
+    this._handoffRules = new Map();    // fromSwarm → { toSwarm, condition }[]
+    this._maxHistory = 89;             // F(11)
   }
 
   /**
@@ -65,7 +65,7 @@ export class HandoffRouter extends EventEmitter {
 
     // Check if handoff rule exists
     const rules = this._handoffRules.get(fromSwarm) || [];
-    const matchingRule = rules.find((r) => r.toSwarm === toSwarm);
+    const matchingRule = rules.find(r => r.toSwarm === toSwarm);
     if (matchingRule?.condition && !matchingRule.condition(task, context)) {
       return { accepted: false, reason: 'Handoff condition not met' };
     }
@@ -133,7 +133,7 @@ export class HandoffRouter extends EventEmitter {
       totalHandoffs: this._handoffHistory.length,
       rules: Array.from(this._handoffRules.entries()).map(([from, rules]) => ({
         from,
-        targets: rules.map((r) => r.toSwarm),
+        targets: rules.map(r => r.toSwarm),
       })),
     };
   }

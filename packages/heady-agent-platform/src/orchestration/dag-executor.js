@@ -123,7 +123,7 @@ export class DAGExecutor extends EventEmitter {
       const batches = this._createBatches(waveNodes, this._maxParallel);
 
       for (const batch of batches) {
-        const promises = batch.map((nodeId) => this._executeNode(nodeId, state, context, visited));
+        const promises = batch.map(nodeId => this._executeNode(nodeId, state, context, visited));
         const results = await Promise.allSettled(promises);
 
         for (let i = 0; i < results.length; i++) {
@@ -243,7 +243,7 @@ export class DAGExecutor extends EventEmitter {
       const batches = this._createBatches(Array.from(currentWave), this._maxParallel);
 
       for (const batch of batches) {
-        const promises = batch.map((nodeId) => this._executeNode(nodeId, state, context, visited));
+        const promises = batch.map(nodeId => this._executeNode(nodeId, state, context, visited));
         const results = await Promise.allSettled(promises);
 
         for (let i = 0; i < results.length; i++) {
@@ -289,10 +289,7 @@ export class DAGExecutor extends EventEmitter {
     const result = await Promise.race([
       node.handler(state, { ...context, nodeId, runId: this._runId }),
       new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error(`Node ${nodeId} timed out after ${node.timeout}ms`)),
-          node.timeout,
-        ),
+        setTimeout(() => reject(new Error(`Node ${nodeId} timed out after ${node.timeout}ms`)), node.timeout)
       ),
     ]);
 
@@ -311,14 +308,14 @@ export class DAGExecutor extends EventEmitter {
         hasIncoming.add(edge.target);
       }
     }
-    return Array.from(this._nodes.keys()).filter((id) => !hasIncoming.has(id));
+    return Array.from(this._nodes.keys()).filter(id => !hasIncoming.has(id));
   }
 
   _getSuccessors(nodeId, state) {
     const edges = this._edges.get(nodeId) || [];
     return edges
-      .filter((edge) => !edge.condition || edge.condition(state))
-      .map((edge) => edge.target);
+      .filter(edge => !edge.condition || edge.condition(state))
+      .map(edge => edge.target);
   }
 
   _isAllowedCycle(nodeId, visited) {
@@ -376,7 +373,7 @@ export class DAGExecutor extends EventEmitter {
     while (queue.length > 0) {
       const nodeId = queue.shift();
       sorted.push(nodeId);
-      for (const edge of this._edges.get(nodeId) || []) {
+      for (const edge of (this._edges.get(nodeId) || [])) {
         const newDegree = inDegree.get(edge.target) - 1;
         inDegree.set(edge.target, newDegree);
         if (newDegree === 0) queue.push(edge.target);

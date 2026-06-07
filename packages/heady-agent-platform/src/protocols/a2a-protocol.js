@@ -30,8 +30,8 @@ export class A2AProtocol extends EventEmitter {
   constructor(messageBus) {
     super();
     this._messageBus = messageBus;
-    this._agents = new Map(); // agentId → AgentCard
-    this._pendingTasks = new Map(); // taskId → { from, to, state, result }
+    this._agents = new Map();         // agentId → AgentCard
+    this._pendingTasks = new Map();    // taskId → { from, to, state, result }
   }
 
   /**
@@ -186,10 +186,10 @@ export class A2AProtocol extends EventEmitter {
     return {
       agents: this._agents.size,
       totalTasks: tasks.length,
-      submitted: tasks.filter((t) => t.state === 'submitted').length,
-      working: tasks.filter((t) => t.state === 'working').length,
-      completed: tasks.filter((t) => t.state === 'completed').length,
-      failed: tasks.filter((t) => t.state === 'failed').length,
+      submitted: tasks.filter(t => t.state === 'submitted').length,
+      working: tasks.filter(t => t.state === 'working').length,
+      completed: tasks.filter(t => t.state === 'completed').length,
+      failed: tasks.filter(t => t.state === 'failed').length,
     };
   }
 

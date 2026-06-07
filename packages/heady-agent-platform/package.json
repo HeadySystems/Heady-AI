@@ -1,5 +1,5 @@
 {
-  "name": "heady-agent-platform",
+  "name": "@heady-ai/agent-platform",
   "version": "1.0.0",
   "description": "Heady™ Native Agent Orchestration Platform — Multi-agent async parallel orchestration with phi-scaled Sacred Geometry constants",
   "type": "module",

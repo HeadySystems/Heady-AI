@@ -78,7 +78,7 @@ export class HealthMonitor extends EventEmitter {
       // Slow down checks: φ multiplier
       health.checkInterval = Math.min(
         health.checkInterval * PHI,
-        this._baseIntervalMs * PHI * PHI * PHI, // Max ~4.2x base
+        this._baseIntervalMs * PHI * PHI * PHI // Max ~4.2x base
       );
     } else {
       health.consecutiveFailures++;
@@ -92,7 +92,7 @@ export class HealthMonitor extends EventEmitter {
       // Speed up checks: ψ multiplier
       health.checkInterval = Math.max(
         health.checkInterval * PSI,
-        this._baseIntervalMs * PSI, // Min ~0.618x base
+        this._baseIntervalMs * PSI // Min ~0.618x base
       );
     }
 
@@ -124,7 +124,9 @@ export class HealthMonitor extends EventEmitter {
       healthy: swarms.filter(([, h]) => h.status === 'healthy').length,
       degraded: swarms.filter(([, h]) => h.status === 'degraded').length,
       unhealthy: swarms.filter(([, h]) => h.status === 'unhealthy').length,
-      details: Object.fromEntries(swarms.map(([id, h]) => [id, this.getSwarmHealth(id)])),
+      details: Object.fromEntries(
+        swarms.map(([id, h]) => [id, this.getSwarmHealth(id)])
+      ),
     };
   }
 

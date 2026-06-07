@@ -48,10 +48,7 @@ export class SwarmMessageBus extends EventEmitter {
    */
   publish(topic, message, metadata = {}) {
     const envelope = {
-      id: createHash('sha256')
-        .update(JSON.stringify(message) + Date.now())
-        .digest('hex')
-        .slice(0, 16),
+      id: createHash('sha256').update(JSON.stringify(message) + Date.now()).digest('hex').slice(0, 16),
       topic,
       message,
       metadata,
@@ -67,7 +64,7 @@ export class SwarmMessageBus extends EventEmitter {
     // Deliver to subscribers
     for (const [pattern, handlers] of this._subscribers) {
       if (this._matchTopic(topic, pattern)) {
-        handlers.forEach((h) => h(envelope));
+        handlers.forEach(h => h(envelope));
       }
     }
 

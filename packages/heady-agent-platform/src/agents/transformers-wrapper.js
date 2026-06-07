@@ -46,9 +46,9 @@ export class TransformersAgentWrapper {
         return {
           result: `[SIMULATED] Task completed by ${swarmId}`,
           steps: [],
-          metrics: { latency: 150, tokens: 500 },
+          metrics: { latency: 150, tokens: 500 }
         };
-      },
+      }
     };
 
     this.agents.set(swarmId, agent);
@@ -69,7 +69,7 @@ export class TransformersAgentWrapper {
     const models = {
       strategic: 'meta-llama/Llama-3.1-405B-Instruct',
       tactical: 'Qwen/Qwen2.5-Coder-32B-Instruct',
-      operational: 'Qwen/Qwen3-8B',
+      operational: 'Qwen/Qwen3-8B'
     };
     return models[layer] || models.operational;
   }

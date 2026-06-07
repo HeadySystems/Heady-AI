@@ -24,7 +24,7 @@ describe('Phi-Math Library', () => {
   });
 
   test('PSI is reciprocal of PHI', () => {
-    expect(PSI).toBeCloseTo(1 / PHI, 10);
+    expect(PSI).toBeCloseTo(1/PHI, 10);
   });
 
   test('Fibonacci sequence generation', () => {

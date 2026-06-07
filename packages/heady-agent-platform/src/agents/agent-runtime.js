@@ -137,7 +137,9 @@ export class AgentRuntime extends EventEmitter {
     // Task as user message
     messages.push({
       role: 'user',
-      content: typeof task.description === 'string' ? task.description : JSON.stringify(task),
+      content: typeof task.description === 'string'
+        ? task.description
+        : JSON.stringify(task),
     });
 
     return messages;
@@ -208,6 +210,6 @@ export class AgentRuntime extends EventEmitter {
   }
 
   _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

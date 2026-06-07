@@ -86,10 +86,8 @@ export class PatternEngine {
         // Conditional: only execute if coordinator selected this specialist
         condition: (state) => state._selectedSpecialist === specialist.id,
       });
-      dag.addEdge(
-        coordinator.id,
-        specialist.id,
-        (state) => state._selectedSpecialist === specialist.id,
+      dag.addEdge(coordinator.id, specialist.id,
+        (state) => state._selectedSpecialist === specialist.id
       );
     }
 
@@ -165,7 +163,7 @@ export class PatternEngine {
 
     dag.addNode(refiner.id, refiner.handler, refiner.options);
     dag.addNode('__exit_check', async (state) => {
-      const done = exitCondition ? exitCondition(state) : state._refinementScore >= 0.882;
+      const done = exitCondition ? exitCondition(state) : (state._refinementScore >= 0.882);
       return { _refinementDone: done };
     });
 
@@ -260,7 +258,7 @@ export class PatternEngine {
     }
 
     dag.addNode(judgeId, async (state) => {
-      const results = competitors.map((c) => ({
+      const results = competitors.map(c => ({
         id: c.id,
         result: state[`_race_${c.id}`],
       }));

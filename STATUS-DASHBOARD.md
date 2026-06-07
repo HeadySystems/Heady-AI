@@ -27,6 +27,15 @@
 | **Resource Monitor** | ✅ Active | RAM/CPU tracked every 5 sec |
 | **PM2 God Daemon** | ✅ Running | Process management active |
 
+## 🤖 Native Orchestrator Metrics
+
+| Metric | Status | Details |
+|--------|--------|---------|
+| **Platform Engine** | ✅ Active | `@heady-ai/agent-platform` |
+| **Swarm Routing** | ✅ Active | 17-swarm topology |
+| **Backpressure** | ✅ Nominal | φ-scaled throttling |
+| **Health API** | ✅ ONLINE | `/api/v2/orchestrator/health` |
+
 ## 📈 Learning Metrics
 
 | Metric | Value |
