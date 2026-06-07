@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-03T11:07:29.079Z",
+  "generatedAt": "2026-06-07T01:22:35.001Z",
   "policyVersion": 1,
   "health": {
     "endpoint": "/api/antigravity/health",
@@ -11,7 +11,7 @@
   "enforcedGateway": "heady",
   "workspaceMode": "3d-vector",
   "autonomousMode": "optimized-autonomous",
-  "optimizationReportHash": "1f3327a6ec481fdefb6d5f5aae4472906e7baaf23e7ebeba313c311b3079ae90",
+  "optimizationReportHash": "a7a59fed401237daa8ed4902942e30d674b34c5df07ccdad577ba7570e314972",
   "topTemplates": [
     {
       "id": "hb-deployment-operator-v1",
@@ -22,16 +22,16 @@
       "score": 0.659167
     },
     {
+      "id": "hb-swarm-coordinator-v1",
+      "score": 0.6425
+    },
+    {
       "id": "hb-orchestration-conductor-v1",
       "score": 0.639167
     },
     {
       "id": "hb-compliance-sentinel-v2",
       "score": 0.6375
-    },
-    {
-      "id": "hb-intelligence-analyst-v1",
-      "score": 0.634167
     }
   ],
   "samplePlan": {
@@ -146,51 +146,51 @@
         "optimizationScore": 0.659167
       },
       {
-        "id": "hb-orchestration-conductor-v1",
-        "name": "Orchestration Conductor",
+        "id": "hb-swarm-coordinator-v1",
+        "name": "Swarm Coordinator",
         "zone": 0,
         "skills": [
-          "agent-spawning",
-          "liquid-routing",
-          "supervisor-management",
-          "cloud-routing",
-          "spatial-mapping"
+          "bee-orchestration",
+          "parallel-dispatch",
+          "swarm-scaling",
+          "work-distribution",
+          "blast-optimization",
+          "concurrency-control"
         ],
         "workflows": [
-          "spawn-supervisor",
-          "route-to-optimal-agent",
-          "rebalance-load",
-          "conductor-health-check",
-          "sse-broadcast"
+          "dispatch-swarm",
+          "scale-bees",
+          "optimize-blast",
+          "balance-load",
+          "measure-throughput"
         ],
         "nodes": [
           "CONDUCTOR",
           "ARENA",
-          "BUDDY"
+          "BUILDER"
         ],
         "headyswarmTasks": [
-          "spawn-agent",
-          "route-request",
-          "rebalance-agents",
-          "check-conductor-health",
-          "broadcast-event",
-          "sync-agent-state"
+          "bee_orchestration",
+          "parallel_dispatch",
+          "swarm_scaling",
+          "work_distribution",
+          "blast_optimization",
+          "concurrency_control"
         ],
         "situations": [
           "autonomous-deploy",
-          "incident-response",
           "performance-tuning",
-          "pipeline-repair"
+          "capacity-planning"
         ],
-        "healthEndpoint": "/api/orchestration/health",
+        "healthEndpoint": "/api/swarm/coordinator/health",
         "projectionPolicy": "github-source-of-truth",
         "bees": [
           "orchestration",
+          "services",
           "agents",
-          "lifecycle",
-          "services"
+          "lifecycle"
         ],
-        "optimizationScore": 0.639167
+        "optimizationScore": 0.6425
       }
     ],
     "requiredSwarmTasks": [

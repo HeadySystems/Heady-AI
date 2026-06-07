@@ -709,6 +709,40 @@ try {
   log.warn('HeadyMemory service not loaded', { errorMessage: err.message });
 }
 
+// ─── Antigravity Runtime Service ─────────────────────────────────────
+let antigravityRuntime = null;
+try {
+  antigravityRuntime = require('./src/services/antigravity-heady-runtime');
+  
+  app.get('/api/antigravity/health', (req, res) => {
+    res.json(antigravityRuntime.getHealthStatus());
+  });
+  
+  app.get('/api/antigravity/policy', (req, res) => {
+    try {
+      res.json(antigravityRuntime.readPolicy());
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+  
+  app.post('/api/antigravity/enforce', (req, res) => {
+    try {
+      const plan = antigravityRuntime.enforceHeadyForAntigravityOperation(req.body);
+      if (global.eventBus) {
+        global.eventBus.emit('antigravity:enforced', plan);
+      }
+      res.json(plan);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+  
+  log.info('Antigravity Runtime: ROUTES LOADED');
+} catch (err) {
+  log.warn('Antigravity runtime service not loaded', { errorMessage: err.message });
+}
+
 // ─── Static Assets ─────────────────────────────────────────────────
 // All UI pages served from public/ (self-contained HTML + sacred-geometry.css)
 app.use(express.static('public'));
