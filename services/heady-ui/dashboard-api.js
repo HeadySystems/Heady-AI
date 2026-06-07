@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: services/heady-ui/dashboard-api.js                                                    ║
+// ║  LAYER: root                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /**
  * @file dashboard-api.js — Express routes for Heady™ dashboards
  * Source: docs/ENTERPRISE-MANIFEST.md → pilot/dashboard/dashboard-api.js

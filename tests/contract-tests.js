@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: tests/contract-tests.js                                                    ║
+// ║  LAYER: tests                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /**
  * Heady Contract Tests — Pact-Style Inter-Service API Verification
  * Verifies that service interfaces match their declared contracts.

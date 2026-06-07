@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: docs/compliance-templates/gdpr/gdpr-data-subject-rights.js                                                    ║
+// ║  LAYER: docs                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /**
  * GDPR Data Subject Rights Implementation
  * @module compliance-templates/gdpr/gdpr-data-subject-rights

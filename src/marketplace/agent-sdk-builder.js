@@ -8,8 +8,9 @@
 // ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  FILE: src/marketplace/agent-sdk-builder.js                     ║
-// ║  LAYER: marketplace/sdk                                         ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/marketplace/agent-sdk-builder.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 

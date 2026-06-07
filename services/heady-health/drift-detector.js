@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: services/heady-health/drift-detector.js                                                    ║
+// ║  LAYER: root                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 const { PhiPartitioner } = require('../core/phi-scales');
 const CSL = require('../core/semantic-logic');
 const logger = require('../utils/logger').child({ component: 'drift-detector' });

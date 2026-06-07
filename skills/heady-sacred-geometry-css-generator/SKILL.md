@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: skills/heady-sacred-geometry-css-generator/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-sacred-geometry-css-generator
 description: Skill for generating phi-scaled CSS design systems and sacred geometry canvas animations for all 9 Heady sites. Use when building or updating the dark premium glassmorphism design system, generating Fibonacci spacing tokens, creating per-site sacred geometry canvas animations (Flower of Life, Metatron's Cube, Sri Yantra, Torus, Seed of Life, Fibonacci Spiral, Vesica Piscis), or implementing WCAG 2.1 accessibility compliance. Triggers on "CSS", "design system", "sacred geometry", "glassmorphism", "canvas animation", "phi-scaled", or any visual/styling task.

@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: packages/heady-memory/src/bootstrap.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 // packages/heady-memory/src/bootstrap.js
 // §3 — Full Post-Auth Latent Space Bootstrap (T0 + T1 combined)
 import { setWorkingMemory, setCSLScore } from './t0-redis.js';

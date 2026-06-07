@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: src/heady-max-potential-v40/packages/phi-math-foundation/README.md                                                    ║
+<!-- ║  LAYER: backend/src                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # @heady/phi-math-foundation
 
 Golden ratio mathematics foundation for the Heady platform. Provides phi-derived constants, Fibonacci utilities, backoff strategies, threshold calculations, and fusion weight algorithms.

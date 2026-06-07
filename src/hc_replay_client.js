@@ -8,8 +8,9 @@
 // ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  FILE: src/hc_replay_client.js                                  ║
-// ║  LAYER: distiller/replay                                        ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/hc_replay_client.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 

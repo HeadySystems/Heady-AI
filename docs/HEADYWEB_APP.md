@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/HEADYWEB_APP.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady™Web App Capability Guide
 
 The gateway app now provides a full browser workflow for authenticated user access, persistent vector memory operations, and authenticated workspace file operations from the same interface.

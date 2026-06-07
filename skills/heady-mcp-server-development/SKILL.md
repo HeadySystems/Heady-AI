@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: skills/heady-mcp-server-development/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-mcp-server-development
 description: Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools

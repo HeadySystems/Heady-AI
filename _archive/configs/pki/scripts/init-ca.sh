@@ -10,7 +10,7 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: configs/pki/scripts/init-ca.sh                                                    ║
+# ║  FILE: _archive/configs/pki/scripts/init-ca.sh                                                    ║
 # ║  LAYER: automation                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END

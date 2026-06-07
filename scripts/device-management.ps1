@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 # Heady Device Management & Cross-Device Sync
 # Manages all Heady installations across devices with seamless sync
 

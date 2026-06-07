@@ -1,13 +1,20 @@
-'use strict';
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Competitive Intelligence Engine (Pythia)               ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces   ║
-// ║  FILE: src/intelligence/competitive-intelligence-engine.js     ║
-// ║  LAYER: intelligence                                           ║
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/intelligence/competitive-intelligence-engine.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+'use strict';
+
 
 /**
  * @fileoverview Heady Pythia — Competitive Intelligence & Integration Engine

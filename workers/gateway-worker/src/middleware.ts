@@ -9,8 +9,8 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: workers/gateway-worker/src/middleware.ts                   ║
-// ║  LAYER: backend/src                                              ║
+// ║  FILE: workers/gateway-worker/src/middleware.ts                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 

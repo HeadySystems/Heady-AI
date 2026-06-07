@@ -1,8 +1,3 @@
-/*
- * © 2026 Heady™Systems Inc.
- * PROPRIETARY AND CONFIDENTIAL.
- * Unauthorized copying, modification, or distribution is strictly prohibited.
- */
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,10 +9,15 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/agents/nonprofit-agent.js                             ║
-// ║  LAYER: backend/src/agents                                       ║
+// ║  FILE: _archive/src/agents/nonprofit-agent.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+/*
+ * © 2026 Heady™Systems Inc.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 
 /**
  * NonprofitConsultantAgent — Specialized agent for nonprofit consulting workflows.

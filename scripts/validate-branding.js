@@ -62,14 +62,26 @@ function getAllProjectFiles() {
   const files = [];
   
   function walk(dir) {
-    fs.readdirSync(dir).forEach(f => {
+    let list;
+    try {
+      list = fs.readdirSync(dir);
+    } catch (err) {
+      return;
+    }
+    
+    list.forEach(f => {
       const fullPath = path.join(dir, f);
       if (ignoreDirs.some(d => fullPath.includes(d))) return;
       
-      if (fs.statSync(fullPath).isDirectory()) {
-        walk(fullPath);
-      } else if (/\.([jt]sx?|py|ya?ml|json|xml|ps1|conf|txt|md)$/i.test(fullPath)) {
-        files.push(fullPath);
+      try {
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          walk(fullPath);
+        } else if (/\.([jt]sx?|py|ya?ml|json|xml|ps1|conf|txt|md)$/i.test(fullPath)) {
+          files.push(fullPath);
+        }
+      } catch (err) {
+        // Skip files that cannot be read/stated (e.g. broken symlinks)
       }
     });
   }

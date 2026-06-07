@@ -9,9 +9,8 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: docker-compose.heady-field.yml                           ║
-# ║  LAYER: infrastructure                                          ║
-# ║  PURPOSE: HeadyField Regenerative Oracle Data Node               ║
+# ║  FILE: docker-compose.heady-field.yml                                                    ║
+# ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 

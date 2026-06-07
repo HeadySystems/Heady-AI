@@ -9,8 +9,8 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: headybuddy/SYSTEM_PROMPT.md                                                    ║
-<!-- ║  LAYER: headybuddy                                                  ║
+<!-- ║  FILE: docs/prompts/agents/BUDDY-SYSTEM-PROMPT.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

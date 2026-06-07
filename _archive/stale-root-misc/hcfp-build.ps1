@@ -9,7 +9,7 @@
 <# ║                                                                  ║
 <# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<# ║  FILE: hcfp-build.ps1                                                    ║
+<# ║  FILE: _archive/stale-root-misc/hcfp-build.ps1                                                    ║
 <# ║  LAYER: root                                                  ║
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END

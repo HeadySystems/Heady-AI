@@ -9,7 +9,7 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: configs/public-domain-patterns.md                                                    ║
+<!-- ║  FILE: _archive/configs/_domains/public-domain-patterns.md                                                    ║
 <!-- ║  LAYER: config                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END

@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-compliance-navigator/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-compliance-navigator
 description: Design and operate the Heady Compliance Navigator for regulatory compliance automation, AI inventory management, risk assessment workflows, technical control implementation, and continuous compliance monitoring. Use when building compliance automation pipelines, designing AI system inventories, creating risk assessment frameworks, implementing technical controls for AI regulations, planning compliance roadmaps (EU AI Act, ISO 42001, NIST AI RMF, SOC 2), or designing continuous compliance monitoring. Integrates with heady-sentinel for control enforcement, heady-traces for compliance evidence, heady-observer for continuous monitoring, heady-governance-atlas for policy management, heady-audit-forge for audit readiness, heady-vinci for compliance intelligence, and heady-docs for compliance documentation.

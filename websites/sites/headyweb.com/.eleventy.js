@@ -9,7 +9,7 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: websites/sites/headyweb.com/.eleventy.js
+// ║  FILE: websites/sites/headyweb.com/.eleventy.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END

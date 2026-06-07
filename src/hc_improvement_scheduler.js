@@ -1,6 +1,3 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('hc_improvement_scheduler');
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,6 +13,9 @@ const logger = createLogger('hc_improvement_scheduler');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_improvement_scheduler');
+
 
 const EventEmitter = require('events');
 const fs = require('fs');

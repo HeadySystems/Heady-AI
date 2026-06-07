@@ -1,12 +1,20 @@
-const { createLogger } = require('../../../src/utils/logger');
-const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY SYSTEMS — MCP Backend (PRIVATE — Cloud Run only)        ║
-// ║  ∞ SACRED GEOMETRY ∞  All trade secrets live here              ║
-// ║  NEVER publish to npm · ONLY deploy to Cloud Run               ║
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: packages/mcp-server/backend/server.js                                                    ║
+// ║  LAYER: backend                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('../../../src/utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * Heady MCP Backend — Private Cloud Run Server

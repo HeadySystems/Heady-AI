@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2026 HeadySystems Inc. (C-Corp)
- * PROPRIETARY & CONFIDENTIAL.
- * Patent Pending: Infrastructure & Orchestration Cluster
- * Implements: Distributed State Mutex, Golden Ratio UI
- */
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,10 +9,17 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: services/orchestrator/brain_api.js                                                    ║
+// ║  FILE: services/orchestrator_brain/api.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+/**
+ * Copyright (c) 2026 HeadySystems Inc. (C-Corp)
+ * PROPRIETARY & CONFIDENTIAL.
+ * Patent Pending: Infrastructure & Orchestration Cluster
+ * Implements: Distributed State Mutex, Golden Ratio UI
+ */
+
 
 /**
  * HeadyBrain API — Per-Layer Intelligence Service

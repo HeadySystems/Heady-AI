@@ -1,15 +1,20 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY SYNC DAEMON — Intelligent Multi-Remote Git Sync         ║
-// ║  FILE: services/heady-sync-daemon.js                           ║
-// ║  LAYER: infrastructure                                          ║
-// ║                                                                 ║
-// ║  Monitors 16 remotes. Merges conflict-free. Deploys on green.  ║
-// ║  Author: Eric Haywood                                           ║
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: services/heady-sync-daemon.js                                                    ║
+// ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('auto-fixed');
 
 const {
   execSync,

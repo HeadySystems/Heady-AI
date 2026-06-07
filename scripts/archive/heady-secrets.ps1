@@ -9,7 +9,7 @@
 <# ║                                                                  ║
 <# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<# ║  FILE: scripts/heady-secrets.ps1                                                    ║
+<# ║  FILE: scripts/archive/heady-secrets.ps1                                                    ║
 <# ║  LAYER: automation                                                  ║
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END

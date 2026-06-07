@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 
 # HCFP Phone Integration Organization Script
 # Sets up phone integration with visual branding and unified organization

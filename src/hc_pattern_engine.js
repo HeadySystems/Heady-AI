@@ -1,4 +1,3 @@
-const logger = require('./utils/logger').createLogger('auto-fix');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,6 +13,7 @@ const logger = require('./utils/logger').createLogger('auto-fix');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = require('./utils/logger').createLogger('auto-fix');
 /**
  * ╔═══════════════════════════════════════════════════════════════════╗
  * ║  HC PATTERN ENGINE - Continuous Pattern Recognition              ║

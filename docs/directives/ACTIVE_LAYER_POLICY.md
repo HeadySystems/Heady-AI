@@ -9,8 +9,8 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: ACTIVE_LAYER_POLICY.md                                                    ║
-<!-- ║  LAYER: root                                                  ║
+<!-- ║  FILE: docs/directives/ACTIVE_LAYER_POLICY.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

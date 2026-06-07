@@ -1,5 +1,3 @@
-const { createLogger } = require('../../src/utils/logger');
-const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -11,10 +9,12 @@ const logger = createLogger('auto-fixed');
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: packages/heady-memory/index.js                            ║
-// ║  LAYER: packages                                                 ║
+// ║  FILE: packages/heady-memory/index.js                                                    ║
+// ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('../../src/utils/logger');
+const logger = createLogger('auto-fixed');
 
 /**
  * HeadyMemory — 3D Latent Space Vector Memory

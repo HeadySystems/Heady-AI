@@ -9,8 +9,8 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: HeadyAI-IDE/src/components/CommandPalette.jsx             ║
-// ║  LAYER: frontend/src/components                                  ║
+// ║  FILE: HeadyAI-IDE/src/components/CommandPalette.jsx                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 

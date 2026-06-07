@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -15,6 +13,8 @@ const logger = pino();
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const pino = require('pino');
+const logger = pino();
 
 // Heady Maid - System Maintenance and Cleanup Service
 // Placeholder for automated system maintenance

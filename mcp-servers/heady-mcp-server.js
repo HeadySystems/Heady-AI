@@ -10,8 +10,8 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: mcp-servers/heady-mcp-server.js                          ║
-// ║  LAYER: orchestrator — thin composition of 8 microservices      ║
+// ║  FILE: mcp-servers/heady-mcp-server.js                                                    ║
+// ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 /**

@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 <#
 .SYNOPSIS
     Heady Complete Infrastructure Setup (HCIS) - Domain migration and device provisioning

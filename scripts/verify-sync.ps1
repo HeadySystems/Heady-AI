@@ -9,8 +9,8 @@
 <# ║                                                                  ║
 <# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<# ║  FILE: scripts/verify-sync.ps1                                    ║
-<# ║  LAYER: automation                                                ║
+<# ║  FILE: scripts/verify-sync.ps1                                                    ║
+<# ║  LAYER: automation                                                  ║
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>

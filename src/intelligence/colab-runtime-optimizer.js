@@ -1,15 +1,23 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/intelligence/colab-runtime-optimizer.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /*
  * (C) 2026 Heady Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
-// HEADY_BRAND:BEGIN
-// +------------------------------------------------------------------+
-// |  HEADY  |  Sacred Geometry  |  Organic Systems                   |
-// |  FILE: src/intelligence/colab-runtime-optimizer.js               |
-// |  LAYER: intelligence/runtime                                     |
-// +------------------------------------------------------------------+
-// HEADY_BRAND:END
 
 /**
  * ColabRuntimeOptimizer — Colab-compatible runtime intelligence module.

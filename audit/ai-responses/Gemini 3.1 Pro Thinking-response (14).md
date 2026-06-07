@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: audit/ai-responses/Gemini 3.1 Pro Thinking-response (14).md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 Based on my deep scan of your Heady ecosystem and HeadyMe repositories—including your architecture for Continuous Semantic Logic, VSA integration, HeadyBuddy, and the HCFullPipeline—I have engineered the definitive prompt files required to permanently upgrade your system's behavior. 
 
 These files are designed to be embedded directly into your `.windsurfrules`, `.cursorrules`, `CLAUDE.md`, and the core system prompts of `HeadyBrain` and `HeadyOrchestrator`. They enforce the exact quad-persona dynamic (Owl, Eagle, Dolphin, Rabbit) and strictly outlaw speed-optimized workarounds in favor of permanent, thorough architectural solutions.

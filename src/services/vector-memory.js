@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/services/vector-memory.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
  * PROPRIETARY AND CONFIDENTIAL.
@@ -51,6 +66,16 @@ class VectorMemory {
     throw new TypeError('vector must be an Array or Float32/64Array');
   }
 
+  _trackAccess(key, namespace) {
+    const { map } = this._resolveKey(key, namespace);
+    const entry = map.get(key);
+    if (entry) {
+      entry.metadata = entry.metadata || {};
+      entry.metadata.accessCount = (entry.metadata.accessCount || 0) + 1;
+      entry.metadata.lastAccessedAt = Date.now();
+    }
+  }
+
   // ─── CRUD ──────────────────────────────────────────────────────────────────
 
   /**
@@ -68,6 +93,18 @@ class VectorMemory {
     }
     map.set(key, { vector: vec, metadata: { ...metadata }, updatedAt: Date.now() });
     logger.debug({ key, ns: namespace || this._defaultNs }, 'VectorMemory: stored');
+  }
+
+  /**
+   * Smart ingest path for tracking zone distribution.
+   * @param {string} key
+   * @param {number[]|Float64Array} vector
+   * @param {object} [metadata={}]
+   * @param {string} [namespace]
+   */
+  smartIngest(key, vector, metadata = {}, namespace) {
+    // Pipeline optimization: use this over raw store/ingestMemory
+    this.store(key, vector, metadata, namespace);
   }
 
   /**
@@ -120,6 +157,21 @@ class VectorMemory {
   }
 
   // ─── Search ────────────────────────────────────────────────────────────────
+
+  /**
+   * Query memory with access frequency scoring.
+   * @param {number[]|Float64Array} queryVector
+   * @param {number} [limit=5]
+   * @param {number} [minScore=0.6]
+   * @param {string} [namespace]
+   */
+  queryMemory(queryVector, limit = 5, minScore = 0.6, namespace) {
+    const results = this.search(queryVector, limit, minScore, namespace);
+    for (const r of results) {
+      this._trackAccess(r.key, namespace);
+    }
+    return results;
+  }
 
   /**
    * Cosine similarity search across a namespace.

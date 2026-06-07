@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 # Error Handling and Recovery Workflow for Heady
 # Part of HCFP - Heady Continuous Full-Build Pipeline
 

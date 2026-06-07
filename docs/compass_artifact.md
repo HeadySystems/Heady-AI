@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/compass_artifact.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady's liquid architecture: a self-healing AI platform across 10 services
 
 **Heady can run as a globally distributed, self-improving AI platform for roughly $600–750/month by strategically layering Cloudflare's edge, GCP/Azure cloud compute, Upstash's serverless data tier, Neon Postgres for persistent memory, and four Colab Pro+ GPU runtimes as a continuous learning engine.** The architecture achieves resilience through a "liquidity layer" where every critical function has a fallback provider, every state is checkpointed, and every model improves via a DSPy/LoRA optimization loop running on a dedicated GPU. Below is the complete blueprint — service by service — with specific configurations, code patterns, and cost estimates that make every dollar count.

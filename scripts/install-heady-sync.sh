@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║  HeadyAutoSync — Parrot OS / Linux VM Installer                ║
-# ║  Option 3: Persistent systemd service for local git sync       ║
-# ║  © 2026 HeadySystems Inc. | φ = 1.618033988749895              ║
+# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: scripts/install-heady-sync.sh                                                    ║
+# ║  LAYER: automation                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 #

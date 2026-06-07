@@ -9,7 +9,7 @@
 <# ║                                                                  ║
 <# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<# ║  FILE: scripts/hcautoflow-fixed-final.ps1                              ║
+<# ║  FILE: scripts/hcautoflow-fixed-final.ps1                                                    ║
 <# ║  LAYER: automation                                                  ║
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END

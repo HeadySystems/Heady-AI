@@ -1,7 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/components/Layout.js
-// LAYER: ui/frontend
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/components/Layout.js                                                    ║
+// ║  LAYER: ui/frontend                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useState } from 'react';

@@ -9,7 +9,7 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: docs/CHECKPOINT_PROTOCOL.md                                                    ║
+<!-- ║  FILE: docs/misc/CHECKPOINT_PROTOCOL.md                                                    ║
 <!-- ║  LAYER: docs                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END

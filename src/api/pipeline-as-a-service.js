@@ -9,9 +9,8 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/api/pipeline-as-a-service.js                         ║
-// ║  LAYER: api                                                     ║
-// ║  PURPOSE: Pipeline-as-a-Service — enterprise webhook stage API  ║
+// ║  FILE: src/api/pipeline-as-a-service.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 /**

@@ -9,7 +9,7 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: docs/ARENA_MODE_SPEC.md                                                    ║
+<!-- ║  FILE: docs/misc/ARENA_MODE_SPEC.md                                                    ║
 <!-- ║  LAYER: docs                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END

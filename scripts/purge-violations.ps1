@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 # PURGE ALL VIOLATIONS - api.headysystems.com, api.headysystems.com, .headysystems.com, headysystems.com, headysystems.com, .headysystems.com
 
 Write-Host "🔥 PURGING ALL FORBIDDEN REFERENCES..." -ForegroundColor Red

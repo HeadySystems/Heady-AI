@@ -9,7 +9,7 @@
 <# ║                                                                  ║
 <# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<# ║  FILE: scripts/file_maintenance/pre_scan_check.ps1                                                    ║
+<# ║  FILE: _archive/scripts/file_maintenance/pre_scan_check.ps1                                                    ║
 <# ║  LAYER: automation                                                  ║
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END

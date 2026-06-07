@@ -9,7 +9,7 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: PYCHARM-TRANSITION-CHECKLIST.md                                                    ║
+<!-- ║  FILE: _archive/stale-root-md/PYCHARM-TRANSITION-CHECKLIST.md                                                    ║
 <!-- ║  LAYER: root                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END

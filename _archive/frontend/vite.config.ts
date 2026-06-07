@@ -9,8 +9,8 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: frontend/vite.config.ts                                   ║
-// ║  LAYER: ui/frontend                                              ║
+// ║  FILE: _archive/frontend/vite.config.ts                                                    ║
+// ║  LAYER: ui/frontend                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 import { defineConfig } from "vite";

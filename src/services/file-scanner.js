@@ -1,5 +1,3 @@
-const pino = require('pino');
-const logger = pino();
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -15,6 +13,8 @@ const logger = pino();
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const pino = require('pino');
+const logger = pino();
 
 const fs = require('fs').promises;
 const path = require('path');

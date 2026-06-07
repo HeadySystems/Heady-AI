@@ -9,8 +9,8 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: src/heady_project/mcp_service.py                          ║
-# ║  LAYER: backend/src                                              ║
+# ║  FILE: src/heady_project/mcp_service.py                                                    ║
+# ║  LAYER: backend/src                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 

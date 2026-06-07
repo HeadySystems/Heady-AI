@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-ops/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-ops
 description: "DevOps, deployment, health monitoring, and system operations using Heady™ Operations services. Use this skill when the user asks about system health, deployment, maintenance, service status, monitoring, cleanup, or any operational task. Triggers on: 'deploy', 'health check', 'system status', 'is everything running', 'maintenance', 'cleanup', 'service health', 'monitor', 'ops', 'devops', 'uptime', 'telemetry', 'logs'. Always use this skill for any operational, deployment, monitoring, or maintenance task — it connects to heady_deploy, heady_health, heady_ops, heady_maintenance, heady_maid, heady_telemetry, heady_edge_ai, heady_search, and heady_template_stats MCP tools."

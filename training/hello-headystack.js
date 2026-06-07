@@ -1,6 +1,3 @@
-// Hello HeadyStack - Your First Coding Exercise
-// This file demonstrates HeadyStack architecture principles
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -12,10 +9,13 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: training/hello-headystack.js                               ║
-// ║  LAYER: training                                                  ║
+// ║  FILE: training/hello-headystack.js                                                    ║
+// ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+// Hello HeadyStack - Your First Coding Exercise
+// This file demonstrates HeadyStack architecture principles
+
 
 /**
  * Hello HeadyStack - Your First Coding Exercise

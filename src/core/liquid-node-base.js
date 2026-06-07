@@ -1,14 +1,22 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/core/liquid-node-base.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /*
  * © 2026 Heady™Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  */
-// HEADY_BRAND:BEGIN
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  LIQUID NODE BASE — Universal Microservice Contract             ║
-// ║  Every Heady service extends this to become a Liquid Node       ║
-// ║  FILE: src/core/liquid-node-base.js                             ║
-// ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
 
 const EventEmitter = require('events');
 const crypto = require('crypto');

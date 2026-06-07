@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 // HEADY_BRAND:BEGIN
-// setup-sentry-alerts.js
-// Sets up standard alert rules across all Sentry projects for the heady-ai org.
-// Run after deploying: node scripts/setup-sentry-alerts.js
-//
-// Required env vars:
-//   SENTRY_AUTH_TOKEN  — Sentry API token with project:write scope
-//   SENTRY_ORG         — Sentry org slug (e.g., heady-ai)
-//   SENTRY_WEBHOOK_URL — URL of /api/webhooks/sentry endpoint (optional, for webhook alerts)
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: scripts/setup-sentry-alerts.js                                                    ║
+// ║  LAYER: automation                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 const SENTRY_ORG = process.env.SENTRY_ORG || 'heady-ai';

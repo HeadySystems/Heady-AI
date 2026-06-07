@@ -1,4 +1,3 @@
-const logger = require('./src/utils/logger.js');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -10,10 +9,11 @@ const logger = require('./src/utils/logger.js');
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: quick-server.js                                                    ║
+// ║  FILE: _archive/stale-root-js/quick-server.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = require('./src/utils/logger.js');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');

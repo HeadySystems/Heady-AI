@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-decision-theater/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-decision-theater
 description: Design and operate the Heady Decision Theater for structured decision support, scenario simulation, multi-criteria analysis, and collaborative deliberation. Use when building decision frameworks for complex choices, designing scenario modeling and what-if analysis tools, creating multi-criteria decision analysis (MCDA) systems, implementing collaborative deliberation workflows, planning probabilistic outcome simulation, or designing decision audit trails. Integrates with heady-montecarlo for probabilistic simulation, heady-vinci for analysis and synthesis, heady-battle for comparative evaluation, heady-critique for devil's advocate analysis, HeadyMemory for decision history, heady-traces for decision audit trails, and headyconnection-core for collaborative deliberation.

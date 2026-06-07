@@ -9,8 +9,8 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: services/api/python_worker/Dockerfile                                                    ║
-# ║  LAYER: services                                                  ║
+# ║  FILE: services/api/Dockerfile                                                    ║
+# ║  LAYER: root                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 # ╔═══════════════════════════════════════════════════════════════╗

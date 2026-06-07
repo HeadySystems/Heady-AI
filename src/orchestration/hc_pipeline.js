@@ -1,9 +1,3 @@
-const logger = console;
-/*
- * © 2026 Heady™Systems Inc.
- * PROPRIETARY AND CONFIDENTIAL.
- * Unauthorized copying, modification, or distribution is strictly prohibited.
- */
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -15,10 +9,16 @@ const logger = console;
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/hc_pipeline.js                                                    ║
+// ║  FILE: src/orchestration/hc_pipeline.js                                                    ║
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = console;
+/*
+ * © 2026 Heady™Systems Inc.
+ * PROPRIETARY AND CONFIDENTIAL.
+ * Unauthorized copying, modification, or distribution is strictly prohibited.
+ */
 
 //
 // HCFullPipeline Runtime Engine

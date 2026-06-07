@@ -1,6 +1,3 @@
-const { createLogger } = require('../utils/logger');
-const logger = createLogger('subsystem-routes');
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -12,10 +9,13 @@ const logger = createLogger('subsystem-routes');
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/gateway/subsystem-routes.js                            ║
-// ║  LAYER: backend/src                                               ║
+// ║  FILE: src/gateway/subsystem-routes.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('subsystem-routes');
+
 
 /**
  * Subsystem Routes — API endpoints for Colab Cluster, Swarm Coordinator,

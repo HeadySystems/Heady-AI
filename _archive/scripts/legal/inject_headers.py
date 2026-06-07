@@ -1,6 +1,3 @@
-# © 2026 Heady Systems LLC.
-# PROPRIETARY AND CONFIDENTIAL.
-# Unauthorized copying, modification, or distribution is strictly prohibited.
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -12,10 +9,13 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: scripts/legal/inject_headers.py                                                    ║
+# ║  FILE: _archive/scripts/legal/inject_headers.py                                                    ║
 # ║  LAYER: automation                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
+# © 2026 Heady Systems LLC.
+# PROPRIETARY AND CONFIDENTIAL.
+# Unauthorized copying, modification, or distribution is strictly prohibited.
 import os
 import datetime
 from multiprocessing import Pool

@@ -1,5 +1,3 @@
-const { createLogger } = require('../../src/utils/logger');
-const logger = createLogger('auto-fixed');
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -15,6 +13,8 @@ const logger = createLogger('auto-fixed');
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('../../src/utils/logger');
+const logger = createLogger('auto-fixed');
 
 // HC Brain - System Intelligence and Decision Making
 // Placeholder for brain functions

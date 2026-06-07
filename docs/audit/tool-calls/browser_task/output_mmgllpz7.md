@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/audit/tool-calls/browser_task/output_mmgllpz7.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 The GitHub repository [HeadyMe/heady-production](https://github.com/HeadyMe/heady-production) is **not visible** to the public. Navigating to the URL returns a [404 error page](https://github.com/HeadyMe/heady-production), indicating the repository is either private or does not exist.
 
 While the user [HeadyMe (Eric Haywood)](https://github.com/HeadyMe) has several public repositories, including [heady-production](https://github.com/HeadyMe/heady-production) and [headymcp-production](https://github.com/HeadyMe/headymcp-production), the specific repository requested is not among the [13 public repositories](https://github.com/HeadyMe?tab=repositories) currently listed on their profile.

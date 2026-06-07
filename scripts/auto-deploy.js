@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -11,10 +10,11 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: scripts/auto-deploy.js                                        ║
+// ║  FILE: scripts/auto-deploy.js                                                    ║
 // ║  LAYER: automation                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+
 
 const { execSync } = require('child_process');
 const fs = require('fs');

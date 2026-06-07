@@ -9,8 +9,8 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: config/node_manifest.yaml                                                    ║
-# ║  LAYER: root                                                  ║
+# ║  FILE: configs/node_manifest.yaml                                                    ║
+# ║  LAYER: config                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 # Declarative manifest describing a single Heady Node deployment.

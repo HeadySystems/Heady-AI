@@ -1,7 +1,18 @@
 <# HEADY_BRAND:BEGIN
-# Security Remediation Script — Remove hardcoded secrets from tracked files
-# Run: .\scripts\security-remediation.ps1 [-DryRun] [-Force]
-# HEADY_BRAND:END
+<# ╔══════════════════════════════════════════════════════════════════╗
+<# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<# ║                                                                  ║
+<# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<# ║  FILE: scripts/security-remediation.ps1                                                    ║
+<# ║  LAYER: automation                                                  ║
+<# ╚══════════════════════════════════════════════════════════════════╝
+<# HEADY_BRAND:END
 #>
 
 param(

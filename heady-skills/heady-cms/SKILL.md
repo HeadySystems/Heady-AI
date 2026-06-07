@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-cms/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-cms
 description: "Drupal CMS content management for all 9 Heady™ websites. Use this skill when the user asks to create, edit, publish, or manage website content, blog posts, articles, documentation, media, or taxonomy across any Heady domain. Triggers on: 'publish a post', 'create content', 'update the website', 'add documentation', 'manage media', 'taxonomy', 'blog post', 'article', 'page', 'Drupal', 'CMS', 'content management', 'website content', 'HeadySystems content', 'HeadyMe page'. Always use this skill for any content creation, publishing, or website management task — it connects to heady_cms_content, heady_cms_taxonomy, heady_cms_media, heady_cms_views, and heady_cms_search MCP tools."

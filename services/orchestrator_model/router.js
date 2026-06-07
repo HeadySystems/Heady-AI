@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2026 HeadySystems Inc. (C-Corp)
- * PROPRIETARY & CONFIDENTIAL.
- * Patent Pending: Infrastructure & Orchestration Cluster
- * Implements: Distributed State Mutex, Golden Ratio UI
- */
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,10 +9,17 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: services/orchestrator/model_router.js                                                    ║
+// ║  FILE: services/orchestrator_model/router.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+/**
+ * Copyright (c) 2026 HeadySystems Inc. (C-Corp)
+ * PROPRIETARY & CONFIDENTIAL.
+ * Patent Pending: Infrastructure & Orchestration Cluster
+ * Implements: Distributed State Mutex, Golden Ratio UI
+ */
+
 
 /**
  * ModelRouter — Per-Workspace Decision Matrix for Model Selection

@@ -1,6 +1,3 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('brain_connector');
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,6 +13,9 @@ const logger = createLogger('brain_connector');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('brain_connector');
+
 
 /**
  * HeadyBrain 100% Uptime Connector

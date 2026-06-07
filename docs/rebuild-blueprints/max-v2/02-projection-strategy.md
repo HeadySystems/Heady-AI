@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/rebuild-blueprints/max-v2/02-projection-strategy.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Projection strategy
 
 The public repos should be generated products, not parallel hand-maintained codebases, because the current public `*-core` repositories already describe themselves as projected from the latent OS ([headyme-core README](https://github.com/HeadyMe/headyme-core/blob/main/README.md), [headyos-core README](https://github.com/HeadyMe/headyos-core/blob/main/README.md), [headymcp-core README](https://github.com/HeadyMe/headymcp-core/blob/main/README.md), [headysystems-core README](https://github.com/HeadyMe/headysystems-core/blob/main/README.md), [headyapi-core README](https://github.com/HeadyMe/headyapi-core/blob/main/README.md), [headyconnection-core README](https://github.com/HeadyMe/headyconnection-core/blob/main/README.md), [headybuddy-core README](https://github.com/HeadyMe/headybuddy-core/blob/main/README.md)).

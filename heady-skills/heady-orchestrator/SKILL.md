@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-orchestrator/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-orchestrator
 description: "Autonomous task orchestration, multi-step workflows, and pipeline execution using Heady™ Orchestration services. Use this skill when the user wants to run complex multi-step tasks, automate workflows, chain tools together, execute pipelines, or coordinate multiple AI operations. Triggers on: 'run the full pipeline', 'auto-flow', 'orchestrate', 'chain these steps', 'automate this', 'multi-step', 'workflow', 'coordinate', 'end-to-end', 'full pipeline', 'HCFP'. Always use this skill for any multi-step automation or orchestration task — it connects to heady_auto_flow, heady_orchestrator, heady_hcfp_status, heady_csl_engine, and heady_agent_orchestration MCP tools."

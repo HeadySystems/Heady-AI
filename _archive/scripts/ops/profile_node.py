@@ -1,7 +1,3 @@
-# © 2026 Heady Systems LLC.
-# PROPRIETARY AND CONFIDENTIAL.
-# Unauthorized copying, modification, or distribution is strictly prohibited.
-#!/usr/bin/env python3
 # HEADY_BRAND:BEGIN
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,10 +9,14 @@
 # ║                                                                  ║
 # ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 # ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-# ║  FILE: scripts/ops/profile_node.py                                                    ║
+# ║  FILE: _archive/scripts/ops/profile_node.py                                                    ║
 # ║  LAYER: automation                                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
+# © 2026 Heady Systems LLC.
+# PROPRIETARY AND CONFIDENTIAL.
+# Unauthorized copying, modification, or distribution is strictly prohibited.
+#!/usr/bin/env python3
 
 """
 HeadySystems Node Profile Detection

@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: tests/core.test.js                                                    ║
+// ║  LAYER: tests                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 import { vi } from "vitest";
 /**
  * © 2026-2026 HeadySystems Inc. All Rights Reserved.
@@ -188,13 +203,13 @@ describe('heady-crypt', () => {
 
   test('compare() returns true for matching password', async () => {
     const h = await headyCrypt.hash('correct-horse', 4);
-    const match = await headycrypt.compare('correct-horse', h);
+    const match = await headyCrypt.compare('correct-horse', h);
     expect(match).toBe(true);
   });
 
   test('compare() returns false for wrong password', async () => {
     const h = await headyCrypt.hash('correct-horse', 4);
-    const match = await headycrypt.compare('wrong-pony', h);
+    const match = await headyCrypt.compare('wrong-pony', h);
     expect(match).toBe(false);
   });
 
@@ -223,8 +238,8 @@ describe('heady-crypt', () => {
 
   test('hashSync() and compareSync() work synchronously', () => {
     const h = headyCrypt.hashSync('sync-password', 4);
-    expect(headycrypt.compareSync('sync-password', h)).toBe(true);
-    expect(headycrypt.compareSync('wrong', h)).toBe(false);
+    expect(headyCrypt.compareSync('sync-password', h)).toBe(true);
+    expect(headyCrypt.compareSync('wrong', h)).toBe(false);
   });
 });
 

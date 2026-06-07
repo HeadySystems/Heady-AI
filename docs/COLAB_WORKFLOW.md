@@ -9,8 +9,8 @@
 <!-- ║                                                                  ║
 <!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-<!-- ║  FILE: COLAB_WORKFLOW.md                                                    ║
-<!-- ║  LAYER: root                                                  ║
+<!-- ║  FILE: docs/COLAB_WORKFLOW.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

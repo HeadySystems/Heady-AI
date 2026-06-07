@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: docs/skills/heady-colab-runtime-SKILL.md                                                    ║
+<!-- ║  LAYER: docs                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-colab-runtime
 description: Manages the Heady distributed compute cluster across 3 Google Colab Pro+ runtimes with mixed GPU types. Use this skill whenever working with Colab notebooks, GPU memory allocation, inter-runtime communication, distributed inference, vector store operations, model parallelism, or runtime persistence for the Heady system. Triggers on mentions of "Colab", "runtime", "GPU", "T4", "A100", "L4", "VRAM", "distributed inference", "model parallelism", "vector store", "FAISS", "ngrok", "cloudflare tunnel", "Ray cluster", or any code that needs to run across multiple Colab runtimes. Also use when the user wants to optimize GPU utilization, set up inter-notebook communication, or deploy Heady agents on Colab.

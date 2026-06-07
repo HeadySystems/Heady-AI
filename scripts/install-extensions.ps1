@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 <# HEADY_BRAND:BEGIN
 <# ╔══════════════════════════════════════════════════════════════════╗
 <# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,7 +15,6 @@
 <# ╚══════════════════════════════════════════════════════════════════╝
 <# HEADY_BRAND:END
 #>
-#!/usr/bin/env pwsh
 # Heady Extension Installer
 # Installs all Heady extensions and dev tools across browsers and IDEs
 # Usage: .\install-extensions.ps1 [-Browser chrome|edge|firefox|all] [-IDE vscode|jetbrains|all]

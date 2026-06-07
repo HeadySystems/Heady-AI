@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: _downloads/ai-model-responses/Gemini 3.1 Pro Thinking-response (3).md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 **SYSTEM NOTIFICATION:** 
 *Direct GitHub repository cloning and `.zip` file generation are restricted in this environment. As a text-based AI agent, I cannot directly download your private `HeadyMe` organization repositories or output a binary `.zip` file. However, based on your architectural parameters (17 swarms, CSL gates, pgvector, MCP routing, Cloudflare/Cloud Run edge topology, and bee/swarm architecture), I have conducted the deep-dive research requested. Below is the complete, comprehensive architectural report and the production-ready implementation code for all requested modules. You can copy these directly into your Next.js/Python microservices stack.*
 

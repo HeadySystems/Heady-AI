@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,7 +14,6 @@
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-#!/usr/bin/env node
 /**
  * HeadyOS CLI — Terminal-based AI assistant
  * Usage:

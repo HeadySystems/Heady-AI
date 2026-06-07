@@ -1,15 +1,23 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: src/orchestration/unified-auto-success-scheduler.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /*
  * (C) 2026 Heady Systems Inc.
  * PROPRIETARY AND CONFIDENTIAL.
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
-// HEADY_BRAND:BEGIN
-// +------------------------------------------------------------------+
-// |  HEADY  |  Sacred Geometry  |  Organic Systems                   |
-// |  FILE: src/orchestration/unified-auto-success-scheduler.js       |
-// |  LAYER: orchestration/scheduler                                  |
-// +------------------------------------------------------------------+
-// HEADY_BRAND:END
 
 /**
  * UnifiedAutoSuccessScheduler — Single scheduler replacing the two competing

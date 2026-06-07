@@ -230,9 +230,9 @@ function processFile(filePath, options = {}) {
     // Remove existing branding if present
     content = removeBranding(content, fileType);
     
-    // Handle special cases for Python (preserve shebang/encoding)
+    // Preserve shebang if present
     let prefix = '';
-    if (fileType.prefix === '#' && content.startsWith('#!')) {
+    if (content.startsWith('#!')) {
       const shebangEnd = content.indexOf('\n');
       if (shebangEnd !== -1) {
         prefix = content.slice(0, shebangEnd + 1);
@@ -313,16 +313,24 @@ function main() {
   } else {
     // Get all files in the project
     const getAllFiles = (dir, fileList = []) => {
-      const files = fs.readdirSync(dir);
+      let files;
+      try {
+        files = fs.readdirSync(dir);
+      } catch (err) {
+        return fileList;
+      }
       
       for (const file of files) {
         const filePath = path.join(dir, file);
-        const stat = fs.statSync(filePath);
-        
-        if (stat.isDirectory() && !file.startsWith('.')) {
-          getAllFiles(filePath, fileList);
-        } else if (stat.isFile()) {
-          fileList.push(filePath);
+        try {
+          const stat = fs.statSync(filePath);
+          if (stat.isDirectory() && !file.startsWith('.')) {
+            getAllFiles(filePath, fileList);
+          } else if (stat.isFile()) {
+            fileList.push(filePath);
+          }
+        } catch (err) {
+          // Skip files that cannot be read/stated (e.g. broken symlinks)
         }
       }
       

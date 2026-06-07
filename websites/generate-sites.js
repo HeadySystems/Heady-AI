@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: websites/generate-sites.js                                                    ║
+// ║  LAYER: root                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 const fs = require('fs');
 const path = require('path');
 
@@ -786,22 +801,7 @@ const topology = {
 </body>
 </html>`;
 
-const generateEleventyConfig = (site) => `// HEADY_BRAND:BEGIN
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: websites/sites/${site.domain}/.eleventy.js
-// ║  LAYER: root                                                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
-module.exports = function(eleventyConfig) {
+const generateEleventyConfig = (site) => `module.exports = function(eleventyConfig) {
   // ${site.title} specific config
   return {
     dir: {

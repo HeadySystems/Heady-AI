@@ -1,18 +1,20 @@
 #!/usr/bin/env node
-const logger = require('../logger');
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: scripts/auto-merge.js
-// LAYER: root
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: scripts/auto-merge.js                                                    ║
+// ║  LAYER: automation                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = require('../logger');
 
 /**
  * Auto Merge Script

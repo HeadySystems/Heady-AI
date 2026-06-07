@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: maximum-potential/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: maximum-potential
 description: "Master orchestrator prompt for the Heady ecosystem. Universal coding agent system prompt for Claude, GPT, Gemini, Perplexity, Windsurf, Cursor, Copilot, and any agentic coding system. Synthesizes all 60+ Heady skills into a single cohesive autonomous builder prompt. Use for any Heady development, architecture, deployment, orchestration, vector memory, MCP gateway, edge AI, bee swarm, liquid node, CSL engine, phi-math, sacred geometry, or full-system build task. Keywords: heady, maximum potential, universal prompt, coding agent, autonomous builder, liquid OS, sacred geometry, CSL, phi-math, vector memory, bee swarm, MCP gateway, edge AI, conductor, pipeline, alive software."

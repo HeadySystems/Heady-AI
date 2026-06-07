@@ -1,7 +1,3 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('heady_story_driver');
-
-// const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -17,6 +13,10 @@ const logger = createLogger('heady_story_driver');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('heady_story_driver');
+
+// const logger = console;
 
 /**
  * HeadyStoryDriver :: Deterministic Story Engine

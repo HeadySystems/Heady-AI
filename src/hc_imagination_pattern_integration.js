@@ -1,4 +1,3 @@
-const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -14,6 +13,7 @@ const logger = console;
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = console;
 /**
  * Imagination-Pattern Engine Integration
  * 

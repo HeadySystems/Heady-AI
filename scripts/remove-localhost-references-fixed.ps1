@@ -1,3 +1,19 @@
+<# HEADY_BRAND:BEGIN
+<# ╔══════════════════════════════════════════════════════════════════╗
+<# ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<# ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<# ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<# ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<# ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<# ║                                                                  ║
+<# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<# ║  FILE: scripts/remove-localhost-references-fixed.ps1                                                    ║
+<# ║  LAYER: automation                                                  ║
+<# ╚══════════════════════════════════════════════════════════════════╝
+<# HEADY_BRAND:END
+#>
 # Heady Systems - Remove Localhost References Script
 # Replaces localhost, 127.0.0.1, and .onrender.com with proper Heady domains
 

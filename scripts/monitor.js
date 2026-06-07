@@ -1,17 +1,19 @@
-const logger = require('../logger');
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: scripts/monitor.js
-// LAYER: root
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | |_| | \ V / 
-//        |  _  || |___/ ___ \|  _  |   | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: scripts/monitor.js                                                    ║
+// ║  LAYER: automation                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const logger = require('../logger');
 
 /**
  * Heady System Monitor - Real-time Change Detection

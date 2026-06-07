@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-skills/heady-trading-compliance-SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-trading-compliance
 description: Enforces Apex Trader Funding compliance rules and risk management logic for all Heady trading code. Use this skill whenever writing, reviewing, or debugging ANY trading-related code — including order execution, risk checks, drawdown calculations, position sizing, P&L tracking, Rithmic/Tradovate API integration, or Apex evaluation/funded account logic. Triggers on mentions of "Apex", "drawdown", "trailing threshold", "consistency rule", "funded account", "Rithmic", "Tradovate", "TradersPost", "PickMyTrade", "contract scaling", "position flattening", or any trading risk management code. Also use when the user asks about prop firm rules, trading compliance, or risk agent logic.

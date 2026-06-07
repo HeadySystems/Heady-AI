@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-07T01:22:35.001Z",
+  "generatedAt": "2026-06-07T01:25:50.236Z",
   "policyVersion": 1,
   "health": {
     "endpoint": "/api/antigravity/health",
@@ -11,7 +11,7 @@
   "enforcedGateway": "heady",
   "workspaceMode": "3d-vector",
   "autonomousMode": "optimized-autonomous",
-  "optimizationReportHash": "a7a59fed401237daa8ed4902942e30d674b34c5df07ccdad577ba7570e314972",
+  "optimizationReportHash": "fce7a280ea0fa06ed5a378693a44bd978abb86b4ff75d0e375f391fdacf44f16",
   "topTemplates": [
     {
       "id": "hb-deployment-operator-v1",

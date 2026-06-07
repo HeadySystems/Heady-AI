@@ -1,6 +1,3 @@
-const { createLogger } = require('../utils/logger');
-const logger = createLogger('imagination-agent-guide');
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,6 +13,9 @@ const logger = createLogger('imagination-agent-guide');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('imagination-agent-guide');
+
 /**
  * Imagination Engine - Coding Agent Guide
  * 

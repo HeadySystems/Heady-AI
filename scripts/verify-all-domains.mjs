@@ -1,4 +1,19 @@
 #!/usr/bin/env node
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: scripts/verify-all-domains.mjs                                                    ║
+// ║  LAYER: automation                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 /**
  * Heady Platform — Domain Verification Script
  * 
@@ -14,9 +29,11 @@
  *        node verify-all-domains.mjs --json   (machine-readable output)
  */
 
+import { fileURLToPath } from 'url';
+
 const PHI = 1.6180339887;
 
-const DOMAINS = [
+export const DOMAINS = [
   // Primary domains
   {
     domain: 'headyme.com',
@@ -332,7 +349,14 @@ async function main() {
   process.exit(failing.length > 0 ? 1 : 0);
 }
 
-main().catch(err => {
-  console.error('Verification failed:', err);
-  process.exit(2);
-});
+const isMain = process.argv[1] && (
+  process.argv[1] === fileURLToPath(import.meta.url) ||
+  process.argv[1].endsWith('verify-all-domains.mjs')
+);
+
+if (isMain) {
+  main().catch(err => {
+    console.error('Verification failed:', err);
+    process.exit(2);
+  });
+}

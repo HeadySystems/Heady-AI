@@ -1,3 +1,19 @@
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: heady-bee-swarm-ops/SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 ---
 name: heady-bee-swarm-ops
 description: Use when managing HeadyBee agent worker lifecycle, template registries, swarm coordination, or working with any of the 30+ bee types (agents-bee, brain-bee, config-bee, creative-bee, deployment-bee, device-provisioner-bee, engines-bee, intelligence-bee, lifecycle-bee, middleware-bee, ops-bee, orchestration-bee, pipeline-bee, providers-bee, refactor-bee, routes-bee, services-bee, sync-projection-bee, vector-ops-bee, vector-template-bee, connectors-bee, auto-success-bee). Keywords include bee, swarm, worker, template registry, agent factory, bee lifecycle, HeadyBee, and bee orchestration.

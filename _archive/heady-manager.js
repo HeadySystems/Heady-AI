@@ -1,7 +1,3 @@
-// Allow self-signed certs for internal HTTPS self-calls (manager runs mTLS)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-const logger = require("./src/utils/logger");
-const redisPool = require("./src/utils/redis-pool");
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,10 +9,14 @@ const redisPool = require("./src/utils/redis-pool");
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: heady-manager.js                                                    ║
+// ║  FILE: _archive/heady-manager.js                                                    ║
 // ║  LAYER: root                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+// Allow self-signed certs for internal HTTPS self-calls (manager runs mTLS)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const logger = require("./src/utils/logger");
+const redisPool = require("./src/utils/redis-pool");
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║  🌈 HEADY SYSTEMS — MANAGER SERVER                                         ║

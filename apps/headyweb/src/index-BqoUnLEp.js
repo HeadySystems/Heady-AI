@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: apps/headyweb/src/index-BqoUnLEp.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 import{r as uv,a as C,W as vs}from"./monaco-BX6Emkwf.js";import{r as sv}from"./react-vendor-BH7Thwn7.js";(function(){const D=document.createElement("link").relList;if(D&&D.supports&&D.supports("modulepreload"))return;for(const b of document.querySelectorAll('link[rel="modulepreload"]'))o(b);new MutationObserver(b=>{for(const j of b)if(j.type==="childList")for(const g of j.addedNodes)g.tagName==="LINK"&&g.rel==="modulepreload"&&o(g)}).observe(document,{childList:!0,subtree:!0});function x(b){const j={};return b.integrity&&(j.integrity=b.integrity),b.referrerPolicy&&(j.referrerPolicy=b.referrerPolicy),b.crossOrigin==="use-credentials"?j.credentials="include":b.crossOrigin==="anonymous"?j.credentials="omit":j.credentials="same-origin",j}function o(b){if(b.ep)return;b.ep=!0;const j=x(b);fetch(b.href,j)}})();var os={exports:{}},gn={};/**
  * @license React
  * react-jsx-runtime.production.js

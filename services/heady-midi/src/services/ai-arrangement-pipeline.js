@@ -1,3 +1,18 @@
+// HEADY_BRAND:BEGIN
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: services/heady-midi/src/services/ai-arrangement-pipeline.js                                                    ║
+// ║  LAYER: backend/src                                                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
+// HEADY_BRAND:END
 import { PHI, PSI, PSI2, FIB, CHANNEL, NOTE, VELOCITY, STATUS, DEFAULT_BPM, DEFAULT_PPQ, PHI_SWING, SYSEX_CMD } from '../shared/midi-constants.js';
 import { encodeSetTempo, encodeSetTimeSignature, encodeTriggerClip, encodeSetDeviceParam, encodeTransport, encodeCreateMidiTrack, encodeCreateAudioTrack, encodeSetTrackVolume, encodeSetClipName, encodeSetClipColor, encodeFireScene, encodeArmTrack, encodeSetTrackSend, encodeSetMacro, encodeMuteTrack, encodeSoloTrack, encodeSetLoopRegion, encodeAIArrangement, buildSysEx, encodeJSON } from '../shared/sysex-codec.js';
 import { EventEmitter } from 'events';

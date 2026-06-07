@@ -1,7 +1,3 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('hc_skill_executor');
-
-// const logger = console;
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -17,6 +13,10 @@ const logger = createLogger('hc_skill_executor');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_skill_executor');
+
+// const logger = console;
 /**
  * ╔══════════════════════════════════════════════════════════════════════════════╗
  * ║  🌈 HEADY SYSTEMS — SKILL EXECUTOR                                         ║

@@ -1,6 +1,3 @@
-const { createLogger } = require('./utils/logger');
-const logger = createLogger('hc_orchestrator');
-
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -16,6 +13,9 @@ const logger = createLogger('hc_orchestrator');
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
+const { createLogger } = require('./utils/logger');
+const logger = createLogger('hc_orchestrator');
+
 /**
  * HeadyOrchestrator - Execution Engine
  * 
