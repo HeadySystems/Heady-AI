@@ -15,6 +15,8 @@
 
 set -euo pipefail
 
+export GIT_TERMINAL_PROMPT=0
+
 # ─── Configuration ────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
