@@ -1,28 +1,73 @@
 {
   "servers": {
-    "heady-cloud": {
-      "type": "http",
-      "url": "https://headymcp.com/mcp",
-      "headers": {
-        "Authorization": "Bearer YOUR_HEADY_API_KEY"
-      }
-    },
-    "heady-local": {
+    "heady-mcp": {
       "type": "stdio",
       "command": "node",
-      "args": ["/home/headyme/Heady/services/heady-mcp-server/src/index.js"],
+      "args": ["/home/headyme/Heady/mcp-servers/heady-mcp-server.js"],
       "env": {
         "HEADY_MCP_TRANSPORT": "stdio",
-        "NODE_ENV": "development"
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
       }
     },
-    "heady-codebase": {
+    "heady-liquid-nodes": {
       "type": "stdio",
       "command": "node",
-      "args": ["/home/headyme/Heady/src/mcp/heady-mcp-server.js"],
+      "args": ["/home/headyme/Heady/mcp-servers/liquid-nodes-mcp-server.js"],
       "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
         "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
-        "NODE_ENV": "development"
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-orchestration": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-orchestration-mcp-server.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-intelligence": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-intelligence-mcp-server.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-memory": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-memory-mcp-server.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-governance": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-governance-mcp-server.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-unified": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["/home/headyme/Heady/mcp-servers/heady-unified-mcp-server.js"],
+      "env": {
+        "HEADY_MCP_TRANSPORT": "stdio",
+        "HEADY_WORKSPACE_ROOT": "/home/headyme/Heady",
+        "NODE_ENV": "production"
       }
     }
   }

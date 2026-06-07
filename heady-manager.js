@@ -744,146 +744,8 @@ function readJsonSafe(filePath) {
 }
 
 // ─── Health & Pulse ─────────────────────────────────────────────────
-/**
- * @swagger
- * /api/pulse:
- *   get:
- *     summary: Service pulse check
- *     responses:
- *       200:
- *         description: Service is active
- */
-/**
- * @description Service pulse check
- * @returns {Object} Service pulse data
- */
-app.get('/api/pulse', (req, res) => {
-  res.json({
-    ok: true,
-    service: 'heady-manager',
-    version: '4.1.0',
-    ts: new Date().toISOString(),
-    status: 'active',
-    active_layer: activeLayer,
-    layer_endpoint: LAYERS[activeLayer]?.endpoint || '',
-    endpoints: [
-      '/api/health',
-      '/api/pulse',
-      '/api/registry',
-      '/api/registry/component/:id',
-      '/api/registry/environments',
-      '/api/registry/docs',
-      '/api/registry/notebooks',
-      '/api/registry/patterns',
-      '/api/registry/workflows',
-      '/api/registry/ai-nodes',
-      '/api/nodes',
-      '/api/system/status',
-      '/api/pipeline/*',
-      '/api/ide/spec',
-      '/api/ide/agents',
-      '/api/playbook',
-      '/api/agentic',
-      '/api/activation',
-      '/api/public-domain',
-      '/api/resources/health',
-      '/api/resources/snapshot',
-      '/api/resources/events',
-      '/api/resources/diagnose',
-      '/api/resources/quick-wins',
-      '/api/resources/system-profile',
-      '/api/scheduler/status',
-      '/api/scheduler/queues',
-      '/api/scheduler/history',
-      '/api/stories',
-      '/api/stories/recent',
-      '/api/stories/summary',
-      '/api/monte-carlo/plan',
-      '/api/monte-carlo/result',
-      '/api/monte-carlo/metrics',
-      '/api/monte-carlo/status',
-      '/api/monte-carlo/drift',
-      '/api/monte-carlo/simulate',
-      '/api/monte-carlo/speed-mode',
-      '/api/patterns',
-      '/api/patterns/summary',
-      '/api/patterns/recent',
-      '/api/patterns/bottlenecks',
-      '/api/patterns/improvements',
-      '/api/self/status',
-      '/api/self/knowledge',
-      '/api/self/critique',
-      '/api/self/critiques',
-      '/api/self/improvement',
-      '/api/self/improvements',
-      '/api/self/diagnose',
-      '/api/self/diagnostics',
-      '/api/self/connection-health',
-      '/api/self/connections',
-      '/api/self/meta-analysis',
-      '/api/pricing/tiers',
-      '/api/pricing/fair-access',
-      '/api/pricing/metrics',
-      '/api/secrets/status',
-      '/api/secrets',
-      '/api/secrets/:id',
-      '/api/secrets/alerts',
-      '/api/secrets/check',
-      '/api/secrets/:id/refresh',
-      '/api/secrets/audit',
-      '/api/cloudflare/status',
-      '/api/cloudflare/refresh',
-      '/api/cloudflare/zones',
-      '/api/cloudflare/domains',
-      '/api/cloudflare/verify',
-      '/api/aloha/status',
-      '/api/aloha/protocol',
-      '/api/aloha/de-optimization',
-      '/api/aloha/stability',
-      '/api/aloha/priorities',
-      '/api/aloha/checklist',
-      '/api/aloha/crash-report',
-      '/api/aloha/de-opt-check',
-      '/api/aloha/web-baseline',
-      '/api/v1/train',
-      '/api/imagination/primitives',
-      '/api/imagination/concepts',
-      '/api/imagination/imagine',
-      '/api/imagination/hot-concepts',
-      '/api/imagination/top-concepts',
-      '/api/imagination/ip-packages',
-      '/api/orchestrator/health',
-      '/api/orchestrator/route',
-      '/api/orchestrator/execute',
-      '/api/orchestrator/brains',
-      '/api/orchestrator/layers',
-      '/api/orchestrator/agents',
-      '/api/orchestrator/metrics',
-      '/api/orchestrator/contract',
-      '/api/orchestrator/rebuild-status',
-      '/api/orchestrator/reload',
-      '/api/brain/health',
-      '/api/brain/plan',
-      '/api/brain/feedback',
-      '/api/brain/status',
-    ],
-    aloha: alohaState
-      ? {
-          mode: alohaState.mode,
-          protocols: alohaState.protocols,
-          stabilityDiagnosticMode: alohaState.stabilityDiagnosticMode,
-          crashReports: alohaState.crashReports.length,
-        }
-      : null,
-    secrets: secretsManager ? secretsManager.getSummary() : null,
-    cloudflare: cfManager
-      ? {
-          tokenValid: cfManager.isTokenValid(),
-          expiresIn: cfManager.expiresAt ? cfManager._timeUntil(cfManager.expiresAt) : null,
-        }
-      : null,
-  });
-});
+// The legacy health and pulse routes have been extracted to src/routes/health.js
+// and are mounted via the new modular health router system.
 
 // ─── Registry ───────────────────────────────────────────────────────
 const REGISTRY_PATH = path.join(__dirname, '.heady', 'registry.json');
@@ -3646,64 +3508,155 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Root health endpoint (before SPA fallback)
-app.get('/health', (req, res) => {
-  res.redirect('/api/health');
-});
-
 // ─── Enhanced Health Status with Swarm Modules ──────────────────────
-function healthResponse() {
+function getHealthState() {
   return {
     status: 'ok',
     timestamp: new Date().toISOString(),
-    swarms: headySwarms ? 'loaded' : 'not_loaded',
-    vectorRouter: vectorRouter ? 'loaded' : 'not_loaded',
-    colabLatentOps: colabLatentOps ? 'loaded' : 'not_loaded',
-    memoryService: memoryService ? 'loaded' : 'not_loaded',
-    pd04Codec: pd04Codec ? 'loaded' : 'not_loaded',
-    spatialOrchestrator: spatialOrchestrator ? 'loaded' : 'not_loaded',
-    liquidArchitecture: liquidArchitecture ? 'loaded' : 'not_loaded',
-    resonanceRouter: resonanceRouter ? 'loaded' : 'not_loaded',
-    latentSpace: latentSpace ? 'loaded' : 'not_loaded',
-    orchestrator: orchestrator ? 'loaded' : 'not_loaded',
-    conductor: conductor ? 'loaded' : 'not_loaded',
+    swarms: typeof headySwarms !== 'undefined' && headySwarms ? 'loaded' : 'not_loaded',
+    vectorRouter: typeof vectorRouter !== 'undefined' && vectorRouter ? 'loaded' : 'not_loaded',
+    colabLatentOps: typeof colabLatentOps !== 'undefined' && colabLatentOps ? 'loaded' : 'not_loaded',
+    memoryService: typeof memoryService !== 'undefined' && memoryService ? 'loaded' : 'not_loaded',
+    pd04Codec: typeof pd04Codec !== 'undefined' && pd04Codec ? 'loaded' : 'not_loaded',
+    spatialOrchestrator: typeof spatialOrchestrator !== 'undefined' && spatialOrchestrator ? 'loaded' : 'not_loaded',
+    liquidArchitecture: typeof liquidArchitecture !== 'undefined' && liquidArchitecture ? 'loaded' : 'not_loaded',
+    resonanceRouter: typeof resonanceRouter !== 'undefined' && resonanceRouter ? 'loaded' : 'not_loaded',
+    latentSpace: typeof latentSpace !== 'undefined' && latentSpace ? 'loaded' : 'not_loaded',
+    orchestrator: typeof orchestrator !== 'undefined' && orchestrator ? 'loaded' : 'not_loaded',
+    conductor: typeof conductor !== 'undefined' && conductor ? 'loaded' : 'not_loaded',
   };
 }
 
-app.get('/api/health', (req, res) => {
-  res.json(healthResponse());
-});
-
-// Alias required by render.yaml healthCheckPath
-app.get('/api/brain/health', (req, res) => {
-  res.json(healthResponse());
-});
-
-// Standard Cloud Run /healthz endpoint (Kubernetes convention)
-app.get('/healthz', (req, res) => {
-  res.json(healthResponse());
-});
-
-// Readiness probe
-app.get('/readiness', (req, res) => {
-  res.json({
-    status: 'ready',
+function getPulseState() {
+  return {
+    ok: true,
     service: 'heady-manager',
     version: '4.1.0',
-    timestamp: new Date().toISOString(),
-  });
-});
+    ts: new Date().toISOString(),
+    status: 'active',
+    active_layer: typeof activeLayer !== 'undefined' ? activeLayer : 'local',
+    layer_endpoint: typeof LAYERS !== 'undefined' && typeof activeLayer !== 'undefined' && LAYERS[activeLayer] ? LAYERS[activeLayer].endpoint : '',
+    endpoints: [
+      '/api/health',
+      '/api/pulse',
+      '/api/registry',
+      '/api/registry/component/:id',
+      '/api/registry/environments',
+      '/api/registry/docs',
+      '/api/registry/notebooks',
+      '/api/registry/patterns',
+      '/api/registry/workflows',
+      '/api/registry/ai-nodes',
+      '/api/nodes',
+      '/api/system/status',
+      '/api/pipeline/*',
+      '/api/ide/spec',
+      '/api/ide/agents',
+      '/api/playbook',
+      '/api/agentic',
+      '/api/activation',
+      '/api/public-domain',
+      '/api/resources/health',
+      '/api/resources/snapshot',
+      '/api/resources/events',
+      '/api/resources/diagnose',
+      '/api/resources/quick-wins',
+      '/api/resources/system-profile',
+      '/api/scheduler/status',
+      '/api/scheduler/queues',
+      '/api/scheduler/history',
+      '/api/stories',
+      '/api/stories/recent',
+      '/api/stories/summary',
+      '/api/monte-carlo/plan',
+      '/api/monte-carlo/result',
+      '/api/monte-carlo/metrics',
+      '/api/monte-carlo/status',
+      '/api/monte-carlo/drift',
+      '/api/monte-carlo/simulate',
+      '/api/monte-carlo/speed-mode',
+      '/api/patterns',
+      '/api/patterns/summary',
+      '/api/patterns/recent',
+      '/api/patterns/bottlenecks',
+      '/api/patterns/improvements',
+      '/api/self/status',
+      '/api/self/knowledge',
+      '/api/self/critique',
+      '/api/self/critiques',
+      '/api/self/improvement',
+      '/api/self/improvements',
+      '/api/self/diagnose',
+      '/api/self/diagnostics',
+      '/api/self/connection-health',
+      '/api/self/connections',
+      '/api/self/meta-analysis',
+      '/api/pricing/tiers',
+      '/api/pricing/fair-access',
+      '/api/pricing/metrics',
+      '/api/secrets/status',
+      '/api/secrets',
+      '/api/secrets/:id',
+      '/api/secrets/alerts',
+      '/api/secrets/check',
+      '/api/secrets/:id/refresh',
+      '/api/secrets/audit',
+      '/api/cloudflare/status',
+      '/api/cloudflare/refresh',
+      '/api/cloudflare/zones',
+      '/api/cloudflare/domains',
+      '/api/cloudflare/verify',
+      '/api/aloha/status',
+      '/api/aloha/protocol',
+      '/api/aloha/de-optimization',
+      '/api/aloha/stability',
+      '/api/aloha/priorities',
+      '/api/aloha/checklist',
+      '/api/aloha/crash-report',
+      '/api/aloha/de-opt-check',
+      '/api/aloha/web-baseline',
+      '/api/v1/train',
+      '/api/imagination/primitives',
+      '/api/imagination/concepts',
+      '/api/imagination/imagine',
+      '/api/imagination/hot-concepts',
+      '/api/imagination/top-concepts',
+      '/api/imagination/ip-packages',
+      '/api/orchestrator/health',
+      '/api/orchestrator/route',
+      '/api/orchestrator/execute',
+      '/api/orchestrator/brains',
+      '/api/orchestrator/layers',
+      '/api/orchestrator/agents',
+      '/api/orchestrator/metrics',
+      '/api/orchestrator/contract',
+      '/api/orchestrator/rebuild-status',
+      '/api/orchestrator/reload',
+      '/api/brain/health',
+      '/api/brain/plan',
+      '/api/brain/feedback',
+      '/api/brain/status',
+    ],
+    aloha: typeof alohaState !== 'undefined' && alohaState
+      ? {
+          mode: alohaState.mode,
+          protocols: alohaState.protocols,
+          stabilityDiagnosticMode: alohaState.stabilityDiagnosticMode,
+          crashReports: alohaState.crashReports.length,
+        }
+      : null,
+    secrets: typeof secretsManager !== 'undefined' && secretsManager ? secretsManager.getSummary() : null,
+    cloudflare: typeof cfManager !== 'undefined' && cfManager
+      ? {
+          tokenValid: cfManager.isTokenValid(),
+          expiresIn: cfManager.expiresAt ? cfManager._timeUntil(cfManager.expiresAt) : null,
+        }
+      : null,
+  };
+}
 
-// Startup probe
-app.get('/startup', (req, res) => {
-  res.json({
-    status: 'started',
-    service: 'heady-manager',
-    version: '4.1.0',
-    uptime_ms: process.uptime() * 1000,
-    timestamp: new Date().toISOString(),
-  });
-});
+const { createHealthRouter } = require('./src/routes/health');
+app.use('/', createHealthRouter({ getHealthState, getPulseState }));
 
 // ─── Sentry → Linear Webhook Bridge ─────────────────────────────────
 // Receives Sentry alert webhooks and auto-creates Linear issues.
