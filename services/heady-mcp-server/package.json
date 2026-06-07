@@ -1,7 +1,7 @@
 {
   "name": "heady-mcp-server",
   "version": "2.0.0",
-  "type": "module",
+
   "description": "Heady MCP Server — Streamable HTTP transport with 384D vector tools + CSL coherence",
   "main": "server.js",
   "scripts": {
