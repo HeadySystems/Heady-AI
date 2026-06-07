@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
@@ -13,9 +14,6 @@
 // ║  LAYER: backend/src                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
-const { createLogger } = require('../../utils/logger');
-const logger = createLogger('auto-fixed');
-#!/usr/bin/env node
 /**
  * Heady™ MCP Server v5.1 — Master Control Program
  * ================================================
@@ -407,7 +405,7 @@ async function main() {
   }
 }
 main().catch(err => {
-  logger.error('Fatal:', err);
+  log.fatal({ err }, 'Fatal startup error');
   process.exit(1);
 });
 module.exports = {

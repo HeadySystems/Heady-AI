@@ -1,21 +1,14 @@
-// HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: services/heady-mcp-server/index.js                                                    ║
-// ║  LAYER: root                                                  ║
+// ║  HEADY™ MCP Server — Index Redirect                           ║
+// ║  Canonical entry point is server.js (ESM)                      ║
+// ║  This file exists for import compatibility only.               ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
 // ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
-const { createLogger } = require('../utils/logger');
-const logger = createLogger('auto-fixed');
-#!/usr/bin/env node
+
+// Re-export from canonical server.js
+// Usage: node server.js (not index.js)
+export { default } from './server.js';
+
 /**
  * Heady™ MCP Server v5.0 — Master Control Program
  * ================================================
