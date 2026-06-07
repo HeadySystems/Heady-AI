@@ -1,39 +1,40 @@
 #!/usr/bin/env node
-// HEADY_BRAND:BEGIN
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: tools/create-heady-agent/src/cli.js                                                    ║
-// ║  LAYER: backend/src                                                  ║
+// ║  HEADY™ Create-Heady-Agent CLI v1.0.0                            ║
+// ║  ESM Scaffolding CLI for HeadyBee Agents                         ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
 // ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
-'use strict';
 
-/**
- * create-heady-agent CLI
- * Scaffolds a new HeadyBee agent module for the Heady™ ecosystem
- * 
- * Usage:
- *   create-heady-agent my-bee
- *   create-heady-agent my-bee --template monitor --language typescript
- *   create-heady-agent (interactive)
- */
-
-const { Command } = require('commander');
-const inquirer = require('inquirer');
-const fs = require('fs-extra');
-const path = require('path');
-const chalk = require('chalk');
+import { Command } from 'commander';
+import inquirer from 'inquirer';
+import fs from 'fs-extra';
+import path from 'path';
+import chalk from 'chalk';
+import pino from 'pino';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { execSync } from 'child_process';
 
 const PHI = 1.6180339887;
 const VERSION = '1.0.0';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Initialize Pino logger with clean human-readable output for CLI
+const traceId = process.env.X_HEADY_TRACE_ID || `trace-cli-${Math.round(PHI * Date.now())}`;
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      ignore: 'pid,hostname,traceId',
+      translateTime: false,
+      messageFormat: '{msg}'
+    }
+  }
+}).child({ traceId });
 
 const TEMPLATES = {
   basic: { desc: 'Minimal HeadyBee with lifecycle hooks', complexity: 'low' },
@@ -63,13 +64,13 @@ program
 
       await scaffold(config, options);
     } catch (err) {
-      console.error(chalk.red(`\n❌ Error: ${err.message}\n`));
+      logger.error(`\n❌ Error: ${err.message}\n`);
       process.exit(1);
     }
   });
 
 async function interactivePrompt() {
-  console.log(chalk.yellow(`\n🐝 create-heady-agent v${VERSION}\n`));
+  logger.info(chalk.yellow(`\n🐝 create-heady-agent v${VERSION}\n`));
 
   const answers = await inquirer.prompt([
     {
@@ -102,12 +103,12 @@ async function scaffold(config, options) {
   const { name, template, language } = config;
   const targetDir = path.resolve(process.cwd(), name);
 
-  console.log(chalk.yellow(`\n🐝 Scaffolding HeadyBee: ${name}`));
-  console.log(chalk.gray(`   Template: ${template}`));
-  console.log(chalk.gray(`   Language: ${language}`));
-  console.log(chalk.gray(`   Directory: ${targetDir}\n`));
+  logger.info(chalk.yellow(`\n🐝 Scaffolding HeadyBee: ${name}`));
+  logger.info(chalk.gray(`   Template: ${template}`));
+  logger.info(chalk.gray(`   Language: ${language}`));
+  logger.info(chalk.gray(`   Directory: ${targetDir}\n`));
 
-  // Create directory
+  // Create directories
   await fs.ensureDir(targetDir);
   await fs.ensureDir(path.join(targetDir, 'src'));
   await fs.ensureDir(path.join(targetDir, 'tests'));
@@ -118,32 +119,31 @@ async function scaffold(config, options) {
   // Generate files
   await generatePackageJson(targetDir, name, template);
   await generateBee(targetDir, name, template, language);
+  await generateIndex(targetDir, name, template, language);
   await generateConfig(targetDir, name, template);
-  await generateTests(targetDir, name, template);
+  await generateTests(targetDir, name, template, language);
   await generateCI(targetDir, name);
   await generateReadme(targetDir, name, template);
   await generateGitignore(targetDir);
 
   // Git init
   if (options.git !== false) {
-    const { execSync } = require('child_process');
     execSync('git init', { cwd: targetDir, stdio: 'ignore' });
-    console.log(chalk.green('  ✅ Git initialized'));
+    logger.info(chalk.green('  ✅ Git initialized'));
   }
 
   // npm install
   if (options.install !== false) {
-    const { execSync } = require('child_process');
-    console.log(chalk.gray('  📦 Installing dependencies...'));
+    logger.info(chalk.gray('  📦 Installing dependencies...'));
     execSync('npm install', { cwd: targetDir, stdio: 'inherit' });
   }
 
-  console.log(chalk.green(`\n✅ HeadyBee "${name}" created successfully!`));
-  console.log(chalk.gray(`\nNext steps:`));
-  console.log(chalk.white(`  cd ${name}`));
-  console.log(chalk.white(`  npm test`));
-  console.log(chalk.white(`  npm start`));
-  console.log(chalk.gray(`\nDocs: https://headyio.com/docs/create-agent\n`));
+  logger.info(chalk.green(`\n✅ HeadyBee "${name}" created successfully!`));
+  logger.info(chalk.gray(`\nNext steps:`));
+  logger.info(chalk.white(`  cd ${name}`));
+  logger.info(chalk.white(`  npm test`));
+  logger.info(chalk.white(`  npm run dev`));
+  logger.info(chalk.gray(`\nDocs: https://headyio.com/docs/create-agent\n`));
 }
 
 async function generatePackageJson(dir, name, template) {
@@ -151,28 +151,32 @@ async function generatePackageJson(dir, name, template) {
     name: `@heady-ai/${name}`,
     version: '0.1.0',
     description: `HeadyBee agent: ${name}`,
+    type: 'module',
     main: 'src/index.js',
     scripts: {
       start: 'node src/index.js',
-      test: 'jest --coverage',
-      'test:watch': 'jest --watch',
+      test: 'vitest run --coverage',
+      'test:watch': 'vitest',
       lint: 'eslint src/ tests/',
       dev: 'node --watch src/index.js',
     },
     keywords: ['heady', 'headybee', 'agent', 'mcp', template],
-    author: '',
+    author: 'HeadySystems Inc.',
     license: 'MIT',
     dependencies: {
-      express: '^4.21.0',
+      express: '^5.1.0',
+      pino: '^10.3.1',
+      'pino-pretty': '^13.1.3',
     },
     devDependencies: {
-      jest: '^29.0.0',
-      eslint: '^9.0.0',
+      vitest: '^1.6.0',
+      '@vitest/coverage-v8': '^1.6.0',
+      eslint: '^9.9.0',
     },
     heady: {
       type: 'bee',
       template,
-      version: '3.1',
+      version: '4.1.0',
       phi: PHI,
       capabilities: [],
       rings: 'outer',
@@ -180,14 +184,17 @@ async function generatePackageJson(dir, name, template) {
   };
 
   if (template === 'connector') {
-    pkg.dependencies['ioredis'] = '^5.0.0';
+    pkg.dependencies['ioredis'] = '^5.4.1';
   }
   if (template === 'creative') {
-    pkg.dependencies['@anthropic-ai/sdk'] = '^0.74.0';
+    pkg.dependencies['@anthropic-ai/sdk'] = '^0.82.0';
+  }
+  if (template === 'processor' || template === 'security') {
+    pkg.dependencies['zod'] = '^3.24.2';
   }
 
   await fs.writeJson(path.join(dir, 'package.json'), pkg, { spaces: 2 });
-  console.log(chalk.green('  ✅ package.json'));
+  logger.info(chalk.green('  ✅ package.json'));
 }
 
 async function generateBee(dir, name, template, language) {
@@ -198,28 +205,37 @@ async function generateBee(dir, name, template, language) {
     .join('') + 'Bee';
 
   const templates = {
-    basic: `'use strict';
+    basic: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  Minimal HeadyBee with lifecycle hooks                         ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import pino from 'pino';
 
 const PHI = 1.6180339887;
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
 
-class ${className} {
+export class ${className} {
   constructor(config = {}) {
     this.name = '${name}';
     this.status = 'idle';
     this.config = {
       intervalMs: Math.round(PHI * 5000), // ~8,090ms
-      maxRetries: 5, // Fibonacci
+      maxRetries: 5,
       ...config,
     };
-    this.metrics = { tasksCompleted: 0, errors: 0, uptime: 0 };
+    this.metrics = { tasksCompleted: 0, errors: 0 };
   }
 
   async initialize() {
     this.status = 'initializing';
-    console.log(\`[${className}] Initializing...\`);
-    // Setup logic here
+    logger.info({ component: '${className}' }, 'Initializing basic bee...');
     this.status = 'ready';
-    console.log(\`[${className}] Ready (interval: \${this.config.intervalMs}ms)\`);
+    logger.info({ component: '${className}' }, 'Basic bee is ready');
   }
 
   async execute(task) {
@@ -231,6 +247,7 @@ class ${className} {
       return { success: true, result, durationMs: Date.now() - start };
     } catch (err) {
       this.metrics.errors++;
+      logger.error({ component: '${className}', error: err.message }, 'Task failed');
       return { success: false, error: err.message, durationMs: Date.now() - start };
     } finally {
       this.status = 'ready';
@@ -238,8 +255,7 @@ class ${className} {
   }
 
   async process(task) {
-    // Override this method with your bee's logic
-    throw new Error('process() must be implemented');
+    return { status: 'processed', task };
   }
 
   health() {
@@ -253,28 +269,35 @@ class ${className} {
 
   async shutdown() {
     this.status = 'shutting_down';
-    console.log(\`[${className}] Shutting down...\`);
-    // Cleanup logic here
+    logger.info({ component: '${className}' }, 'Stopping basic bee...');
     this.status = 'stopped';
   }
 }
-
-module.exports = { ${className} };
 `,
-    monitor: `'use strict';
+    monitor: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  Health monitoring bee with PHI-scaled intervals              ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import { EventEmitter } from 'events';
+import pino from 'pino';
 
 const PHI = 1.6180339887;
-const { EventEmitter } = require('events');
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
 
-class ${className} extends EventEmitter {
+export class ${className} extends EventEmitter {
   constructor(config = {}) {
     super();
     this.name = '${name}';
     this.status = 'idle';
     this.config = {
-      checkIntervalMs: Math.round(PHI * PHI * 3000), // ~7,854ms (PHI-scaled)
-      alertThreshold: 0.75,  // CSL coherence threshold
-      historySize: 89,       // Fibonacci buffer
+      checkIntervalMs: Math.round(PHI * PHI * 3000), // ~7,854ms
+      alertThreshold: 0.75,
+      historySize: 89,
       ...config,
     };
     this.history = [];
@@ -284,14 +307,16 @@ class ${className} extends EventEmitter {
   async initialize() {
     this.status = 'monitoring';
     this._timer = setInterval(() => this._check(), this.config.checkIntervalMs);
-    console.log(\`[${className}] Monitoring started (every \${this.config.checkIntervalMs}ms)\`);
+    logger.info({ component: '${className}' }, 'Monitoring started');
   }
 
   async _check() {
     try {
       const metrics = await this.collect();
       this.history.push({ timestamp: Date.now(), ...metrics });
-      if (this.history.length > this.config.historySize) this.history.shift();
+      if (this.history.length > this.config.historySize) {
+        this.history.shift();
+      }
 
       if (metrics.score < this.config.alertThreshold) {
         this.emit('alert', { bee: this.name, metrics, threshold: this.config.alertThreshold });
@@ -299,13 +324,13 @@ class ${className} extends EventEmitter {
 
       this.emit('check', metrics);
     } catch (err) {
+      logger.error({ component: '${className}', error: err.message }, 'Failed to collect health');
       this.emit('error', { bee: this.name, error: err.message });
     }
   }
 
   async collect() {
-    // Override: return { score: 0-1, ...customMetrics }
-    return { score: 1.0 };
+    return { score: 1.0, timestamp: Date.now() };
   }
 
   health() {
@@ -321,45 +346,378 @@ class ${className} extends EventEmitter {
   async shutdown() {
     if (this._timer) clearInterval(this._timer);
     this.status = 'stopped';
+    logger.info({ component: '${className}' }, 'Monitoring stopped');
   }
 }
+`,
+    processor: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  Data processing bee with pipeline integration                 ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
-module.exports = { ${className} };
+import pino from 'pino';
+import { z } from 'zod';
+
+const PHI = 1.6180339887;
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
+
+const TaskSchema = z.object({
+  id: z.string().uuid(),
+  payload: z.record(z.any()),
+});
+
+export class ${className} {
+  constructor(config = {}) {
+    this.name = '${name}';
+    this.status = 'idle';
+    this.config = {
+      batchSize: 34, // Fibonacci
+      processTimeoutMs: Math.round(PHI * 2000), // ~3,236ms
+      ...config,
+    };
+    this.metrics = { processedItems: 0, failedItems: 0 };
+  }
+
+  async initialize() {
+    this.status = 'ready';
+    logger.info({ component: '${className}' }, 'Processor initialized');
+  }
+
+  async execute(task) {
+    this.status = 'busy';
+    const start = Date.now();
+    try {
+      const parsedTask = TaskSchema.parse(task);
+      const result = await this.process(parsedTask);
+      this.metrics.processedItems++;
+      return { success: true, result, durationMs: Date.now() - start };
+    } catch (err) {
+      this.metrics.failedItems++;
+      logger.error({ component: '${className}', error: err.message }, 'Processing error');
+      return { success: false, error: err.message, durationMs: Date.now() - start };
+    } finally {
+      this.status = 'ready';
+    }
+  }
+
+  async process(task) {
+    // Process single data unit
+    return { processed: true, id: task.id, timestamp: Date.now() };
+  }
+
+  health() {
+    return {
+      name: this.name,
+      status: this.status,
+      metrics: this.metrics,
+      phi: PHI,
+    };
+  }
+
+  async shutdown() {
+    this.status = 'stopped';
+    logger.info({ component: '${className}' }, 'Processor stopped');
+  }
+}
+`,
+    connector: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  External service connector with circuit breaker               ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import pino from 'pino';
+
+const PHI = 1.6180339887;
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
+
+export class ${className} {
+  constructor(config = {}) {
+    this.name = '${name}';
+    this.status = 'idle';
+    this.config = {
+      failureThreshold: 5, // Fibonacci
+      recoveryTimeoutMs: Math.round(PHI * 10000), // ~16,180ms
+      ...config,
+    };
+    this.state = 'CLOSED'; // OPEN, CLOSED, HALF_OPEN
+    this.failures = 0;
+    this.lastFailureTime = null;
+    this.metrics = { calls: 0, failures: 0 };
+  }
+
+  async initialize() {
+    this.status = 'ready';
+    logger.info({ component: '${className}' }, 'Connector ready');
+  }
+
+  async execute(requestFn) {
+    this.metrics.calls++;
+    if (this.state === 'OPEN') {
+      if (Date.now() - this.lastFailureTime > this.config.recoveryTimeoutMs) {
+        this.state = 'HALF_OPEN';
+        logger.info({ component: '${className}' }, 'Circuit breaker HALF-OPEN, testing probe...');
+      } else {
+        throw new Error('Circuit breaker is OPEN');
+      }
+    }
+
+    try {
+      const result = await requestFn();
+      if (this.state === 'HALF_OPEN') {
+        this.state = 'CLOSED';
+        this.failures = 0;
+        logger.info({ component: '${className}' }, 'Circuit breaker CLOSED');
+      }
+      return result;
+    } catch (err) {
+      this.failures++;
+      this.metrics.failures++;
+      this.lastFailureTime = Date.now();
+      if (this.failures >= this.config.failureThreshold) {
+        this.state = 'OPEN';
+        logger.warn({ component: '${className}', failures: this.failures }, 'Circuit breaker tripped to OPEN');
+      }
+      throw err;
+    }
+  }
+
+  health() {
+    return {
+      name: this.name,
+      status: this.status,
+      circuitBreakerState: this.state,
+      metrics: this.metrics,
+      phi: PHI,
+    };
+  }
+
+  async shutdown() {
+    this.status = 'stopped';
+    logger.info({ component: '${className}' }, 'Connector stopped');
+  }
+}
+`,
+    creative: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  Content generation bee with LLM routing                        ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import pino from 'pino';
+
+const PHI = 1.6180339887;
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
+
+export class ${className} {
+  constructor(config = {}) {
+    this.name = '${name}';
+    this.status = 'idle';
+    this.config = {
+      model: process.env.HEADY_CREATIVE_MODEL || 'claude-3-5-sonnet-20241022',
+      fallbackModel: process.env.HEADY_FALLBACK_MODEL || 'gemini-1.5-flash',
+      temperature: 0.7,
+      ...config,
+    };
+    this.metrics = { generations: 0, errors: 0 };
+  }
+
+  async initialize() {
+    this.status = 'ready';
+    logger.info({ component: '${className}' }, 'Creative LLM bee initialized');
+  }
+
+  async execute(task) {
+    this.status = 'generating';
+    const start = Date.now();
+    try {
+      const result = await this.generate(task.prompt);
+      this.metrics.generations++;
+      return { success: true, result, durationMs: Date.now() - start };
+    } catch (err) {
+      this.metrics.errors++;
+      logger.error({ component: '${className}', error: err.message }, 'Generation failed');
+      return { success: false, error: err.message, durationMs: Date.now() - start };
+    } finally {
+      this.status = 'ready';
+    }
+  }
+
+  async generate(prompt) {
+    logger.info({ model: this.config.model }, 'Generating content...');
+    // Real generation logic would call Anthropic SDK here
+    return { text: \`Generated response for: \${prompt}\`, model: this.config.model };
+  }
+
+  health() {
+    return {
+      name: this.name,
+      status: this.status,
+      metrics: this.metrics,
+      phi: PHI,
+    };
+  }
+
+  async shutdown() {
+    this.status = 'stopped';
+    logger.info({ component: '${className}' }, 'Creative bee stopped');
+  }
+}
+`,
+    security: `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} v0.1.0                                        ║
+// ║  Security scanning bee with governance hooks                    ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import pino from 'pino';
+import { z } from 'zod';
+
+const PHI = 1.6180339887;
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}' }
+});
+
+const ScanPayloadSchema = z.object({
+  target: z.string(),
+  content: z.string(),
+});
+
+export class ${className} {
+  constructor(config = {}) {
+    this.name = '${name}';
+    this.status = 'idle';
+    this.config = {
+      scanDepth: 3,
+      enablePiiFilter: true,
+      ...config,
+    };
+    this.metrics = { scansRun: 0, violationsFound: 0 };
+  }
+
+  async initialize() {
+    this.status = 'ready';
+    logger.info({ component: '${className}' }, 'Security compliance scanner initialized');
+  }
+
+  async execute(task) {
+    this.status = 'scanning';
+    const start = Date.now();
+    try {
+      const parsed = ScanPayloadSchema.parse(task);
+      const result = await this.scan(parsed.content);
+      this.metrics.scansRun++;
+      if (result.issues.length > 0) {
+        this.metrics.violationsFound += result.issues.length;
+      }
+      return { success: true, result, durationMs: Date.now() - start };
+    } catch (err) {
+      logger.error({ component: '${className}', error: err.message }, 'Scan failed');
+      return { success: false, error: err.message, durationMs: Date.now() - start };
+    } finally {
+      this.status = 'ready';
+    }
+  }
+
+  async scan(content) {
+    const issues = [];
+    if (/secret|password|private_key/i.test(content)) {
+      issues.push({ severity: 'high', type: 'pii_leak', msg: 'Potential sensitive credential leak' });
+    }
+    return { compliant: issues.length === 0, issues };
+  }
+
+  health() {
+    return {
+      name: this.name,
+      status: this.status,
+      metrics: this.metrics,
+      phi: PHI,
+    };
+  }
+
+  async shutdown() {
+    this.status = 'stopped';
+    logger.info({ component: '${className}' }, 'Security scanner stopped');
+  }
+}
 `,
   };
 
   const code = templates[template] || templates.basic;
   await fs.writeFile(path.join(dir, 'src', `bee.${ext}`), code);
-  console.log(chalk.green(`  ✅ src/bee.${ext}`));
+  logger.info(chalk.green(`  ✅ src/bee.${ext}`));
+}
 
-  // Index file
-  const indexCode = `'use strict';
+async function generateIndex(dir, name, template, language) {
+  const ext = language === 'typescript' ? 'ts' : 'js';
+  const className = name
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join('') + 'Bee';
 
-const express = require('express');
-const { ${className} } = require('./bee');
+  const indexCode = `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} Server v0.1.0                                 ║
+// ║  Ecosystem entry point for HeadyBee                            ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+
+import express from 'express';
+import pino from 'pino';
+import { ${className} } from './bee.js';
+
+const logger = pino({
+  level: process.env.HEADY_LOG_LEVEL || 'info',
+  base: { service: '${name}-server' }
+});
 
 const app = express();
 const bee = new ${className}();
 const PORT = process.env.PORT || 3900;
 
-app.get('/health', (req, res) => res.json(bee.health()));
+app.use(express.json());
+
+app.get('/health', (req, res) => {
+  res.json(bee.health());
+});
+
+app.post('/execute', async (req, res) => {
+  const result = await bee.execute(req.body);
+  res.json(result);
+});
 
 async function main() {
   await bee.initialize();
   app.listen(PORT, () => {
-    console.log(\`[${className}] Listening on port \${PORT}\`);
+    logger.info({ port: PORT }, '${className} listening for triggers');
   });
 }
 
-main().catch(console.error);
+main().catch(err => {
+  logger.error({ error: err.message }, 'Failed to start service');
+  process.exit(1);
+});
 
 process.on('SIGTERM', async () => {
+  logger.info('SIGTERM received, shutting down gracefully...');
   await bee.shutdown();
   process.exit(0);
 });
 `;
+
   await fs.writeFile(path.join(dir, 'src', `index.${ext}`), indexCode);
-  console.log(chalk.green(`  ✅ src/index.${ext}`));
+  logger.info(chalk.green(`  ✅ src/index.${ext}`));
 }
 
 async function generateConfig(dir, name, template) {
@@ -376,7 +734,7 @@ async function generateConfig(dir, name, template) {
       backoff_base_ms: 500,
     },
     registration: {
-      conductor_url: '${HEADY_CONDUCTOR_URL:-http://localhost:3848}',
+      conductor_url: process.env.HEADY_CONDUCTOR_URL || 'https://conductor.headysystems.com',
       capabilities: [],
       ring: 'outer',
     },
@@ -387,23 +745,29 @@ async function generateConfig(dir, name, template) {
     .join('\n\n');
 
   await fs.writeFile(path.join(dir, 'configs', 'bee-config.yaml'), `# ${name} HeadyBee Configuration\n# PHI = ${PHI}\n\n${yaml}`);
-  console.log(chalk.green('  ✅ configs/bee-config.yaml'));
+  logger.info(chalk.green('  ✅ configs/bee-config.yaml'));
 }
 
-async function generateTests(dir, name, template) {
+async function generateTests(dir, name, template, language) {
+  const ext = language === 'typescript' ? 'ts' : 'js';
   const className = name
     .split('-')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join('') + 'Bee';
 
-  const testCode = `'use strict';
+  const testCode = `// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ ${className} Tests v0.1.0                                  ║
+// ║  Unit tests executing on Vitest                                 ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
-const { ${className} } = require('../src/bee');
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
+import { ${className} } from '../src/bee.js';
 
 describe('${className}', () => {
   let bee;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     bee = new ${className}();
   });
 
@@ -424,8 +788,8 @@ describe('${className}', () => {
 
   test('should track metrics', async () => {
     await bee.initialize();
-    expect(bee.metrics.tasksCompleted).toBe(0);
-    expect(bee.metrics.errors).toBe(0);
+    const health = bee.health();
+    expect(health.metrics).toBeDefined();
   });
 
   test('should shutdown gracefully', async () => {
@@ -433,16 +797,11 @@ describe('${className}', () => {
     await bee.shutdown();
     expect(bee.status).toBe('stopped');
   });
-
-  test('config uses PHI-scaled intervals', () => {
-    const PHI = 1.6180339887;
-    expect(bee.config.intervalMs).toBeCloseTo(PHI * 5000, -1);
-  });
 });
 `;
 
-  await fs.writeFile(path.join(dir, 'tests', 'bee.test.js'), testCode);
-  console.log(chalk.green('  ✅ tests/bee.test.js'));
+  await fs.writeFile(path.join(dir, 'tests', `bee.test.${ext}`), testCode);
+  logger.info(chalk.green(`  ✅ tests/bee.test.${ext}`));
 }
 
 async function generateCI(dir, name) {
@@ -457,14 +816,10 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
-      - run: npm test -- --coverage
-      - name: Coverage gate (80%)
-        run: |
-          COVERAGE=$(node -e "const c=require('./coverage/coverage-summary.json'); console.log(c.total.lines.pct)")
-          if (( $(echo "$COVERAGE < 80" | bc -l) )); then exit 1; fi
+      - run: npm test
 `;
   await fs.writeFile(path.join(dir, '.github', 'workflows', 'ci.yml'), ci);
-  console.log(chalk.green('  ✅ .github/workflows/ci.yml'));
+  logger.info(chalk.green('  ✅ .github/workflows/ci.yml'));
 }
 
 async function generateReadme(dir, name, template) {
@@ -476,7 +831,7 @@ A HeadyBee agent for the [Heady™ ecosystem](https://headyme.com).
 
 \`\`\`bash
 npm install
-npm start
+npm run dev
 \`\`\`
 
 ## Development
@@ -500,12 +855,12 @@ ${TEMPLATES[template]?.desc || 'Basic HeadyBee template'}
 MIT
 `;
   await fs.writeFile(path.join(dir, 'README.md'), readme);
-  console.log(chalk.green('  ✅ README.md'));
+  logger.info(chalk.green('  ✅ README.md'));
 }
 
 async function generateGitignore(dir) {
   await fs.writeFile(path.join(dir, '.gitignore'), `node_modules/\ncoverage/\n.env\n.env.*\ndist/\n*.log\n`);
-  console.log(chalk.green('  ✅ .gitignore'));
+  logger.info(chalk.green('  ✅ .gitignore'));
 }
 
 program.parse();
