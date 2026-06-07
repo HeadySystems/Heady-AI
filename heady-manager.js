@@ -380,20 +380,7 @@ app.post(
 // Security: remove X-Powered-By
 app.disable('x-powered-by');
 
-// Admin auth middleware — validates ADMIN_TOKEN via timing-safe comparison
-function requireAdmin(req, res, next) {
-  const token = req.headers['authorization']?.split(' ')[1] || req.headers['x-admin-token'];
-  const expected = process.env.ADMIN_TOKEN;
-  if (
-    !token ||
-    !expected ||
-    token.length !== expected.length ||
-    !require('crypto').timingSafeEqual(Buffer.from(token), Buffer.from(expected))
-  ) {
-    return res.status(403).json({ error: 'Admin authentication required' });
-  }
-  next();
-}
+const { requireAdmin } = require('./src/middleware/auth');
 
 // Additional security headers and request ID generation
 app.use((req, res, next) => {
