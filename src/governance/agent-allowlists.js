@@ -43,10 +43,16 @@ const TOOL_GROUPS = Object.freeze({
   execution:    ['coder', 'battle', 'buddy', 'chat', 'claude', 'openai', 'gemini', 'groq'],
   operations:   ['deploy', 'health', 'ops', 'maintenance', 'maid', 'telemetry'],
   cms:          ['cms_content', 'cms_taxonomy', 'cms_media', 'cms_views', 'cms_search'],
+  // HeadyVault secrets lifecycle (services/heady-vault) — split read vs. admin.
+  vault_read:   ['vault_audit', 'vault_blast_radius', 'vault_health', 'vault_project_masked', 'vault_list'],
+  vault_admin:  ['vault_rotate', 'vault_revoke', 'vault_expire', 'vault_project_full', 'vault_store'],
 });
 
 // ─── Destructive tools requiring HITL approval ──────────────────────────────
-const DESTRUCTIVE_TOOLS = Object.freeze(['deploy', 'maintenance', 'maid', 'delete', 'rotate_secrets']);
+const DESTRUCTIVE_TOOLS = Object.freeze([
+  'deploy', 'maintenance', 'maid', 'delete', 'rotate_secrets',
+  'vault_rotate', 'vault_revoke', 'vault_expire',  // vault mutations → protectedActions.rotate_secrets
+]);
 
 // ─── CSL Thresholds ─────────────────────────────────────────────────────────
 const CSL = Object.freeze({
@@ -162,13 +168,41 @@ const AGENT_ALLOWLISTS = Object.freeze({
   },
 });
 
+// ─── Service Principals (repo/service identities) ───────────────────────────
+// Mirrors `servicePrincipals` in configs/governance-policies.yaml. Authorizes the
+// two canonical codebases for HeadyVault optimization with least privilege:
+// vault_read is ambient; vault_admin mutations are gated behind HITL approval.
+const SERVICE_PRINCIPALS = Object.freeze({
+  'heady-ai': {
+    name: 'HeadySystems/heady-ai',
+    allowedToolGroups: ['vault_read', 'vault_admin'],
+    maxConcurrent: 3,           // fib(4)
+    budgetPerSession: 5.00,
+    cslThreshold: CSL.CRITICAL,
+    canSelfModify: false,
+    requiresApprovalFor: ['vault_rotate', 'vault_revoke', 'vault_expire'],
+  },
+  'heady': {
+    name: 'HeadyMe/latent-core-dev',
+    allowedToolGroups: ['vault_read', 'vault_admin'],
+    maxConcurrent: 3,           // fib(4)
+    budgetPerSession: 5.00,
+    cslThreshold: CSL.CRITICAL,
+    canSelfModify: false,
+    requiresApprovalFor: ['vault_rotate', 'vault_revoke', 'vault_expire'],
+  },
+});
+
+// Unified principal lookup: named agents + repo/service principals.
+const PRINCIPALS = Object.freeze({ ...AGENT_ALLOWLISTS, ...SERVICE_PRINCIPALS });
+
 /**
  * Resolve all allowed tools for a given agent.
  * @param {string} agentId - Agent identifier (e.g., 'BRAIN', 'DEVOPS')
  * @returns {string[]} Flat list of allowed tool names
  */
 function resolveAllowedTools(agentId) {
-  const agent = AGENT_ALLOWLISTS[agentId];
+  const agent = PRINCIPALS[agentId];
   if (!agent) return [];
   return agent.allowedToolGroups.flatMap(group => TOOL_GROUPS[group] || []);
 }
@@ -180,7 +214,7 @@ function resolveAllowedTools(agentId) {
  * @returns {{ allowed: boolean, requiresApproval: boolean, reason: string }}
  */
 function checkToolAccess(agentId, toolName) {
-  const agent = AGENT_ALLOWLISTS[agentId];
+  const agent = PRINCIPALS[agentId];
   if (!agent) {
     return { allowed: false, requiresApproval: false, reason: `Unknown agent: ${agentId}` };
   }
@@ -211,7 +245,7 @@ function checkToolAccess(agentId, toolName) {
  * @returns {{ tokens: number, usd: number }}
  */
 function getAgentBudget(agentId) {
-  const agent = AGENT_ALLOWLISTS[agentId];
+  const agent = PRINCIPALS[agentId];
   if (!agent) return { tokens: 0, usd: 0 };
   // Token budget is USD × 10,000 (approximate token-per-dollar ratio)
   return { tokens: agent.budgetPerSession * 10000, usd: agent.budgetPerSession };
@@ -222,6 +256,8 @@ module.exports = {
   DESTRUCTIVE_TOOLS,
   CSL,
   AGENT_ALLOWLISTS,
+  SERVICE_PRINCIPALS,
+  PRINCIPALS,
   resolveAllowedTools,
   checkToolAccess,
   getAgentBudget,

@@ -104,6 +104,26 @@ toolGovernance:
     cslThreshold: 0.618          # BOOST (PSI)
     riskLevel: MEDIUM
 
+  # HeadyVault (services/heady-vault) — secrets lifecycle. Split read vs. admin
+  # so principals get the minimum surface needed for optimization, not blanket access.
+  vault_read:
+    tools: [vault_audit, vault_blast_radius, vault_health, vault_project_masked, vault_list]
+    authLevel: authenticated
+    requiresApproval: false
+    rateLimit: 21                # fib(8) per minute
+    cslThreshold: 0.618          # BOOST (PSI)
+    riskLevel: MEDIUM
+    auditReads: true             # every credential read is logged (audit.memoryWriteAuditing)
+
+  vault_admin:
+    tools: [vault_rotate, vault_revoke, vault_expire, vault_project_full, vault_store]
+    authLevel: admin
+    requiresApproval: true       # maps to protectedActions.rotate_secrets — HITL required
+    rateLimit: 8                 # fib(6) per minute
+    cslThreshold: 0.927          # CRITICAL
+    riskLevel: HIGH
+    destructiveTools: [vault_rotate, vault_revoke, vault_expire]
+
 # ─── PER-AGENT GOVERNANCE ─────────────────────────────────────────────────────
 # Each named agent has an explicit action allowlist.
 agentGovernance:
@@ -174,6 +194,28 @@ agentGovernance:
     maxConcurrent: 2             # fib(3)
     budgetPerSession: 5.00
     canSelfModify: false
+
+# ─── SERVICE PRINCIPALS (repo/service identities) ─────────────────────────────
+# Authorizes the two canonical codebases for HeadyVault optimization work.
+# Least-privilege: vault_read is ambient; vault_admin (rotate/revoke/expire) is
+# allowed but gated behind approval per protectedActions.rotate_secrets.
+# Identity is proven via identity.serviceTokens (ed25519), not shared API keys.
+servicePrincipals:
+  heady-ai:                      # HeadySystems/heady-ai — canonical monorepo / orchestrator
+    repo: HeadySystems/heady-ai
+    allowedToolGroups: [vault_read, vault_admin]
+    requiresApprovalFor: [vault_rotate, vault_revoke, vault_expire]
+    vaultCredentialScopes: [github, cloudflare, gcp, anthropic, openai, huggingface]  # tighten as optimization narrows actual need
+    canSelfModify: false
+    auditAllAccess: true
+
+  heady:                         # HeadyMe/latent-core-dev — secure-key-vault implementation home
+    repo: HeadyMe/latent-core-dev
+    allowedToolGroups: [vault_read, vault_admin]
+    requiresApprovalFor: [vault_rotate, vault_revoke, vault_expire]
+    vaultCredentialScopes: [github, cloudflare, gcp, anthropic, openai, huggingface]  # tighten as optimization narrows actual need
+    canSelfModify: false
+    auditAllAccess: true
 
 # ─── PATENT LOCK ENFORCEMENT ──────────────────────────────────────────────────
 patentLock:

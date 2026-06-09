@@ -403,7 +403,62 @@ class ModelRegistry {
       }
     }
 
+    this.loadRoster();
+    this.watchRoster();
+
     logger.info('[ModelRegistry] initialized', { modelCount: this._models.size });
+  }
+
+  loadRoster() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const rosterFile = path.join(__dirname, '..', '..', '..', 'latent-core-dev', 'data', 'model-roster.json');
+      if (!fs.existsSync(rosterFile)) return;
+      
+      const roster = JSON.parse(fs.readFileSync(rosterFile, 'utf8'));
+      if (roster.models) {
+        for (const [id, model] of Object.entries(roster.models)) {
+          const mappedModel = {
+            id: model.id,
+            displayName: model.displayName,
+            provider: model.provider,
+            capabilities: [...model.capabilities],
+            costTier: model.costTier,
+            contextWindow: model.contextWindow,
+            outputWindow: model.outputWindow,
+            inputCostPer1MTokens: model.inputCostPer1MTokens,
+            outputCostPer1MTokens: model.outputCostPer1MTokens,
+            strengths: [...model.strengths],
+            latencyProfile: model.latencyProfile,
+            available: model.available,
+            elo: model.elo
+          };
+          this._models.set(id, mappedModel);
+        }
+        logger.info('[ModelRegistry] Dynamically merged model roster', { modelCount: this._models.size });
+      }
+    } catch (e) {
+      logger.error('[ModelRegistry] Failed to load dynamic model roster', { error: e.message });
+    }
+  }
+
+  watchRoster() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const rosterFile = path.join(__dirname, '..', '..', '..', 'latent-core-dev', 'data', 'model-roster.json');
+      if (fs.existsSync(rosterFile)) {
+        fs.watch(rosterFile, (event) => {
+          if (event === 'change') {
+            logger.info('[ModelRegistry] Roster file changed on disk, reloading...');
+            this.loadRoster();
+          }
+        });
+      }
+    } catch (e) {
+      // Ignore watch errors
+    }
   }
 
   // ─── Query ────────────────────────────────────────────────────────────────────

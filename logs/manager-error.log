@@ -35658,3 +35658,163 @@ Node.js v20.19.2
 2026-02-28 06:49:52 -07:00: Redis Cluster not connected. Using in-memory state.
 2026-02-28 06:49:55 -07:00: Redis Cluster not connected. Using in-memory state.
 2026-02-28 06:49:57 -07:00: Redis Cluster not connected. Using in-memory state.
+2026-06-08 22:03:09 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:09 -06:00: Require stack:
+2026-06-08 22:03:09 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:09 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:09 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:09 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:09 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:09 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:09 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:09 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:09 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:09 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:09 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:09 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:09 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:09 -06:00: }
+2026-06-08 22:03:13 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:13 -06:00: Require stack:
+2026-06-08 22:03:13 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:13 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:13 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:13 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:13 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:13 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:13 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:13 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:13 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:13 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:13 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:13 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:13 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:13 -06:00: }
+2026-06-08 22:03:16 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:16 -06:00: Require stack:
+2026-06-08 22:03:16 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:16 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:16 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:16 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:16 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:16 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:16 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:16 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:16 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:16 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:16 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:16 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:16 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:16 -06:00: }
+2026-06-08 22:03:20 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:20 -06:00: Require stack:
+2026-06-08 22:03:20 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:20 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:20 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:20 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:20 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:20 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:20 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:20 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:20 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:20 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:20 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:20 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:20 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:20 -06:00: }
+2026-06-08 22:03:24 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:24 -06:00: Require stack:
+2026-06-08 22:03:24 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:24 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:24 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:24 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:24 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:24 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:24 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:24 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:24 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:24 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:24 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:24 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:24 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:24 -06:00: }
+2026-06-08 22:03:27 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:27 -06:00: Require stack:
+2026-06-08 22:03:27 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:27 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:27 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:27 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:27 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:27 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:27 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:27 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:27 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:27 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:27 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:27 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:27 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:27 -06:00: }
+2026-06-08 22:03:31 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:31 -06:00: Require stack:
+2026-06-08 22:03:31 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:31 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:31 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:31 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:31 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:31 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:31 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:31 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:31 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:31 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:31 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:31 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:31 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:31 -06:00: }
+2026-06-08 22:03:34 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:34 -06:00: Require stack:
+2026-06-08 22:03:34 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:34 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:34 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:34 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:34 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:34 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:34 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:34 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:34 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:34 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:34 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:34 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:34 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:34 -06:00: }
+2026-06-08 22:03:38 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:38 -06:00: Require stack:
+2026-06-08 22:03:38 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:38 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:38 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:38 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:38 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:38 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:38 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:38 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:38 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:38 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:38 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:38 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:38 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:38 -06:00: }
+2026-06-08 22:03:42 -06:00: Error: Cannot find module 'js-yaml'
+2026-06-08 22:03:42 -06:00: Require stack:
+2026-06-08 22:03:42 -06:00: - /home/headyme/workspace/heady-ai/heady-manager.js
+2026-06-08 22:03:42 -06:00:     at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+2026-06-08 22:03:42 -06:00:     at Hook._require.Module.require (/usr/local/lib/node_modules/pm2/node_modules/require-in-the-middle/index.js:81:25)
+2026-06-08 22:03:42 -06:00:     at require (node:internal/modules/helpers:191:16)
+2026-06-08 22:03:42 -06:00:     at Object.<anonymous> (/home/headyme/workspace/heady-ai/heady-manager.js:41:14)
+2026-06-08 22:03:42 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14)
+2026-06-08 22:03:42 -06:00:     at Object..js (node:internal/modules/cjs/loader:1969:10)
+2026-06-08 22:03:42 -06:00:     at Module.load (node:internal/modules/cjs/loader:1552:32)
+2026-06-08 22:03:42 -06:00:     at Module._load (node:internal/modules/cjs/loader:1354:12)
+2026-06-08 22:03:42 -06:00:     at Object.<anonymous> (/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js:33:23)
+2026-06-08 22:03:42 -06:00:     at Module._compile (node:internal/modules/cjs/loader:1829:14) {
+2026-06-08 22:03:42 -06:00:   code: 'MODULE_NOT_FOUND',
+2026-06-08 22:03:42 -06:00:   requireStack: [ '/home/headyme/workspace/heady-ai/heady-manager.js' ]
+2026-06-08 22:03:42 -06:00: }
