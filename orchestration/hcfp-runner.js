@@ -27,6 +27,7 @@
  *
  * @module hcfp-runner
  * @version 1.0.0
+ */
 const EdgeAdapter = require('./edge-adapter');
 const LangGraphAdapter = require('./langgraph-adapter');
 
