@@ -28,7 +28,7 @@ packages:
 catalog:
   typescript: ^5.4.5
   eslint: ^10.0.3
-  vitest: ^4.1.0
+  vitest: ^3.2.6
   pino: ^10.3.1
   "@google/genai": ^1.42.0
   "@modelcontextprotocol/sdk": ^1.0.1

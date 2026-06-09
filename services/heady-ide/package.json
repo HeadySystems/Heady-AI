@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "eslint": "^9.16.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.2.6"
   },
   "engines": {
     "node": ">=22.0.0"
