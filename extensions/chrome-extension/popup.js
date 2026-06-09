@@ -46,20 +46,27 @@ document.querySelectorAll(".tab").forEach((tab) => {
 });
 
 /* ─── SETTINGS PERSISTENCE ─────────────────────────────────────────── */
-chrome.storage.local.get(["apiBase", "pollInterval", "notifications"], (items) => {
-    if (items.apiBase) document.getElementById("api-url").value = items.apiBase;
-    if (items.pollInterval) document.getElementById("poll-interval").value = items.pollInterval;
-    if (items.notifications === false) document.getElementById("notif-toggle").checked = false;
-});
+async function loadPopupSettings() {
+    try {
+        const items = await chrome.storage.local.get(["apiBase", "pollInterval", "notifications"]);
+        if (items.apiBase) document.getElementById("api-url").value = items.apiBase;
+        if (items.pollInterval) document.getElementById("poll-interval").value = items.pollInterval;
+        if (items.notifications === false) document.getElementById("notif-toggle").checked = false;
+    } catch (err) {
+        console.error("Failed to load popup settings", err);
+    }
+}
 
-document.getElementById("api-url").addEventListener("change", (e) => {
-    chrome.storage.local.set({ apiBase: e.target.value });
+loadPopupSettings();
+
+document.getElementById("api-url").addEventListener("change", async (e) => {
+    await chrome.storage.local.set({ apiBase: e.target.value });
 });
-document.getElementById("poll-interval").addEventListener("change", (e) => {
-    chrome.storage.local.set({ pollInterval: e.target.value });
+document.getElementById("poll-interval").addEventListener("change", async (e) => {
+    await chrome.storage.local.set({ pollInterval: e.target.value });
 });
-document.getElementById("notif-toggle").addEventListener("change", (e) => {
-    chrome.storage.local.set({ notifications: e.target.checked });
+document.getElementById("notif-toggle").addEventListener("change", async (e) => {
+    await chrome.storage.local.set({ notifications: e.target.checked });
 });
 
 /* ─── API HELPERS ──────────────────────────────────────────────────── */
@@ -344,14 +351,17 @@ function renderNodes(health) {
 /* ─── MAIN INIT ────────────────────────────────────────────────────── */
 async function init() {
     // 1. Try to load cached health first (instant render)
-    chrome.storage.local.get(["lastHealth", "lastPollTs"], (items) => {
+    try {
+        const items = await chrome.storage.local.get(["lastHealth", "lastPollTs"]);
         if (items.lastHealth) {
             renderDashboard(items.lastHealth);
             renderActivity(items.lastHealth);
             renderPipeline(items.lastHealth);
             renderNodes(items.lastHealth);
         }
-    });
+    } catch (err) {
+        console.error("Failed to load cached health data", err);
+    }
 
     // 2. Fetch fresh health data
     try {
@@ -360,7 +370,7 @@ async function init() {
         renderActivity(health);
         renderPipeline(health);
         renderNodes(health);
-        chrome.storage.local.set({ lastHealth: health, lastPollTs: Date.now() });
+        await chrome.storage.local.set({ lastHealth: health, lastPollTs: Date.now() });
     } catch (err) {
         // If live fetch fails, render offline state but keep cached data displayed
         setStatusBadge("offline");

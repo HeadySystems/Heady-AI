@@ -75,6 +75,15 @@ body {
     background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-deep) 100%);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    transition: background 0.5s var(--ease);
+    position: relative;
+    z-index: 10;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .header-brand {
@@ -92,12 +101,9 @@ body {
 }
 
 @keyframes logo-breathe {
-
-    0%,
-    100% {
+    0%, 100% {
         box-shadow: 0 0 16px var(--accent-glow);
     }
-
     50% {
         box-shadow: 0 0 28px var(--accent-glow), 0 0 60px rgba(0, 230, 180, 0.08);
     }
@@ -118,6 +124,258 @@ body {
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 1.5px;
+}
+
+/* Settings Toggle Button */
+.settings-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s var(--ease);
+    border: 1px solid transparent;
+}
+
+.settings-toggle-btn:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-color: var(--border-accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.settings-toggle-btn:active {
+    transform: scale(0.92);
+}
+
+/* Settings Drawer Panel */
+.settings-panel {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-top: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s var(--ease), margin-top 0.4s var(--ease);
+    background: rgba(13, 21, 37, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.settings-panel.open {
+    max-height: 350px;
+    opacity: 1;
+    margin-top: 14px;
+    padding: 14px;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings-group + .settings-group {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.settings-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.toggle-control, .input-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-primary);
+}
+
+.input-control {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-input {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    padding: 6px 10px;
+    font-size: 12px;
+    outline: none;
+    font-family: var(--font);
+    width: 100%;
+    transition: all 0.3s var(--ease);
+}
+
+.settings-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* Beautiful Switch Toggle styled like Heady iOS */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-input);
+    transition: .3s;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--text-secondary);
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--accent-soft);
+    border-color: var(--accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: var(--accent-bright);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Visualizer Canvas Area */
+.visualizer-wrap {
+    margin-top: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    overflow: hidden;
+    height: 130px;
+    transition: all 0.4s var(--ease);
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.visualizer-wrap.collapsed {
+    height: 0;
+    margin-top: 0;
+    border-color: transparent;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#canvas-visualizer {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+/* Glassmorphism Global Overlay theme */
+body.glass-mode {
+    --bg-primary: rgba(10, 14, 26, 0.45);
+    --bg-deep: rgba(6, 10, 20, 0.35);
+    --bg-card: rgba(17, 28, 46, 0.45);
+    --bg-input: rgba(13, 21, 37, 0.5);
+    background: transparent;
+    position: relative;
+}
+
+body.glass-mode::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(0, 230, 180, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(167, 139, 250, 0.05) 0%, transparent 40%),
+                linear-gradient(135deg, #060a14 0%, #0a0e1a 100%);
+    z-index: -2;
+}
+
+body.glass-mode::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(20px) saturate(160%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+body.glass-mode .header {
+    background: rgba(10, 14, 26, 0.35);
+    border-bottom: 1px solid rgba(30, 45, 71, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+body.glass-mode .feed {
+    background: transparent;
+}
+
+body.glass-mode .buddy-content {
+    background: rgba(17, 28, 46, 0.45);
+    border: 1px solid rgba(30, 45, 71, 0.5);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+body.glass-mode .buddy-code-block {
+    background: rgba(17, 28, 46, 0.4);
+    border: 1px solid rgba(30, 45, 71, 0.45);
+    backdrop-filter: blur(8px);
+}
+
+body.glass-mode .input-bar {
+    background: rgba(10, 14, 26, 0.5);
+    border-top: 1px solid rgba(30, 45, 71, 0.45);
+    backdrop-filter: blur(10px);
+}
+
+body.glass-mode .input-field {
+    background: rgba(13, 21, 37, 0.45);
+    border: 1px solid rgba(30, 45, 71, 0.4);
+}
+
+body.glass-mode .input-field:focus {
+    border-color: rgba(0, 230, 180, 0.6);
+    box-shadow: 0 0 16px rgba(0, 230, 180, 0.25);
 }
 
 /* ─── FEED / MAIN ──────────────────────────────────────────────────── */

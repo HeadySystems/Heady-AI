@@ -9,40 +9,62 @@
 // ║                                                                  ║
 // ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
 // ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: extensions/chrome-extension/sidebar.js                                                    ║
+// ║  FILE: extensions/chrome-extension/sidebar.js                    ║
 // ║  LAYER: extensions                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 /* ═══════════════════════════════════════════════════════════════════════
-   HeadyBuddy Sidebar — Dynamic A2UI Renderer
+   HeadyBuddy Sidebar — Dynamic A2UI Renderer & Sacred Geometry Visualizer
    
    The sidebar UI is data-driven. Buddy sends JSON directives via the
    manager API and the renderer builds the UI dynamically.
    
-   A2UI Block Types:
-     "text"     → Pretty-printed rich text bubble
-     "image"    → Branded image card with caption
-     "code"     → Syntax-highlighted code block
-     "heading"  → Section heading
-     "list"     → Bullet list
-     "status"   → Status indicator (active/thinking/error)
-     "divider"  → Visual separator
-     "thinking" → Animated thinking state with branded imagery
-     "card"     → Flexible card with title + body
-   
-   Buddy can reshape this sidebar at any time by pushing new directives.
+   Features integrated:
+     1. Modernized Promise-based storage & messaging.
+     2. Interactive Sacred Geometry HTML5 Canvas (Torus/Flower of Life math).
+     3. State-of-the-art Glassmorphism layout mode toggling.
+     4. Fully functional API setting drawers with live memory storage.
    ═══════════════════════════════════════════════════════════════════════ */
 
-const API_BASE = "https://headyapi.com";
+const API_BASE_DEFAULT = "https://headyapi.com";
 const BUDDY_AVATAR = "icons/buddy-avatar.png";
 const BUDDY_THINKING_IMG = "icons/buddy-thinking.png";
 const BUDDY_COMPLETE_IMG = "icons/buddy-complete.png";
 
+// Dom Elements
 const $feed = document.getElementById("buddy-feed");
 const $content = document.getElementById("dynamic-content");
 const $welcome = document.getElementById("welcome");
 const $input = document.getElementById("buddy-input");
 const $sendBtn = document.getElementById("send-btn");
+
+const $settingsToggle = document.getElementById("settings-toggle");
+const $settingsPanel = document.getElementById("settings-panel");
+const $toggleGlass = document.getElementById("toggle-glass");
+const $toggleCanvas = document.getElementById("toggle-canvas");
+const $apiBaseInput = document.getElementById("api-base-input");
+const $apiKeyInput = document.getElementById("api-key-input");
+const $visualizerWrap = document.getElementById("visualizer-wrap");
+const $canvas = document.getElementById("canvas-visualizer");
+
+// Active System State for Sacred Geometry Visualizer
+let systemState = "active"; // "active" | "thinking" | "idle" | "error"
+let currentSpeed = 0.015;
+let targetSpeed = 0.015;
+let currentScale = 1.0;
+let targetScale = 1.0;
+let breathAngle = 0;
+let rotationAngle = 0;
+let liveLatency = -1;
+let lastInteractionTs = Date.now();
+let animationFrameId = null;
+
+// Mouse reaction positions
+let mouseX = 0;
+let mouseY = 0;
+let targetMouseX = 0;
+let targetMouseY = 0;
+let isHovered = false;
 
 /* ─── A2UI RENDERER ────────────────────────────────────────────────── */
 const A2UI = {
@@ -79,9 +101,16 @@ const A2UI = {
             case "code": return this._code(block);
             case "heading": return this._heading(block);
             case "list": return this._list(block);
-            case "status": return this._status(block);
+            case "status": {
+                // Update systemState to match the status block
+                if (block.state) updateSystemState(block.state);
+                return this._status(block);
+            }
             case "divider": return this._divider();
-            case "thinking": return this._thinking(block);
+            case "thinking": {
+                updateSystemState("thinking");
+                return this._thinking(block);
+            }
             case "card": return this._card(block);
             default: return null;
         }
@@ -106,7 +135,6 @@ const A2UI = {
     _image(b) {
         const card = document.createElement("div");
         card.className = "buddy-image-card";
-        // Use branded image mappings
         const src = resolveImage(b.src || b.url || "");
         card.innerHTML = `
             <img src="${src}" alt="${esc(b.alt || "")}" loading="lazy">
@@ -232,71 +260,361 @@ function resolveImage(src) {
     return map[src] || src;
 }
 
-/* ─── USER INPUT HANDLING ──────────────────────────────────────────── */
-function handleSend() {
+/* ─── SACRED GEOMETRY CANVAS ANIMATION LOOP ───────────────────────── */
+const PHI = 1.61803398875;
+const INV_PHI = 0.61803398875;
+
+function initCanvas() {
+    if (!$canvas) return;
+    const ctx = $canvas.getContext("2d");
+
+    // Dynamic sizing helper
+    function resize() {
+        const rect = $canvas.getBoundingClientRect();
+        // Use devicePixelRatio for super crisp lines on high-DPI displays
+        const dpr = window.devicePixelRatio || 1;
+        $canvas.width = rect.width * dpr;
+        $canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    // Mouse interactive capture
+    $canvas.addEventListener("mousemove", (e) => {
+        const rect = $canvas.getBoundingClientRect();
+        targetMouseX = e.clientX - rect.left;
+        targetMouseY = e.clientY - rect.top;
+        isHovered = true;
+        lastInteractionTs = Date.now();
+    });
+
+    $canvas.addEventListener("mouseleave", () => {
+        isHovered = false;
+    });
+
+    // Main Sacred Geometry Loop
+    function draw() {
+        if ($toggleCanvas && !$toggleCanvas.checked) {
+            animationFrameId = requestAnimationFrame(draw);
+            return;
+        }
+
+        const width = $canvas.width / (window.devicePixelRatio || 1);
+        const height = $canvas.height / (window.devicePixelRatio || 1);
+
+        ctx.clearRect(0, 0, width, height);
+
+        // State machine interpolators
+        if (systemState === "thinking") {
+            targetSpeed = 0.045;
+            targetScale = 1.12;
+        } else if (systemState === "error") {
+            targetSpeed = 0.005;
+            targetScale = 0.95;
+        } else if (systemState === "idle") {
+            targetSpeed = 0.008;
+            targetScale = 0.98;
+        } else {
+            // default active
+            targetSpeed = 0.016;
+            targetScale = 1.0;
+        }
+
+        // Smoothly interpolate parameters
+        currentSpeed += (targetSpeed - currentSpeed) * 0.1;
+        currentScale += (targetScale - currentScale) * 0.1;
+        
+        // Mouse gravity well easing
+        if (isHovered) {
+            mouseX += (targetMouseX - mouseX) * 0.08;
+            mouseY += (targetMouseY - mouseY) * 0.08;
+        } else {
+            // Ease back to center
+            mouseX += (width / 2 - mouseX) * 0.05;
+            mouseY += (height / 2 - mouseY) * 0.05;
+        }
+
+        rotationAngle += currentSpeed;
+        breathAngle += 0.02;
+
+        const centerX = mouseX;
+        const centerY = mouseY;
+
+        // Dynamic base radius styled around Golden Section ratios
+        const breathingFactor = 1 + Math.sin(breathAngle) * 0.06 * (systemState === "thinking" ? 1.5 : 1.0);
+        const baseRadius = (height * 0.32) * currentScale * breathingFactor;
+
+        // Apply global styles
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.globalCompositeOperation = "screen";
+
+        // Color profiles matching thinking / active / error
+        let strokeColor1, strokeColor2, glowColor;
+        if (systemState === "thinking") {
+            // Pulsing golden amber and indigo purple
+            strokeColor1 = `hsla(38, 92%, 50%, 0.45)`;
+            strokeColor2 = `hsla(258, 90%, 75%, 0.45)`;
+            glowColor = "rgba(167, 139, 250, 0.25)";
+        } else if (systemState === "error") {
+            // Subdued warning crimson
+            strokeColor1 = `hsla(343, 85%, 55%, 0.4)`;
+            strokeColor2 = `hsla(20, 80%, 50%, 0.35)`;
+            glowColor = "rgba(251, 113, 133, 0.15)";
+        } else if (systemState === "idle") {
+            // Muted low-frequency teal/dim steel
+            strokeColor1 = `hsla(167, 50%, 40%, 0.25)`;
+            strokeColor2 = `hsla(210, 40%, 30%, 0.2)`;
+            glowColor = "rgba(0, 230, 180, 0.05)";
+        } else {
+            // Live active: Heady mint-teal and glowing cyan
+            strokeColor1 = `hsla(167, 100%, 45%, 0.4)`;
+            strokeColor2 = `hsla(180, 100%, 45%, 0.35)`;
+            glowColor = "rgba(0, 255, 204, 0.2)";
+        }
+
+        // Draw radial aura background
+        const aura = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, baseRadius * 1.618);
+        aura.addColorStop(0, glowColor);
+        aura.addColorStop(1, "transparent");
+        ctx.fillStyle = aura;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, baseRadius * 1.618, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 1. Torus Inner Geometry Grid: Intersecting Phi Circles (Flower of Life topology)
+        const circlesCount = 12;
+        for (let i = 0; i < circlesCount; i++) {
+            const angle = (i * Math.PI * 2) / circlesCount + rotationAngle;
+            
+            // Core coordinate calculation adhering to golden Section
+            const rOffset = baseRadius * INV_PHI * 0.8;
+            const x = centerX + Math.cos(angle) * rOffset;
+            const y = centerY + Math.sin(angle) * rOffset;
+
+            ctx.beginPath();
+            ctx.arc(x, y, baseRadius * INV_PHI, 0, Math.PI * 2);
+            ctx.strokeStyle = strokeColor1;
+            ctx.lineWidth = 1.0;
+            ctx.stroke();
+        }
+
+        // 2. Star Polygon Connection Mesh (Swarms node grid)
+        const outerPoints = 8;
+        const outerNodes = [];
+        ctx.beginPath();
+        for (let i = 0; i < outerPoints; i++) {
+            const angle = (i * Math.PI * 2) / outerPoints - rotationAngle * 0.5;
+            const radius = baseRadius * PHI * 0.8;
+            const x = centerX + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius;
+            outerNodes.push({ x, y });
+
+            // Small pulsing node dots representing agents
+            ctx.fillStyle = i === 0 ? "var(--accent-bright)" : strokeColor1;
+            ctx.beginPath();
+            ctx.arc(x, y, i === 0 ? 3.5 : 2.0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Inter-connect nodes with golden ratios chords
+        ctx.beginPath();
+        for (let i = 0; i < outerPoints; i++) {
+            for (let j = i + 1; j < outerPoints; j++) {
+                // Connect alternating points to form beautiful geometric webs
+                if ((j - i) % 2 === 1 || (j - i) === 3) {
+                    ctx.moveTo(outerNodes[i].x, outerNodes[i].y);
+                    ctx.lineTo(outerNodes[j].x, outerNodes[j].y);
+                }
+            }
+        }
+        ctx.strokeStyle = strokeColor2;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+
+        // 3. Central Nucleus Core
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, baseRadius * INV_PHI * INV_PHI, 0, Math.PI * 2);
+        ctx.strokeStyle = strokeColor1;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // Smallest inner binary balance dot
+        ctx.fillStyle = systemState === "thinking" ? "var(--amber)" : "var(--accent)";
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 3 + Math.sin(breathAngle * 2) * 1, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw latency meter if verified
+        if (liveLatency > 0 && isHovered) {
+            ctx.fillStyle = "var(--text-secondary)";
+            ctx.font = "500 10px var(--font-mono)";
+            ctx.textAlign = "center";
+            ctx.fillText(`${liveLatency}ms`, centerX, centerY - baseRadius - 15);
+        }
+
+        animationFrameId = requestAnimationFrame(draw);
+    }
+
+    mouseX = width / 2;
+    mouseY = height / 2;
+    draw();
+}
+
+function updateSystemState(newState) {
+    systemState = newState;
+}
+
+/* ─── DYNAMIC SETTINGS MECHANICS ────────────────────────────────────── */
+async function loadVisualSettings() {
+    try {
+        const items = await chrome.storage.local.get(["glassMode", "canvasMode", "apiBase", "apiKey"]);
+        
+        // 1. Glassmorphism theme setup
+        const isGlass = items.glassMode !== false; // default true
+        $toggleGlass.checked = isGlass;
+        if (isGlass) {
+            document.body.classList.add("glass-mode");
+        } else {
+            document.body.classList.remove("glass-mode");
+        }
+
+        // 2. Sacred Geometry setup
+        const isCanvas = items.canvasMode !== false; // default true
+        $toggleCanvas.checked = isCanvas;
+        if (isCanvas) {
+            $visualizerWrap.classList.remove("collapsed");
+        } else {
+            $visualizerWrap.classList.add("collapsed");
+        }
+
+        // 3. Custom settings drawer values
+        $apiBaseInput.value = items.apiBase || API_BASE_DEFAULT;
+        $apiKeyInput.value = items.apiKey || "";
+
+    } catch (err) {
+        console.error("Failed to load visual configurations", err);
+    }
+}
+
+// Bind visual toggles listeners
+$settingsToggle.addEventListener("click", () => {
+    $settingsPanel.classList.toggle("open");
+});
+
+$toggleGlass.addEventListener("change", async (e) => {
+    const active = e.target.checked;
+    await chrome.storage.local.set({ glassMode: active });
+    if (active) {
+        document.body.classList.add("glass-mode");
+    } else {
+        document.body.classList.remove("glass-mode");
+    }
+});
+
+$toggleCanvas.addEventListener("change", async (e) => {
+    const active = e.target.checked;
+    await chrome.storage.local.set({ canvasMode: active });
+    if (active) {
+        $visualizerWrap.classList.remove("collapsed");
+    } else {
+        $visualizerWrap.classList.add("collapsed");
+    }
+});
+
+$apiBaseInput.addEventListener("input", async (e) => {
+    await chrome.storage.local.set({ apiBase: e.target.value.trim() });
+});
+
+$apiKeyInput.addEventListener("input", async (e) => {
+    await chrome.storage.local.set({ apiKey: e.target.value.trim() });
+});
+
+/* ─── PROMISE-BASED USER INPUT SCRIPTING ────────────────────────────── */
+async function handleSend() {
     const text = $input.value.trim();
     if (!text) return;
     $input.value = "";
 
-    // Show user message
+    // Show user message & switch state to thinking
     A2UI.render([
         { type: "text", label: "You", content: text, timestamp: Date.now() },
         { type: "thinking", content: "Buddy is on it…" },
     ]);
+    updateSystemState("thinking");
 
-    // Get API key from storage if available
-    chrome.storage.local.get(["apiKey", "apiBase"], (items) => {
-        const apiBase = items.apiBase || API_BASE;
+    const startTime = Date.now();
+
+    try {
+        const items = await chrome.storage.local.get(["apiKey", "apiBase"]);
+        const apiBase = items.apiBase || API_BASE_DEFAULT;
         const apiKey = items.apiKey || "";
 
-        // Send to Buddy via real AI chat endpoint
-        chrome.runtime.sendMessage(
-            { action: "fetchChat", apiBase, apiKey, message: text, model: "heady-buddy" },
-            (response) => {
-                // Remove thinking indicator
-                const thinkingEls = $content.querySelectorAll(".thinking-indicator");
-                thinkingEls.forEach((el) => el.remove());
+        // Promise messaging
+        const response = await chrome.runtime.sendMessage({
+            action: "fetchChat",
+            apiBase,
+            apiKey,
+            message: text,
+            model: "heady-buddy"
+        });
 
-                if (response?.ok && response.data) {
-                    A2UI.render([
-                        {
-                            type: "text",
-                            label: "Buddy",
-                            content: response.data.content,
-                            timestamp: Date.now(),
-                        },
-                    ]);
-                } else {
-                    // Fallback: try health check if chat endpoint isn't available
-                    chrome.runtime.sendMessage(
-                        { action: "fetchBuddy", apiBase, apiKey },
-                        (fallbackResponse) => {
-                            if (fallbackResponse?.ok && fallbackResponse.data) {
-                                const health = fallbackResponse.data;
-                                A2UI.render([
-                                    {
-                                        type: "text",
-                                        label: "Buddy",
-                                        content: `I heard you! The chat endpoint isn't responding right now, but I can confirm the system is **${health.status || "online"}**. Uptime: \`${formatUptime(health.uptime || health.uptimeMs)}\`. ${health.version ? `Running v${health.version}.` : ""} Try again in a moment — the AI models may be warming up.`,
-                                        timestamp: Date.now(),
-                                    },
-                                ]);
-                            } else {
-                                A2UI.render([
-                                    {
-                                        type: "text",
-                                        label: "Buddy",
-                                        content: "I'm having trouble reaching the Heady™ network right now. Check your connection or API key, then try again.",
-                                        timestamp: Date.now(),
-                                    },
-                                ]);
-                            }
-                        }
-                    );
-                }
+        // Compute response speed latency
+        liveLatency = Date.now() - startTime;
+
+        // Clear thinking indicators
+        const thinkingEls = $content.querySelectorAll(".thinking-indicator");
+        thinkingEls.forEach((el) => el.remove());
+
+        if (response?.ok && response.data) {
+            updateSystemState("active");
+            A2UI.render([
+                {
+                    type: "text",
+                    label: "Buddy",
+                    content: response.data.content,
+                    timestamp: Date.now(),
+                },
+            ]);
+        } else {
+            // Try fallback
+            const fallbackResponse = await chrome.runtime.sendMessage({
+                action: "fetchBuddy",
+                apiBase,
+                apiKey
+            });
+
+            if (fallbackResponse?.ok && fallbackResponse.data) {
+                updateSystemState("active");
+                const health = fallbackResponse.data;
+                A2UI.render([
+                    {
+                        type: "text",
+                        label: "Buddy",
+                        content: `I heard you! The chat endpoint isn't responding right now, but I can confirm the system is **${health.status || "online"}**. Uptime: \`${formatUptime(health.uptime || health.uptimeMs)}\`. ${health.version ? `Running v${health.version}.` : ""} Try again in a moment — the AI models may be warming up.`,
+                        timestamp: Date.now(),
+                    },
+                ]);
+            } else {
+                throw new Error("No response from endpoint");
             }
-        );
-    });
+        }
+    } catch (err) {
+        updateSystemState("error");
+        const thinkingEls = $content.querySelectorAll(".thinking-indicator");
+        thinkingEls.forEach((el) => el.remove());
+
+        A2UI.render([
+            {
+                type: "text",
+                label: "Buddy",
+                content: "I'm having trouble reaching the Heady™ network right now. Check your connection or API key, then try again.",
+                timestamp: Date.now(),
+            },
+        ]);
+    }
 }
 
 $sendBtn.addEventListener("click", handleSend);
@@ -321,21 +639,30 @@ function formatUptime(ms) {
 /* ─── INITIAL LOAD — Fetch Buddy's latest output ──────────────────── */
 async function loadBuddyOutput() {
     try {
-        // Try to get A2UI directives from the manager
-        chrome.runtime.sendMessage({ action: "fetchA2UI", apiBase: API_BASE }, (response) => {
-            if (response?.ok && response.data?.blocks) {
-                // Buddy has sent UI directives — render them dynamically
-                A2UI.render(response.data.blocks, { append: false });
-            }
-            // Otherwise keep the welcome screen — Buddy will push content when ready
+        const items = await chrome.storage.local.get(["apiBase"]);
+        const apiBase = items.apiBase || API_BASE_DEFAULT;
+
+        const response = await chrome.runtime.sendMessage({
+            action: "fetchA2UI",
+            apiBase
         });
+
+        if (response?.ok && response.data?.blocks) {
+            A2UI.render(response.data.blocks, { append: false });
+        }
     } catch {
-        // Welcome screen stays visible — no API connection needed for first impression
+        // Welcome screen stays visible
     }
 }
 
-// Load on sidebar open
-loadBuddyOutput();
+/* ─── INITIALIZATION STARTUP ───────────────────────────────────────── */
+async function bootstrap() {
+    await loadVisualSettings();
+    initCanvas();
+    await loadBuddyOutput();
+}
+
+bootstrap();
 
 /* ─── EXPOSE A2UI GLOBALLY for Buddy to call from content scripts ──── */
 window.A2UI = A2UI;
