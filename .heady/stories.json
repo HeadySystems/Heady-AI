@@ -7,643 +7,6 @@
     "status": "ongoing",
     "timeline": [
       {
-        "id": "a701b929-7366-405c-bbca-ea13c425d4bd",
-        "timestamp": "2026-02-15T06:56:59.484Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 97%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 97,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "d55f2b5a-28b9-43d1-b4f8-145e7479d2fd",
-        "timestamp": "2026-02-15T06:57:05.428Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 96%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 96,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "c9429f76-1d54-4bf3-85cf-d162677aafe3",
-        "timestamp": "2026-02-15T06:57:11.311Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 96%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 96,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "d5b161ea-142a-47b0-bb34-df8f4d9fbd7d",
-        "timestamp": "2026-02-15T06:57:17.965Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 99%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 99,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "0b641b3d-9774-45a5-b7de-3ee25e8ad3e7",
-        "timestamp": "2026-02-15T06:57:24.149Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 97%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 97,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "ece7f6e0-209c-4d71-bb12-6a749b523c3b",
-        "timestamp": "2026-02-15T06:57:32.518Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 98%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 98,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "d8663975-820d-49d1-ae21-b3aec4ed24cd",
-        "timestamp": "2026-02-15T06:57:52.231Z",
-        "type": "RESOURCE_CRITICAL",
-        "description": "Resources critical: RAM at 99%. pending.",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 99,
-          "mitigation": "pending"
-        },
-        "severity": "notable",
-        "source": "resource_manager"
-      },
-      {
-        "id": "e533fe24-c369-4dea-9827-f29f9731d642",
-        "timestamp": "2026-03-17T18:33:57.527Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "17347c8b-d293-4015-8f81-a202c0be513b",
-        "timestamp": "2026-03-17T18:34:02.544Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "f3d9a41c-76e2-454a-a3e2-7d7bd2b88539",
-        "timestamp": "2026-03-17T18:34:07.556Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "f57ec072-351b-43df-af2b-d01201eb6e57",
-        "timestamp": "2026-03-17T18:34:12.570Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "d68ccec6-92bb-468e-9ba5-7630f7523114",
-        "timestamp": "2026-03-17T18:34:17.582Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "8986aba0-b8d4-439e-8905-d0d9e314e4bd",
-        "timestamp": "2026-03-17T18:34:22.597Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 80,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "b87a170e-737b-4618-a7e4-13b6e6e6509b",
-        "timestamp": "2026-03-17T18:34:27.611Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "aaddf55d-7894-4059-b78f-95658ab6ca6c",
-        "timestamp": "2026-03-17T18:34:32.626Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 82,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "a507387d-336b-4210-a62d-6723d4b73802",
-        "timestamp": "2026-03-17T18:34:37.640Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 81,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "f02303cc-364c-4af9-83cc-62b9856af188",
-        "timestamp": "2026-03-17T19:25:32.757Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "271d0968-5515-4663-bf12-829b75c988ed",
-        "timestamp": "2026-03-17T20:00:47.879Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "45421400-daf5-4182-b388-225a1937bdc5",
-        "timestamp": "2026-03-17T20:00:52.908Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "1e2594c3-58eb-43d9-827f-eeba546bc89d",
-        "timestamp": "2026-03-17T20:00:57.944Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "9000cdeb-794f-43e9-8e50-4a5bcc311a3b",
-        "timestamp": "2026-03-17T20:01:22.969Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "faf886de-74c1-4814-92f1-c49b723e74b2",
-        "timestamp": "2026-03-17T20:01:27.987Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "2e607bf8-dcc6-47d6-bfa1-040043ad2d39",
-        "timestamp": "2026-03-17T20:02:08.004Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "c8981afa-f1b5-47ef-b90f-ba8df1b82100",
-        "timestamp": "2026-03-17T20:02:13.017Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "44850f69-7a9b-49d5-b741-36ff000c5c36",
-        "timestamp": "2026-03-17T22:55:48.419Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "08b741d4-84b6-4b56-be1e-5f28214b2fc5",
-        "timestamp": "2026-03-17T22:55:53.437Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 82,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "cefcb6d6-ebe5-4558-b76a-c1ea955cac55",
-        "timestamp": "2026-03-17T22:55:58.455Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 83,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "3c4e13bd-2496-4f58-ac63-e0301f4f5657",
-        "timestamp": "2026-03-17T22:56:03.478Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 83,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "a4184e57-1efa-4ab6-a69c-6820955f0b02",
-        "timestamp": "2026-03-17T22:56:08.495Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 83,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "987f0433-2e98-46ba-a929-2685914d1651",
-        "timestamp": "2026-03-17T22:56:13.511Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 82,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "b78ce9c8-6907-4b48-bbdb-e8ffb75f254a",
-        "timestamp": "2026-03-17T22:56:18.525Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "ae4dd7c0-5c3b-444e-b738-2b37b1889900",
-        "timestamp": "2026-03-17T22:56:23.539Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "2c8173b4-bad4-45f4-8682-23e93532ead3",
-        "timestamp": "2026-03-17T22:56:28.554Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 80,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "27726060-9965-42f6-ae65-37cac21f5f15",
-        "timestamp": "2026-03-17T23:02:38.580Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "53848360-8b7a-492d-a457-fef15fc8a197",
-        "timestamp": "2026-03-17T23:02:43.595Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "c3df69d4-28ed-40c9-a52f-c2a009e4952a",
-        "timestamp": "2026-03-17T23:55:03.742Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "5a2ccdc6-ba5b-4b32-b839-24947da39801",
-        "timestamp": "2026-03-17T23:55:08.754Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "a35c9e55-f1d4-48a9-8195-5609d5276789",
-        "timestamp": "2026-03-17T23:55:13.768Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "61fa554d-1b7c-49aa-9c09-cc29284df61a",
-        "timestamp": "2026-03-18T01:16:48.954Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 80,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "1ea1b9c2-421a-4e8d-b7dd-3e0464fa38e8",
-        "timestamp": "2026-03-18T01:16:53.968Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 82,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "ab7ec236-7568-4f6c-bdeb-9b4ac6fecd74",
-        "timestamp": "2026-03-18T01:16:58.985Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 81,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "f0691233-b1db-43ec-bd6c-3d958f109a57",
-        "timestamp": "2026-03-18T01:17:03.999Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 81,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "6571c193-ba03-49e2-a5db-5f86223018a0",
-        "timestamp": "2026-03-18T01:17:09.015Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 81,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "903cbf2e-befa-450e-bf4b-a5e41f31d58b",
-        "timestamp": "2026-03-18T01:17:14.033Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 81,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "38fa7c96-becd-4f3c-948d-4d9522713722",
-        "timestamp": "2026-03-18T01:17:29.047Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "5b084f1e-1e8b-4070-99ce-38f3ced7387a",
-        "timestamp": "2026-03-18T01:17:34.061Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "29041b3e-63db-4bba-8907-e7afc5a89753",
-        "timestamp": "2026-03-18T01:17:49.075Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "2ac4fc35-cf65-401e-8677-2e98e8eb815e",
-        "timestamp": "2026-03-18T01:17:54.090Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 78,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
-        "id": "87a9bbd0-4724-44d5-9d4f-0352e75ead26",
-        "timestamp": "2026-03-18T01:17:59.104Z",
-        "type": "RESOURCE_WARN_HARD",
-        "description": "Event: RESOURCE_WARN_HARD",
-        "refs": {
-          "resourceType": "RAM",
-          "percent": 79,
-          "mitigation": "pending"
-        },
-        "severity": "info",
-        "source": "resource_manager"
-      },
-      {
         "id": "6618a1c8-c541-483e-9550-bf305c760b26",
         "timestamp": "2026-03-18T01:32:49.162Z",
         "type": "RESOURCE_WARN_HARD",
@@ -6505,12 +5868,649 @@
         },
         "severity": "notable",
         "source": "resource_manager"
+      },
+      {
+        "id": "c89d9e3f-77ac-41a5-97f7-b80b176d1fd3",
+        "timestamp": "2026-06-09T04:15:03.794Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "2e238501-9aa6-434d-a09a-7a1bf68726fd",
+        "timestamp": "2026-06-09T04:15:08.821Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "733098a2-4363-43ad-984a-2ec0119728f6",
+        "timestamp": "2026-06-09T04:15:13.858Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "a59c8d62-5536-4a8b-a40b-b762e005ccf7",
+        "timestamp": "2026-06-09T04:15:18.895Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "4371e8e1-41b6-4f98-8e95-4fc7f105d376",
+        "timestamp": "2026-06-09T04:15:23.924Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "ce1d1881-34b6-462d-bc29-ef101e10d284",
+        "timestamp": "2026-06-09T04:15:28.960Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "b21c90c6-3dbf-4354-9daa-c85b6684ea56",
+        "timestamp": "2026-06-09T04:15:33.989Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "cf3a0588-996e-46ed-a020-0486d6956ec0",
+        "timestamp": "2026-06-09T04:15:52.157Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "df1bebdf-773c-4a38-9a92-90a1a6dbd722",
+        "timestamp": "2026-06-09T04:15:57.183Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "42d0c928-e7ce-4ab4-86e1-a6c26b1ef695",
+        "timestamp": "2026-06-09T04:16:02.223Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "8552140d-21f7-4b71-8366-6e10865f730f",
+        "timestamp": "2026-06-09T04:16:07.257Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "4ce2e242-bbeb-4459-b1e6-db57878f00bc",
+        "timestamp": "2026-06-09T04:16:12.287Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "310983c6-c13c-453c-8f9c-c083df664980",
+        "timestamp": "2026-06-09T04:16:17.309Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "e2af07da-8e9d-4f9c-9e9b-cc4674a630dc",
+        "timestamp": "2026-06-09T04:16:22.338Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "0dd5d50e-74bc-452d-834d-2f5caec3ad43",
+        "timestamp": "2026-06-09T04:16:27.373Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "f9eb81c4-00d3-449a-8bf0-fb878e917fc6",
+        "timestamp": "2026-06-09T04:16:32.413Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "11bfba84-a891-4900-a154-55e482302355",
+        "timestamp": "2026-06-09T04:16:37.441Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "2202dad2-cea7-4079-8b3a-168d6d73aab7",
+        "timestamp": "2026-06-09T04:16:44.460Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "6b8253ac-0d4a-45db-a8e6-12f6ec50e995",
+        "timestamp": "2026-06-09T04:16:49.504Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "a72ef246-d6b4-46ef-b511-8ad2e108f051",
+        "timestamp": "2026-06-09T04:17:04.747Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "e52d2c77-5ce0-4c21-b757-dbd9a68f6542",
+        "timestamp": "2026-06-09T04:17:09.779Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "1a18fd70-b447-4a4c-8248-d4c4c2a2f3a9",
+        "timestamp": "2026-06-09T04:17:14.804Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "b19ead8f-7fd3-4f54-817b-bb447cad7e6e",
+        "timestamp": "2026-06-09T04:17:19.839Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "2fb5439c-afb8-4a28-b01b-51122e40b8d0",
+        "timestamp": "2026-06-09T04:17:24.871Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "354be4f9-8c28-4199-8717-b3e9cf2f44cf",
+        "timestamp": "2026-06-09T04:17:31.230Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "86edda81-ef0e-46fc-a9ba-0a3d04ad1ead",
+        "timestamp": "2026-06-09T04:17:36.272Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "26bfa28b-00a7-4301-bb1b-f53c5955fe01",
+        "timestamp": "2026-06-09T04:17:41.303Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "cec8eca1-101b-4734-a250-ee9c5fe068ac",
+        "timestamp": "2026-06-09T04:17:46.338Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "383808b3-5205-400d-a8f4-caed86a14f31",
+        "timestamp": "2026-06-09T04:17:51.349Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "f89ebbc7-b5de-44ae-960d-2fd66e765300",
+        "timestamp": "2026-06-09T04:17:56.371Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "cfafe772-185f-4665-a2a6-ddb030b5cd3b",
+        "timestamp": "2026-06-09T04:18:01.401Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "4af9b717-b155-425e-b61e-abe0ab25d02e",
+        "timestamp": "2026-06-09T04:18:06.418Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "fa3c4413-c289-471c-9e2b-d40017892df7",
+        "timestamp": "2026-06-09T04:18:24.228Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "795c5901-dbc7-43dd-9f40-6c0a91bd6803",
+        "timestamp": "2026-06-09T04:18:29.908Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "982b7f52-3c9a-40c7-b04d-7a9fc6c9a976",
+        "timestamp": "2026-06-09T04:18:34.966Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "f1e9085e-4792-4fcb-a442-c3611c25fb40",
+        "timestamp": "2026-06-09T04:18:40.001Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "d4e9421c-2b52-4fe0-8d7e-1620c241ba68",
+        "timestamp": "2026-06-09T04:18:45.029Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "a310dab8-a1b8-41cc-88d4-70ae7c472774",
+        "timestamp": "2026-06-09T04:18:50.059Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "de71e786-f91b-4bbe-9808-27403bf2627f",
+        "timestamp": "2026-06-09T04:18:55.098Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "b45bba8d-9a84-4250-ad88-3e495130d187",
+        "timestamp": "2026-06-09T04:19:00.146Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "955ff2f9-f960-46bb-ba7c-4f5896b2280a",
+        "timestamp": "2026-06-09T04:19:05.178Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "80f10295-af43-420d-8b48-6549acb6d070",
+        "timestamp": "2026-06-09T04:19:10.199Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "e91cb7dc-8bcc-41d3-ae3d-58d892006259",
+        "timestamp": "2026-06-09T04:19:16.826Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "0206a9b1-3a8a-4740-a40c-2fa29e99feb2",
+        "timestamp": "2026-06-09T04:19:21.864Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "6099eba2-34b6-4b6b-a166-cc0109050d8a",
+        "timestamp": "2026-06-09T04:19:38.269Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "47c3d671-6a36-462a-b89d-1651b04a1c20",
+        "timestamp": "2026-06-09T04:19:43.309Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "642fcc4e-d7c2-45a6-9dc1-fb5d340126ea",
+        "timestamp": "2026-06-09T04:19:48.351Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "a74d3dcd-2cce-40d4-a0d1-b4b0f1e513d5",
+        "timestamp": "2026-06-09T04:19:53.388Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
+      },
+      {
+        "id": "6123797b-5b6e-4a7c-b676-e7340ee34e09",
+        "timestamp": "2026-06-09T04:19:58.887Z",
+        "type": "RESOURCE_CRITICAL",
+        "description": "Resources critical: CPU at 91%. pending.",
+        "refs": {
+          "resourceType": "CPU",
+          "percent": 91,
+          "mitigation": "pending"
+        },
+        "severity": "notable",
+        "source": "resource_manager"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:33:04.440Z",
-    "updatedAt": "2026-06-09T04:14:58.761Z"
+    "updatedAt": "2026-06-09T04:19:58.887Z"
   },
   "934e25a6-b531-41b9-b602-5fbc6b3621fc": {
     "id": "934e25a6-b531-41b9-b602-5fbc6b3621fc",
@@ -6519,101 +6519,6 @@
     "summary": "",
     "status": "ongoing",
     "timeline": [
-      {
-        "id": "6415dfcd-9454-45fa-87b3-cb602317542a",
-        "timestamp": "2026-02-14T18:06:48.726Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 30
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "be985d32-29e1-4509-8c63-17eb7a874431",
-        "timestamp": "2026-02-14T18:06:48.732Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:plan",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 4
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "79b16750-adc3-4344-b5f0-c9aac617be17",
-        "timestamp": "2026-02-14T18:08:55.984Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 24
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "24104651-62cf-49b7-a5c6-c2d88c20d4c8",
-        "timestamp": "2026-02-14T18:08:55.988Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:plan",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 4
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "a2a5ad03-58c1-42e5-8aa6-579f5cf6d314",
-        "timestamp": "2026-02-15T03:55:57.218Z",
-        "type": "ERROR_BURST_DETECTED",
-        "description": "Event: ERROR_BURST_DETECTED",
-        "refs": {
-          "patternId": "reliability::resource:RAM",
-          "name": "resource:RAM",
-          "count": 20
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
-      {
-        "id": "c861d04a-7ef3-4979-8c4b-f39f3f082382",
-        "timestamp": "2026-02-15T03:55:57.221Z",
-        "type": "CORRELATED_SLOWDOWN",
-        "description": "Event: CORRELATED_SLOWDOWN",
-        "refs": {
-          "patterns": [
-            "latency:pipeline:channel-entry",
-            "latency:pipeline:plan",
-            "latency:pipeline:execute-major-phase",
-            "latency:pipeline:recover",
-            "latency:pipeline:optimize",
-            "latency:pipeline:finalize",
-            "latency:pipeline:monitor-feedback",
-            "latency:pipeline:crypto",
-            "latency:pipeline:cross-device-sync"
-          ],
-          "count": 9
-        },
-        "severity": "info",
-        "source": "pattern_engine"
-      },
       {
         "id": "b2e717f4-3850-4fcd-99f8-e217ff34f61c",
         "timestamp": "2026-02-15T03:57:57.218Z",
@@ -17299,11 +17204,155 @@
         },
         "severity": "info",
         "source": "pattern_engine"
+      },
+      {
+        "id": "9e14a39b-bd5f-421b-bfbc-f4a5baba8a0b",
+        "timestamp": "2026-06-09T04:15:52.723Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:CPU",
+          "name": "resource:CPU",
+          "count": 41
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "9986ef57-cb3d-41f1-964c-20f7179b3098",
+        "timestamp": "2026-06-09T04:15:52.747Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 22
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "3b2aca7b-b5ad-423f-a42c-26634ab12b44",
+        "timestamp": "2026-06-09T04:17:52.778Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:CPU",
+          "name": "resource:CPU",
+          "count": 50
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "cf9b2041-e447-4937-9845-22b82800962b",
+        "timestamp": "2026-06-09T04:17:52.807Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 22
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "0557ba2f-0d6e-4a93-9bf7-19438e06f7f6",
+        "timestamp": "2026-06-09T04:19:52.769Z",
+        "type": "ERROR_BURST_DETECTED",
+        "description": "Event: ERROR_BURST_DETECTED",
+        "refs": {
+          "patternId": "reliability::resource:CPU",
+          "name": "resource:CPU",
+          "count": 49
+        },
+        "severity": "info",
+        "source": "pattern_engine"
+      },
+      {
+        "id": "13fa3d74-bb69-44cd-8f96-3f8d5a271faf",
+        "timestamp": "2026-06-09T04:19:52.813Z",
+        "type": "CORRELATED_SLOWDOWN",
+        "description": "Event: CORRELATED_SLOWDOWN",
+        "refs": {
+          "patterns": [
+            "latency:pipeline:channel-entry",
+            "latency:pipeline:recon",
+            "latency:pipeline:intake",
+            "latency:pipeline:classify",
+            "latency:pipeline:triage",
+            "latency:pipeline:decompose",
+            "latency:pipeline:trial-and-error",
+            "latency:pipeline:orchestrate",
+            "latency:pipeline:monte-carlo",
+            "latency:pipeline:arena",
+            "latency:pipeline:judge",
+            "latency:pipeline:approve",
+            "latency:pipeline:execute",
+            "latency:pipeline:verify",
+            "latency:pipeline:self-awareness",
+            "latency:pipeline:self-critique",
+            "latency:pipeline:mistake-analysis",
+            "latency:pipeline:optimization-ops",
+            "latency:pipeline:continuous-search",
+            "latency:pipeline:evolution",
+            "latency:pipeline:receipt",
+            "latency:pipeline:distiller"
+          ],
+          "count": 22
+        },
+        "severity": "info",
+        "source": "pattern_engine"
       }
     ],
     "links": {},
     "pinnedEvents": [],
     "createdAt": "2026-02-11T22:34:57.989Z",
-    "updatedAt": "2026-06-09T04:13:48.741Z"
+    "updatedAt": "2026-06-09T04:19:52.813Z"
   }
 }
