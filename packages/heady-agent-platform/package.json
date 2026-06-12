@@ -27,7 +27,7 @@
     "start": "node src/orchestration/heady-orchestrator.js"
   },
   "devDependencies": {
-    "vitest": "^3.2.1"
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=20.0.0"
