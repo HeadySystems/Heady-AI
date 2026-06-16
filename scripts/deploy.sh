@@ -22,7 +22,6 @@ case "${1:-all}" in
       --source . \
       --project "$PROJECT" \
       --region "$REGION" \
-      --dockerfile packages/codeflow/Dockerfile \
       --allow-unauthenticated \
       --min-instances 0 --max-instances 13 \
       --set-env-vars "FIREBASE_PROJECT_ID=${PROJECT},CODEFLOW_ORIGIN=${PORTAL_ORIGIN:-*}" \
