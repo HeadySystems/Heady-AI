@@ -1,0 +1,22 @@
+{
+  "name": "@heady/codeflow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Governed codeflow — every code change is a proposal through validate→govern→approve→apply→rollback (ADR-0005).",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "bin": {
+    "heady-codeflow": "src/server.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "serve": "node src/server.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*"
+  }
+}
