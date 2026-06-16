@@ -216,6 +216,7 @@
     "facts.yaml",
     "lexicon.yaml",
     ".dockerignore",
+    "Dockerfile",
     "claude_desktop_config.json",
     "heady-latent-os-commander.plugin",
     "scaffold_heady.sh",
