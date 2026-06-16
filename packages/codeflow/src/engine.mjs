@@ -9,6 +9,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { validate, autoCorrect } from './validate.mjs';
+import { unifiedDiff } from './diff.mjs';
+import { FIB } from '../../phi-math/src/index.mjs';
 
 export const STATES = Object.freeze({
   SUBMITTED: 'submitted', VALIDATING: 'validating', VALIDATED: 'validated',
@@ -87,6 +89,12 @@ export class Codeflow {
       return this._public(p);
     }
     this._transition(p, STATES.VALIDATED);
+    // Compute the diff vs the file on disk — the reviewer's view + audit record.
+    let current = '';
+    try { current = readFileSync(join(this.root, p.targetFile), 'utf8'); } catch { /* new file */ }
+    const d = unifiedDiff(current, p.content);
+    p.diffStat = { added: d.added, removed: d.removed, existed: current !== '', truncated: !!d.truncated };
+    p.diffPreview = d.preview.slice(0, FIB[12]); // 144-line capped preview
     // 4. Validation ≠ approval. Sensitive paths require a human; the rest auto-approve (stage-1 allowlist).
     if (p.sensitive) {
       p.governance = { requiresHuman: true, approver: null, decidedAt: null };

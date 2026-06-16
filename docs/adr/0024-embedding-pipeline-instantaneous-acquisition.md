@@ -1,6 +1,6 @@
 # ADR-0024: Embedding Pipeline & Instantaneous-Acquisition Ruleset
 
-- **Status:** Proposed (2026-06-15)
+- **Status:** Accepted (2026-06-16)
 - **Deciders:** Eric Anthony Haywood
 
 ## Context

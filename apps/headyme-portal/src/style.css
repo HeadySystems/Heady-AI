@@ -251,6 +251,14 @@ button.small {
 .cf-findings { margin: 8px 0; padding-left: 21px; color: #ff4757; font-size: 13px; }
 .cf-findings code { color: #ffb020; }
 .cf-actions { margin-top: 13px; display: flex; gap: 8px; }
+.cf-browse { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 13px; }
+.cf-browse input { flex: 1; min-width: 144px; background: rgba(0,0,0,0.25); border: 1px solid rgba(124,94,255,0.3); border-radius: 8px; color: inherit; padding: 6px 8px; }
+.cf-browse #cf-tree { width: 100%; display: flex; gap: 13px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.cf-browse #cf-tree a { color: #7c5eff; text-decoration: none; }
+.cf-diff { background: rgba(0,0,0,0.35); border-radius: 8px; padding: 8px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.5; max-height: 377px; }
+.cf-diff .dadd { color: #2ed573; }
+.cf-diff .ddel { color: #ff4757; }
+.cf-diff .dctx { color: rgba(255,255,255,0.45); }
 
 /* Loader */
 .loader-container {

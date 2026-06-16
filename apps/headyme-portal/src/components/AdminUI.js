@@ -48,6 +48,12 @@ export class AdminUI {
 
           <section class="card glass-panel codeflow-panel" style="grid-column: 1 / -1;">
             <h2>Governed Codeflow <span class="muted">— every change is a proposal (ADR-0005)</span></h2>
+            <div class="cf-browse">
+              <input id="cf-path" placeholder="docs" />
+              <button type="button" id="cf-browse-btn" class="secondary-btn small">Browse</button>
+              <button type="button" id="cf-load-btn" class="secondary-btn small">Load into editor</button>
+              <div id="cf-tree" class="muted"></div>
+            </div>
             <form id="cf-form">
               <div class="input-group"><label>Intent</label><input id="cf-intent" placeholder="what &amp; why" required /></div>
               <div class="input-group"><label>Target file (repo-relative)</label><input id="cf-target" placeholder="docs/example.md" required /></div>
@@ -62,8 +68,29 @@ export class AdminUI {
 
     this.container.querySelector('#logout-btn').addEventListener('click', () => signOut(auth));
     this.container.querySelector('#cf-form').addEventListener('submit', (e) => this.onSubmit(e));
+    this.container.querySelector('#cf-browse-btn').addEventListener('click', () => this.browse());
+    this.container.querySelector('#cf-load-btn').addEventListener('click', () => this.loadFile());
     window.dispatchEvent(new CustomEvent('navigation:admin:entered'));
     this.loadStatus();
+  }
+
+  async browse() {
+    const tree = this.container.querySelector('#cf-tree');
+    try {
+      const r = await api.files(this.container.querySelector('#cf-path').value, await this.token());
+      if (r.type === 'file') { tree.textContent = `${r.path} (${r.content.length} bytes) — use “Load into editor”`; return; }
+      tree.innerHTML = r.entries.map((e) => `<a href="#" data-p="${r.path === '.' ? '' : r.path + '/'}${e.name}">${e.type === 'dir' ? '📁' : '📄'} ${e.name}</a>`).join(' ');
+      tree.querySelectorAll('a').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); this.container.querySelector('#cf-path').value = a.dataset.p; this.browse(); }));
+    } catch (err) { tree.textContent = `cannot browse: ${err.message}`; }
+  }
+
+  async loadFile() {
+    try {
+      const r = await api.files(this.container.querySelector('#cf-path').value, await this.token());
+      if (r.type !== 'file') { this.container.querySelector('#cf-tree').textContent = 'select a file, not a directory'; return; }
+      this.container.querySelector('#cf-target').value = r.path;
+      this.container.querySelector('#cf-content').value = r.content;
+    } catch (err) { this.container.querySelector('#cf-tree').textContent = `cannot load: ${err.message}`; }
   }
 
   async loadStatus() {
@@ -116,6 +143,11 @@ export class AdminUI {
     const out = this.container.querySelector('#cf-result');
     const verdict = p.validation?.verdict || '—';
     const findings = (p.validation?.findings || []).map((f) => `<li><code>${f.rule}</code> — ${f.message}</li>`).join('');
+    const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const diff = p.diffStat
+      ? `<p class="muted">diff: +${p.diffStat.added} / −${p.diffStat.removed} ${p.diffStat.existed ? '' : '(new file)'}</p>
+         <pre class="cf-diff">${(p.diffPreview || []).map((d) => `<span class="d${d.op === '+' ? 'add' : d.op === '-' ? 'del' : 'ctx'}">${d.op} ${esc(d.line)}</span>`).join('\n')}</pre>`
+      : '';
     let actions = '';
     if (p.state === 'governance_pending') actions = `<button class="primary-btn" id="cf-approve">Approve as ${this.user.email} (human)</button>`;
     else if (p.state === 'approved') actions = `<button class="primary-btn" id="cf-apply">Apply</button>`;
@@ -125,6 +157,7 @@ export class AdminUI {
         <p><strong>State:</strong> <code>${p.state}</code> · <strong>Validation:</strong> <code>${verdict}</code> · <strong>trace:</strong> ${p.traceId}</p>
         ${p.sensitive ? '<p class="status-indicator alert">Sensitive path — human approval required (no self-approve)</p>' : ''}
         ${findings ? `<ul class="cf-findings">${findings}</ul>` : ''}
+        ${diff}
         <div class="cf-actions">${actions}</div>
       </div>`;
     const run = (fn) => async () => { try { this.proposal = await fn(await this.token()); this.renderResult(this.proposal); } catch (err) { out.innerHTML = `<p class="status-indicator offline">${err.message}</p>`; } };

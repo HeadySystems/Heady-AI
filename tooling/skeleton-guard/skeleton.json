@@ -215,6 +215,7 @@
     "SOURCE_OF_TRUTH.md",
     "facts.yaml",
     "lexicon.yaml",
+    ".dockerignore",
     "claude_desktop_config.json",
     "heady-latent-os-commander.plugin",
     "scaffold_heady.sh",

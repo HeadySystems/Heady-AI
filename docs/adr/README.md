@@ -3,8 +3,7 @@
 One decision per file. Format: Context → Decision → Consequences. Status lifecycle:
 `Proposed → Accepted → (Superseded by ADR-XXXX)`.
 
-Status: **0000–0018** are **Proposed (2026-06-15)**, pending founder approval (ADR-0013). **0019–0023**
-were authored separately as **Accepted (2026-06-15)** and carry a v2 Reconciliation section.
+Status: **0000–0018** are **Proposed (2026-06-15)**, pending founder approval (ADR-0013). **0019–0029** are **Accepted (2026-06-15)** and carry a v2 Reconciliation section.
 
 Amendments (v2 reconciliation, 2026-06-15): **0003** (stores) and **0005** (agent bootstrap) carry an
 Amendment section. **Numbering note:** an earlier set of ADRs also used numbers 0014–0018 (frontend,
@@ -38,3 +37,9 @@ event-bus, sandbox, state-sync, vector-trigger); to remove the collision they we
 | 0022 | Real-Time State & UI Sync | Architecture (was 0017) · SSE+HTTP/2 / WS for agent |
 | 0023 | Vector Projection Ingestion Trigger | Architecture (was 0018) · Merkle for files / CDC=ADR-0014 |
 | 0024 | Embedding Pipeline & Instantaneous-Acquisition Ruleset | Architecture · impl `packages/embedding` |
+| 0025 | Strict Global Consistency and Non-Orphanage Governance | Architecture / Governance |
+| 0026 | MCP Console (Admin UI) Architecture | Architecture |
+| 0027 | Task Ledger & Outbox-driven Sync (Linear/Sentry) | Architecture |
+| 0028 | Cross-Domain SSO Partitioned Cookie Governance | Architecture / Security |
+| 0029 | WASM WebContainer Sandbox In-Browser Execution | Architecture / Security |
+
