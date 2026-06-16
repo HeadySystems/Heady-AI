@@ -1,0 +1,95 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Heady Core API",
+    "version": "1.0.0",
+    "description": "Canonical contract surface for the Heady Latent OS. Source of truth: OpenAPI → types/Zod/mcp-tools.json (ADR-0001, SOURCE_OF_TRUTH)."
+  },
+  "servers": [
+    { "url": "https://headymcp.com", "description": "edge (Cloudflare Workers)" },
+    { "url": "https://heady-manager.run.app", "description": "origin (Cloud Run)" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Liveness/health probe.",
+        "responses": {
+          "200": {
+            "description": "Service health",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/Health" } }
+            }
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "post": {
+        "operationId": "enqueueTask",
+        "summary": "Enqueue a task (writes task + outbox in one transaction).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/EnqueueTask" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task accepted",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/TaskStatus" } }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{taskId}": {
+      "get": {
+        "operationId": "getTask",
+        "summary": "Fetch task status.",
+        "parameters": [
+          { "name": "taskId", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task status",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/TaskStatus" } }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Health": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": { "type": "string", "enum": ["ok", "degraded", "down"] },
+          "version": { "type": "string" }
+        }
+      },
+      "EnqueueTask": {
+        "type": "object",
+        "required": ["kind", "input"],
+        "properties": {
+          "kind": { "type": "string", "description": "Task kind (maps to a skill/bee/workflow ref)." },
+          "input": { "type": "object", "additionalProperties": true },
+          "deps": { "type": "array", "items": { "type": "string", "format": "uuid" } }
+        }
+      },
+      "TaskStatus": {
+        "type": "object",
+        "required": ["taskId", "status"],
+        "properties": {
+          "taskId": { "type": "string", "format": "uuid" },
+          "status": { "type": "string", "enum": ["PENDING", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED"] },
+          "result": { "type": "object", "additionalProperties": true }
+        }
+      }
+    }
+  }
+}

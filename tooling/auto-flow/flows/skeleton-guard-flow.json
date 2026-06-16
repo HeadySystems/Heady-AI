@@ -1,0 +1,34 @@
+{
+  "id": "skeleton-guard-on-file-created",
+  "trigger": "heady.observation.file.created",
+  "steps": [
+    {
+      "id": "verify",
+      "kind": "skill",
+      "ref": "skeleton-guard",
+      "input": { "action": "verify-placement" },
+      "on": "heady.observation.skeleton.verified",
+      "next": "log",
+      "onHalt": "report-violation",
+      "gate": { "execute": 0.618, "halt": 0.382 }
+    },
+    {
+      "id": "report-violation",
+      "kind": "bee",
+      "ref": "alert-bee",
+      "input": { "channel": "heady.observation.skeleton.violation", "severity": "warn" },
+      "on": "heady.observation.skeleton.violation.reported",
+      "next": "log"
+    },
+    {
+      "id": "log",
+      "kind": "workflow",
+      "ref": "skeleton-violation-ledger",
+      "input": { "ledgerPath": ".data/task-ledger/skeleton-violations.jsonl" },
+      "on": "heady.observation.skeleton.logged",
+      "next": null
+    }
+  ],
+  "loop": null,
+  "budgetTokens": null
+}

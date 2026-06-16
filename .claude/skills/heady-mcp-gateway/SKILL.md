@@ -255,7 +255,7 @@ server.tool(
 
 ## MCP Server Template (Python / FastMCP)
 
-For Python-based MCP servers (useful for ML-heavy operations running on Colab):
+For Python-based MCP servers (ML-heavy tool operations on the Cloud Run origin, or offloaded to the Colab inference fallback tail behind the AI Gateway):
 
 ```python
 # heady-mcp-ml/server.py
@@ -270,7 +270,7 @@ mcp = FastMCP(
 @mcp.tool()
 async def generate_embeddings(
     texts: list[str],
-    model: str = "all-MiniLM-L6-v2"
+    model: str = "@cf/baai/bge-small-en-v1.5"
 ) -> dict:
     """
     Generate vector embeddings for a list of texts using the specified model.
@@ -294,11 +294,12 @@ async def vector_search(
     index_name: str = "default"
 ) -> dict:
     """
-    Search the FAISS vector index for the nearest neighbors to the query embedding.
+    Search the Neon pgvector index for the nearest neighbors to the query embedding.
     Used by the Data Agent to retrieve relevant historical context for agent decisions.
     """
     query = np.array([query_embedding], dtype='float32')
-    distances, indices = faiss_indices[index_name].search(query, top_k)
+    # Neon pgvector is the retrieval authority (ADR-0003); cosine top-k via HNSW.
+    rows = await db.query("SELECT id, 1-(embedding <=> $1) AS score FROM vector_memory ORDER BY embedding <=> $1 LIMIT $2", [query, top_k])
     return {
         "top_k": top_k,
         "results": [
@@ -347,34 +348,19 @@ These are the MCP servers the Heady ecosystem needs:
 | `heady-monitoring` | TypeScript | Health checks, metrics, alerting | Sentinel |
 | `heady-midi` | TypeScript | MIDI UMP packet translation, binary vector encoding | Bridge Builder |
 
-## Connecting MCP Servers to Colab Runtimes
+## Deploying MCP Servers (Cloud Run / Cloudflare Workers)
 
-MCP servers running on Colab need to be accessible by the agents (which may run on different runtimes or on external infrastructure).
+MCP servers deploy to the **origin (Cloud Run, Node22)** or the **edge (Cloudflare Workers, Hono)** — never on Colab behind a tunnel. The edge Worker is the public entrypoint (`headymcp.com/mcp`); GPU/long-running tool calls are forwarded to Cloud Run, or to the Colab inference **fallback tail**, through the **Cloudflare AI Gateway** (the single model-egress chokepoint).
 
-```python
-# Start MCP server on a Colab runtime with Streamable HTTP transport
-import asyncio
-from mcp.server.fastmcp import FastMCP
+\`\`\`typescript
+// Edge MCP server — Hono on Cloudflare Workers, Streamable HTTP transport.
+import { Hono } from "hono";
+import { mcpStreamableHttp } from "@heady/mcp"; // tool registry derived from mcp-tools.json
 
-async def start_mcp_on_colab(mcp_server: FastMCP, port: int = 8080):
-    """Start an MCP server on Colab and expose it via Cloudflare Tunnel."""
-
-    # Start the MCP server
-    from starlette.applications import Starlette
-    from starlette.routing import Mount
-    app = Starlette(routes=[Mount("/mcp", app=mcp_server.streamable_http_app())])
-
-    # Run with uvicorn
-    import uvicorn
-    config = uvicorn.Config(app, host="0.0.0.0", port=port, log_level="info")
-    server = uvicorn.Server(config)
-
-    # Start Cloudflare Tunnel in parallel
-    tunnel_url, tunnel_proc = start_cloudflare_tunnel(port)
-    print(f"MCP Server accessible at: {tunnel_url}/mcp")
-
-    await server.serve()
-```
+const app = new Hono();
+app.all("/mcp", mcpStreamableHttp(toolRegistry)); // auth + CSL gate applied per @heady/security-mesh
+export default app;                               // `pnpm wrangler deploy` → headymcp.com/mcp
+\`\`\`
 
 ## Security Requirements for MCP Servers
 

@@ -46,7 +46,7 @@ These are independent of the integrate/drop choices — they need action before 
 
 | # | Severity | Finding | Location | Action |
 |---|---|---|---|---|
-| R-1 | 🔴 Critical | **Live Google/Firebase API key committed** (`AIzaSyDg0NQgbHXTJGSp6_8IlP4YcnJfWV4RNTU`) + real GCP project + CF account id | `perplexity-build/.env.template` | **Rotate the key now**; scrub before any import. Feeds SEC-001. |
+| R-1 | 🔴 Critical | **Live Google/Firebase API key committed** (`‹live-key-redacted›`) + real GCP project + CF account id | `perplexity-build/.env.template` | **Rotate the key now**; scrub before any import. Feeds SEC-001. |
 | R-2 | 🔴 Critical | **Fail-open auth** — mock mode mints/accepts ANY session cookie as `dev-user`, no `NODE_ENV==='production'` hard-stop | `auth-session-server/src/index.js:113,156-157` | Drop component; ensure rebuild auth fails **closed** (SEC-002). |
 | R-3 | 🔴 High | **AI-Gateway bypass is universal** — every model call (Gemini/Claude/GPT-4o/Groq) hits providers directly; zero `gateway.ai.cloudflare` usage | `mcp-servers/liquid-nodes`, `colab/*`, `python/*` | Route ALL egress through CF AI Gateway on port. |
 | R-4 | 🟠 High | **Embedding-dim drift** — `db/` lineage uses `vector(1536)`, violating the 384 lock | `db/001_*`, `db/002_*` | Quarantine `db/` SQL; only the `heady_*` 384-dim lineage may seed Neon. |

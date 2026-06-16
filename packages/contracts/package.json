@@ -3,8 +3,16 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady contract surface — OpenAPI 3.1 source of truth + mcp-tools.json generator. Types/Zod derive via codegen (ADR-0001).",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./openapi": "./openapi/heady.openapi.json"
+  },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/contracts'",
-    "test": "echo 'No tests in @heady/contracts'"
-  }
+    "build": "echo \"(no build — runnable ESM; Kubb/openapi-ts codegen wired when deps install)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "contracts", "openapi", "mcp-tools", "zod", "codegen"]
 }

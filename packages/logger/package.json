@@ -3,8 +3,14 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady structured logger — pino-shaped JSON, X-Heady-Trace-Id propagation, redaction, φ-sampling. Cloud Run + Workers.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/logger'",
-    "test": "echo 'No tests in @heady/logger'"
-  }
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/phi-math": "workspace:*" },
+  "keywords": ["heady", "logger", "pino", "structured-logging", "trace-id", "redaction"]
 }

@@ -3,8 +3,18 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady CSL engine — Continuous Semantic Logic geometric gates + the ternary cslGate. ⚠️ PATENT zone (HS-2026-051+).",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/csl-engine'",
-    "test": "echo 'No tests in @heady/csl-engine'"
-  }
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*"
+  },
+  "keywords": ["heady", "csl", "geometric-logic", "cosine", "vector-logic", "patent"]
 }

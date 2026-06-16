@@ -1,0 +1,15 @@
+{
+  "name": "@heady/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady cross-cutting primitives — typed errors, Result<T,E>, health/metrics shapes, the Latent Service Pattern contract.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "shared", "errors", "result", "health", "service-contract"]
+}

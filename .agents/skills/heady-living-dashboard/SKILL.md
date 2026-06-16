@@ -21,7 +21,7 @@
 <!-- HEADY_BRAND:END
 -->
 ---
-name: living-dashboard
+name: heady-living-dashboard
 description: >
   Living Dashboard for Heady — builds and deploys real-time monitoring dashboards for the Heady
   ecosystem using vanilla HTML/CSS/JavaScript (no React/Vue/Angular per Heady standards). Creates

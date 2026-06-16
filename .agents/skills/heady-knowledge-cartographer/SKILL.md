@@ -21,7 +21,7 @@
 <!-- HEADY_BRAND:END
 -->
 ---
-name: knowledge-cartographer
+name: heady-knowledge-cartographer
 description: >
   Knowledge Cartographer for Heady — maps the entire Heady ecosystem (46K+ files, 175 services,
   9 domains, 30+ bee types, 60+ patents) into navigable knowledge graphs, dependency maps, and

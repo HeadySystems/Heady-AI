@@ -1,0 +1,228 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ lexicon.yaml — authored definitions (the concept SoT)      ║
+# ║  The ONE home for human-language definitions of Heady terms that    ║
+# ║  cannot be derived from code. Variables (env/secrets/constants/     ║
+# ║  facts) are DERIVED, not listed here — see docs/HEADY_VARIABLE_     ║
+# ║  REGISTRY.md (generated). © 2026 HeadySystems Inc. — Eric Haywood   ║
+# ╚══════════════════════════════════════════════════════════════════╝
+schema: lexicon.v1
+# Each term: def (one line) + sot (where the authority lives). Keep defs crisp; the registry renders them.
+terms:
+  CSL:
+    def: "Continuous Semantic Logic — vector operations used as logical gates (cosine=AND, orthogonal projection=NOT, superposition=OR). Heady's core geometric-AI differentiator."
+    sot: "packages/csl-engine; ADR-0003; docs/compendium/01"
+  cslGate:
+    def: "The ternary gate primitive cslGate(value, cosScore, tau) returning ALLOW/BLOCK/DEFER. Replaces if/else thresholds across the OS."
+    sot: "packages/csl-engine; AGENTS.md"
+  phi:
+    def: "The golden ratio approximately 1.618033988749895. Every timeout, TTL, pool size, and threshold derives from it — zero magic numbers."
+    sot: "packages/phi-math (PHI); AGENTS.md #8"
+  psi:
+    def: "The inverse golden ratio approximately 0.618. Used in confidence-threshold tiering (1 minus psi^level)."
+    sot: "packages/phi-math (PSI)"
+  fibonacci-scaling:
+    def: "Pool sizes, caps, retry counts, and secret max-age are Fibonacci-indexed (FIB[n]). e.g. maxParallel=fib(6)=8, secret maxAge=FIB[9]=34d."
+    sot: "packages/phi-math (FIB, fib)"
+  bee:
+    def: "A HeadyBee — a single agent worker with a start/stop/health/metrics lifecycle (BaseHeadyBee). 30+ typed bee roles (config-bee, refactor-bee, ...)."
+    sot: "packages/bees; heady-bee-swarm-ops"
+  swarm:
+    def: "A HeadySwarm — a coordinated set of bees: spawn, dispatch, consensus, fuse; CSL-gated and phi-scaled."
+    sot: "packages/orchestration; heady-agent-orchestration"
+  liquid-node:
+    def: "A latent compute node in Liquid Architecture v9 — reconfigurable, CSL-routed unit of work; 'liquid' means topology adapts at runtime."
+    sot: "docs/compendium/03; AGENTS.md"
+  latent-os:
+    def: "The Heady Liquid Latent OS — the modular monolith plus edge tier plus CSL gating plus phi-scaling that this monorepo builds."
+    sot: "SOURCE_OF_TRUTH.md; REBUILD_PLAN_V2.md"
+  golden-record:
+    def: "facts.yaml — the single source of derived facts. README badges, CI matrices, and config generate from it; nothing restates it as truth."
+    sot: "facts.yaml; packages/config"
+  projection:
+    def: "A pure one-way derivation (monorepo SHA, source, transform) to a public *-core repo. Manifest-authoritative, content-addressed, never authored."
+    sot: "ADR-0017; docs/REBUILD_PLAN_V2.md section 10"
+  projection-drift:
+    def: "When a projection output diverges from its source. States: in-sync / source-ahead (re-project) / projection-ahead (page + freeze)."
+    sot: "ADR-0017"
+  ternary-gate:
+    def: "The 3-state CSL outcome ALLOW/BLOCK/DEFER. All Heady gates return a ternary verdict, never a boolean."
+    sot: "packages/csl-engine"
+  ai-gateway-chokepoint:
+    def: "Cloudflare AI Gateway is the single egress for ALL model traffic. Direct provider calls (R-3) are forbidden and linted."
+    sot: "ADR-0018; facts.model_layer.egress_chokepoint"
+  pgvector-authority:
+    def: "Neon pgvector is the sole retrieval authority. Vectorize is a derived edge cache (reconstructible); Qdrant is dropped."
+    sot: "ADR-0003; facts.stores"
+  merkle-trigger:
+    def: "File indexing/embedding is triggered by Merkle-tree file hashing, never Postgres CDC. The change-detection substrate."
+    sot: "ADR-0023; tooling/embed-corpus"
+  gate-then-embed:
+    def: "Embedding runs only after the consistency gate passes (fail-closed precondition). The ledger, not the diff, is the authority for 'embedded'."
+    sot: "tooling/embed-corpus; ADR-0024"
+  latent-service-pattern:
+    def: "Every service exports start/stop/health/metrics. The conformance contract for a Heady runtime unit."
+    sot: "AGENTS.md"
+  phi-backoff:
+    def: "Retry/backoff timing derived from phi (base 1,618,034 microseconds), not fixed intervals. Circuit breaker: 5 failures opens, probe after a phi-scaled delay."
+    sot: "packages/phi-math (phiBackoffMs); packages/resilience"
+  coherence-kernel:
+    def: "tooling/coherence — derives the System Map from ground truth, gates on contradiction (not incompleteness), computes change blast-radius."
+    sot: "docs/LIQUID_LATENT_OS_COHERENCE.md"
+  system-map:
+    def: "The machine-derived model of the whole OS (entities plus relationships). What 'self-aware' means concretely: the system reads its own map."
+    sot: "tooling/coherence"
+  ripple:
+    def: "The blast radius of a change — the derived set of files/packages that must regenerate or be reviewed when one source-of-truth value changes."
+    sot: "tooling/coherence (ripple)"
+  extraction-engine:
+    def: "The repeatable, gated pipeline that ports one legacy component into the rebuild: security-bee, arbiter, codemod, tests, eval-gate, consistency, ledger."
+    sot: "docs/LEGACY_EXTRACTION_SYSTEM.md"
+  transfer-group:
+    def: "A bounded-context cluster of legacy components (G01-G13) bundled for transfer into the rebuild. G99 is dropped (provenance only)."
+    sot: "docs/SYSTEM_DECOMPOSITION.md; tooling/decomposition"
+  disposition-mark:
+    def: "The per-component verdict Integrate / Adapt / Defer / Drop — the routing key for the Extraction Engine."
+    sot: "docs/LEGACY_STACK_COMPONENT_DISPOSITION.md"
+  arbiter:
+    def: "The patent-lock review agent. Returns ALLOW/BLOCK before any change to a patent zone (HS-2026-051..062)."
+    sot: "agent: arbiter; AGENTS.md Patent Lock Zones"
+  patent-lock-zone:
+    def: "Files implementing provisional patents HS-2026-051 through HS-2026-062. Modification requires an arbiter ALLOW plus a signed HCP."
+    sot: "AGENTS.md; R-8"
+  HCP:
+    def: "Heady Change Proposal — the Ed25519-signed approval record that gates merges/deploys touching patent zones or locked decisions."
+    sot: "REBUILD_PLAN_V2.md section 10"
+  ADR:
+    def: "Architecture Decision Record — append-only, Nygard format. ADRs 0000 through 0024 hold the locked decisions."
+    sot: "docs/adr/"
+  risk-id:
+    def: "R-1 through R-10 — the cross-cutting critical risks from the legacy audit (R-1 live key, R-2 fail-open auth, R-4 dim drift, R-8 patent IP, ...)."
+    sot: "docs/LEGACY_STACK_COMPONENT_DISPOSITION.md"
+  characterization-test:
+    def: "A test that pins a component's existing behavior before porting. Golden-master (equality) for Integrate; contract (public API/Zod) for Adapt."
+    sot: "docs/LEGACY_EXTRACTION_SYSTEM.md section 6"
+  sacred-geometry:
+    def: "The design metaphor for Heady's organic, phi-proportioned systems and breathing interfaces (heartbeat pulse, honeycomb cells)."
+    sot: "AGENTS.md; docs/compendium/01"
+  liquid-architecture-v9:
+    def: "The canonical architecture generation: modular monolith + edge tier + CSL gating + phi-scaling + liquid (runtime-adaptive) topology."
+    sot: "AGENTS.md; docs/compendium/03"
+  transactional-outbox:
+    def: "The only sanctioned cross-boundary write: a domain row + an outbox row in one transaction, drained by a consumer. No direct external calls."
+    sot: "ADR-0006; REBUILD_PLAN_V2.md"
+  expand-migrate-contract:
+    def: "ParallelChange schema/contract evolution: add the new shape, migrate readers/writers behind a flag, then remove the old. Used for every contract change."
+    sot: "ADR-0007; REBUILD_PLAN_V2.md section 11"
+  branch-by-abstraction:
+    def: "Replace an implementation behind a stable public API in one move. In Heady the abstraction is the package's public contract; the codemod swaps the impl."
+    sot: "docs/LEGACY_EXTRACTION_SYSTEM.md section 5"
+  strangler-fig:
+    def: "Gradual live-traffic migration behind a stable boundary. SKIPPED pre-launch (no live traffic) — Heady uses port-and-verify instead."
+    sot: "REBUILD_PLAN_V2.md section 2"
+  anti-corruption-layer:
+    def: "An adapter isolating new code from a legacy model. Kept only as a build-time boundary (Zod public API), not a runtime facade, pre-launch."
+    sot: "docs/LEGACY_EXTRACTION_SYSTEM.md section 1"
+  rrf:
+    def: "Reciprocal Rank Fusion (k=60) — fuses dense (pgvector) and sparse (tsvector/BM25) result lists in one SQL CTE for hybrid retrieval."
+    sot: "heady-hybrid-vector-search; REBUILD_PLAN_V2.md section 4"
+  hnsw:
+    def: "Hierarchical Navigable Small World — the pgvector index (m=16, ef_construction=200) backing 384-dim retrieval."
+    sot: "ADR-0003"
+  bi-temporal-memory:
+    def: "Zep/Graphiti-style two-timestamp-pair fact model (valid-time + transaction-time) stored directly in Neon — no graph DB."
+    sot: "REBUILD_PLAN_V2.md section 6"
+  mem0:
+    def: "The derived-memory mutation policy ADD/UPDATE/DELETE/NOOP, applied conservatively by an LLM arbiter."
+    sot: "REBUILD_PLAN_V2.md section 6"
+  sleep-time-agent:
+    def: "A paired idle agent that owns core-memory edit tools and consolidates memory on a cron/alarm, separate from the primary."
+    sot: "REBUILD_PLAN_V2.md section 6"
+  durable-object:
+    def: "A Cloudflare single-writer, linearizable state primitive (10GB SQLite, WebSocket Hibernation). One DO per session owns conversation/plan state."
+    sot: "ADR-0004; REBUILD_PLAN_V2.md section 3"
+  cloudflare-workflow:
+    def: "The durable-execution surface: step.do (memoized retry), step.sleep (free hibernation), step.waitForEvent (CSL human-in-the-loop gate). No Temporal."
+    sot: "ADR-0004"
+  phi-canary:
+    def: "Staged rollout 5/25/50/100% with phi^n soak windows and Cloud Run revision tags; rollback to the highest-traffic revision."
+    sot: "REBUILD_PLAN_V2.md section 10"
+  eval-gate:
+    def: "The fidelity/CI gate ('OS of the OS'): regression set 100% pass, drift bounds, cost/p95 ceilings; judge model never the agent's own family."
+    sot: "agent: eval-gate; REBUILD_PLAN_V2.md section 11"
+  oidc-keyless:
+    def: "GitHub/Cloud Run authenticate to GCP via OIDC Workload Identity Federation — no static service-account keys anywhere."
+    sot: "ADR-0008; facts.secrets"
+  byok:
+    def: "Bring-Your-Own-Key sovereign identity — tenants supply their own provider keys, held in GCP Secret Manager, never co-mingled."
+    sot: "heady-sovereign-identity-byok"
+  reserve-commit-billing:
+    def: "Reserve a thought-budget out-of-band, commit actual cost on completion — no DB-lock latency on the hot path."
+    sot: "REBUILD_PLAN_V2.md section 12"
+  fibonacci-tiers:
+    def: "Subscription pricing on Fibonacci dollars: Trial / Seed $89 / Grow $233 / Scale $610."
+    sot: "REBUILD_PLAN_V2.md section 12"
+  heady-coin:
+    def: "Heady's token-economics unit (staking, ledger, Merkle-anchored) for per-thought micro-transactions with phi-multipliers."
+    sot: "heady-fintech-trading"
+  law-07:
+    def: "The auto-success law — a 135-task self-completion cycle the orchestrator drives toward done-state."
+    sot: "AG-05; heady-latent-os"
+  archetype:
+    def: "An animal-cognitive-function reasoning layer (the archetype set) used to shape persona reasoning."
+    sot: "AG-08; docs/compendium/02"
+  a2a:
+    def: "Agent-to-Agent protocol — inter-agent messaging and handoffs, carried over the NATS event bus."
+    sot: "heady-a2a-protocol; ADR-0020"
+  webcontainer:
+    def: "WASM WebContainers — AI-generated code runs in the browser sandbox, not Cloud Run containers."
+    sot: "AGENTS.md; ADR-0021"
+  tenant-namespace:
+    def: "Redis/KV keys are always namespaced tenant:{id}:* — no cross-tenant key collisions."
+    sot: "AGENTS.md #7"
+# ── The 8 cognitive agents (HeadySwarm roles). sot: heady-agent-orchestration ──
+agents:
+  Alpha: "Strategic lead — sets objective, decomposes, and routes work across the swarm."
+  Risk: "Risk assessment — scores downside, exposure, and blast radius before action."
+  Execution: "Task execution — carries out the planned work units and reports results."
+  Sentinel: "Monitoring and security watch — observes health, anomalies, and threats."
+  Compliance: "Governance and RBAC — enforces policy, permissions, and audit."
+  Data: "Data and memory operations — retrieval, embedding, and persistence."
+  View: "UI / projection — renders state and surfaces to human-facing views."
+  Bridge-Builder: "Integration and inter-agent connection — wires services and mediates handoffs."
+# ── HeadyBee worker roles (one lifecycle-bound worker per domain). sot: heady-bee-swarm-ops ──
+bees:
+  agents-bee: "Manages agent definitions and lifecycles."
+  auth-provider-bee: "Onboards and wires OAuth/API-key providers."
+  auto-success-bee: "Drives the LAW-07 auto-success task cycle."
+  brain-bee: "Cognitive and reasoning coordination worker."
+  config-bee: "Configuration management and validation."
+  connectors-bee: "Builds and maintains external connectors."
+  creative-bee: "Creative and generative content work (incl. MIDI)."
+  deployment-bee: "Deploys services to Cloud Run / Cloudflare."
+  device-provisioner-bee: "Provisions and bridges cross-device surfaces."
+  documentation-bee: "Generates and hydrates documentation."
+  engines-bee: "Maintains the latent-OS engines (pipeline, evolution)."
+  governance-bee: "Audit, compliance, and permission enforcement."
+  heady-bee: "The base/generic bee for scouting and foraging tasks."
+  health-bee: "Health checks and uptime monitoring."
+  intelligence-bee: "Analytics and intelligence synthesis."
+  lifecycle-bee: "Manages worker spawn and retire lifecycles."
+  mcp-bee: "Manages MCP servers and tool surfaces."
+  memory-bee: "Vector memory store, search, and embed operations."
+  middleware-bee: "HTTP middleware (CORS, rate-limit, headers)."
+  midi-bee: "MIDI transport and creative-music bridging."
+  ops-bee: "General operations and maintenance."
+  orchestration-bee: "Coordinates multi-agent DAG execution."
+  pipeline-bee: "Runs the staged HCFP pipeline."
+  providers-bee: "Manages AI provider routing and keys."
+  refactor-bee: "Performs code refactoring and codemods."
+  resilience-bee: "Circuit breakers, bulkheads, and fallbacks."
+  routes-bee: "Generates and validates API routes."
+  security-bee: "Security review — secrets, fail-closed, auth (also an agent gate)."
+  services-bee: "Scaffolds and maintains Latent-pattern services."
+  sync-projection-bee: "Maintains projections and the sync fabric."
+  telemetry-bee: "OTel, Sentry, and Langfuse instrumentation."
+  trading-bee: "Apex trading and FinOps logic."
+  ulti-bee: "Multi-capability fallback worker."
+  vector-ops-bee: "Low-level vector index operations."
+  vector-template-bee: "Manages vector and projection templates."

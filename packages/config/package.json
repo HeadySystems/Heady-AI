@@ -1,0 +1,16 @@
+{
+  "name": "@heady/config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady config — facts.yaml golden-record loader + validation + fail-closed env access. Single source of derived facts (DX-01).",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/shared": "workspace:*" },
+  "keywords": ["heady", "config", "facts", "golden-record", "env", "yaml"]
+}

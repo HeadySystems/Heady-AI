@@ -3,8 +3,14 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady trust-boundary primitives — fail-closed authz, HMAC request signing, RBAC, CSP, prompt-injection scan. ⚠️ PATENT zone.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/security-mesh'",
-    "test": "echo 'No tests in @heady/security-mesh'"
-  }
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/phi-math": "workspace:*" },
+  "keywords": ["heady", "security", "authz", "hmac", "rbac", "csp", "fail-closed", "patent"]
 }

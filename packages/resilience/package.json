@@ -1,0 +1,16 @@
+{
+  "name": "@heady/resilience",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady resilience — circuit breaker, φ-backoff retry, timeout, bulkhead, graceful shutdown.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/phi-math": "workspace:*", "@heady/shared": "workspace:*" },
+  "keywords": ["heady", "resilience", "circuit-breaker", "retry", "bulkhead", "phi-backoff"]
+}

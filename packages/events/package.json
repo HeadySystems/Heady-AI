@@ -1,0 +1,16 @@
+{
+  "name": "@heady/events",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady typed event bus — subject taxonomy, NATS-style wildcard routing, in-memory bus, outbox projection.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/shared": "workspace:*" },
+  "keywords": ["heady", "events", "nats", "pub-sub", "event-bus", "outbox"]
+}

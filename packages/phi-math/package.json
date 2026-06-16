@@ -3,8 +3,15 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady φ-math foundation — golden-ratio constants, Fibonacci, φ-backoff, CSL thresholds. Zero magic numbers.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/phi-math'",
-    "test": "echo 'No tests in @heady/phi-math'"
-  }
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "phi", "golden-ratio", "fibonacci", "csl", "constants"]
 }

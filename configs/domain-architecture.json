@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "domains": [
+    {
+      "name": "headyme.com",
+      "type": "brand-hub",
+      "purpose": "OS hub, onboarding and developer portal",
+      "canonicalHost": "headyme.com",
+      "redirects": ["www.headyme.com"],
+      "ssl": true,
+      "oauthCallbacks": ["https://auth.headysystems.com/oauth/callback/headyme"]
+    },
+    {
+      "name": "headysystems.com",
+      "type": "docs-status",
+      "purpose": "Documentation and node status page",
+      "canonicalHost": "headysystems.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headyconnection.org",
+      "type": "nonprofit",
+      "purpose": "501(c)(3) community programs and grants",
+      "canonicalHost": "headyconnection.org",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headybuddy.com",
+      "type": "companion",
+      "purpose": "HeadyBuddy companion user interface",
+      "canonicalHost": "headybuddy.com",
+      "ssl": true,
+      "oauthCallbacks": ["https://auth.headysystems.com/oauth/callback/headybuddy"]
+    },
+    {
+      "name": "headymcp.com",
+      "type": "mcp-hub",
+      "purpose": "Model Context Protocol registry and hub",
+      "canonicalHost": "headymcp.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headyio.com",
+      "type": "integration",
+      "purpose": "API integration dashboard",
+      "canonicalHost": "headyio.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headybot.com",
+      "type": "bots",
+      "purpose": "Bot orchestrations and task runners",
+      "canonicalHost": "headybot.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headyapi.com",
+      "type": "gateway",
+      "purpose": "API gateway routing service",
+      "canonicalHost": "headyapi.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headylens.com",
+      "type": "vision",
+      "purpose": "Vision, spatial models, and graphics",
+      "canonicalHost": "headylens.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
+      "name": "headyai.com",
+      "type": "core-ai",
+      "purpose": "Core AI model console and arena",
+      "canonicalHost": "headyai.com",
+      "ssl": true,
+      "oauthCallbacks": ["https://auth.headysystems.com/oauth/callback/headyai"]
+    },
+    {
+      "name": "headyfinance.com",
+      "type": "finance",
+      "purpose": "Fintech options, macro, and ledger systems",
+      "canonicalHost": "headyfinance.com",
+      "ssl": true,
+      "oauthCallbacks": []
+    }
+  ],
+  "sharedAuthService": "auth.headysystems.com"
+}
