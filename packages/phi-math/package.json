@@ -1,0 +1,10 @@
+{
+  "name": "@heady/phi-math",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Nothing to build in @heady/phi-math'",
+    "test": "echo 'No tests in @heady/phi-math'"
+  }
+}

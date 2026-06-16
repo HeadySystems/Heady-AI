@@ -1,0 +1,207 @@
+{
+  "flow": "skills",
+  "transformVersion": "1.0.0",
+  "entries": {
+    "/home/headyme/Heady/dropzone/06-Skills-Library/23-heady-arena-productization.md": {
+      "target": ".agents/skills/heady-arena-productization/SKILL.md",
+      "sourceHash": "9ddbb825a7668b1b7d203ef6b598e30dd7f7e6cc7a09a83f9accf841dcbe71b7",
+      "outputHash": "fd4319b4c5b3b00011bd67379f6179a455472a289a82a7c14228f337cf372947",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/24-heady-buddy-permission-ops.md": {
+      "target": ".agents/skills/heady-buddy-permission-ops/SKILL.md",
+      "sourceHash": "be3e0a9e55530646c3c32969d081db1e369cd5deafa818862e562239c26cbeb2",
+      "outputHash": "03d23d9d3b0c0daa42386e09682c55b8647c751963bffc9810c69658f8d510a8",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/25-heady-cross-device-handoff.md": {
+      "target": ".agents/skills/heady-cross-device-handoff/SKILL.md",
+      "sourceHash": "c13e620aea51d2bca9fa6ae7a191d005e5cc38abb29b39996e2b05b4f02c1257",
+      "outputHash": "3149f47ee2c50f0e134d84ab947c9d3c8e01d688608b1fa4d262a22739029ab8",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/26-heady-feature-forge.md": {
+      "target": ".agents/skills/heady-feature-forge/SKILL.md",
+      "sourceHash": "718d270f5d350c4d8b52030d84a413a0760433801b538b54b48767518f95800c",
+      "outputHash": "c3459dc57dd459a1ce09aff58db9edf895a1c8edc94b0c0d6c13e8715fb94063",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/27-heady-liquid-module-design.md": {
+      "target": ".agents/skills/heady-liquid-module-design/SKILL.md",
+      "sourceHash": "babf8fd558c6d77234c8aecf6ebcb3c10390fb76c045ff2f42f935be4fafc67e",
+      "outputHash": "4ea0a46f7e9ad98e2892dba5fcd6e827e6c531548a2931f384bf68365f8a1b7d",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/28-heady-manager-surface-design.md": {
+      "target": ".agents/skills/heady-manager-surface-design/SKILL.md",
+      "sourceHash": "cbf9d9192dbb36c0ea9957d0f3671ffa5cb560c1ab045d5ce56b495c2e2d1ead",
+      "outputHash": "486712f172f268aa4415a9b2cfb24150632dee8f520b8e0643b935a05d3974ba",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/29-heady-memory-ledger-design.md": {
+      "target": ".agents/skills/heady-memory-ledger-design/SKILL.md",
+      "sourceHash": "319bb10a373492c617b49cbe1ec28994574d7ac9df856efa889592969792f5bf",
+      "outputHash": "895c952143f78acdb058a11ee2fa94192c955005f86a55a054bbd74384e9a56c",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/30-heady-projection-composer.md": {
+      "target": ".agents/skills/heady-projection-composer/SKILL.md",
+      "sourceHash": "1bf6be05b8f32074a81fa13752597365e634317393ee0793ef7c33af51ccd2b6",
+      "outputHash": "f6ff3239ab46127acc1233985bfb49579cd6e4a9f60e70a9e1be2537d11c915c",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/31-heady-skill-foundry.md": {
+      "target": ".agents/skills/heady-skill-foundry/SKILL.md",
+      "sourceHash": "5dd9da6b8bf6f91cc6376ecbd18a1380bf287ea068b5e8ac3274b50c1a17e8eb",
+      "outputHash": "7591bba036330c7e3a53cb5d4e7ce281416cadd6b2cb83611bcec916e25aec71",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/32-heady-trust-receipts.md": {
+      "target": ".agents/skills/heady-trust-receipts/SKILL.md",
+      "sourceHash": "c5100fdb425a68e7ad8728c44ef178362d2c143dcbdc96a0903f10d2018b6736",
+      "outputHash": "c8004f042bf14a153890352eb76408c706714b9ed5a09e519b9ee52fec3f12c1",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/33-heady-delegation-architect.md": {
+      "target": ".agents/skills/heady-delegation-architect/SKILL.md",
+      "sourceHash": "8aa31350c7196a8fc062ba33e3965aca9c072b4dbb2e64057ef76d2767bef89d",
+      "outputHash": "afb07297985416d78c0ce415cc3db8512b19b28b9f105c37b26407bcbb130489",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/34-heady-forensic-analyst.md": {
+      "target": ".agents/skills/heady-forensic-analyst/SKILL.md",
+      "sourceHash": "0324eff2b3574695af395d051f5ea045a53382076b1845cddcd66c141f7aef6e",
+      "outputHash": "ffe112a8d5ecaddc58345d5e4ea204535d8a07a41653d130d41bc26b7008fc2f",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/35-heady-narrative-engine.md": {
+      "target": ".agents/skills/heady-narrative-engine/SKILL.md",
+      "sourceHash": "7b749bfb6a35d4d109411588adaa53c15357a597410dfeab0cda42807a5ded08",
+      "outputHash": "20b9bee8321f758bde18c45757a360af6864f247078c6b39fa4d6e9f57e322b6",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/36-heady-resource-crystallizer.md": {
+      "target": ".agents/skills/heady-resource-crystallizer/SKILL.md",
+      "sourceHash": "f1b4318c1492c727f636ec73ffc1eb52ff74c2098a55eef426237fa06a95b6b8",
+      "outputHash": "fba268441e44508994c519ed8cccf00a6e065649be0986ddfb0789927d115337",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/37-heady-semantic-firewall.md": {
+      "target": ".agents/skills/heady-semantic-firewall/SKILL.md",
+      "sourceHash": "b09982641396b72ddc732bb74391e3a6ec1cbf11f202b69effe429309b33e2c5",
+      "outputHash": "0d939b35f24f7018199ee5f080f145c2000e93ad93fb35f2bae7086dcbe3f511",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/38-heady-swarm-evolution.md": {
+      "target": ".agents/skills/heady-swarm-evolution/SKILL.md",
+      "sourceHash": "3fd0322d25b7ac4194b2c070c2f6ed724c875878f0300462738b3c80a1ad947b",
+      "outputHash": "d31f9712e18fa95e041c1771b66425252c95d86353b8e0752e1349e5b3b228db",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/39-heady-synaptic-mesh.md": {
+      "target": ".agents/skills/heady-synaptic-mesh/SKILL.md",
+      "sourceHash": "d811ed9cef9b49459c100ae0352fcc605c6ab680758362b3c483722ee9aef8c0",
+      "outputHash": "8b029976ebb925fee0fd382f0ed3201d8e94fa277a62762b30dc5c6702c2f500",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/40-heady-hypothesis-lab.md": {
+      "target": ".agents/skills/heady-hypothesis-lab/SKILL.md",
+      "sourceHash": "76d9b8d7986c2adf7f5a9a421bd2b132e26a597b566687f19d76199cdd7cbf9d",
+      "outputHash": "8811453d9cf059ccd226aaceda33439fd867f7dd48cd9f6410ab6a79caca30d1",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/41-heady-knowledge-cartographer.md": {
+      "target": ".agents/skills/heady-knowledge-cartographer/SKILL.md",
+      "sourceHash": "f5d1a8533e19748b72382d87846eea43eef6052802831e486eee61abc4a7460d",
+      "outputHash": "58478f6145bffaafc53290714f8d7c858c27b4fc94b80ae075cc82204c289181",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/42-heady-living-dashboard.md": {
+      "target": ".agents/skills/heady-living-dashboard/SKILL.md",
+      "sourceHash": "440640b82f5206674da902e01b4753fc14784a3ab5fc7a313811bf74532bd194",
+      "outputHash": "eab3ecd9f08c8664a8abdfa256996eeee4a9422f7ab14da4ea2143fd18bb62a8",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/heady-agent-orchestration-SKILL.md": {
+      "target": ".agents/skills/heady-agent-orchestration/SKILL.md",
+      "sourceHash": "de6571a41c15417891110775e43a933a6c43084d761ea4a9c61a156a1265424e",
+      "outputHash": "5829c29aec99341064863f8df7f344bc0b1cd3862d05d3548c3da6663566fc89",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/heady-coding-standards-SKILL.md": {
+      "target": ".agents/skills/heady-coding-standards/SKILL.md",
+      "sourceHash": "0f275e2956a2ee0b1ba56e14f62c0f1547040073bfc750cd1a6d629e7bcfd17d",
+      "outputHash": "16019c1c89055c5819147d1fb6a7cd27ce4effbc1d8b6db20f4a54a053f5258e",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/heady-colab-runtime-SKILL.md": {
+      "target": ".agents/skills/heady-colab-runtime/SKILL.md",
+      "sourceHash": "b8800ba6831e38766ac5824c6dc941d5e672d70c486d79f8c224fa04b69eb33e",
+      "outputHash": "8c9a2112405705eb2e2decc7bf5ed2a89f8bfd1414fc77656c8ef3384ea2787a",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/heady-mcp-gateway-SKILL.md": {
+      "target": ".agents/skills/heady-mcp-gateway/SKILL.md",
+      "sourceHash": "0a52098e353cbae31f43686079e56451b97cf133e07209508cac2d80fd23fbef",
+      "outputHash": "ac09332aa2b1e8d2965c9b1bb454790dddc08f503d9423c9208f15bfe941b0f1",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    },
+    "/home/headyme/Heady/dropzone/06-Skills-Library/heady-trading-compliance-SKILL.md": {
+      "target": ".agents/skills/heady-trading-compliance/SKILL.md",
+      "sourceHash": "bb25a488a15b32ca71bc0ab264d41befec96dec3be7d936b3feaa7869e90a083",
+      "outputHash": "80f14797239426fbab2855c54158b982342b5d6e0c2117209a8dc6e7f7cd2a44",
+      "transformVersion": "1.0.0",
+      "state": "new",
+      "syncedAt": "2026-06-16T06:12:26.061Z"
+    }
+  },
+  "lastSyncAt": "2026-06-16T08:09:08.756Z"
+}

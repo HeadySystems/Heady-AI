@@ -1,0 +1,10 @@
+{
+  "name": "@heady/security-mesh",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Nothing to build in @heady/security-mesh'",
+    "test": "echo 'No tests in @heady/security-mesh'"
+  }
+}

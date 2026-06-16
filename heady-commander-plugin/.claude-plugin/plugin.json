@@ -1,0 +1,7 @@
+{
+  "schema_version": "1.0",
+  "id": "heady-latent-os-commander",
+  "name": "Heady Latent OS Commander",
+  "description": "Master orchestration plugin for Claude Desktop. Installs the Lion Persona and injects the AGENTS.md rule engine for the Heady environment.",
+  "author": "HeadySystems Inc."
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@heady/data-consistency",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Global data-consistency gate + legacy→rebuild sync system for the Heady rebuild.",
+  "bin": {
+    "heady-consistency": "src/cli.mjs",
+    "heady-sync": "src/sync.mjs"
+  },
+  "exports": {
+    "./check": "./src/cli.mjs",
+    "./checker": "./src/checker.mjs",
+    "./sync": "./src/sync.mjs"
+  },
+  "scripts": {
+    "check": "node src/cli.mjs",
+    "check:json": "node src/cli.mjs --json",
+    "sync": "node src/sync.mjs",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "consistency", "migration", "sync", "provenance", "governance"]
+}

@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-06-15",
+  "authority": "SOURCE_OF_TRUTH.md + locked decisions (ADR-0003 amended/R2, ADR-0015 embedding lock). AGENTS.md is the stale node and conforms to these, never the reverse. ADR 'Proposed' status labels do not weaken a decision already declared in SOURCE_OF_TRUTH or locked memory.",
+  "scope": {
+    "canonicalRoots": ["docs", "configs", "packages", "tooling"],
+    "canonicalFiles": ["AGENTS.md", "SOURCE_OF_TRUTH.md", "CLAUDE.md", "CLAUDE_MEMORY.md"],
+    "extendedRoots": [".agents"],
+    "exts": [".md", ".json", ".mjs", ".ts", ".js"],
+    "exclude": [
+      "node_modules",
+      "tooling/data-consistency",
+      ".git",
+      ".turbo",
+      "dist",
+      "artifacts",
+      ".firebase",
+      "docs/OPTIMAL_REBUILD_PLAN.md"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "EMBED-DIM-384",
+      "severity": "error",
+      "appliesTo": ["canonical", "extended"],
+      "authority": "ADR-0015 (embedding lock: @cf/baai/bge-small-en-v1.5, 384, mean) · SOURCE_OF_TRUTH",
+      "banned": "vector\\(\\s*1536\\s*\\)|VECTOR_DIM[A-Z_]*\\s*=\\s*1536|1536-?(?:dim|d)\\b(?![^\\n]*(?:full|CSL|reject|alternative|text-embedding|competitor|GTE|Qwen|OpenAI))",
+      "allow": "(?i)(quick\\s*/\\s*full|full\\s*CSL|384\\s*[/–-]\\s*1536|384d|1536[- ]?D? full|reject|alternative|text-embedding-3|competitor|self-hosted|GTE|Qwen|violat|drift|quarantine|\\bdrop\\b|supersed|older\\s+(?:flat\\s+)?lineage)",
+      "message": "Retrieval/storage embedding dimension must be 384 (vector(384)) per the bge-small-en-v1.5 lock (ADR-0015). 1536 is only legitimate as the CSL full-mode gating vector or as a rejected alternative — not as the pgvector storage dimension.",
+      "fix": "vector(384)"
+    },
+    {
+      "id": "QDRANT-DROPPED",
+      "severity": "error",
+      "appliesTo": ["canonical", "extended"],
+      "authority": "ADR-0003 amended (R2) · SOURCE_OF_TRUTH (\"not Vectorize, not Qdrant\")",
+      "banned": "\\bQdrant\\b",
+      "allow": "(?i)(drop|decommission|supersed|defer|reject|remov|competitor|provenance|\\bR2\\b|n[o']t?\\s+(?:add\\s+)?Qdrant|\\bno\\s+Qdrant|zero\\s+Qdrant|absent|unused|idle|reintroduc|benchmark|\\bgate|assumed|observed|\\bwas\\b|pinecone|weaviate|market|\\bvs\\b|evolution|antigravity plan|proposed a|chosen over|over\\s+Qdrant|optional|second\\s+vector\\s+engine|2nd\\s+vector\\s+engine|as-authority|deferred|Phase\\s*4|\\bP4\\b|Qdrant\\s+off)",
+      "message": "Qdrant is DROPPED (ADR-0003 amended / R2). It must not appear as a live tier, store, or write target. Authority = Neon pgvector; derived edge cache = Vectorize. Qdrant may only be named in historical/rejected/competitor context.",
+      "fix": null
+    },
+    {
+      "id": "PGVECTOR-SOLE-AUTHORITY",
+      "severity": "error",
+      "appliesTo": ["canonical"],
+      "authority": "ADR-0003 · SOURCE_OF_TRUTH (Retrieval/vectors = Neon pgvector)",
+      "banned": "(?i)Vectorize\\s+(?:is|=|as)\\s+(?:the\\s+)?(?:retrieval\\s+)?authorit",
+      "allow": "(?i)(not\\s+(?:an?\\s+)?authority|never\\s+(?:an?\\s+)?authority|derived|cache|reject|defer|benchmark|gate)",
+      "message": "Vectorize must never be declared a retrieval authority — it is a derived, reconstructible edge cache (dim-locked 384). pgvector is the sole retrieval authority (ADR-0003).",
+      "fix": null
+    },
+    {
+      "id": "EMBED-MODEL-LOCK",
+      "severity": "warn",
+      "appliesTo": ["canonical"],
+      "authority": "ADR-0015 · memory heady-store-and-stack-decisions",
+      "banned": "(?i)(text-embedding-3-large|text-embedding-ada|all-MiniLM)\\b",
+      "allow": "(?i)(reject|alternative|not\\s+used|legacy|provenance|was\\b|instead of|competitor|1536)",
+      "message": "The locked embedding model is @cf/baai/bge-small-en-v1.5 (384, mean). Other embedding models are only legitimate as named rejected alternatives.",
+      "fix": null
+    }
+  ],
+  "structural": {
+    "adrUniqueNumbers": true,
+    "supersededDocsNeedBanner": ["docs/OPTIMAL_REBUILD_PLAN.md"],
+    "supersededBannerPattern": "supersed",
+    "planningDocsMustExist": true,
+    "taskSourcesMustResolve": true,
+    "legacySourceSearchRoots": ["~/Heady", "~/workspace/Heady"]
+  }
+}

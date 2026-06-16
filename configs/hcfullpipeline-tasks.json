@@ -1,0 +1,47 @@
+{
+  "version": "1.0.1",
+  "taskCount": 4,
+  "lastFineTuned": "2026-06-15T12:00:00Z",
+  "tasks": [
+    {
+      "id": "SEC-001",
+      "category": "SECURITY",
+      "title": "Rotate Cloudflare and MCP credentials",
+      "description": "Remove committed auth material and rotate credentials per heady_current_state_handoff.md.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 2,
+      "source": "heady_current_state_handoff.md - Security Remediation"
+    },
+    {
+      "id": "SEC-002",
+      "category": "SECURITY",
+      "title": "Patch src/heady-conductor.js to fail closed",
+      "description": "Ensure privileged mutation routes fail closed in production when admin auth is missing.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 1,
+      "source": "heady_current_state_handoff.md - Security Workstream"
+    },
+    {
+      "id": "INFRA-001",
+      "category": "INFRASTRUCTURE",
+      "title": "Fix canary rollback targeting in CI/CD",
+      "description": "Fix .github/workflows/ci.yml canary rollback by capturing the stable Cloud Run revision before traffic shifting.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2,
+      "source": "heady_current_state_handoff.md - Deployment Workstream"
+    },
+    {
+      "id": "ARCH-001",
+      "category": "ARCHITECTURE",
+      "title": "Establish Projection Manifests",
+      "description": "Create machine-readable manifests for every satellite repo to resolve projection drift.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 4,
+      "source": "heady_current_state_handoff.md - Projection Workstream"
+    }
+  ]
+}

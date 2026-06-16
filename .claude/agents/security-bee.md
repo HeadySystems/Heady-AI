@@ -1,0 +1,1 @@
+../../.agents/agents/security-bee.md

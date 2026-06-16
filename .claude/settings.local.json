@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//tmp/**)",
+      "Bash(mkdir -p /tmp/heady-design)",
+      "Bash(rm -rf /tmp/heady-design)",
+      "Bash(unzip -o \"/home/headyme/workspace/Heady/dropzone/Heady MCP Console Design System.zip\")",
+      "Bash(python3 /tmp/gen_index.py)",
+      "Bash(python3 /tmp/fix_frontmatter.py)",
+      "Bash(python3 -)",
+      "Bash(node src/cli.mjs)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(awk '{print $NF}')",
+      "Bash(xargs cat)",
+      "Bash(git -C /home/headyme/Heady log --oneline --all)",
+      "Bash(git -C /home/headyme/Heady log --name-status --oneline --all -- \"sites/*.html\")",
+      "Bash(xargs -I{} bash -c 'echo \"$\\(ls -la {} 2>/dev/null | wc -l\\) {}\"')",
+      "Bash(sed -n '1,40p' packages/phi-math/src/*.mjs)",
+      "Bash(node --input-type=module -e \"import\\('./packages/embedding/src/core.mjs'\\).then\\(m=>console.log\\('core OK, LOCKED_MODEL=',m.LOCKED_MODEL.id,m.LOCKED_MODEL.dim\\)\\).catch\\(e=>console.log\\('ERR',e.message\\)\\)\")",
+      "Bash(node tooling/data-consistency/src/cli.mjs --json)",
+      "Bash(node tooling/data-consistency/src/cli.mjs)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(node tooling/data-consistency/src/cli.mjs --strict)",
+      "Bash(ls .github/workflows/)",
+      "Bash(grep -rln \"canary\\\\|rollback\\\\|update-traffic\\\\|to-revisions\" .github/workflows/)",
+      "Bash(sort -t: -k2 -n)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(awk '{print $9}')",
+      "Bash(xargs -I {} basename {})",
+      "Bash(node tooling/embed-corpus/src/cli.mjs --dry-run)",
+      "Bash(echo \"gate exit=$?\")",
+      "Bash(node tooling/embed-corpus/src/embed.mjs --dry-run)"
+    ]
+  }
+}

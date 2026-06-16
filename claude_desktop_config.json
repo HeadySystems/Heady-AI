@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "firebase-mcp": {
+      "command": "npx",
+      "args": ["-y", "firebase-mcp-server"]
+    },
+    "genkit-mcp": {
+      "command": "npx",
+      "args": ["-y", "genkit-mcp-server"]
+    },
+    "gitkraken": {
+      "command": "npx",
+      "args": ["-y", "@gitkraken/mcp-server"]
+    },
+    "heady-governance": {
+      "command": "node",
+      "args": ["/home/headyme/Heady-AI/packages/heady-governance/dist/mcp-server.js"]
+    },
+    "heady-memory": {
+      "command": "node",
+      "args": ["/home/headyme/Heady-AI/packages/heady-memory/dist/mcp-server.js"]
+    },
+    "heady-unified": {
+      "command": "node",
+      "args": ["/home/headyme/Heady-AI/packages/heady-unified/dist/mcp-server.js"]
+    }
+  }
+}
