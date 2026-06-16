@@ -35,7 +35,7 @@
       "appliesTo": ["canonical", "extended"],
       "authority": "ADR-0003 amended (R2) · SOURCE_OF_TRUTH (\"not Vectorize, not Qdrant\")",
       "banned": "\\bQdrant\\b",
-      "allow": "(?i)(drop|decommission|supersed|defer|reject|remov|competitor|provenance|\\bR2\\b|n[o']t?\\s+(?:add\\s+)?Qdrant|\\bno\\s+Qdrant|zero\\s+Qdrant|absent|unused|idle|reintroduc|benchmark|\\bgate|assumed|observed|\\bwas\\b|pinecone|weaviate|market|\\bvs\\b|evolution|antigravity plan|proposed a|chosen over|over\\s+Qdrant|optional|second\\s+vector\\s+engine|2nd\\s+vector\\s+engine|as-authority|deferred|Phase\\s*4|\\bP4\\b|Qdrant\\s+off)",
+      "allow": "(?i)(drop|decommission|supersed|defer|reject|remov|competitor|provenance|\\bR2\\b|n[o']t?\\s+(?:add\\s+)?Qdrant|\\bno\\s+Qdrant|zero\\s+Qdrant|absent|unused|idle|reintroduc|benchmark|\\bgate|assumed|observed|\\bwas\\b|pinecone|weaviate|market|\\bvs\\b|evolution|antigravity plan|proposed a|chosen over|over\\s+Qdrant|optional|second\\s+vector\\s+engine|2nd\\s+vector\\s+engine|as-authority|deferred|Phase\\s*4|\\bP4\\b|Qdrant\\s+off|e\\.g\\.?\\s+Qdrant|no\\s+external)",
       "message": "Qdrant is DROPPED (ADR-0003 amended / R2). It must not appear as a live tier, store, or write target. Authority = Neon pgvector; derived edge cache = Vectorize. Qdrant may only be named in historical/rejected/competitor context.",
       "fix": null
     },

@@ -74,6 +74,30 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 - **Fallback Chain:** Every critical function has a fallback. Never single point of failure.
 - **Circuit Breaker:** 5 failures → open, φ-backoff (1,618,034µs base), probe after 30s.
 
+## Systemic Services & MCP Tool Governance
+
+All system-level services and MCP tools are classified into **Permanent (Mandatory)** and **Optional (Discretionary)** categories. All agents must default to executing through the permanent stack unless a fallback path is explicitly triggered.
+
+### Permanent Systemic Services
+* **HeadyAutoContext (5-Pass Middleware):** Ubiquitous and mandatory. Runs automatically prior to any reasoning stage to build grounded workspace context.
+* **HeadyEventBus (NATS):** Authoritative inter-service messaging channel (`agent.coder.*`). Standard pub/sub communication is permanent.
+* **HeadyVault & GCP Secret Manager:** Canonical keyless secret resolver (OIDC). Direct credential storage in code or `.env` files is strictly blocked.
+* **Neon PostgreSQL & pgvector:** Authoritative storage and semantic memory retriever. No external DB/vector stores (e.g. Qdrant) may serve as source of truth.
+* **SSE Client Sync:** Authoritative Server-Sent Events channel for UI synchronization.
+
+### Mandatory MCP Tool Invocations
+Agents **must** invoke these tools on specific execution triggers:
+* **Context Mutation (`heady_autocontext_enrich`):** Call immediately when establishing new project invariants, new service routes, or secret metadata.
+* **Context Diagnostics (`heady_autocontext_history`):** Query immediately during debugging or when a confidence check (`phiGATE`) fails.
+* **Policy Compliance (`heady_governance_enforce`):** Call prior to code submission, PR creation, or canary deployment to verify rule conformance.
+* **Workspace Structuring (`heady_project_tree` & `heady_env_audit`):** Call on startup to establish monorepo scope and environmental variables.
+
+### Optional & Discretionary Services
+* **Perplexity Sonar Search (`perplexity_ask` / HeadyResearch):** Optional. Fallback for external web grounding when local documentation is insufficient.
+* **React UI Canvas:** Optional. Strictly allowed for advanced graphic canvases/dashboards; standard UI must use Vanilla Web Components.
+* **WASM WebContainer Sandbox:** Optional. Used strictly for running client-side previews of AI-generated widgets in-browser.
+* **Integration Connectors (Slack, Cloudflare Pages, etc.):** Optional. Invoked selectively based on targeted distribution workflows.
+
 ## Patent Lock Zones
 
 Files marked with `⚠️ PATENT LOCK` require ARBITER swarm review before modification.

@@ -5,16 +5,43 @@
 // ║  artifacts — never fabricated). © 2026 HeadySystems — E. Haywood   ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { readFileSync, statSync, readdirSync } from 'node:fs';
+import { join, resolve, normalize } from 'node:path';
 import { FIB } from '../../phi-math/src/index.mjs';
 import { Codeflow } from './engine.mjs';
+import { verifyFirebaseToken } from './auth.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const PORT = Number(process.env.PORT) || 8000 + FIB[13]; // Cloud Run injects PORT; local default 8233
 const ORIGIN = process.env.CODEFLOW_ORIGIN || '*';
-const TOKEN = process.env.CODEFLOW_TOKEN || ''; // when set, POST routes require Bearer (fail-closed)
+const TOKEN = process.env.CODEFLOW_TOKEN || ''; // optional service-to-service bearer (fail-closed when set)
 const cf = new Codeflow({ root: ROOT });
+
+// Resolve the caller to a VERIFIED principal — a Firebase ID token (preferred) or the service token.
+// Returns null when no valid credential is presented (→ 401). Never trusts a client-sent identity.
+async function principal(req) {
+  const authz = req.headers.authorization || '';
+  if (!authz.startsWith('Bearer ')) return TOKEN ? null : { email: 'anonymous:dev', service: true };
+  const tok = authz.slice(7);
+  if (TOKEN && tok === TOKEN) return { email: 'service:token', service: true };
+  try { const v = await verifyFirebaseToken(tok); return { email: v.email || v.uid, service: false }; }
+  catch { return null; }
+}
+
+// Read-only, path-safe codebase browser. Denies VCS/deps/derived/secret locations.
+const DENY = /(^|\/)(\.git|node_modules|\.data|dist|\.turbo|\.env)/;
+function browse(rel) {
+  const norm = normalize(rel || '.');
+  if (norm.startsWith('..') || DENY.test(norm)) throw new Error('path not browsable');
+  const abs = join(ROOT, norm);
+  if (!abs.startsWith(ROOT)) throw new Error('escapes repo');
+  const st = statSync(abs);
+  if (st.isDirectory()) {
+    return { type: 'dir', path: norm, entries: readdirSync(abs, { withFileTypes: true }).filter((e) => !DENY.test(e.name)).map((e) => ({ name: e.name, type: e.isDirectory() ? 'dir' : 'file' })) };
+  }
+  if (st.size > FIB[16] * 1024) throw new Error('file too large');
+  return { type: 'file', path: norm, content: readFileSync(abs, 'utf8') };
+}
 const log = (level, msg, f = {}) => process.stdout.write(`${JSON.stringify({ t: 'codeflow-api', level, msg, ...f })}\n`);
 
 const readJson = (rel) => { try { return JSON.parse(readFileSync(join(ROOT, rel), 'utf8')); } catch { return null; } };
@@ -46,7 +73,6 @@ function send(res, code, body) {
 }
 
 const body = (req) => new Promise((ok) => { let d = ''; req.on('data', (c) => { d += c; }); req.on('end', () => { try { ok(d ? JSON.parse(d) : {}); } catch { ok({}); } }); });
-const authed = (req) => !TOKEN || req.headers.authorization === `Bearer ${TOKEN}`;
 
 const server = createServer(async (req, res) => {
   try {
@@ -60,16 +86,22 @@ const server = createServer(async (req, res) => {
     if (req.method === 'GET' && seg[0] === 'codeflow' && seg[1] === 'proposals' && seg[2]) {
       return send(res, 200, { proposal: cf.get(seg[2]), history: cf.history(seg[2]) });
     }
-    // mutations — gated
+    // codebase browser — read-only but reveals source → require a verified principal
+    if (req.method === 'GET' && path === '/api/files') {
+      if (!(await principal(req))) return send(res, 401, { error: 'unauthorized' });
+      return send(res, 200, browse(url.searchParams.get('path') || '.'));
+    }
+    // mutations — verified principal drives the actor/approver identity (never client-claimed)
     if (req.method === 'POST') {
-      if (!authed(req)) return send(res, 401, { error: 'unauthorized' });
+      const who = await principal(req);
+      if (!who) return send(res, 401, { error: 'unauthorized' });
       const b = await body(req);
-      if (path === '/codeflow/proposals') return send(res, 201, cf.submit(b));
+      if (path === '/codeflow/proposals') return send(res, 201, cf.submit({ ...b, actor: who.email }));
       if (seg[0] === 'codeflow' && seg[1] === 'proposals' && seg[2]) {
         const id = seg[2]; const action = seg[3];
         if (action === 'evaluate') return send(res, 200, cf.evaluate(id));
-        if (action === 'approve') return send(res, 200, cf.approve(id, b));
-        if (action === 'reject') return send(res, 200, cf.reject(id, b));
+        if (action === 'approve') return send(res, 200, cf.approve(id, { approver: who.email, human: !who.service }));
+        if (action === 'reject') return send(res, 200, cf.reject(id, { approver: who.email, reason: b.reason }));
         if (action === 'apply') return send(res, 200, cf.apply(id));
         if (action === 'rollback') return send(res, 200, cf.rollback(id));
       }
