@@ -235,6 +235,22 @@ button.small {
   background: #2ed573;
   box-shadow: 0 0 8px rgba(46, 213, 115, 0.6);
 }
+.status-indicator.alert { color: #ffb020; }
+.status-indicator.alert::before { background: #ffb020; box-shadow: 0 0 8px rgba(255, 176, 32, 0.6); }
+.status-indicator.offline { color: #ff4757; }
+.status-indicator.offline::before { background: #ff4757; box-shadow: 0 0 8px rgba(255, 71, 87, 0.6); }
+
+/* Governed Codeflow panel (φ-spaced) */
+.muted { color: rgba(255, 255, 255, 0.55); font-weight: 400; font-size: 0.8em; }
+.codeflow-panel form { display: flex; flex-direction: column; gap: 13px; margin: 13px 0; }
+.codeflow-panel textarea {
+  width: 100%; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(124, 94, 255, 0.3);
+  border-radius: 8px; color: inherit; padding: 8px; font-family: 'JetBrains Mono', monospace; resize: vertical;
+}
+.cf-verdict { margin-top: 21px; padding: 13px; }
+.cf-findings { margin: 8px 0; padding-left: 21px; color: #ff4757; font-size: 13px; }
+.cf-findings code { color: #ffb020; }
+.cf-actions { margin-top: 13px; display: flex; gap: 8px; }
 
 /* Loader */
 .loader-container {
