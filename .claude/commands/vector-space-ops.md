@@ -1,0 +1,1 @@
+../../.agents/workflows/vector-space-ops.md

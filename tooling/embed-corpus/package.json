@@ -1,0 +1,23 @@
+{
+  "name": "@heady/embed-corpus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Gate-then-embed corpus workflow: spec-sync → consistency gate (fail-closed) → Merkle trigger (ADR-0023) → embed (ADR-0024). Ensures files are at current Heady spec and globally consistent before any embedding.",
+  "bin": {
+    "heady-embed": "src/embed.mjs"
+  },
+  "exports": {
+    "./store": "./src/store.mjs",
+    "./embedder": "./src/embedder.mjs"
+  },
+  "scripts": {
+    "embed": "node src/embed.mjs",
+    "embed:dry": "node src/embed.mjs --dry-run",
+    "embed:json": "node src/embed.mjs --json",
+    "test": "node --test test/workflow.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "embedding", "merkle", "consistency", "workflow", "pgvector", "vectorize"]
+}

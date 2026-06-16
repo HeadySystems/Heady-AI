@@ -1,0 +1,10 @@
+{
+  "name": "@heady/db",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Nothing to build in @heady/db'",
+    "test": "echo 'No tests in @heady/db'"
+  }
+}

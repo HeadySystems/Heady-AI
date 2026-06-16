@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read(//home/headyme/Heady-AI/**)",
+      "Bash(pnpm:*)",
+      "Bash(pnpm turbo:*)",
+      "Bash(pnpm vitest:*)",
+      "Bash(pnpm eslint:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm prettier:*)",
+      "Bash(node --test:*)",
+      "Bash(node -e:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)"
+    ],
+    "deny": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/heady-rules.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

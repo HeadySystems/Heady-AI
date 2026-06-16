@@ -1,0 +1,21 @@
+name: heady-latent-os-commander
+version: "2.0.0"
+surfaces: [claude-desktop, cowork, ide]
+triggers:
+  keywords: ["heady", "rebuild", "latent os", "commander", "lion"]
+  contexts: ["when managing heady infrastructure", "when executing architecture decisions"]
+permissions:
+  required: ["read-files", "execute-code", "mcp-access"]
+  optional: ["write-files", "network-access"]
+capabilities:
+  - name: execute-csl-logic
+    description: Executes Continuous Semantic Logic (CSL) gates for decisive autonomous action.
+    parameters:
+      - name: threshold
+        type: number
+        required: false
+  - name: enforce-phi-scaling
+    description: Ensures all magical numbers and retries follow the Golden Ratio (phi=1.618).
+dependencies:
+  tools: ["firebase-mcp-server", "heady-memory", "heady-governance"]
+  models: ["claude-3-5-sonnet"]

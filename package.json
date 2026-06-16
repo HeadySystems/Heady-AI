@@ -1,0 +1,29 @@
+{  
+  "name": "heady-ai",  
+  "version": "3.0.0",  
+  "private": true,  
+  "description": "Canonical Monorepo Core for Heady's Latent Operating System",  
+  "engines": {  
+    "node": ">=22.0.0",  
+    "pnpm": ">=9.0.0"  
+  },  
+  "packageManager": "pnpm@9.15.9",  
+  "scripts": {  
+    "build": "turbo run build",  
+    "dev": "turbo run dev",  
+    "lint": "turbo run lint",  
+    "test": "turbo run test",  
+    "clean": "turbo run clean && rimraf node_modules",  
+    "format": "prettier --write \"**/*.{js,ts,json,md,yml,yaml}\"",  
+    "security:scan": "turbo run security:scan"  
+  },  
+  "devDependencies": {  
+    "turbo": "^2.0.0",  
+    "prettier": "^3.0.0",  
+    "typescript": "^5.4.0",  
+    "rimraf": "^5.0.0"  
+  },  
+  "dependencies": {  
+    "pnpm": "^9.1.0"  
+  }  
+}
