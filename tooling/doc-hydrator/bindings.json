@@ -1,0 +1,6 @@
+{
+  "infra": {
+    "type": "exec",
+    "command": "node scripts/fetch-infra-state.mjs"
+  }
+}

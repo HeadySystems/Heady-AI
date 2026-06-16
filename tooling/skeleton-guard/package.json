@@ -1,0 +1,16 @@
+{
+  "name": "@heady/skeleton-guard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "File placement verification — ensures every file lands in a recognized scaffold location per skeleton.json.",
+  "scripts": {
+    "verify": "node verify-placement.mjs",
+    "audit": "node audit-orphans.mjs",
+    "audit:json": "node audit-orphans.mjs --json",
+    "audit:verbose": "node audit-orphans.mjs --verbose"
+  },
+  "keywords": ["skeleton", "guard", "placement", "audit", "orphan", "scaffold"],
+  "author": "HeadySystems Inc.",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,79 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ facts.yaml — golden record (single source of derived facts)║
+# ║  Loaded/validated by @heady/config. Derived artifacts (README       ║
+# ║  badges, CI matrices, OpenAPI servers) generate FROM this file.     ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+# ╚══════════════════════════════════════════════════════════════════╝
+schema: facts.v1
+company:
+  legal_name: HeadySystems Inc.
+  trade_name: Heady
+  founder: Eric Anthony Haywood
+  patents_provisional: 60
+product:
+  name: heady-ai
+  version: 3.0.0
+  status: pre-launch
+platform:
+  package_manager: pnpm
+  pnpm_version: 9.15.9
+  node_version: 22
+  monorepo_tool: turborepo
+  module_system: esm
+  phi: 1.618033988749895
+registries:
+  npm_scope: "@heady"
+stores:
+  system_of_record: neon-postgres
+  retrieval_authority: pgvector
+  derived_edge_cache: vectorize
+  cache: upstash-redis
+  dropped:
+    - qdrant
+embedding:
+  model: "@cf/baai/bge-small-en-v1.5"
+  dim: 384
+  pooling: mean
+model_layer:
+  egress_chokepoint: cloudflare-ai-gateway
+  edge_tier: workers-ai
+  fallback_chain:
+    - workers-ai
+    - cloud-run
+    - colab
+event_bus: nats
+ui_sync: sse-http2
+durable_execution: cloudflare-workflows
+agent_harness: vercel-ai-sdk-v6
+auth: firebase-auth
+secrets: gcp-secret-manager
+supply_chain:
+  primary: renovate
+  security_only: dependabot
+deploy_targets:
+  origin:
+    kind: gcp-cloud-run
+    region: us-central1
+    node: 22
+  edge:
+    kind: cloudflare-workers
+  pages:
+    kind: cloudflare-pages
+pipeline:
+  stages:
+    - lint
+    - typecheck
+    - test
+    - build
+    - scan
+    - deploy
+  required_checks:
+    - lint
+    - typecheck
+    - test
+    - scan
+consistency:
+  escalation_threshold: 3
+legacy:
+  source_root: "~/Heady"
+  disposition_doc: docs/LEGACY_STACK_COMPONENT_DISPOSITION.md

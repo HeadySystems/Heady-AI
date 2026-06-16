@@ -42,7 +42,7 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `text` | string | **required** | Text to generate embeddings for |
-| `model` | string | `nomic-embed-text` | Embedding model |
+| `model` | string | `@cf/baai/bge-small-en-v1.5` | Embedding model (locked, ADR-0015) |
 
 ### Heady™Soul — `mcp_Heady_heady_soul`
 

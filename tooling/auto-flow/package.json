@@ -1,0 +1,20 @@
+{
+  "name": "@heady/auto-flow",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Auto-Flow preflight + flow definitions — catalog scan and CSL-gated skill/workflow shortlist before a task.",
+  "bin": {
+    "heady-preflight": "preflight.mjs"
+  },
+  "exports": {
+    "./preflight": "./preflight.mjs",
+    "./flows/skill-preflight": "./flows/skill-preflight.flow.mjs"
+  },
+  "scripts": {
+    "preflight": "node preflight.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "auto-flow", "preflight", "orchestration", "csl", "skills"]
+}

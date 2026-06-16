@@ -1,0 +1,24 @@
+{
+  "id": "flow-doc-hydrator",
+  "name": "Document Hydrator Auto-Flow",
+  "description": "Periodically recompiles compendium documents with live ecosystem data to prevent stale state.",
+  "trigger": {
+    "type": "cron",
+    "schedule": "0 0 * * *"
+  },
+  "condition": {
+    "type": "always_true"
+  },
+  "action": {
+    "type": "execute_script",
+    "script": "node tooling/doc-hydrator/hydrate.mjs",
+    "cwd": "${WORKSPACE_ROOT}"
+  },
+  "on_success": {
+    "log": "Compendium documents successfully hydrated."
+  },
+  "on_failure": {
+    "log": "Failed to hydrate documents.",
+    "alert": "csl-violation"
+  }
+}

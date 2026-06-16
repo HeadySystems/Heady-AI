@@ -1,0 +1,17 @@
+name: heady-data-consistency
+version: "1.0.0"
+surfaces: [ide, buddy, web]
+triggers:
+  keywords: ["consistency", "hygiene", "trace", "hydrate", "merkle", "cslGate", "localhost"]
+  contexts: ["when-coding", "when-auditing", "when-reviewing"]
+permissions:
+  required: ["read-files", "execute-code"]
+  optional: ["write-files"]
+capabilities:
+  - name: hydrate-docs
+    description: Hydrates compendium markdown documents from Handlebars templates using live parameters.
+  - name: run-trace
+    description: Executes NATS event, OpenAPI path, domain hygiene, Merkle signature mapping, and spec research queries.
+dependencies:
+  tools: ["heady-mcp", "heady-brain"]
+  models: ["@cf/baai/bge-small-en-v1.5"]

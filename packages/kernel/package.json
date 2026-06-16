@@ -1,0 +1,20 @@
+{
+  "name": "@heady/kernel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady microkernel — Latent Service Pattern {start,stop,health,metrics}, dependency-ordered boot, aggregate health/metrics, graceful shutdown.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/shared": "workspace:*",
+    "@heady/resilience": "workspace:*",
+    "@heady/logger": "workspace:*"
+  },
+  "keywords": ["heady", "kernel", "microkernel", "service", "lifecycle", "boot"]
+}

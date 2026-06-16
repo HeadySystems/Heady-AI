@@ -16,6 +16,7 @@
   "scripts": {
     "check": "node src/cli.mjs",
     "check:json": "node src/cli.mjs --json",
+    "trace": "node src/trace-routes.mjs && node src/trace-concepts.mjs && node src/domain-guard.mjs && node src/semantic-gate.mjs && node src/research-binder.mjs",
     "sync": "node src/sync.mjs",
     "test": "node --test",
     "lint": "echo \"(lint wired at repo level)\"",

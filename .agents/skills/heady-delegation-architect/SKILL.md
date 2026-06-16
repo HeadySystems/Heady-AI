@@ -21,7 +21,7 @@
 <!-- HEADY_BRAND:END
 -->
 ---
-name: delegation-architect
+name: heady-delegation-architect
 description: >
   Delegation Architect for Heady — intelligent orchestration of Perplexity Computer subagents,
   cron jobs, and external tools specifically optimized for Heady ecosystem work. Knows which

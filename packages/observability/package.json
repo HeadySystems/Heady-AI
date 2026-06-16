@@ -1,0 +1,16 @@
+{
+  "name": "@heady/observability",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady observability — vendor-neutral metrics + spans; OpenTelemetry + Sentry + Langfuse exporters wire on top.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/logger": "workspace:*" },
+  "keywords": ["heady", "observability", "opentelemetry", "sentry", "langfuse", "metrics"]
+}

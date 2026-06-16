@@ -3,8 +3,13 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
+  "description": "Heady system of record — Neon Postgres + pgvector (384-dim) schema, transactional outbox, idempotency helpers.",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
   "scripts": {
-    "build": "echo 'Nothing to build in @heady/db'",
-    "test": "echo 'No tests in @heady/db'"
-  }
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "postgres", "neon", "pgvector", "outbox", "idempotency", "drizzle"]
 }

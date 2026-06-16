@@ -25,7 +25,7 @@
       "appliesTo": ["canonical", "extended"],
       "authority": "ADR-0015 (embedding lock: @cf/baai/bge-small-en-v1.5, 384, mean) · SOURCE_OF_TRUTH",
       "banned": "vector\\(\\s*1536\\s*\\)|VECTOR_DIM[A-Z_]*\\s*=\\s*1536|1536-?(?:dim|d)\\b(?![^\\n]*(?:full|CSL|reject|alternative|text-embedding|competitor|GTE|Qwen|OpenAI))",
-      "allow": "(?i)(quick\\s*/\\s*full|full\\s*CSL|384\\s*[/–-]\\s*1536|384d|1536[- ]?D? full|reject|alternative|text-embedding-3|competitor|self-hosted|GTE|Qwen|violat|drift|quarantine|\\bdrop\\b|supersed|older\\s+(?:flat\\s+)?lineage)",
+      "allow": "(?i)(quick\\s*/\\s*full|full\\s*CSL|384\\s*[/–-]\\s*1536|384d|1536[- ]?D? full|reject|alternative|text-embedding-3|competitor|self-hosted|GTE|Qwen|violat|drift|quarantine|\\bdrop\\b|supersed|older\\s+(?:flat\\s+)?lineage|rewrite)",
       "message": "Retrieval/storage embedding dimension must be 384 (vector(384)) per the bge-small-en-v1.5 lock (ADR-0015). 1536 is only legitimate as the CSL full-mode gating vector or as a rejected alternative — not as the pgvector storage dimension.",
       "fix": "vector(384)"
     },
@@ -52,11 +52,21 @@
     {
       "id": "EMBED-MODEL-LOCK",
       "severity": "warn",
-      "appliesTo": ["canonical"],
+      "appliesTo": ["canonical", "extended"],
       "authority": "ADR-0015 · memory heady-store-and-stack-decisions",
-      "banned": "(?i)(text-embedding-3-large|text-embedding-ada|all-MiniLM)\\b",
-      "allow": "(?i)(reject|alternative|not\\s+used|legacy|provenance|was\\b|instead of|competitor|1536)",
-      "message": "The locked embedding model is @cf/baai/bge-small-en-v1.5 (384, mean). Other embedding models are only legitimate as named rejected alternatives.",
+      "banned": "(?i)(text-embedding-3-large|text-embedding-ada|all-MiniLM|nomic[- ]?embed|\\bjina\\b|\\bvoyage\\b|cohere\\s+embed)\\b",
+      "allow": "(?i)(reject|alternative|not\\s+used|legacy|provenance|was\\b|instead of|competitor|benchmark|\\bvs\\b|market|comparison|deprecated|superseded|1536)",
+      "message": "The locked embedding model is @cf/baai/bge-small-en-v1.5 (384, mean). Other embedding models/providers are only legitimate as named rejected alternatives or competitor references — not as live embedders.",
+      "fix": null
+    },
+    {
+      "id": "STALE-MECHANISM",
+      "severity": "warn",
+      "appliesTo": ["extended"],
+      "authority": "REBUILD_PLAN_V2 / locked stack — pgvector authority (not FAISS), CF Workflows (no Temporal), CF Workers/Cloud Run (no tunnels), CF AI Gateway (Colab = fallback tail only)",
+      "banned": "(\\bFAISS\\b|\\bngrok\\b|[Cc]loudflare[- ][Tt]unnel|\\bray\\.init\\b|[Rr]ay\\s+cluster|(?<![-\\w])Temporal\\b(?!\\s+(?:[Ii]ndex|[Qq]uer|[Rr]ecency|[Pp]attern|[Cc]oherence|[Aa]warenes|[Dd]ecay|[Rr]esolution|[Gg]raph|[Mm]emory|[Dd]ata|[Dd]ynamic|[Aa]spect|[Rr]elationship|[Cc]ontext|[Pp]roximit|[Ss]cop)))",
+      "allow": "(?i)(reject|instead of|\\bno\\s+Temporal\\b|not\\s+Temporal|without|legacy|superseded|deprecated|migrat|\\bvs\\b|competitor|comparison|alternative|provenance|was\\b|dropped|absent)",
+      "message": "Stale/superseded mechanism for the locked stack. pgvector is the vector authority (not FAISS); orchestration is Cloudflare Workflows (no Temporal); exposure is CF Workers/Cloud Run (no ngrok/tunnels); Colab is the inference fallback tail behind the CF AI Gateway, not a primary fabric. Legitimate only in rejected/competitor/historical context.",
       "fix": null
     }
   ],

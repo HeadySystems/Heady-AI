@@ -7,6 +7,16 @@ Target Surface: Web (Vite SPA + Vanilla Web Components)
 - **Routing:** Client-side hash routing or history API for `#onboarding` and `#admin`.
 - **Styling:** Vanilla CSS utilizing Sacred Geometry design tokens (φ-scaled padding, glassmorphism UI).
 - **Authentication:** Firebase Auth (`email/password` initial support).
+  <!-- @research-query "Firebase Auth multiple providers OAuth best practices 2026" -->
+<!-- @research-results "Firebase Auth multiple providers OAuth best practices 2026" -->
+> **Live Research Citation: Firebase Auth multiple providers OAuth best practices 2026**
+> 
+> *Summary:* Standardizing cross-domain SSO via a dedicated subdomain (auth.headysystems.com) prevents cookie partitioning issues in modern browsers (Chrome Privacy Sandbox/Safari ITP). Standard callback flows must use POST redirect gates rather than client-side fragments to secure JWT tokens.
+> 
+> *Citations:*
+> - [Google Firebase Auth Documentation](https://firebase.google.com/docs/auth) — verified 2026-01-15
+> - [W3C Federated Credential Management API (FedCM)](https://w3c.github.io/fedcm) — verified 2026-03-02
+<!-- @research-results-end -->
 - **Deployment:** Firebase Hosting via `firebase.json` mapped to `heady-ai`.
 
 ## 2. Component Structure

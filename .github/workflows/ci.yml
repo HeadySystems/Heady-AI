@@ -1,0 +1,53 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ CI — build/test + the coherence scan gate                  ║
+# ║  Stages mirror facts.pipeline (lint·typecheck·test·build·scan).    ║
+# ║  Actions are Renovate digest-pinned (facts.supply_chain.primary).  ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: lint · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.9 --activate
+      - name: install
+        run: pnpm install --frozen-lockfile
+      - name: lint
+        run: pnpm turbo run lint
+      - name: typecheck
+        run: pnpm turbo run typecheck
+      - name: test
+        run: pnpm turbo run test
+      - name: build
+        run: pnpm turbo run build
+
+  scan:
+    name: coherence gate (the OS of the OS)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Fail-closed structural gate: builds the System Map, regenerates the master
+      # variable registry, and blocks on any CONTRADICTION (two sources of truth disagree).
+      # Federates tooling/data-consistency as a content sub-gate. Exit 2 on contradiction.
+      - name: coherence all
+        run: node tooling/coherence/src/coherence.mjs all
+      # Generated-not-authored: the committed registry must match a fresh regeneration.
+      - name: variable-registry freshness
+        run: git diff --exit-code docs/HEADY_VARIABLE_REGISTRY.md

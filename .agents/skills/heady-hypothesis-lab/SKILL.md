@@ -21,7 +21,7 @@
 <!-- HEADY_BRAND:END
 -->
 ---
-name: hypothesis-lab
+name: heady-hypothesis-lab
 description: >
   Hypothesis Lab for Heady — structured experimentation framework for testing architectural
   decisions, comparing implementation approaches, benchmarking provider performance, and validating

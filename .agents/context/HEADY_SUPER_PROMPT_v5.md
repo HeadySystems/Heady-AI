@@ -578,7 +578,7 @@ const PHI = 1.618033988749895;       // Golden Ratio
 const PSI = 1 / PHI;                 // ≈ 0.618
 const PSI_SQ = PSI * PSI;           // ≈ 0.382
 const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987];
-const VECTOR_DIM = 384;              // Embedding dimensions (all-MiniLM-L6-v2)
+const VECTOR_DIM = 384;              // Embedding dimensions (@cf/baai/bge-small-en-v1.5, locked — ADR-0015)
 const VECTOR_DIM_LARGE = 1536;       // Full-mode (text-embedding-3-large)
 const CSL_GATES = {
   include: PSI_SQ,                   // ≈ 0.382 — minimum relevance to include

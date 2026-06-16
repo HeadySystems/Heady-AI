@@ -1,0 +1,11 @@
+{
+  "name": "@heady/doc-hydrator",
+  "version": "1.0.0",
+  "description": "Heady™ Document Hydrator - Live ecosystem state injection",
+  "type": "module",
+  "scripts": {
+    "hydrate": "node hydrate.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

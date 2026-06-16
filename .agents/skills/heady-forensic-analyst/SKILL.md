@@ -21,7 +21,7 @@
 <!-- HEADY_BRAND:END
 -->
 ---
-name: forensic-analyst
+name: heady-forensic-analyst
 description: >
   Forensic Analyst for Heady — deep investigation tool for debugging system failures, tracing
   data corruption, analyzing security incidents, dissecting performance regressions, and

@@ -119,7 +119,7 @@ Research         → Perplexity Sonar    → Claude Sonnet       → GPT-4o
 Documentation    → GPT-4o/HeadyCodex  → Claude Sonnet       → Gemini Pro
 Quick Tasks      → Groq Llama (edge)   → GPT-4o-mini        → Gemini Flash
 Creative         → Claude Opus/MUSE    → GPT-4o/NOVA        → Gemini Pro
-Embeddings       → Cloudflare Edge     → Nomic v2           → Local Ollama
+Embeddings       → Workers AI (bge-small-en-v1.5) → AI Gateway → Cloud Run (fallback tail)
 ```
 
 ### Resource Pool Allocation (Fibonacci Ratios)
@@ -424,7 +424,7 @@ Client Request
 
 Priority cascade: sovereignty → CSL-gated scoring → text length → cost budget → domain match
 
-Providers: Nomic v2 (768D, $0.05/M), Jina v3 (1024D, $0.018/M), Cohere v4 (128K ctx), Voyage 3 (best MTEB), BGE-M3 (free, hybrid), GTE-Qwen2 (free, self-hosted)
+Embedding: @cf/baai/bge-small-en-v1.5 (384-D, mean) via Workers AI — locked single provider (ADR-0015). All model egress flows through the Cloudflare AI Gateway. A second embedder is deferred to Phase-4, gated on a benchmark (ADR-0003).
 
 ---
 
@@ -583,7 +583,7 @@ Minimum assignment threshold: CSL_THRESHOLDS.LOW ≈ 0.691
 | 2 | LLM Inference & Agent Execution | A100 | 3302 |
 | 3 | Training, Fine-tuning & Analytics | TPU v2-8 | 3303 |
 
-Connected via Cloudflare Tunnel: vector.headyos.com, llm.headyos.com, train.headyos.com
+Connected via Cloudflare Workers + service bindings (no tunnels); all model egress through the Cloudflare AI Gateway; pgvector is the retrieval authority.
 
 ### Durable Agent State (Edge)
 

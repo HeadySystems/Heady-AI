@@ -1,0 +1,290 @@
+{
+  "version": "1.0.0",
+  "title": "Heady Legacy → Rebuild System Decomposition",
+  "generated_owner": "Eric Anthony Haywood",
+  "legacy_root": "/home/headyme/Heady",
+  "rebuild_root": "/home/headyme/Heady-AI",
+  "authority": "docs/LEGACY_STACK_COMPONENT_DISPOSITION.md + REBUILD_PLAN_V2.md + AGENTS.md",
+  "method": "docs/LEGACY_EXTRACTION_SYSTEM.md (the Extraction Engine consumes these rows)",
+  "global_excludes": [
+    "*/node_modules/*", "node_modules/*", "*/.git/*", ".git/*",
+    "*.log", "logs/*", "*/logs/*", "core.*", "*.core",
+    "data/*", "_archive/*", "archive/*", "_site/*", "*/dist/*", "dist/*",
+    "*/build/*", ".turbo/*", "*/.turbo/*", "*.zip", "tool_calls/*",
+    "*.lfs", "*.bin", "tmp/*",
+    ".env", ".env.*", "*/.env", "*/.env.*", "*.env", "*.env.*",
+    "*.pem", "*.key", "*.p12", "*.pfx", "*.keystore", "id_rsa*", "id_ed25519*",
+    "*serviceAccount*.json", "*service-account*.json", "credentials.json", "*/credentials.json"
+  ],
+  "blocked_secret_paths": [
+    "configs/api-keys.json", "config/api-keys.json",
+    "env", "env.local", "env.production", ".env", ".env.local", ".env.production",
+    "perplexity-build/.env.template"
+  ],
+  "blocked_secret_reason": "R-1 live Google/Firebase key + R-14 populated env files. Rotate-and-drop; never bundled (fail-closed).",
+  "groups": [
+    {
+      "id": "G01", "name": "phi-math-csl", "title": "φ-Math & CSL Core",
+      "phase": "P1", "depends_on": [], "patent_lock": true, "transfer_eligible": true,
+      "target": ["packages/phi-math", "packages/csl-engine"],
+      "rationale": "The mathematical differentiator. Foundation layer — everything depends on it.",
+      "components": [
+        { "id": "BE-04", "mark": "adapt", "name": "csl-engine-v2", "paths": ["shared/csl-engine-v2.js"], "target": "@heady/csl-engine" },
+        { "id": "BE-07", "mark": "adapt", "name": "shared-lib", "paths": ["shared"], "target": "@heady/shared (auth-mgr, bee-factory, encryption, CORS)" },
+        { "id": "AG-04", "mark": "integrate", "name": "phi-constants", "paths": ["maximum-potential/phi-constants.cjs"], "target": "@heady/phi-math" },
+        { "id": "DA-16", "mark": "integrate", "name": "sacred-geometry", "paths": ["sacred-geometry.js"], "target": "@heady/phi-math" },
+        { "id": "BZ-05", "mark": "adapt", "name": "vsa-integration", "paths": ["heady-vsa-integration"], "target": "@heady/csl-engine", "patent": "HS-058" },
+        { "id": "BE-08", "mark": "integrate", "name": "shared-ts", "paths": ["shared-ts"], "target": "@heady/shared" }
+      ]
+    },
+    {
+      "id": "G02", "name": "bee-swarm-runtime", "title": "Bee / Swarm Runtime & Orchestration",
+      "phase": "P2", "depends_on": ["G01", "G03"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["packages/bees", "packages/orchestration", "packages/engines"],
+      "rationale": "φ-math swarm engine: spawn→dispatch→consensus→fuse. The best runnable agent code.",
+      "components": [
+        { "id": "AG-01", "mark": "adapt", "name": "agents-swarm-engine", "paths": ["agents"], "target": "packages/bees" },
+        { "id": "AG-03", "mark": "integrate", "name": "liquid-nodes-basebee", "paths": ["maximum-potential/liquid-nodes"], "target": "packages/bees" },
+        { "id": "AG-05", "mark": "adapt", "name": "auto-success-engine", "paths": ["heady-10-10", "directives/source"], "target": "packages/orchestration" },
+        { "id": "AG-06", "mark": "adapt", "name": "hive-sdk", "paths": ["heady-hive-sdk"], "target": "packages/orchestration" },
+        { "id": "AG-02", "mark": "adapt", "name": "headybee-swarm-v3", "paths": ["agents/headybee-swarm.js"], "target": "packages/bees (salvage routing; drop Pinecone/Redis)" },
+        { "id": "AG-13", "mark": "adapt", "name": "heady-agents-defs", "paths": ["heady-agents"], "target": "AI SDK v6 agents (reuse personas; drop SDK wiring + localhost:3310)" }
+      ]
+    },
+    {
+      "id": "G03", "name": "data-memory-vector", "title": "Data / Memory / Vector / Projections",
+      "phase": "P1", "depends_on": ["G01"], "patent_lock": false, "transfer_eligible": true,
+      "r5_gated": true,
+      "target": ["packages/db", "packages/memory-stream", "packages/projections"],
+      "rationale": "Canonical pgvector(384) schema + φ-vector memory. DA-01 extraction is R-5-gated (verify live Neon).",
+      "components": [
+        { "id": "DA-01", "mark": "adapt", "name": "canonical-migrations", "paths": ["migrations"], "target": "packages/db", "gate": "R-5 verify \\dt heady_*" },
+        { "id": "DA-04", "mark": "defer", "name": "superseded-features", "paths": ["migrations/_superseded"], "target": "packages/db (0010+: projection_tables, graph_rag_schema only)" },
+        { "id": "DA-05", "mark": "adapt", "name": "db-infra-redis-pool", "paths": ["heady-db-infra"], "target": "T0 Redis/KV adapter" },
+        { "id": "DA-06", "mark": "adapt", "name": "vector-store", "paths": ["memory/vector-store.js"], "target": "Vectorize T2 cache" },
+        { "id": "DA-08", "mark": "adapt", "name": "projection-engine", "paths": ["memory/projection-engine.js"], "target": "packages/projections" },
+        { "id": "DA-11", "mark": "defer", "name": "projection-daemon", "paths": ["heady-projection"], "target": "projection service (later)" },
+        { "id": "DA-14", "mark": "adapt", "name": "registry-catalog", "paths": ["registry", "heady-registry.json"], "target": "service registry table" },
+        { "id": "DA-07", "mark": "adapt", "name": "embedding-pipeline-breaker", "paths": ["memory/embedding-pipeline.js"], "target": "single-provider CF embed (KEEP breaker only; drop fake-hash + multi-provider, R-4)" },
+        { "id": "BZ-07", "mark": "adapt", "name": "vector-db-rnd", "paths": ["heady-implementation"], "target": "db/migrations, packages/vector (only section1 pgvector/hybrid/graph-rag portable)" }
+      ]
+    },
+    {
+      "id": "G04", "name": "mcp-ai-gateway", "title": "MCP Servers / AI Gateway / Colab Fabric",
+      "phase": "P3", "depends_on": ["G01", "G03"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["packages/contracts", "headyme-portal", "model-gateway"],
+      "rationale": "The AI brain. All egress must reroute through CF AI Gateway (R-3) on port.",
+      "components": [
+        { "id": "MC-01", "mark": "adapt", "name": "heady-mcp-server-v6", "paths": ["mcp-servers/heady-mcp-server.js"], "target": "packages/contracts + MCP Console" },
+        { "id": "MC-06", "mark": "adapt", "name": "mcp-tool-services", "paths": ["mcp-servers/services", "mcp-servers/tool-schemas.js"], "target": "mcp-tools.json (regen via OpenAPI/Kubb)" },
+        { "id": "MC-04", "mark": "adapt", "name": "liquid-nodes-mcp", "paths": ["mcp-servers/liquid-nodes-mcp-server.js"], "target": "reroute via CF AI Gateway", "gate": "R-3 gateway bypass" },
+        { "id": "BE-09", "mark": "adapt", "name": "mcp-stdio-wrapper", "paths": ["backend"], "target": "CF/Cloud Run MCP entry + queue consumer" },
+        { "id": "MC-20", "mark": "adapt", "name": "connector-vault-proto", "paths": ["proto"], "target": "OpenAPI/Kubb (not raw gRPC); keyless OIDC + GCP SM" },
+        { "id": "MC-03", "mark": "adapt", "name": "mcp-domain-servers", "paths": ["mcp-servers/governance-mcp-server.js", "mcp-servers/intelligence-mcp-server.js", "mcp-servers/memory-mcp-server.js", "mcp-servers/orchestration-mcp-server.js"], "target": "contracts + MCP tools" },
+        { "id": "MC-08", "mark": "adapt", "name": "mcp-security-gateway", "paths": ["heady-mcp-security"], "target": "CF Worker gateway / security-bee" },
+        { "id": "MC-10", "mark": "integrate", "name": "colab-gateway-ts", "paths": ["colab-gateway"], "target": "Colab inference adapter" },
+        { "id": "MC-09", "mark": "adapt", "name": "colab-runtimes", "paths": ["colab"], "target": "inference fallback (swap embed → bge-small-384)" },
+        { "id": "MC-15", "mark": "integrate", "name": "huggingface-metadata", "paths": ["huggingface"], "target": "HF Space / datasets" },
+        { "id": "MC-17", "mark": "integrate", "name": "academic-research", "paths": ["heady-academic-research", "research"], "target": "docs/ + vector memory" }
+      ]
+    },
+    {
+      "id": "G05", "name": "backend-core-runtime", "title": "Backend Core / Kernel / Manager",
+      "phase": "P3", "depends_on": ["G01", "G02", "G03", "G04"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["core/modules", "packages/kernel"],
+      "rationale": "The microkernel + the 136KB god-server to migrate-then-archive. Largest single effort.",
+      "components": [
+        { "id": "BE-02", "mark": "adapt", "name": "manager-kernel", "paths": ["core/heady-manager-kernel.js"], "target": "packages/kernel" },
+        { "id": "BE-01", "mark": "adapt", "name": "heady-manager-godserver", "paths": ["heady-manager.js"], "target": "core/modules (decompose + archive)", "history": "filter-repo" },
+        { "id": "BE-03", "mark": "adapt", "name": "boot-barrel", "paths": ["heady-main.js", "index.js"], "target": "monorepo bootstrap" },
+        { "id": "BE-06", "mark": "adapt", "name": "core-src-infra", "paths": ["core", "src"], "target": "core/modules" },
+        { "id": "BE-10", "mark": "adapt", "name": "circuit-breaker", "paths": ["circuit-breaker"], "target": "packages/resilience" },
+        { "id": "BE-11", "mark": "adapt", "name": "orchestration-hcfp", "paths": ["orchestration"], "target": "CF Workflows+Queues+DO" },
+        { "id": "BE-16", "mark": "adapt", "name": "ops-middleware", "paths": ["middleware"], "target": "packages/resilience" },
+        { "id": "BE-17", "mark": "adapt", "name": "template-adapters", "paths": ["adapters"], "target": "template/projection pkg" },
+        { "id": "BZ-02", "mark": "adapt", "name": "latent-os-engine", "paths": ["heady-latent-os"], "target": "packages/orchestration, engines" },
+        { "id": "BZ-04", "mark": "adapt", "name": "latent-os-runtime-bundle", "paths": ["heady-latent-os-runtime-bundle"], "target": "packages/kernel, observability" },
+        { "id": "BZ-08", "mark": "adapt", "name": "platform-fixes", "paths": ["heady-platform-fixes"], "target": "scripts/ci, worker configs" },
+        { "id": "BE-22", "mark": "adapt", "name": "conformant-services", "paths": ["services/heady-bus"], "target": "Latent-pattern service pkgs (the ~4 with {start,stop,health,metrics})" }
+      ]
+    },
+    {
+      "id": "G06", "name": "auth-security", "title": "Auth / Security / Middleware / Compliance",
+      "phase": "P1", "depends_on": ["G01"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["packages/security-mesh", "auth"],
+      "rationale": "Mature, mostly fail-closed security set. security-bee must clear fail-open paths (R-2/R-7) on port.",
+      "components": [
+        { "id": "BE-12", "mark": "adapt", "name": "auth-firebase-sso", "paths": ["auth"], "target": "Firebase Auth + SSO pkg" },
+        { "id": "BE-13", "mark": "adapt", "name": "auth-service-idp", "paths": ["auth-service"], "target": "fold RBAC/API-keys into Firebase" },
+        { "id": "BE-15", "mark": "adapt", "name": "security-middleware", "paths": ["security-middleware"], "target": "Hono/Express middleware pkg", "gate": "R-7 fail-closed CORS/rate-limit" },
+        { "id": "IN-17", "mark": "integrate", "name": "security-modules", "paths": ["security"], "target": "packages/security-mesh" },
+        { "id": "IN-18", "mark": "adapt", "name": "credential-rotation-compliance", "paths": ["credential-rotation", "compliance-templates"], "target": "GCP SM rotation + packages/compliance" }
+      ]
+    },
+    {
+      "id": "G07", "name": "edge-cloudflare", "title": "Cloudflare Edge / Workers Fleet",
+      "phase": "P3", "depends_on": ["G04", "G06"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["CF Workers/Pages/DO/Workflows"],
+      "rationale": "Real edge logic; matches the CF edge lock. Drop nested cloudflare/cloudflare + workers/workers dups.",
+      "components": [
+        { "id": "IN-13", "mark": "integrate", "name": "cloudflare-fleet", "paths": ["cloudflare", "cloudflare-workers"], "target": "CF Workers/Pages/DO" },
+        { "id": "IN-14", "mark": "integrate", "name": "workers-core", "paths": ["workers"], "target": "CF Workers+Queues+DO" },
+        { "id": "IN-15", "mark": "adapt", "name": "edge-boot-libs", "paths": ["edge", "boot", "bin"], "target": "edge libs (OIDC creds)" }
+      ]
+    },
+    {
+      "id": "G08", "name": "infra-cicd-observability", "title": "Infra / CI-CD / Observability / Governance",
+      "phase": "P0", "depends_on": [], "patent_lock": false, "transfer_eligible": true,
+      "target": ["tooling/ci", "packages/observability", "infra (Terraform)"],
+      "rationale": "Cross-cutting gates. GHA+pnpm+OIDC CI matches lock; Sentry+Langfuse+pino are net-new.",
+      "components": [
+        { "id": "IN-01", "mark": "integrate", "name": "github-ci", "paths": [".github/workflows/ci.yml"], "target": "GHA+Turborepo" },
+        { "id": "IN-02", "mark": "adapt", "name": "cloud-run-deploy", "paths": [".github/workflows/deploy-cloud-run.yml"], "target": "GHA φ-canary", "gate": "INFRA-001 / R-6 rollback fix" },
+        { "id": "IN-05", "mark": "integrate", "name": "governance-config", "paths": ["Makefile", "CODEOWNERS", "renovate.json", "commitlint.config.js", "branch-protection", "gitleaks.yml"], "target": "locked governance" },
+        { "id": "IN-06", "mark": "adapt", "name": "ci-policy-opa", "paths": ["ci-pipelines", "enforcement", "policy"], "target": "CI gate + OPA/Rego" },
+        { "id": "IN-09", "mark": "adapt", "name": "iac-terraform-otel", "paths": ["infra"], "target": "Terraform (GCP+CF)" },
+        { "id": "IN-16", "mark": "adapt", "name": "observability-otel", "paths": ["monitoring", "observability", "otel-wrappers"], "target": "OTel+Sentry+Langfuse+pino" },
+        { "id": "IN-03", "mark": "adapt", "name": "cloudbuild-canary", "paths": ["cloudbuild.yaml", "deployment", "heady-build", "ci"], "target": "salvage canary-config; GHA is chosen CI" },
+        { "id": "IN-07", "mark": "adapt", "name": "compose-keep-set", "paths": ["docker-compose.unified.yml", "docker-compose.production.yml", "docker-compose.full.yml"], "target": "collapse to ONE dev compose (drop 11 specialized)" },
+        { "id": "IN-08", "mark": "adapt", "name": "dockerfile-keep-set", "paths": ["Dockerfile.distroless", "Dockerfile.production"], "target": "distroless Node22 (drop service/universal/monorepo)" },
+        { "id": "IN-11", "mark": "adapt", "name": "nats-event-bus", "paths": ["nats"], "target": "locked NATS bus (eval host)" },
+        { "id": "IN-12", "mark": "adapt", "name": "scale-runtime", "paths": ["scale", "scaling"], "target": "cloud-run-optimizer + NATS bus (drop pgbouncer-pool)" },
+        { "id": "DX-11", "mark": "adapt", "name": "rescue-scripts", "paths": ["scripts/ban-localhost.sh", "scripts/backup-pgvector.js"], "target": "scripts/ (rescue only; drop PowerShell+localhost)" }
+      ]
+    },
+    {
+      "id": "G09", "name": "frontend-console-ui", "title": "Frontend / MCP Console / Buddy",
+      "phase": "P3", "depends_on": ["G04", "G06"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["headyme-portal", "apps/*"],
+      "rationale": "React→Vanilla-WC adapt. headyme-portal is the locked spearhead (unblocks Google for Startups).",
+      "components": [
+        { "id": "FE-01", "mark": "adapt", "name": "admin-ide-spa", "paths": ["frontend"], "target": "headyme-portal", "gate": "R-9 merge-conflict in package.json" },
+        { "id": "FE-02", "mark": "adapt", "name": "mcp-console-seeds", "paths": ["public/mcp-dashboard.html", "apps/heady-mcp-portal", "admin-ui"], "target": "headyme-portal" },
+        { "id": "FE-03", "mark": "adapt", "name": "ops-dashboard", "paths": ["ui"], "target": "console widgets (SSE)" },
+        { "id": "FE-09", "mark": "adapt", "name": "websites-ssg", "paths": ["websites"], "target": "CF Pages + WC" },
+        { "id": "FE-13", "mark": "adapt", "name": "design-tokens", "paths": ["css", "designs"], "target": "WC design system" },
+        { "id": "FE-15", "mark": "adapt", "name": "web-generators", "paths": ["web"], "target": "build tooling" },
+        { "id": "AG-14", "mark": "adapt", "name": "headybuddy-web", "paths": ["headybuddy"], "target": "Buddy app", "gate": "R-9 merge-conflict" }
+      ]
+    },
+    {
+      "id": "G10", "name": "content-cognition-assets", "title": "Content / Cognition / Assets / Personas",
+      "phase": "P1", "depends_on": [], "patent_lock": false, "transfer_eligible": true,
+      "target": ["content store", "docs/compendium", "asset store"],
+      "rationale": "Framework-agnostic, directly reusable. heady-cognition is the canonical design-IP superset.",
+      "components": [
+        { "id": "FE-11", "mark": "integrate", "name": "cms-content", "paths": ["content"], "target": "content store" },
+        { "id": "FE-12", "mark": "integrate", "name": "brand-assets", "paths": ["assets"], "target": "asset store (LFS pull)" },
+        { "id": "AG-07", "mark": "integrate", "name": "cognition-superset", "paths": ["heady-cognition", "heady-cognitive-config.json"], "target": "docs/compendium/02 + CSL config" },
+        { "id": "AG-08", "mark": "adapt", "name": "archetypes", "paths": ["archetypes"], "target": "persona/archetype prompts" },
+        { "id": "AG-09", "mark": "adapt", "name": "personas", "paths": ["personas"], "target": "harness persona library" },
+        { "id": "AG-10", "mark": "adapt", "name": "directives-prompts", "paths": ["directives", "prompts"], "target": "AGENTS.md/system rules" }
+      ]
+    },
+    {
+      "id": "G11", "name": "governance-docs-skills", "title": "Golden Record / Foundations / Skills / Tooling",
+      "phase": "P0", "depends_on": [], "patent_lock": false, "transfer_eligible": true,
+      "target": ["facts.yaml (root)", "docs/compendium", ".agents/skills", "tooling"],
+      "rationale": "facts.yaml is the top-priority survivor (absent from rebuild). 67 unique concept skills triaged individually.",
+      "components": [
+        { "id": "DX-01", "mark": "integrate", "name": "facts-golden-record", "paths": ["facts.yaml"], "target": "Heady-AI/facts.yaml" },
+        { "id": "DX-02", "mark": "adapt", "name": "foundations-refs", "paths": ["01-foundations", "02-implementation-references"], "target": "docs/compendium" },
+        { "id": "DX-03", "mark": "adapt", "name": "unique-concept-skills", "paths": ["skills", "heady-skills"], "target": ".agents/skills (67 unique, triage)" },
+        { "id": "DX-12", "mark": "adapt", "name": "facts-validator-tooling", "paths": ["tools", "tooling"], "target": "consistency engine" },
+        { "id": "DX-09", "mark": "defer", "name": "legacy-boot-docs", "paths": ["BUDDY_KERNEL.md", "ARCHITECTURE.md", "ACTIVE_LAYER_POLICY.md", "START_HERE.md"], "target": "harvest φ/Fib params → facts.yaml/compendium" },
+        { "id": "AG-17", "mark": "adapt", "name": "bee-a2a-runtime-specs", "paths": ["heady-bee-swarm-ops", "heady-a2a-protocol", "heady-cognitive-runtime"], "target": "designs feed impl (A2A→NATS, CSL ternary = 3-layer gate)" }
+      ]
+    },
+    {
+      "id": "G12", "name": "patent-ip", "title": "Patent Implementations (ARBITER-GATED)",
+      "phase": "deferred", "depends_on": ["G01"], "patent_lock": true, "transfer_eligible": "arbiter_only",
+      "target": ["packages/* under ARBITER patent-lock review"],
+      "rationale": "R-8: the only full-source copy of 8 provisionals (HS-051..062, 59 claims, 806 tests). Bundled SEPARATELY with a guard; never bulk-merged.",
+      "components": [
+        { "id": "BZ-01", "mark": "defer", "name": "patent-implementations", "paths": ["heady-patent-implementations"], "target": "packages/* (HCP + arbiter ALLOW required)", "patent": "HS-051..062" }
+      ]
+    },
+    {
+      "id": "G13", "name": "deferred-postlaunch", "title": "Deferred — Post-Launch / Evidence-Gated",
+      "phase": "P4", "depends_on": ["various"], "patent_lock": false, "transfer_eligible": true,
+      "target": ["mobile / desktop / enterprise / niche phases"],
+      "rationale": "Real but post-launch. Bundled for provenance, marked deferred with trigger conditions.",
+      "components": [
+        { "id": "AG-15", "mark": "defer", "name": "headybuddy-mobile", "paths": ["headybuddy-mobile"], "target": "mobile phase" },
+        { "id": "FE-04", "mark": "defer", "name": "headyai-ide", "paths": ["HeadyAI-IDE"], "target": "deferred IDE (Phase 4+)" },
+        { "id": "FE-07", "mark": "defer", "name": "desktop-shells", "paths": ["apps/desktop", "desktop-overlay"], "target": "deferred desktop" },
+        { "id": "FE-16", "mark": "defer", "name": "extensions", "paths": ["extensions"], "target": "deferred companion extensions" },
+        { "id": "BE-18", "mark": "defer", "name": "oracle-service", "paths": ["oracle_service"], "target": "Phase 4+ IoT" },
+        { "id": "BE-19", "mark": "defer", "name": "native-ai-services", "paths": ["heady-native-services"], "target": "Phase 4+ (conflicts w/ AI Gateway)" },
+        { "id": "BE-21", "mark": "defer", "name": "voice-relay", "paths": ["heady-voice-relay"], "target": "Phase 4+ voice" },
+        { "id": "MC-12", "mark": "defer", "name": "python-ml-core", "paths": ["python", "notebooks"], "target": "notebooks/ML reference" },
+        { "id": "MC-19", "mark": "defer", "name": "midi-creative", "paths": ["midi_bridge", "integrations"], "target": "optional edge worker" },
+        { "id": "BZ-10", "mark": "defer", "name": "enterprise-distribution", "paths": ["heady-enterprise"], "target": "post-launch ops" },
+        { "id": "BZ-15", "mark": "defer", "name": "desktop-suite", "paths": ["heady-desktop-suite"], "target": "desktop phase" },
+        { "id": "IN-19", "mark": "defer", "name": "pqc-security", "paths": ["heady-pqc-security"], "target": "forward-looking crypto" },
+        { "id": "FE-14", "mark": "defer", "name": "a11y-i18n", "paths": ["accessibility", "i18n"], "target": "a11y/i18n utils (conforms; not Phase-1)" },
+        { "id": "AG-11", "mark": "defer", "name": "stage-prompts", "paths": ["stage-prompts"], "target": "bootstrap prompts later" },
+        { "id": "MC-13", "mark": "defer", "name": "notebooks-ml-ref", "paths": ["notebooks", "python/notebooks"], "target": "docs/notebooks" },
+        { "id": "MC-18", "mark": "defer", "name": "academy-training", "paths": ["HeadyAcademy", "training"], "target": "docs (agent-pattern reference)" },
+        { "id": "MC-11", "mark": "defer", "name": "colab-integration-py", "paths": ["colab-integration"], "target": "fold runtime-bridge.py into colab-gateway (JS dead)" },
+        { "id": "BZ-12", "mark": "defer", "name": "snapshot-audit", "paths": ["heady-improvement", "heady-system-fix"], "target": "inspect for unique tests/crypto before drop" },
+        { "id": "BZ-13", "mark": "defer", "name": "gtm-research-assets", "paths": ["heady-improvements", "HeadyConnectionKits"], "target": "docs/, packages/compliance (post-launch)" },
+        { "id": "BZ-16", "mark": "defer", "name": "vertical-skill-manifests", "paths": ["heady-fintech-trading", "heady-nonprofit-ops", "heady-intelligence-analytics"], "target": ".claude/skills (routing capability descriptions)" },
+        { "id": "DA-13", "mark": "defer", "name": "vector-projection-drift-skills", "paths": ["heady-vector-projection", "heady-drift-detection"], "target": "drift→Merkle re-index (integrate); vector-projection (defer)" },
+        { "id": "DX-05", "mark": "defer", "name": "dropzone-skills", "paths": ["dropzone/06-Skills-Library"], "target": "merge remainder into 67-skill triage" },
+        { "id": "DX-07", "mark": "defer", "name": "arch-diagrams", "paths": ["docs/ARCHITECTURE-MAP.md", "docs/C4_ARCHITECTURE.md", "docs/LIQUID_ARCHITECTURE_v9.md", "docs/csl-specs", "docs/specs", "docs/rebuild-blueprints"], "target": "mine for compendium gaps else archive (docs/patents excluded → see G12 R-8)" },
+        { "id": "DX-16", "mark": "defer", "name": "remediation-tracker", "paths": ["remediation-tracker.yaml"], "target": "cross-check vs backlog then archive" },
+        { "id": "DX-10", "mark": "defer", "name": "stage-prompts-dx", "paths": ["stage-prompts"], "target": "verify vs STEPWISE → .agents/specs (same source as AG-11)" }
+      ]
+    },
+    {
+      "id": "G99", "name": "dropped", "title": "Dropped — Provenance Manifest Only (NOT BUNDLED)",
+      "phase": "none", "depends_on": [], "patent_lock": false, "transfer_eligible": false,
+      "target": ["_archive/provenance (tarball ref only)"],
+      "rationale": "Dead, duplicate, superseded, or violates a locked decision. Recorded for audit completeness; no code transferred.",
+      "components": [
+        { "id": "FE-05", "mark": "drop", "name": "vue-fragments", "paths": ["heady-ide", "heady-ide-ui"] },
+        { "id": "FE-06", "mark": "drop", "name": "module-federation-shell", "paths": ["apps/headyweb", "heady-microfrontend-portal"] },
+        { "id": "FE-10", "mark": "drop", "name": "static-site-dupes", "paths": ["sites", "_site", "apps/sites", "pages"] },
+        { "id": "FE-17", "mark": "drop", "name": "drupal-triad", "paths": ["drupal", "drupal-config", "14-drupal-config"], "salvage": "13 content-type schemas as content model" },
+        { "id": "BE-05", "mark": "drop", "name": "csl-broken-copy", "paths": ["csl-engine.js"] },
+        { "id": "BE-14", "mark": "drop", "name": "auth-session-server-failopen", "paths": ["auth-session-server"], "reason": "R-2 CRITICAL fail-open" },
+        { "id": "BE-23", "mark": "drop", "name": "services-sprawl", "paths": ["services"], "reason": "~290 dupes/dead; only ~4 conform (rebuilt on demand)" },
+        { "id": "DA-02", "mark": "drop", "name": "db-1536-lineage", "paths": ["db", "postgres"], "reason": "R-4 1536-dim violates 384 lock" },
+        { "id": "MC-14", "mark": "drop", "name": "perplexity-build", "paths": ["perplexity-build"], "reason": "R-1 leaks live key; hollow stubs" },
+        { "id": "IN-04", "mark": "drop", "name": "offplatform-ci", "paths": ["azure-pipelines.yml", "render.yaml", "render.yml", "ecosystem.config.js"] },
+        { "id": "IN-10", "mark": "drop", "name": "infra-dup", "paths": ["infrastructure"], "reason": "273M dup of infra/" },
+        { "id": "BZ-17", "mark": "drop", "name": "meta-snapshots", "paths": ["heady-complete", "heady-monorepo", "HeadySystems_v13", "heady-production", "heady-output", "heady-full-rebuild", "heady-system-build", "heady-missing-modules"], "reason": "superseded by Heady-AI itself" },
+        { "id": "FE-08", "mark": "drop", "name": "electron-probes", "paths": ["electron-test", "headybrowser-desktop"], "reason": "dead scaffolding, no real source" },
+        { "id": "FE-18", "mark": "drop", "name": "app-stubs", "paths": ["gift-packs", "heady-digital-presence"], "reason": "~18 empty app stubs / demo cruft" },
+        { "id": "BE-20", "mark": "drop", "name": "skill-doc-stubs", "paths": ["heady-manager"], "reason": "doc stubs, no code; impls live in src/" },
+        { "id": "AG-12", "mark": "drop", "name": "perplexity-oneshot-prompts", "paths": ["prompts/perplexity", "context/perplexity"], "reason": "single-use legacy deploy scripts, obsolete" },
+        { "id": "AG-16", "mark": "drop", "name": "buddy-build-artifact", "paths": ["heady-buddy/dist"], "reason": "regenerable output" },
+        { "id": "DA-03", "mark": "drop", "name": "singular-schema", "paths": ["postgres/init.sql"], "reason": "oldest superseded namespacing" },
+        { "id": "DA-09", "mark": "drop", "name": "memory-broken-barrel", "paths": ["memory/memory-cache.js", "memory/index.js"], "reason": "broken CJS-over-ESM barrel" },
+        { "id": "DA-10", "mark": "drop", "name": "runtime-dumps", "paths": ["data"], "reason": "415 files null/zero embeddings, junk state (also globally excluded)" },
+        { "id": "DA-12", "mark": "drop", "name": "placeholder-projections", "paths": ["projections", "sacred-projections"], "reason": "placeholder SHAs, wrong format" },
+        { "id": "DA-15", "mark": "drop", "name": "registry-context7-patch", "paths": ["12-heady-registry-context7-patch.json"], "reason": "R-10 localhost:3371; stale" },
+        { "id": "DA-17", "mark": "drop", "name": "handoff-dumps", "paths": ["memory-payload.json", "memories", "prisma", "pgbouncer", "repo-type.yaml"], "reason": "Neon has pooling; LOCAL_FIRST conflicts cloud-first" },
+        { "id": "MC-02", "mark": "drop", "name": "unified-mcp-dup", "paths": ["mcp-servers/heady-unified-mcp-server.js"], "reason": "dead dup of v6" },
+        { "id": "MC-05", "mark": "drop", "name": "render-mcp", "paths": ["mcp-servers/render-mcp-server.js"], "reason": "Render not in stack" },
+        { "id": "MC-07", "mark": "drop", "name": "mcp-enhancement-unwired", "paths": ["heady-mcp-enhancement"], "reason": "complete code never integrated; speculative" },
+        { "id": "MC-16", "mark": "drop", "name": "empty-hf-dirs", "paths": ["heady-hf-space", "heady-connection", "heady-systems"], "reason": "0 files" },
+        { "id": "MC-21", "mark": "drop", "name": "tool-call-logs", "paths": ["tool_calls"], "reason": "scratch output (also globally excluded)" },
+        { "id": "BZ-03", "mark": "drop", "name": "missing-modules-snapshot", "paths": ["heady-missing-modules"], "reason": "earlier/stub copies of BZ-02 (double-port risk)" },
+        { "id": "BZ-06", "mark": "drop", "name": "system-build-scaffold", "paths": ["heady-system-build"], "reason": "bulk superseded; only build-sites.py unique" },
+        { "id": "BZ-09", "mark": "drop", "name": "platform-fixes-dup", "paths": ["platform-fixes"], "reason": "functionally identical to BZ-08" },
+        { "id": "BZ-11", "mark": "drop", "name": "enterprise-subset", "paths": ["enterprise"], "reason": "partial stale copy of BZ-10" },
+        { "id": "BZ-14", "mark": "drop", "name": "academy-routing-dup", "paths": ["HeadyAcademy"], "reason": "routing already in latent-os (cognition schema covered by AG-07)" },
+        { "id": "BZ-18", "mark": "drop", "name": "zip-bundle-stubs", "paths": ["heady-complete-bundle-v5.0.0.zip", "heady-mcp-enhancement-v5.0.0.zip"], "reason": "LFS pointer stubs, content absent" },
+        { "id": "DX-04", "mark": "drop", "name": "skill-triplication", "paths": ["skills", "heady-skills"], "reason": "~125 overlap rebuild's 136; keep only 67 unique (DX-03)" },
+        { "id": "DX-06", "mark": "drop", "name": "adr-collision-dirs", "paths": ["docs/adr", "docs/ADR", "docs/adrs"], "reason": "rebuild's 25 ADRs are curated descendant; verify no unique stranded" },
+        { "id": "DX-08", "mark": "drop", "name": "status-report-sprawl", "paths": ["DEEP_SCAN", "STATUS-DASHBOARD", "SYNC_STATUS", "ECOSYSTEM-AUDIT"], "reason": "greenfield rule: stale status = drop" },
+        { "id": "DX-13", "mark": "drop", "name": "config-sprawl-secrets", "paths": ["config", "configs"], "reason": "massive dup; configs/api-keys.json secret risk (blocked); harvest registry/domain facts only" },
+        { "id": "DX-14", "mark": "drop", "name": "env-files-secrets", "paths": ["env", "env.local", "env.production"], "reason": "R-14 secrets — rotate, never port (blocked)" },
+        { "id": "DX-15", "mark": "drop", "name": "legacy-build-meta", "paths": ["pnpm-workspace.yaml", "turbo.json", "tsconfig.json"], "reason": "rebuild has its own canonical set" },
+        { "id": "IN-20", "mark": "drop", "name": "misc-infra-rot", "paths": ["metrics_scraper.js", "tracer.js", "audit", "distribution", "deployments"], "reason": "scraper/logs drop; salvage cloud-run/cloudflare deployers under IN-03" }
+      ]
+    }
+  ]
+}

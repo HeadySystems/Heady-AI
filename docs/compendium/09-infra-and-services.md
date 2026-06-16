@@ -1,3 +1,9 @@
+<!-- 
+  ⚠️ GENERATED FILE — DO NOT EDIT DIRECTLY 
+  This file is compiled from tooling/doc-hydrator/templates/09-infra-and-services.hbs.
+  Run `pnpm run hydrate` to update it.
+-->
+
 # 09 — Infrastructure, Services, Security Stack & Sites
 
 > The physical/edge substrate: five tiers, the service registry, compute providers + failover, the
@@ -82,7 +88,7 @@ domains, sandboxed iframe, Zod relay payload, CSP `frame-ancestors`). **Disposit
 per dependency-minimalism. Sacred geometry is a **default/heuristic, not a hard gate** (per the v2
 correction).
 
-## I7. The sites (9 in v2 / 11 in V9)
+## I7. The sites (11 total)
 
 11 domains, each a Drupal 11 site with a sacred-geometry accent: headyme (#00d4aa, OS hub/onboarding),
 headysystems (#7c5eff, docs/node status), headyconnection.org (#00b4ff, 501c3), headybuddy (#ff6b35,

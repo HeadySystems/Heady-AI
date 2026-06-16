@@ -1,117 +1,64 @@
 ---
 name: heady-durable-execution
-description: Use when implementing crash-proof workflows, long-running orchestration with replay capability, or activity-based execution with heartbeats in the Heady™ ecosystem. Keywords include durable execution, Temporal, workflow, activity, replay, crash recovery, long-running, heartbeat, event history.
+description: >
+  Use when implementing crash-proof, long-running orchestration with replay/checkpointing
+  and human-in-the-loop gates in the Heady ecosystem. Durable execution runs on
+  Cloudflare Workflows + Queues + Durable Objects (ADR-0004) — NOT Temporal. Keywords:
+  durable execution, Cloudflare Workflows, workflow step, queue, Durable Object, replay,
+  checkpoint, crash recovery, long-running, human-in-the-loop, rollback, idempotency.
 metadata:
   author: HeadySystems
-  version: '1.0'
+  version: '2.0'
   liquid_node: LiquidDurable
-  absorption_source: "Temporal.io ($5B) durable execution patterns"
+  supersedes: "Temporal.io durable-execution patterns (rejected — ADR-0004; not in the locked stack)"
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
+> **OPTIMAL BUILD NOTICE (v2.0.0):** pnpm + Turborepo · Stores: Neon pgvector (authority) · Vectorize (derived cache, 384-dim) · Qdrant dropped · Embedding lock `@cf/baai/bge-small-en-v1.5` · Event bus: NATS · Follow `AGENTS.md`.
 
 # Heady™ Durable Execution (LiquidDurable)
 
+Durable, crash-proof orchestration on **Cloudflare Workflows + Queues + Durable Objects** — the locked durable-execution surface (ADR-0004). **No Temporal, no Cadence, no external orchestrator** — the prior Temporal-based design is superseded.
+
 ## When to Use This Skill
 
-Use this skill when the user needs to:
-- Run workflows that survive crashes and restarts
-- Implement long-running agent tasks (hours/days) with persistence
-- Add human-in-the-loop approval gates to automated pipelines
-- Replay failed workflows from the exact point of failure
-- Coordinate multi-step operations with rollback capability
+- Run workflows that survive crashes/restarts (automatic replay from the last durable step).
+- Long-running agent tasks (minutes→days) with persisted state.
+- Human-in-the-loop approval gates inside an automated pipeline.
+- Multi-step operations with rollback/compensation.
 
-## Architecture
+For event-triggered chaining of skills/bees, use [[heady-auto-flow]] (which dispatches durable steps into this surface); for per-session edge state use [[heady-durable-agent-state]].
 
-### Core Separation: Workflows vs Activities
+## Architecture (Cloudflare Workflows)
 
-| Component | Deterministic? | Examples |
+| Concept | Cloudflare primitive | Notes |
 |---|---|---|
-| **Workflow** | ✅ Yes — pure orchestration logic | Pipeline stage sequencing, branching, waiting |
-| **Activity** | ❌ No — side effects allowed | LLM API calls, file writes, HTTP requests, tool use |
-
-```
-Workflow (deterministic orchestration)
-  ├─ scheduleActivity('llm_call', { prompt, model })
-  ├─ scheduleActivity('file_write', { path, content })
-  ├─ waitForSignal('human_approval')        ← sleeps hours/days
-  ├─ scheduleActivity('deploy', { target })
-  └─ return result
-```
-
-### Event History (Immutable Audit Trail)
+| Durable workflow | `WorkflowEntrypoint` | Each `step.do()` is checkpointed; on failure the run replays only from the last completed step. |
+| Side-effecting work | `step.do(name, fn)` | LLM calls (via the **AI Gateway**), DB writes, HTTP — wrapped as retryable steps. |
+| Wait / HITL gate | `step.sleep` / `step.waitForEvent` | Pause for a timer or an external approval event (no busy-wait). |
+| Fan-out / async | **Queues** (`env.QUEUE.send`) | Decouple producers from consumers; at-least-once delivery. |
+| Per-entity serialization | **Durable Object** | One writer per session/task; hibernates to SQLite when idle. |
+| Retry/backoff | φ-backoff (`@heady/phi-math` `phiBackoff`) | Step retries use golden-ratio backoff; a `phi_circuit_breaker` opens after 5 failures. |
 
 ```typescript
-interface WorkflowEvent {
-  id: number;                 // Monotonic sequence
-  type: 'ActivityScheduled' | 'ActivityCompleted' | 'ActivityFailed'
-      | 'SignalReceived' | 'TimerStarted' | 'TimerFired'
-      | 'WorkflowStarted' | 'WorkflowCompleted';
-  timestamp: string;
-  data: unknown;
-  deterministic_hash: string; // For replay verification
-}
-```
+import { WorkflowEntrypoint, WorkflowStep, WorkflowEvent } from "cloudflare:workers";
 
-### Replay Mechanism
-
-1. On crash/restart, reload Event History from persistent store.
-2. Re-execute Workflow code — deterministic, produces same decisions.
-3. For each `scheduleActivity` call, check Event History:
-   - If ActivityCompleted exists → return cached result (skip execution).
-   - If not → execute Activity for real.
-4. Workflow resumes exactly where it left off.
-
-## Instructions
-
-### Implementing a Durable Workflow
-
-1. **Separate orchestration from execution** — Workflows contain no I/O, Activities contain all I/O.
-2. **Model calls are Activities** — They run once, results recorded in Event History.
-3. **Human approvals use Signals** — Workflow sleeps (hours/days), resumes on Signal.
-4. **No random/time in Workflows** — Use `workflow.now()` for deterministic time, seeded PRNG for randomness.
-5. **Persist Event History** — Neon Postgres or Redis Streams.
-
-### Activity Heartbeats
-
-```javascript
-// Long-running activities send heartbeats
-async function longLLMCall(ctx, input) {
-  for (const chunk of streamResponse(input)) {
-    ctx.heartbeat({ progress: chunk.index });  // Prevents timeout
-    await processChunk(chunk);
+export class HCPipeline extends WorkflowEntrypoint<Env, Params> {
+  async run(event: WorkflowEvent<Params>, step: WorkflowStep) {
+    // Each step is durable: re-running the workflow replays completed steps from history.
+    const plan = await step.do("plan", () => planTask(event.payload));         // deterministic-ish
+    const result = await step.do("execute", { retries: { limit: 8, backoff: "exponential" } },
+      () => runViaAiGateway(plan));                                             // side effects isolated here
+    await step.waitForEvent("approval", { type: "human.approve", timeout: "24 hours" }); // HITL gate
+    await step.do("commit", () => persist(result));                             // idempotent write (outbox)
+    return { ok: true };
   }
 }
-// Heartbeat interval: φ³ seconds (≈4.24s)
 ```
 
-### Failure Recovery
+## Rules
 
-| Failure Type | Recovery |
-|---|---|
-| Activity timeout | Retry with exponential backoff (φ-scaled: 1.6s, 2.6s, 4.2s) |
-| Activity crash | Replay from Event History, skip completed activities |
-| Workflow crash | Full replay — deterministic code produces same decisions |
-| Infrastructure failure | New worker picks up workflow from persisted state |
-
-### Integration with HCFullPipeline
-
-- Each pipeline stage = one Activity.
-- Pipeline orchestration = Workflow.
-- APPROVE gate (Stage 11) = Signal wait.
-- Stage failures trigger Activity retry, not full pipeline restart.
-
-## Output Format
-
-- Workflow Execution Status
-- Event History Viewer
-- Activity Heartbeat Dashboard
-- Replay Verification Report
-- Signal Queue Status
+1. **Workflow code is replay-safe** — no wall-clock reads, randomness, or un-stepped side effects in the entrypoint body; push all I/O into `step.do()`.
+2. **Idempotent commits** — pair terminal writes with the transactional outbox + `idempotencyKey` (`@heady/db`) so replays don't double-apply.
+3. **Egress through the gateway** — model calls inside steps go through the **Cloudflare AI Gateway**, never directly to providers.
+4. **No Temporal** — if a source references Temporal/Cadence, map it: workflow→`WorkflowEntrypoint`, activity→`step.do`, signal→`waitForEvent`, timer→`step.sleep` (ADR-0004).
+5. **φ-derived** retries/timeouts/caps come from `@heady/phi-math`.

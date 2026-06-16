@@ -8,5 +8,11 @@ node_modules/
 dist/
 .turbo/
 
-# Derived, reconstructible vector-memory projections (ADR-0000) — regenerable via `heady-embed`.
-.data/vector-memory/
+# Derived, reconstructible artifacts (ADR-0000 — never authoritative). Regenerable from the SoT:
+#   .data/vector-memory   → `heady-embed`
+#   .data/decomposition   → `node tooling/decomposition/src/decompose.mjs`
+#   .data/coherence       → `node tooling/coherence/src/coherence.mjs all`
+.data/
+
+# Generated bundles — reconstructible, not committed to the clean repo
+*.zip
