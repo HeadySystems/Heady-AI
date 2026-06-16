@@ -1,12 +1,129 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+
+  "autoCompactEnabled": true,
+  "autoCompactWindow": 1000000,
+
+  "effortLevel": "xhigh",
+  "alwaysThinkingEnabled": true,
+  "showThinkingSummaries": true,
+
+  "fileCheckpointingEnabled": true,
+  "todoFeatureEnabled": true,
+  "cleanupPeriodDays": 90,
+  "skillListingBudgetFraction": 0.02,
+
+  "env": {
+    "ANTHROPIC_BETAS": "context-1m-2025-08-07",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000",
+    "MAX_THINKING_TOKENS": "32000",
+    "MAX_MCP_OUTPUT_TOKENS": "50000",
+    "BASH_MAX_OUTPUT_LENGTH": "120000",
+    "BASH_MAX_TIMEOUT_MS": "600000",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000"
+  },
+
+  "enableAllProjectMcpServers": true,
+
   "permissions": {
+    "defaultMode": "default",
     "allow": [
       "Read",
       "Glob",
       "Grep",
-      "Agent"
+      "Agent",
+      "Edit",
+      "Write",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git checkout*)",
+      "Bash(git switch*)",
+      "Bash(git add*)",
+      "Bash(git restore*)",
+      "Bash(git stash*)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git commit*)",
+      "Bash(git rev-parse*)",
+      "Bash(git grep*)",
+      "Bash(git remote -v)",
+      "Bash(npm run*)",
+      "Bash(npm test*)",
+      "Bash(npm ci*)",
+      "Bash(npm install*)",
+      "Bash(npm start*)",
+      "Bash(npm audit*)",
+      "Bash(pnpm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(python3 *)",
+      "Bash(pytest*)",
+      "Bash(jest*)",
+      "Bash(jq *)",
+      "Bash(rg *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(gitleaks *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -rf .*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard origin*)",
+      "Bash(git clean -fdx*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.heady/**)",
+      "Read(**/*.pem)",
+      "Read(**/id_rsa*)",
+      "Read(**/*.key)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)"
+    ],
+    "ask": [
+      "Bash(gcloud *delete*)",
+      "Bash(*DROP TABLE*)",
+      "Bash(*DROP DATABASE*)",
+      "Bash(gh repo delete*)",
+      "Bash(wrangler * delete*)"
     ]
   },
+
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-context.sh",
+            "timeout": 20,
+            "statusMessage": "Loading Heady ecosystem context"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-bash.sh",
+            "timeout": 10,
+            "statusMessage": "Screening for destructive commands"
+          }
+        ]
+      }
+    ]
+  },
+
   "agentDefinitions": {
     "heady-orchestrator": {
       "path": ".claude/agents/heady-orchestrator.md",
