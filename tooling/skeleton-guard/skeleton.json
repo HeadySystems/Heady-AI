@@ -179,6 +179,12 @@
       "notes": "CI (coherence gate), CODEOWNERS, issue templates"
     },
     {
+      "pattern": "scripts/**",
+      "purpose": "Operational shell/JS scripts",
+      "allowedExtensions": [".sh", ".mjs", ".js"],
+      "notes": "heady-sync.sh (git sync w/ secret guard), ops scripts"
+    },
+    {
       "pattern": ".data/**",
       "purpose": "Runtime/agent data stores",
       "allowedExtensions": [".json", ".jsonl", ".cache", ".bin"],
@@ -230,6 +236,7 @@
     "tooling",
     "configs",
     "docs",
+    "scripts",
     "scratch",
     ".agents",
     ".claude",
