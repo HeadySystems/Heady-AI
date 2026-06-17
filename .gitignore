@@ -153,3 +153,7 @@ scripts/vault-seed.js
 
 .data/
 .turbo/
+
+# Provider setup script outputs (contains secrets)
+scripts/provider-setup/output/
+scripts/provider-setup/.env.*
