@@ -1,0 +1,36 @@
+{
+  "goal": "Process all ingress/egress data: recognize globally-linked HeadyRegistry values, propagate any change everywhere, keep data consistent",
+  "contexts": [
+    { "id": "registry", "name": "HeadyRegistry link index (variable-registry + facts)" },
+    { "id": "processor", "name": "Ingress/egress data processor" },
+    { "id": "propagation", "name": "Global change propagation" },
+    { "id": "gate", "name": "Consistency verification" }
+  ],
+  "contracts": [
+    { "id": "LinkIndexPort", "owner": "registry", "kind": "canonical value + lock + link-sites for every registered key" },
+    { "id": "ProcessPort", "owner": "processor", "kind": "recognize registered values in a payload + classify MATCH/DRIFT" },
+    { "id": "PropagatePort", "owner": "propagation", "kind": "blast-radius + change-set for a canonical change" },
+    { "id": "WritePort", "owner": "propagation", "kind": "apply the change-set (reuse @heady/codeflow governed apply)" },
+    { "id": "GatePort", "owner": "gate", "kind": "coherence-green verification (fail-closed)" }
+  ],
+  "entities": [
+    { "id": "@heady/consistency-bus", "kind": "package" },
+    { "id": "@heady/codeflow", "kind": "package" }
+  ],
+  "capabilities": [
+    { "id": "link-index", "context": "registry", "seam": "LinkIndexPort", "depends": [], "acceptance": "every registered key → {canonical value, locked?, class, sot}" },
+    { "id": "recognize", "context": "processor", "seam": "ProcessPort", "depends": ["link-index"], "acceptance": "flatten a payload; mark each registered value MATCH or DRIFT vs canonical" },
+    { "id": "ingress-guard", "context": "processor", "seam": "ProcessPort", "depends": ["recognize"], "acceptance": "DRIFT on a LOCKED value is BLOCKED fail-closed unless authorized" },
+    { "id": "egress-normalize", "context": "processor", "seam": "ProcessPort", "depends": ["recognize"], "acceptance": "outgoing payload rewritten to canonical values — never emit a stale linked value" },
+    { "id": "blast-radius", "context": "propagation", "seam": "PropagatePort", "depends": ["link-index"], "acceptance": "for a key, list every link-site across the repo (ripple)" },
+    { "id": "propagate", "context": "propagation", "seam": "PropagatePort", "depends": ["blast-radius", "recognize"], "acceptance": "authorized canonical change → change-set covering all link-sites" },
+    { "id": "govern-apply", "context": "propagation", "seam": "WritePort", "depends": ["propagate"], "acceptance": "change-set applied as governed proposals (validate→approve→apply→rollback)" },
+    { "id": "verify", "context": "gate", "seam": "GatePort", "depends": ["govern-apply"], "acceptance": "coherence gate green after propagation — 0 contradictions" }
+  ],
+  "acceptance": [
+    { "id": "C1", "capability": "ingress-guard", "criterion": "no inbound payload can set a locked value to a non-canonical value without authorization" },
+    { "id": "C2", "capability": "egress-normalize", "criterion": "no outbound payload emits a stale linked value" },
+    { "id": "C3", "capability": "propagate", "criterion": "a canonical change reaches every link-site (no partial update)" },
+    { "id": "C4", "capability": "verify", "criterion": "the system is coherence-green after every applied change" }
+  ]
+}
