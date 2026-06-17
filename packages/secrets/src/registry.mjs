@@ -68,6 +68,13 @@ export const SECRETS = Object.freeze([
     description: "Hugging Face token for the non-locked embed fallback (BAAI/bge-small-en-v1.5). Requires --allow-hf; off by default." },
   { name: "HEADY_ALLOW_HF_EMBED", required: false,
     description: "Flag (0/1) opting into the off-platform Hugging Face embed fallback. Non-secret; default 0." },
+
+  // ── Owner / founder governance credential (ADR-0013) ──
+  { name: "HEADY_OWNER", required: false,
+    description: "Owner/founder identity (email) bound to the owner credential — non-secret." },
+  { name: "HEADY_OWNER_PASS", required: false, secret: true, minLength: 16,
+    rotation: { strategy: "internal", maxAgeDays: FIB[9] },
+    description: "Owner credential: a bearer recognized as the founder (human) for owner-level governance, incl. sensitive-path approval (ADR-0013). Prefer a Firebase ID token in production; rotate to high-entropy." },
 ]);
 
 /** Look up one registry spec by name. */
