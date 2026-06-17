@@ -4,7 +4,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo 'Nothing to build in heady-manager'",
-    "test": "echo 'No tests in heady-manager'"
+    "build": "echo '(no build — runnable ESM)'",
+    "test": "node --test",
+    "start": "node src/index.mjs"
+  },
+  "main": "src/index.mjs",
+  "dependencies": {
+    "@heady/kernel": "workspace:*",
+    "@heady/config": "workspace:*",
+    "@heady/logger": "workspace:*",
+    "@heady/shared": "workspace:*",
+    "@heady/resilience": "workspace:*",
+    "express": "^5.2.1",
+    "@heady/csl-engine": "workspace:*",
+    "@heady/embedding": "workspace:*",
+    "@heady/events": "workspace:*",
+    "@heady/perspective": "workspace:*",
+    "@heady/auto-context": "workspace:*"
   }
 }

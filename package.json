@@ -36,8 +36,8 @@
     "cli": "python scripts/heady_cli.py",
     "start": "node heady-manager.js",
     "dev": "nodemon heady-manager.js",
-    "build": "echo 'Frontend build not yet configured — see docs/strategic/heady-improvement-roadmap-2026.md'",
-    "test": "fuser -k 3300/tcp 2>/dev/null; jest",
+    "build": "turbo run build",
+    "test": "turbo run test",
     "lint": "eslint . --fix",
     "lint:fix": "eslint . --fix",
     "pipeline": "node -e \"const {pipeline}=require('./src/hc_pipeline');pipeline.run().then(s=>console.log(JSON.stringify({runId:s.runId,status:s.status},null,2))).catch(e=>console.error(e.message))\"",
@@ -136,7 +136,8 @@
     "jest": "^30.2.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.2.2",
-    "yaml-jest": "^1.2.0"
+    "yaml-jest": "^1.2.0",
+    "turbo": "^2.9.18"
   },
   "packageManager": "pnpm@9.15.9",
   "engines": {

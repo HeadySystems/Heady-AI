@@ -5,7 +5,7 @@
         ".env",
         "configs/**"
     ],
-    "pipeline": {
+    "tasks": {
         "build": {
             "dependsOn": [
                 "^build"
