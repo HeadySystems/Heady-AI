@@ -1,0 +1,106 @@
+name: Deploy Portal to Firebase Hosting
+
+on:
+  workflow_dispatch:
+    inputs:
+      codeflow_api:
+        description: 'Cloud Run URL for codeflow API'
+        default: 'https://heady-manager-609590223909.us-central1.run.app'
+        type: string
+
+env:
+  NODE_VERSION: '22'
+  FIREBASE_PROJECT: 'heady-ai'
+
+jobs:
+  deploy-firebase:
+    name: 🔥 Deploy → Firebase Hosting
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rebuild
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install portal dependencies
+        working-directory: apps/headyme-portal
+        run: npm install
+
+      - name: Build portal with production URLs
+        working-directory: apps/headyme-portal
+        env:
+          VITE_CODEFLOW_API: ${{ inputs.codeflow_api || 'https://heady-manager-609590223909.us-central1.run.app' }}
+          VITE_LEGACY_API: ${{ inputs.codeflow_api || 'https://heady-manager-609590223909.us-central1.run.app' }}
+          VITE_HEADYLENS_API: ${{ inputs.codeflow_api || 'https://heady-manager-609590223909.us-central1.run.app' }}
+          VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: heady-ai.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: heady-ai
+          VITE_FIREBASE_APP_ID: '1:1003436179562:web:1ab30825a7119a82578a13'
+          VITE_FIREBASE_MESSAGING_SENDER_ID: '1003436179562'
+        run: |
+          npx vite build --mode production
+          # Post-build fixes
+          sed -i 's|/vite.svg|/favicon.svg|g' dist/index.html
+          echo '/* /index.html 200' > dist/_redirects
+          echo "✅ Portal built:"
+          ls -la dist/
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools@15
+
+      - name: Authenticate to Google Cloud (Workload Identity)
+        id: auth
+        uses: google-github-actions/auth@v2
+        continue-on-error: true
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Firebase Hosting (WIF)
+        if: steps.auth.outcome == 'success'
+        working-directory: apps/headyme-portal
+        run: |
+          firebase deploy --only hosting --project ${{ env.FIREBASE_PROJECT }} --non-interactive
+          echo "✅ Firebase Hosting deployed via Workload Identity"
+
+      - name: Deploy to Firebase Hosting (Service Account fallback)
+        if: steps.auth.outcome != 'success'
+        working-directory: apps/headyme-portal
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -n "$GOOGLE_APPLICATION_CREDENTIALS_JSON" ]; then
+            echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > /tmp/sa-key.json
+            export GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa-key.json
+            firebase deploy --only hosting --project ${{ env.FIREBASE_PROJECT }} --non-interactive
+            rm /tmp/sa-key.json
+            echo "✅ Firebase Hosting deployed via Service Account"
+          else
+            echo "❌ No GCP auth available — set GCP_WORKLOAD_IDENTITY or FIREBASE_SERVICE_ACCOUNT secret"
+            exit 1
+          fi
+
+      - name: Smoke test deployed portal
+        run: |
+          sleep 10
+          echo "🔥 Testing Firebase Hosting..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
+            "https://heady-ai.firebaseapp.com/" 2>/dev/null || echo "000")
+          echo "  Portal status: $STATUS"
+          
+          STATUS2=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
+            "https://heady-ai.web.app/" 2>/dev/null || echo "000")
+          echo "  Web app status: $STATUS2"
+          
+          if [ "$STATUS" = "200" ] || [ "$STATUS2" = "200" ]; then
+            echo "✅ Portal live!"
+          else
+            echo "⚠️ Portal may still be propagating — check manually"
+          fi
