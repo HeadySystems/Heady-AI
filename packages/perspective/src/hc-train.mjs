@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Perspective — hc-train (TrainPort) v1.0.0                 ║
 // ║  Calibrate HeadyPerspective from ground truth (HeadyRegistry +      ║

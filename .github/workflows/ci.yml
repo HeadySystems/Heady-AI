@@ -50,8 +50,8 @@ jobs:
       - name: law-lint tests
         run: node --test tooling/law-lint/test/law-lint.test.mjs
 
-  governance:
-    name: governance gate (patent-coverage · workflow-sync)
+  governance-coverage:
+    name: governance coverage (patent-CODEOWNERS · workflow-sync)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,7 +60,8 @@ jobs:
           node-version: 22
       # Every ⚠️ PATENT-marked file must be CODEOWNERS-covered (routes required human
       # review on patent zones HS-2026-051..062), and .agents/workflows must stay in
-      # sync with .claude/commands. Exit 1 on either violation.
+      # sync with .claude/commands. Exit 1 on either violation. Distinct from the
+      # `governance` enforcer job below (laws); this is structural coverage.
       - name: governance gate
         run: node tooling/governance-gate/src/governance-gate.mjs all
       - name: governance gate tests
