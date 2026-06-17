@@ -39,7 +39,7 @@ Use this skill when you need to:
 ```
 Client → Cloudflare Worker (edge inference)
        → Durable Object (agent state, WebSocket, SQLite)
-       → [Simple query] → Workers AI (llama-3.1-8b, bge-base)
+       → [Simple query] → Workers AI (llama-3.1-8b, bge-small-en-v1.5)
        → [Complex query] → Cloud Run origin (Claude, GPT-4o, Gemini)
        → Vectorize (edge vector search) ↔ pgvector (origin, source of truth)
 ```

@@ -82,13 +82,12 @@ This index is the navigable map; the skill **directories stay flat** so each can
 
 ## 4. Vector, Embedding & Retrieval
 
-*Embedding, projection, indexing, semantic search & drift.* — **10 skills**
+*Embedding, projection, indexing, semantic search & drift.* — **9 skills**
 
 | Skill | What it's for |
 |-------|---------------|
 | `heady-vector-projection` | Use when working with the vector projection engine, vector serving, vector pipelines, or 3D spatial computing |
 | `heady-projection-composer` | Design the Heady Projection Composer for context-driven UI and app delivery. Use when building adaptive interf |
-| `heady-embedding-router` | Use when routing embedding requests across multiple providers with intelligent model selection, |
 | `heady-hybrid-vector-search` | Use when implementing or optimizing hybrid search combining BM25 full-text with dense vector |
 | `heady-semantic-cache` | Use when implementing LLM response caching, reducing API costs via semantic similarity matching, or optimizing |
 | `heady-merkle-index` | Use when implementing incremental codebase indexing, file change detection, or efficient re-embedding pipeline |
