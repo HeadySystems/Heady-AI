@@ -1,0 +1,13 @@
+{
+  "name": "@heady/build-plan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Map an end goal once → emit mapped-straight-through vs simple-first build plans → compare deterministically.",
+  "bin": { "heady-plan": "src/plan.mjs" },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  }
+}
