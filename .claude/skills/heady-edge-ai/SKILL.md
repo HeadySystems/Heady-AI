@@ -29,14 +29,14 @@ mcp_Heady_heady_edge_ai
 | `action` | enum | **required** | `embed`, `chat`, `classify`, `vectorize-insert`, `vectorize-query`, `queue` |
 | `text` | string | optional | Text for embedding, classification, or vector ops |
 | `message` | string | optional | Message for edge chat |
-| `model` | string | optional | Model override (default: `llama-3.1-8b` for chat, `bge-base` for embed) |
+| `model` | string | optional | Model override (default: `llama-3.1-8b` for chat, `bge-small-en-v1.5` for embed) |
 | `topK` | number | optional | Number of results for vector query |
 
 ## Actions Reference
 
 | Action | Purpose | Default Model |
 |--------|---------|---------------|
-| `embed` | Generate vector embeddings at the edge | `bge-base` |
+| `embed` | Generate vector embeddings at the edge | `bge-small-en-v1.5` |
 | `chat` | Fast AI chat at the edge | `llama-3.1-8b` |
 | `classify` | Text classification | Auto |
 | `vectorize-insert` | Insert text into edge vector store | — |

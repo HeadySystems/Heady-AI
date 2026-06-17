@@ -72,7 +72,7 @@ User Query → Embed Query → Search Cache (cosine ≥ 0.95)
 
 ### Implementing Semantic Cache
 
-1. Embed incoming query using `text-embedding-3-small` (fast, cheap).
+1. Embed incoming query using `@cf/baai/bge-small-en-v1.5` (fast, cheap).
 2. Search Redis for vectors with cosine similarity ≥ 0.95.
 3. If hit: return cached response, increment hit_count, log cost savings.
 4. If miss: call LLM, cache response with embedding, set φ-scaled TTL.

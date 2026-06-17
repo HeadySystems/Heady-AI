@@ -54,7 +54,7 @@
       "severity": "warn",
       "appliesTo": ["canonical", "extended"],
       "authority": "ADR-0015 · memory heady-store-and-stack-decisions",
-      "banned": "(?i)(text-embedding-3-large|text-embedding-ada|all-MiniLM|nomic[- ]?embed|\\bjina\\b|\\bvoyage\\b|cohere\\s+embed)\\b",
+      "banned": "(?i)(text-embedding-3|text-embedding-ada|all-MiniLM|nomic[- ]?embed|\\bjina\\b|\\bvoyage\\b|cohere\\s+embed|bge-(base|large|m3))\\b",
       "allow": "(?i)(reject|alternative|not\\s+used|legacy|provenance|was\\b|instead of|competitor|benchmark|\\bvs\\b|market|comparison|deprecated|superseded|1536)",
       "message": "The locked embedding model is @cf/baai/bge-small-en-v1.5 (384, mean). Other embedding models/providers are only legitimate as named rejected alternatives or competitor references — not as live embedders.",
       "fix": null
