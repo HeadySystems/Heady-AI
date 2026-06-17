@@ -1,0 +1,22 @@
+{
+  "name": "@heady/task-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady task ledger — task queues, transactional outbox (Linear/Sentry sync), and attempts lifecycle.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/db": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/logger": "workspace:*"
+  },
+  "keywords": ["heady", "task-ledger", "outbox", "idempotency", "linear", "sentry"]
+}

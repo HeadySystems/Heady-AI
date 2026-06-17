@@ -1,13 +1,13 @@
 # Source of Truth
 
-> **Status:** Draft for approval · **Date:** 2026-06-15
+> **Status:** Approved · **Date:** 2026-06-16
 > Canonical authority declaration for the Heady ecosystem. See ADR-0001.
 
 ## Canonical repositories
 
 | Role | Repository | Status |
 |---|---|---|
-| **Canonical engineering monorepo** | `HeadySystems/heady-ai` (this scaffold, `~/Heady-AI`) | **Authoritative** |
+| **Canonical engineering monorepo** | `HeadySystems/Heady-AI` (this scaffold, `~/Heady-AI`) | **Authoritative** |
 | **Canonical docs / strategy / IP hub** | `HeadyMe/heady-docs` | Authoritative (read-only catalog) |
 | Migration source | `~/workspace/heady-ai` (legacy sprawl) | Source → archive after cutover |
 | Legacy core | `HeadyMe/Heady-pre-production-9f2f0642` | Migrate `heady-manager` logic, then archive |

@@ -1,0 +1,24 @@
+{
+  "name": "@heady/headylens",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "HeadyLens — unifies events + logs + spans into one time-ordered, detail-graded, redacted lens with query + live SSE. Display/diagnostic only (signed audit-of-record is the deferred G5/G9 surface).",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./server": "./src/server.mjs"
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "@heady/events": "workspace:*",
+    "@heady/logger": "workspace:*",
+    "@heady/observability": "workspace:*"
+  },
+  "scripts": {
+    "test": "node --test test/headylens.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "headylens", "observability", "audit", "log", "sse", "timeline"]
+}
