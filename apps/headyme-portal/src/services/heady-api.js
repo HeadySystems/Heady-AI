@@ -41,6 +41,9 @@ export const api = {
 // ── legacy advisor API ─────────────────────────────────────────────
 const LEGACY_BASE = import.meta.env.VITE_LEGACY_API ?? '';
 
+// ── HeadyLens API ──────────────────────────────────────────────────
+const LENS_BASE = import.meta.env.VITE_HEADYLENS_API ?? '';
+
 function la(method, path, body, token) {
   return _call(LEGACY_BASE, method, path, body, token);
 }
@@ -70,7 +73,7 @@ export const lens = {
     if (sinceMs != null) qs.set('since', String(sinceMs));
     return `${LENS_BASE}/api/lens/stream?${qs.toString()}`;
   },
-  health: (token) => call('GET', '/api/lens/health', null, token).catch(async () => {
+  health: (token) => _call(LENS_BASE, 'GET', '/api/lens/health', null, token).catch(async () => {
     const res = await fetch(`${LENS_BASE}/api/lens/health`, { headers: token ? { authorization: `Bearer ${token}` } : {} });
     if (!res.ok) throw new Error(`lens ${res.status}`);
     return res.json();
