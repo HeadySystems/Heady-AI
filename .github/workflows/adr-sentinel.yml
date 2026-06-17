@@ -1,0 +1,352 @@
+name: ADR Sentinel
+
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ ADR SENTINEL                                             ║
+# ║  Scans every PR for undocumented architectural changes.         ║
+# ║  Fails the build if a monitored manifest/schema changes without  ║
+# ║  a corresponding ADR in docs/ADR/.                              ║
+# ║  Posts the missing ADR report directly to the PR comment thread. ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+on:
+  pull_request:
+    branches: [main]
+    # Run on ALL file types — the script determines what's architectural
+    paths-ignore:
+      - '_archive/**'
+      - '**.test.js'
+      - '**.spec.js'
+
+concurrency:
+  group: adr-sentinel-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write   # required to post PR comments
+  issues: write
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 1: Detect architectural changes in monitored files
+  # ─────────────────────────────────────────────────────────────────
+  detect-changes:
+    name: Detect Architectural Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      has_arch_changes: ${{ steps.scan.outputs.has_arch_changes }}
+      changed_manifests: ${{ steps.scan.outputs.changed_manifests }}
+      changed_schemas: ${{ steps.scan.outputs.changed_schemas }}
+      changed_core: ${{ steps.scan.outputs.changed_core }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history required for diff
+
+      - name: Get changed files
+        id: files
+        uses: tj-actions/changed-files@v44
+        with:
+          files_yaml: |
+            manifests:
+              - 'configs/liquid-microservice-architecture.yaml'
+              - 'configs/domain-architecture.yaml'
+              - 'configs/heady-cognitive-config.json'
+              - 'configs/data-schema.yaml'
+              - 'configs/governance/**'
+              - 'BUNDLE_MANIFEST.json'
+              - 'HeadySystems_v13/packages/heady-core/package.json'
+            schemas:
+              - '_archive/db/schema.sql'
+              - 'audit/loose-configs/schema.prisma'
+              - 'assets/**/*schema*.json'
+              - '**/migrations/**/*.sql'
+              - '**/migrations/**/*.js'
+            core:
+              - 'core/**'
+              - 'HeadySystems_v13/packages/heady-core/src/**'
+              - 'src/pipeline/pipeline-core.js'
+              - 'src/orchestration/**'
+              - 'src/resilience/**'
+
+      - name: Evaluate architectural scope
+        id: scan
+        run: |
+          HAS_ARCH=false
+
+          if [[ "${{ steps.files.outputs.manifests_any_changed }}" == "true" ]]; then
+            HAS_ARCH=true
+          fi
+          if [[ "${{ steps.files.outputs.schemas_any_changed }}" == "true" ]]; then
+            HAS_ARCH=true
+          fi
+          if [[ "${{ steps.files.outputs.core_any_changed }}" == "true" ]]; then
+            HAS_ARCH=true
+          fi
+
+          echo "has_arch_changes=$HAS_ARCH" >> "$GITHUB_OUTPUT"
+          echo "changed_manifests=${{ steps.files.outputs.manifests_all_changed_files }}" >> "$GITHUB_OUTPUT"
+          echo "changed_schemas=${{ steps.files.outputs.schemas_all_changed_files }}" >> "$GITHUB_OUTPUT"
+          echo "changed_core=${{ steps.files.outputs.core_all_changed_files }}" >> "$GITHUB_OUTPUT"
+
+          echo "### ADR Sentinel Scan" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Manifests changed: ${{ steps.files.outputs.manifests_any_changed }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Schemas changed: ${{ steps.files.outputs.schemas_any_changed }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Core modules changed: ${{ steps.files.outputs.core_any_changed }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Architecture change detected: $HAS_ARCH" >> "$GITHUB_STEP_SUMMARY"
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 2: Verify ADR coverage (only runs if architectural changes found)
+  # ─────────────────────────────────────────────────────────────────
+  verify-adr-coverage:
+    name: Verify ADR Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_arch_changes == 'true'
+
+    outputs:
+      missing_adrs: ${{ steps.check.outputs.missing_adrs }}
+      coverage_passed: ${{ steps.check.outputs.coverage_passed }}
+      report_json: ${{ steps.check.outputs.report_json }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run ADR coverage check
+        id: check
+        env:
+          CHANGED_MANIFESTS: ${{ needs.detect-changes.outputs.changed_manifests }}
+          CHANGED_SCHEMAS: ${{ needs.detect-changes.outputs.changed_schemas }}
+          CHANGED_CORE: ${{ needs.detect-changes.outputs.changed_core }}
+          ADR_DIR: docs/ADR
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: node scripts/check-adr-coverage.js
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: adr-coverage-report
+          path: /tmp/adr-coverage-report.json
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 3: Post PR comment with missing ADR links
+  # ─────────────────────────────────────────────────────────────────
+  post-pr-comment:
+    name: Post ADR Report to PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: [detect-changes, verify-adr-coverage]
+    if: always() && needs.detect-changes.outputs.has_arch_changes == 'true'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: adr-coverage-report
+          path: /tmp
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post PR comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          COVERAGE_PASSED: ${{ needs.verify-adr-coverage.outputs.coverage_passed }}
+          REPORT_PATH: /tmp/adr-coverage-report.json
+          ADR_BASE_URL: https://github.com/${{ github.repository }}/blob/main/docs/ADR
+          COMMIT_SHA: ${{ github.sha }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: node scripts/report-missing-adrs.js
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 4: Gate — FAIL the build if ADRs are missing
+  # This is the blocking check referenced in ADR-0018.
+  # ─────────────────────────────────────────────────────────────────
+  adr-gate:
+    name: ADR Coverage Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [detect-changes, verify-adr-coverage]
+    # Always run this gate — even if no arch changes (passes instantly)
+    if: always()
+
+    steps:
+      - name: No architectural changes — gate passes
+        if: needs.detect-changes.outputs.has_arch_changes != 'true'
+        run: |
+          echo "✅ No architectural changes detected. ADR gate passes."
+
+      - name: ADR coverage check passed
+        if: >
+          needs.detect-changes.outputs.has_arch_changes == 'true' &&
+          needs.verify-adr-coverage.outputs.coverage_passed == 'true'
+        run: |
+          echo "✅ All architectural changes are covered by ADRs. Gate passes."
+
+      - name: ADR coverage check FAILED — blocking merge
+        if: >
+          needs.detect-changes.outputs.has_arch_changes == 'true' &&
+          needs.verify-adr-coverage.outputs.coverage_passed != 'true'
+        run: |
+          echo "❌ ARCHITECTURAL CHANGES DETECTED WITHOUT ADR COVERAGE"
+          echo ""
+          echo "One or more monitored files were modified without a corresponding"
+          echo "Architecture Decision Record in docs/ADR/."
+          echo ""
+          echo "To resolve:"
+          echo "  1. Create a new ADR in docs/ADR/NNNN-<title>.md"
+          echo "     Template: https://github.com/${{ github.repository }}/blob/main/docs/ADR/TEMPLATE.md"
+          echo "  2. The ADR must reference the changed file(s) in its Context section"
+          echo "  3. Push the ADR in the same PR or a preceding PR on this branch"
+          echo ""
+          echo "Missing ADR details were posted to the PR comment thread."
+          exit 1
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 5: PQC static analysis scan (ADR-0021)
+  # Runs on every PR — scans changed files for prohibited crypto
+  # ─────────────────────────────────────────────────────────────────
+  pqc-scan:
+    name: PQC Compliance Scan (ADR-0021)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      gate_passed: ${{ steps.scan.outputs.gate_passed }}
+      critical:    ${{ steps.scan.outputs.critical }}
+      high:        ${{ steps.scan.outputs.high }}
+      medium:      ${{ steps.scan.outputs.medium }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files for diff-mode scan
+        id: changed
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **/*.js
+            **/*.mjs
+            **/*.cjs
+            **/*.ts
+            **/*.mts
+            **/*.json
+            **/*.yaml
+            **/*.yml
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run PQC scanner
+        id: scan
+        env:
+          GITHUB_SHA:        ${{ github.sha }}
+          PR_NUMBER:         ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CHANGED_FILES:     ${{ steps.changed.outputs.all_changed_files }}
+        run: |
+          COMMA_FILES=$(echo "$CHANGED_FILES" | tr ' ' ',')
+          if [ -n "$COMMA_FILES" ]; then
+            node scripts/pqc-scanner.js --changed-only "$COMMA_FILES"
+          else
+            node scripts/pqc-scanner.js
+          fi
+
+      - name: Upload PQC scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pqc-scan-report
+          path: /tmp/pqc-scan-report.json
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 6: Post PQC findings to PR comment
+  # ─────────────────────────────────────────────────────────────────
+  pqc-report:
+    name: Post PQC Report to PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    needs: pqc-scan
+    if: always() && github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download PQC scan report
+        uses: actions/download-artifact@v4
+        with:
+          name: pqc-scan-report
+          path: /tmp
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Post PR comment
+        env:
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER:         ${{ github.event.pull_request.number }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA:        ${{ github.sha }}
+          PR_AUTHOR:         ${{ github.event.pull_request.user.login }}
+          REPORT_PATH:       /tmp/pqc-scan-report.json
+        run: node scripts/pqc-report-pr.js
+
+  # ─────────────────────────────────────────────────────────────────
+  # JOB 7: PQC gate — blocks merge on CRITICAL or HIGH findings
+  # ─────────────────────────────────────────────────────────────────
+  pqc-gate:
+    name: PQC Compliance Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: pqc-scan
+    if: always()
+
+    steps:
+      - name: PQC gate passed
+        if: needs.pqc-scan.outputs.gate_passed == 'true'
+        run: |
+          echo "✅ PQC compliance gate passed."
+          echo "   CRITICAL: ${{ needs.pqc-scan.outputs.critical }}"
+          echo "   HIGH:     ${{ needs.pqc-scan.outputs.high }}"
+          echo "   MEDIUM:   ${{ needs.pqc-scan.outputs.medium }} (non-blocking)"
+
+      - name: PQC gate FAILED — blocking merge
+        if: needs.pqc-scan.outputs.gate_passed != 'true'
+        run: |
+          echo "❌ PQC COMPLIANCE VIOLATION — MERGE BLOCKED"
+          echo ""
+          echo "This PR introduces cryptographic patterns prohibited by ADR-0021."
+          echo "  CRITICAL: ${{ needs.pqc-scan.outputs.critical }} findings"
+          echo "  HIGH:     ${{ needs.pqc-scan.outputs.high }} findings"
+          echo ""
+          echo "Resolution:"
+          echo "  1. Replace RSA/ECDH/ECDSA with Heady hybrid PQC primitives"
+          echo "     from src/security/pqc.js (hybridSign, hybridKEM, generateHybridKeyPair)"
+          echo "  2. Rename CRYSTALS-Kyber -> ML-KEM-768, Dilithium -> ML-DSA-65"
+          echo "  3. Use // PQC-EXEMPT: <reason> for test fixtures"
+          echo ""
+          echo "ADR: https://github.com/${{ github.repository }}/blob/main/docs/ADR/0021-post-quantum-cryptography-mandate.md"
+          exit 1
