@@ -11,6 +11,7 @@ import { FIB } from '../../phi-math/src/index.mjs';
 import { Codeflow } from './engine.mjs';
 import { verifyFirebaseToken } from './auth.mjs';
 import { loadLinkIndex, ingressGuard, egressNormalize } from '../../consistency-bus/src/index.mjs';
+import { loadRoles, assignWeighted, getEmbedder } from '../../perspective/src/index.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const PORT = Number(process.env.PORT) || 8000 + FIB[13]; // Cloud Run injects PORT; local default 8233
@@ -20,6 +21,12 @@ const cf = new Codeflow({ root: ROOT });
 // Consistency-bus middleware: recognize HeadyRegistry-linked values on every payload (best-effort —
 // null when the registry hasn't been generated yet).
 const LINK_INDEX = (() => { try { return loadLinkIndex({}); } catch { return null; } })();
+// HeadyPerspective roles: prefer a trained profile (carries vectors → semantic), else lexical roles.
+const ROLES = (() => {
+  try { return JSON.parse(readFileSync(join(ROOT, '.data', 'perspective', 'profiles.json'), 'utf8')).roles; }
+  catch { try { return loadRoles({}); } catch { return null; } }
+})();
+const EMBEDDER = getEmbedder(); // null without a token → lexical assignment
 
 // Resolve the caller to a VERIFIED principal — a Firebase ID token (preferred) or the service token.
 // Returns null when no valid credential is presented (→ 401). Never trusts a client-sent identity.
@@ -90,6 +97,15 @@ const server = createServer(async (req, res) => {
     if (req.method === 'GET' && path === '/codeflow/proposals') return send(res, 200, { proposals: cf.list() });
     if (req.method === 'GET' && seg[0] === 'codeflow' && seg[1] === 'proposals' && seg[2]) {
       return send(res, 200, { proposal: cf.get(seg[2]), history: cf.history(seg[2]) });
+    }
+    // HeadyPerspective task routing — rank the optimal-company roles for a task (verified principal)
+    if (req.method === 'GET' && path === '/api/assign') {
+      if (!(await principal(req))) return send(res, 401, { error: 'unauthorized' });
+      const task = url.searchParams.get('task');
+      if (!task) return send(res, 400, { error: 'task query param required' });
+      if (!ROLES) return send(res, 200, { task, mode: 'unavailable', ranked: [], note: 'run hc-train / coherence vars first' });
+      const r = await assignWeighted(task, ROLES, { embedder: EMBEDDER, topN: 8 });
+      return send(res, 200, { task, ...r });
     }
     // codebase browser — read-only but reveals source → require a verified principal
     if (req.method === 'GET' && path === '/api/files') {
