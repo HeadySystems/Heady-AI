@@ -283,3 +283,128 @@ button.small {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* ── Dual-State Tab Strip ─────────────────────────────────────────── */
+/* Append to apps/headyme-portal/src/style.css                         */
+
+:root {
+  --phi: 1.618033988749895;
+  --tab-gap: calc(var(--phi) * 8px);  /* ~13px */
+}
+
+.system-tabs {
+  display: flex;
+  gap: var(--tab-gap);
+  align-items: center;
+  padding: 10px 21px;
+  margin-bottom: 21px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.tab-btn {
+  text-decoration: none;
+  color: var(--text-muted, #8a8a9a);
+  padding: 7px 18px;
+  border-radius: 5px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: color 0.236s ease, background 0.236s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn:hover,
+.tab-btn.active {
+  color: var(--color-accent, #00d4aa);
+  background: var(--color-accent-glow, rgba(0,212,170,0.10));
+}
+
+.tab-badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.tab-badge.rebuild {
+  background: rgba(0, 212, 170, 0.15);
+  color: #00d4aa;
+}
+
+.tab-badge.legacy {
+  background: rgba(124, 94, 255, 0.15);
+  color: #7c5eff;
+}
+
+/* ── Legacy Dashboard Grid (mirrors .admin-dashboard layout) ──────── */
+.legacy-dashboard .dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 21px;
+}
+
+/* ── Baseline Comparison Table ────────────────────────────────────── */
+.baseline-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 13px;
+  font-size: 0.82rem;
+}
+
+.baseline-table th {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  color: var(--text-muted, #8a8a9a);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.baseline-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.baseline-table td.ok   { color: #00d4aa; }
+.baseline-table td.warn { color: #ffd93d; }
+
+/* ── Pattern Advisor Block ────────────────────────────────────────── */
+.pattern-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pattern-block {
+  background: rgba(0,0,0,0.3);
+  border-radius: 5px;
+  padding: 13px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.pattern-block.error { color: #ff6b6b; }
+
+/* ── Loading state ────────────────────────────────────────────────── */
+.status-indicator.loading {
+  color: var(--text-muted, #8a8a9a);
+  animation: pulse 1.618s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1;   }
+}
