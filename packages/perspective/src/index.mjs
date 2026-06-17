@@ -6,5 +6,6 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 export { loadRoles, tokenize } from './roles.mjs';
 export { levelFor, sourceLevels } from './perspective-level.mjs';
-export { assign } from './assign.mjs';
-export { train, persist } from './hc-train.mjs';
+export { assign, assignSemantic, assignWeighted } from './assign.mjs';
+export { getEmbedder, embedTexts, semanticScore, gateVerdict } from './semantic.mjs';
+export { train, trainSemantic, embedRoles, persist } from './hc-train.mjs';

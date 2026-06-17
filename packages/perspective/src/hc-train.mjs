@@ -9,6 +9,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { loadRoles } from './roles.mjs';
 import { sourceLevels } from './perspective-level.mjs';
+import { getEmbedder, embedTexts } from './semantic.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const canon = (o) => (Array.isArray(o) ? `[${o.map(canon).join(',')}]` : (o && typeof o === 'object') ? `{${Object.keys(o).sort().map((k) => `${JSON.stringify(k)}:${canon(o[k])}`).join(',')}}` : JSON.stringify(o));
@@ -27,6 +28,23 @@ export function train(opts = {}) {
   return profile;
 }
 
+/** Attach real embedding vectors to roles (locked bge-small). No-op without an embedder → lexical mode. */
+export async function embedRoles(roles, embedder) {
+  if (!embedder) return roles;
+  const vecs = await embedTexts(embedder, roles.map((r) => r.competencies.join(' ')));
+  return roles.map((r, i) => ({ ...r, vector: Array.isArray(vecs[i]) ? vecs[i] : null }));
+}
+
+/** Calibrate WITH semantic vectors when a token is configured; otherwise the lexical profile. */
+export async function trainSemantic(opts = {}) {
+  const base = train(opts);
+  const embedder = opts.embedder ?? getEmbedder();
+  base.semantic = !!embedder;
+  base.roles = await embedRoles(base.roles, embedder);
+  base.hash = createHash('sha256').update(canon(base)).digest('hex').slice(0, 16);
+  return base;
+}
+
 /** Persist the profile under .data/perspective/profiles.json. */
 export function persist(profile, { root = ROOT } = {}) {
   const out = join(root, '.data', 'perspective', 'profiles.json');
@@ -37,7 +55,7 @@ export function persist(profile, { root = ROOT } = {}) {
 
 // CLI: `node hc-train.mjs [registryPath]`
 if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
-  const profile = train(process.argv[2] ? { registryPath: process.argv[2] } : {});
+  const profile = await trainSemantic(process.argv[2] ? { registryPath: process.argv[2] } : {});
   const at = persist(profile);
-  process.stdout.write(`${JSON.stringify({ t: 'hc-train', level: 'info', msg: 'perspective calibrated', hash: profile.hash, ...profile.counts, at })}\n`);
+  process.stdout.write(`${JSON.stringify({ t: 'hc-train', level: 'info', msg: 'perspective calibrated', hash: profile.hash, semantic: profile.semantic, ...profile.counts, at })}\n`);
 }
