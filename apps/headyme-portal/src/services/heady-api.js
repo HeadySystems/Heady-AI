@@ -1,20 +1,17 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Portal API client v1.1.0                                  ║
-// ║  Talks to @heady/codeflow (status + governed-codeflow endpoints)   ║
-// ║  and @heady/headylens (live build narrative SSE). Base URLs from   ║
-// ║  env — never hardcoded; same-origin by default. HeadyLens is a     ║
-// ║  SEPARATE service from codeflow (own host/port 8377).              ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  HEADY™ Portal API client v2.0.0                                  ║
+// ║  api        → rebuild codeflow  (VITE_CODEFLOW_API)               ║
+// ║  legacyApi  → legacy advisor    (VITE_LEGACY_API)                 ║
+// ║  lens       → HeadyLens stream  (VITE_HEADYLENS_API)              ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
-const BASE = import.meta.env.VITE_CODEFLOW_API ?? '';
-// HeadyLens runs on its own origin (default :8377). Falls back to same-origin so
-// a reverse-proxied deploy that mounts both under one host still works.
-const LENS_BASE = import.meta.env.VITE_HEADYLENS_API ?? '';
-
-async function call(method, path, body, token) {
-  const res = await fetch(`${BASE}${path}`, {
+async function _call(base, method, path, body, token) {
+  const res = await fetch(`${base}${path}`, {
     method,
-    headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}) },
+    headers: {
+      'content-type': 'application/json',
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
@@ -22,18 +19,44 @@ async function call(method, path, body, token) {
   return data;
 }
 
+// ── rebuild codeflow API ───────────────────────────────────────────
+const CODEFLOW_BASE = import.meta.env.VITE_CODEFLOW_API ?? '';
+
+function cf(method, path, body, token) {
+  return _call(CODEFLOW_BASE, method, path, body, token);
+}
+
 export const api = {
-  status: () => call('GET', '/api/status'),
-  files: (path, token) => call('GET', `/api/files?path=${encodeURIComponent(path || '.')}`, null, token),
-  assign: (task, token) => call('GET', `/api/assign?task=${encodeURIComponent(task)}`, null, token),
-  listProposals: () => call('GET', '/codeflow/proposals'),
-  submit: (p, token) => call('POST', '/codeflow/proposals', p, token),
-  evaluate: (id, token) => call('POST', `/codeflow/proposals/${id}/evaluate`, {}, token),
-  approve: (id, b, token) => call('POST', `/codeflow/proposals/${id}/approve`, b, token),
-  apply: (id, token) => call('POST', `/codeflow/proposals/${id}/apply`, {}, token),
-  rollback: (id, token) => call('POST', `/codeflow/proposals/${id}/rollback`, {}, token),
+  status:        ()              => cf('GET',  '/api/status'),
+  files:         (path, token)   => cf('GET',  `/api/files?path=${encodeURIComponent(path || '.')}`, null, token),
+  assign:        (task, token)   => cf('GET',  `/api/assign?task=${encodeURIComponent(task)}`, null, token),
+  listProposals: ()              => cf('GET',  '/codeflow/proposals'),
+  submit:        (p, token)      => cf('POST', '/codeflow/proposals', p, token),
+  evaluate:      (id, token)     => cf('POST', `/codeflow/proposals/${id}/evaluate`, {}, token),
+  approve:       (id, b, token)  => cf('POST', `/codeflow/proposals/${id}/approve`, b, token),
+  apply:         (id, token)     => cf('POST', `/codeflow/proposals/${id}/apply`, {}, token),
+  rollback:      (id, token)     => cf('POST', `/codeflow/proposals/${id}/rollback`, {}, token),
 };
 
+// ── legacy advisor API ─────────────────────────────────────────────
+const LEGACY_BASE = import.meta.env.VITE_LEGACY_API ?? '';
+
+function la(method, path, body, token) {
+  return _call(LEGACY_BASE, method, path, body, token);
+}
+
+export const legacyApi = {
+  /** GET /api/advisor/health — uptime, lastAutoCommit, service count */
+  health:      (token)           => la('GET', '/api/advisor/health',                   null, token),
+  /** GET /api/advisor/swarm-status — active/total swarms, bee counts */
+  swarmStatus: (token)           => la('GET', '/api/advisor/swarm-status',             null, token),
+  /** GET /api/advisor/baseline — metric comparison array */
+  baseline:    (token)           => la('GET', '/api/advisor/baseline',                  null, token),
+  /** GET /api/advisor/patterns/:domain — auth|routing|vector|csl|swarm|pipeline */
+  patterns:    (domain, token)   => la('GET', `/api/advisor/patterns/${domain}`,        null, token),
+  /** GET /api/advisor/config/:service — service config advisor */
+  config:      (service, token)  => la('GET', `/api/advisor/config/${service}`,         null, token),
+};
 // ── HeadyLens: the live build narrative ──────────────────────────────
 // The lens server is Bearer-auth + GET-only (no `*` CORS). EventSource cannot
 // set an Authorization header, so we stream via fetch + ReadableStream and parse
@@ -93,3 +116,4 @@ export const lens = {
     return { close: () => ctrl.abort() };
   },
 };
+

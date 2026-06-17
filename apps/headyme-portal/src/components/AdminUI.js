@@ -1,12 +1,21 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Admin Control Plane v2.0.0                                ║
-// ║  Native interface to Heady: live system status (real, sourced from ║
-// ║  the coherence/decomposition kernels) + the governed-codeflow      ║
-// ║  panel. © 2026 HeadySystems Inc. — Eric Haywood, Founder           ║
+// ║  HEADY™ Admin Control Plane v3.0.0 — Dual-State Tab Strip         ║
+// ║  Adds system-tabs nav bar; all existing panels unchanged.          ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import { api } from '../services/heady-api.js';
 import './heady-build-narrative.js'; // registers <heady-build-narrative>
+
+const TAB_NAV = `
+<nav class="system-tabs glass-panel" aria-label="System switcher">
+  <a href="#admin"  class="tab-btn active" aria-current="page">
+    ⬡ Rebuild <span class="tab-badge rebuild">PRIMARY</span>
+  </a>
+  <a href="#legacy" class="tab-btn" aria-current="false">
+    ◈ Legacy <span class="tab-badge legacy">ADVISOR</span>
+  </a>
+</nav>`;
 
 export class AdminUI {
   constructor(container, user) {
@@ -16,7 +25,7 @@ export class AdminUI {
   }
 
   render() {
-    this.container.innerHTML = `
+    this.container.innerHTML = TAB_NAV + `
       <div class="admin-dashboard">
         <header class="admin-header glass-panel">
           <div class="header-content">
@@ -69,8 +78,7 @@ export class AdminUI {
             <div id="cf-result"></div>
           </section>
         </main>
-      </div>
-    `;
+      </div>`;
 
     this.container.querySelector('#logout-btn').addEventListener('click', () => signOut(auth));
     this.container.querySelector('#cf-form').addEventListener('submit', (e) => this.onSubmit(e));
@@ -88,7 +96,7 @@ export class AdminUI {
     const tree = this.container.querySelector('#cf-tree');
     try {
       const r = await api.files(this.container.querySelector('#cf-path').value, await this.token());
-      if (r.type === 'file') { tree.textContent = `${r.path} (${r.content.length} bytes) — use “Load into editor”`; return; }
+      if (r.type === 'file') { tree.textContent = `${r.path} (${r.content.length} bytes) — use "Load into editor"`; return; }
       tree.innerHTML = r.entries.map((e) => `<a href="#" data-p="${r.path === '.' ? '' : r.path + '/'}${e.name}">${e.type === 'dir' ? '📁' : '📄'} ${e.name}</a>`).join(' ');
       tree.querySelectorAll('a').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); this.container.querySelector('#cf-path').value = a.dataset.p; this.browse(); }));
     } catch (err) { tree.textContent = `cannot browse: ${err.message}`; }
