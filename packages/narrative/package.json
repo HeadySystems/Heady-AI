@@ -1,0 +1,25 @@
+{
+  "name": "@heady/narrative",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The build, as it happens — a thin emitter that publishes typed narrative events onto the @heady/events bus (HeadyLens captures + streams them). No store, no server: one authority per concern.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "dependencies": {
+    "@heady/events": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@heady/headylens": "workspace:*"
+  },
+  "keywords": ["heady", "narrative", "build-story", "glass-box", "events", "headylens"]
+}

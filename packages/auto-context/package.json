@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Heady auto-context projector — Syncs Neon pgvector events to Cloudflare Vectorize edge cache.",
+  "description": "Heady auto-context — the SYSTEMIC pre-reasoning procedure (Unbreakable Law 4 / Master Directive 1): CSL-ranked context enrichment middleware that feeds every reasoning stage live ecosystem state, plus the Neon→Vectorize edge projector. Not an opt-in skill — runtime-enforced, CI-verified.",
   "main": "src/index.mjs",
   "exports": {
     ".": "./src/index.mjs"
@@ -16,7 +16,14 @@
   "dependencies": {
     "@heady/db": "workspace:*",
     "@heady/phi-math": "workspace:*",
-    "@heady/logger": "workspace:*"
+    "@heady/logger": "workspace:*",
+    "@heady/csl-engine": "workspace:*",
+    "@heady/shared": "workspace:*",
+    "@heady/events": "workspace:*",
+    "@heady/narrative": "workspace:*"
   },
-  "keywords": ["heady", "auto-context", "vectorize", "replication", "projector", "wal"]
+  "devDependencies": {
+    "@heady/headylens": "workspace:*"
+  },
+  "keywords": ["heady", "auto-context", "enrichment", "middleware", "csl", "law-4", "vectorize", "projector"]
 }

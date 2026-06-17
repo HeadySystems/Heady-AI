@@ -5,7 +5,7 @@
 
 ## Context
 
-The system orchestrates 17 swarms and 89 HeadyBees that must communicate, pass state, and hand off tasks seamlessly. While `pgmq` handles scheduled outbox tasks, real-time agent stigmergy requires high-throughput, typed pub/sub.
+The system orchestrates 17 swarms and 197 HeadyBees (24 swarm-domain worker-config variants) that must communicate, pass state, and hand off tasks seamlessly. While `pgmq` handles scheduled outbox tasks, real-time agent stigmergy requires high-throughput, typed pub/sub.
 
 ## Decision
 
