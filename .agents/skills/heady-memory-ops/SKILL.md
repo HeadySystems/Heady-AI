@@ -3,18 +3,9 @@ name: heady-memory-ops
 description: Persistent 3D vector memory operations — search, store, embed, and learn via Heady™Memory, HeadyEmbed, HeadySoul, and HeadyVinci.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
+# Heady Memory Operations Skill
 
-# Heady™ Memory Operations Skill
-
-Use this skill whenever a task requires **persisting knowledge, retrieving past context, generating embeddings, or leveraging Heady's continuous learning layer**. Memory is the backbone of the Heady™ ecosystem — it's how the system remembers facts, workflows, and preferences across sessions.
+Use this skill whenever a task requires **persisting knowledge, retrieving past context, generating embeddings, or leveraging Heady's continuous learning layer**. Memory is the backbone of the Heady ecosystem — it's how the system remembers facts, workflows, and preferences across sessions.
 
 ## Tools Overview
 
@@ -27,7 +18,7 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 ## Tool Details
 
-### Heady™Memory — `mcp_Heady_heady_memory`
+### HeadyMemory — `mcp_Heady_heady_memory`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -37,14 +28,14 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 **Critical**: Always search memory **before** starting research or analysis. The answer may already exist.
 
-### Heady™Embed — `mcp_Heady_heady_embed`
+### HeadyEmbed — `mcp_Heady_heady_embed`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `text` | string | **required** | Text to generate embeddings for |
-| `model` | string | `@cf/baai/bge-small-en-v1.5` | Embedding model (locked, ADR-0015) |
+| `model` | string | `@cf/baai/bge-small-en-v1.5` | Embedding model |
 
-### Heady™Soul — `mcp_Heady_heady_soul`
+### HeadySoul — `mcp_Heady_heady_soul`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -53,7 +44,7 @@ Use this skill whenever a task requires **persisting knowledge, retrieving past 
 
 **Use `learn`** after completing tasks to feed the learning layer with new patterns.
 
-### Heady™Vinci — `mcp_Heady_heady_vinci`
+### HeadyVinci — `mcp_Heady_heady_vinci`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

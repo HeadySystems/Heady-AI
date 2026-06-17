@@ -35,13 +35,13 @@ description: >
 metadata:
   author: HeadySystems
   version: '1.0'
-  patents: 60+
+  patents: 51
   phi-compliant: true
 ---
 
 # Heady Narrative Engine
 
-> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 60+ Provisional Patents**
+> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**
 > Sacred Geometry v4.0 | PHI-math foundation | CSL gates throughout
 
 ## When to Use This Skill

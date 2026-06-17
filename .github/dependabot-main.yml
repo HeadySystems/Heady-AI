@@ -1,0 +1,10 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"              # root manifest only — not _archive/ or _downloads/
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]   # reduce noise further
+    labels: ["dependencies", "main-branch"]

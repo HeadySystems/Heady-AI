@@ -5,7 +5,7 @@ description: >
   innovation using vector operations as logical gates. Covers CSL AND (cosine), OR (superposition),
   NOT (orthogonal projection), IMPLY (projection), XOR, CONSENSUS, GATE operations, plus HDC/VSA
   binding and bundling, MoE cosine routing, ternary logic, and mathematical proofs.
-  60+ provisional patents. All parameters use phi-continuous scaling.
+  51 provisional patents. All parameters use phi-continuous scaling.
   Keywords: CSL, Continuous Semantic Logic, geometric logic, vector logic, cosine gate, orthogonal
   projection, semantic NOT, HDC, hyperdimensional computing, VSA, vector symbolic, MoE router,
   ternary logic, Heady CSL, geometric AI, Sacred Geometry logic.

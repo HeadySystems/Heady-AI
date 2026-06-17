@@ -3,16 +3,7 @@ name: heady-deployment
 description: Deploy, monitor, scale, and maintain services using Heady™Deploy, HeadyOps, HeadyHealth, HeadyMaid, and HeadyMaintenance.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Deployment Skill
+# Heady Deployment Skill
 
 Use this skill for the **full service lifecycle** — deploying, monitoring, scaling, health-checking, and cleaning up Heady services.
 
@@ -28,7 +19,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 
 ## Tool Details
 
-### Heady™Deploy — `mcp_Heady_heady_deploy`
+### HeadyDeploy — `mcp_Heady_heady_deploy`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -36,7 +27,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `service` | string | optional | Target service name |
 | `config` | object | optional | Additional configuration |
 
-### Heady™Ops — `mcp_Heady_heady_ops`
+### HeadyOps — `mcp_Heady_heady_ops`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -44,13 +35,13 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `service` | string | optional | Target service |
 | `config` | object | optional | Deployment or infra configuration |
 
-### Heady™Health — `mcp_Heady_heady_health`
+### HeadyHealth — `mcp_Heady_heady_health`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
 | `service` | enum | `all` | `all`, `brain`, `manager`, `hcfp`, `mcp` |
 
-### Heady™Maid — `mcp_Heady_heady_maid`
+### HeadyMaid — `mcp_Heady_heady_maid`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -58,7 +49,7 @@ Use this skill for the **full service lifecycle** — deploying, monitoring, sca
 | `target` | string | optional | Target directory, service, or resource |
 | `schedule` | string | optional | Cron expression |
 
-### Heady™Maintenance — `mcp_Heady_heady_maintenance`
+### HeadyMaintenance — `mcp_Heady_heady_maintenance`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

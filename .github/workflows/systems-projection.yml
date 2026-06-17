@@ -1,0 +1,46 @@
+name: "Heady Liquid Projection — HeadySystems"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/headysystems/**'
+
+jobs:
+  compile-and-project:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout Latent Core
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Enterprise Cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile HeadySystems UI
+        run: npm run build --workspace=apps/headysystems
+        env:
+          NODE_ENV: production
+
+      - name: Sanitize & Strip Source Maps (Aegis Protocol)
+        run: find apps/headysystems/dist -name "*.map" -type f -delete
+
+      - name: Project to Spoke Repository (headysystems-production)
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.HEADY_PROJECTION_PAT }}
+        with:
+          source-directory: 'apps/headysystems/dist'
+          destination-github-username: 'HeadyMe'
+          destination-repository-name: 'headysystems-production'
+          user-email: 'orchestrator@headyme.com'
+          target-branch: 'main'
+          commit-message: 'Autonomous Projection: update headysystems.com UI chunk'

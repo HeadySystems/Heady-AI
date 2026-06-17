@@ -3,16 +3,7 @@ name: heady-code-generation
 description: "Multi-model code generation, refactoring, and inline suggestions using Heady™Coder, HeadyCodex, HeadyCopilot, and HeadyRefactor."
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Code Generation Skill
+# Heady Code Generation Skill
 
 Use this skill whenever a task requires **generating, transforming, documenting, or refactoring code** through Heady's specialized code agents.
 
@@ -27,7 +18,7 @@ Use this skill whenever a task requires **generating, transforming, documenting,
 
 ## Tool Details
 
-### Heady™Coder — `mcp_Heady_heady_coder`
+### HeadyCoder — `mcp_Heady_heady_coder`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -39,7 +30,7 @@ Use this skill whenever a task requires **generating, transforming, documenting,
 **Use `orchestrate`** when the task involves creating or modifying multiple interdependent files.
 **Use `scaffold`** when setting up a new project structure.
 
-### Heady™Codex — `mcp_Heady_heady_codex`
+### HeadyCodex — `mcp_Heady_heady_codex`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -50,7 +41,7 @@ Use this skill whenever a task requires **generating, transforming, documenting,
 **Use `transform`** to convert code between patterns (e.g., callbacks → async/await).
 **Use `document`** to auto-generate JSDoc, docstrings, or inline comments.
 
-### Heady™Copilot — `mcp_Heady_heady_copilot`
+### HeadyCopilot — `mcp_Heady_heady_copilot`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -59,7 +50,7 @@ Use this skill whenever a task requires **generating, transforming, documenting,
 | `language` | string | optional | Programming language |
 | `cursor_position` | int | optional | Cursor position for context-aware completion |
 
-### Heady™Refactor — `mcp_Heady_heady_refactor`
+### HeadyRefactor — `mcp_Heady_heady_refactor`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

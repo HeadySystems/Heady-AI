@@ -3,18 +3,9 @@ name: heady-deep-scan
 description: Project-wide context mapping via Heady™DeepScan — maps an entire workspace into 3D vector memory for deep understanding before any major work.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
+# Heady Deep Scan Skill
 
-# Heady™ Deep Scan Skill
-
-Use this skill **before starting any major work on a project** to give the Heady™ ecosystem full awareness of the codebase. HeadyDeepScan performs a massive single-pass project map and pulls persistent 3D vector memory to establish global context.
+Use this skill **before starting any major work on a project** to give the Heady ecosystem full awareness of the codebase. HeadyDeepScan performs a massive single-pass project map and pulls persistent 3D vector memory to establish global context.
 
 ## Primary Tool
 

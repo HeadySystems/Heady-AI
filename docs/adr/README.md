@@ -1,45 +1,11 @@
 # Architecture Decision Records
 
-One decision per file. Format: Context → Decision → Consequences. Status lifecycle:
-`Proposed → Accepted → (Superseded by ADR-XXXX)`.
+One numbered file per architectural decision, Nygard format (Title · Status · Context · Decision · Consequences). **Immutable once Accepted** — superseded by a new ADR, never edited in place. This log is the single authoritative record of *why* Heady is built the way it is.
 
-Status: **0000–0018** are **Proposed (2026-06-15)**, pending founder approval (ADR-0013). **0019–0029** are **Accepted (2026-06-15)** and carry a v2 Reconciliation section.
+The governing principle for all of these: **pick one source of truth per concern and derive everything else from it deterministically.** "Globally consistent" does not mean synchronous replicas — it means mechanical agreement between a source and its projections, with reconciliation when they diverge.
 
-Amendments (v2 reconciliation, 2026-06-15): **0003** (stores) and **0005** (agent bootstrap) carry an
-Amendment section. **Numbering note:** an earlier set of ADRs also used numbers 0014–0018 (frontend,
-event-bus, sandbox, state-sync, vector-trigger); to remove the collision they were **renumbered to
-0019–0023** and reconciled with the v2 set. See `REBUILD_PLAN_V2.md` and `docs/compendium/11-reconciliation.md`.
+## Status (canonical set `0000`–`0029`)
 
-| # | Title | Theme |
-|---|---|---|
-| 0000 | Reject RAM-First / Latent-as-Truth | Architecture (prior to 0001) |
-| 0001 | Canonical Repository Authority | Architecture |
-| 0002 | Architecture Backbone | Architecture |
-| 0003 | Retrieval Authority — pgvector | Architecture |
-| 0004 | Durable Orchestration Center | Architecture |
-| 0005 | Agent Governance & Coder-Agent Blast Radius | Architecture / Security |
-| 0006 | Idempotency-Key Schema | Operational gap |
-| 0007 | DDL Coordination across Logical Replication | Operational gap |
-| 0008 | Data Retention & GDPR Posture | Operational gap |
-| 0009 | PITR / DR Drill Schedule | Operational gap |
-| 0010 | Rate-Limit & Token Budgets | Operational gap |
-| 0011 | SLO-Based On-Call Policy | Operational gap |
-| 0012 | FinOps Caps & Daily Spend Reporting | Operational gap |
-| 0013 | Founder-Bottleneck Governance | Operational gap |
-| 0014 | Logical Replication & WAL-Driven CDC | Architecture / Operational |
-| 0015 | Embedding-Model Lock | Architecture / Operational |
-| 0016 | Native Agent Loop & rustc-Style Bootstrap | Architecture / Security |
-| 0017 | Projections Engine & Lifecycle | Architecture / Governance |
-| 0018 | Model Gateway & Liquid Routing | Architecture |
-| 0019 | Frontend & UI Framework Selection | Architecture (was 0014) · R1 |
-| 0020 | Inter-Agent & Swarm Event Bus | Architecture (was 0015) · R8 — NATS best-effort only |
-| 0021 | Agent Code Execution Sandbox | Security (was 0016) · scoped vs ADR-0016 |
-| 0022 | Real-Time State & UI Sync | Architecture (was 0017) · SSE+HTTP/2 / WS for agent |
-| 0023 | Vector Projection Ingestion Trigger | Architecture (was 0018) · Merkle for files / CDC=ADR-0014 |
-| 0024 | Embedding Pipeline & Instantaneous-Acquisition Ruleset | Architecture · impl `packages/embedding` |
-| 0025 | Strict Global Consistency and Non-Orphanage Governance | Architecture / Governance |
-| 0026 | MCP Console (Admin UI) Architecture | Architecture |
-| 0027 | Task Ledger & Outbox-driven Sync (Linear/Sentry) | Architecture |
-| 0028 | Cross-Domain SSO Partitioned Cookie Governance | Architecture / Security |
-| 0029 | WASM WebContainer Sandbox In-Browser Execution | Architecture / Security |
+All **30 canonical ADRs are Accepted.** `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority, architecture backbone, pgvector retrieval, durable orchestration, agent governance, idempotency, DDL coordination, GDPR, PITR, rate limits, SLO, FinOps, founder governance, CDC, embedding lock, agent loop, projections, model gateway) were ratified **2026-06-17 by founder approval per ADR-0013** in a single batch review. `0019`–`0029` were Accepted 2026-06-15 and carry v2 Reconciliation sections. Per-file `Status:` headers are authoritative.
 
+> ✅ **Doc-drift resolved (2026-06-17):** the stale v1 ADR generation (`0001-canonical-repo`, `0002-strangler-fig-evolution`, `0003-source-of-truth-ledger`, `0004-consistency-model`, Accepted 2026-06-14) — superseded by the canonical `0001-canonical-repository-authority` / `0002-architecture-backbone` / `0003-retrieval-authority-pgvector` / `0004-durable-orchestration-center` — has been **archived to `docs/adr/superseded-v1/`** (content preserved, out of the canonical number-space). This directory indexes the canonical set only; `superseded-v1/` is quarantined from the coherence + data-consistency gates.

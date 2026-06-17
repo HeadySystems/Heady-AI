@@ -35,6 +35,37 @@ jobs:
       - name: build
         run: pnpm turbo run build
 
+  law-check:
+    name: constitutional law gate (AGENTS.md rules → CI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Mirror of .claude/hooks/heady-rules.mjs — ensures humans, git, and CI are
+      # bound by the same AGENTS.md laws as the Claude agent hook. Exit 1 on any violation.
+      - name: law-lint
+        run: node tooling/law-lint/src/law-lint.mjs
+      - name: law-lint tests
+        run: node --test tooling/law-lint/test/law-lint.test.mjs
+
+  governance:
+    name: governance gate (patent-coverage · workflow-sync)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Every ⚠️ PATENT-marked file must be CODEOWNERS-covered (routes required human
+      # review on patent zones HS-2026-051..062), and .agents/workflows must stay in
+      # sync with .claude/commands. Exit 1 on either violation.
+      - name: governance gate
+        run: node tooling/governance-gate/src/governance-gate.mjs all
+      - name: governance gate tests
+        run: node --test tooling/governance-gate/test/governance-gate.test.mjs
+
   scan:
     name: coherence gate (the OS of the OS)
     runs-on: ubuntu-latest

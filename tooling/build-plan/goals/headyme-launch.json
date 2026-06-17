@@ -1,0 +1,47 @@
+{
+  "goal": "headyme.com live: auth → onboarding → personal 3D-memory workspace → HeadyBuddy → admin UI (Heady-V1 + Heady-AI) with live headybee/headyswarm engines",
+  "contexts": [
+    { "id": "edge", "name": "DNS + edge (headyme.com on Cloudflare/Firebase Hosting)" },
+    { "id": "auth", "name": "headykey (Firebase) + headyvault (secrets)" },
+    { "id": "onboard", "name": "Onboarding flow" },
+    { "id": "memory", "name": "Personal 3D vector memory + memory layers" },
+    { "id": "buddy", "name": "HeadyBuddy (external + internal tasks)" },
+    { "id": "admin", "name": "Admin UI — Heady-V1 + Heady-AI interfaces" },
+    { "id": "engines", "name": "headybee/headyswarm multi-agent async engines" },
+    { "id": "deploy", "name": "Public deploy (Cloud Run API + Firebase Hosting)" }
+  ],
+  "contracts": [
+    { "id": "DnsPort", "owner": "edge", "kind": "headyme.com → hosting + API origin" },
+    { "id": "AuthPort", "owner": "auth", "kind": "Firebase ID token → principal (verified human)" },
+    { "id": "VaultPort", "owner": "auth", "kind": "secrets from GCP Secret Manager" },
+    { "id": "OnboardPort", "owner": "onboard", "kind": "first-run → provisioned workspace" },
+    { "id": "MemoryPort", "owner": "memory", "kind": "per-user pgvector(384) + tier memory" },
+    { "id": "BuddyPort", "owner": "buddy", "kind": "task execution external/internal" },
+    { "id": "AdminPort", "owner": "admin", "kind": "live status + governed codeflow + routing" },
+    { "id": "EnginePort", "owner": "engines", "kind": "swarm dispatch (NATS, async, multi-modal)" },
+    { "id": "DeployPort", "owner": "deploy", "kind": "ship API + portal publicly" }
+  ],
+  "entities": [
+    { "id": "headyme-portal", "kind": "app" },
+    { "id": "@heady/codeflow", "kind": "package" },
+    { "id": "@heady/perspective", "kind": "package" },
+    { "id": "@heady/consistency-bus", "kind": "package" }
+  ],
+  "capabilities": [
+    { "id": "secrets-real", "context": "auth", "seam": "VaultPort", "depends": [], "deferred": true, "acceptance": "valid CLOUDFLARE_ACCOUNT_ID + Neon postgres URL + Firebase config in Secret Manager (EXTERNAL: real creds)" },
+    { "id": "auth", "context": "auth", "seam": "AuthPort", "depends": ["secrets-real"], "acceptance": "Firebase ID-token verification (BUILT: codeflow auth.mjs) + owner credential (BUILT)" },
+    { "id": "onboard", "context": "onboard", "seam": "OnboardPort", "depends": ["auth"], "acceptance": "OnboardingUI sign-in/up → admin (BUILT: portal); workspace provisioning row (PARTIAL)" },
+    { "id": "memory", "context": "memory", "seam": "MemoryPort", "depends": ["secrets-real"], "deferred": true, "acceptance": "per-user pgvector(384) live (BLOCKED: real DATABASE_URL + CF embedder; embed-corpus ready)" },
+    { "id": "admin-ui", "context": "admin", "seam": "AdminPort", "depends": ["auth", "memory"], "acceptance": "live status + codeflow + /api/assign (BUILT locally; UI panel held on parallel work)" },
+    { "id": "buddy", "context": "buddy", "seam": "BuddyPort", "depends": ["auth", "memory", "admin-ui"], "deferred": true, "acceptance": "HeadyBuddy task exec external/internal (PARTIAL: governed codeflow = internal; external exec needs sandbox/GitHub App ADR-0016/0021)" },
+    { "id": "engines", "context": "engines", "seam": "EnginePort", "depends": ["memory"], "deferred": true, "acceptance": "headybee/headyswarm async multi-agent on NATS (DESIGN: packages/bees not yet built; ADR-0020 bus)" },
+    { "id": "deploy", "context": "deploy", "seam": "DeployPort", "depends": ["auth", "admin-ui"], "deferred": true, "acceptance": "API→Cloud Run, portal→Firebase Hosting (BLOCKED: firebase login + org policy on public Cloud Run)" },
+    { "id": "dns", "context": "edge", "seam": "DnsPort", "depends": ["deploy"], "deferred": true, "acceptance": "headyme.com → live origin (EXTERNAL: DNS)" }
+  ],
+  "acceptance": [
+    { "id": "L1", "capability": "deploy", "criterion": "no public unauthenticated surface unless org policy permits" },
+    { "id": "L2", "capability": "auth", "criterion": "no unverified principal reaches a workspace" },
+    { "id": "L3", "capability": "memory", "criterion": "per-user memory isolated (tenant-namespaced)" },
+    { "id": "L4", "capability": "dns", "criterion": "the welcome/auth page actually serves at headyme.com before notifying the user" }
+  ]
+}

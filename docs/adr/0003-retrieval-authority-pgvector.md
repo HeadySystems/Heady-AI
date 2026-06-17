@@ -1,6 +1,6 @@
 # ADR-0003: Retrieval Authority — pgvector
 
-- **Status:** Proposed (2026-06-15) · **Amended** 2026-06-15 (v2 reconciliation — see §Amendment)
+- **Status:** Accepted (2026-06-17, founder approval per ADR-0013)
 - **Deciders:** Eric Anthony Haywood
 
 ## Context

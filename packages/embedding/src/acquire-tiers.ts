@@ -1,3 +1,7 @@
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ Embedding — tiered acquisition adapters                   ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // Tiered acquisition adapters (Rules 1 & 7). Canonical stack: Cloudflare KV → Vectorize → Neon pgvector.
 // Wires the platform stores into the pure `acquire()` from core.mjs. The read path NEVER embeds.
 import { acquire, type AcquireTier } from "./core.mjs";

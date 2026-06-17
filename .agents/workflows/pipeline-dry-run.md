@@ -2,15 +2,6 @@
 description: Pipeline dry-run — safely test pipeline changes without side effects
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
 # 🧪 Pipeline Dry-Run Workflow
 
 > Run before committing pipeline changes to validate correctness.

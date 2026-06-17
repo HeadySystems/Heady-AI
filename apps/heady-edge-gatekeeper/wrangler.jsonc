@@ -1,0 +1,48 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "heady-edge-gatekeeper",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-15",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+
+  "placement": { "mode": "smart" },
+
+  "ai": { "binding": "AI" },
+
+  "vectorize": [
+    { "binding": "VECTORIZE", "index_name": "heady-mem-384" }
+  ],
+
+  "kv_namespaces": [
+    { "binding": "CONFIG_KV", "id": "<KV_NAMESPACE_ID>" }
+  ],
+
+  "hyperdrive": [
+    { "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_CONFIG_ID>" }
+  ],
+
+  "queues": {
+    "producers": [
+      { "binding": "SIGNAL_QUEUE", "queue": "heady-signal-ingest" }
+    ],
+    "consumers": [
+      {
+        "queue": "heady-signal-ingest",
+        "max_batch_size": 13,
+        "max_batch_timeout": 5,
+        "max_retries": 3,
+        "dead_letter_queue": "heady-signal-dlq"
+      }
+    ]
+  },
+
+  "vars": {
+    "CLOUD_RUN_ORIGIN": "https://heady-api-xxxx-uc.a.run.app",
+    "MAX_SIGNATURE_AGE_SECONDS": "34"
+  }
+}

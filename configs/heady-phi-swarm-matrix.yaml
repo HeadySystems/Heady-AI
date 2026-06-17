@@ -1,0 +1,91 @@
+id: heady-phi-autonomous-matrix
+name: Heady Infinite Geometric Autonomous Matrix (v5.0)
+version: 5.0.0
+role: Unbounded CSL-driven continuous system enhancement governed by Sacred Geometry (φ).
+allocation:
+  strategy: phi-dynamic-expansion
+  phi_constant: 1.6180339887
+  expansion_limit: unbound
+workerAssignments:
+  # 1. HeadySystems
+  - swarmId: tensor-swarm
+    role: mathematical-core
+    scaling_formula: (gate_backlog * φ) / csl_confidence
+    trigger_threshold: 0.618 # Prominence Boost Gate
+  - swarmId: topology-swarm
+    role: spatial-architecture
+    scaling_formula: base_req * φ^1
+    trigger_threshold: 0.382 # Baseline Inclusion Gate
+  - swarmId: governance-swarm
+    role: security-compliance
+    scaling_formula: anomaly_index * φ^2
+    trigger_threshold: 0.618
+
+  # 2. HeadyMe
+  - swarmId: forge-swarm
+    role: ui-production
+    scaling_formula: (mutation_ideas * φ) / 1.618
+    trigger_threshold: 0.718 # Autonomous Injection Gate
+  - swarmId: persona-swarm
+    role: cognitive-alignment
+    scaling_formula: bio_sync_needs * φ^3
+    trigger_threshold: 0.618
+  - swarmId: studio-swarm
+    role: audio-visual
+    scaling_formula: context_flux * φ^1
+    trigger_threshold: 0.382
+
+  # 3. HeadyAI
+  - swarmId: foundry-swarm
+    role: fine-tuning
+    scaling_formula: dataset_entropy * φ^4
+    trigger_threshold: 0.618
+  - swarmId: emissary-swarm
+    role: external-bridging
+    scaling_formula: backlog_content * φ^2
+    trigger_threshold: 0.718
+  - swarmId: overmind-swarm
+    role: goal-decomposition
+    scaling_formula: intention_complexity * φ^3
+    trigger_threshold: 0.618
+  - swarmId: dreamer-swarm
+    role: simulation
+    scaling_formula: monte_carlo_paths * φ^2
+    trigger_threshold: 0.382
+  - swarmId: nexus-swarm
+    role: web3-integration
+    scaling_formula: tx_pool * φ^1
+    trigger_threshold: 0.618
+
+  # 4. HeadyConnection
+  - swarmId: diplomat-swarm
+    role: b2b-integration
+    scaling_formula: api_events * φ^1
+    trigger_threshold: 0.382
+  - swarmId: sentinel-swarm
+    role: threat-detection
+    scaling_formula: threat_vectors * φ^5
+    trigger_threshold: 0.718
+  - swarmId: arbiter-swarm
+    role: ip-protection
+    scaling_formula: code_changes * φ^2
+    trigger_threshold: 0.618
+  - swarmId: oracle-swarm
+    role: economic-guardrails
+    scaling_formula: cost_variance * φ^1
+    trigger_threshold: 0.382
+  - swarmId: quant-swarm
+    role: trading-optimization
+    scaling_formula: market_volatility * φ^4
+    trigger_threshold: 0.618
+  - swarmId: fabricator-swarm
+    role: iot-physical
+    scaling_formula: room_entropy * φ^1
+    trigger_threshold: 0.382
+
+projection:
+  enabled: true
+  uiRegion: core-infrastructure
+  sacred_geometry_renderer: WebGL_Octree_Phi
+observability:
+  metrics: [swarm_organic_growth, csl_confidence, phi_scaled_latency]

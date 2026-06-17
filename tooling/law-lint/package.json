@@ -1,0 +1,15 @@
+{
+  "name": "@heady/law-lint",
+  "version": "1.0.0",
+  "description": "Heady constitutional law scanner — CI-grade enforcement mirror of .claude/hooks/heady-rules.mjs",
+  "type": "module",
+  "bin": {
+    "heady-law-lint": "src/law-lint.mjs"
+  },
+  "scripts": {
+    "lint": "echo \"(lint wired at repo level)\"",
+    "test": "node --test test/law-lint.test.mjs"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

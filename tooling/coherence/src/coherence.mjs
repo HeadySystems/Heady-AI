@@ -49,7 +49,9 @@ const flat = (o, pfx = '') => Object.entries(o).flatMap(([k, v]) =>
 const CANON = ['docs', 'packages', 'tooling', 'configs', 'AGENTS.md', 'SOURCE_OF_TRUTH.md', 'CLAUDE.md', 'CLAUDE_MEMORY.md'];
 const grep = (ere, paths, extraAllow) => {
   try {
-    const args = ['-rInE', '--exclude-dir=node_modules', '--exclude-dir=.git', '--exclude-dir=.turbo', '--exclude-dir=dist', ere, ...paths];
+    // `drupal` + `superseded-v1` are quarantined legacy/archived surfaces (mirrors
+    // tooling/data-consistency/invariants.json scope.exclude) — not part of the canonical rebuild.
+    const args = ['-rInE', '--exclude-dir=node_modules', '--exclude-dir=.git', '--exclude-dir=.turbo', '--exclude-dir=dist', '--exclude-dir=drupal', '--exclude-dir=superseded-v1', ere, ...paths];
     return execFileSync('grep', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 })
       .split('\n').filter(Boolean)
       .filter((l) => !(extraAllow && extraAllow.test(l)));

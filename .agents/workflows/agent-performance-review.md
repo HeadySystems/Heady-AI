@@ -2,15 +2,6 @@
 description: Agent performance review — evaluate all agents for effectiveness and optimization
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
 # 📊 Agent Performance Review Workflow
 
 > Run monthly to evaluate agent effectiveness and identify optimization opportunities.
@@ -18,7 +9,7 @@ description: Agent performance review — evaluate all agents for effectiveness 
 ## Steps
 
 1. **Inventory all agents** — Scan `src/agents/` and `configs/agent-profiles/`
-   - heady-buddy-agent, heady-code-agent, heady-fintech-agent, nonprofit-agent
+   - heady-buddy-agent, claude-code-agent, heady-fintech-agent, nonprofit-agent
    - buddy-error-protocol, pipeline-handlers
 
 2. **Collect metrics per agent**:

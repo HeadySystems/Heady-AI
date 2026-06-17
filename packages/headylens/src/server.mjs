@@ -11,11 +11,41 @@
 // Records are already redacted at ingest (record.mjs); inputs are strictly validated + clamped.
 
 import { createServer } from "node:http";
+import { readFileSync, existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { FIB } from "@heady/phi-math";
 import { DETAIL, DETAIL_NAMES } from "./record.mjs";
 
 const log = (level, msg, f = {}) =>
   process.stdout.write(`${JSON.stringify({ t: "headylens-api", level, msg, ...f })}\n`);
+
+const VECTOR_MEMORY_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", ".data", "vector-memory");
+
+/** Read the persistent vector-memory connection state (the embedding projection). Never throws. */
+function vectorMemoryStatus() {
+  const read = (name) => {
+    try { return JSON.parse(readFileSync(join(VECTOR_MEMORY_DIR, name), "utf8")); } catch { return null; }
+  };
+  const merkle = read("merkle-index.json");
+  const report = read("embed-corpus-report.json");
+  const connected = Boolean(merkle || report);
+  return {
+    connected,
+    authority: "Neon pgvector (projection: .data/vector-memory)",
+    model: merkle?.model ?? null,
+    dim: merkle?.dim ?? null,
+    indexed: merkle?.count ?? 0,
+    merkleRoot: merkle?.root ? merkle.root.slice(0, 16) : null,
+    embedded: report?.embedded ?? 0,
+    enqueued: report?.enqueued ?? 0,
+    serving: report?.serving ?? null,
+    lastRun: report?.ranAt ?? null,
+    note: report && report.embedded === 0 && report.enqueued > 0
+      ? "indexed + enqueued; 0 embedded (no embedder binding — set Cloudflare Workers AI creds and run heady-embed)"
+      : null,
+  };
+}
 
 const MAX_LIMIT = FIB[18]; // 2584 — bound the query response
 
@@ -83,6 +113,10 @@ export function createLensServer(collector, opts = {}) {
         channels: ["event", "log", "span", "error"],
         detailTiers: DETAIL_NAMES,
       });
+    }
+
+    if (url.pathname === "/api/lens/memory") {
+      return json(res, 200, vectorMemoryStatus());
     }
 
     if (url.pathname === "/api/lens/query") {

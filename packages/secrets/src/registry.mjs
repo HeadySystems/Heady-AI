@@ -28,9 +28,11 @@ export const SECRETS = Object.freeze([
   // ── Sanctioned embedding binding (ADR-0015) ──
   { name: "CLOUDFLARE_ACCOUNT_ID", required: false, kind: "id", minLength: 8,
     description: "Cloudflare account id for the Workers AI embedding binding (non-secret)." },
+  { name: "CLOUDFLARE_EMAIL", required: false,
+    description: "Cloudflare account email — REQUIRED only when CLOUDFLARE_API_TOKEN is a legacy Global API Key (X-Auth-Email auth). Omit when using a scoped token (Bearer). Non-secret." },
   { name: "CLOUDFLARE_API_TOKEN", required: false, secret: true, minLength: 20,
     rotation: { strategy: "manual", maxAgeDays: FIB[11] },
-    description: "Workers AI token (scope: Workers AI:Read). Activates the locked embed path." },
+    description: "Workers AI credential. Preferred: a scoped token (Workers AI:Read → Bearer). Also accepts a legacy Global API Key (account-wide → set CLOUDFLARE_EMAIL). Activates the locked embed path." },
 
   // ── Retrieval authority (ADR-0003: Neon pgvector) ──
   { name: "DATABASE_URL", required: true, kind: "url", secret: true, prefix: "postgres",
@@ -75,6 +77,26 @@ export const SECRETS = Object.freeze([
   { name: "HEADY_OWNER_PASS", required: false, secret: true, minLength: 16,
     rotation: { strategy: "internal", maxAgeDays: FIB[9] },
     description: "Owner credential: a bearer recognized as the founder (human) for owner-level governance, incl. sensitive-path approval (ADR-0013). Prefer a Firebase ID token in production; rotate to high-entropy." },
+
+  // ── Extended providers / integrations (added 2026-06-17; rotated set) ──
+  { name: "ANTHROPIC_API_KEY2", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Secondary Anthropic API key (AI-Gateway rotation / load-spread)." },
+  { name: "ANTHROPIC_API_KEY3", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Tertiary Anthropic API key (AI-Gateway rotation / load-spread)." },
+  { name: "GITHUB_TOKEN", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "GitHub PAT for repo operations (clone/push/PR)." },
+  { name: "NEON_SECRET", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "provider", maxAgeDays: FIB[9] }, description: "Neon API key (branch/role management; distinct from DATABASE_URL)." },
+  { name: "PERPLEXITY_API_KEY", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Perplexity Sonar API key." },
+  { name: "PINECONE_API_KEY", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Pinecone API key. ⚠️ VESTIGIAL — the stack uses Neon pgvector (ADR-0003); Pinecone is not in the architecture. Retained per founder request; candidate for removal." },
+  { name: "SENTRY_AUTH_TOKEN", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Sentry auth token for release tracking / observability uploads." },
+  { name: "STRIPE_SECRET_KEY", required: false, secret: true, minLength: 20, prefix: "sk_",
+    rotation: { strategy: "provider", maxAgeDays: FIB[9] }, description: "Stripe secret key (billing; reserve-commit + Fibonacci tiers, ADR roadmap)." },
+  { name: "STRIPE_PUBLIC_KEY", required: false, kind: "id", prefix: "pk_",
+    description: "Stripe publishable key — public by design (client-side); non-secret." },
 ]);
 
 /** Look up one registry spec by name. */

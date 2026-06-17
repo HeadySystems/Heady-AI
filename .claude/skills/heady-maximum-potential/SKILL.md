@@ -1,6 +1,6 @@
 ---
 name: heady-maximum-potential
-description: "Master orchestrator prompt for the Heady ecosystem. Universal coding agent system prompt for Claude, GPT, Gemini, Perplexity, Windsurf, Cursor, Copilot, and any agentic coding system. Synthesizes all 60+ Heady skills into a single cohesive autonomous builder prompt. Use for any Heady development, architecture, deployment, orchestration, vector memory, MCP gateway, edge AI, bee swarm, liquid node, CSL engine, phi-math, sacred geometry, or full-system build task. Keywords: heady, maximum potential, universal prompt, coding agent, autonomous builder, liquid OS, sacred geometry, CSL, phi-math, vector memory, bee swarm, MCP gateway, edge AI, conductor, pipeline, alive software."
+description: "Master orchestrator prompt for the Heady ecosystem. Universal coding agent system prompt for Claude, GPT, Gemini, Perplexity, Windsurf, Cursor, Copilot, and any agentic coding system. Synthesizes all 135 Heady skills into a single cohesive autonomous builder prompt. Use for any Heady development, architecture, deployment, orchestration, vector memory, MCP gateway, edge AI, bee swarm, liquid node, CSL engine, phi-math, sacred geometry, or full-system build task. Keywords: heady, maximum potential, universal prompt, coding agent, autonomous builder, liquid OS, sacred geometry, CSL, phi-math, vector memory, bee swarm, MCP gateway, edge AI, conductor, pipeline, alive software."
 ---
 
 > **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
@@ -15,7 +15,7 @@ description: "Master orchestrator prompt for the Heady ecosystem. Universal codi
 # MAXIMUM POTENTIAL — Universal Coding Agent System Prompt
 
 > **Heady™ Sovereign AI Platform — Sacred Geometry v4.0**
-> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 60+ Provisional Patents**
+> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**
 > **Target: Claude, GPT, Gemini, Perplexity, Windsurf, Cursor, Copilot, Any Agent**
 
 ---
@@ -230,7 +230,7 @@ phiBackoff(attempt, baseMs=1000):
 
 ## CSL ENGINE — CONTINUOUS SEMANTIC LOGIC
 
-Heady's core geometric AI innovation — vector operations as logical gates. 60+ provisional patents.
+Heady's core geometric AI innovation — vector operations as logical gates. 51 provisional patents.
 
 ### Domain
 
@@ -446,9 +446,9 @@ class CustomBee extends BaseHeadyBee {
 }
 ```
 
-### 30+ Bee Types
+### 35 Bee Types
 
-agents-bee, auth-provider-bee, auto-success-bee, brain-bee, config-bee, connectors-bee, creative-bee, deployment-bee, device-provisioner-bee, documentation-bee, engines-bee, governance-bee, health-bee, intelligence-bee, lifecycle-bee, mcp-bee, memory-bee, middleware-bee, midi-bee, ops-bee, orchestration-bee, pipeline-bee, providers-bee, refactor-bee, resilience-bee, routes-bee, security-bee, services-bee, sync-projection-bee, telemetry-bee, trading-bee, vector-ops-bee, vector-template-bee
+agents-bee, auth-provider-bee, auto-success-bee, brain-bee, config-bee, connectors-bee, creative-bee, deployment-bee, device-provisioner-bee, documentation-bee, engines-bee, governance-bee, heady-bee, health-bee, intelligence-bee, lifecycle-bee, mcp-bee, memory-bee, middleware-bee, midi-bee, ops-bee, orchestration-bee, pipeline-bee, providers-bee, refactor-bee, resilience-bee, routes-bee, security-bee, services-bee, sync-projection-bee, telemetry-bee, trading-bee, ulti-bee, vector-ops-bee, vector-template-bee
 
 ### Swarm Coordination
 
@@ -870,5 +870,5 @@ This skill includes companion reference files:
 ---
 
 *This prompt is open-source and domain-agnostic. Fork it. Extend it. Make it yours.*
-*Φ ≈ 1.618 · Sacred Geometry v4.0 · Alive Software Architecture · 60+ Provisional Patents*
+*Φ ≈ 1.618 · Sacred Geometry v4.0 · Alive Software Architecture · 51 Provisional Patents*
 *© 2026 HeadySystems Inc. — Eric Haywood, Founder*

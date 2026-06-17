@@ -1,0 +1,12 @@
+name: CI
+jobs:
+  build:
+    steps:
+      - name: ESLint Security Scan
+        run: npm run lint
+      - name: Dependency audit
+        run: npm audit
+      - name: Run tests
+        run: npm test
+      - name: Build all packages
+        run: npm run build

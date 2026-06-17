@@ -1,6 +1,6 @@
 # ADR-0005: Agent Governance & Coder-Agent Blast Radius
 
-- **Status:** Proposed (2026-06-15)
+- **Status:** Accepted (2026-06-17, founder approval per ADR-0013)
 - **Deciders:** Eric Anthony Haywood
 
 ## Context

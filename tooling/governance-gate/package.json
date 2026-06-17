@@ -1,0 +1,15 @@
+{
+  "name": "@heady/governance-gate",
+  "version": "1.0.0",
+  "description": "Heady governance coverage gate — every patent-marked file must be CODEOWNERS-covered; workflows must stay in sync with commands.",
+  "type": "module",
+  "bin": {
+    "heady-governance-gate": "src/governance-gate.mjs"
+  },
+  "scripts": {
+    "lint": "echo \"(lint wired at repo level)\"",
+    "test": "node --test test/governance-gate.test.mjs"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

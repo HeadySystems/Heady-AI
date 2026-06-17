@@ -3,16 +3,7 @@ name: heady-battle-arena
 description: Competitive AI evaluation using Heady™Battle Arena Mode — pit AI nodes against each other to find the best solution for any task.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Battle Arena Skill
+# Heady Battle Arena Skill
 
 Use this skill when you need to **validate code quality, compare AI-generated solutions, or find the best approach** through competitive evaluation. HeadyBattle pits multiple AI nodes against each other and ranks results.
 

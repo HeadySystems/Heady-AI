@@ -1,6 +1,6 @@
 # ADR-0017: Projections Engine & Lifecycle
 
-- **Status:** Proposed (2026-06-15)
+- **Status:** Accepted (2026-06-17, founder approval per ADR-0013)
 - **Deciders:** Eric Anthony Haywood
 
 ## Context

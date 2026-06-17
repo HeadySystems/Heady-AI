@@ -1,6 +1,6 @@
 ---
 name: heady-perplexity-patent-search
-description: "Skill for searching and analyzing patent landscapes using Perplexity for HeadySystems IP portfolio development. Use when asked to search for patents, analyze prior art, assess patentability, map the IP landscape, or research competitors' patent portfolios. HeadySystems holds 60+ provisional patents. Triggers on \"patent\", \"prior art\", \"IP landscape\", \"patentability\", \"patent search\", \"provisional patent\", or any intellectual property research task."
+description: "Skill for searching and analyzing patent landscapes using Perplexity for HeadySystems IP portfolio development. Use when asked to search for patents, analyze prior art, assess patentability, map the IP landscape, or research competitors' patent portfolios. HeadySystems holds 51 provisional patents. Triggers on \"patent\", \"prior art\", \"IP landscape\", \"patentability\", \"patent search\", \"provisional patent\", or any intellectual property research task."
 ---
 
 > **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).

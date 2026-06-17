@@ -11,6 +11,7 @@ import {
 import { RingStore, NdjsonStore, multiStore } from "../src/store.mjs";
 import { createCollector, } from "../src/collector.mjs";
 import { createLens } from "../src/index.mjs";
+import { createLensServer } from "../src/server.mjs";
 
 test("redact masks secret-named keys and emails at any depth", () => {
   const out = redact({ token: "abc", email: "eric@x.com", nested: { password: "p", ok: 1 } });
@@ -90,6 +91,19 @@ test("collector records, fans out live, queries time-ordered, and erases", () =>
   unsub();
   assert.equal(collector.eraseByTrace("t1"), 2);
   assert.equal(collector.size, 0);
+});
+
+test("GET /api/lens/memory reports the persistent vector-memory connection state", async () => {
+  const server = createLensServer(createLens());
+  await new Promise((r) => server.listen(0, r));
+  try {
+    const m = await (await fetch(`http://127.0.0.1:${server.address().port}/api/lens/memory`)).json();
+    assert.equal(typeof m.connected, "boolean");
+    assert.ok("indexed" in m && "embedded" in m && "enqueued" in m, "reports index/embed/enqueue counts");
+    assert.ok("authority" in m && /pgvector/.test(m.authority));
+  } finally {
+    server.close();
+  }
 });
 
 test("multiStore fans writes to all stores", () => {

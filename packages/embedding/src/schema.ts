@@ -1,3 +1,7 @@
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ Embedding — Drizzle schema (Neon + pgvector authority)    ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // Drizzle schema for the embedding pipeline (Neon + pgvector). Canonical stack.
 // Three tables: the vector store (authority), the content-addressed ledger (dedup), and the
 // embedding-jobs outbox (durable, idempotent). DDL lands via expand→migrate→contract (ADR-0007).

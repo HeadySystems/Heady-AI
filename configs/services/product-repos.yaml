@@ -1,0 +1,42 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Product Repos Registry v1.0.0                         ║
+# ║  Source of truth for tracked product repositories              ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+products:
+  heady-manager:
+    repo: HeadySystems/Heady-AI
+    path: apps/heady-manager
+    tier: core
+    description: Central orchestration manager and API gateway
+
+  headyme-portal:
+    repo: HeadySystems/Heady-AI
+    path: apps/headyme-portal
+    tier: core
+    description: Headyme living honeycomb portal interface
+
+  heady-edge-proxy:
+    repo: HeadySystems/Heady-AI
+    path: cloudflare/heady-edge-proxy
+    tier: edge
+    description: Cloudflare Workers edge proxy for latent routing
+
+  heady-buddy:
+    repo: HeadySystems/Heady
+    path: heady-buddy
+    tier: companion
+    description: HeadyBuddy conversational companion
+
+  heady-mcp-server:
+    repo: HeadySystems/Heady
+    path: src/heady-mcp-server.js
+    tier: intelligence
+    description: MCP server for IDE and agent integration
+
+  heady-vector-memory:
+    repo: HeadySystems/Heady
+    path: src/vector-memory.js
+    tier: memory
+    description: 3D spatial vector memory with zone-first query

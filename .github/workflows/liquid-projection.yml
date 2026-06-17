@@ -1,0 +1,56 @@
+name: "Heady Liquid Projection"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/**'
+
+jobs:
+  compile-and-project:
+    runs-on: ubuntu-latest
+    environment: production
+    strategy:
+      matrix:
+        app: [mcp-dashboard, headysystems, ableton-edge]
+        include:
+          - app: mcp-dashboard
+            repo: headymcp-production
+          - app: headysystems
+            repo: headysystems-production
+          - app: ableton-edge
+            repo: ableton-edge-production
+
+    steps:
+      - name: Checkout Latent Core
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Enterprise Cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile Holographic UI (${{ matrix.app }})
+        run: npm run build --workspace=apps/${{ matrix.app }}
+        env:
+          NODE_ENV: production
+
+      - name: Sanitize & Strip Source Maps (Aegis Protocol)
+        run: find apps/${{ matrix.app }}/dist -name "*.map" -type f -delete || true
+
+      - name: Project to Spoke Repository (${{ matrix.repo }})
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.HEADY_PROJECTION_PAT }}
+        with:
+          source-directory: 'apps/${{ matrix.app }}/dist'
+          destination-github-username: 'HeadyMe'
+          destination-repository-name: '${{ matrix.repo }}'
+          user-email: 'orchestrator@headyme.com'
+          target-branch: 'main'
+          commit-message: 'Autonomous Projection: update ${{ matrix.repo }} chunk'
