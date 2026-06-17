@@ -5,6 +5,7 @@
 // ║  artifacts — never fabricated). © 2026 HeadySystems — E. Haywood   ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createServer } from 'node:http';
+import { timingSafeEqual } from 'node:crypto';
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, resolve, normalize } from 'node:path';
 import { FIB } from '../../phi-math/src/index.mjs';
@@ -17,6 +18,10 @@ const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const PORT = Number(process.env.PORT) || 8000 + FIB[13]; // Cloud Run injects PORT; local default 8233
 const ORIGIN = process.env.CODEFLOW_ORIGIN || '*';
 const TOKEN = process.env.CODEFLOW_TOKEN || ''; // optional service-to-service bearer (fail-closed when set)
+const OWNER_PASS = process.env.HEADY_OWNER_PASS || ''; // founder credential (ADR-0013) — a verified human
+const OWNER = process.env.HEADY_OWNER || 'owner';
+// constant-time compare for the higher-privilege owner credential
+const safeEq = (a, b) => { const x = Buffer.from(String(a)); const y = Buffer.from(String(b)); return x.length === y.length && timingSafeEqual(x, y); };
 const cf = new Codeflow({ root: ROOT });
 // Consistency-bus middleware: recognize HeadyRegistry-linked values on every payload (best-effort —
 // null when the registry hasn't been generated yet).
@@ -35,6 +40,8 @@ async function principal(req) {
   if (!authz.startsWith('Bearer ')) return TOKEN ? null : { email: 'anonymous:dev', service: true };
   const tok = authz.slice(7);
   if (TOKEN && tok === TOKEN) return { email: 'service:token', service: true };
+  // owner credential → the founder as a verified human (may approve sensitive paths, ADR-0013)
+  if (OWNER_PASS && safeEq(tok, OWNER_PASS)) return { email: OWNER, service: false, owner: true };
   try { const v = await verifyFirebaseToken(tok); return { email: v.email || v.uid, service: false }; }
   catch { return null; }
 }

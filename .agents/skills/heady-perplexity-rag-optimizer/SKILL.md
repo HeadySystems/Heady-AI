@@ -136,8 +136,8 @@ Compare embedding model quality for Heady content:
 | Model | Dimensions | Speed | Quality | Recommendation |
 |-------|-----------|-------|---------|---------------|
 | @cf/baai/bge-small-en-v1.5 | 384 | Fast | Good | **Locked default (ADR-0015)** |
-| all-mpnet-base-v2 | 768 | Medium | Better | Upgrade candidate |
-| Cloudflare BGE-large | 1024 | Fast (edge) | Best | Use for edge queries |
+| all-mpnet-base-v2 | 768 | Medium | Better | Rejected alternative (768≠384, breaks ADR-0015) |
+| Cloudflare BGE-large | 1024 | Fast (edge) | Best | Rejected alternative (1024≠384; comparison only) |
 
 Test with:
 ```bash
