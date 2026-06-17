@@ -1,0 +1,96 @@
+# HEADY_BRAND:BEGIN
+#   HEADY™ · .github/dependabot.yml
+#   Supply-chain hygiene for the clean-slate rebuild. Scoped to LIVE ecosystems
+#   only (pnpm workspace · Dockerfile · GitHub Actions) so the alert surface
+#   never re-inflates from legacy lockfile/archive sprawl.
+#   ∞ Sacred Geometry · Liquid Intelligence ∞
+#   © 2026 HeadySystems Inc. — Eric Haywood, Founder
+# HEADY_BRAND:END
+#
+# WHY THIS FILE EXISTS
+#   The legacy `main` branch carried 69 orphaned package-lock.json files plus
+#   _archive/ and _downloads/ trees, which inflated Dependabot to ~777 alerts —
+#   the same handful of CVEs counted once per duplicate lockfile. The `rebuild`
+#   branch is a deliberate clean slate: a single pnpm-lock.yaml, no _archive,
+#   no _downloads. This config keeps it that way.
+#
+# SCALING NOTE (LAW-10 · Sacred Geometry)
+#   open-pull-requests-limit values are Fibonacci (8, 5, 3) — higher headroom
+#   for the fast-moving JS workspace, less for slow Docker/Actions ecosystems.
+#
+# DESIGN
+#   - groups dev-dependency bumps so the test/build toolchain (vitest, esbuild,
+#     vite, etc.) lands as ONE PR instead of dozens.
+#   - separates security updates from version-churn so the coherence gate sees
+#     security fixes immediately.
+#   - weekly cadence (Mondays, America/Denver) — batched, low-noise.
+
+version: 2
+
+updates:
+  # ── JavaScript / TypeScript — the pnpm workspace (apps/* packages/* tooling/* configs/*)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "America/Denver"
+    open-pull-requests-limit: 8
+    labels:
+      - "dependencies"
+      - "javascript"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    groups:
+      # Batch the dev/build toolchain — never ships to production runtime.
+      dev-toolchain:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      # Batch routine production minor/patch bumps together.
+      production-minor-patch:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ── Container base image (single Dockerfile at repo root)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "America/Denver"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker)"
+      include: "scope"
+
+  # ── GitHub Actions — keeps the coherence-gate workflow's actions current.
+  #    (Existing actions are tag-pinned; bumps here keep them patched.)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "07:00"
+      timezone: "America/Denver"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "ci(actions)"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
