@@ -20,10 +20,20 @@
     "@heady/csl-engine": "workspace:*",
     "@heady/shared": "workspace:*",
     "@heady/events": "workspace:*",
-    "@heady/narrative": "workspace:*"
+    "@heady/narrative": "workspace:*",
+    "@heady/headylens": "workspace:*"
   },
   "devDependencies": {
     "@heady/headylens": "workspace:*"
   },
-  "keywords": ["heady", "auto-context", "enrichment", "middleware", "csl", "law-4", "vectorize", "projector"]
+  "keywords": [
+    "heady",
+    "auto-context",
+    "enrichment",
+    "middleware",
+    "csl",
+    "law-4",
+    "vectorize",
+    "projector"
+  ]
 }

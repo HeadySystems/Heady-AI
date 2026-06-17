@@ -16,10 +16,18 @@
   "dependencies": {
     "@heady/events": "workspace:*",
     "@heady/phi-math": "workspace:*",
-    "@heady/shared": "workspace:*"
+    "@heady/shared": "workspace:*",
+    "@heady/headylens": "workspace:*"
   },
   "devDependencies": {
     "@heady/headylens": "workspace:*"
   },
-  "keywords": ["heady", "narrative", "build-story", "glass-box", "events", "headylens"]
+  "keywords": [
+    "heady",
+    "narrative",
+    "build-story",
+    "glass-box",
+    "events",
+    "headylens"
+  ]
 }
