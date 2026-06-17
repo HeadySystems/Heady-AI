@@ -5,6 +5,7 @@
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { tokenize } from './roles.mjs';
+import { embedTexts, semanticScore, gateVerdict } from './semantic.mjs';
 
 /** competency match ∈ [0,1] — fraction of the task's terms the role covers. */
 function match(taskTokens, role) {
@@ -28,4 +29,30 @@ export function assign(task, roles, { topN } = {}) {
     .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score || a.role.localeCompare(b.role));
   return topN ? ranked.slice(0, topN) : ranked;
+}
+
+/** Semantic ranking: CSL-gated cosine(taskVec, role.vector) × perspective weight. Roles need vectors. */
+export function assignSemantic(taskVec, roles, { topN, tau } = {}) {
+  const ranked = roles
+    .filter((r) => Array.isArray(r.vector))
+    .map((r) => {
+      const sim = semanticScore(taskVec, r.vector);
+      return { role: r.id, kind: r.kind, weight: r.weight, similarity: Number(sim.toFixed(4)), verdict: gateVerdict(sim, tau), score: Number((sim * r.weight).toFixed(4)) };
+    })
+    .filter((r) => r.verdict !== 'REJECT' && r.score > 0) // CSL gate: drop rejected fits
+    .sort((a, b) => b.score - a.score || a.role.localeCompare(b.role));
+  return topN ? ranked.slice(0, topN) : ranked;
+}
+
+/**
+ * Perspective-weighted assignment with a fallback chain (AGENTS: never a single point of failure):
+ * semantic CSL-cosine when an embedder + role vectors are available, else lexical token-overlap.
+ * Returns { mode, ranked }.
+ */
+export async function assignWeighted(task, roles, { embedder, topN, tau } = {}) {
+  if (embedder && roles.some((r) => Array.isArray(r.vector))) {
+    const [taskVec] = await embedTexts(embedder, [task]);
+    if (Array.isArray(taskVec)) return { mode: 'semantic-csl', ranked: assignSemantic(taskVec, roles, { topN, tau }) };
+  }
+  return { mode: 'lexical', ranked: assign(task, roles, { topN }) };
 }
