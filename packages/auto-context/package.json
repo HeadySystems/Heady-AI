@@ -1,0 +1,22 @@
+{
+  "name": "@heady/auto-context",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady auto-context projector — Syncs Neon pgvector events to Cloudflare Vectorize edge cache.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/db": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/logger": "workspace:*"
+  },
+  "keywords": ["heady", "auto-context", "vectorize", "replication", "projector", "wal"]
+}
