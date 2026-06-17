@@ -1,20 +1,28 @@
 # Source of Truth
 
-> **Status:** Approved · **Date:** 2026-06-16
+> **Status:** Approved · **Date:** 2026-06-17
 > Canonical authority declaration for the Heady ecosystem. See ADR-0001.
+> **Updated 2026-06-17:** `rebuild` is now the default branch. `main` archived as `legacy/main-archive`.
+
+## Canonical branch
+
+| Branch | Status |
+|---|---|
+| **`rebuild`** | **Default + canonical — all new work targets here** |
+| `legacy/main-archive` | Frozen · locked · preserved for IP provenance (sha: 3a54aeee) |
+| `main` | Legacy pointer (will be retired after verification period) |
 
 ## Canonical repositories
 
 | Role | Repository | Status |
 |---|---|---|
-| **Canonical engineering monorepo** | `HeadySystems/Heady-AI` (this scaffold, `~/Heady-AI`) | **Authoritative** |
+| **Canonical engineering monorepo** | `HeadySystems/heady-ai` (`rebuild` branch) | **Authoritative** |
 | **Canonical docs / strategy / IP hub** | `HeadyMe/heady-docs` | Authoritative (read-only catalog) |
-| Migration source | `~/workspace/heady-ai` (legacy sprawl) | Source → archive after cutover |
 | Legacy core | `HeadyMe/Heady-pre-production-9f2f0642` | Migrate `heady-manager` logic, then archive |
 | `HeadySystems/main`, `HeadySystems/Heady`, `ai-workflow-engine` | — | **Archived** (do not build from) |
 | `*-core` satellites (headyme, headymcp, headysystems, …) | thin projection shells | **Fold into monorepo** or label projection-only |
 
-Releases, provenance, contract generation, and CI run **only** from the canonical monorepo.
+Releases, provenance, contract generation, and CI run **only** from the canonical monorepo, `rebuild` branch.
 
 ## Single authorities
 
@@ -34,7 +42,10 @@ Collapse 4 orgs → 1 (`HeadySystems`) as the first migration step, before code 
 
 ## Action items
 
-- [ ] Approve this declaration + ADR-0001.
+- [x] Approve this declaration + ADR-0001.
+- [x] Flip default branch to `rebuild` (2026-06-17).
+- [x] Archive `main` as `legacy/main-archive` (locked, tag: `archive/main-2026-06-17`).
+- [x] Branch protections on `rebuild`: CI gate + coherence gate required.
 - [ ] Add CI check: release/provenance only from canonical repo.
 - [ ] Archive the repos marked Archived; add projection manifests only for satellites that survive.
 
@@ -46,3 +57,7 @@ Collapse 4 orgs → 1 (`HeadySystems`) as the first migration step, before code 
 - `docs/PROVIDER_AND_OSS_MASTER_PLAN.md` — provider & open-source utilization.
 - `docs/compendium/` — exhaustive component-by-component reference (bees, swarms, governance, transforms, …).
 - `docs/adr/0000–0018` — architecture decisions (0000 + 0014–0018 added, 0003/0005 amended in v2 reconciliation).
+- `docs/ENV_SEPARATION.md` — legacy vs rebuild provider namespacing spec.
+
+φ = 1.618033988749895 — Fibonacci-scaled per LAW-10
+© 2026 HeadySystems Inc. — Eric Haywood, Founder
