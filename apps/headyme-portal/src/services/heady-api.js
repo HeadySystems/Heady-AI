@@ -20,6 +20,7 @@ async function call(method, path, body, token) {
 export const api = {
   status: () => call('GET', '/api/status'),
   files: (path, token) => call('GET', `/api/files?path=${encodeURIComponent(path || '.')}`, null, token),
+  assign: (task, token) => call('GET', `/api/assign?task=${encodeURIComponent(task)}`, null, token),
   listProposals: () => call('GET', '/codeflow/proposals'),
   submit: (p, token) => call('POST', '/codeflow/proposals', p, token),
   evaluate: (id, token) => call('POST', `/codeflow/proposals/${id}/evaluate`, {}, token),
