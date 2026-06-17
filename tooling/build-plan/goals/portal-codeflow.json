@@ -1,0 +1,46 @@
+{
+  "goal": "Fully-functional Heady admin workspace + native governed codebase interface",
+  "contexts": [
+    { "id": "auth", "name": "Auth (headykey/Firebase + headyvault)" },
+    { "id": "codeflow", "name": "Governed codeflow engine + API" },
+    { "id": "git-write", "name": "Production git-write path (GitHub App, ADR-0016)" },
+    { "id": "portal", "name": "headyme-portal admin UI" },
+    { "id": "infra", "name": "Deploy (Cloud Run + Firebase Hosting)" }
+  ],
+  "contracts": [
+    { "id": "AuthPort", "owner": "auth", "kind": "verify ID token → principal" },
+    { "id": "StatusPort", "owner": "codeflow", "kind": "real system status" },
+    { "id": "ValidatePort", "owner": "codeflow", "kind": "fail-closed validators" },
+    { "id": "WritePort", "owner": "codeflow", "kind": "apply/rollback a change (local fs OR GitHub App)" },
+    { "id": "FilesPort", "owner": "codeflow", "kind": "read-only codebase browse" },
+    { "id": "DiffPort", "owner": "codeflow", "kind": "proposal diff" },
+    { "id": "DeployPort", "owner": "infra", "kind": "ship API + portal" },
+    { "id": "ApiContract", "owner": "portal", "kind": "client↔server shapes" }
+  ],
+  "entities": [
+    { "id": "@heady/codeflow", "kind": "package" },
+    { "id": "headyme-portal", "kind": "app" },
+    { "id": "FIREBASE_PROJECT_ID", "kind": "env" },
+    { "id": "CODEFLOW_ORIGIN", "kind": "env" },
+    { "id": "VITE_CODEFLOW_API", "kind": "env" }
+  ],
+  "capabilities": [
+    { "id": "auth", "context": "auth", "seam": "AuthPort", "depends": [], "acceptance": "verified Firebase token → principal; reject bad/expired" },
+    { "id": "validate", "context": "codeflow", "seam": "ValidatePort", "depends": [], "acceptance": "credential/loopback/placeholder/diff-bounds block fail-closed" },
+    { "id": "status", "context": "codeflow", "seam": "StatusPort", "depends": [], "acceptance": "/api/status returns real coherence/registry/decomposition numbers" },
+    { "id": "governed-edit", "context": "codeflow", "seam": "WritePort", "depends": ["auth", "validate"], "acceptance": "submit→validate→govern→approve→apply→rollback; sensitive needs human" },
+    { "id": "file-browser", "context": "codeflow", "seam": "FilesPort", "depends": ["auth"], "acceptance": "read-only path-safe browse of the repo" },
+    { "id": "diff-view", "context": "codeflow", "seam": "DiffPort", "depends": ["governed-edit"], "acceptance": "proposal shows +added/-removed and preview" },
+    { "id": "onboarding", "context": "auth", "seam": "AuthPort", "depends": ["auth"], "acceptance": "email/password sign-in/up renders and routes to admin" },
+    { "id": "admin-ui", "context": "portal", "seam": "ApiContract", "depends": ["status", "governed-edit", "file-browser", "diff-view"], "acceptance": "live status cards + working codeflow panel" },
+    { "id": "prod-apply", "context": "git-write", "seam": "WritePort", "depends": ["governed-edit"], "deferred": true, "acceptance": "apply lands a PR via GitHub App (1-hour downscoped token)" },
+    { "id": "deploy", "context": "infra", "seam": "DeployPort", "depends": ["auth", "status", "governed-edit"], "acceptance": "API on Cloud Run, portal on Firebase Hosting" }
+  ],
+  "acceptance": [
+    { "id": "A1", "capability": "auth", "criterion": "no unverified principal can mutate" },
+    { "id": "A2", "capability": "governed-edit", "criterion": "no apply without an approved proposal" },
+    { "id": "A3", "capability": "admin-ui", "criterion": "no fake data — all status sourced" },
+    { "id": "A4", "capability": "prod-apply", "criterion": "prod apply uses GitHub App, never repo creds in a container" },
+    { "id": "A5", "capability": "deploy", "criterion": "no public unauthenticated surface unless org-policy permits" }
+  ]
+}
