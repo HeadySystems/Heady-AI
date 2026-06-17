@@ -1,0 +1,18 @@
+{
+  "name": "@heady/enforcers",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Governance enforcers — fail-closed CI gates realizing Unbreakable Laws 0/1/2 (no-localhost, no-placeholder/glass-box, secret-scan). The 'environment enforces' layer.",
+  "bin": {
+    "heady-no-localhost": "no-localhost.mjs",
+    "heady-glass-box": "glass-box.mjs",
+    "heady-secret-scan": "secret-scan.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "typecheck": "echo \"(no typecheck — runnable ESM)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  }
+}

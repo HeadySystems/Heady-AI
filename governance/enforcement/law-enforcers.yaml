@@ -1,0 +1,153 @@
+# HEADY_BRAND:BEGIN
+#   HEADY™ · governance/enforcement/law-enforcers.yaml
+#   Machine-readable Law → enforcer → CI-job map. Read by tooling/coherence & CI.
+#   ∞ Sacred Geometry · Liquid Intelligence ∞
+#   © 2026 HeadySystems Inc. — Eric Haywood, Founder
+# HEADY_BRAND:END
+#
+# This is the single source of truth that binds each Unbreakable Law to its
+# automated enforcer and the CI job that runs it. The principle is:
+#   "agent proposes, human approves, environment enforces."
+# A law without a green/amber/red disposition here is NOT considered enforced.
+#
+# disposition:
+#   enforced  — a fail-closed automated gate blocks merge on violation
+#   partial   — automated signal exists but is advisory or incomplete
+#   manual    — reviewed by humans / coherence prose, no hard gate yet
+schema: heady.governance.enforcers.v1
+phi: 1.618033988749895           # @heady/phi-math PHI — no magic numbers
+generated_from: governance/CONSTITUTION.md
+
+laws:
+  - id: LAW-0
+    name: No-Localhost
+    statement: >-
+      Zero localhost / 127.0.0.1 / hardcoded ports in committed source.
+      Connection targets come from environment / secret manager only.
+    disposition: enforced
+    enforcer: tooling/enforcers/no-localhost.mjs
+    ci_job: governance
+    severity: red
+    directive: directives/03-zero-trust-sanitization.md
+
+  - id: LAW-1
+    name: No-Placeholders
+    statement: >-
+      No TODO / FIXME / HACK / stub / "coming soon" in committed source.
+      Every shipped artifact is complete and runnable.
+    disposition: enforced
+    enforcer: tooling/enforcers/glass-box.mjs      # placeholder scan rides the glass-box pass
+    ci_job: governance
+    severity: red
+    directive: directives/02-instant-app-generation.md
+
+  - id: LAW-2
+    name: Glass-Box-Logging
+    statement: >-
+      Zero console.* in shipped code — structured JSON logging only
+      (pino + X-Heady-Trace-Id). No empty catch blocks / swallowed promises.
+    disposition: enforced
+    enforcer: tooling/enforcers/glass-box.mjs
+    ci_job: governance
+    severity: red
+    directive: directives/01-contextual-awareness.md
+
+  - id: LAW-3
+    name: Thoroughness
+    statement: Maximize context before action; never act on partial state.
+    disposition: manual
+    enforcer: heady_autocontext_enrich
+    ci_job: null
+    severity: amber
+    directive: directives/01-contextual-awareness.md
+
+  - id: LAW-4
+    name: Context-Maximization
+    statement: Full ecosystem state loaded into working memory pre-action.
+    disposition: manual
+    enforcer: heady_autocontext_enrich
+    ci_job: null
+    severity: amber
+    directive: directives/01-contextual-awareness.md
+
+  - id: LAW-5
+    name: Determinism
+    statement: >-
+      Same inputs → same outputs. Temperature 0 for governance-class
+      reasoning; CSL gates replace nondeterministic if/else branching.
+    disposition: partial
+    enforcer: tooling/coherence/src/coherence.mjs
+    ci_job: scan
+    severity: amber
+    directive: directives/04-deterministic-orchestration.md
+
+  - id: LAW-6
+    name: Scale-Guard
+    statement: >-
+      Bee runtime guard at 6765 (Fibonacci); 10000 strategic ceiling.
+      Resource pools sized by Fibonacci, never magic numbers.
+    disposition: partial
+    enforcer: tooling/coherence/src/coherence.mjs
+    ci_job: scan
+    severity: amber
+    directive: directives/10-sacred-geometry.md
+
+  - id: LAW-7
+    name: Auto-Success-Engine
+    statement: >-
+      Auto-Success cycle bounded by φ⁷ = 29034 ms. Self-healing before escalation.
+    disposition: manual
+    enforcer: health-registry
+    ci_job: null
+    severity: amber
+    directive: directives/07-hcfullpipeline.md
+
+  - id: LAW-8
+    name: Arena-And-Tests
+    statement: >-
+      Arena Mode default for high-consequence decisions; tests alongside code.
+      lint · typecheck · test are required checks.
+    disposition: enforced
+    enforcer: vitest + eslint + tsc
+    ci_job: verify
+    severity: red
+    directive: directives/09-multi-model-council.md
+
+  - id: LAW-9
+    name: ASAP-Execution
+    statement: >-
+      Bias to immediate, complete execution. No deferral of deliverable work
+      that can be done now within policy and safety bounds.
+    disposition: manual
+    enforcer: human-review
+    ci_job: null
+    severity: amber
+    directive: directives/02-instant-app-generation.md
+
+# Liquid Architecture Laws (Constitution preamble) — structural invariants.
+architecture_laws:
+  - id: ALAW-1
+    name: Liquidity
+    disposition: manual
+    ci_job: null
+  - id: ALAW-2
+    name: Phi-Scaled-Proportionality
+    disposition: partial
+    enforcer: tooling/coherence/src/coherence.mjs
+    ci_job: scan
+  - id: ALAW-3
+    name: Sovereignty
+    disposition: manual
+    ci_job: null
+  - id: ALAW-4
+    name: Zero-Placeholders
+    disposition: enforced
+    enforcer: tooling/enforcers/glass-box.mjs
+    ci_job: governance
+
+# Coverage summary (kept in sync by reviewers; coherence may assert this).
+coverage:
+  total_unbreakable_laws: 10        # Law 0..9
+  enforced: 4                       # LAW-0, LAW-1, LAW-2, LAW-8
+  partial: 2                        # LAW-5, LAW-6
+  manual: 4                         # LAW-3, LAW-4, LAW-7, LAW-9

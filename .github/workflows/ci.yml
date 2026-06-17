@@ -51,3 +51,45 @@ jobs:
       # Generated-not-authored: the committed registry must match a fresh regeneration.
       - name: variable-registry freshness
         run: git diff --exit-code docs/HEADY_VARIABLE_REGISTRY.md
+
+  governance:
+    name: governance gate (laws enforced from day one)
+    runs-on: ubuntu-latest
+    steps:
+      # Full history so the enforcers can diff the PR against its base (compliant
+      # day one: new code is held to the Unbreakable Laws without retroactively
+      # failing the rebuild baseline). fetch-depth: 0 = complete history.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # ── LAW 0 · secret-leak detection ──────────────────────────────
+      # gitleaks is the primary committed-secret gate; secret-scan.mjs below is a
+      # fast, dependency-free complement. (Renovate digest-pins this action.)
+      - name: secret-leak (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      # Resolve the diff base: the PR base on pull_request, else full-repo scan.
+      - name: resolve enforcement scope
+        id: scope
+        run: |
+          if [ -n "${{ github.event.pull_request.base.sha }}" ]; then
+            echo "args=--diff ${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=--all" >> "$GITHUB_OUTPUT"
+          fi
+      # ── LAW 0 · no-localhost (zero-tolerance) ──────────────────────
+      - name: no-localhost
+        run: node tooling/enforcers/no-localhost.mjs ${{ steps.scope.outputs.args }}
+      # ── LAWS 1 & 2 · glass-box logging + no placeholders ───────────
+      - name: glass-box
+        run: node tooling/enforcers/glass-box.mjs ${{ steps.scope.outputs.args }}
+      # ── LAW 0 · high-signal secret-scan (complements gitleaks) ─────
+      - name: secret-scan
+        run: node tooling/enforcers/secret-scan.mjs ${{ steps.scope.outputs.args }}
+      # The enforcers carry their own unit tests proving they are not no-ops.
+      - name: enforcer self-tests
+        run: node --test tooling/enforcers/test/
