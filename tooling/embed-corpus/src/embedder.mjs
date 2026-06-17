@@ -33,17 +33,23 @@ function assertVectors(data, expectedLen) {
   return data;
 }
 
-/** Cloudflare Workers AI — the canonical locked serving path. */
-function cloudflareEmbedder(accountId, token) {
+/** Cloudflare Workers AI — the canonical locked serving path.
+ *  Two credential shapes are supported: a scoped API token (preferred, least-privilege →
+ *  `Authorization: Bearer`) or a legacy account-wide Global API Key (requires the account email →
+ *  `X-Auth-Email` + `X-Auth-Key`). The shape is inferred from whether `email` is present. */
+function cloudflareEmbedder(accountId, token, email) {
   const endpoint = `${CF_API_BASE}/accounts/${accountId}/ai/run/${LOCKED_MODEL.id}`;
+  const authHeaders = email
+    ? { "X-Auth-Email": email, "X-Auth-Key": token }
+    : { Authorization: `Bearer ${token}` };
   return {
     model: LOCKED_MODEL,
-    serving: "workers-ai",
+    serving: email ? "workers-ai:global-key" : "workers-ai",
     async embed(texts) {
       if (texts.length === 0) return [];
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { ...authHeaders, "Content-Type": "application/json" },
         body: JSON.stringify({ text: texts }),
       });
       if (!res.ok) {
@@ -97,7 +103,9 @@ export function resolveEmbedder(env = process.env, opts = {}) {
 
   const cfAccount = env.CLOUDFLARE_ACCOUNT_ID;
   const cfToken = env.CLOUDFLARE_API_TOKEN || env.CLOUDFLARE_WORKERS_AI_TOKEN || env.CF_API_TOKEN;
-  if (cfAccount && cfToken) return cloudflareEmbedder(cfAccount, cfToken);
+  // A Global API Key needs the account email (X-Auth-*); a scoped token does not (Bearer).
+  const cfEmail = env.CLOUDFLARE_EMAIL || env.CLOUDFLARE_API_EMAIL || env.CF_API_EMAIL;
+  if (cfAccount && cfToken) return cloudflareEmbedder(cfAccount, cfToken, cfEmail);
 
   const allowHf = opts.allowHf === true || env.HEADY_ALLOW_HF_EMBED === "1";
   const hfToken = env.HF_TOKEN || env.HUGGINGFACE_TOKEN || env.HUGGINGFACEHUB_API_TOKEN;

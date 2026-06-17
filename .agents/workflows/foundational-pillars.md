@@ -2,15 +2,6 @@
 description: Foundational Pillars Validation — enforced before every Heady™ system modification
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
 # 🐝 Heady Foundational Pillars Workflow
 
 > **MANDATORY PRE-ACTION CHECKLIST.** Before adding, modifying, or removing ANY Heady system component, validate against every pillar below. If a change violates a pillar, it MUST be redesigned. No exceptions.
@@ -19,7 +10,7 @@ description: Foundational Pillars Validation — enforced before every Heady™ 
 
 ## Pillar 0 · HEADYOS IS NOT CONVENTIONAL SOFTWARE
 
-> **FOUNDING PRINCIPLE.** HeadyOS is a unique operating system with its own paradigms. It does NOT and SHOULD NOT follow common software engineering patterns. Every decision must be evaluated through the Heady™OS lens first.
+> **FOUNDING PRINCIPLE.** HeadyOS is a unique operating system with its own paradigms. It does NOT and SHOULD NOT follow common software engineering patterns. Every decision must be evaluated through the HeadyOS lens first.
 
 **HeadyOS Paradigm vs. Conventional Patterns:**
 
@@ -39,7 +30,7 @@ description: Foundational Pillars Validation — enforced before every Heady™ 
 **Constraints:**
 
 - **NEVER** default to a conventional pattern when a HeadyOS paradigm exists
-- When implementing new features, first ask: "What is the Heady™OS way to do this?"
+- When implementing new features, first ask: "What is the HeadyOS way to do this?"
 - If a conventional pattern is truly needed (e.g., Express for HTTP), wrap it in HeadyOS abstractions
 - Every constant should consider phi-based derivation, not arbitrary numbers
 - Inter-component communication should prefer MIDI events over HTTP where possible
@@ -98,7 +89,7 @@ Work is distributed through bee-colony workers. Every task is decomposable into 
 
 ## Pillar 3 · SACRED GEOMETRY AESTHETICS
 
-All UI/UX follows organic, breathing, phi-based design patterns. This is the Heady™ brand.
+All UI/UX follows organic, breathing, phi-based design patterns. This is the Heady brand.
 
 **Constraints:**
 
@@ -275,7 +266,7 @@ User input is proof of missing automation. If a human must manually instruct a s
 
 ## 🔒 ENFORCEMENT
 
-This workflow is consulted by every agent (HeadyBuddy, Claude Code Agent, Heady™ Coder, Antigravity, etc.) before writing or modifying ANY code. Violations are flagged by the `self-awareness.js` telemetry loop and the `rulez-gatekeeper.js` compliance engine.
+This workflow is consulted by every agent (HeadyBuddy, Claude Code Agent, Heady Coder, Antigravity, etc.) before writing or modifying ANY code. Violations are flagged by the `self-awareness.js` telemetry loop and the `rulez-gatekeeper.js` compliance engine.
 
 **Workflow execution order:**
 

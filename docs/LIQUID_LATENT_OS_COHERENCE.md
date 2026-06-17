@@ -71,7 +71,7 @@ yet" findings, cry wolf, and get disabled — worse than no gate.
 
 | Tier | Meaning | Effect | Example |
 |---|---|---|---|
-| **`error` — contradiction** | Two sources of truth **disagree** | **Blocks** (exit 2) | `facts` says 384, a migration says 1536; a skill imports dropped Qdrant; a doc says 51 patents, `facts` says 60 |
+| **`error` — contradiction** | Two sources of truth **disagree** | **Blocks** (exit 2) | `facts` says 384, a migration says 1536; a skill imports dropped Qdrant; a doc says 384-dim, a migration says 1536 |
 | **`info` — incompleteness** | Something is **declared but unbuilt** | **Reported, never blocks** | 24 planned packages absent; a package without a README |
 
 Only contradictions block. Incompleteness is the normal state of a build in progress.
@@ -241,7 +241,7 @@ the Kernel.
 
 ## 10. What to do with today's findings
 
-1. **Settle the patent count** (60 vs 51 vs 8): decide the true number, write it once in `facts.yaml`,
+1. **Patent count RESOLVED** = 51 (HS-2026-001..051) — canonical in `facts.yaml`;
    delete the restatements (or make them a generated badge). Re-run → `C-patents` goes green.
 2. **Reconcile `@heady/csl` vs `@heady/csl-engine`**: pick one; update the decomposition manifest or
    rename the package. Re-run → `S6` goes green.

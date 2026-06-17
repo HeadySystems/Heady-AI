@@ -3,16 +3,7 @@ name: heady-research
 description: Deep web research with citations using Heady™Research (Perplexity Sonar Pro) — use when the user needs sourced answers, literature review, or real-time web intelligence.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Research Skill
+# Heady Research Skill
 
 Use this skill whenever a task requires **web research, sourced answers, academic review, or real-time news intelligence**. HeadyResearch is powered by Perplexity Sonar Pro and returns rich answers with URL citations.
 

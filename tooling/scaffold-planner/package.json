@@ -1,0 +1,22 @@
+{
+  "name": "@heady/scaffold-planner",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive rebuild-plan planner — native CLI + AdminUI section. Two builds: Heady-V1 (legacy) and Heady-AI (rebuild). Accept/defer/replan options; HeadyBuddy replan is pluggable.",
+  "bin": {
+    "heady-scaffold": "src/scaffold.mjs"
+  },
+  "exports": {
+    "./core": "./src/core.mjs",
+    "./server": "./src/server.mjs"
+  },
+  "scripts": {
+    "plan": "node src/scaffold.mjs plan",
+    "serve": "node src/scaffold.mjs serve",
+    "test": "node --test test/scaffold.test.mjs test/server.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "scaffold", "rebuild-plan", "interactive", "heady-v1", "heady-ai"]
+}

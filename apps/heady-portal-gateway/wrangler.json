@@ -1,0 +1,11 @@
+{
+  "name": "heady-portal-gateway",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-01",
+  "observability": { "enabled": true },
+  "vars": {
+    "FIREBASE_PROJECT_ID": "heady-ai",
+    "CLOUD_RUN_URL": "https://heady-codeflow-api-1003436179562.us-east1.run.app",
+    "ALLOWED_ORIGINS": "https://heady-ai.web.app,https://headyme.com,https://www.headyme.com"
+  }
+}

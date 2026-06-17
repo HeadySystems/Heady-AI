@@ -1,0 +1,89 @@
+{
+  "$heady": "HEADY™ Scaffold Plan — the interactive rebuild option tree. Single source of truth for both interfaces (AdminUI section + heady-scaffold CLI). Decisions are an OVERLAY (.data/scaffold/decisions.json or browser localStorage), never written back here.",
+  "version": "1.0.0",
+  "updated": "2026-06-16",
+  "derivedFrom": ["docs/REBUILD_PLAN_V2.md (§13 phase plan)", "docs/PACKAGE_CATALOG.md (tier status)", "docs/STEPWISE_BUILD_SPEC.md"],
+  "decisionStates": ["pending", "accepted", "deferred", "replan"],
+  "builds": {
+    "heady-v1": {
+      "id": "heady-v1",
+      "label": "Heady-V1 — legacy build",
+      "kind": "legacy",
+      "root": "~/Heady",
+      "summary": "The current/legacy production build (75 fragmented repos / 50+ services), being decomposed and migrated into Heady-AI. Interface shows each legacy layer's migration disposition.",
+      "source": "docs/LEGACY_STACK_COMPONENT_DISPOSITION.md + tooling/decomposition (.data/decomposition/decomposition-report.json when present)",
+      "options": [
+        { "id": "v1.apps", "title": "Legacy apps + admin-ui", "disposition": "project", "detail": "Frontends fold into apps/headyme-portal; legacy admin-ui projected one-way (manifest-authoritative, ADR-0001).", "refs": ["ADR-0001"] },
+        { "id": "v1.agents", "title": "Agents + skills library", "disposition": "migrate", "detail": "dropzone/06-Skills-Library → .agents/skills via heady-sync (content-addressed, provenance-tracked).", "refs": ["sync.mjs"] },
+        { "id": "v1.adapters", "title": "Adapters / connectors", "disposition": "rebuild", "detail": "Re-expressed as @heady/contracts + connector-forge; no direct port.", "refs": ["PACKAGE_CATALOG"] },
+        { "id": "v1.infra", "title": "Infrastructure-hardening", "disposition": "supersede", "detail": "Superseded by Phase-0 containment (Secret Manager/OIDC, supply-chain CI) and security-mesh.", "refs": ["STEPWISE_BUILD_SPEC 0.x"] },
+        { "id": "v1.drupal", "title": "Drupal config (headless CMS)", "disposition": "evaluate", "detail": "Headless Drupal + JSON:API content sync — keep as a content source; evidence-gate before full port." },
+        { "id": "v1.dumps", "title": "~32 core dumps (~375 GB)", "disposition": "drop", "detail": "Operational hazard cleanup (Phase 0); investigate then purge.", "refs": ["REBUILD_PLAN_V2 §0"] },
+        { "id": "v1.qdrant", "title": "Qdrant vector store", "disposition": "drop", "detail": "DROPPED (ADR-0003 amended, R2). Authority = Neon pgvector; edge cache = Vectorize.", "refs": ["ADR-0003"] }
+      ]
+    },
+    "heady-ai": {
+      "id": "heady-ai",
+      "label": "Heady-AI — rebuild (v2 plan)",
+      "kind": "rebuild",
+      "root": "/home/headyme/Heady-AI",
+      "summary": "The Turborepo modular-monolith rebuild. ≤1 net-new platform per phase; every gate is a condition (REBUILD_PLAN_V2 §13).",
+      "phases": [
+        {
+          "id": "phase-0", "label": "Phase 0 — Containment & authority", "priority": "P0",
+          "options": [
+            { "id": "p0.secret-manager", "title": "GCP Secret Manager + keyless OIDC", "status": "done", "detail": "@heady/secrets + heady-secrets rotate/grant/doctor; the one new platform.", "refs": ["STEPWISE 0.3", "SEC-001"] },
+            { "id": "p0.secret-purge", "title": "Secret purge + key rotation", "status": "in-progress", "detail": "git filter-repo purge; rotation via heady-secrets. R-1/R-2 live keys flagged.", "refs": ["SEC-001"] },
+            { "id": "p0.supply-chain-ci", "title": "Supply-chain CI (gitleaks/Semgrep/Trivy/Renovate)", "status": "pending", "detail": "Actions pinned to digests.", "refs": ["STEPWISE 0.5"] },
+            { "id": "p0.agents-md", "title": "AGENTS.md hierarchy + anti-sprawl gates", "status": "done", "detail": "Root AGENTS.md + consistency gate + skeleton-guard + rule-gate hook." },
+            { "id": "p0.stage0", "title": "Stage 0 declared untouchable", "status": "done", "detail": "Eval harness / fidelity gate / phi_circuit_breaker / CODEOWNERS / merge button.", "refs": ["REBUILD_PLAN_V2 §7"] }
+          ]
+        },
+        {
+          "id": "phase-1", "label": "Phase 1 — Backbone packages", "priority": "P0",
+          "options": [
+            { "id": "p1.phi-math", "title": "@heady/phi-math", "status": "done" },
+            { "id": "p1.csl-engine", "title": "@heady/csl-engine", "status": "done", "refs": ["⚠️ patent HS-2026-051+"] },
+            { "id": "p1.contracts", "title": "@heady/contracts (OpenAPI+Zod)", "status": "done" },
+            { "id": "p1.db", "title": "@heady/db (Drizzle, Neon pgvector)", "status": "done", "detail": "Neon = the new platform.", "refs": ["ADR-0003/0007/0014"] },
+            { "id": "p1.security-mesh", "title": "@heady/security-mesh", "status": "done", "refs": ["⚠️ patent HS-2026-051+"] },
+            { "id": "p1.vault", "title": "heady-vault (runtime secret binding)", "status": "done", "detail": "Realized as @heady/secrets loadSecrets (fail-closed).", "refs": ["STEPWISE 1.6"] },
+            { "id": "p1.observability", "title": "@heady/observability + logger (OTel/Sentry/Langfuse)", "status": "done" }
+          ]
+        },
+        {
+          "id": "phase-2", "label": "Phase 2 — Task ledger + memory", "priority": "P0/P1",
+          "options": [
+            { "id": "p2.task-ledger", "title": "Task ledger (Linear/Sentry outbox mirrors)", "status": "pending", "refs": ["REBUILD_PLAN_V2 §9"] },
+            { "id": "p2.memory-stream", "title": "memory-stream (CoALA/Letta/mem0 on pgvector)", "status": "pending", "refs": ["§6"] },
+            { "id": "p2.embedding", "title": "Embedding pipeline locked (bge-small-en-v1.5, 384)", "status": "done", "detail": "@heady/embedding + heady-embed gate-then-embed corpus workflow.", "refs": ["ADR-0015/0023/0024"] },
+            { "id": "p2.auto-context", "title": "auto-context (WAL→projector CDC)", "status": "pending", "refs": ["ADR-0007"] },
+            { "id": "p2.eval-harness", "title": "Langfuse + eval harness (OS of the OS)", "status": "pending" }
+          ]
+        },
+        {
+          "id": "phase-3", "label": "Phase 3 — Apps, MCP + Console, native agent loop", "priority": "P1",
+          "options": [
+            { "id": "p3.portal", "title": "headyme-portal Console (unblocks Google for Startups)", "status": "in-progress", "detail": "AdminUI shell; this scaffold planner is a section in it.", "refs": ["§8"] },
+            { "id": "p3.codeflow", "title": "@heady/codeflow (governed change proposals)", "status": "done", "detail": "propose→evaluate→approve→apply→rollback (ADR-0005)." },
+            { "id": "p3.headylens", "title": "@heady/headylens (observability/audit lens)", "status": "done", "detail": "events+logs+spans → time-ordered detail-graded stream + query/SSE." },
+            { "id": "p3.api-gateway", "title": "api-gateway (edge reads, origin writes)", "status": "pending", "refs": ["§5"] },
+            { "id": "p3.heady-manager", "title": "heady-manager (route decomposition)", "status": "pending" },
+            { "id": "p3.mcp-server", "title": "heady-mcp-server (Streamable HTTP)", "status": "pending" },
+            { "id": "p3.agent-loop", "title": "Native agent loop (stage0→stage1, Writer/Reviewer)", "status": "pending", "refs": ["§7"] },
+            { "id": "p3.approval", "title": "HCP approval system (OPA/Rego, 2-approver patent gate)", "status": "in-progress", "detail": "HCP-0001 drafted; codeflow approval-adjacent.", "refs": ["§10", "docs/hcp"] }
+          ]
+        },
+        {
+          "id": "phase-4", "label": "Phase 4 — Expand carefully (evidence-gated)", "priority": "P2",
+          "options": [
+            { "id": "p4.agent-stage2", "title": "Agent stage2 (condition-gated)", "status": "deferred" },
+            { "id": "p4.billing", "title": "Stripe + Reserve-Commit billing + Fibonacci tiers", "status": "deferred" },
+            { "id": "p4.compliance", "title": "990 Parser + PHI compliance + sovereign DB", "status": "deferred" },
+            { "id": "p4.second-vector", "title": "Second vector engine (only on benchmark evidence)", "status": "deferred", "refs": ["ADR-0003"] }
+          ]
+        }
+      ]
+    }
+  }
+}

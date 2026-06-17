@@ -1,3 +1,7 @@
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ Embedding — HCEmbedPipeline durable workflow              ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HCEmbedPipeline — the durable embedding workflow (Cloudflare Workflows). Canonical stack.
 // Each step is memoized + retryable; the whole thing is idempotent on `idempotencyKey` (= vectorKey).
 // This is where the acquisition ruleset is enforced as control flow:

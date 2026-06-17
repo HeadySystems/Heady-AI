@@ -2,15 +2,6 @@
 description: Enforce deep-scan and deep-research at the start of every task to establish full codebase context before implementation work.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
 # Deep-Scan Task Initialization Workflow
 
 **Every task MUST begin with deep-scan and deep-research to establish full context.**
@@ -24,7 +15,7 @@ Run the deep-scan skill against the project root to map the entire workspace int
 
 ```
 Read the deep-scan skill at:
-/home/headyme/Heady-AI/.agents/skills/heady-deep-scan/SKILL.md
+/home/headyme/HeadyClone/Heady-pre-production-9f2f0642/.agents/skills/heady-deep-scan/SKILL.md
 ```
 
 Then analyze the relevant project area:
@@ -41,7 +32,7 @@ Use the heady-research skill (Perplexity Sonar Pro) for any external context nee
 
 ```
 Read the research skill at:
-/home/headyme/Heady-AI/.agents/skills/heady-research/SKILL.md
+/home/headyme/HeadyClone/Heady-pre-production-9f2f0642/.agents/skills/heady-research/SKILL.md
 ```
 
 Research topics should include:

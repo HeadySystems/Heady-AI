@@ -1,0 +1,210 @@
+{
+  "generatedAt": "2026-06-17T07:00:41.925Z",
+  "policyVersion": 1,
+  "health": {
+    "endpoint": "/api/antigravity/health",
+    "status": "healthy",
+    "workspaceMode": "3d-vector",
+    "gateway": "heady",
+    "autonomousMode": "optimized-autonomous"
+  },
+  "enforcedGateway": "heady",
+  "workspaceMode": "3d-vector",
+  "autonomousMode": "optimized-autonomous",
+  "optimizationReportHash": "2cb49d79ef1d9b62fcdf8df3796988a7a563ca626d0a62b903aa0f0039f60359",
+  "topTemplates": [
+    {
+      "id": "hb-deployment-operator-v1",
+      "score": 0.67375
+    },
+    {
+      "id": "hb-vector-memory-master-v1",
+      "score": 0.659167
+    },
+    {
+      "id": "hb-swarm-coordinator-v1",
+      "score": 0.6425
+    },
+    {
+      "id": "hb-orchestration-conductor-v1",
+      "score": 0.639167
+    },
+    {
+      "id": "hb-compliance-sentinel-v2",
+      "score": 0.6375
+    }
+  ],
+  "samplePlan": {
+    "enforced": true,
+    "gateway": "heady",
+    "workspaceMode": "3d-vector",
+    "autonomousMode": "optimized-autonomous",
+    "operation": {
+      "initiatedBy": "owner",
+      "source": "antigravity",
+      "task": "autonomous-runtime-sync",
+      "situation": "autonomous-deploy",
+      "metadata": {
+        "initiatedBySystem": true
+      }
+    },
+    "selectedTemplates": [
+      {
+        "id": "hb-deployment-operator-v1",
+        "name": "Deployment Operator",
+        "zone": 3,
+        "skills": [
+          "git-push",
+          "hf-spaces-deploy",
+          "cloud-run-deploy",
+          "post-deploy-verify",
+          "rollback",
+          "canary-check"
+        ],
+        "workflows": [
+          "pre-deploy-gate",
+          "build-push",
+          "deploy-target",
+          "smoke-test",
+          "rollback-if-failed"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "run-pre-deploy-gate",
+          "build-artifacts",
+          "push-to-github",
+          "deploy-hf-space",
+          "deploy-cloud-run",
+          "run-smoke-tests",
+          "rollback-deploy"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "digital-presence-launch",
+          "edge-failover"
+        ],
+        "healthEndpoint": "/api/deployment/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops",
+          "auto-success"
+        ],
+        "optimizationScore": 0.67375
+      },
+      {
+        "id": "hb-vector-memory-master-v1",
+        "name": "Vector Memory Master",
+        "zone": 1,
+        "skills": [
+          "spatial-embedding",
+          "octree-management",
+          "cache-sync",
+          "pre-fetching",
+          "federation",
+          "hybrid-search"
+        ],
+        "workflows": [
+          "ingest-embed-cache",
+          "pre-fetch-loop",
+          "federation-sync",
+          "memory-health-check",
+          "receipts-audit"
+        ],
+        "nodes": [
+          "BUDDY",
+          "PYTHIA",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "spatial-embed-payload",
+          "octree-insert",
+          "redis-cache-push",
+          "pre-fetch-adjacent",
+          "validate-embedding-integrity",
+          "compact-cold-vectors"
+        ],
+        "situations": [
+          "memory-compaction",
+          "data-migration",
+          "performance-tuning",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/vector-memory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "vector-templates",
+          "sync-projection"
+        ],
+        "optimizationScore": 0.659167
+      },
+      {
+        "id": "hb-swarm-coordinator-v1",
+        "name": "Swarm Coordinator",
+        "zone": 0,
+        "skills": [
+          "bee-orchestration",
+          "parallel-dispatch",
+          "swarm-scaling",
+          "work-distribution",
+          "blast-optimization",
+          "concurrency-control"
+        ],
+        "workflows": [
+          "dispatch-swarm",
+          "scale-bees",
+          "optimize-blast",
+          "balance-load",
+          "measure-throughput"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "bee_orchestration",
+          "parallel_dispatch",
+          "swarm_scaling",
+          "work_distribution",
+          "blast_optimization",
+          "concurrency_control"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/swarm/coordinator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "services",
+          "agents",
+          "lifecycle"
+        ],
+        "optimizationScore": 0.6425
+      }
+    ],
+    "requiredSwarmTasks": [
+      "vector-context-bootstrap",
+      "template-selection",
+      "autonomous-execution",
+      "projection-sync",
+      "post-op-learning-ingest"
+    ],
+    "vectorWorkspace": {
+      "enabled": true,
+      "dimensions": 3,
+      "zoneRouting": true,
+      "instantExecution": true
+    }
+  }
+}

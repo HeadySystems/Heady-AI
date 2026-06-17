@@ -42,6 +42,24 @@ We are rebuilding the Heady ecosystem from 75 fragmented legacy repositories and
      transmit patent IP to a third party. **Current state: 268 jobs enqueued, 0 vectors written** —
      blocked solely on the Cloudflare token (user-supplied). Inject it and re-run to embed.
 
+8. **Realtime Change Awareness:** Built `tooling/awareness` (`@heady/awareness`, `heady-awareness`)
+   — the realtime layer that makes Heady (and any external AI) aware of codebase changes and keeps
+   context current. Deliberately git-event-driven (post-commit/merge/checkout/rewrite hooks) + an
+   optional φ⁷≈29s HEAD-poll, NOT a filesystem watcher (the fs-wide watcher caused the 1400%CPU/11GB
+   blowup, §6). On each reaction it spawns `heady-embed --json` (the ONE embed code path — ledger stays
+   authority, gate stays fail-closed), rebuilds `.data/awareness/context.json` (the canonical
+   current-state snapshot any AI reads), and emits a durable redacted event to
+   `.data/awareness/lens.ndjson` (HeadyLens query + SSE). The snapshot is honest: `embedderBound:false`
+   / `currency.blockedReason` while the outbox is enqueue-only (still blocked on the Cloudflare token).
+   - "Squash merges" shipped NON-destructively: `heady-awareness propose-squash` clusters `base..HEAD`
+     by CSL-cosine over a semantic+structural feature bag (τ=CSL_THRESHOLDS.LOW 0.691), synthesizes a
+     conventional-commit message per cluster, and emits the exact git commands but NEVER runs them
+     (`autoApply:false, destructive:true, requiresHumanConfirmation:true`).
+   - Latent Service `{ start, stop, health, metrics }`. 7/7 unit tests pass; whole-repo consistency
+     gate clean (241 canonical + 198 extended).
+   - **To make it realtime:** run `heady-awareness install-hooks` once (NOT auto-installed — executable
+     git hooks are persistence), or `heady-awareness serve --poll`.
+
 ## 3. Immediate Next Steps (Phase 1)
 We are currently entering **Phase 1: Security Containment & Math Foundation**.
 Claude should focus on the following extracted tasks:

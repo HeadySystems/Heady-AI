@@ -1,0 +1,18 @@
+{
+  "$schema": "./autopilot.schema.json",
+  "description": "Heady Autopilot defaults. CLI directives (--autonomy, --grill-me, --no-sync, --conditions) override these. See .agents/skills/heady-autopilot/SKILL.md.",
+  "autonomy": "L2",
+  "grillMe": "auto",
+  "sync": true,
+  "verify": "standard",
+  "maxParallel": 8,
+  "budgetTokens": null,
+  "forbid": ["prod-deploy", "destructive", "commit-secrets"],
+  "closeout": {
+    "secretScanAddedLines": true,
+    "commit": true,
+    "push": true,
+    "sync": "scripts/heady-sync.sh",
+    "log": "headylens"
+  }
+}

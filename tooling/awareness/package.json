@@ -1,0 +1,27 @@
+{
+  "name": "@heady/awareness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady Change Awareness: git-event-driven realtime codebase awareness. On every commit/merge/checkout it runs the fail-closed consistency gate, advances the Merkle-triggered embed outbox (via heady-embed), and republishes a current-state context snapshot so Heady or any external AI reads live data. Squash-merge is a NON-destructive proposal — never an unattended history rewrite.",
+  "bin": {
+    "heady-awareness": "src/cli.mjs"
+  },
+  "exports": {
+    ".": "./src/service.mjs",
+    "./react": "./src/react.mjs",
+    "./context": "./src/context.mjs",
+    "./squash": "./src/squash.mjs",
+    "./git": "./src/git.mjs"
+  },
+  "scripts": {
+    "react": "node src/cli.mjs react",
+    "context": "node src/cli.mjs context --json",
+    "status": "node src/cli.mjs status --json",
+    "install-hooks": "node src/cli.mjs install-hooks",
+    "test": "node --test test/awareness.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "keywords": ["heady", "awareness", "realtime", "merkle", "git-hooks", "context", "squash", "sse", "csl"]
+}

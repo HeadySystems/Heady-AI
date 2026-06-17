@@ -1,0 +1,42 @@
+# ═══════════════════════════════════════════════════════════════
+# HEADY CODEOWNERS — IP Protection Layer (Ring 1)
+# HeadySystems Inc. — auto-review for sensitive paths
+# ═══════════════════════════════════════════════════════════════
+
+# ── Core Intellectual Property ──
+/heady-manager.js                    @HeadyMe/core-team
+/src/heady-conductor.js              @HeadyMe/core-team
+/src/agent-orchestrator.js           @HeadyMe/core-team
+/src/vector-memory.js                @HeadyMe/core-team
+/src/vector-pipeline.js              @HeadyMe/core-team
+/src/vector-space-ops.js             @HeadyMe/core-team
+
+# ── Security & Governance ──
+/src/security/                       @HeadyMe/core-team
+/src/auth/                           @HeadyMe/core-team
+/configs/code-governance.yaml        @HeadyMe/core-team
+
+# ── Orchestration Layer ──
+/src/orchestration/                  @HeadyMe/core-team
+
+# ── Infrastructure & Deployment ──
+/Dockerfile*                         @HeadyMe/core-team
+/.github/workflows/                  @HeadyMe/core-team
+/infrastructure/                     @HeadyMe/core-team
+
+# ── SDK & Distribution ──
+/heady-hive-sdk/                     @HeadyMe/core-team
+/.npmignore                          @HeadyMe/core-team
+/.gitignore                          @HeadyMe/core-team
+
+# ── Agent Definitions ──
+/.agents/                            @HeadyMe/core-team
+
+# ── Patent Zones (HS-2026-051..062) — ARBITER + core-team review required ──
+# Founder-approved (Eric Haywood, 2026-06-17). Append-only; closes the coverage
+# hole found by tooling/governance-gate (patent-marked files routing to no reviewer).
+# Placed last to win under CODEOWNERS last-match-wins for these paths.
+/packages/csl-engine/                @HeadyMe/core-team
+/packages/security-mesh/             @HeadyMe/core-team
+/packages/memory-stream/             @HeadyMe/core-team
+/packages/auto-context/              @HeadyMe/core-team

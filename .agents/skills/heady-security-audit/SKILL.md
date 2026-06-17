@@ -1,18 +1,9 @@
 ---
 name: heady-security-audit
-description: Heady™ comprehensive security auditing — vulnerability scanning, risk assessment, mitigation planning, and pattern analysis via Heady™Risks, HeadyAnalyze, and HeadyPatterns.
+description: Heady™ comprehensive security auditing — vulnerability scanning, risk assessment, mitigation planning, and pattern analysis via HeadyRisks, HeadyAnalyze, and HeadyPatterns.
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Security Audit Skill
+# Heady Security Audit Skill
 
 Use this skill whenever you need to **scan for vulnerabilities, assess risks, generate mitigation plans, or analyze code for security patterns**. Combines three tools for defense-in-depth coverage.
 
@@ -26,7 +17,7 @@ Use this skill whenever you need to **scan for vulnerabilities, assess risks, ge
 
 ## Tool Details
 
-### Heady™Risks — `mcp_Heady_heady_risks`
+### HeadyRisks — `mcp_Heady_heady_risks`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -38,7 +29,7 @@ Use this skill whenever you need to **scan for vulnerabilities, assess risks, ge
 - **`assess`** — evaluates risk level and impact
 - **`mitigate`** — generates remediation plans
 
-### Heady™Analyze (Security Mode) — `mcp_Heady_heady_analyze`
+### HeadyAnalyze (Security Mode) — `mcp_Heady_heady_analyze`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|
@@ -47,7 +38,7 @@ Use this skill whenever you need to **scan for vulnerabilities, assess risks, ge
 | `focus` | string | optional | Specific aspect (e.g., "injection", "auth bypass") |
 | `language` | string | optional | Programming language |
 
-### Heady™Patterns — `mcp_Heady_heady_patterns`
+### HeadyPatterns — `mcp_Heady_heady_patterns`
 
 | Parameter | Type | Default | Purpose |
 |-----------|------|---------|---------|

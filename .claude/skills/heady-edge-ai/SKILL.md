@@ -3,16 +3,7 @@ name: heady-edge-ai
 description: "Heady™ ultra-low latency AI inference on Cloudflare edge — embeddings, chat, classification, and vector operations with zero origin round-trip."
 ---
 
-> **OPTIMAL BUILD NOTICE:** This file has been auto-migrated for the Heady-AI Latent OS (v2.0.0).
-> - **Package Manager:** Use `pnpm` and `Turborepo`
-> - **Frontend:** Vite SPAs + Vanilla Web Components (React only for complex canvas)
-> - **Event Bus:** NATS (`heady-event-bus`)
-> - **Sandbox:** WASM WebContainers
-> - **UI Sync:** Server-Sent Events (SSE) + HTTP/2
-> - **Vector Trigger:** Merkle-Tree File Hashing
-> - **Rule File:** Follow `AGENTS.md`
-
-# Heady™ Edge AI Skill
+# Heady Edge AI Skill
 
 Use this skill when you need **ultra-fast AI inference** running directly on Cloudflare's global edge network. No origin server round-trip — requests are processed at the nearest PoP for minimum latency.
 
@@ -29,14 +20,14 @@ mcp_Heady_heady_edge_ai
 | `action` | enum | **required** | `embed`, `chat`, `classify`, `vectorize-insert`, `vectorize-query`, `queue` |
 | `text` | string | optional | Text for embedding, classification, or vector ops |
 | `message` | string | optional | Message for edge chat |
-| `model` | string | optional | Model override (default: `llama-3.1-8b` for chat, `bge-small-en-v1.5` for embed) |
+| `model` | string | optional | Model override (default: `llama-3.1-8b` for chat, `@cf/baai/bge-small-en-v1.5` for embed) |
 | `topK` | number | optional | Number of results for vector query |
 
 ## Actions Reference
 
 | Action | Purpose | Default Model |
 |--------|---------|---------------|
-| `embed` | Generate vector embeddings at the edge | `bge-small-en-v1.5` |
+| `embed` | Generate vector embeddings at the edge | `@cf/baai/bge-small-en-v1.5` |
 | `chat` | Fast AI chat at the edge | `llama-3.1-8b` |
 | `classify` | Text classification | Auto |
 | `vectorize-insert` | Insert text into edge vector store | — |

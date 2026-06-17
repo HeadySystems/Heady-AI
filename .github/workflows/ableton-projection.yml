@@ -1,0 +1,46 @@
+name: "Heady Liquid Projection — Ableton Edge"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/ableton-edge/**'
+
+jobs:
+  compile-and-project:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout Latent Core
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (Enterprise Cache)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Compile Ableton Edge SysEx Runtime
+        run: npm run build --workspace=apps/ableton-edge
+        env:
+          NODE_ENV: production
+
+      - name: Sanitize & Strip Source Maps (Aegis Protocol)
+        run: find apps/ableton-edge/dist -name "*.map" -type f -delete
+
+      - name: Project to Spoke Repository (ableton-edge-production)
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.HEADY_PROJECTION_PAT }}
+        with:
+          source-directory: 'apps/ableton-edge/dist'
+          destination-github-username: 'HeadyMe'
+          destination-repository-name: 'ableton-edge-production'
+          user-email: 'orchestrator@headyme.com'
+          target-branch: 'main'
+          commit-message: 'Autonomous Projection: update Ableton SysEx Edge chunk'

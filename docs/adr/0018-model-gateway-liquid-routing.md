@@ -1,6 +1,6 @@
 # ADR-0018: Model Gateway & Liquid Routing
 
-- **Status:** Proposed (2026-06-15)
+- **Status:** Accepted (2026-06-17, founder approval per ADR-0013)
 - **Deciders:** Eric Anthony Haywood
 
 ## Context

@@ -24,7 +24,7 @@
 name: heady-knowledge-cartographer
 description: >
   Knowledge Cartographer for Heady — maps the entire Heady ecosystem (46K+ files, 175 services,
-  9 domains, 30+ bee types, 60+ patents) into navigable knowledge graphs, dependency maps, and
+  9 domains, 30+ bee types, 51 patents) into navigable knowledge graphs, dependency maps, and
   architecture diagrams. Crawls repos, docs, skills, and service registries to produce living
   maps of what exists, what connects to what, and where gaps live. Use when Eric needs to
   understand current system state, find orphaned code, trace service dependencies, audit skill
@@ -190,7 +190,7 @@ For comprehensive mapping:
 
 For IP audit and patent preparation:
 
-1. List all 60+ provisional patent claims
+1. List all 51 provisional patent claims
 2. For each claim, search codebase for implementing modules
 3. Rate coverage: fully implemented, partially implemented, spec only
 4. Identify code that implements novel methods but lacks patent coverage

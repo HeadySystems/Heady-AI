@@ -1,0 +1,5591 @@
+{
+  "generatedAt": "2026-06-17T07:00:41.852Z",
+  "sourceOfTruth": {
+    "provider": "github",
+    "repo": "HeadyMe/Heady",
+    "path": "configs/services/headybee-template-registry.json"
+  },
+  "registryHash": "052c8826cf8c3215d05bff9d3ab8df88d1333298bc27b5d9f441b3c3bcca527e",
+  "valid": true,
+  "coverage": 1,
+  "topTemplates": [
+    {
+      "id": "hb-deployment-operator-v1",
+      "score": 0.67375
+    },
+    {
+      "id": "hb-vector-memory-master-v1",
+      "score": 0.659167
+    },
+    {
+      "id": "hb-swarm-coordinator-v1",
+      "score": 0.6425
+    },
+    {
+      "id": "hb-orchestration-conductor-v1",
+      "score": 0.639167
+    },
+    {
+      "id": "hb-compliance-sentinel-v2",
+      "score": 0.6375
+    }
+  ],
+  "bySituation": {
+    "incident-response": [
+      {
+        "id": "hb-orchestration-conductor-v1",
+        "name": "Orchestration Conductor",
+        "zone": 0,
+        "skills": [
+          "agent-spawning",
+          "liquid-routing",
+          "supervisor-management",
+          "cloud-routing",
+          "spatial-mapping"
+        ],
+        "workflows": [
+          "spawn-supervisor",
+          "route-to-optimal-agent",
+          "rebalance-load",
+          "conductor-health-check",
+          "sse-broadcast"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "spawn-agent",
+          "route-request",
+          "rebalance-agents",
+          "check-conductor-health",
+          "broadcast-event",
+          "sync-agent-state"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "incident-response",
+          "performance-tuning",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/orchestration/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "agents",
+          "lifecycle",
+          "services"
+        ],
+        "optimizationScore": 0.639167
+      },
+      {
+        "id": "hb-compliance-sentinel-v2",
+        "name": "Compliance & Security Sentinel",
+        "zone": 2,
+        "skills": [
+          "secret-scanning",
+          "policy-validation",
+          "dependency-audit",
+          "patent-protection",
+          "rbac-enforcement",
+          "pqc-readiness"
+        ],
+        "workflows": [
+          "scan-credentials",
+          "validate-cicd-gates",
+          "produce-audit-report",
+          "rotate-secrets",
+          "enforce-governance"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "JULES",
+          "BATTLE",
+          "GOVERNANCE"
+        ],
+        "headyswarmTasks": [
+          "detect-secrets",
+          "audit-dependencies",
+          "enforce-policy-rules",
+          "rotate-api-keys",
+          "validate-patent-claims",
+          "scan-protected-paths"
+        ],
+        "situations": [
+          "compliance-audit",
+          "incident-response",
+          "security-hardening"
+        ],
+        "healthEndpoint": "/api/compliance/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "governance",
+          "config"
+        ],
+        "optimizationScore": 0.6375
+      },
+      {
+        "id": "hb-intelligence-analyst-v1",
+        "name": "Intelligence Analyst",
+        "zone": 4,
+        "skills": [
+          "deep-scan",
+          "deep-research",
+          "realtime-intel",
+          "predictive-cache",
+          "context-assembly",
+          "voice-processing"
+        ],
+        "workflows": [
+          "deep-scan-repo",
+          "multi-provider-research",
+          "context-enrichment",
+          "prediction-calibrate",
+          "voice-ingest"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "OBSERVER",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "run-deep-scan",
+          "fan-out-research",
+          "enrich-context",
+          "calibrate-predictions",
+          "process-voice-input",
+          "synthesize-findings"
+        ],
+        "situations": [
+          "incident-response",
+          "compliance-audit",
+          "performance-tuning",
+          "refactor-sprint"
+        ],
+        "healthEndpoint": "/api/intelligence/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "agents"
+        ],
+        "optimizationScore": 0.634167
+      }
+    ],
+    "autonomous-deploy": [
+      {
+        "id": "hb-deployment-operator-v1",
+        "name": "Deployment Operator",
+        "zone": 3,
+        "skills": [
+          "git-push",
+          "hf-spaces-deploy",
+          "cloud-run-deploy",
+          "post-deploy-verify",
+          "rollback",
+          "canary-check"
+        ],
+        "workflows": [
+          "pre-deploy-gate",
+          "build-push",
+          "deploy-target",
+          "smoke-test",
+          "rollback-if-failed"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "run-pre-deploy-gate",
+          "build-artifacts",
+          "push-to-github",
+          "deploy-hf-space",
+          "deploy-cloud-run",
+          "run-smoke-tests",
+          "rollback-deploy"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "digital-presence-launch",
+          "edge-failover"
+        ],
+        "healthEndpoint": "/api/deployment/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops",
+          "auto-success"
+        ],
+        "optimizationScore": 0.67375
+      },
+      {
+        "id": "hb-vector-memory-master-v1",
+        "name": "Vector Memory Master",
+        "zone": 1,
+        "skills": [
+          "spatial-embedding",
+          "octree-management",
+          "cache-sync",
+          "pre-fetching",
+          "federation",
+          "hybrid-search"
+        ],
+        "workflows": [
+          "ingest-embed-cache",
+          "pre-fetch-loop",
+          "federation-sync",
+          "memory-health-check",
+          "receipts-audit"
+        ],
+        "nodes": [
+          "BUDDY",
+          "PYTHIA",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "spatial-embed-payload",
+          "octree-insert",
+          "redis-cache-push",
+          "pre-fetch-adjacent",
+          "validate-embedding-integrity",
+          "compact-cold-vectors"
+        ],
+        "situations": [
+          "memory-compaction",
+          "data-migration",
+          "performance-tuning",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/vector-memory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "vector-templates",
+          "sync-projection"
+        ],
+        "optimizationScore": 0.659167
+      },
+      {
+        "id": "hb-swarm-coordinator-v1",
+        "name": "Swarm Coordinator",
+        "zone": 0,
+        "skills": [
+          "bee-orchestration",
+          "parallel-dispatch",
+          "swarm-scaling",
+          "work-distribution",
+          "blast-optimization",
+          "concurrency-control"
+        ],
+        "workflows": [
+          "dispatch-swarm",
+          "scale-bees",
+          "optimize-blast",
+          "balance-load",
+          "measure-throughput"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "bee_orchestration",
+          "parallel_dispatch",
+          "swarm_scaling",
+          "work_distribution",
+          "blast_optimization",
+          "concurrency_control"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/swarm/coordinator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "services",
+          "agents",
+          "lifecycle"
+        ],
+        "optimizationScore": 0.6425
+      }
+    ],
+    "digital-presence-launch": [
+      {
+        "id": "hb-deployment-operator-v1",
+        "name": "Deployment Operator",
+        "zone": 3,
+        "skills": [
+          "git-push",
+          "hf-spaces-deploy",
+          "cloud-run-deploy",
+          "post-deploy-verify",
+          "rollback",
+          "canary-check"
+        ],
+        "workflows": [
+          "pre-deploy-gate",
+          "build-push",
+          "deploy-target",
+          "smoke-test",
+          "rollback-if-failed"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "run-pre-deploy-gate",
+          "build-artifacts",
+          "push-to-github",
+          "deploy-hf-space",
+          "deploy-cloud-run",
+          "run-smoke-tests",
+          "rollback-deploy"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "digital-presence-launch",
+          "edge-failover"
+        ],
+        "healthEndpoint": "/api/deployment/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops",
+          "auto-success"
+        ],
+        "optimizationScore": 0.67375
+      },
+      {
+        "id": "hb-creative-engine-v1",
+        "name": "Creative Engine",
+        "zone": 9,
+        "skills": [
+          "content-generation",
+          "image-creation",
+          "remix",
+          "style-transfer",
+          "edge-diffusion",
+          "composition"
+        ],
+        "workflows": [
+          "generate-content",
+          "transform-asset",
+          "compose-multi-modal",
+          "apply-style",
+          "edge-render"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "generate-image",
+          "generate-text-content",
+          "remix-asset",
+          "compose-layout",
+          "edge-diffusion-render",
+          "publish-creative-output"
+        ],
+        "situations": [
+          "content-generation",
+          "creative-generation",
+          "growth-campaign",
+          "digital-presence-launch"
+        ],
+        "healthEndpoint": "/api/creative/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "connectors"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-video-compositor-v1",
+        "name": "Video Compositor",
+        "zone": 9,
+        "skills": [
+          "video-editing",
+          "transition-generation",
+          "text-overlay",
+          "audio-sync",
+          "thumbnail-generation",
+          "format-conversion"
+        ],
+        "workflows": [
+          "edit-video",
+          "generate-transitions",
+          "overlay-text",
+          "sync-audio",
+          "generate-thumbnail"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUILDER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "video_editing",
+          "transition_generation",
+          "text_overlay",
+          "audio_sync",
+          "thumbnail_generation",
+          "format_conversion"
+        ],
+        "situations": [
+          "creative-generation",
+          "content-generation",
+          "digital-presence-launch"
+        ],
+        "healthEndpoint": "/api/video/compositor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "deployment"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "compliance-audit": [
+      {
+        "id": "hb-compliance-sentinel-v2",
+        "name": "Compliance & Security Sentinel",
+        "zone": 2,
+        "skills": [
+          "secret-scanning",
+          "policy-validation",
+          "dependency-audit",
+          "patent-protection",
+          "rbac-enforcement",
+          "pqc-readiness"
+        ],
+        "workflows": [
+          "scan-credentials",
+          "validate-cicd-gates",
+          "produce-audit-report",
+          "rotate-secrets",
+          "enforce-governance"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "JULES",
+          "BATTLE",
+          "GOVERNANCE"
+        ],
+        "headyswarmTasks": [
+          "detect-secrets",
+          "audit-dependencies",
+          "enforce-policy-rules",
+          "rotate-api-keys",
+          "validate-patent-claims",
+          "scan-protected-paths"
+        ],
+        "situations": [
+          "compliance-audit",
+          "incident-response",
+          "security-hardening"
+        ],
+        "healthEndpoint": "/api/compliance/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "governance",
+          "config"
+        ],
+        "optimizationScore": 0.6375
+      },
+      {
+        "id": "hb-intelligence-analyst-v1",
+        "name": "Intelligence Analyst",
+        "zone": 4,
+        "skills": [
+          "deep-scan",
+          "deep-research",
+          "realtime-intel",
+          "predictive-cache",
+          "context-assembly",
+          "voice-processing"
+        ],
+        "workflows": [
+          "deep-scan-repo",
+          "multi-provider-research",
+          "context-enrichment",
+          "prediction-calibrate",
+          "voice-ingest"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "OBSERVER",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "run-deep-scan",
+          "fan-out-research",
+          "enrich-context",
+          "calibrate-predictions",
+          "process-voice-input",
+          "synthesize-findings"
+        ],
+        "situations": [
+          "incident-response",
+          "compliance-audit",
+          "performance-tuning",
+          "refactor-sprint"
+        ],
+        "healthEndpoint": "/api/intelligence/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "agents"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-auth-gateway-v1",
+        "name": "Auth Gateway Orchestrator",
+        "zone": 0,
+        "skills": [
+          "jwt-validation",
+          "oauth2-flow",
+          "rbac-enforcement",
+          "session-management",
+          "token-refresh",
+          "mfa-verification"
+        ],
+        "workflows": [
+          "validate-token",
+          "oauth-exchange",
+          "enforce-rbac",
+          "refresh-session",
+          "verify-mfa"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "GOVERNANCE",
+          "JULES"
+        ],
+        "headyswarmTasks": [
+          "jwt_validation",
+          "oauth2_flow",
+          "rbac_enforcement",
+          "session_management",
+          "token_refresh",
+          "mfa_verification"
+        ],
+        "situations": [
+          "onboarding-new-user",
+          "security-hardening",
+          "compliance-audit"
+        ],
+        "healthEndpoint": "/api/auth/gateway/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "auth-provider",
+          "security",
+          "middleware"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "growth-campaign": [
+      {
+        "id": "hb-creative-engine-v1",
+        "name": "Creative Engine",
+        "zone": 9,
+        "skills": [
+          "content-generation",
+          "image-creation",
+          "remix",
+          "style-transfer",
+          "edge-diffusion",
+          "composition"
+        ],
+        "workflows": [
+          "generate-content",
+          "transform-asset",
+          "compose-multi-modal",
+          "apply-style",
+          "edge-render"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "generate-image",
+          "generate-text-content",
+          "remix-asset",
+          "compose-layout",
+          "edge-diffusion-render",
+          "publish-creative-output"
+        ],
+        "situations": [
+          "content-generation",
+          "creative-generation",
+          "growth-campaign",
+          "digital-presence-launch"
+        ],
+        "healthEndpoint": "/api/creative/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "connectors"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-brand-designer-v1",
+        "name": "Brand Designer",
+        "zone": 9,
+        "skills": [
+          "logo-generation",
+          "color-palette",
+          "typography-selection",
+          "brand-guide",
+          "asset-library",
+          "sacred-geometry-design"
+        ],
+        "workflows": [
+          "generate-logo",
+          "create-palette",
+          "select-typography",
+          "build-brand-guide",
+          "design-sacred-geometry"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "logo_generation",
+          "color_palette",
+          "typography_selection",
+          "brand_guide",
+          "asset_library",
+          "sacred_geometry_design"
+        ],
+        "situations": [
+          "digital-presence-launch",
+          "growth-campaign",
+          "creative-generation"
+        ],
+        "healthEndpoint": "/api/brand/designer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "documentation"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-ab-test-runner-v1",
+        "name": "A/B Test Runner",
+        "zone": 11,
+        "skills": [
+          "experiment-design",
+          "traffic-allocation",
+          "statistical-analysis",
+          "winner-detection",
+          "variant-management",
+          "result-reporting"
+        ],
+        "workflows": [
+          "design-experiment",
+          "allocate-traffic",
+          "analyze-results",
+          "detect-winner",
+          "report-results"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "experiment_design",
+          "traffic_allocation",
+          "statistical_analysis",
+          "winner_detection",
+          "variant_management",
+          "result_reporting"
+        ],
+        "situations": [
+          "a-b-testing",
+          "feature-rollout",
+          "growth-campaign"
+        ],
+        "healthEndpoint": "/api/ab/test/runner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "telemetry",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "data-migration": [
+      {
+        "id": "hb-vector-memory-master-v1",
+        "name": "Vector Memory Master",
+        "zone": 1,
+        "skills": [
+          "spatial-embedding",
+          "octree-management",
+          "cache-sync",
+          "pre-fetching",
+          "federation",
+          "hybrid-search"
+        ],
+        "workflows": [
+          "ingest-embed-cache",
+          "pre-fetch-loop",
+          "federation-sync",
+          "memory-health-check",
+          "receipts-audit"
+        ],
+        "nodes": [
+          "BUDDY",
+          "PYTHIA",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "spatial-embed-payload",
+          "octree-insert",
+          "redis-cache-push",
+          "pre-fetch-adjacent",
+          "validate-embedding-integrity",
+          "compact-cold-vectors"
+        ],
+        "situations": [
+          "memory-compaction",
+          "data-migration",
+          "performance-tuning",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/vector-memory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "vector-templates",
+          "sync-projection"
+        ],
+        "optimizationScore": 0.659167
+      },
+      {
+        "id": "hb-embedding-pipeline-v1",
+        "name": "Embedding Pipeline",
+        "zone": 1,
+        "skills": [
+          "text-embedding",
+          "multi-modal-embed",
+          "batch-embedding",
+          "embedding-cache",
+          "dimension-reduction",
+          "embedding-quality"
+        ],
+        "workflows": [
+          "embed-text",
+          "embed-batch",
+          "cache-embeddings",
+          "reduce-dimensions",
+          "validate-quality"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "text_embedding",
+          "multi_modal_embed",
+          "batch_embedding",
+          "embedding_cache",
+          "dimension_reduction",
+          "embedding_quality"
+        ],
+        "situations": [
+          "data-migration",
+          "memory-compaction",
+          "vector-reindex"
+        ],
+        "healthEndpoint": "/api/embedding/pipeline/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "brain"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-memory-federation-v1",
+        "name": "Memory Federation",
+        "zone": 1,
+        "skills": [
+          "cross-store-sync",
+          "federation-routing",
+          "consistency-check",
+          "conflict-resolution",
+          "partition-management",
+          "replication"
+        ],
+        "workflows": [
+          "sync-stores",
+          "route-query",
+          "check-consistency",
+          "resolve-conflicts",
+          "manage-partitions"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "cross_store_sync",
+          "federation_routing",
+          "consistency_check",
+          "conflict_resolution",
+          "partition_management",
+          "replication"
+        ],
+        "situations": [
+          "data-migration",
+          "disaster-recovery",
+          "memory-compaction"
+        ],
+        "healthEndpoint": "/api/memory/federation/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "sync-projection",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "cost-optimization": [
+      {
+        "id": "hb-multi-provider-router-v1",
+        "name": "Multi-Provider Router",
+        "zone": 4,
+        "skills": [
+          "provider-selection",
+          "latency-routing",
+          "fallback-chain",
+          "model-matching",
+          "cost-aware-routing",
+          "quality-scoring"
+        ],
+        "workflows": [
+          "select-provider",
+          "route-by-latency",
+          "failover-provider",
+          "match-model",
+          "score-quality"
+        ],
+        "nodes": [
+          "ATLAS",
+          "ARENA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "provider_selection",
+          "latency_routing",
+          "fallback_chain",
+          "model_matching",
+          "cost_aware_routing",
+          "quality_scoring"
+        ],
+        "situations": [
+          "provider-rotation",
+          "cost-optimization",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/multi/provider/router/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "providers",
+          "intelligence",
+          "connectors"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-budget-guardian-v1",
+        "name": "Budget Guardian",
+        "zone": 7,
+        "skills": [
+          "budget-tracking",
+          "spend-forecasting",
+          "alert-thresholds",
+          "cost-attribution",
+          "waste-detection",
+          "savings-recommendation"
+        ],
+        "workflows": [
+          "track-budget",
+          "forecast-spend",
+          "set-alerts",
+          "attribute-costs",
+          "detect-waste"
+        ],
+        "nodes": [
+          "ATLAS",
+          "OBSERVER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "budget_tracking",
+          "spend_forecasting",
+          "alert_thresholds",
+          "cost_attribution",
+          "waste_detection",
+          "savings_recommendation"
+        ],
+        "situations": [
+          "budget-alert",
+          "cost-optimization",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/budget/guardian/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "ops",
+          "telemetry",
+          "providers"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-subscription-manager-v1",
+        "name": "Subscription Manager",
+        "zone": 7,
+        "skills": [
+          "tier-management",
+          "usage-metering",
+          "billing-integration",
+          "upgrade-flow",
+          "quota-enforcement",
+          "invoice-generation"
+        ],
+        "workflows": [
+          "manage-tiers",
+          "meter-usage",
+          "integrate-billing",
+          "process-upgrade",
+          "enforce-quotas"
+        ],
+        "nodes": [
+          "ATLAS",
+          "CONDUCTOR",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "tier_management",
+          "usage_metering",
+          "billing_integration",
+          "upgrade_flow",
+          "quota_enforcement",
+          "invoice_generation"
+        ],
+        "situations": [
+          "subscription-management",
+          "onboarding-new-user",
+          "cost-optimization"
+        ],
+        "healthEndpoint": "/api/subscription/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "services",
+          "ops",
+          "auth-provider"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "edge-failover": [
+      {
+        "id": "hb-deployment-operator-v1",
+        "name": "Deployment Operator",
+        "zone": 3,
+        "skills": [
+          "git-push",
+          "hf-spaces-deploy",
+          "cloud-run-deploy",
+          "post-deploy-verify",
+          "rollback",
+          "canary-check"
+        ],
+        "workflows": [
+          "pre-deploy-gate",
+          "build-push",
+          "deploy-target",
+          "smoke-test",
+          "rollback-if-failed"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "run-pre-deploy-gate",
+          "build-artifacts",
+          "push-to-github",
+          "deploy-hf-space",
+          "deploy-cloud-run",
+          "run-smoke-tests",
+          "rollback-deploy"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "digital-presence-launch",
+          "edge-failover"
+        ],
+        "healthEndpoint": "/api/deployment/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops",
+          "auto-success"
+        ],
+        "optimizationScore": 0.67375
+      },
+      {
+        "id": "hb-continuity-guardian-v2",
+        "name": "Continuity & Healing Guardian",
+        "zone": 5,
+        "skills": [
+          "self-healing",
+          "error-analysis",
+          "rollback",
+          "deterministic-replay",
+          "circuit-breaking",
+          "auto-tuning"
+        ],
+        "workflows": [
+          "capture-anomaly",
+          "root-cause-analysis",
+          "rule-synthesis",
+          "auto-heal-loop",
+          "retry-with-backoff"
+        ],
+        "nodes": [
+          "HCFP",
+          "PATTERNS",
+          "CONDUCTOR",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "self-heal-pipeline",
+          "derive-learned-rule",
+          "retry-stage",
+          "circuit-break-restore",
+          "health-probe-sweep"
+        ],
+        "situations": [
+          "incident-response",
+          "edge-failover",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/continuity/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "resilience",
+          "auto-success",
+          "health",
+          "pipeline"
+        ],
+        "optimizationScore": 0.63125
+      },
+      {
+        "id": "hb-edge-deployer-v1",
+        "name": "Edge Deployer",
+        "zone": 3,
+        "skills": [
+          "cloudflare-deploy",
+          "edge-function-push",
+          "kv-sync",
+          "edge-cache-purge",
+          "worker-routing",
+          "edge-analytics"
+        ],
+        "workflows": [
+          "deploy-worker",
+          "sync-kv",
+          "purge-cache",
+          "route-edge",
+          "analyze-edge-traffic"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "cloudflare_deploy",
+          "edge_function_push",
+          "kv_sync",
+          "edge_cache_purge",
+          "worker_routing",
+          "edge_analytics"
+        ],
+        "situations": [
+          "edge-failover",
+          "autonomous-deploy",
+          "cache-warming"
+        ],
+        "healthEndpoint": "/api/edge/deployer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "onboarding-new-user": [
+      {
+        "id": "hb-auth-gateway-v1",
+        "name": "Auth Gateway Orchestrator",
+        "zone": 0,
+        "skills": [
+          "jwt-validation",
+          "oauth2-flow",
+          "rbac-enforcement",
+          "session-management",
+          "token-refresh",
+          "mfa-verification"
+        ],
+        "workflows": [
+          "validate-token",
+          "oauth-exchange",
+          "enforce-rbac",
+          "refresh-session",
+          "verify-mfa"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "GOVERNANCE",
+          "JULES"
+        ],
+        "headyswarmTasks": [
+          "jwt_validation",
+          "oauth2_flow",
+          "rbac_enforcement",
+          "session_management",
+          "token_refresh",
+          "mfa_verification"
+        ],
+        "situations": [
+          "onboarding-new-user",
+          "security-hardening",
+          "compliance-audit"
+        ],
+        "healthEndpoint": "/api/auth/gateway/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "auth-provider",
+          "security",
+          "middleware"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-subscription-manager-v1",
+        "name": "Subscription Manager",
+        "zone": 7,
+        "skills": [
+          "tier-management",
+          "usage-metering",
+          "billing-integration",
+          "upgrade-flow",
+          "quota-enforcement",
+          "invoice-generation"
+        ],
+        "workflows": [
+          "manage-tiers",
+          "meter-usage",
+          "integrate-billing",
+          "process-upgrade",
+          "enforce-quotas"
+        ],
+        "nodes": [
+          "ATLAS",
+          "CONDUCTOR",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "tier_management",
+          "usage_metering",
+          "billing_integration",
+          "upgrade_flow",
+          "quota_enforcement",
+          "invoice_generation"
+        ],
+        "situations": [
+          "subscription-management",
+          "onboarding-new-user",
+          "cost-optimization"
+        ],
+        "healthEndpoint": "/api/subscription/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "services",
+          "ops",
+          "auth-provider"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-notification-engine-v1",
+        "name": "Notification Engine",
+        "zone": 10,
+        "skills": [
+          "email-dispatch",
+          "push-notification",
+          "sms-gateway",
+          "in-app-notification",
+          "notification-templating",
+          "delivery-tracking"
+        ],
+        "workflows": [
+          "dispatch-email",
+          "send-push",
+          "send-sms",
+          "notify-in-app",
+          "track-delivery"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "BUDDY",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "email_dispatch",
+          "push_notification",
+          "sms_gateway",
+          "in_app_notification",
+          "notification_templating",
+          "delivery_tracking"
+        ],
+        "situations": [
+          "notification-dispatch",
+          "onboarding-new-user",
+          "incident-response"
+        ],
+        "healthEndpoint": "/api/notification/engine/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "templates"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "content-generation": [
+      {
+        "id": "hb-creative-engine-v1",
+        "name": "Creative Engine",
+        "zone": 9,
+        "skills": [
+          "content-generation",
+          "image-creation",
+          "remix",
+          "style-transfer",
+          "edge-diffusion",
+          "composition"
+        ],
+        "workflows": [
+          "generate-content",
+          "transform-asset",
+          "compose-multi-modal",
+          "apply-style",
+          "edge-render"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "generate-image",
+          "generate-text-content",
+          "remix-asset",
+          "compose-layout",
+          "edge-diffusion-render",
+          "publish-creative-output"
+        ],
+        "situations": [
+          "content-generation",
+          "creative-generation",
+          "growth-campaign",
+          "digital-presence-launch"
+        ],
+        "healthEndpoint": "/api/creative/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "connectors"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-vector-search-engine-v1",
+        "name": "Vector Search Engine",
+        "zone": 1,
+        "skills": [
+          "knn-search",
+          "hybrid-search",
+          "filtered-search",
+          "semantic-ranking",
+          "re-ranking",
+          "faceted-search"
+        ],
+        "workflows": [
+          "execute-search",
+          "rank-results",
+          "re-rank",
+          "filter-vectors",
+          "facet-results"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "ATLAS",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "knn_search",
+          "hybrid_search",
+          "filtered_search",
+          "semantic_ranking",
+          "re_ranking",
+          "faceted_search"
+        ],
+        "situations": [
+          "performance-tuning",
+          "content-generation",
+          "user-support-escalation"
+        ],
+        "healthEndpoint": "/api/vector/search/engine/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "vector-ops",
+          "memory",
+          "intelligence"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-context-assembler-v1",
+        "name": "Context Assembler",
+        "zone": 4,
+        "skills": [
+          "context-window-packing",
+          "rag-retrieval",
+          "context-ranking",
+          "token-budgeting",
+          "context-compression",
+          "relevance-scoring"
+        ],
+        "workflows": [
+          "assemble-context",
+          "retrieve-rag",
+          "rank-context",
+          "budget-tokens",
+          "compress-context"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "context_window_packing",
+          "rag_retrieval",
+          "context_ranking",
+          "token_budgeting",
+          "context_compression",
+          "relevance_scoring"
+        ],
+        "situations": [
+          "content-generation",
+          "user-support-escalation",
+          "model-fine-tuning"
+        ],
+        "healthEndpoint": "/api/context/assembler/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "memory"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "memory-compaction": [
+      {
+        "id": "hb-vector-memory-master-v1",
+        "name": "Vector Memory Master",
+        "zone": 1,
+        "skills": [
+          "spatial-embedding",
+          "octree-management",
+          "cache-sync",
+          "pre-fetching",
+          "federation",
+          "hybrid-search"
+        ],
+        "workflows": [
+          "ingest-embed-cache",
+          "pre-fetch-loop",
+          "federation-sync",
+          "memory-health-check",
+          "receipts-audit"
+        ],
+        "nodes": [
+          "BUDDY",
+          "PYTHIA",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "spatial-embed-payload",
+          "octree-insert",
+          "redis-cache-push",
+          "pre-fetch-adjacent",
+          "validate-embedding-integrity",
+          "compact-cold-vectors"
+        ],
+        "situations": [
+          "memory-compaction",
+          "data-migration",
+          "performance-tuning",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/vector-memory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "vector-templates",
+          "sync-projection"
+        ],
+        "optimizationScore": 0.659167
+      },
+      {
+        "id": "hb-embedding-pipeline-v1",
+        "name": "Embedding Pipeline",
+        "zone": 1,
+        "skills": [
+          "text-embedding",
+          "multi-modal-embed",
+          "batch-embedding",
+          "embedding-cache",
+          "dimension-reduction",
+          "embedding-quality"
+        ],
+        "workflows": [
+          "embed-text",
+          "embed-batch",
+          "cache-embeddings",
+          "reduce-dimensions",
+          "validate-quality"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "text_embedding",
+          "multi_modal_embed",
+          "batch_embedding",
+          "embedding_cache",
+          "dimension_reduction",
+          "embedding_quality"
+        ],
+        "situations": [
+          "data-migration",
+          "memory-compaction",
+          "vector-reindex"
+        ],
+        "healthEndpoint": "/api/embedding/pipeline/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "brain"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-memory-federation-v1",
+        "name": "Memory Federation",
+        "zone": 1,
+        "skills": [
+          "cross-store-sync",
+          "federation-routing",
+          "consistency-check",
+          "conflict-resolution",
+          "partition-management",
+          "replication"
+        ],
+        "workflows": [
+          "sync-stores",
+          "route-query",
+          "check-consistency",
+          "resolve-conflicts",
+          "manage-partitions"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "cross_store_sync",
+          "federation_routing",
+          "consistency_check",
+          "conflict_resolution",
+          "partition_management",
+          "replication"
+        ],
+        "situations": [
+          "data-migration",
+          "disaster-recovery",
+          "memory-compaction"
+        ],
+        "healthEndpoint": "/api/memory/federation/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "sync-projection",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "provider-rotation": [
+      {
+        "id": "hb-multi-provider-router-v1",
+        "name": "Multi-Provider Router",
+        "zone": 4,
+        "skills": [
+          "provider-selection",
+          "latency-routing",
+          "fallback-chain",
+          "model-matching",
+          "cost-aware-routing",
+          "quality-scoring"
+        ],
+        "workflows": [
+          "select-provider",
+          "route-by-latency",
+          "failover-provider",
+          "match-model",
+          "score-quality"
+        ],
+        "nodes": [
+          "ATLAS",
+          "ARENA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "provider_selection",
+          "latency_routing",
+          "fallback_chain",
+          "model_matching",
+          "cost_aware_routing",
+          "quality_scoring"
+        ],
+        "situations": [
+          "provider-rotation",
+          "cost-optimization",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/multi/provider/router/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "providers",
+          "intelligence",
+          "connectors"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-provider-rotation-v1",
+        "name": "Provider Rotation Manager",
+        "zone": 7,
+        "skills": [
+          "provider-benchmark",
+          "failover-routing",
+          "model-catalog",
+          "latency-measurement",
+          "quota-management"
+        ],
+        "workflows": [
+          "benchmark-providers",
+          "failover-to-backup",
+          "update-model-catalog",
+          "measure-latency",
+          "manage-quotas"
+        ],
+        "nodes": [
+          "ATLAS",
+          "CONDUCTOR",
+          "ARENA"
+        ],
+        "headyswarmTasks": [
+          "benchmark-provider",
+          "failover-provider",
+          "update-catalog",
+          "measure-provider-latency",
+          "rotate-api-keys",
+          "log-rotation-event"
+        ],
+        "situations": [
+          "provider-rotation",
+          "cost-optimization",
+          "edge-failover",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/providers/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "providers",
+          "connectors",
+          "resilience"
+        ],
+        "optimizationScore": 0.614167
+      },
+      {
+        "id": "hb-finops-router-v2",
+        "name": "FinOps Routing Optimizer",
+        "zone": 7,
+        "skills": [
+          "provider-budgeting",
+          "latency-balancing",
+          "cost-guardrails",
+          "usage-tracking",
+          "model-selection"
+        ],
+        "workflows": [
+          "budget-precheck",
+          "provider-selection",
+          "usage-recording",
+          "cost-alert",
+          "budget-rebalance"
+        ],
+        "nodes": [
+          "ATLAS",
+          "CONDUCTOR",
+          "ARENA"
+        ],
+        "headyswarmTasks": [
+          "check-provider-budget",
+          "route-to-cheaper-provider",
+          "log-provider-usage",
+          "trigger-cost-alert",
+          "rebalance-quotas"
+        ],
+        "situations": [
+          "cost-optimization",
+          "autonomous-deploy",
+          "provider-rotation"
+        ],
+        "healthEndpoint": "/api/finops/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "providers",
+          "trading",
+          "ops",
+          "services"
+        ],
+        "optimizationScore": 0.59125
+      }
+    ],
+    "security-hardening": [
+      {
+        "id": "hb-compliance-sentinel-v2",
+        "name": "Compliance & Security Sentinel",
+        "zone": 2,
+        "skills": [
+          "secret-scanning",
+          "policy-validation",
+          "dependency-audit",
+          "patent-protection",
+          "rbac-enforcement",
+          "pqc-readiness"
+        ],
+        "workflows": [
+          "scan-credentials",
+          "validate-cicd-gates",
+          "produce-audit-report",
+          "rotate-secrets",
+          "enforce-governance"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "JULES",
+          "BATTLE",
+          "GOVERNANCE"
+        ],
+        "headyswarmTasks": [
+          "detect-secrets",
+          "audit-dependencies",
+          "enforce-policy-rules",
+          "rotate-api-keys",
+          "validate-patent-claims",
+          "scan-protected-paths"
+        ],
+        "situations": [
+          "compliance-audit",
+          "incident-response",
+          "security-hardening"
+        ],
+        "healthEndpoint": "/api/compliance/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "governance",
+          "config"
+        ],
+        "optimizationScore": 0.6375
+      },
+      {
+        "id": "hb-auth-gateway-v1",
+        "name": "Auth Gateway Orchestrator",
+        "zone": 0,
+        "skills": [
+          "jwt-validation",
+          "oauth2-flow",
+          "rbac-enforcement",
+          "session-management",
+          "token-refresh",
+          "mfa-verification"
+        ],
+        "workflows": [
+          "validate-token",
+          "oauth-exchange",
+          "enforce-rbac",
+          "refresh-session",
+          "verify-mfa"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "GOVERNANCE",
+          "JULES"
+        ],
+        "headyswarmTasks": [
+          "jwt_validation",
+          "oauth2_flow",
+          "rbac_enforcement",
+          "session_management",
+          "token_refresh",
+          "mfa_verification"
+        ],
+        "situations": [
+          "onboarding-new-user",
+          "security-hardening",
+          "compliance-audit"
+        ],
+        "healthEndpoint": "/api/auth/gateway/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "auth-provider",
+          "security",
+          "middleware"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-threat-detector-v1",
+        "name": "Threat Detector",
+        "zone": 2,
+        "skills": [
+          "intrusion-detection",
+          "anomaly-scoring",
+          "ip-reputation",
+          "waf-rules",
+          "ddos-mitigation",
+          "bot-detection"
+        ],
+        "workflows": [
+          "detect-intrusion",
+          "score-anomaly",
+          "check-reputation",
+          "apply-waf",
+          "mitigate-ddos"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "WATCHDOG",
+          "BATTLE"
+        ],
+        "headyswarmTasks": [
+          "intrusion_detection",
+          "anomaly_scoring",
+          "ip_reputation",
+          "waf_rules",
+          "ddos_mitigation",
+          "bot_detection"
+        ],
+        "situations": [
+          "incident-response",
+          "security-hardening",
+          "anomaly-detection"
+        ],
+        "healthEndpoint": "/api/threat/detector/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "intelligence",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "performance-tuning": [
+      {
+        "id": "hb-vector-memory-master-v1",
+        "name": "Vector Memory Master",
+        "zone": 1,
+        "skills": [
+          "spatial-embedding",
+          "octree-management",
+          "cache-sync",
+          "pre-fetching",
+          "federation",
+          "hybrid-search"
+        ],
+        "workflows": [
+          "ingest-embed-cache",
+          "pre-fetch-loop",
+          "federation-sync",
+          "memory-health-check",
+          "receipts-audit"
+        ],
+        "nodes": [
+          "BUDDY",
+          "PYTHIA",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "spatial-embed-payload",
+          "octree-insert",
+          "redis-cache-push",
+          "pre-fetch-adjacent",
+          "validate-embedding-integrity",
+          "compact-cold-vectors"
+        ],
+        "situations": [
+          "memory-compaction",
+          "data-migration",
+          "performance-tuning",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/vector-memory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "vector-templates",
+          "sync-projection"
+        ],
+        "optimizationScore": 0.659167
+      },
+      {
+        "id": "hb-swarm-coordinator-v1",
+        "name": "Swarm Coordinator",
+        "zone": 0,
+        "skills": [
+          "bee-orchestration",
+          "parallel-dispatch",
+          "swarm-scaling",
+          "work-distribution",
+          "blast-optimization",
+          "concurrency-control"
+        ],
+        "workflows": [
+          "dispatch-swarm",
+          "scale-bees",
+          "optimize-blast",
+          "balance-load",
+          "measure-throughput"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "bee_orchestration",
+          "parallel_dispatch",
+          "swarm_scaling",
+          "work_distribution",
+          "blast_optimization",
+          "concurrency_control"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/swarm/coordinator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "services",
+          "agents",
+          "lifecycle"
+        ],
+        "optimizationScore": 0.6425
+      },
+      {
+        "id": "hb-orchestration-conductor-v1",
+        "name": "Orchestration Conductor",
+        "zone": 0,
+        "skills": [
+          "agent-spawning",
+          "liquid-routing",
+          "supervisor-management",
+          "cloud-routing",
+          "spatial-mapping"
+        ],
+        "workflows": [
+          "spawn-supervisor",
+          "route-to-optimal-agent",
+          "rebalance-load",
+          "conductor-health-check",
+          "sse-broadcast"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "spawn-agent",
+          "route-request",
+          "rebalance-agents",
+          "check-conductor-health",
+          "broadcast-event",
+          "sync-agent-state"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "incident-response",
+          "performance-tuning",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/orchestration/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "agents",
+          "lifecycle",
+          "services"
+        ],
+        "optimizationScore": 0.639167
+      }
+    ],
+    "documentation-refresh": [
+      {
+        "id": "hb-knowledge-graph-v1",
+        "name": "Knowledge Graph Builder",
+        "zone": 4,
+        "skills": [
+          "entity-extraction",
+          "relation-mapping",
+          "graph-traversal",
+          "concept-linking",
+          "graph-embedding",
+          "inference"
+        ],
+        "workflows": [
+          "extract-entities",
+          "map-relations",
+          "traverse-graph",
+          "link-concepts",
+          "embed-graph"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "ATLAS",
+          "PATTERNS"
+        ],
+        "headyswarmTasks": [
+          "entity_extraction",
+          "relation_mapping",
+          "graph_traversal",
+          "concept_linking",
+          "graph_embedding",
+          "inference"
+        ],
+        "situations": [
+          "data-migration",
+          "documentation-refresh",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/knowledge/graph/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "memory",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-deep-scanner-v1",
+        "name": "Deep Scanner",
+        "zone": 4,
+        "skills": [
+          "repo-analysis",
+          "dependency-graph",
+          "dead-code-detection",
+          "technical-debt-scoring",
+          "complexity-metrics",
+          "coverage-analysis"
+        ],
+        "workflows": [
+          "scan-repo",
+          "graph-dependencies",
+          "detect-dead-code",
+          "score-tech-debt",
+          "measure-complexity"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PATTERNS",
+          "PYTHIA"
+        ],
+        "headyswarmTasks": [
+          "repo_analysis",
+          "dependency_graph",
+          "dead_code_detection",
+          "technical_debt_scoring",
+          "complexity_metrics",
+          "coverage_analysis"
+        ],
+        "situations": [
+          "refactor-sprint",
+          "compliance-audit",
+          "documentation-refresh"
+        ],
+        "healthEndpoint": "/api/deep/scanner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "refactor",
+          "documentation"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-documentation-generator-v1",
+        "name": "Documentation Generator",
+        "zone": 6,
+        "skills": [
+          "readme-generation",
+          "api-doc-generation",
+          "architecture-diagrams",
+          "changelog-generation",
+          "concept-indexing"
+        ],
+        "workflows": [
+          "generate-readme",
+          "generate-api-docs",
+          "render-architecture",
+          "produce-changelog",
+          "index-concepts"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "generate-project-readme",
+          "generate-openapi-spec",
+          "render-architecture-diagram",
+          "build-changelog",
+          "index-concepts-yaml"
+        ],
+        "situations": [
+          "documentation-refresh",
+          "digital-presence-launch",
+          "refactor-sprint"
+        ],
+        "healthEndpoint": "/api/docs/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "documentation",
+          "templates",
+          "intelligence"
+        ],
+        "optimizationScore": 0.56625
+      }
+    ],
+    "trading-session": [
+      {
+        "id": "hb-trading-sentinel-v1",
+        "name": "Trading Sentinel",
+        "zone": 7,
+        "skills": [
+          "risk-assessment",
+          "drawdown-monitor",
+          "payout-check",
+          "session-management",
+          "compliance-gate"
+        ],
+        "workflows": [
+          "pre-trade-risk-check",
+          "monitor-drawdown",
+          "validate-payout",
+          "open-session",
+          "close-session"
+        ],
+        "nodes": [
+          "ATLAS",
+          "ARENA",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "check-trade-risk",
+          "monitor-trailing-drawdown",
+          "validate-payout-eligibility",
+          "start-trading-session",
+          "log-trade-outcome",
+          "enforce-trading-rules"
+        ],
+        "situations": [
+          "trading-session",
+          "cost-optimization",
+          "compliance-audit"
+        ],
+        "healthEndpoint": "/api/trading/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "trading",
+          "providers",
+          "governance"
+        ],
+        "optimizationScore": 0.5975
+      }
+    ],
+    "creative-generation": [
+      {
+        "id": "hb-creative-engine-v1",
+        "name": "Creative Engine",
+        "zone": 9,
+        "skills": [
+          "content-generation",
+          "image-creation",
+          "remix",
+          "style-transfer",
+          "edge-diffusion",
+          "composition"
+        ],
+        "workflows": [
+          "generate-content",
+          "transform-asset",
+          "compose-multi-modal",
+          "apply-style",
+          "edge-render"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "generate-image",
+          "generate-text-content",
+          "remix-asset",
+          "compose-layout",
+          "edge-diffusion-render",
+          "publish-creative-output"
+        ],
+        "situations": [
+          "content-generation",
+          "creative-generation",
+          "growth-campaign",
+          "digital-presence-launch"
+        ],
+        "healthEndpoint": "/api/creative/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "templates",
+          "connectors"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-image-generator-v1",
+        "name": "Image Generator",
+        "zone": 9,
+        "skills": [
+          "text-to-image",
+          "image-editing",
+          "style-transfer",
+          "upscaling",
+          "background-removal",
+          "batch-generation"
+        ],
+        "workflows": [
+          "generate-image",
+          "edit-image",
+          "transfer-style",
+          "upscale-image",
+          "batch-generate"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "text_to_image",
+          "image_editing",
+          "style_transfer",
+          "upscaling",
+          "background_removal",
+          "batch_generation"
+        ],
+        "situations": [
+          "image-generation",
+          "creative-generation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/image/generator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "connectors",
+          "providers"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-music-producer-v1",
+        "name": "Music Producer",
+        "zone": 9,
+        "skills": [
+          "pattern-generation",
+          "chord-progression",
+          "arrangement",
+          "mixing-automation",
+          "mastering",
+          "sample-library"
+        ],
+        "workflows": [
+          "generate-pattern",
+          "build-progression",
+          "arrange-track",
+          "automate-mix",
+          "master-track"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "pattern_generation",
+          "chord_progression",
+          "arrangement",
+          "mixing_automation",
+          "mastering",
+          "sample_library"
+        ],
+        "situations": [
+          "live-music-session",
+          "creative-generation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/music/producer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "midi",
+          "creative",
+          "engines"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "system-health-check": [
+      {
+        "id": "hb-event-reactor-v1",
+        "name": "Event Reactor",
+        "zone": 0,
+        "skills": [
+          "event-processing",
+          "pub-sub",
+          "event-sourcing",
+          "cqrs",
+          "stream-processing",
+          "real-time-reaction"
+        ],
+        "workflows": [
+          "process-event",
+          "publish-event",
+          "replay-events",
+          "aggregate-stream",
+          "react-to-change"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "PATTERNS",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "event_processing",
+          "pub_sub",
+          "event_sourcing",
+          "cqrs",
+          "stream_processing",
+          "real_time_reaction"
+        ],
+        "situations": [
+          "incident-response",
+          "anomaly-detection",
+          "system-health-check"
+        ],
+        "healthEndpoint": "/api/event/reactor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "engines",
+          "pipeline"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-metrics-collector-v1",
+        "name": "Metrics Collector",
+        "zone": 8,
+        "skills": [
+          "metric-collection",
+          "aggregation",
+          "percentile-calculation",
+          "alerting",
+          "dashboard-generation",
+          "sli-tracking"
+        ],
+        "workflows": [
+          "collect-metrics",
+          "aggregate-data",
+          "calculate-percentiles",
+          "trigger-alerts",
+          "generate-dashboard"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "WATCHDOG",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "metric_collection",
+          "aggregation",
+          "percentile_calculation",
+          "alerting",
+          "dashboard_generation",
+          "sli_tracking"
+        ],
+        "situations": [
+          "system-health-check",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/metrics/collector/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "telemetry",
+          "health",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-slo-monitor-v1",
+        "name": "SLO Monitor",
+        "zone": 8,
+        "skills": [
+          "slo-definition",
+          "error-budget-tracking",
+          "burn-rate-alert",
+          "availability-calculation",
+          "latency-sli",
+          "throughput-sli"
+        ],
+        "workflows": [
+          "define-slo",
+          "track-error-budget",
+          "alert-burn-rate",
+          "calculate-availability",
+          "measure-latency-sli"
+        ],
+        "nodes": [
+          "WATCHDOG",
+          "OBSERVER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "slo_definition",
+          "error_budget_tracking",
+          "burn_rate_alert",
+          "availability_calculation",
+          "latency_sli",
+          "throughput_sli"
+        ],
+        "situations": [
+          "system-health-check",
+          "budget-alert",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/slo/monitor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "health",
+          "telemetry",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "pipeline-repair": [
+      {
+        "id": "hb-orchestration-conductor-v1",
+        "name": "Orchestration Conductor",
+        "zone": 0,
+        "skills": [
+          "agent-spawning",
+          "liquid-routing",
+          "supervisor-management",
+          "cloud-routing",
+          "spatial-mapping"
+        ],
+        "workflows": [
+          "spawn-supervisor",
+          "route-to-optimal-agent",
+          "rebalance-load",
+          "conductor-health-check",
+          "sse-broadcast"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "spawn-agent",
+          "route-request",
+          "rebalance-agents",
+          "check-conductor-health",
+          "broadcast-event",
+          "sync-agent-state"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "incident-response",
+          "performance-tuning",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/orchestration/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "agents",
+          "lifecycle",
+          "services"
+        ],
+        "optimizationScore": 0.639167
+      },
+      {
+        "id": "hb-continuity-guardian-v2",
+        "name": "Continuity & Healing Guardian",
+        "zone": 5,
+        "skills": [
+          "self-healing",
+          "error-analysis",
+          "rollback",
+          "deterministic-replay",
+          "circuit-breaking",
+          "auto-tuning"
+        ],
+        "workflows": [
+          "capture-anomaly",
+          "root-cause-analysis",
+          "rule-synthesis",
+          "auto-heal-loop",
+          "retry-with-backoff"
+        ],
+        "nodes": [
+          "HCFP",
+          "PATTERNS",
+          "CONDUCTOR",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "self-heal-pipeline",
+          "derive-learned-rule",
+          "retry-stage",
+          "circuit-break-restore",
+          "health-probe-sweep"
+        ],
+        "situations": [
+          "incident-response",
+          "edge-failover",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/continuity/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "resilience",
+          "auto-success",
+          "health",
+          "pipeline"
+        ],
+        "optimizationScore": 0.63125
+      },
+      {
+        "id": "hb-rollback-controller-v1",
+        "name": "Rollback Controller",
+        "zone": 3,
+        "skills": [
+          "version-tracking",
+          "instant-rollback",
+          "state-snapshot",
+          "diff-analysis",
+          "rollback-validation",
+          "notification"
+        ],
+        "workflows": [
+          "track-version",
+          "snapshot-state",
+          "execute-rollback",
+          "validate-rollback",
+          "notify-stakeholders"
+        ],
+        "nodes": [
+          "HCFP",
+          "CONDUCTOR",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "version_tracking",
+          "instant_rollback",
+          "state_snapshot",
+          "diff_analysis",
+          "rollback_validation",
+          "notification"
+        ],
+        "situations": [
+          "incident-response",
+          "disaster-recovery",
+          "pipeline-repair"
+        ],
+        "healthEndpoint": "/api/rollback/controller/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "resilience",
+          "auto-success"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "refactor-sprint": [
+      {
+        "id": "hb-intelligence-analyst-v1",
+        "name": "Intelligence Analyst",
+        "zone": 4,
+        "skills": [
+          "deep-scan",
+          "deep-research",
+          "realtime-intel",
+          "predictive-cache",
+          "context-assembly",
+          "voice-processing"
+        ],
+        "workflows": [
+          "deep-scan-repo",
+          "multi-provider-research",
+          "context-enrichment",
+          "prediction-calibrate",
+          "voice-ingest"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "OBSERVER",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "run-deep-scan",
+          "fan-out-research",
+          "enrich-context",
+          "calibrate-predictions",
+          "process-voice-input",
+          "synthesize-findings"
+        ],
+        "situations": [
+          "incident-response",
+          "compliance-audit",
+          "performance-tuning",
+          "refactor-sprint"
+        ],
+        "healthEndpoint": "/api/intelligence/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "agents"
+        ],
+        "optimizationScore": 0.634167
+      },
+      {
+        "id": "hb-deep-scanner-v1",
+        "name": "Deep Scanner",
+        "zone": 4,
+        "skills": [
+          "repo-analysis",
+          "dependency-graph",
+          "dead-code-detection",
+          "technical-debt-scoring",
+          "complexity-metrics",
+          "coverage-analysis"
+        ],
+        "workflows": [
+          "scan-repo",
+          "graph-dependencies",
+          "detect-dead-code",
+          "score-tech-debt",
+          "measure-complexity"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PATTERNS",
+          "PYTHIA"
+        ],
+        "headyswarmTasks": [
+          "repo_analysis",
+          "dependency_graph",
+          "dead_code_detection",
+          "technical_debt_scoring",
+          "complexity_metrics",
+          "coverage_analysis"
+        ],
+        "situations": [
+          "refactor-sprint",
+          "compliance-audit",
+          "documentation-refresh"
+        ],
+        "healthEndpoint": "/api/deep/scanner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "refactor",
+          "documentation"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-dependency-upgrader-v1",
+        "name": "Dependency Upgrader",
+        "zone": 5,
+        "skills": [
+          "version-scanning",
+          "breaking-change-detection",
+          "auto-upgrade",
+          "test-validation",
+          "lockfile-management",
+          "vulnerability-patching"
+        ],
+        "workflows": [
+          "scan-versions",
+          "detect-breaking-changes",
+          "auto-upgrade",
+          "validate-tests",
+          "manage-lockfile"
+        ],
+        "nodes": [
+          "BUILDER",
+          "HCFP",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "version_scanning",
+          "breaking_change_detection",
+          "auto_upgrade",
+          "test_validation",
+          "lockfile_management",
+          "vulnerability_patching"
+        ],
+        "situations": [
+          "dependency-upgrade",
+          "security-hardening",
+          "refactor-sprint"
+        ],
+        "healthEndpoint": "/api/dependency/upgrader/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "refactor",
+          "pipeline",
+          "security"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "live-music-session": [
+      {
+        "id": "hb-music-producer-v1",
+        "name": "Music Producer",
+        "zone": 9,
+        "skills": [
+          "pattern-generation",
+          "chord-progression",
+          "arrangement",
+          "mixing-automation",
+          "mastering",
+          "sample-library"
+        ],
+        "workflows": [
+          "generate-pattern",
+          "build-progression",
+          "arrange-track",
+          "automate-mix",
+          "master-track"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "pattern_generation",
+          "chord_progression",
+          "arrangement",
+          "mixing_automation",
+          "mastering",
+          "sample_library"
+        ],
+        "situations": [
+          "live-music-session",
+          "creative-generation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/music/producer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "midi",
+          "creative",
+          "engines"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "api-integration": [
+      {
+        "id": "hb-api-gateway-v1",
+        "name": "API Gateway Controller",
+        "zone": 10,
+        "skills": [
+          "api-versioning",
+          "request-transformation",
+          "response-caching",
+          "cors-management",
+          "graphql-federation",
+          "grpc-gateway"
+        ],
+        "workflows": [
+          "version-api",
+          "transform-request",
+          "cache-response",
+          "manage-cors",
+          "federate-graphql"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "api_versioning",
+          "request_transformation",
+          "response_caching",
+          "cors_management",
+          "graphql_federation",
+          "grpc_gateway"
+        ],
+        "situations": [
+          "api-integration",
+          "performance-tuning",
+          "feature-rollout"
+        ],
+        "healthEndpoint": "/api/api/gateway/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "routes",
+          "middleware",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-webhook-dispatcher-v1",
+        "name": "Webhook Dispatcher",
+        "zone": 10,
+        "skills": [
+          "webhook-registration",
+          "payload-delivery",
+          "retry-delivery",
+          "signature-verification",
+          "event-filtering",
+          "delivery-tracking"
+        ],
+        "workflows": [
+          "register-webhook",
+          "deliver-payload",
+          "retry-failed",
+          "verify-signature",
+          "filter-events"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "HCFP",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "webhook_registration",
+          "payload_delivery",
+          "retry_delivery",
+          "signature_verification",
+          "event_filtering",
+          "delivery_tracking"
+        ],
+        "situations": [
+          "webhook-orchestration",
+          "api-integration",
+          "notification-dispatch"
+        ],
+        "healthEndpoint": "/api/webhook/dispatcher/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-connector-factory-v1",
+        "name": "Connector Factory",
+        "zone": 0,
+        "skills": [
+          "connector-generation",
+          "api-discovery",
+          "schema-mapping",
+          "auth-integration",
+          "rate-limit-handling",
+          "webhook-support"
+        ],
+        "workflows": [
+          "generate-connector",
+          "discover-api",
+          "map-schema",
+          "integrate-auth",
+          "handle-rate-limits"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "connector_generation",
+          "api_discovery",
+          "schema_mapping",
+          "auth_integration",
+          "rate_limit_handling",
+          "webhook_support"
+        ],
+        "situations": [
+          "api-integration",
+          "onboarding-new-user",
+          "feature-rollout"
+        ],
+        "healthEndpoint": "/api/connector/factory/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "middleware"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "user-support-escalation": [
+      {
+        "id": "hb-vector-search-engine-v1",
+        "name": "Vector Search Engine",
+        "zone": 1,
+        "skills": [
+          "knn-search",
+          "hybrid-search",
+          "filtered-search",
+          "semantic-ranking",
+          "re-ranking",
+          "faceted-search"
+        ],
+        "workflows": [
+          "execute-search",
+          "rank-results",
+          "re-rank",
+          "filter-vectors",
+          "facet-results"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "ATLAS",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "knn_search",
+          "hybrid_search",
+          "filtered_search",
+          "semantic_ranking",
+          "re_ranking",
+          "faceted_search"
+        ],
+        "situations": [
+          "performance-tuning",
+          "content-generation",
+          "user-support-escalation"
+        ],
+        "healthEndpoint": "/api/vector/search/engine/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "vector-ops",
+          "memory",
+          "intelligence"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-context-assembler-v1",
+        "name": "Context Assembler",
+        "zone": 4,
+        "skills": [
+          "context-window-packing",
+          "rag-retrieval",
+          "context-ranking",
+          "token-budgeting",
+          "context-compression",
+          "relevance-scoring"
+        ],
+        "workflows": [
+          "assemble-context",
+          "retrieve-rag",
+          "rank-context",
+          "budget-tokens",
+          "compress-context"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "context_window_packing",
+          "rag_retrieval",
+          "context_ranking",
+          "token_budgeting",
+          "context_compression",
+          "relevance_scoring"
+        ],
+        "situations": [
+          "content-generation",
+          "user-support-escalation",
+          "model-fine-tuning"
+        ],
+        "healthEndpoint": "/api/context/assembler/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "memory"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-sentiment-analyzer-v1",
+        "name": "Sentiment Analyzer",
+        "zone": 4,
+        "skills": [
+          "text-sentiment",
+          "emotion-detection",
+          "intent-classification",
+          "topic-extraction",
+          "urgency-scoring",
+          "language-detection"
+        ],
+        "workflows": [
+          "analyze-sentiment",
+          "detect-emotions",
+          "classify-intent",
+          "extract-topics",
+          "score-urgency"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "text_sentiment",
+          "emotion_detection",
+          "intent_classification",
+          "topic_extraction",
+          "urgency_scoring",
+          "language_detection"
+        ],
+        "situations": [
+          "sentiment-analysis",
+          "user-support-escalation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/sentiment/analyzer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "agents"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "a-b-testing": [
+      {
+        "id": "hb-ui-builder-v1",
+        "name": "Dynamic UI Builder",
+        "zone": 11,
+        "skills": [
+          "component-generation",
+          "layout-engine",
+          "theme-application",
+          "responsive-design",
+          "accessibility-audit",
+          "animation-library"
+        ],
+        "workflows": [
+          "generate-component",
+          "build-layout",
+          "apply-theme",
+          "audit-accessibility",
+          "animate-transitions"
+        ],
+        "nodes": [
+          "BUILDER",
+          "IMAGINATION",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "component_generation",
+          "layout_engine",
+          "theme_application",
+          "responsive_design",
+          "accessibility_audit",
+          "animation_library"
+        ],
+        "situations": [
+          "digital-presence-launch",
+          "onboarding-new-user",
+          "a-b-testing"
+        ],
+        "healthEndpoint": "/api/ui/builder/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "templates",
+          "creative",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-ab-test-runner-v1",
+        "name": "A/B Test Runner",
+        "zone": 11,
+        "skills": [
+          "experiment-design",
+          "traffic-allocation",
+          "statistical-analysis",
+          "winner-detection",
+          "variant-management",
+          "result-reporting"
+        ],
+        "workflows": [
+          "design-experiment",
+          "allocate-traffic",
+          "analyze-results",
+          "detect-winner",
+          "report-results"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "experiment_design",
+          "traffic_allocation",
+          "statistical_analysis",
+          "winner_detection",
+          "variant_management",
+          "result_reporting"
+        ],
+        "situations": [
+          "a-b-testing",
+          "feature-rollout",
+          "growth-campaign"
+        ],
+        "healthEndpoint": "/api/ab/test/runner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "telemetry",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-feature-flag-manager-v1",
+        "name": "Feature Flag Manager",
+        "zone": 0,
+        "skills": [
+          "flag-management",
+          "gradual-rollout",
+          "user-targeting",
+          "kill-switch",
+          "flag-analytics",
+          "flag-lifecycle"
+        ],
+        "workflows": [
+          "create-flag",
+          "gradual-rollout",
+          "target-users",
+          "kill-switch",
+          "analyze-flag-impact"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "OBSERVER",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "flag_management",
+          "gradual_rollout",
+          "user_targeting",
+          "kill_switch",
+          "flag_analytics",
+          "flag_lifecycle"
+        ],
+        "situations": [
+          "feature-rollout",
+          "a-b-testing",
+          "canary-deployment"
+        ],
+        "healthEndpoint": "/api/feature/flag/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "config",
+          "services",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "model-fine-tuning": [
+      {
+        "id": "hb-context-assembler-v1",
+        "name": "Context Assembler",
+        "zone": 4,
+        "skills": [
+          "context-window-packing",
+          "rag-retrieval",
+          "context-ranking",
+          "token-budgeting",
+          "context-compression",
+          "relevance-scoring"
+        ],
+        "workflows": [
+          "assemble-context",
+          "retrieve-rag",
+          "rank-context",
+          "budget-tokens",
+          "compress-context"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "context_window_packing",
+          "rag_retrieval",
+          "context_ranking",
+          "token_budgeting",
+          "context_compression",
+          "relevance_scoring"
+        ],
+        "situations": [
+          "content-generation",
+          "user-support-escalation",
+          "model-fine-tuning"
+        ],
+        "healthEndpoint": "/api/context/assembler/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "memory"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "vector-reindex": [
+      {
+        "id": "hb-embedding-pipeline-v1",
+        "name": "Embedding Pipeline",
+        "zone": 1,
+        "skills": [
+          "text-embedding",
+          "multi-modal-embed",
+          "batch-embedding",
+          "embedding-cache",
+          "dimension-reduction",
+          "embedding-quality"
+        ],
+        "workflows": [
+          "embed-text",
+          "embed-batch",
+          "cache-embeddings",
+          "reduce-dimensions",
+          "validate-quality"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "ATLAS"
+        ],
+        "headyswarmTasks": [
+          "text_embedding",
+          "multi_modal_embed",
+          "batch_embedding",
+          "embedding_cache",
+          "dimension_reduction",
+          "embedding_quality"
+        ],
+        "situations": [
+          "data-migration",
+          "memory-compaction",
+          "vector-reindex"
+        ],
+        "healthEndpoint": "/api/embedding/pipeline/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "brain"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-spatial-indexer-v1",
+        "name": "Spatial Indexer",
+        "zone": 1,
+        "skills": [
+          "octree-indexing",
+          "range-query",
+          "nearest-neighbor",
+          "spatial-partitioning",
+          "zone-assignment",
+          "3d-coordinate-mapping"
+        ],
+        "workflows": [
+          "build-index",
+          "query-range",
+          "find-nearest",
+          "partition-space",
+          "assign-zones"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "octree_indexing",
+          "range_query",
+          "nearest_neighbor",
+          "spatial_partitioning",
+          "zone_assignment",
+          "3d_coordinate_mapping"
+        ],
+        "situations": [
+          "vector-reindex",
+          "data-migration",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/spatial/indexer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "vector-ops",
+          "vector-templates",
+          "memory"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "secret-rotation": [
+      {
+        "id": "hb-config-manager-v1",
+        "name": "Configuration Manager",
+        "zone": 0,
+        "skills": [
+          "config-validation",
+          "env-management",
+          "feature-flags",
+          "config-drift-detection",
+          "yaml-processing",
+          "secret-injection"
+        ],
+        "workflows": [
+          "validate-config",
+          "sync-env-vars",
+          "toggle-features",
+          "detect-drift",
+          "inject-secrets"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "BUILDER",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "config_validation",
+          "env_management",
+          "feature_flags",
+          "config_drift_detection",
+          "yaml_processing",
+          "secret_injection"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "feature-rollout",
+          "secret-rotation"
+        ],
+        "healthEndpoint": "/api/config/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "config",
+          "services",
+          "security"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-secret-vault-v1",
+        "name": "Secret Vault Manager",
+        "zone": 2,
+        "skills": [
+          "secret-storage",
+          "key-rotation",
+          "vault-audit",
+          "secret-versioning",
+          "access-control",
+          "encryption-at-rest"
+        ],
+        "workflows": [
+          "store-secret",
+          "rotate-keys",
+          "audit-access",
+          "version-secret",
+          "encrypt-payload"
+        ],
+        "nodes": [
+          "GOVERNANCE",
+          "JULES",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "secret_storage",
+          "key_rotation",
+          "vault_audit",
+          "secret_versioning",
+          "access_control",
+          "encryption_at_rest"
+        ],
+        "situations": [
+          "secret-rotation",
+          "compliance-audit",
+          "security-hardening"
+        ],
+        "healthEndpoint": "/api/secret/vault/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "config",
+          "governance"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "capacity-planning": [
+      {
+        "id": "hb-swarm-coordinator-v1",
+        "name": "Swarm Coordinator",
+        "zone": 0,
+        "skills": [
+          "bee-orchestration",
+          "parallel-dispatch",
+          "swarm-scaling",
+          "work-distribution",
+          "blast-optimization",
+          "concurrency-control"
+        ],
+        "workflows": [
+          "dispatch-swarm",
+          "scale-bees",
+          "optimize-blast",
+          "balance-load",
+          "measure-throughput"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "bee_orchestration",
+          "parallel_dispatch",
+          "swarm_scaling",
+          "work_distribution",
+          "blast_optimization",
+          "concurrency_control"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/swarm/coordinator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "services",
+          "agents",
+          "lifecycle"
+        ],
+        "optimizationScore": 0.6425
+      },
+      {
+        "id": "hb-cache-orchestrator-v1",
+        "name": "Cache Orchestrator",
+        "zone": 1,
+        "skills": [
+          "redis-caching",
+          "cache-invalidation",
+          "cache-warming",
+          "ttl-management",
+          "cache-aside",
+          "write-through"
+        ],
+        "workflows": [
+          "warm-cache",
+          "invalidate-stale",
+          "set-ttl",
+          "sync-cache",
+          "measure-hit-rate"
+        ],
+        "nodes": [
+          "BUDDY",
+          "ATLAS",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "redis_caching",
+          "cache_invalidation",
+          "cache_warming",
+          "ttl_management",
+          "cache_aside",
+          "write_through"
+        ],
+        "situations": [
+          "cache-warming",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/cache/orchestrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "ops",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-prediction-calibrator-v1",
+        "name": "Prediction Calibrator",
+        "zone": 4,
+        "skills": [
+          "forecast-generation",
+          "calibration-scoring",
+          "confidence-intervals",
+          "backtesting",
+          "drift-detection",
+          "model-evaluation"
+        ],
+        "workflows": [
+          "generate-forecast",
+          "calibrate-model",
+          "compute-intervals",
+          "backtest-predictions",
+          "detect-drift"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "PATTERNS",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "forecast_generation",
+          "calibration_scoring",
+          "confidence_intervals",
+          "backtesting",
+          "drift_detection",
+          "model_evaluation"
+        ],
+        "situations": [
+          "anomaly-detection",
+          "capacity-planning",
+          "budget-alert"
+        ],
+        "healthEndpoint": "/api/prediction/calibrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "engines",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "disaster-recovery": [
+      {
+        "id": "hb-lifecycle-manager-v1",
+        "name": "Service Lifecycle Manager",
+        "zone": 0,
+        "skills": [
+          "service-start",
+          "service-stop",
+          "graceful-shutdown",
+          "hot-reload",
+          "dependency-ordering",
+          "health-gating"
+        ],
+        "workflows": [
+          "start-services",
+          "stop-services",
+          "hot-reload",
+          "reorder-deps",
+          "gate-health"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "WATCHDOG",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "service_start",
+          "service_stop",
+          "graceful_shutdown",
+          "hot_reload",
+          "dependency_ordering",
+          "health_gating"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "incident-response",
+          "disaster-recovery"
+        ],
+        "healthEndpoint": "/api/lifecycle/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "lifecycle",
+          "services",
+          "health"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-memory-federation-v1",
+        "name": "Memory Federation",
+        "zone": 1,
+        "skills": [
+          "cross-store-sync",
+          "federation-routing",
+          "consistency-check",
+          "conflict-resolution",
+          "partition-management",
+          "replication"
+        ],
+        "workflows": [
+          "sync-stores",
+          "route-query",
+          "check-consistency",
+          "resolve-conflicts",
+          "manage-partitions"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "cross_store_sync",
+          "federation_routing",
+          "consistency_check",
+          "conflict_resolution",
+          "partition_management",
+          "replication"
+        ],
+        "situations": [
+          "data-migration",
+          "disaster-recovery",
+          "memory-compaction"
+        ],
+        "healthEndpoint": "/api/memory/federation/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "sync-projection",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-blue-green-switcher-v1",
+        "name": "Blue-Green Switcher",
+        "zone": 3,
+        "skills": [
+          "environment-sync",
+          "traffic-switch",
+          "health-validation",
+          "dns-cutover",
+          "rollback-instant",
+          "warm-standby"
+        ],
+        "workflows": [
+          "sync-environments",
+          "switch-traffic",
+          "validate-health",
+          "cutover-dns",
+          "instant-rollback"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "environment_sync",
+          "traffic_switch",
+          "health_validation",
+          "dns_cutover",
+          "rollback_instant",
+          "warm_standby"
+        ],
+        "situations": [
+          "blue-green-switch",
+          "autonomous-deploy",
+          "disaster-recovery"
+        ],
+        "healthEndpoint": "/api/blue/green/switcher/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "health"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "feature-rollout": [
+      {
+        "id": "hb-config-manager-v1",
+        "name": "Configuration Manager",
+        "zone": 0,
+        "skills": [
+          "config-validation",
+          "env-management",
+          "feature-flags",
+          "config-drift-detection",
+          "yaml-processing",
+          "secret-injection"
+        ],
+        "workflows": [
+          "validate-config",
+          "sync-env-vars",
+          "toggle-features",
+          "detect-drift",
+          "inject-secrets"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "BUILDER",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "config_validation",
+          "env_management",
+          "feature_flags",
+          "config_drift_detection",
+          "yaml_processing",
+          "secret_injection"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "feature-rollout",
+          "secret-rotation"
+        ],
+        "healthEndpoint": "/api/config/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "config",
+          "services",
+          "security"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-canary-deployer-v1",
+        "name": "Canary Deployer",
+        "zone": 3,
+        "skills": [
+          "canary-release",
+          "traffic-splitting",
+          "metric-comparison",
+          "auto-promote",
+          "auto-rollback",
+          "feature-gating"
+        ],
+        "workflows": [
+          "deploy-canary",
+          "split-traffic",
+          "compare-metrics",
+          "promote-canary",
+          "rollback-canary"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "canary_release",
+          "traffic_splitting",
+          "metric_comparison",
+          "auto_promote",
+          "auto_rollback",
+          "feature_gating"
+        ],
+        "situations": [
+          "canary-deployment",
+          "feature-rollout",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/canary/deployer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "health",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-api-gateway-v1",
+        "name": "API Gateway Controller",
+        "zone": 10,
+        "skills": [
+          "api-versioning",
+          "request-transformation",
+          "response-caching",
+          "cors-management",
+          "graphql-federation",
+          "grpc-gateway"
+        ],
+        "workflows": [
+          "version-api",
+          "transform-request",
+          "cache-response",
+          "manage-cors",
+          "federate-graphql"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "api_versioning",
+          "request_transformation",
+          "response_caching",
+          "cors_management",
+          "graphql_federation",
+          "grpc_gateway"
+        ],
+        "situations": [
+          "api-integration",
+          "performance-tuning",
+          "feature-rollout"
+        ],
+        "healthEndpoint": "/api/api/gateway/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "routes",
+          "middleware",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "dependency-upgrade": [
+      {
+        "id": "hb-container-builder-v1",
+        "name": "Container Builder",
+        "zone": 3,
+        "skills": [
+          "docker-build",
+          "multi-stage-build",
+          "layer-caching",
+          "image-scanning",
+          "registry-push",
+          "manifest-generation"
+        ],
+        "workflows": [
+          "build-image",
+          "scan-image",
+          "push-registry",
+          "generate-manifest",
+          "cache-layers"
+        ],
+        "nodes": [
+          "BUILDER",
+          "HCFP",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "docker_build",
+          "multi_stage_build",
+          "layer_caching",
+          "image_scanning",
+          "registry_push",
+          "manifest_generation"
+        ],
+        "situations": [
+          "autonomous-deploy",
+          "dependency-upgrade",
+          "security-hardening"
+        ],
+        "healthEndpoint": "/api/container/builder/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "pipeline",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-schema-evolver-v1",
+        "name": "Schema Evolver",
+        "zone": 6,
+        "skills": [
+          "schema-versioning",
+          "migration-generation",
+          "backward-compat",
+          "schema-validation",
+          "data-transform",
+          "rollback-migration"
+        ],
+        "workflows": [
+          "version-schema",
+          "generate-migration",
+          "validate-compat",
+          "transform-data",
+          "rollback-migration"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "ATLAS",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "schema_versioning",
+          "migration_generation",
+          "backward_compat",
+          "schema_validation",
+          "data_transform",
+          "rollback_migration"
+        ],
+        "situations": [
+          "schema-evolution",
+          "data-migration",
+          "dependency-upgrade"
+        ],
+        "healthEndpoint": "/api/schema/evolver/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "pipeline"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-migration-planner-v1",
+        "name": "Migration Planner",
+        "zone": 6,
+        "skills": [
+          "dependency-analysis",
+          "risk-assessment",
+          "migration-scripting",
+          "rollback-planning",
+          "progress-tracking",
+          "validation-testing"
+        ],
+        "workflows": [
+          "analyze-dependencies",
+          "assess-risk",
+          "script-migration",
+          "plan-rollback",
+          "track-progress"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "HCFP",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "dependency_analysis",
+          "risk_assessment",
+          "migration_scripting",
+          "rollback_planning",
+          "progress_tracking",
+          "validation_testing"
+        ],
+        "situations": [
+          "data-migration",
+          "dependency-upgrade",
+          "schema-evolution"
+        ],
+        "healthEndpoint": "/api/migration/planner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "pipeline",
+          "memory",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "log-analysis": [
+      {
+        "id": "hb-log-analyzer-v1",
+        "name": "Log Analyzer",
+        "zone": 8,
+        "skills": [
+          "log-parsing",
+          "pattern-matching",
+          "anomaly-detection",
+          "log-correlation",
+          "structured-logging",
+          "log-archival"
+        ],
+        "workflows": [
+          "parse-logs",
+          "match-patterns",
+          "detect-anomalies",
+          "correlate-events",
+          "archive-logs"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PATTERNS",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "log_parsing",
+          "pattern_matching",
+          "anomaly_detection",
+          "log_correlation",
+          "structured_logging",
+          "log_archival"
+        ],
+        "situations": [
+          "log-analysis",
+          "incident-response",
+          "anomaly-detection"
+        ],
+        "healthEndpoint": "/api/log/analyzer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "telemetry",
+          "ops",
+          "intelligence"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-access-auditor-v1",
+        "name": "Access Auditor",
+        "zone": 2,
+        "skills": [
+          "access-log-analysis",
+          "permission-audit",
+          "privilege-escalation-detection",
+          "rbac-validation",
+          "compliance-reporting"
+        ],
+        "workflows": [
+          "analyze-logs",
+          "audit-permissions",
+          "detect-escalation",
+          "validate-rbac",
+          "generate-compliance-report"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "GOVERNANCE",
+          "JULES"
+        ],
+        "headyswarmTasks": [
+          "access_log_analysis",
+          "permission_audit",
+          "privilege_escalation_detection",
+          "rbac_validation",
+          "compliance_reporting"
+        ],
+        "situations": [
+          "compliance-audit",
+          "security-hardening",
+          "log-analysis"
+        ],
+        "healthEndpoint": "/api/access/auditor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "governance",
+          "telemetry"
+        ],
+        "optimizationScore": 0.56625
+      }
+    ],
+    "cache-warming": [
+      {
+        "id": "hb-cache-orchestrator-v1",
+        "name": "Cache Orchestrator",
+        "zone": 1,
+        "skills": [
+          "redis-caching",
+          "cache-invalidation",
+          "cache-warming",
+          "ttl-management",
+          "cache-aside",
+          "write-through"
+        ],
+        "workflows": [
+          "warm-cache",
+          "invalidate-stale",
+          "set-ttl",
+          "sync-cache",
+          "measure-hit-rate"
+        ],
+        "nodes": [
+          "BUDDY",
+          "ATLAS",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "redis_caching",
+          "cache_invalidation",
+          "cache_warming",
+          "ttl_management",
+          "cache_aside",
+          "write_through"
+        ],
+        "situations": [
+          "cache-warming",
+          "performance-tuning",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/cache/orchestrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "ops",
+          "services"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-edge-deployer-v1",
+        "name": "Edge Deployer",
+        "zone": 3,
+        "skills": [
+          "cloudflare-deploy",
+          "edge-function-push",
+          "kv-sync",
+          "edge-cache-purge",
+          "worker-routing",
+          "edge-analytics"
+        ],
+        "workflows": [
+          "deploy-worker",
+          "sync-kv",
+          "purge-cache",
+          "route-edge",
+          "analyze-edge-traffic"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "cloudflare_deploy",
+          "edge_function_push",
+          "kv_sync",
+          "edge_cache_purge",
+          "worker_routing",
+          "edge_analytics"
+        ],
+        "situations": [
+          "edge-failover",
+          "autonomous-deploy",
+          "cache-warming"
+        ],
+        "healthEndpoint": "/api/edge/deployer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "schema-evolution": [
+      {
+        "id": "hb-schema-evolver-v1",
+        "name": "Schema Evolver",
+        "zone": 6,
+        "skills": [
+          "schema-versioning",
+          "migration-generation",
+          "backward-compat",
+          "schema-validation",
+          "data-transform",
+          "rollback-migration"
+        ],
+        "workflows": [
+          "version-schema",
+          "generate-migration",
+          "validate-compat",
+          "transform-data",
+          "rollback-migration"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "ATLAS",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "schema_versioning",
+          "migration_generation",
+          "backward_compat",
+          "schema_validation",
+          "data_transform",
+          "rollback_migration"
+        ],
+        "situations": [
+          "schema-evolution",
+          "data-migration",
+          "dependency-upgrade"
+        ],
+        "healthEndpoint": "/api/schema/evolver/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "memory",
+          "vector-ops",
+          "pipeline"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-migration-planner-v1",
+        "name": "Migration Planner",
+        "zone": 6,
+        "skills": [
+          "dependency-analysis",
+          "risk-assessment",
+          "migration-scripting",
+          "rollback-planning",
+          "progress-tracking",
+          "validation-testing"
+        ],
+        "workflows": [
+          "analyze-dependencies",
+          "assess-risk",
+          "script-migration",
+          "plan-rollback",
+          "track-progress"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "HCFP",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "dependency_analysis",
+          "risk_assessment",
+          "migration_scripting",
+          "rollback_planning",
+          "progress_tracking",
+          "validation_testing"
+        ],
+        "situations": [
+          "data-migration",
+          "dependency-upgrade",
+          "schema-evolution"
+        ],
+        "healthEndpoint": "/api/migration/planner/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "pipeline",
+          "memory",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "webhook-orchestration": [
+      {
+        "id": "hb-webhook-dispatcher-v1",
+        "name": "Webhook Dispatcher",
+        "zone": 10,
+        "skills": [
+          "webhook-registration",
+          "payload-delivery",
+          "retry-delivery",
+          "signature-verification",
+          "event-filtering",
+          "delivery-tracking"
+        ],
+        "workflows": [
+          "register-webhook",
+          "deliver-payload",
+          "retry-failed",
+          "verify-signature",
+          "filter-events"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "HCFP",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "webhook_registration",
+          "payload_delivery",
+          "retry_delivery",
+          "signature_verification",
+          "event_filtering",
+          "delivery_tracking"
+        ],
+        "situations": [
+          "webhook-orchestration",
+          "api-integration",
+          "notification-dispatch"
+        ],
+        "healthEndpoint": "/api/webhook/dispatcher/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "notification-dispatch": [
+      {
+        "id": "hb-webhook-dispatcher-v1",
+        "name": "Webhook Dispatcher",
+        "zone": 10,
+        "skills": [
+          "webhook-registration",
+          "payload-delivery",
+          "retry-delivery",
+          "signature-verification",
+          "event-filtering",
+          "delivery-tracking"
+        ],
+        "workflows": [
+          "register-webhook",
+          "deliver-payload",
+          "retry-failed",
+          "verify-signature",
+          "filter-events"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "HCFP",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "webhook_registration",
+          "payload_delivery",
+          "retry_delivery",
+          "signature_verification",
+          "event_filtering",
+          "delivery_tracking"
+        ],
+        "situations": [
+          "webhook-orchestration",
+          "api-integration",
+          "notification-dispatch"
+        ],
+        "healthEndpoint": "/api/webhook/dispatcher/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-notification-engine-v1",
+        "name": "Notification Engine",
+        "zone": 10,
+        "skills": [
+          "email-dispatch",
+          "push-notification",
+          "sms-gateway",
+          "in-app-notification",
+          "notification-templating",
+          "delivery-tracking"
+        ],
+        "workflows": [
+          "dispatch-email",
+          "send-push",
+          "send-sms",
+          "notify-in-app",
+          "track-delivery"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "BUDDY",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "email_dispatch",
+          "push_notification",
+          "sms_gateway",
+          "in_app_notification",
+          "notification_templating",
+          "delivery_tracking"
+        ],
+        "situations": [
+          "notification-dispatch",
+          "onboarding-new-user",
+          "incident-response"
+        ],
+        "healthEndpoint": "/api/notification/engine/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "connectors",
+          "services",
+          "templates"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "report-generation": [
+      {
+        "id": "hb-etl-pipeline-v1",
+        "name": "ETL Pipeline",
+        "zone": 6,
+        "skills": [
+          "data-extraction",
+          "data-transformation",
+          "data-loading",
+          "data-validation",
+          "incremental-sync",
+          "data-quality"
+        ],
+        "workflows": [
+          "extract-data",
+          "transform-data",
+          "load-data",
+          "validate-quality",
+          "incremental-sync"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "data_extraction",
+          "data_transformation",
+          "data_loading",
+          "data_validation",
+          "incremental_sync",
+          "data_quality"
+        ],
+        "situations": [
+          "data-migration",
+          "backup-restore",
+          "report-generation"
+        ],
+        "healthEndpoint": "/api/etl/pipeline/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "pipeline",
+          "memory",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-user-journey-tracker-v1",
+        "name": "User Journey Tracker",
+        "zone": 11,
+        "skills": [
+          "event-tracking",
+          "funnel-analysis",
+          "cohort-analysis",
+          "retention-tracking",
+          "churn-prediction",
+          "engagement-scoring"
+        ],
+        "workflows": [
+          "track-events",
+          "analyze-funnel",
+          "analyze-cohorts",
+          "track-retention",
+          "predict-churn"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "event_tracking",
+          "funnel_analysis",
+          "cohort_analysis",
+          "retention_tracking",
+          "churn_prediction",
+          "engagement_scoring"
+        ],
+        "situations": [
+          "growth-campaign",
+          "subscription-management",
+          "report-generation"
+        ],
+        "healthEndpoint": "/api/user/journey/tracker/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "telemetry",
+          "intelligence",
+          "agents"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-report-generator-v1",
+        "name": "Report Generator",
+        "zone": 11,
+        "skills": [
+          "data-aggregation",
+          "chart-generation",
+          "pdf-rendering",
+          "scheduled-reports",
+          "custom-dashboards",
+          "export-formats"
+        ],
+        "workflows": [
+          "aggregate-data",
+          "generate-charts",
+          "render-pdf",
+          "schedule-report",
+          "export-data"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "BUILDER"
+        ],
+        "headyswarmTasks": [
+          "data_aggregation",
+          "chart_generation",
+          "pdf_rendering",
+          "scheduled_reports",
+          "custom_dashboards",
+          "export_formats"
+        ],
+        "situations": [
+          "report-generation",
+          "compliance-audit",
+          "budget-alert"
+        ],
+        "healthEndpoint": "/api/report/generator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "telemetry",
+          "documentation"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "backup-restore": [
+      {
+        "id": "hb-etl-pipeline-v1",
+        "name": "ETL Pipeline",
+        "zone": 6,
+        "skills": [
+          "data-extraction",
+          "data-transformation",
+          "data-loading",
+          "data-validation",
+          "incremental-sync",
+          "data-quality"
+        ],
+        "workflows": [
+          "extract-data",
+          "transform-data",
+          "load-data",
+          "validate-quality",
+          "incremental-sync"
+        ],
+        "nodes": [
+          "ATLAS",
+          "PYTHIA",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "data_extraction",
+          "data_transformation",
+          "data_loading",
+          "data_validation",
+          "incremental_sync",
+          "data_quality"
+        ],
+        "situations": [
+          "data-migration",
+          "backup-restore",
+          "report-generation"
+        ],
+        "healthEndpoint": "/api/etl/pipeline/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "pipeline",
+          "memory",
+          "vector-ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-backup-manager-v1",
+        "name": "Backup Manager",
+        "zone": 6,
+        "skills": [
+          "snapshot-backup",
+          "incremental-backup",
+          "backup-verification",
+          "restore-testing",
+          "retention-policy",
+          "offsite-replication"
+        ],
+        "workflows": [
+          "create-snapshot",
+          "incremental-backup",
+          "verify-backup",
+          "test-restore",
+          "enforce-retention"
+        ],
+        "nodes": [
+          "HCFP",
+          "OBSERVER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "snapshot_backup",
+          "incremental_backup",
+          "backup_verification",
+          "restore_testing",
+          "retention_policy",
+          "offsite_replication"
+        ],
+        "situations": [
+          "backup-restore",
+          "disaster-recovery",
+          "compliance-audit"
+        ],
+        "healthEndpoint": "/api/backup/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "ops",
+          "memory",
+          "resilience"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "rate-limit-adjustment": [
+      {
+        "id": "hb-route-optimizer-v1",
+        "name": "Route Optimizer",
+        "zone": 0,
+        "skills": [
+          "request-routing",
+          "load-balancing",
+          "rate-limiting",
+          "circuit-breaking",
+          "retry-logic",
+          "timeout-management"
+        ],
+        "workflows": [
+          "optimize-routes",
+          "balance-load",
+          "enforce-limits",
+          "break-circuit",
+          "retry-failed"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "request_routing",
+          "load_balancing",
+          "rate_limiting",
+          "circuit_breaking",
+          "retry_logic",
+          "timeout_management"
+        ],
+        "situations": [
+          "performance-tuning",
+          "load-balancing",
+          "rate-limit-adjustment"
+        ],
+        "healthEndpoint": "/api/route/optimizer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "routes",
+          "middleware",
+          "resilience"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "canary-deployment": [
+      {
+        "id": "hb-canary-deployer-v1",
+        "name": "Canary Deployer",
+        "zone": 3,
+        "skills": [
+          "canary-release",
+          "traffic-splitting",
+          "metric-comparison",
+          "auto-promote",
+          "auto-rollback",
+          "feature-gating"
+        ],
+        "workflows": [
+          "deploy-canary",
+          "split-traffic",
+          "compare-metrics",
+          "promote-canary",
+          "rollback-canary"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "canary_release",
+          "traffic_splitting",
+          "metric_comparison",
+          "auto_promote",
+          "auto_rollback",
+          "feature_gating"
+        ],
+        "situations": [
+          "canary-deployment",
+          "feature-rollout",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/canary/deployer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "health",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-feature-flag-manager-v1",
+        "name": "Feature Flag Manager",
+        "zone": 0,
+        "skills": [
+          "flag-management",
+          "gradual-rollout",
+          "user-targeting",
+          "kill-switch",
+          "flag-analytics",
+          "flag-lifecycle"
+        ],
+        "workflows": [
+          "create-flag",
+          "gradual-rollout",
+          "target-users",
+          "kill-switch",
+          "analyze-flag-impact"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "OBSERVER",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "flag_management",
+          "gradual_rollout",
+          "user_targeting",
+          "kill_switch",
+          "flag_analytics",
+          "flag_lifecycle"
+        ],
+        "situations": [
+          "feature-rollout",
+          "a-b-testing",
+          "canary-deployment"
+        ],
+        "healthEndpoint": "/api/feature/flag/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "config",
+          "services",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "blue-green-switch": [
+      {
+        "id": "hb-blue-green-switcher-v1",
+        "name": "Blue-Green Switcher",
+        "zone": 3,
+        "skills": [
+          "environment-sync",
+          "traffic-switch",
+          "health-validation",
+          "dns-cutover",
+          "rollback-instant",
+          "warm-standby"
+        ],
+        "workflows": [
+          "sync-environments",
+          "switch-traffic",
+          "validate-health",
+          "cutover-dns",
+          "instant-rollback"
+        ],
+        "nodes": [
+          "BUILDER",
+          "CONDUCTOR",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "environment_sync",
+          "traffic_switch",
+          "health_validation",
+          "dns_cutover",
+          "rollback_instant",
+          "warm_standby"
+        ],
+        "situations": [
+          "blue-green-switch",
+          "autonomous-deploy",
+          "disaster-recovery"
+        ],
+        "healthEndpoint": "/api/blue/green/switcher/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "deployment",
+          "sync-projection",
+          "health"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "load-balancing": [
+      {
+        "id": "hb-route-optimizer-v1",
+        "name": "Route Optimizer",
+        "zone": 0,
+        "skills": [
+          "request-routing",
+          "load-balancing",
+          "rate-limiting",
+          "circuit-breaking",
+          "retry-logic",
+          "timeout-management"
+        ],
+        "workflows": [
+          "optimize-routes",
+          "balance-load",
+          "enforce-limits",
+          "break-circuit",
+          "retry-failed"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "ARENA",
+          "HCFP"
+        ],
+        "headyswarmTasks": [
+          "request_routing",
+          "load_balancing",
+          "rate_limiting",
+          "circuit_breaking",
+          "retry_logic",
+          "timeout_management"
+        ],
+        "situations": [
+          "performance-tuning",
+          "load-balancing",
+          "rate-limit-adjustment"
+        ],
+        "healthEndpoint": "/api/route/optimizer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "routes",
+          "middleware",
+          "resilience"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-load-tester-v1",
+        "name": "Load Tester",
+        "zone": 8,
+        "skills": [
+          "load-generation",
+          "stress-testing",
+          "spike-testing",
+          "soak-testing",
+          "breakpoint-detection",
+          "performance-profiling"
+        ],
+        "workflows": [
+          "generate-load",
+          "stress-test",
+          "spike-test",
+          "soak-test",
+          "detect-breakpoint"
+        ],
+        "nodes": [
+          "ARENA",
+          "OBSERVER",
+          "PATTERNS"
+        ],
+        "headyswarmTasks": [
+          "load_generation",
+          "stress_testing",
+          "spike_testing",
+          "soak_testing",
+          "breakpoint_detection",
+          "performance_profiling"
+        ],
+        "situations": [
+          "performance-tuning",
+          "capacity-planning",
+          "load-balancing"
+        ],
+        "healthEndpoint": "/api/load/tester/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "ops",
+          "health",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "dns-migration": [
+      {
+        "id": "hb-dns-orchestrator-v1",
+        "name": "DNS Orchestrator",
+        "zone": 10,
+        "skills": [
+          "dns-management",
+          "record-validation",
+          "propagation-check",
+          "geo-dns",
+          "dns-failover",
+          "cname-flattening"
+        ],
+        "workflows": [
+          "manage-records",
+          "validate-dns",
+          "check-propagation",
+          "configure-geo",
+          "failover-dns"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "OBSERVER",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "dns_management",
+          "record_validation",
+          "propagation_check",
+          "geo_dns",
+          "dns_failover",
+          "cname_flattening"
+        ],
+        "situations": [
+          "dns-migration",
+          "edge-failover",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/dns/orchestrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "ops",
+          "health",
+          "deployment"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "certificate-renewal": [
+      {
+        "id": "hb-certificate-manager-v1",
+        "name": "Certificate Manager",
+        "zone": 2,
+        "skills": [
+          "ssl-provisioning",
+          "cert-renewal",
+          "cert-validation",
+          "ca-management",
+          "mtls-setup",
+          "cert-monitoring"
+        ],
+        "workflows": [
+          "provision-cert",
+          "renew-cert",
+          "validate-chain",
+          "setup-mtls",
+          "monitor-expiry"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "WATCHDOG",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "ssl_provisioning",
+          "cert_renewal",
+          "cert_validation",
+          "ca_management",
+          "mtls_setup",
+          "cert_monitoring"
+        ],
+        "situations": [
+          "certificate-renewal",
+          "security-hardening",
+          "autonomous-deploy"
+        ],
+        "healthEndpoint": "/api/certificate/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "ops",
+          "health"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "image-generation": [
+      {
+        "id": "hb-image-generator-v1",
+        "name": "Image Generator",
+        "zone": 9,
+        "skills": [
+          "text-to-image",
+          "image-editing",
+          "style-transfer",
+          "upscaling",
+          "background-removal",
+          "batch-generation"
+        ],
+        "workflows": [
+          "generate-image",
+          "edit-image",
+          "transfer-style",
+          "upscale-image",
+          "batch-generate"
+        ],
+        "nodes": [
+          "IMAGINATION",
+          "BUDDY",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "text_to_image",
+          "image_editing",
+          "style_transfer",
+          "upscaling",
+          "background_removal",
+          "batch_generation"
+        ],
+        "situations": [
+          "image-generation",
+          "creative-generation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/image/generator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "creative",
+          "connectors",
+          "providers"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "voice-processing": [
+      {
+        "id": "hb-voice-processor-v1",
+        "name": "Voice Processor",
+        "zone": 4,
+        "skills": [
+          "speech-to-text",
+          "text-to-speech",
+          "voice-command-parsing",
+          "speaker-identification",
+          "emotion-detection",
+          "noise-cancellation"
+        ],
+        "workflows": [
+          "transcribe-speech",
+          "synthesize-speech",
+          "parse-command",
+          "identify-speaker",
+          "detect-emotion"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "IMAGINATION"
+        ],
+        "headyswarmTasks": [
+          "speech_to_text",
+          "text_to_speech",
+          "voice_command_parsing",
+          "speaker_identification",
+          "emotion_detection",
+          "noise_cancellation"
+        ],
+        "situations": [
+          "voice-processing",
+          "user-support-escalation",
+          "creative-generation"
+        ],
+        "healthEndpoint": "/api/voice/processor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "creative"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "sentiment-analysis": [
+      {
+        "id": "hb-sentiment-analyzer-v1",
+        "name": "Sentiment Analyzer",
+        "zone": 4,
+        "skills": [
+          "text-sentiment",
+          "emotion-detection",
+          "intent-classification",
+          "topic-extraction",
+          "urgency-scoring",
+          "language-detection"
+        ],
+        "workflows": [
+          "analyze-sentiment",
+          "detect-emotions",
+          "classify-intent",
+          "extract-topics",
+          "score-urgency"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "BUDDY",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "text_sentiment",
+          "emotion_detection",
+          "intent_classification",
+          "topic_extraction",
+          "urgency_scoring",
+          "language_detection"
+        ],
+        "situations": [
+          "sentiment-analysis",
+          "user-support-escalation",
+          "content-generation"
+        ],
+        "healthEndpoint": "/api/sentiment/analyzer/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "brain",
+          "agents"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "anomaly-detection": [
+      {
+        "id": "hb-event-reactor-v1",
+        "name": "Event Reactor",
+        "zone": 0,
+        "skills": [
+          "event-processing",
+          "pub-sub",
+          "event-sourcing",
+          "cqrs",
+          "stream-processing",
+          "real-time-reaction"
+        ],
+        "workflows": [
+          "process-event",
+          "publish-event",
+          "replay-events",
+          "aggregate-stream",
+          "react-to-change"
+        ],
+        "nodes": [
+          "CONDUCTOR",
+          "PATTERNS",
+          "WATCHDOG"
+        ],
+        "headyswarmTasks": [
+          "event_processing",
+          "pub_sub",
+          "event_sourcing",
+          "cqrs",
+          "stream_processing",
+          "real_time_reaction"
+        ],
+        "situations": [
+          "incident-response",
+          "anomaly-detection",
+          "system-health-check"
+        ],
+        "healthEndpoint": "/api/event/reactor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "orchestration",
+          "engines",
+          "pipeline"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-threat-detector-v1",
+        "name": "Threat Detector",
+        "zone": 2,
+        "skills": [
+          "intrusion-detection",
+          "anomaly-scoring",
+          "ip-reputation",
+          "waf-rules",
+          "ddos-mitigation",
+          "bot-detection"
+        ],
+        "workflows": [
+          "detect-intrusion",
+          "score-anomaly",
+          "check-reputation",
+          "apply-waf",
+          "mitigate-ddos"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "WATCHDOG",
+          "BATTLE"
+        ],
+        "headyswarmTasks": [
+          "intrusion_detection",
+          "anomaly_scoring",
+          "ip_reputation",
+          "waf_rules",
+          "ddos_mitigation",
+          "bot_detection"
+        ],
+        "situations": [
+          "incident-response",
+          "security-hardening",
+          "anomaly-detection"
+        ],
+        "healthEndpoint": "/api/threat/detector/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "security",
+          "intelligence",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-prediction-calibrator-v1",
+        "name": "Prediction Calibrator",
+        "zone": 4,
+        "skills": [
+          "forecast-generation",
+          "calibration-scoring",
+          "confidence-intervals",
+          "backtesting",
+          "drift-detection",
+          "model-evaluation"
+        ],
+        "workflows": [
+          "generate-forecast",
+          "calibrate-model",
+          "compute-intervals",
+          "backtest-predictions",
+          "detect-drift"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "PATTERNS",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "forecast_generation",
+          "calibration_scoring",
+          "confidence_intervals",
+          "backtesting",
+          "drift_detection",
+          "model_evaluation"
+        ],
+        "situations": [
+          "anomaly-detection",
+          "capacity-planning",
+          "budget-alert"
+        ],
+        "healthEndpoint": "/api/prediction/calibrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "engines",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "budget-alert": [
+      {
+        "id": "hb-prediction-calibrator-v1",
+        "name": "Prediction Calibrator",
+        "zone": 4,
+        "skills": [
+          "forecast-generation",
+          "calibration-scoring",
+          "confidence-intervals",
+          "backtesting",
+          "drift-detection",
+          "model-evaluation"
+        ],
+        "workflows": [
+          "generate-forecast",
+          "calibrate-model",
+          "compute-intervals",
+          "backtest-predictions",
+          "detect-drift"
+        ],
+        "nodes": [
+          "PYTHIA",
+          "PATTERNS",
+          "OBSERVER"
+        ],
+        "headyswarmTasks": [
+          "forecast_generation",
+          "calibration_scoring",
+          "confidence_intervals",
+          "backtesting",
+          "drift_detection",
+          "model_evaluation"
+        ],
+        "situations": [
+          "anomaly-detection",
+          "capacity-planning",
+          "budget-alert"
+        ],
+        "healthEndpoint": "/api/prediction/calibrator/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "intelligence",
+          "engines",
+          "telemetry"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-budget-guardian-v1",
+        "name": "Budget Guardian",
+        "zone": 7,
+        "skills": [
+          "budget-tracking",
+          "spend-forecasting",
+          "alert-thresholds",
+          "cost-attribution",
+          "waste-detection",
+          "savings-recommendation"
+        ],
+        "workflows": [
+          "track-budget",
+          "forecast-spend",
+          "set-alerts",
+          "attribute-costs",
+          "detect-waste"
+        ],
+        "nodes": [
+          "ATLAS",
+          "OBSERVER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "budget_tracking",
+          "spend_forecasting",
+          "alert_thresholds",
+          "cost_attribution",
+          "waste_detection",
+          "savings_recommendation"
+        ],
+        "situations": [
+          "budget-alert",
+          "cost-optimization",
+          "capacity-planning"
+        ],
+        "healthEndpoint": "/api/budget/guardian/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "ops",
+          "telemetry",
+          "providers"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-slo-monitor-v1",
+        "name": "SLO Monitor",
+        "zone": 8,
+        "skills": [
+          "slo-definition",
+          "error-budget-tracking",
+          "burn-rate-alert",
+          "availability-calculation",
+          "latency-sli",
+          "throughput-sli"
+        ],
+        "workflows": [
+          "define-slo",
+          "track-error-budget",
+          "alert-burn-rate",
+          "calculate-availability",
+          "measure-latency-sli"
+        ],
+        "nodes": [
+          "WATCHDOG",
+          "OBSERVER",
+          "CONDUCTOR"
+        ],
+        "headyswarmTasks": [
+          "slo_definition",
+          "error_budget_tracking",
+          "burn_rate_alert",
+          "availability_calculation",
+          "latency_sli",
+          "throughput_sli"
+        ],
+        "situations": [
+          "system-health-check",
+          "budget-alert",
+          "performance-tuning"
+        ],
+        "healthEndpoint": "/api/slo/monitor/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "health",
+          "telemetry",
+          "ops"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ],
+    "subscription-management": [
+      {
+        "id": "hb-subscription-manager-v1",
+        "name": "Subscription Manager",
+        "zone": 7,
+        "skills": [
+          "tier-management",
+          "usage-metering",
+          "billing-integration",
+          "upgrade-flow",
+          "quota-enforcement",
+          "invoice-generation"
+        ],
+        "workflows": [
+          "manage-tiers",
+          "meter-usage",
+          "integrate-billing",
+          "process-upgrade",
+          "enforce-quotas"
+        ],
+        "nodes": [
+          "ATLAS",
+          "CONDUCTOR",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "tier_management",
+          "usage_metering",
+          "billing_integration",
+          "upgrade_flow",
+          "quota_enforcement",
+          "invoice_generation"
+        ],
+        "situations": [
+          "subscription-management",
+          "onboarding-new-user",
+          "cost-optimization"
+        ],
+        "healthEndpoint": "/api/subscription/manager/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "services",
+          "ops",
+          "auth-provider"
+        ],
+        "optimizationScore": 0.6175
+      },
+      {
+        "id": "hb-user-journey-tracker-v1",
+        "name": "User Journey Tracker",
+        "zone": 11,
+        "skills": [
+          "event-tracking",
+          "funnel-analysis",
+          "cohort-analysis",
+          "retention-tracking",
+          "churn-prediction",
+          "engagement-scoring"
+        ],
+        "workflows": [
+          "track-events",
+          "analyze-funnel",
+          "analyze-cohorts",
+          "track-retention",
+          "predict-churn"
+        ],
+        "nodes": [
+          "OBSERVER",
+          "PYTHIA",
+          "BUDDY"
+        ],
+        "headyswarmTasks": [
+          "event_tracking",
+          "funnel_analysis",
+          "cohort_analysis",
+          "retention_tracking",
+          "churn_prediction",
+          "engagement_scoring"
+        ],
+        "situations": [
+          "growth-campaign",
+          "subscription-management",
+          "report-generation"
+        ],
+        "healthEndpoint": "/api/user/journey/tracker/health",
+        "projectionPolicy": "github-source-of-truth",
+        "bees": [
+          "telemetry",
+          "intelligence",
+          "agents"
+        ],
+        "optimizationScore": 0.6175
+      }
+    ]
+  },
+  "warnings": [],
+  "errors": []
+}
