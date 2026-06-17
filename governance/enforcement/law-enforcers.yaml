@@ -55,19 +55,23 @@ laws:
   - id: LAW-3
     name: Thoroughness
     statement: Maximize context before action; never act on partial state.
-    disposition: manual
-    enforcer: heady_autocontext_enrich
-    ci_job: null
-    severity: amber
+    disposition: enforced
+    enforcer: tooling/enforcers/autocontext.mjs
+    ci_job: governance
+    severity: red
     directive: directives/01-contextual-awareness.md
 
   - id: LAW-4
     name: Context-Maximization
-    statement: Full ecosystem state loaded into working memory pre-action.
-    disposition: manual
-    enforcer: heady_autocontext_enrich
-    ci_job: null
-    severity: amber
+    statement: >-
+      Full ecosystem state loaded into working memory pre-action via the
+      @heady/auto-context enrichment middleware (wrapGateway). Systemic, not a
+      skill: every reasoning entry routes through the one enrichment chokepoint;
+      a bare gateway.complete/.battle/.council call is a CI-fail.
+    disposition: enforced
+    enforcer: tooling/enforcers/autocontext.mjs
+    ci_job: governance
+    severity: red
     directive: directives/01-contextual-awareness.md
 
   - id: LAW-5
@@ -148,6 +152,6 @@ architecture_laws:
 # Coverage summary (kept in sync by reviewers; coherence may assert this).
 coverage:
   total_unbreakable_laws: 10        # Law 0..9
-  enforced: 4                       # LAW-0, LAW-1, LAW-2, LAW-8
+  enforced: 6                       # LAW-0, LAW-1, LAW-2, LAW-3, LAW-4, LAW-8
   partial: 2                        # LAW-5, LAW-6
-  manual: 4                         # LAW-3, LAW-4, LAW-7, LAW-9
+  manual: 2                         # LAW-7, LAW-9

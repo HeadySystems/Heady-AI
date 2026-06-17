@@ -32,7 +32,12 @@ for AI calls. 4. Scan for in-flight conflicting changes. 5. Confirm no active in
 budget check · ❌ Changing code without checking recent changes.
 
 ## Enforcer
-`heady_autocontext_enrich` (HeadyAutoContext 5-pass middleware) — mandatory before reasoning stages.
+CI-enforced systemic middleware — **not** an opt-in skill:
+- **Build-time:** `tooling/enforcers/autocontext.mjs` (governance CI job) fails any reasoning chokepoint
+  (`.complete`/`.battle`/`.council`) in a file that does not flow through `@heady/auto-context`.
+- **Runtime:** the `@heady/auto-context` `wrapGateway` middleware enriches + CSL-gates every reasoning
+  call (profiles: stage/battle/council); `assertEnriched` proves a request carries its context capsule
+  before any reasoning stage runs. HCFullPipeline stage 00 (CHANNEL_ENTRY) calls `enrichForStage`.
 
 ---
 *Heady™ — HeadySystems Inc. — Implements the Constitution (`governance/CONSTITUTION.md`).*

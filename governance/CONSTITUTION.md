@@ -76,9 +76,12 @@ The legacy sources are frozen for provenance under `governance/legacy/`.
 
 ### Law 4 — CONTEXT MAXIMIZATION
 - **Statement.** Load full ecosystem state before acting (the mandatory pre‑action scan, Master
-  Directive 1). Consider downstream impact across all services/swarms before any change.
-- **Enforcer.** `heady_autocontext_enrich` (HeadyAutoContext 5‑pass middleware) + the coherence System
-  Map. **Disposition: runtime‑enforced.**
+  Directive 1). Consider downstream impact across all services/swarms before any change. Every
+  reasoning chokepoint (`.complete`/`.battle`/`.council`) routes through the systemic
+  `@heady/auto-context` enrichment middleware (`wrapGateway`/`assertEnriched`) — not an opt-in skill.
+- **Enforcer.** `tooling/enforcers/autocontext.mjs` (CI governance job) — fails any reasoning call
+  in an anchor-less file; plus the `@heady/auto-context` middleware (`wrapGateway`) at runtime and the
+  coherence System Map. **Disposition: CI‑enforced + runtime‑enforced.**
 
 ### Law 5 — DETERMINISM
 - **Statement.** AI calls on the deterministic path use `temp=0, top_p=1, seed=42`; outputs are

@@ -37,21 +37,185 @@ importers:
         specifier: ^8.0.12
         version: 8.0.16(@types/node@25.9.3)
 
+  packages/auto-context:
+    dependencies:
+      '@heady/csl-engine':
+        specifier: workspace:*
+        version: link:../csl-engine
+      '@heady/db':
+        specifier: workspace:*
+        version: link:../db
+      '@heady/events':
+        specifier: workspace:*
+        version: link:../events
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@heady/narrative':
+        specifier: workspace:*
+        version: link:../narrative
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@heady/headylens':
+        specifier: workspace:*
+        version: link:../headylens
+
+  packages/codeflow:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  packages/config:
+    dependencies:
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/consistency-bus:
+    dependencies:
+      '@heady/codeflow':
+        specifier: workspace:*
+        version: link:../codeflow
+
   packages/contracts: {}
 
-  packages/csl-engine: {}
+  packages/csl-engine:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
 
   packages/db: {}
 
   packages/embedding: {}
 
-  packages/logger: {}
+  packages/events:
+    dependencies:
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/headylens:
+    dependencies:
+      '@heady/events':
+        specifier: workspace:*
+        version: link:../events
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@heady/observability':
+        specifier: workspace:*
+        version: link:../observability
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  packages/kernel:
+    dependencies:
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@heady/resilience':
+        specifier: workspace:*
+        version: link:../resilience
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/logger:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  packages/memory-stream:
+    dependencies:
+      '@heady/db':
+        specifier: workspace:*
+        version: link:../db
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  packages/narrative:
+    dependencies:
+      '@heady/events':
+        specifier: workspace:*
+        version: link:../events
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@heady/headylens':
+        specifier: workspace:*
+        version: link:../headylens
+
+  packages/observability:
+    dependencies:
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+
+  packages/perspective: {}
 
   packages/phi-math: {}
 
-  packages/security-mesh: {}
+  packages/resilience:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
+
+  packages/secrets: {}
+
+  packages/security-mesh:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  packages/shared: {}
+
+  packages/task-ledger:
+    dependencies:
+      '@heady/db':
+        specifier: workspace:*
+        version: link:../db
+      '@heady/logger':
+        specifier: workspace:*
+        version: link:../logger
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
+  tooling/auto-flow: {}
+
+  tooling/build-plan: {}
 
   tooling/data-consistency: {}
+
+  tooling/doc-hydrator: {}
+
+  tooling/embed-corpus: {}
+
+  tooling/enforcers: {}
+
+  tooling/skeleton-guard: {}
 
 packages:
 

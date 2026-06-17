@@ -26,7 +26,7 @@ not behavioral* — "the weakest layer is the one you built yourself."
 | Path | What | Status |
 |---|---|---|
 | `CONSTITUTION.md` | The canonical law set: 4 Liquid Architecture Laws + the 8+1 Unbreakable Laws, with each mapped to an automated enforcer. | **Enforced** |
-| `PRIME_DIRECTIVE.md` | Cognitive foundation (codename *Aether*): identity, the 7 Cognitive Archetypes, operational constants. Reconciled per the deep-audit (21-stage pipeline, `bge-small-en-v1.5`). | Canonical |
+| `PRIME_DIRECTIVE.md` | Cognitive foundation (codename *Aether*): identity, the 7 Cognitive Archetypes, operational constants. Reconciled per the deep-audit (22-stage pipeline v9.0, `bge-small-en-v1.5`). | Canonical |
 | `directives/01..10-*.md` | The 10 Master Directives — the operating procedures that implement the Laws in daily execution. | Canonical |
 | `enforcement/law-enforcers.yaml` | Machine-readable map: every Law → its CI enforcer + location. Read by `tooling/coherence`. | **Enforced** |
 | `enforcement/ENF-anti-shortcut.md` | The anti-shortcut enforcement policy. | Canonical |

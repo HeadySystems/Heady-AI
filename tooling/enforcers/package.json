@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Governance enforcers — fail-closed CI gates realizing Unbreakable Laws 0/1/2 (no-localhost, no-placeholder/glass-box, secret-scan). The 'environment enforces' layer.",
+  "description": "Governance enforcers — fail-closed CI gates realizing Unbreakable Laws 0/1/2/4 (no-localhost, no-placeholder/glass-box, secret-scan, auto-context). The 'environment enforces' layer.",
   "bin": {
     "heady-no-localhost": "no-localhost.mjs",
     "heady-glass-box": "glass-box.mjs",
-    "heady-secret-scan": "secret-scan.mjs"
+    "heady-secret-scan": "secret-scan.mjs",
+    "heady-autocontext": "autocontext.mjs"
   },
   "scripts": {
     "test": "node --test",

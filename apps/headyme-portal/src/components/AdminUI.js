@@ -6,6 +6,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import { api } from '../services/heady-api.js';
+import './heady-build-narrative.js'; // registers <heady-build-narrative>
 
 export class AdminUI {
   constructor(container, user) {
@@ -46,6 +47,11 @@ export class AdminUI {
             <p>—</p>
           </section>
 
+          <section class="card glass-panel" id="build-narrative-panel" style="grid-column: 1 / -1;">
+            <h2>Build Narrative <span class="muted">— live story of every build, via HeadyLens (ADR-0026 SSE)</span></h2>
+            <heady-build-narrative id="build-narrative" subject="heady.action.build." detail="forensic"></heady-build-narrative>
+          </section>
+
           <section class="card glass-panel codeflow-panel" style="grid-column: 1 / -1;">
             <h2>Governed Codeflow <span class="muted">— every change is a proposal (ADR-0005)</span></h2>
             <div class="cf-browse">
@@ -70,6 +76,10 @@ export class AdminUI {
     this.container.querySelector('#cf-form').addEventListener('submit', (e) => this.onSubmit(e));
     this.container.querySelector('#cf-browse-btn').addEventListener('click', () => this.browse());
     this.container.querySelector('#cf-load-btn').addEventListener('click', () => this.loadFile());
+    // Hand the narrative component an auth-token getter so it can open the
+    // Bearer-authed HeadyLens SSE stream without coupling to firebase directly.
+    const narrative = this.container.querySelector('#build-narrative');
+    if (narrative) narrative.tokenProvider = () => this.token();
     window.dispatchEvent(new CustomEvent('navigation:admin:entered'));
     this.loadStatus();
   }

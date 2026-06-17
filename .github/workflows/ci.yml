@@ -90,6 +90,13 @@ jobs:
       # ── LAW 0 · high-signal secret-scan (complements gitleaks) ─────
       - name: secret-scan
         run: node tooling/enforcers/secret-scan.mjs ${{ steps.scope.outputs.args }}
+      # ── LAWS 3 & 4 · auto-context enrichment (systemic middleware) ─
+      # Every reasoning chokepoint (.complete/.battle/.council) must flow through
+      # @heady/auto-context (wrapGateway/assertEnriched). Bare calls in anchor-less
+      # files fail the gate — arming the line for Phase-3 gateway code without
+      # retroactively failing the rebuild baseline.
+      - name: autocontext
+        run: node tooling/enforcers/autocontext.mjs ${{ steps.scope.outputs.args }}
       # The enforcers carry their own unit tests proving they are not no-ops.
       - name: enforcer self-tests
         run: node --test tooling/enforcers/test/

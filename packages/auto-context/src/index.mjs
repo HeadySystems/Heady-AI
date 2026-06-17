@@ -1,8 +1,18 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Auto-Context Projector v1.0.0                            ║
-// ║  WAL-replication to Vectorize edge cache + drift verification.   ║
+// ║  HEADY™ @heady/auto-context — public API v2.0.0                   ║
+// ║  TWO concerns, one package:                                       ║
+// ║   1. ENRICHMENT (systemic, Law 4) — ContextEnricher + wrapGateway ║
+// ║      middleware that feeds every reasoning entry a CSL-ranked      ║
+// ║      context capsule before it runs. The enforcement point.       ║
+// ║   2. PROJECTION (edge) — VectorizeProjector: Neon→Vectorize WAL    ║
+// ║      replication + drift verification (the awareness substrate     ║
+// ║      a retriever reads from).                                     ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
 // ╚══════════════════════════════════════════════════════════════════╝
+
+// ── Systemic enrichment (Unbreakable Law 4) ──
+export { ContextEnricher, ENRICH_PROFILES, DIM } from "./context-enrichment.mjs";
+export { wrapGateway, assertEnriched } from "./gateway-middleware.mjs";
 
 import { createHash } from "node:crypto";
 import { logger } from "@heady/logger";
