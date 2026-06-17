@@ -1,0 +1,30 @@
+{
+  "goal": "HeadyPerspective: perspective-level source data (authority bias) + model the optimal software company as weighted roles/skills so task assignment weighs every role's perspective",
+  "contexts": [
+    { "id": "levels", "name": "Perspective levels on source data (bias)" },
+    { "id": "org", "name": "Optimal software company — roles/skills/workflows" },
+    { "id": "routing", "name": "Perspective-weighted task assignment" },
+    { "id": "training", "name": "hc-train calibration of perspective" }
+  ],
+  "contracts": [
+    { "id": "PerspectivePort", "owner": "levels", "kind": "source → perspective level (weight/bias) by authority/class" },
+    { "id": "RolePort", "owner": "org", "kind": "role → competencies + base perspective weight (agents/bees/skills)" },
+    { "id": "AssignPort", "owner": "routing", "kind": "task → ranked roles by competency-match × perspective weight" },
+    { "id": "TrainPort", "owner": "training", "kind": "calibrate + persist perspective profiles deterministically" }
+  ],
+  "entities": [
+    { "id": "@heady/perspective", "kind": "package" }
+  ],
+  "capabilities": [
+    { "id": "source-level", "context": "levels", "seam": "PerspectivePort", "depends": [], "acceptance": "every source gets a perspective level; canonical (facts/AGENTS/ADR) biased highest, stale lowest" },
+    { "id": "roles", "context": "org", "seam": "RolePort", "depends": [], "acceptance": "load the 8 agents + bees + skills as roles with competencies + base weights" },
+    { "id": "assign", "context": "routing", "seam": "AssignPort", "depends": ["source-level", "roles"], "acceptance": "a task ranks roles by competency-match × perspective weight; deterministic" },
+    { "id": "hc-train", "context": "training", "seam": "TrainPort", "depends": ["source-level", "roles", "assign"], "acceptance": "calibrate perspective profiles from ground truth (lexicon/registry); deterministic hash; persisted" }
+  ],
+  "acceptance": [
+    { "id": "P1", "capability": "source-level", "criterion": "perspective bias is authority-derived and auditable, never arbitrary" },
+    { "id": "P2", "capability": "roles", "criterion": "every defined role/skill weighs in (none ignored)" },
+    { "id": "P3", "capability": "assign", "criterion": "task assignment corresponds to perspective weight + competency fit" },
+    { "id": "P4", "capability": "hc-train", "criterion": "calibration is deterministic and derived, not hand-authored" }
+  ]
+}
