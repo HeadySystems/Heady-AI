@@ -10,12 +10,16 @@ import { join, resolve, normalize } from 'node:path';
 import { FIB } from '../../phi-math/src/index.mjs';
 import { Codeflow } from './engine.mjs';
 import { verifyFirebaseToken } from './auth.mjs';
+import { loadLinkIndex, ingressGuard, egressNormalize } from '../../consistency-bus/src/index.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const PORT = Number(process.env.PORT) || 8000 + FIB[13]; // Cloud Run injects PORT; local default 8233
 const ORIGIN = process.env.CODEFLOW_ORIGIN || '*';
 const TOKEN = process.env.CODEFLOW_TOKEN || ''; // optional service-to-service bearer (fail-closed when set)
 const cf = new Codeflow({ root: ROOT });
+// Consistency-bus middleware: recognize HeadyRegistry-linked values on every payload (best-effort —
+// null when the registry hasn't been generated yet).
+const LINK_INDEX = (() => { try { return loadLinkIndex({}); } catch { return null; } })();
 
 // Resolve the caller to a VERIFIED principal — a Firebase ID token (preferred) or the service token.
 // Returns null when no valid credential is presented (→ 401). Never trusts a client-sent identity.
@@ -81,7 +85,8 @@ const server = createServer(async (req, res) => {
     const seg = path.split('/').filter(Boolean);
     if (req.method === 'OPTIONS') return send(res, 204, {});
     if (req.method === 'GET' && path === '/healthz') return send(res, 200, { ok: true });
-    if (req.method === 'GET' && path === '/api/status') return send(res, 200, status());
+    // egress: outbound system data is normalized to canonical linked values (never emit drift)
+    if (req.method === 'GET' && path === '/api/status') return send(res, 200, LINK_INDEX ? egressNormalize(status(), LINK_INDEX).payload : status());
     if (req.method === 'GET' && path === '/codeflow/proposals') return send(res, 200, { proposals: cf.list() });
     if (req.method === 'GET' && seg[0] === 'codeflow' && seg[1] === 'proposals' && seg[2]) {
       return send(res, 200, { proposal: cf.get(seg[2]), history: cf.history(seg[2]) });
@@ -96,6 +101,14 @@ const server = createServer(async (req, res) => {
       const who = await principal(req);
       if (!who) return send(res, 401, { error: 'unauthorized' });
       const b = await body(req);
+      // ingress: a payload that drifts a LOCKED HeadyRegistry value is refused fail-closed.
+      // `content` is exempt — codeflow IS the governed channel for changing linked values.
+      if (LINK_INDEX) {
+        const authorizedKeys = (req.headers['x-heady-authorized-keys'] || '').split(',').map((s) => s.trim()).filter(Boolean);
+        const { content, ...meta } = b;
+        const guard = ingressGuard(meta, LINK_INDEX, { authorizedKeys });
+        if (guard.verdict === 'BLOCK') return send(res, 409, { error: 'locked-value drift (consistency-bus)', blocked: guard.blocked });
+      }
       if (path === '/codeflow/proposals') return send(res, 201, cf.submit({ ...b, actor: who.email }));
       if (seg[0] === 'codeflow' && seg[1] === 'proposals' && seg[2]) {
         const id = seg[2]; const action = seg[3];

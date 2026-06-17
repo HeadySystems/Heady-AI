@@ -1,0 +1,14 @@
+{
+  "name": "@heady/perspective",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "HeadyPerspective: authority-weighted perspective levels on source data + optimal-company role model + perspective-weighted task assignment, calibrated by hc-train.",
+  "exports": { ".": "./src/index.mjs" },
+  "bin": { "hc-train": "src/hc-train.mjs" },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  }
+}
