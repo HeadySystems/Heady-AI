@@ -1,0 +1,20 @@
+{
+  "name": "@heady/midi-bus",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady internal MIDI-style messaging — compact typed frames (note/control/program/clock/SysEx) over a swappable transport (in-process + event-bus now; UDP/QUIC a drop-in adapter later).",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./codec": "./src/codec.mjs",
+    "./transport": "./src/transport.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": { "@heady/events": "workspace:*" },
+  "keywords": ["heady", "midi", "messaging", "event-bus", "transport", "sysex", "data-injection"]
+}
