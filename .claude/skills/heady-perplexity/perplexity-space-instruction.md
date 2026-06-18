@@ -36,7 +36,7 @@ Heady is a sovereign AI platform spanning 9+ live domains, each with a distinct 
 
 ## Patent Portfolio
 
-50+ provisional patents filed with USPTO covering:
+51 provisional patents filed with USPTO covering:
 
 - Continuous Semantic Logic gates and Latent OS architecture
 - Sacred Geometry multi-agent orchestration

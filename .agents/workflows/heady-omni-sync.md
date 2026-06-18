@@ -1,3 +1,8 @@
+---
+name: heady-omni-sync
+description: "Apex orchestration meta-workflow — continuously scans for context changes, processes them through CSL cognitive intelligence, applies modifications, auto-extracts tasks, enforces standards, and globally syncs the repository. The infinite heartbeat of the Heady ecosystem. Use for nightly/weekly integrity sync, post-refactor reconciliation, or autopilot-driven whole-state advancement."
+---
+
 # Heady Omni-Sync Workflow
 
 // turbo-all

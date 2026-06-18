@@ -473,17 +473,37 @@ User/Trigger → HeadyBuddy (companion interface)
             → HeadyBuddy (deliver result)
 ```
 
-### HCFullPipeline (HCFP) — 8 Stages
+### HCFullPipeline (HCFP) — the 21-stage DAG (stages 0–20, fib(8)=21)
+
+Execution order is a **data-dependency DAG** (stages fire when inputs are ready, not by priority).
+Full path = **21 stages, CHANNEL_ENTRY → RECEIPT**, φ-anchored to **fib(8)=21** (22 is not a
+Fibonacci number → not canonical). Variants: Fast 7 / Arena 9 / Learning 7. Backed by durable
+Cloudflare Workflows (each stage = `step.do`). Authority: `.agents/context/HEADY_SUPER_PROMPT_v5.md`
+§6 + the Accepted "21-Stage HCFullPipeline as Canonical" ADR. **Not 8 (fabricated) and not 22
+(compendium off-by-one that numbered from 00 and appended DISTILL past RECEIPT).**
 
 ```
-1. Context Assembly    → HeadyBrains gathers all relevant context
-2. Intent Classification → Conductor determines task type + domain
-3. Node Selection      → CSL-scored capability routing picks optimal nodes
-4. Execution           → Parallel or sequential node activation
-5. Quality Gate        → HeadyCheck validates output
-6. Assurance Gate      → HeadyAssure certifies for deployment
-7. Pattern Capture     → HeadyPatterns logs workflow for learning
-8. Story Update        → HeadyAutobiographer records narrative
+00 CHANNEL_ENTRY      multi-channel gateway, identity, context sync   → channel authed
+01 RECON             deep scan: codebase, configs, attack surface     → readiness ≥ ψ
+02 INTAKE            async semantic barrier, 3D vector context        → completeness ≥ 0.92
+03 CLASSIFY          intent via CSL Resonance Gate                     → cos ≥ ψ
+04 TRIAGE            route by CSL domain match, swarm assignment       → risk score
+05 DECOMPOSE         subtask DAG (Rabbit layer)                        → criteria per subtask
+06 TRIAL_AND_ERROR   sandboxed exec, auto-rollback                     → ≥2 trials succeed
+07 ORCHESTRATE       bee spawning, resource alloc, dependency wiring   → bees healthy
+08 MONTE_CARLO       HeadySims 1K+ scenarios                           → ≥80% pass
+09 ARENA             multi-candidate competition (seeded PRNG)         → winner +≥5%
+10 JUDGE             rubric: correctness .34 safety .21 perf .21 …     → composite ≥ 0.7
+11 APPROVE           human gate for risk criteria                      → founder approval
+12 EXECUTE           metacognitive gate (HeadyBuddy confidence)        → confidence ≥ ψ²
+13 VERIFY            post-exec validation, integration tests           → assertions pass
+14 SELF_AWARENESS    confidence calibration, blind-spot detection      → awareness ≥ ψ
+15 SELF_CRITIQUE     bottlenecks, weaknesses, waste                    → critique complete
+16 MISTAKE_ANALYSIS  root cause + recurring patterns → prevention rules → rules generated
+17 OPTIMIZATION_OPS  dead-code/waste detection, CSL ROI ranking        → plan generated
+18 CONTINUOUS_SEARCH new tools, research, security advisories          → relevance ≥ ψ
+19 EVOLUTION         controlled mutation: mutate→simulate→measure→promote → fitness > baseline
+20 RECEIPT           trust receipt, audit log, wisdom.json             → signed Ed25519
 ```
 
 ### Arena Mode

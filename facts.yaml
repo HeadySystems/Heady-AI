@@ -72,6 +72,15 @@ pipeline:
     - typecheck
     - test
     - scan
+hcfullpipeline:
+  # HCFullPipeline — the autonomous orchestration DAG. Canonical = 21 stages (0–20),
+  # CHANNEL_ENTRY → RECEIPT, anchored to fib(8)=21 (φ-native; 22 is not a Fibonacci number and
+  # cannot be canonical). Authority: .agents/context/HEADY_SUPER_PROMPT_v5.md §6 + the Accepted
+  # "21-Stage HCFullPipeline as Canonical" ADR. The compendium's "22 (00–21)" was an off-by-one
+  # (numbered from 00 and appended DISTILL past the canonical terminal RECEIPT). Full path = 21;
+  # variants: Fast 7 / Arena 9 / Learning 7. Any prose/skill asserting "N-stage HCFullPipeline" or
+  # "HCFP — N Stages" is checked against this by the coherence gate.
+  stage_count: 21
 consistency:
   escalation_threshold: 3
 legacy:

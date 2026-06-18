@@ -1,0 +1,13 @@
+{
+  "name": "@heady/derive",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Single-source injection engine — keeps <!--heady:inject KEY--> managed regions across all files consistent with the golden record (facts.yaml/lexicon.yaml).",
+  "bin": { "heady-derive": "src/derive.mjs" },
+  "scripts": {
+    "check": "node src/derive.mjs check",
+    "write": "node src/derive.mjs write",
+    "test": "node --test test/derive.test.mjs"
+  }
+}
