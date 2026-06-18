@@ -7,199 +7,365 @@
     {
       "pattern": "apps/*/src/**",
       "purpose": "Application source code",
-      "allowedExtensions": [".js", ".mjs", ".ts", ".jsx", ".tsx", ".css", ".html", ".svg", ".png", ".json"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".ts",
+        ".jsx",
+        ".tsx",
+        ".css",
+        ".html",
+        ".svg",
+        ".png",
+        ".json"
+      ],
       "notes": "Vite SPAs + Vanilla Web Components"
     },
     {
       "pattern": "apps/*/public/**",
       "purpose": "Static assets served at root",
-      "allowedExtensions": [".html", ".svg", ".png", ".ico", ".webmanifest", ".json"],
+      "allowedExtensions": [
+        ".html",
+        ".svg",
+        ".png",
+        ".ico",
+        ".webmanifest",
+        ".json"
+      ],
       "notes": "Public directory for Vite apps"
     },
     {
       "pattern": "apps/*/dist/**",
       "purpose": "Build output (generated, not authored)",
-      "allowedExtensions": ["*"],
+      "allowedExtensions": [
+        "*"
+      ],
       "notes": "Excluded from authored-file audits"
     },
     {
       "pattern": "apps/*",
       "purpose": "Application root config",
-      "allowedExtensions": [".json", ".js", ".mjs", ".ts", ".html", ".yaml", ".yml", ".firebaserc"],
+      "allowedExtensions": [
+        ".json",
+        ".js",
+        ".mjs",
+        ".ts",
+        ".html",
+        ".yaml",
+        ".yml",
+        ".firebaserc"
+      ],
       "notes": "package.json, vite.config, tsconfig, firebase config"
     },
     {
       "pattern": "packages/*/src/**",
       "purpose": "Shared package source code",
-      "allowedExtensions": [".js", ".mjs", ".ts"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".ts"
+      ],
       "notes": "ESM only, no CommonJS"
     },
     {
       "pattern": "packages/*/test/**",
       "purpose": "Package unit/integration tests",
-      "allowedExtensions": [".js", ".mjs", ".ts"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".ts"
+      ],
       "notes": "Vitest test files"
     },
     {
       "pattern": "packages/*/migrations/**",
       "purpose": "Database migrations",
-      "allowedExtensions": [".sql", ".mjs", ".js"],
+      "allowedExtensions": [
+        ".sql",
+        ".mjs",
+        ".js"
+      ],
       "notes": "Neon pgvector migrations"
     },
     {
       "pattern": "packages/*/openapi/**",
       "purpose": "OpenAPI contract specifications",
-      "allowedExtensions": [".yaml", ".yml", ".json"],
+      "allowedExtensions": [
+        ".yaml",
+        ".yml",
+        ".json"
+      ],
       "notes": "API contracts"
     },
     {
       "pattern": "packages/*",
       "purpose": "Package root config",
-      "allowedExtensions": [".json", ".js", ".mjs", ".ts", ".md"],
+      "allowedExtensions": [
+        ".json",
+        ".js",
+        ".mjs",
+        ".ts",
+        ".md"
+      ],
       "notes": "package.json, tsconfig, README"
     },
     {
       "pattern": "tooling/*/src/**",
       "purpose": "Tooling source code",
-      "allowedExtensions": [".js", ".mjs", ".ts"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".ts"
+      ],
       "notes": "Build/CI tooling source"
     },
     {
       "pattern": "tooling/*/test/**",
       "purpose": "Tooling tests",
-      "allowedExtensions": [".js", ".mjs", ".ts"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".ts"
+      ],
       "notes": "Vitest test files for tooling"
     },
     {
       "pattern": "tooling/*/flows/**",
       "purpose": "Auto-flow declarative definitions",
-      "allowedExtensions": [".json", ".mjs"],
+      "allowedExtensions": [
+        ".json",
+        ".mjs"
+      ],
       "notes": "Zod-validated flow definitions (JSON) and flow scripts (MJS)"
     },
     {
       "pattern": "tooling/*/.provenance/**",
       "purpose": "Data provenance tracking",
-      "allowedExtensions": [".json", ".md"],
+      "allowedExtensions": [
+        ".json",
+        ".md"
+      ],
       "notes": "Provenance metadata"
+    },
+    {
+      "pattern": "tooling/*/templates/**",
+      "purpose": "Handlebars-style report/doc templates",
+      "allowedExtensions": [
+        ".hbs",
+        ".md",
+        ".json"
+      ],
+      "notes": "doc-hydrator + report-templates source templates"
+    },
+    {
+      "pattern": "tooling/*/bindings/**",
+      "purpose": "Report-template data-source binding scripts",
+      "allowedExtensions": [
+        ".mjs",
+        ".js",
+        ".json"
+      ],
+      "notes": "Each prints JSON consumed by report-templates render"
     },
     {
       "pattern": "tooling/*",
       "purpose": "Tooling root config and scripts",
-      "allowedExtensions": [".json", ".mjs", ".js", ".sh", ".md"],
+      "allowedExtensions": [
+        ".json",
+        ".mjs",
+        ".js",
+        ".sh",
+        ".md"
+      ],
       "notes": "package.json, preflight.mjs, register.mjs, etc."
     },
     {
       "pattern": "configs/**",
       "purpose": "Shared configuration files",
-      "allowedExtensions": [".json", ".yaml", ".yml", ".js", ".mjs"],
+      "allowedExtensions": [
+        ".json",
+        ".yaml",
+        ".yml",
+        ".js",
+        ".mjs"
+      ],
       "notes": "Pipeline tasks, shared config"
     },
     {
       "pattern": "docs/**",
       "purpose": "Documentation, ADRs, specs, compendium",
-      "allowedExtensions": [".md"],
+      "allowedExtensions": [
+        ".md"
+      ],
       "notes": "Markdown only — no code in docs/"
     },
     {
       "pattern": ".agents/skills/*/**",
       "purpose": "Skill definitions and resources",
-      "allowedExtensions": [".md", ".mjs", ".js", ".json", ".sh"],
+      "allowedExtensions": [
+        ".md",
+        ".mjs",
+        ".js",
+        ".json",
+        ".sh"
+      ],
       "notes": "SKILL.md is required per skill"
     },
     {
       "pattern": ".agents/skills/*",
       "purpose": "Skill directory root",
-      "allowedExtensions": [".md"],
+      "allowedExtensions": [
+        ".md"
+      ],
       "notes": "SKILL.md frontmatter required"
     },
     {
       "pattern": ".agents/agents/**",
       "purpose": "Agent definitions",
-      "allowedExtensions": [".md", ".json", ".yaml"],
+      "allowedExtensions": [
+        ".md",
+        ".json",
+        ".yaml"
+      ],
       "notes": "Agent persona and config definitions"
     },
     {
       "pattern": ".agents/context/**",
       "purpose": "Agent context documents and scripts",
-      "allowedExtensions": [".md", ".sh", ".json"],
+      "allowedExtensions": [
+        ".md",
+        ".sh",
+        ".json"
+      ],
       "notes": "Super prompts, context scanners"
     },
     {
       "pattern": ".agents/personas/**",
       "purpose": "Agent persona definitions",
-      "allowedExtensions": [".md", ".json"],
+      "allowedExtensions": [
+        ".md",
+        ".json"
+      ],
       "notes": "HEADY_PERSONA_*.md and SKILL.md files"
     },
     {
       "pattern": ".agents/workflows/**",
       "purpose": "Workflow definitions",
-      "allowedExtensions": [".md"],
+      "allowedExtensions": [
+        ".md"
+      ],
       "notes": "Markdown workflow files"
     },
     {
       "pattern": ".claude/skills/**/scripts/**",
       "purpose": "Claude skill helper scripts",
-      "allowedExtensions": [".js", ".mjs", ".sh"],
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".sh"
+      ],
       "notes": "Helper scripts for skills (e.g., perplexity-connector.js)"
     },
     {
       "pattern": ".claude/skills/**",
       "purpose": "Claude Code registered skill mirrors",
-      "allowedExtensions": [".md", ".js", ".mjs"],
+      "allowedExtensions": [
+        ".md",
+        ".js",
+        ".mjs"
+      ],
       "notes": "Lifted from .agents/skills via register.mjs"
     },
     {
       "pattern": ".claude/hooks/**",
       "purpose": "Claude Code PreToolUse/PostToolUse hooks",
-      "allowedExtensions": [".mjs", ".js"],
+      "allowedExtensions": [
+        ".mjs",
+        ".js"
+      ],
       "notes": "Rule enforcement gates"
     },
     {
       "pattern": ".claude/commands/**",
       "purpose": "Claude Code custom commands",
-      "allowedExtensions": [".md", ".json"],
+      "allowedExtensions": [
+        ".md",
+        ".json"
+      ],
       "notes": "Slash command definitions"
     },
     {
       "pattern": ".claude/agents/**",
       "purpose": "Claude Code agent definitions",
-      "allowedExtensions": [".md", ".json", ".yaml", ".yml"],
+      "allowedExtensions": [
+        ".md",
+        ".json",
+        ".yaml",
+        ".yml"
+      ],
       "notes": "Agent configuration"
     },
     {
       "pattern": ".claude",
       "purpose": "Claude Code integration root",
-      "allowedExtensions": [".json", ".md"],
+      "allowedExtensions": [
+        ".json",
+        ".md"
+      ],
       "notes": "settings.json, CLAUDE.md"
     },
     {
       "pattern": ".github/**",
       "purpose": "GitHub Actions CI/CD workflows + repo config",
-      "allowedExtensions": [".yml", ".yaml", ".md", ".json"],
+      "allowedExtensions": [
+        ".yml",
+        ".yaml",
+        ".md",
+        ".json"
+      ],
       "notes": "CI (coherence gate), CODEOWNERS, issue templates"
     },
     {
       "pattern": "scripts/**",
       "purpose": "Operational shell/JS scripts",
-      "allowedExtensions": [".sh", ".mjs", ".js"],
+      "allowedExtensions": [
+        ".sh",
+        ".mjs",
+        ".js"
+      ],
       "notes": "heady-sync.sh (git sync w/ secret guard), ops scripts"
     },
     {
       "pattern": ".data/**",
       "purpose": "Runtime/agent data stores",
-      "allowedExtensions": [".json", ".jsonl", ".cache", ".bin"],
+      "allowedExtensions": [
+        ".json",
+        ".jsonl",
+        ".cache",
+        ".bin"
+      ],
       "notes": "Agent-managed data; no hand-authored files"
     },
     {
       "pattern": "scratch/**",
       "purpose": "Temporary scratch files",
-      "allowedExtensions": ["*"],
+      "allowedExtensions": [
+        "*"
+      ],
       "notes": "Exempt from strict placement rules — any file type allowed"
     },
     {
       "pattern": "heady-commander-plugin/**",
       "purpose": "Heady Commander plugin",
-      "allowedExtensions": [".json", ".md", ".mjs", ".js", ".plugin", ".yaml", ".yml"],
+      "allowedExtensions": [
+        ".json",
+        ".md",
+        ".mjs",
+        ".js",
+        ".plugin",
+        ".yaml",
+        ".yml"
+      ],
       "notes": "Plugin package"
     }
   ],
@@ -255,7 +421,9 @@
       "id": "no-root-source",
       "description": "No source files at repo root",
       "pattern": "^[^/]+\\.(mjs|js|ts|jsx|tsx)$",
-      "except": ["scaffold_heady.sh"],
+      "except": [
+        "scaffold_heady.sh"
+      ],
       "message": "Source files must live in apps/*/src/, packages/*/src/, or tooling/*/. Move this file to the appropriate source tree."
     },
     {

@@ -1,0 +1,37 @@
+---
+output: docs/master-plan/STATUS.md
+bindings: [coherence, ledger]
+---
+# Heady™ Master Plan — Live Status
+
+> Auto-generated projection of the rebuild's real state. © 2026 HeadySystems Inc. — Eric Haywood.
+> Full plan: `docs/master-plan/00-INDEX.md`. Rendered from live gates + the golden record.
+
+## Canonical facts (locked — from facts.yaml via heady-derive)
+
+| Fact | Value |
+|------|-------|
+| Product / version | {{canon facts.product.name}} {{canon facts.product.version}} |
+| Provisional patents | <!--heady:inject facts.company.patents_provisional-->51<!--/heady:inject--> |
+| HCFullPipeline stages | <!--heady:inject facts.hcfullpipeline.stage_count-->21<!--/heady:inject--> (fib(8)) |
+| Agents / Bees / Skills | {{canon lexicon.agents.count}} / {{canon lexicon.bees.count}} / {{canon lexicon.skills.count}} |
+| Embedding model / dim | {{canon facts.embedding.model}} / {{canon facts.embedding.dim}} |
+| Retrieval authority | {{canon facts.stores.retrieval_authority}} · Cloud Run region {{canon facts.deploy_targets.origin.region}} |
+
+## Coherence gate (live)
+
+- **Gate:** {{coherence.gate}} · **contradictions:** {{coherence.contradictions}} · **incomplete:** {{coherence.incomplete}}
+- **Variable registry:** {{coherence.variables}} variables across the system map.
+
+## Decomposition / work
+
+- **Legacy decomposition:** {{ledger.decomposition.groups}} transfer groups · {{ledger.decomposition.components}} components · {{ledger.decomposition.bundled}} bundled.
+- **Governed proposals (codeflow):** {{ledger.proposals}}.
+- **Task-ledger:** {{ledger.tasks.note}}
+
+## How this page stays true
+
+Rendered by `@heady/report-templates` from the **heady-derive canon** (facts.yaml — locked values can't
+drift), the **coherence** binding (`.data/coherence`), and the **ledger** binding. Refresh:
+`node tooling/report-templates/src/render.mjs render master-plan-status.hbs`; CI enforces freshness via
+`render.mjs check`.
