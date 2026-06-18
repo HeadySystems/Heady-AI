@@ -1,0 +1,37 @@
+---
+output: docs/SYSTEM_SNAPSHOT.md
+bindings: [coherence, ledger]
+---
+# Heady™ System Snapshot
+
+> A compendium-shaped **live** snapshot of the Heady-AI rebuild — generated, never hand-written.
+> © 2026 HeadySystems Inc. — Eric Haywood, Founder.
+
+## What
+
+Heady-AI ({{canon facts.product.version}}) — a Liquid Latent OS: a {{canon facts.hcfullpipeline.stage_count}}-stage
+HCFullPipeline DAG over {{canon lexicon.agents.count}} agents / {{canon lexicon.bees.count}} bees /
+{{canon lexicon.skills.count}} skills, retrieval on {{canon facts.stores.retrieval_authority}}
+(embedding {{canon facts.embedding.model}}, dim {{canon facts.embedding.dim}}).
+
+## Why
+
+A single, auditable, drift-free system of record. Every load-bearing number on this page is injected
+from the golden record (`facts.yaml`) — it cannot disagree with the rest of the system.
+
+## How (current state)
+
+- **Coherence gate:** {{coherence.gate}} ({{coherence.contradictions}} contradictions, {{coherence.incomplete}} incomplete) over {{coherence.variables}} registered variables.
+- **Legacy decomposition:** {{ledger.decomposition.components}} components in {{ledger.decomposition.groups}} transfer groups.
+- **Governed proposals:** {{ledger.proposals}}.
+
+## When · Where
+
+Rendered on demand / in CI from `.data/coherence` + `facts.yaml`. Origin: Cloud Run
+{{canon facts.deploy_targets.origin.region}}; edge: Cloudflare Workers; auth {{canon facts.auth}};
+secrets {{canon facts.secrets}}.
+
+## Disposition
+
+Canonical live snapshot. Patents: <!--heady:inject facts.company.patents_provisional-->51<!--/heady:inject-->
+provisional (HS-2026-001..051). Refresh: `node tooling/report-templates/src/render.mjs render system-snapshot.hbs`.
