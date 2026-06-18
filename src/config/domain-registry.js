@@ -1,510 +1,251 @@
-// HEADY_BRAND:BEGIN
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
-// ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
-// ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
-// ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
-// ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
-// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
-// ║                                                                  ║
-// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
-// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
-// ║  FILE: src/config/domain-registry.js                                                    ║
-// ║  LAYER: backend/src                                                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
-// HEADY_BRAND:END
 /**
- * ∞ Heady™ Domain Registry Config — Domain Configuration & Health Tracking
- * Part of Heady™Systems™ Sovereign AI Platform v4.0.0
- * © 2026 Heady™Systems Inc. — Proprietary
- */
-
-'use strict';
-// ─── HEADY CORS WHITELIST ────────────────────────────────────────────
-const HEADY_ALLOWED_ORIGINS = new Set([
-    'https://headyme.com', 'https://headysystems.com', 'https://headyconnection.org',
-    'https://headyconnection.com', 'https://headybuddy.org', 'https://headymcp.com',
-    'https://headyapi.com', 'https://headyio.com', 'https://headyos.com',
-    'https://headyweb.com', 'https://headybot.com', 'https://headycloud.com',
-    'https://headybee.co', 'https://heady-ai.com', 'https://headyex.com',
-    'https://headyfinance.com', 'https://admin.headysystems.com',
-    'https://auth.headysystems.com', 'https://api.headysystems.com',
-]);
-const _isHeadyOrigin = (o) => !o ? false : HEADY_ALLOWED_ORIGINS.has(o) || /\.run\.app$/.test(o) || (process.env.NODE_ENV !== 'production' && /^https?:\/\/(localhost|127\.0\.0\.1):/.test(o));
-
-
-const { PHI_TIMING } = require('../shared/phi-math');
-const EventEmitter = require('events');
-
-// ─────────────────────────────────────────────
-// Domain Definitions
-// ─────────────────────────────────────────────
-
-/**
- * @typedef {object} DomainDefinition
- * @property {string}   domain          Primary domain name
- * @property {string[]} aliases         Alias hostnames
- * @property {string}   role            Domain role in the platform
- * @property {string}   description     Human-readable description
- * @property {string}   service         Backing service name
- * @property {string}   upstreamPort    Local port for upstream service
- * @property {string}   healthPath      Health check endpoint
- * @property {string}   ssl             SSL mode ('cloudflare' | 'none')
- * @property {string[]} features        Enabled feature flags
- * @property {object}   routing         Routing rules
- * @property {object}   tls             TLS/SSL config
- * @property {object}   rateLimit       Rate limiting config
- * @property {string[]} allowedMethods  Allowed HTTP methods
- * @property {object}   cors            CORS configuration
- * @property {object}   headers         Injected response headers
- */
-
-/**
- * All Heady™ domain definitions — the authoritative domain registry.
- * All SSL/TLS termination is handled by Cloudflare (no localhost SSL).
- * @type {DomainDefinition[]}
- */
-const DOMAIN_DEFINITIONS = [
-  {
-    domain:      'headyme.com',
-    aliases:     ['www.headyme.com', 'app.headyme.com'],
-    role:        'primary_app',
-    description: 'HeadyMe flagship — AI-powered wellness and sovereign identity platform',
-    service:     'headyme-app',
-    upstreamPort: 3000,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['auth', 'ai_chat', 'wellness_tracking', 'sovereign_profile', 'bees', 'mcp'],
-    routing: {
-      type:    'proxy',
-      sticky:  false,
-      timeout: PHI_TIMING.CYCLE,
-    },
-    tls: {
-      mode:      'flexible',  // Cloudflare flexible (terminates at CF, HTTP to origin)
-      minVersion: 'TLS 1.2',
-      hsts:       true,
-    },
-    rateLimit: { windowMs: 60_000, max: 100, burstMax: 200 },
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    cors: {
-      origins: ['https://headyme.com', 'https://headyapi.com'],
-      credentials: true,
-    },
-    headers: {
-      'X-Heady-Domain':  'headyme',
-      'X-Frame-Options': 'SAMEORIGIN',
-      'X-XSS-Protection': '1; mode=block',
-    },
-  },
-
-  {
-    domain:      'headysystems.com',
-    aliases:     ['www.headysystems.com', 'admin.headysystems.com'],
-    role:        'platform_root',
-    description: 'HeadySystems™ corporate platform — admin hub and operator dashboard',
-    service:     'headysystems-admin',
-    upstreamPort: 3001,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['admin_dashboard', 'billing', 'domain_management', 'zero_trust'],
-    routing: {
-      type:       'proxy',
-      requireAuth: true,
-      timeout:    PHI_TIMING.CYCLE,
-    },
-    tls: {
-      mode:       'full_strict',
-      minVersion: 'TLS 1.3',
-      hsts:        true,
-    },
-    rateLimit: { windowMs: 60_000, max: 50, burstMax: 100 },
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    cors: {
-      origins: ['https://headysystems.com'],
-      credentials: true,
-    },
-    headers: {
-      'X-Heady-Domain': 'headysystems',
-      'X-Robots-Tag':   'noindex, nofollow',
-    },
-  },
-
-  {
-    domain:      'headymcp.com',
-    aliases:     ['www.headymcp.com', 'mcp.headyme.com'],
-    role:        'mcp_gateway',
-    description: 'Model Context Protocol gateway — AI tool integrations and agent interfaces',
-    service:     'mcp-server',
-    upstreamPort: 3002,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['mcp_tools', 'sse_streaming', 'session_management', 'tool_registry'],
-    routing: {
-      type:        'proxy',
-      timeout:     120_000,  // longer for SSE connections
-      keepAlive:   true,
-    },
-    tls: {
-      mode:       'flexible',
-      minVersion: 'TLS 1.2',
-      hsts:        true,
-    },
-    rateLimit: { windowMs: 60_000, max: 200, burstMax: 400 },
-    allowedMethods: ['GET', 'POST', 'OPTIONS'],
-    cors: {
-      origins:     [...HEADY_ALLOWED_ORIGINS],
-      credentials: false,
-    },
-    headers: {
-      'X-Heady-Domain':  'headymcp',
-      'X-MCP-Version':   '2024-11-05',
-      'Cache-Control':   'no-cache',
-    },
-  },
-
-  {
-    domain:      'headybuddy.org',
-    aliases:     ['www.headybuddy.org', 'buddy.headyme.com'],
-    role:        'companion_ai',
-    description: 'HeadyBuddy — conversational AI companion and wellness guide',
-    service:     'headybuddy-service',
-    upstreamPort: 3003,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['conversational_ai', 'wellness_companion', 'memory', 'personalization'],
-    routing: { type: 'proxy', timeout: 60_000 },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 150, burstMax: 300 },
-    allowedMethods: ['GET', 'POST', 'OPTIONS'],
-    cors: { origins: ['https://headybuddy.org', 'https://headyme.com'], credentials: true },
-    headers: { 'X-Heady-Domain': 'headybuddy' },
-  },
-
-  {
-    domain:      'headyconnection.org',
-    aliases:     ['www.headyconnection.org', 'connect.headyme.com'],
-    role:        'community',
-    description: 'HeadyConnection — community platform, networking, and collective intelligence',
-    service:     'headyconnection-service',
-    upstreamPort: 3004,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['community_forums', 'networking', 'events', 'collective_ai'],
-    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 100, burstMax: 200 },
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    cors: { origins: ['https://headyconnection.org'], credentials: true },
-    headers: { 'X-Heady-Domain': 'headyconnection' },
-  },
-
-  {
-    domain:      'headyio.com',
-    aliases:     ['www.headyio.com', 'io.headyme.com'],
-    role:        'api_hub',
-    description: 'HeadyIO — developer API hub, integration platform, and webhook gateway',
-    service:     'headyio-api',
-    upstreamPort: 3005,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['rest_api', 'graphql', 'webhooks', 'developer_portal', 'sdk_docs'],
-    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 500, burstMax: 1000 },
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    cors: { origins: [...HEADY_ALLOWED_ORIGINS], credentials: false },
-    headers: {
-      'X-Heady-Domain':   'headyio',
-      'X-API-Version':    'v4',
-      'X-Content-Type-Options': 'nosniff',
-    },
-  },
-
-  {
-    domain:      'headybot.com',
-    aliases:     ['www.headybot.com', 'bot.headyme.com'],
-    role:        'bot_platform',
-    description: 'HeadyBot — automation bots, workflow orchestration, and scheduled tasks',
-    service:     'headybot-service',
-    upstreamPort: 3006,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['automation', 'scheduling', 'workflow_builder', 'integrations'],
-    routing: { type: 'proxy', timeout: 120_000 },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 200, burstMax: 400 },
-    allowedMethods: ['GET', 'POST', 'OPTIONS'],
-    cors: { origins: ['https://headybot.com'], credentials: true },
-    headers: { 'X-Heady-Domain': 'headybot' },
-  },
-
-  {
-    domain:      'headyapi.com',
-    aliases:     ['www.headyapi.com', 'api.headyme.com', 'v4.headyapi.com'],
-    role:        'public_api',
-    description: 'HeadyAPI — public REST/GraphQL API for third-party and external integrations',
-    service:     'heady-public-api',
-    upstreamPort: 3007,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['public_api', 'graphql', 'rest', 'versioning', 'api_keys', 'webhooks'],
-    routing: { type: 'proxy', timeout: PHI_TIMING.CYCLE },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 1000, burstMax: 2000 },
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'],
-    cors: { origins: ['https://app.headysystems.com', 'https://headyweb.headysystems.com', 'https://os.headysystems.com', 'https://buddy.headysystems.com'], credentials: false },
-    headers: {
-      'X-Heady-Domain':   'headyapi',
-      'Access-Control-Allow-Origin': 'null',  // HEADY: Use _isHeadyOrigin() for dynamic CORS
-      'X-API-Version':    'v4',
-    },
-  },
-
-  {
-    domain:      'heady-ai.com',
-    aliases:     ['www.heady-ai.com', 'ai.headyme.com', 'inference.headyme.com'],
-    role:        'ai_gateway',
-    description: 'HeadyAI — inference gateway, model routing, embeddings, and AI capabilities',
-    service:     'inference-gateway',
-    upstreamPort: 3008,
-    healthPath:  '/health',
-    ssl:         'cloudflare',
-    features:    ['inference', 'embeddings', 'model_routing', 'streaming', 'rag'],
-    routing: {
-      type:      'proxy',
-      timeout:   90_000,  // AI responses can be slow
-      keepAlive: true,
-    },
-    tls: { mode: 'flexible', minVersion: 'TLS 1.2', hsts: true },
-    rateLimit: { windowMs: 60_000, max: 300, burstMax: 600 },
-    allowedMethods: ['GET', 'POST', 'OPTIONS'],
-    cors: { origins: ['https://headyme.com', 'https://headyapi.com'], credentials: true },
-    headers: {
-      'X-Heady-Domain':       'headyai',
-      'X-Inference-Version':  'v4',
-      'Cache-Control':        'no-store',
-    },
-  },
-];
-
-// ─────────────────────────────────────────────
-// Domain Registry
-// ─────────────────────────────────────────────
-
-/**
- * @typedef {'healthy' | 'degraded' | 'unhealthy' | 'unknown'} DomainHealth
- */
-
-/**
- * Domain Registry.
+ * ═══════════════════════════════════════════════════════════════════════
+ *  HEADY DOMAIN REGISTRY — Canonical Source of Truth
+ *  ADR-0019: Nine-domain brand architecture
+ *  ADR-0024: Domain registry canonical file
+ *  ADR-0011: Node.js ESM only
+ *  ADR-0006: phi-math — no magic numbers
+ * ═══════════════════════════════════════════════════════════════════════
  *
- * Manages domain definitions, health status, and service mapping.
- * Single source of truth for all domain configuration in the platform.
+ * This file is the SINGLE source of truth for:
+ *   - Domain → legal entity mapping  (IRS compliance)
+ *   - Domain → Firebase Auth tenant  (session isolation)
+ *   - Domain → Sacred Geometry layer (topology)
+ *   - Domain → revenue model         (billing attribution)
+ *   - Domain → CORS allowlist        (src/middleware/cors.js)
+ *   - Domain → PQC key namespace     (src/security/pqc.js)
  *
- * @extends EventEmitter
+ * NEVER hard-code domain strings elsewhere. Import from here.
+ * ADR Sentinel CI job verifies all Cloudflare/Firebase/routing configs
+ * reference only domains present in this registry.
  */
-class DomainRegistry extends EventEmitter {
-  constructor() {
-    super();
-    /** @type {Map<string, DomainDefinition>} */
-    this._domains = new Map();
 
-    /** @type {Map<string, DomainHealth>} */
-    this._health  = new Map();
+// ─── Enumerations ──────────────────────────────────────────────────────
 
-    /** @type {Map<string, string>} alias → canonical domain */
-    this._aliases = new Map();
+/** @enum {string} Legal entities in the Heady ecosystem */
+export const Entity = Object.freeze({
+  HEADY_SYSTEMS:     'HeadySystems',
+  HEADY_CONNECTION:  'HeadyConnection',
+});
 
-    // Load built-in definitions
-    for (const def of DOMAIN_DEFINITIONS) this._add(def);
-  }
+/** @enum {string} Sacred Geometry topology layers (ADR-0015) */
+export const Layer = Object.freeze({
+  CENTER:     'Center',
+  INNER:      'Inner',
+  MIDDLE:     'Middle',
+  OUTER:      'Outer',
+  GOVERNANCE: 'Governance',
+  MEMORY:     'Memory',
+  OPS:        'Ops',
+});
 
-  // ── Registration ──
+/** @enum {string} Domain categories */
+export const Category = Object.freeze({
+  CORE:      'core',
+  AI:        'ai',
+  MCP:       'mcp',
+  COMPANION: 'companion',
+  OS:        'os',
+  FINTECH:   'fintech',
+  RESEARCH:  'research',
+  NONPROFIT: 'nonprofit',
+  WEB:       'web',
+});
 
-  /**
-   * Register a domain definition.
-   * @param {DomainDefinition} def
-   */
-  register(def) {
-    this._add(def);
-    this.emit('domain_registered', def);
-  }
+/** @enum {string} Revenue model types */
+export const Revenue = Object.freeze({
+  SAAS_SUBSCRIPTION: 'saas_subscription',
+  API_CREDITS:       'api_credits',
+  API_PER_REQUEST:   'api_per_request',
+  SAAS_USAGE:        'saas_usage',
+  ENTERPRISE:        'enterprise',
+  REVENUE_SHARE:     'revenue_share',
+  GRANTS_DONATIONS:  'grants_donations',
+  AD_SUPPORTED:      'ad_supported',
+});
 
-  _add(def) {
-    this._domains.set(def.domain, def);
-    this._health.set(def.domain, 'unknown');
-    this._aliases.set(def.domain, def.domain);
-    for (const alias of def.aliases ?? []) {
-      this._aliases.set(alias, def.domain);
-    }
-  }
+// ─── Canonical Registry ───────────────────────────────────────────────
 
-  // ── Lookup ──
+/**
+ * @typedef {Object} DomainEntry
+ * @property {string}   entity      - Legal entity owner (Entity enum)
+ * @property {string}   category    - Domain category (Category enum)
+ * @property {string}   layer       - Sacred Geometry layer (Layer enum)
+ * @property {string}   tenant      - Firebase Auth tenant ID
+ * @property {string}   revenue     - Revenue model (Revenue enum)
+ * @property {boolean}  commercial  - false = nonprofit (IRS boundary)
+ * @property {string}   description - Human-readable purpose
+ */
 
-  /**
-   * Get a domain definition by its canonical name or alias.
-   * @param {string} domain
-   * @returns {DomainDefinition|null}
-   */
-  get(domain) {
-    const canonical = this._aliases.get(domain);
-    if (!canonical) return null;
-    return this._domains.get(canonical) ?? null;
-  }
+/** @type {Record<string, DomainEntry>} */
+export const DOMAIN_REGISTRY = Object.freeze({
+  'headyme.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.CORE,
+    layer:       Layer.CENTER,
+    tenant:      'headyme',
+    revenue:     Revenue.SAAS_SUBSCRIPTION,
+    commercial:  true,
+    description: 'Core platform — user workspace, dashboard, primary SaaS entrypoint',
+  },
+  'headyai.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.AI,
+    layer:       Layer.INNER,
+    tenant:      'headyai',
+    revenue:     Revenue.API_CREDITS,
+    commercial:  true,
+    description: 'AI orchestration hub — HCFullPipeline API, swarm access, model racing',
+  },
+  'headymcp.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.MCP,
+    layer:       Layer.INNER,
+    tenant:      'headymcp',
+    revenue:     Revenue.API_PER_REQUEST,
+    commercial:  true,
+    description: 'MCP gateway — Model Context Protocol server, tool registry, JSON-RPC',
+  },
+  'headybuddy.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.COMPANION,
+    layer:       Layer.MIDDLE,
+    tenant:      'headybuddy',
+    revenue:     Revenue.SAAS_USAGE,
+    commercial:  true,
+    description: 'HeadyBuddy companion AI — conversational agent, cross-device bridge',
+  },
+  'headyos.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.OS,
+    layer:       Layer.MIDDLE,
+    tenant:      'headyos',
+    revenue:     Revenue.ENTERPRISE,
+    commercial:  true,
+    description: 'Heady Latent OS — enterprise licensing, sovereign AI platform',
+  },
+  'headytrade.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.FINTECH,
+    layer:       Layer.OUTER,
+    tenant:      'headytrade',
+    revenue:     Revenue.REVENUE_SHARE,
+    commercial:  true,
+    description: 'FinTech / trading — HeadyCoin, Apex trading risk, subscription tiers',
+  },
+  'headylab.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.RESEARCH,
+    layer:       Layer.OUTER,
+    tenant:      'headylab',
+    revenue:     Revenue.ENTERPRISE,
+    commercial:  true,
+    description: 'Research + patent lab — IP portfolio, provisional patents, R&D docs',
+  },
+  'headyconnection.org': {
+    entity:      Entity.HEADY_CONNECTION,
+    category:    Category.NONPROFIT,
+    layer:       Layer.GOVERNANCE,
+    tenant:      'headyconnection',
+    revenue:     Revenue.GRANTS_DONATIONS,
+    commercial:  false,  // IRS 501(c)(3) — zero commercial features allowed
+    description: 'HeadyConnection Inc. nonprofit portal — grants, community, education',
+  },
+  'headyweb.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.WEB,
+    layer:       Layer.OPS,
+    tenant:      'headyweb',
+    revenue:     Revenue.AD_SUPPORTED,
+    commercial:  true,
+    description: 'Web / frontend hub — open access, landing pages, micro-frontend host',
+  },
+});
 
-  /**
-   * Resolve an alias to its canonical domain name.
-   * @param {string} hostOrAlias
-   * @returns {string|null}
-   */
-  resolve(hostOrAlias) {
-    return this._aliases.get(hostOrAlias) ?? null;
-  }
+// ─── Derived Lookups (computed once at module load) ───────────────────
 
-  /**
-   * Get all domain definitions.
-   * @returns {DomainDefinition[]}
-   */
-  all() { return [...this._domains.values()]; }
+/** All domain hostnames as a frozen array */
+export const ALL_DOMAINS = Object.freeze(Object.keys(DOMAIN_REGISTRY));
 
-  /**
-   * Get domains filtered by role.
-   * @param {string} role
-   * @returns {DomainDefinition[]}
-   */
-  byRole(role) {
-    return this.all().filter(d => d.role === role);
-  }
+/** Allowed HTTPS origins for CORS (src/middleware/cors.js imports this) */
+export const ALLOWED_ORIGINS = Object.freeze(
+  ALL_DOMAINS.map(d => `https://${d}`)
+);
 
-  /**
-   * Get domains that have a specific feature enabled.
-   * @param {string} feature
-   * @returns {DomainDefinition[]}
-   */
-  byFeature(feature) {
-    return this.all().filter(d => d.features?.includes(feature));
-  }
+/** Set of allowed origins for O(1) lookup */
+export const ALLOWED_ORIGINS_SET = new Set(ALLOWED_ORIGINS);
 
-  /**
-   * Get the canonical domain for a service name.
-   * @param {string} service
-   * @returns {DomainDefinition|null}
-   */
-  byService(service) {
-    return this.all().find(d => d.service === service) ?? null;
-  }
+/** Nonprofit-only domains (IRS boundary) */
+export const NONPROFIT_DOMAINS = Object.freeze(
+  ALL_DOMAINS.filter(d => !DOMAIN_REGISTRY[d].commercial)
+);
 
-  // ── Health ──
+/** Commercial domains */
+export const COMMERCIAL_DOMAINS = Object.freeze(
+  ALL_DOMAINS.filter(d => DOMAIN_REGISTRY[d].commercial)
+);
 
-  /**
-   * Update health status for a domain.
-   * @param {string} domain
-   * @param {DomainHealth} status
-   */
-  setHealth(domain, status) {
-    const canonical = this._aliases.get(domain) ?? domain;
-    const prev = this._health.get(canonical);
-    this._health.set(canonical, status);
-    if (prev !== status) {
-      this.emit('health_changed', { domain: canonical, previous: prev, current: status });
-    }
-  }
+/** Domains grouped by Sacred Geometry layer */
+export const DOMAINS_BY_LAYER = Object.freeze(
+  ALL_DOMAINS.reduce((acc, domain) => {
+    const { layer } = DOMAIN_REGISTRY[domain];
+    if (!acc[layer]) acc[layer] = [];
+    acc[layer].push(domain);
+    return acc;
+  }, {})
+);
 
-  /**
-   * Get health status for a domain.
-   * @param {string} domain
-   * @returns {DomainHealth}
-   */
-  getHealth(domain) {
-    const canonical = this._aliases.get(domain) ?? domain;
-    return this._health.get(canonical) ?? 'unknown';
-  }
+/** Domains grouped by legal entity */
+export const DOMAINS_BY_ENTITY = Object.freeze(
+  ALL_DOMAINS.reduce((acc, domain) => {
+    const { entity } = DOMAIN_REGISTRY[domain];
+    if (!acc[entity]) acc[entity] = [];
+    acc[entity].push(domain);
+    return acc;
+  }, {})
+);
 
-  /**
-   * Get health snapshot for all domains.
-   * @returns {Record<string, DomainHealth>}
-   */
-  healthSnapshot() {
-    const snap = {};
-    for (const [domain, status] of this._health) snap[domain] = status;
-    return snap;
-  }
+// ─── Guard Utilities ──────────────────────────────────────────────────
 
-  // ── Service Map ──
-
-  /**
-   * Build a map of service name → upstream URL for all domains.
-   * @returns {Record<string, string>}
-   */
-  serviceMap() {
-    const map = {};
-    for (const def of this._domains.values()) {
-      map[def.service] = `http://${process.env.HEADY_INTERNAL_HOST || '0.0.0.0'}:${def.upstreamPort}`;
-    }
-    return map;
-  }
-
-  /**
-   * Build a routing table for the edge layer.
-   * @returns {Array<{pattern: string, upstream: string, options: object}>}
-   */
-  routingTable() {
-    return this.all().map(def => ({
-      pattern:  def.domain,
-      aliases:  def.aliases,
-      upstream: `http://${process.env.HEADY_INTERNAL_HOST || '0.0.0.0'}:${def.upstreamPort}`,
-      health:   this.getHealth(def.domain),
-      options: {
-        timeout:      def.routing?.timeout ?? PHI_TIMING.CYCLE,
-        headers:      def.headers,
-        rateLimit:    def.rateLimit,
-        allowedMethods: def.allowedMethods,
-      },
-    }));
-  }
-
-  // ── Statistics ──
-
-  /**
-   * Registry statistics.
-   * @returns {object}
-   */
-  stats() {
-    const all      = this.all();
-    const byHealth = { healthy: 0, degraded: 0, unhealthy: 0, unknown: 0 };
-    for (const [, status] of this._health) byHealth[status] = (byHealth[status] ?? 0) + 1;
-    return {
-      total:    all.length,
-      aliases:  this._aliases.size,
-      byHealth,
-      services: all.map(d => d.service),
-    };
-  }
+/**
+ * Assert a domain exists in the registry (throws if not found).
+ * Use in route handlers and CI validation scripts.
+ * @param {string} domain
+ * @returns {DomainEntry}
+ */
+export function assertDomain(domain) {
+  const entry = DOMAIN_REGISTRY[domain];
+  if (!entry) throw new Error(`Domain '${domain}' is not registered in DOMAIN_REGISTRY (ADR-0019/ADR-0024)`);
+  return entry;
 }
 
-// ─────────────────────────────────────────────
-// Singleton
-// ─────────────────────────────────────────────
-
-let _instance = null;
-
 /**
- * Get the global DomainRegistry singleton.
- * @returns {DomainRegistry}
+ * Check if an origin is in the allowed CORS set.
+ * @param {string} origin - e.g. 'https://headyme.com'
+ * @returns {boolean}
  */
-function getDomainRegistry() {
-  if (!_instance) _instance = new DomainRegistry();
-  return _instance;
+export function isAllowedOrigin(origin) {
+  return ALLOWED_ORIGINS_SET.has(origin);
 }
 
-// ─────────────────────────────────────────────
-// Exports
-// ─────────────────────────────────────────────
+/**
+ * Resolve the Firebase Auth tenant for an incoming request origin.
+ * @param {string} origin - e.g. 'https://headyme.com'
+ * @returns {string|null}
+ */
+export function tenantForOrigin(origin) {
+  const domain = origin.replace(/^https?:\/\//, '');
+  return DOMAIN_REGISTRY[domain]?.tenant ?? null;
+}
 
-export {
-
-  DomainRegistry,
-  getDomainRegistry,
-  DOMAIN_DEFINITIONS,
-};
+/**
+ * Return the PQC key namespace for a domain (ADR-0021).
+ * Format: '{tenant}:{serviceId}'
+ * @param {string} domain
+ * @param {string} serviceId
+ * @returns {string}
+ */
+export function pqcKeyNamespace(domain, serviceId) {
+  const entry = assertDomain(domain);
+  return `${entry.tenant}:${serviceId}`;
+}

@@ -20,5 +20,15 @@
 | [0016](0016-neon-replaces-cloud-sql.md) | Neon Postgres Replaces Cloud SQL | Accepted | ⭐⭐⭐⭐⭐ Critical |
 | [0017](0017-structured-logging-pino.md) | Structured Logging — Pino Only | Accepted | ⭐⭐⭐⭐ High |
 | [0018](0018-cicd-github-actions-gates.md) | CI/CD — GitHub Actions + Coherence Gate | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0019](0019-nine-domain-brand-architecture.md) | Nine-Domain Brand Architecture — Nonprofit/Commercial Split | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0020](0020-drupal-11-headless-cms.md) | Drupal 11 as Headless CMS | Accepted | ⭐⭐⭐⭐ High |
+| [0021](0021-post-quantum-cryptography-mandate.md) | Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0022](0022-gcp-region-canonical-lock.md) | GCP Project + Region Canonical Lock — us-east1 | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0023](0023-heady-manager-decomposition.md) | heady-manager.js Decomposition Mandate | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0024](0024-domain-registry-canonical-file.md) | src/config/domain-registry.js Canonical Domain File | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0025](0025-content-gateway-cloudflare-worker.md) | Content-Gateway Cloudflare Worker Contract | Accepted | ⭐⭐⭐⭐ High |
 
-Generated: 2026-06-17 | Author: Eric Haywood
+Generated: 2026-06-17 | Updated: 2026-06-17 | Author: Eric Haywood
+
+> 25 ADRs documented. All reserved slots filled. Full coverage from MCP adoption through content delivery.
+> Next recommended: ADR-0026 (workers/content-gateway deployment spec), ADR-0027 (heady-manager Phase 2 route extraction)
