@@ -1,0 +1,13 @@
+{
+  "name": "@heady/report-templates",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "HeadyBee report/narrative templating — fill .hbs templates with live bindings + heady-derive canon; distill doc corpora into deterministic report recipes.",
+  "scripts": {
+    "render": "node src/render.mjs render",
+    "check": "node src/render.mjs check",
+    "distill": "node src/distill.mjs",
+    "test": "node --test test/report-templates.test.mjs"
+  }
+}

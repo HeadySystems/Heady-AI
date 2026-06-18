@@ -5,7 +5,7 @@
 // ║  (facts.yaml via @heady/config + lexicon.yaml) — never hardcodes.  ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { loadFacts, parseYaml } from "../../../packages/config/src/index.mjs";
 
@@ -45,6 +45,12 @@ export function resolveCanon() {
       if (n) canon[`lexicon.${ns}.count`] = String(n);
     }
   } catch { /* lexicon optional */ }
+  // skills are directories under .agents/skills (the authoring source) — count them so the skill
+  // total is canonically derivable (the registry mirrors .agents → .claude).
+  try {
+    const n = readdirSync(resolve(ROOT, ".agents/skills"), { withFileTypes: true }).filter((d) => d.isDirectory()).length;
+    if (n) canon["lexicon.skills.count"] = String(n);
+  } catch { /* skills dir optional */ }
   return canon;
 }
 
