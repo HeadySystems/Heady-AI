@@ -76,6 +76,7 @@ This index is the navigable map; the skill **directories stay flat** so each can
 | `heady-knowledge-ingestion-briefing` | Use when the user wants to turn repositories, technical notes, strategy files, or mixed project materials into |
 | `heady-context-window-manager` | Use when managing limited context windows across multi-agent systems. Covers tiered context |
 | `heady-distiller` | Reverse-engineer agent execution traces into optimized SKILL.md recipes |
+| `heady-understanding-report` | Use when generating a custom 10-Lens Understanding Report for any subject based on HUE |
 | `heady-intent-tracker` | Use when implementing developer action tracking, intent inference from IDE behavior, or proactive AI assistanc |
 | `heady-resource-crystallizer` | Heady Resource Crystallizer — dynamic resource allocation engine that crystallizes optimal |
 | `heady-hypothesis-lab` | Hypothesis Lab for Heady — structured experimentation framework for testing architectural |

@@ -24,7 +24,7 @@ engine runs every time it tries to understand something.
 
 ## 1. The Heady Comprehension Schema (your questions, formalized)
 
-Your questions cluster into **9 lenses**. Each lens has a method (from §2), an output, and a CSL-graded
+Your questions cluster into **10 lenses**. Each lens has a method (from §2), an output, and a CSL-graded
 confidence. Together they are the engine's "definition of understood."
 
 | # | Lens | Your questions (mapped) | Method (from §2) | Output |
@@ -38,8 +38,9 @@ confidence. Together they are the engine's "definition of understood."
 | L7 | **Normativity** | how come it's good? is it bad? why? why not? | second-order thinking · pre-mortem · via-negativa · cost/benefit | benefits, harms, trade-offs, failure modes |
 | L8 | **Agency & Intelligence** | is it intelligent? | agency tests (does it model goals, adapt, predict?) | a placement on the reactive→adaptive→reflective scale |
 | L9 | **Evidence & Confidence** | (implicit in all) how do we know? | Toulmin (claim·grounds·warrant·backing·qualifier·rebuttal) · Bayesian · **CSL ternary** | per-claim confidence + the open unknowns |
+| L10| **Execution & Evolution** | what happened vs intent? system parameters? best move? alternatives? | Post-action reflection · Options calculus | Delta map of intent vs reality, param breakdown, decision defense |
 
-> **The schema is the contract.** A subject is "understood at level N" when lenses L1–L9 are answered with
+> **The schema is the contract.** A subject is "understood at level N" when lenses L1–L10 are answered with
 > evidence at ≥ CSL confidence τ. Unanswered lenses are **explicit unknowns**, not silent gaps — which is
 > itself a form of understanding (knowing what you don't know).
 
@@ -90,7 +91,7 @@ SUBJECT (signal | component | concept | external system)
    │
    ▼  OBSERVE   — gather ground truth: coherence map, tracer-bee journey, code/docs, external research
    ▼  ORIENT    — Cynefin-classify the subject (L6) → choose valid methods per lens
-   ▼  INQUIRE   — run lenses L1–L9 (parallel where independent; the HCFP parallel-pool pattern)
+   ▼  INQUIRE   — run lenses L1–L10 (parallel where independent; the HCFP parallel-pool pattern)
    │               each lens → finding + Toulmin warrant + CSL confidence + cited evidence
    ▼  SYNTHESIZE— assemble the Understanding Artifact (UA); compute overall confidence = min(lens τ)
    ▼  STRESS    — adversarial pass: pre-mortem, rebuttals, "what would make this false?" (refute, don't confirm)
@@ -113,7 +114,8 @@ SUBJECT (signal | component | concept | external system)
     "blastRadius": { "nodes": 7, "ranked": ["task-ledger","Linear team HEA"] },   // coherence ripple
     "normativity": { "good": ["idempotent, fail-safe"], "bad/risk": ["SA key in CF"], "tradeoff": "..." },
     "agency":      { "level": "reactive", "reason": "no goal model; pure transform" },
-    "evidence":    { "method": "toulmin", "qualifier": "verified offline; DB path untested" }
+    "evidence":    { "method": "toulmin", "qualifier": "verified offline; DB path untested" },
+    "evolution":   { "intentVsReality": "...", "parameters": ["FIB_KEY"], "bestMove": "...", "alternatives": ["WebSockets"] }
   },
   "overallConfidence": 0.62,                   // = weakest load-bearing lens
   "openUnknowns": ["DB-path retry behavior"],  // = the next research questions, auto-fileable to Linear

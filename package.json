@@ -1,7 +1,7 @@
 {
   "name": "heady-ai",
   "version": "3.0.0",
-  "description": "Heady\u2122 AI Platform \u2014 Autonomous multi-agent AI operating system with 20 specialized intelligence nodes, federated liquid routing, and post-quantum security.",
+  "description": "Heady™ AI Platform — Autonomous multi-agent AI operating system with 20 specialized intelligence nodes, federated liquid routing, and post-quantum security.",
   "main": "heady-manager.js",
   "license": "UNLICENSED",
   "author": {
@@ -42,7 +42,7 @@
     "lint:fix": "eslint . --fix",
     "pipeline": "node -e \"const {pipeline}=require('./src/hc_pipeline');pipeline.run().then(s=>console.log(JSON.stringify({runId:s.runId,status:s.status},null,2))).catch(e=>console.error(e.message))\"",
     "pipeline:config": "node -e \"const {pipeline}=require('./src/hc_pipeline');console.log(JSON.stringify(pipeline.getConfigSummary(),null,2))\"",
-    "sync": "echo 'Sync migrated to Linux \u2014 use npm run system:sync'",
+    "sync": "echo 'Sync migrated to Linux — use npm run system:sync'",
     "brand:check": "node scripts/brand_headers.js --check",
     "brand:fix": "node scripts/brand_headers.js --fix",
     "test:domains": "node scripts/domain-connectivity-test.js",
@@ -99,10 +99,13 @@
     "@google/genai": "^1.42.0",
     "@google/generative-ai": "^0.24.1",
     "@huggingface/inference": "^4.13.12",
+    "@inquirer/prompts": "^8.5.2",
     "@modelcontextprotocol/sdk": "^1.0.1",
     "@octokit/auth-app": "^8.2.0",
+    "@octokit/rest": "^21.0.0",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
+    "chalk": "^5.6.2",
     "commander": "^14.0.3",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
@@ -125,8 +128,7 @@
     "swagger-ui-express": "^5.0.1",
     "tinyliquid": "^0.2.34",
     "ws": "^8.19.0",
-    "yaml": "^2.8.2",
-    "@octokit/rest": "^21.0.0"
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.55.0",
@@ -136,8 +138,8 @@
     "jest": "^30.2.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.2.2",
-    "yaml-jest": "^1.2.0",
-    "turbo": "^2.9.18"
+    "turbo": "^2.9.18",
+    "yaml-jest": "^1.2.0"
   },
   "packageManager": "pnpm@9.15.9",
   "engines": {
