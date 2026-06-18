@@ -1,5 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Law-Lint — unit tests. `node --test`                      ║
+// ║  HEADY™ Law-Lint v2 — unit tests. `node --test`                  ║
+// ║  Scope: ESM-only (#1) + HEADY brand-header (#6). Logging/         ║
+// ║  placeholders/localhost are tooling/enforcers' canonical domain.  ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
@@ -10,7 +12,6 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const SCANNER = fileURLToPath(new URL("../src/law-lint.mjs", import.meta.url));
-const cl = "console" + String.fromCharCode(46) + "log";
 const FIXTURE_HEADER = `// ╔══════════════════════════════════════════════════════════════════╗\n// ║  HEADY™ test fixture                                              ║\n// ╚══════════════════════════════════════════════════════════════════╝\n`;
 
 function runScanner(dir, args = []) {
@@ -28,7 +29,7 @@ function writeFixture(root, relPath, content) {
   writeFileSync(full, content, "utf8");
 }
 
-test("clean file produces 0 violations", () => {
+test("clean ESM file with brand header produces 0 violations", () => {
   const dir = mkdtempSync("/tmp/llaw-");
   try {
     writeFixture(dir, "packages/foo/src/ok.mjs", FIXTURE_HEADER + "export const x = 1;\n");
@@ -37,35 +38,12 @@ test("clean file produces 0 violations", () => {
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test("detects require() in packages/ (esm-only)", () => {
+test("detects CommonJS require() (esm-only)", () => {
   const dir = mkdtempSync("/tmp/llaw-");
   try {
     writeFixture(dir, "packages/foo/src/bad.mjs", FIXTURE_HEADER + `const x = require('lodash');\n`);
     const result = runScanner(dir);
     assert.ok(result.violations.some(v => v.rule === "esm-only"), "should flag require()");
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("detects console.log in apps/ but NOT in tooling/", () => {
-  const dir = mkdtempSync("/tmp/llaw-");
-  try {
-    writeFixture(dir, "apps/portal/src/main.mjs", FIXTURE_HEADER + "console.log('x');\n");
-    writeFixture(dir, "tooling/cli/src/run.mjs", FIXTURE_HEADER + "console.log('y');\n");
-    const result = runScanner(dir);
-    const appHit = result.violations.some(v => v.file.includes("/apps/") && v.rule === "no-console-log");
-    const toolHit = result.violations.some(v => v.file.includes("/tooling/") && v.rule === "no-console-log");
-    assert.ok(appHit, "console.log in apps/ should be flagged");
-    assert.equal(toolHit, false, "console.log in tooling/ should be exempt");
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("detects loopback address in packages/", () => {
-  const dir = mkdtempSync("/tmp/llaw-");
-  const lh = "local" + "host";
-  try {
-    writeFixture(dir, "packages/api/src/client.mjs", FIXTURE_HEADER + `const url = "http://${lh}:3000";\n`);
-    const result = runScanner(dir);
-    assert.ok(result.violations.some(v => v.rule === "no-loopback"), "should flag loopback");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
@@ -87,30 +65,24 @@ test(".d.ts files exempt from brand header check", () => {
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test("files under dist/ are exempt", () => {
+test("generated bundles and legacy SDK are exempt", () => {
+  const dir = mkdtempSync("/tmp/llaw-");
+  try {
+    writeFixture(dir, "apps/portal/dist/bundle.mjs", `const x = require('x');\n`);
+    writeFixture(dir, "packages/heady-sacred-geometry-sdk/index.js", `const y = require('y');\n`);
+    const result = runScanner(dir);
+    assert.equal(result.count, 0, "dist/ + legacy SDK fully exempt");
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("does NOT enforce console/placeholder/localhost (delegated to tooling/enforcers)", () => {
   const dir = mkdtempSync("/tmp/llaw-");
   const lh = "local" + "host";
+  const todo = "TO" + "DO";
   try {
-    writeFixture(dir, "apps/portal/dist/bundle.mjs", `const x = require('x'); const u = '${lh}'; console.log(u);\n`);
+    // A file that would trip the old rules but only ESM/brand are in scope now.
+    writeFixture(dir, "packages/foo/src/logs.mjs", FIXTURE_HEADER + `export const u = "http://${lh}:3000"; // ${todo}: later\n`);
     const result = runScanner(dir);
-    assert.equal(result.count, 0, "dist/ files should be fully exempt");
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("structured logging via JSON.stringify is allowed (Workers/Logpush)", () => {
-  const dir = mkdtempSync("/tmp/llaw-");
-  try {
-    writeFixture(dir, "apps/edge/src/index.mjs", FIXTURE_HEADER + cl + "(JSON.stringify({ level: 'info' }));\n");
-    const result = runScanner(dir);
-    assert.equal(result.violations.filter(v => v.rule === "no-console-log").length, 0, "structured JSON logging is sanctioned");
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
-test("bare debug logging is still blocked in apps/", () => {
-  const dir = mkdtempSync("/tmp/llaw-");
-  try {
-    writeFixture(dir, "apps/edge/src/dbg.mjs", FIXTURE_HEADER + cl + "('debugging', x);\n");
-    const result = runScanner(dir);
-    assert.ok(result.violations.some(v => v.rule === "no-console-log"), "bare debug logging stays blocked");
+    assert.equal(result.count, 0, "console/placeholder/localhost are no longer law-lint's concern");
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
