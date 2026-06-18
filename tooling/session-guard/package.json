@@ -1,0 +1,14 @@
+{
+  "name": "@heady/session-guard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Machine-wide write-coordination lock so multiple repo writers (interactive agents, the IDE, the cron auto-committer, watchers) never race. Enforced by git hooks; TTL-bounded so a crashed session never blocks.",
+  "bin": { "heady-session": "src/session-guard.mjs" },
+  "exports": { ".": "./src/session-guard.mjs" },
+  "scripts": {
+    "test": "node --test test/session-guard.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  }
+}

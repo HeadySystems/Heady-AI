@@ -317,6 +317,12 @@ importers:
         specifier: workspace:*
         version: link:../phi-math
 
+  packages/midi-bus:
+    dependencies:
+      '@heady/events':
+        specifier: workspace:*
+        version: link:../events
+
   packages/narrative:
     dependencies:
       '@heady/events':
@@ -389,9 +395,15 @@ importers:
 
   tooling/governance-gate: {}
 
+  tooling/heady-derive: {}
+
   tooling/law-lint: {}
 
+  tooling/report-templates: {}
+
   tooling/scaffold-planner: {}
+
+  tooling/session-guard: {}
 
   tooling/skeleton-guard: {}
 

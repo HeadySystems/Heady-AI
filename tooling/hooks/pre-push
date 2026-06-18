@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ pre-push — write-coordination chokepoint                   ║
+# ║  Blocks a push when a DIFFERENT session holds a fresh session lock  ║
+# ║  (see tooling/session-guard). TTL-bounded; bypass with              ║
+# ║  `git push --no-verify` in a genuine emergency. © 2026 Heady.       ║
+# ╚══════════════════════════════════════════════════════════════════╝
+set -euo pipefail
+REPO="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+GUARD="$REPO/tooling/session-guard/src/session-guard.mjs"
+[ -f "$GUARD" ] || exit 0
+if ! node "$GUARD" check; then
+  echo "✋ push blocked by Heady session-guard — another session is actively writing." >&2
+  echo "   Run 'node $GUARD status' to see who. Override (last resort): git push --no-verify" >&2
+  exit 1
+fi
+exit 0
