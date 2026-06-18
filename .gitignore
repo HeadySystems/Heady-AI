@@ -157,3 +157,6 @@ scripts/vault-seed.js
 # Provider setup script outputs (contains secrets)
 scripts/provider-setup/output/
 scripts/provider-setup/.env.*
+# pnpm monorepo — npm lockfile is not used; prevent accidental regeneration
+package-lock.json
+npm-shrinkwrap.json
