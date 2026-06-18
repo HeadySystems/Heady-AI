@@ -15,6 +15,8 @@ import { createLogger, runWithTrace } from "@heady/logger";
 import { HEALTH } from "@heady/shared";
 import { loadFacts } from "@heady/config";
 import { createIntelligence } from "./intelligence.mjs";
+import { startIngestion } from "./patterns/ingest.mjs";
+import { startMidiTransformer } from "./midi/nats-to-midi-transformer.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
@@ -54,6 +56,17 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
 
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
+
+  kernel.register({
+    name: "heady-patterns-engine",
+    start: async () => {
+      startIngestion().catch(e => log.error({ err: e.message }, "Patterns Ingestion failed"));
+      startMidiTransformer().catch(e => log.error({ err: e.message }, "MIDI bridge failed"));
+    },
+    stop: async () => {},
+    health: async () => ({ status: HEALTH.OK }),
+    metrics: async () => ({})
+  });
 
   kernel.register({
     name: "http",

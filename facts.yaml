@@ -86,3 +86,6 @@ consistency:
 legacy:
   source_root: "~/Heady"
   disposition_doc: docs/LEGACY_STACK_COMPONENT_DISPOSITION.md
+concepts:
+  headypatterns_consequence_engine: "Dual-gate CSL ranking that actively intercepts and blocks execution via NATS system.consequence.enforce events upon detecting high similarity (>0.618) to negative patterns."
+  midi_steganography_transport: "Out-of-band UDP telemetry system using a Fibonacci-keyed variable bit/nibble packer to compress and steganographically encrypt large OS payloads into 7-bit MIDI CC bursts."
