@@ -27,9 +27,13 @@ const log = (level, msg, f = {}) => process.stdout.write(`${JSON.stringify({ t: 
 const RE = /<!--\s*heady:inject\s+([\w.]+)\s*-->([\s\S]*?)<!--\s*\/heady:inject\s*-->/g;
 
 // Files to scan: tracked text files under canonical roots (git ls-files = no node_modules/.data).
+// Test files are excluded — they legitimately embed `heady:inject` markers inside fixtures with
+// intentionally-drifted values (to exercise applyRegions), which are NOT real managed regions.
 function targetFiles() {
   const out = execFileSync("git", ["ls-files", "docs", "packages", "tooling", "configs", ".agents", "AGENTS.md", "README.md"], { cwd: ROOT, encoding: "utf8" });
-  return out.split("\n").filter(Boolean).filter((f) => /\.(md|mjs|js|ts|json|yaml|yml)$/.test(f));
+  return out.split("\n").filter(Boolean)
+    .filter((f) => /\.(md|mjs|js|ts|json|yaml|yml)$/.test(f))
+    .filter((f) => !/(^|\/)test\//.test(f) && !/\.test\.(mjs|js|ts)$/.test(f));
 }
 
 /** Rewrite all managed regions in one file's text. Returns {text, changed:[{key,old,new}]}. */
