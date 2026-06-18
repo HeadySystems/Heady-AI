@@ -25,8 +25,10 @@
 | [0021](0021-post-quantum-cryptography-mandate.md) | Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid | Accepted | ⭐⭐⭐⭐⭐ Critical |
 | [0022](0022-gcp-region-canonical-lock.md) | GCP Project + Region Canonical Lock — us-east1 | Accepted | ⭐⭐⭐⭐⭐ Critical |
 | [0023](0023-heady-manager-decomposition.md) | heady-manager.js Decomposition Mandate | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0024](0024-domain-registry-canonical-file.md) | src/config/domain-registry.js Canonical Domain File | Accepted | ⭐⭐⭐⭐⭐ Critical |
+| [0025](0025-content-gateway-cloudflare-worker.md) | Content-Gateway Cloudflare Worker Contract | Accepted | ⭐⭐⭐⭐ High |
 
 Generated: 2026-06-17 | Updated: 2026-06-17 | Author: Eric Haywood
 
-> All reserved slots filled. ADR gaps 0019, 0020, 0022, 0023 are now documented.
-> Next recommended: ADR-0024 (src/config/domain-registry.js canonical file), ADR-0025 (content-gateway Cloudflare Worker spec)
+> 25 ADRs documented. All reserved slots filled. Full coverage from MCP adoption through content delivery.
+> Next recommended: ADR-0026 (workers/content-gateway deployment spec), ADR-0027 (heady-manager Phase 2 route extraction)
