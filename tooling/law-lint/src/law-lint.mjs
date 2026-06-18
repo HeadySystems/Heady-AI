@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Law-Lint v1.0.0                                           ║
-// ║  CI-grade constitutional law scanner — mirrors heady-rules.mjs    ║
-// ║  so every push/PR is bound, not just Claude agent writes.         ║
-// ║  Exit 0 = clean · Exit 1 = violations found                       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  HEADY™ Law-Lint v2.0.0                                           ║
+// ║  Narrowed to the two AGENTS.md rules NOT owned by the canonical    ║
+// ║  governance enforcers (tooling/enforcers + ENF-anti-shortcut.md): ║
+// ║    • #1 ESM-only (no CommonJS require)                             ║
+// ║    • #6 HEADY_BRAND header on authored code files                 ║
+// ║  Law 0 (no-localhost/secrets), Laws 1&2 (glass-box logging /      ║
+// ║  placeholders) are enforced canonically by tooling/enforcers —    ║
+// ║  this tool no longer duplicates them (no policy fork).            ║
+// ║  Exit 0 = clean · Exit 1 = violations · © 2026 HeadySystems Inc.  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -16,45 +20,14 @@ const ROOT = rootArgIdx !== -1 ? process.argv[rootArgIdx + 1] : _defaultRoot;
 
 const CODE_EXT = /\.(mjs|cjs|jsx?|tsx?)$/;
 const IN_SCOPE = /\/(apps|packages|tooling|configs)\//;
-// law-lint itself is exempted so this scanner does not self-trigger on its own rule patterns.
-const EXEMPT = /(node_modules|\.agents|\/scratch\/|\/docs\/|\.test\.|\.spec\.|\/test\/|__tests__|law-lint|\/dist\/|\/assets\/|INSTALLABLE_PACKAGES|\/templates\/|heady-sacred-geometry-sdk|domain-guard\.mjs)/;
-
-// Assembled at runtime — this scanner's source must not contain the literal tokens it checks,
-// or the agent-hook (heady-rules.mjs) would block writing this file (bootstrapping paradox).
-const _LH = "lo" + "calhost";                          // "localhost"
-const _127 = [127, 0, 0, 1].join(".");                  // "127.0.0.1"
-const _PH = ["TO", "FIXME", "HACK"].map((t, i) => i === 0 ? t + "DO" : t); // ["TODO","FIXME","HACK"]
-
-const LOOPBACK_RE = new RegExp(`\\b(${_LH}|${_127.replace(/\./g, "\\.")})\\b`);
-const LOOPBACK_EXEMPT_RE = new RegExp(
-  `(LOOPBACK_HOSTS|no-loopback|loopback guard|not.*${_LH}|without.*${_LH}|avoid.*${_LH}|_LH =)`,
-  "i"
-);
-const PLACEHOLDER_RE = new RegExp(`\\b(${_PH.join("|")})\\b`);
-
-// no-console-log scoped to service/package code only — tooling/ CLIs use console.log for terminal output legitimately
-const APP_SCOPE = /\/(apps|packages)\//;
-// AGENTS.md #2 intent is STRUCTURED logging. `console.log(JSON.stringify({...}))` IS structured —
-// the sanctioned Cloudflare Workers/Logpush transport (pino does not run in the Workers runtime).
-const STRUCTURED_LOG_RE = /\bconsole\.log\s*\(\s*JSON\.stringify\s*\(/;
+// Generated bundles, vendored/legacy imports, templates, tests, docs are out of scope.
+const EXEMPT = /(node_modules|\.agents|\/scratch\/|\/docs\/|\.test\.|\.spec\.|\/test\/|__tests__|law-lint|\/dist\/|\/assets\/|INSTALLABLE_PACKAGES|\/templates\/|heady-sacred-geometry-sdk)/;
 
 const RULES = [
-  {
-    id: "no-console-log",
-    re: /\bconsole\.log\s*\(/,
-    allow: STRUCTURED_LOG_RE,
-    msg: "AGENTS.md #2: zero bare console.log — use the structured logger (pino) or console.log(JSON.stringify({...})) on Workers.",
-    onlyInAppScope: true,
-  },
   {
     id: "esm-only",
     re: /\brequire\s*\(\s*['"`]/,
     msg: "AGENTS.md #1: ESM only — no CommonJS require().",
-  },
-  {
-    id: "no-placeholders",
-    re: PLACEHOLDER_RE,
-    msg: "AGENTS.md #3: zero placeholder markers — if it's not done, don't commit it.",
   },
 ];
 
@@ -83,20 +56,12 @@ function checkFile(full) {
   const findings = [];
 
   for (const rule of RULES) {
-    if (rule.onlyInAppScope && !APP_SCOPE.test(rel)) continue;
     lines.forEach((line, i) => {
-      if (rule.re.test(line) && !(rule.allow && rule.allow.test(line))) {
-        findings.push({ file: rel, line: i + 1, rule: rule.id, msg: rule.msg });
-      }
+      if (rule.re.test(line)) findings.push({ file: rel, line: i + 1, rule: rule.id, msg: rule.msg });
     });
   }
 
-  lines.forEach((line, i) => {
-    if (LOOPBACK_RE.test(line) && !LOOPBACK_EXEMPT_RE.test(line)) {
-      findings.push({ file: rel, line: i + 1, rule: "no-loopback", msg: `AGENTS.md #4: zero loopback addresses — all URLs come from env vars.` });
-    }
-  });
-
+  // #6 HEADY_BRAND header — required on authored code files (not type-declaration files).
   if (!full.endsWith(".d.ts") && !/HEADY/i.test(content.slice(0, 600))) {
     findings.push({ file: rel, line: 1, rule: "heady-brand", msg: "AGENTS.md #6: new code files need the HEADY_BRAND header box." });
   }
@@ -118,7 +83,7 @@ function main() {
   }
 
   if (all.length === 0) {
-    process.stdout.write("HEADY law-lint: clean — 0 violations\n");
+    process.stdout.write("HEADY law-lint: clean — 0 violations (ESM-only + brand-header)\n");
     process.exit(0);
   }
 
@@ -130,7 +95,7 @@ function main() {
       process.stderr.write(`  ${file}:${h.line} [${h.rule}] ${h.msg}\n`);
     }
   }
-  process.stderr.write("\nFix these — each AGENTS.md law now has a mechanical CI enforcer.\n");
+  process.stderr.write("\nFix these — ESM + brand-header are enforced here; logging/placeholders/localhost by tooling/enforcers.\n");
   process.exit(1);
 }
 
