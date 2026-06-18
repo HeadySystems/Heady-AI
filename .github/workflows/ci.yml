@@ -92,6 +92,10 @@ jobs:
   governance:
     name: governance gate (laws enforced from day one)
     runs-on: ubuntu-latest
+    # Map the license secret to a job-level env var so the gitleaks step's `if:` can read it.
+    # (The `secrets` context is NOT available in a step-level `if:` — `env` is the reliable path.)
+    env:
+      GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
     steps:
       # Full history so the enforcers can diff the PR against its base (compliant
       # day one: new code is held to the Unbreakable Laws without retroactively
@@ -109,11 +113,11 @@ jobs:
       # degrades gracefully (skipped, not failed) until then. Set the GITLEAKS_LICENSE repo
       # secret to activate it. (Renovate digest-pins this action.)
       - name: secret-leak (gitleaks)
-        if: ${{ secrets.GITLEAKS_LICENSE != '' }}
+        if: ${{ env.GITLEAKS_LICENSE != '' }}
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+          GITLEAKS_LICENSE: ${{ env.GITLEAKS_LICENSE }}
       # Resolve the diff base: the PR base on pull_request, else full-repo scan.
       - name: resolve enforcement scope
         id: scope
