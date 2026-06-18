@@ -47,6 +47,20 @@ const flat = (o, pfx = '') => Object.entries(o).flatMap(([k, v]) =>
 
 // ── ground-truth scanners (DERIVE — never hand-authored) ──
 const CANON = ['docs', 'packages', 'tooling', 'configs', 'AGENTS.md', 'SOURCE_OF_TRUTH.md', 'CLAUDE.md', 'CLAUDE_MEMORY.md'];
+// Scalar guards also scan .agents (the skill/workflow source) — previously a blind spot where a
+// wrong canonical number could live in a SKILL.md undetected. .claude/skills is a generated
+// mirror of .agents/skills, so scanning the source is sufficient.
+const SCALAR_SCOPE = [...CANON, '.agents'];
+// Canonical load-bearing scalars: one row per tracked fact → cross-checked against the golden record
+// (facts.yaml) across SCALAR_SCOPE. Add a row to track a new number; no other code changes needed.
+//   factKey: dotted facts.yaml key · find: ERE that co-locates the SUBJECT with the number
+//   extract: JS regex whose group 1 is the asserted number · allow: regex exempting legit context
+const SCALAR_GUARDS = [
+  { id: 'C-hcfp-stages', factKey: 'hcfullpipeline.stage_count', label: 'HCFullPipeline stage count',
+    find: '[0-9]+[ -][Ss]tage[ -]?(DAG )?HCFullPipeline|HCFullPipeline[^.]{0,40}[0-9]+[ -][Ss]tage|HCFP[^.]{0,24}[0-9]+[ -][Ss]tage',
+    extract: /([0-9]+)[ -][Ss]tage/,
+    allow: /legacy|14 top-level|nested|provenance|\bwas\b|superseded|\bv1\b|older|reduced|buildable|Phase-?3|critical path|off-path|claimed|wrongly|incorrect|drift|disagree|sneak|example|stale/i },
+];
 const grep = (ere, paths, extraAllow) => {
   try {
     // `drupal` + `superseded-v1` are quarantined legacy/archived surfaces (mirrors
@@ -160,9 +174,24 @@ function check({ facts, pkgs }) {
   // C-fact — prose patent count vs the golden record (cross-source scalar drift)
   const pc = String(F['company.patents_provisional']);
   // allow assignment/provenance prose ("assign 51 provisionals to …") — that is reassignment count, not total
-  for (const l of grep('[0-9]+\\+? provisional', CANON, /implement|fully|HS-051|claims|8 prov|assign|reassign|applicant|never[- ]formed|LLC|501\(c\)|provisionals to|to Heady/i)) {
+  for (const l of grep('[0-9]+\\+? provisional', SCALAR_SCOPE, /implement|fully|HS-051|claims|8 prov|assign|reassign|applicant|never[- ]formed|LLC|501\(c\)|provisionals to|to Heady/i)) {
     const n = l.match(/([0-9]+)\+? provisional/)?.[1];
     if (n && n !== pc && n !== `${pc}`) err('C-patents', `prose patent count (${n}) disagrees with facts.company.patents_provisional (${pc})`, { line: l.slice(0, 140) });
+  }
+
+  // C-scalar — load-bearing canonical SCALARS in prose/skills must match the golden record.
+  // Generalizes C-patents into a table so any tracked fact is a one-line addition. CRITICAL: this
+  // scans SCALAR_SCOPE (= CANON + .agents) so SKILL.md files are checked — they were previously a
+  // blind spot, which is how a wrong HCFullPipeline stage-count slipped into a skill undetected.
+  // Each guard: factKey (golden record), find (ERE, must co-locate the subject with the number),
+  // extract (JS regex → the asserted number), allow (legit provenance/variant context to exempt).
+  for (const g of SCALAR_GUARDS) {
+    const want = String(F[g.factKey]);
+    if (want === 'undefined') { info(g.id, `scalar-guard references missing fact ${g.factKey}`, {}); continue; }
+    for (const l of grep(g.find, SCALAR_SCOPE, g.allow)) {
+      const n = l.match(g.extract)?.[1];
+      if (n && n !== want) err(g.id, `${g.label} (${n}) disagrees with facts.${g.factKey} (${want})`, { line: l.slice(0, 140) });
+    }
   }
 
   // C-dropped — a store facts says is DROPPED must not appear as an active dependency/connector.

@@ -1,17 +1,18 @@
 # 03 — HCFullPipeline, Nodes & Execution Protocols
 
-> The 22-stage orchestration DAG, the 21 service nodes it runs across, and the loops/protocols that wrap
+> The 21-stage orchestration DAG, the 21 service nodes it runs across, and the loops/protocols that wrap
 > every task. **What · Why · How · When · Where · Disposition.**
 
 ---
 
-## P1. HCFullPipeline v9.0 — the 22-stage DAG
+## P1. HCFullPipeline — the 21-stage DAG (fib(8)=21)
 
-**What.** The end-to-end autonomous orchestration: a request enters and passes through 22 stages whose
-execution order is a **data-dependency DAG** (stages fire when their inputs are ready, not by priority).
+**What.** The end-to-end autonomous orchestration: a request enters and passes through **21 stages**
+(0–20, CHANNEL_ENTRY → RECEIPT, φ-anchored to fib(8)=21) whose execution order is a
+**data-dependency DAG** (stages fire when their inputs are ready, not by priority).
 **Why.** A single, auditable, replayable execution spine where competition (Arena), simulation
 (Monte-Carlo), judging, approval, verification, and self-improvement are explicit stages — not ad-hoc.
-**How.** Stages 00–21; critical path = 16 stages, 6 run off-path in parallel pools. **When.** Every
+**How.** Stages 00–20 (21 total); critical path ≈ 16 stages, the rest run off-path in parallel pools. **When.** Every
 non-trivial task. **Where.** Backed by **durable Cloudflare Workflows** (each stage = `step.do`;
 human-gate = `step.waitForEvent`); fast in-flight distribution may use Redis Streams (best-effort).
 **Disposition:** **canonical as a Workflow DAG** — but V9's "no queues, all fire at once" framing (R7) is
@@ -40,13 +41,16 @@ checkpointing — only externally-visible-state-mutating steps are checkpointed.
 | 17 | OPTIMIZATION_OPS | dead-code detection, CSL ROI ranking | — |
 | 18 | CONTINUOUS_SEARCH | new tools, research, security advisories | — |
 | 19 | EVOLUTION | controlled mutation: mutate→simulate→measure→promote | gated |
-| 20 | RECEIPT | audit log + wisdom.json (ML-DSA/Ed25519 signed) | trust receipt (`06-G5`) |
-| 21 | DISTILL | trace → optimized recipe (DSPy MIPROv2/GEPA; Voyager skill synth) | recipe stored (`07-T7`) |
+| 20 | RECEIPT | audit log + wisdom.json (ML-DSA/Ed25519 signed); incl. trace distillation → optimized recipe (DSPy MIPROv2/GEPA; Voyager skill synth) | trust receipt (`06-G5`) / recipe stored (`07-T7`) |
+
+> **Stage count = 21 (fib(8)), terminal = RECEIPT.** DISTILL (recipe synthesis) is folded into RECEIPT,
+> not a separate 22nd stage — an earlier draft numbered 00–21 and listed DISTILL separately, an
+> off-by-one. Canonical authority: `.agents/context/HEADY_SUPER_PROMPT_v5.md` §6 + facts.yaml `hcfullpipeline.stage_count`.
 
 **Parallel pools:** A {RECON∥INTAKE}, B {TRIAL∥ORCHESTRATE}, C {MONTE_CARLO∥ARENA}, D {SELF_AWARENESS∥
 SELF_CRITIQUE∥MISTAKE}, E {OPTIMIZATION∥CONTINUOUS_SEARCH}.
 
-**Canonical reduction:** the 22 stages are the *designed* loop. The buildable Phase-3 version implements
+**Canonical reduction:** the 21 stages are the *designed* loop. The buildable Phase-3 version implements
 the spine — CLASSIFY→TRIAGE→DECOMPOSE→(ARENA/JUDGE where multi-candidate helps)→APPROVE→EXECUTE→VERIFY→
 RECEIPT→DISTILL — and treats SELF_* / EVOLUTION as the MAPE-K loop (`06-G10`), not inline per-request
 stages, until evidence says otherwise.

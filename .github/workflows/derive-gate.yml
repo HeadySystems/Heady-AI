@@ -1,0 +1,30 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ CI — single-source derive gate                            ║
+# ║  Every <!--heady:inject KEY--> managed region must match the golden ║
+# ║  record (facts.yaml/lexicon.yaml). Fail-closed on any hand-edited   ║
+# ║  drift — the lock that makes the "60-vs-51 patents" / "8-vs-21      ║
+# ║  stages" class of drift impossible. © 2026 HeadySystems — E. Haywood║
+# ╚══════════════════════════════════════════════════════════════════╝
+name: derive-gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  derive:
+    name: managed-region freshness + tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Fail-closed if any managed region diverges from facts.yaml/lexicon.yaml.
+      - name: derive check
+        run: node tooling/heady-derive/src/derive.mjs check
+      - name: derive tests
+        run: node --test tooling/heady-derive/test/derive.test.mjs

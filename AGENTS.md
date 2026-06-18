@@ -24,7 +24,7 @@
 This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Operating System.
 - **Founder:** Eric Haywood
 - **Architecture:** Liquid Architecture v9.0
-- **IP:** 51 provisional patents — treat patent-locked zones with care
+- **IP:** <!--heady:inject facts.company.patents_provisional-->51<!--/heady:inject--> provisional patents — treat patent-locked zones with care
 
 ## Stack
 

@@ -11,7 +11,7 @@
 Two source layers feed every entry:
 - **The vision layer** — `HEADY_SUPER_PROMPT_v9.0.md` (scanned 2026-03-16), the 88KB Architectural
   Blueprint, the 136 `SKILL.md` packs, the `src/bees/` registry, and the dropzone reports. This is the
-  *maximalist designed system*: 24 swarm domains / 197 bees, 22-stage pipeline, 21 nodes, 17 swarms.
+  *maximalist designed system*: 24 swarm domains / 197 bees, 21-stage pipeline, 21 nodes, 17 swarms.
 - **The canonical layer** — `REBUILD_PLAN_V2.md` + ADRs 0001–0018. This is the *reduced, sequenced
   build*: one authority per concern, ≤1 net-new platform per phase, evidence-gated expansion.
 
@@ -35,7 +35,7 @@ Where they diverge, the canonical layer wins and the divergence is recorded in �
 | 00 | `00-INDEX.md` | this index + reconciliation summary | ✅ |
 | 01 | `01-laws-and-constants.md` | 4 Liquid laws · 10 constitutional laws · φ constants · CSL gates + threshold ladder · 7 archetypes · 11 personas | ✅ |
 | 02 | `02-bees-and-swarms.md` | **every bee** (3 taxonomies reconciled) · **every swarm** (17 matrix + 24 domains) · BaseHeadyBee lifecycle · Bee Factory · stigmergy · runtime mapping | ✅ |
-| 03 | `03-pipeline-and-nodes.md` | 22-stage HCFullPipeline · 21 nodes · Socratic loop · scan protocol · 6-layer boot · Monte-Carlo/Arena/Judge | ✅ |
+| 03 | `03-pipeline-and-nodes.md` | 21-stage HCFullPipeline · 21 nodes · Socratic loop · scan protocol · 6-layer boot · Monte-Carlo/Arena/Judge | ✅ |
 | 04 | `04-memory-and-retrieval.md` | 3-tier memory · AutoContext 5-pass · CoALA/Letta/mem0/Zep · pgvector+Vectorize · embedding lock · HeadyFS 3D | ✅ |
 | 05 | `05-model-mesh.md` | Liquid Gateway · CF AI Gateway chokepoint · 9-tier provider mesh · Multi-Model Council/Battle Arena · routing formula | ✅ |
 | 06 | `06-governance.md` | **the full governance system**: laws enforcement · CSL gates · HCP approval + OPA/Rego · projection manifests · consistency engine · MCP security · PQC · agent bootstrap · permission graph/delegation vault · trust receipts | ✅ |
