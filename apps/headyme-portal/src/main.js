@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Portal Shell v3.0.0 — Dual-State Router                   ║
+// ║  HEADY™ Portal Shell v3.0.1 — Dual-State Router                   ║
 // ║  Routes: #onboarding · #admin (rebuild) · #legacy (advisor)        ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
