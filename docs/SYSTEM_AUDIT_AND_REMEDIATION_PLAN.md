@@ -69,6 +69,34 @@ check routes first).
 > ⚠️ Worker deletion is destructive and outward-facing. **None will be deleted without
 > per-worker confirmation and a route check.**
 
+### Consolidation proposal (approved: investigate → propose → eliminate)
+
+**Tooling limitation discovered:** the Cloudflare MCP surface exposes only
+`workers_list` and `workers_get_worker`/`_code` — **no route-listing and no
+worker-delete tool** (delete exists only for D1/KV/R2/Hyperdrive). `get_worker` returns
+just `{name, id}`, with no routes/bindings/traffic. Therefore elimination **cannot be
+executed through available automation** and route-safety cannot be MCP-verified. The
+proposal below must be executed via `wrangler delete` / Cloudflare dashboard after a
+route check.
+
+Proposed survivors → retire (after route check):
+- Keep `heady-api-production`; retire `heady-api`.
+- Keep `heady-edge-proxy-production`; retire `heady-edge-proxy`.
+- Keep `liquid-gateway-worker-production`; retire `liquid-gateway-worker`.
+- Routers — keep `heady-edge-router-production` as the canonical edge router; retire
+  `heady-router`, `worker-heady-router`, `heady-intent-router` after folding any unique
+  logic into the survivor (verify with `workers_get_worker_code`).
+- Stale per-domain proxies (`heady-*-proxy`, last-modified 2026-03-18): keep only those
+  still bound to a live DNS route; retire the rest.
+
+`wrangler` retirement template (run after confirming routes):
+```bash
+wrangler delete --name heady-api            # only after routes moved to heady-api-production
+wrangler delete --name heady-router
+wrangler delete --name worker-heady-router
+wrangler delete --name heady-intent-router
+```
+
 ---
 
 ## 4. Repo-level findings
@@ -121,8 +149,14 @@ Full table in `docs/REPO_INVENTORY.md`. Summary:
 | S5 | Consolidate 331 report dumps into one living status doc | medium | **confirm** |
 | S6 | Consolidate duplicate Cloudflare workers; delete stale ones | **high (outward-facing)** | **confirm per item + route check** |
 
-History rewrite to reclaim repo size (e.g. BFG) is **out of scope** without explicit
-sign-off — it is irreversible and breaks every clone/fork.
+**S2–S5 executed** (646 files untracked: 254 zips, 181 docx/pdf, `_downloads/`,
+1 true duplicate, 14 status dumps → `docs/STATUS.md`). Source code untouched.
+
+**S-HIST (history purge): PLANNED, not executed.** Script staged at
+`scripts/history-purge.sh` (dry-run by default; requires `--execute` +
+`HEADY_HISTORY_PURGE_CONFIRM=YES`). It is **irreversible**, rewrites every SHA, and
+requires a coordinated force-push + re-clone by all collaborators. Run only on explicit
+go, ideally during a freeze window.
 
 ---
 
