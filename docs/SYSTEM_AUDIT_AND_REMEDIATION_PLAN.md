@@ -179,9 +179,27 @@ go, ideally during a freeze window.
 - Authored `DEVELOPMENT_FLOW.md`, `HEADY.md`, `AGENT_CONTEXT_PACK.md`,
   `REPO_INVENTORY.md`, and this plan.
 
+## 8a. 🔴 SECURITY FINDING — committed live credentials (partially remediated)
+
+During the file audit, **4 live GCP service-account keys** were found committed at
+`configs/secrets/gen-lang-client-0920560496-*.json` (each contains real
+`"private_key"` material).
+
+- **Done:** `git rm --cached` on all 4 (untracked; local copies retained; path was
+  already in `.gitignore`). Stops further tracking.
+- **MANDATORY follow-up (owner):** the key material remains in **git history** and is
+  therefore compromised. **Rotate these GCP service-account keys immediately** in the
+  Google Cloud console, then purge from history (see `scripts/history-purge.sh`, which
+  already targets these paths via the broader binary purge — extend with
+  `--path configs/secrets` if running). Mirror the untrack to `Heady-Staging`.
+- **Not secrets (verified, left tracked):** `*/designs/**/design_*.pem` and
+  `docs/cloudflare-credentials.md` contain no private-key material.
+
 ## 9. Decisions required from owner
 
-1. Approve destructive stages **S2–S5** (file untracking/deletion in `heady-ai`)?
-2. Approve worker consolidation **S6**, and which router is the survivor?
+1. **Rotate the 4 exposed GCP service-account keys NOW** (history exposure).
+2. Approve worker consolidation **S6** — note the code-review finding: routers are not
+   safely interchangeable; `heady-intent-router` must be kept.
 3. Confirm `Heady-Main` (HeadySystems) production role before any change.
 4. Confirm `Heady-Main-ddb9351d` backs no live deploy → then hard-archive on GitHub.
+5. Authorize the irreversible **S-HIST** history purge (run during a freeze window).
