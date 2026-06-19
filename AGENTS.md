@@ -98,6 +98,26 @@ Agents **must** invoke these tools on specific execution triggers:
 * **WASM WebContainer Sandbox:** Optional. Used strictly for running client-side previews of AI-generated widgets in-browser.
 * **Integration Connectors (Slack, Cloudflare Pages, etc.):** Optional. Invoked selectively based on targeted distribution workflows.
 
+## Self-Extension & Agent Persistence
+
+**Commands & skills auto-sync (every agent benefits, no manual step).** Automated flows live in
+`.agents/workflows/*.md` and skills in `.agents/skills/*/SKILL.md`. They are mirrored to the
+agent-discoverable surface automatically:
+* `.agents/workflows/*` → `.claude/commands/*` (relative symlinks) via `tooling/skill-registry/sync-workflows.mjs`.
+* `.agents/skills/*` → `.claude/skills/*` via `tooling/skill-registry/register.mjs`.
+* The `SessionStart` + `PostToolUse` hook `.claude/hooks/sync-commands.mjs` runs these automatically,
+  so **a newly created workflow/skill becomes a `/heady-*` shortcut the moment it is written** — no
+  manual sync. The `governance-gate workflow-sync` check fails CI if the surfaces ever drift.
+* When you add a workflow or skill, you do **not** need to hand-create its command; just author the
+  source file. To verify: `node tooling/skill-registry/sync-workflows.mjs --check`.
+
+**Self-modifying persistence requires explicit human approval.** An agent may NOT silently install
+anything that auto-executes or persists across sessions — git hooks, `SessionStart`/`PostToolUse`
+hooks, cron/scheduled jobs, daemons, shell-profile edits, or changes to `.claude/settings.json`
+itself. These are powerful, durable surfaces. Propose them, explain the blast radius, and get a
+human's explicit OK first (the safety classifier enforces this; do not route around it). "It was
+useful to me" is never sufficient authorization on its own.
+
 ## Patent Lock Zones
 
 Files marked with `⚠️ PATENT LOCK` require ARBITER swarm review before modification.
