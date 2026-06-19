@@ -74,7 +74,9 @@ repo state and runs at the default level (**L2**).
 5. VERIFY   → prove each leg (tests, health checks, coherence/eval gate) before moving on
 6. GATE?    → at a human-only step (classifier/IAM/credential/prod) → record it, keep going on the rest
 7. CLOSE    → unless --no-sync: heady-sync (commit → push → sync) + HeadyLens log of what changed
-8. REPORT   → 3 buckets: ✅ done & verified · ⚖️ decisions made · 🔒 human-gated steps left
+8. HANDOFF  → run /heady-handoff: emit a verified since-last-run bundle so the next agent is fully
+              up to speed (skipped under --dry-run / --no-sync)
+9. REPORT   → 3 buckets: ✅ done & verified · ⚖️ decisions made · 🔒 human-gated steps left
 ```
 
 Autopilot iterates 2–7 until the goal's acceptance conditions hold or only human-gated steps remain.
@@ -98,6 +100,10 @@ Unless `--dry-run` or `--no-sync`:
 2. Surgical commit of the autopilot's own changes with a message summarizing the legs completed.
 3. Push + `bash scripts/heady-sync.sh` to reconcile local/remote.
 4. HeadyLens entry: a time-ordered, redacted record of the route taken, skills invoked, and outcomes.
+5. **Handoff** — run `/heady-handoff` (`node tooling/handoff/src/handoff.mjs`): emits a verified,
+   since-last-run catch-up bundle (`docs/handoff/HANDOFF-*.md`) and advances the checkpoint, so the
+   next agent — or the next autopilot run — starts fully up to speed. Reports red gates; never blocks
+   the close-out on them.
 
 ## Configuration
 
