@@ -79,6 +79,39 @@ function verdictGlyph(ok) {
   return ok ? "✓" : "✗";
 }
 
+/** Extract repo-relative file paths cited in a gate's detail (enforcer JSON, or path:line). */
+export function extractFiles(detail) {
+  if (!detail) return [];
+  const files = new Set();
+  for (const m of detail.match(/"file"\s*:\s*"([^"]+)"/g) ?? []) {
+    const f = /"file"\s*:\s*"([^"]+)"/.exec(m);
+    if (f) files.add(f[1]);
+  }
+  for (const m of detail.match(/\/?[\w.\-/]+\.\w+:\d+/g) ?? []) files.add(m.split(":")[0]);
+  return [...files].map((f) => f.replace(/^\//, ""));
+}
+
+/**
+ * Classify a failing gate by whether the files it cites are uncommitted (likely transient local
+ * churn from parallel writers) or committed (a real issue). dirtySet = Set of repo-relative paths.
+ * → "committed" | "dirty" | "mixed" | "unknown"
+ */
+export function classifyScope(detail, dirtySet) {
+  const files = extractFiles(detail);
+  if (files.length === 0) return "unknown";
+  const dirty = files.filter((f) => dirtySet.has(f)).length;
+  if (dirty === files.length) return "dirty";
+  if (dirty > 0) return "mixed";
+  return "committed";
+}
+
+const SCOPE_LABEL = {
+  committed: "committed — real",
+  dirty: "dirty-tree — transient",
+  mixed: "mixed (some uncommitted)",
+  unknown: "unattributed",
+};
+
 /**
  * Render the full agent-readable handoff bundle (markdown).
  * @param {object} b
@@ -113,6 +146,15 @@ export function renderBundle(b) {
       `${allGreen ? "" : "  ⚠️ see §4 for failures"}`
   );
   if ((b.uncommitted ?? []).length) out.push(`- **Uncommitted in tree:** ${b.uncommitted.length} file(s) (§6)`);
+  if ((b.uncommitted ?? []).length) {
+    out.push(
+      `- **Tree state:** ⚠️ DIRTY — gates ran against the working tree, which has uncommitted edits ` +
+        `(this repo has many parallel autonomous writers). Red gates tagged \`dirty-tree\` cite uncommitted ` +
+        `files and are likely transient local churn, **not** committed issues — cross-check against \`origin/${b.branch ?? "rebuild"}\`.`
+    );
+  } else {
+    out.push(`- **Tree state:** clean — verification reflects committed state.`);
+  }
   out.push("");
 
   // 2. Commits
@@ -149,10 +191,11 @@ export function renderBundle(b) {
   // 4. Verification
   out.push("## 4. Verification results");
   out.push("");
-  out.push("| Gate | Status | Detail |");
-  out.push("|------|--------|--------|");
+  out.push("| Gate | Status | Scope | Detail |");
+  out.push("|------|--------|-------|--------|");
   for (const v of b.verification ?? []) {
-    out.push(`| ${v.name} | ${v.ok ? "PASS ✓" : "FAIL ✗"} | ${(v.detail ?? "").replace(/\|/g, "\\|").slice(0, 160)} |`);
+    const scope = v.ok ? "—" : (SCOPE_LABEL[v.scope] ?? "unattributed");
+    out.push(`| ${v.name} | ${v.ok ? "PASS ✓" : "FAIL ✗"} | ${scope} | ${(v.detail ?? "").replace(/\|/g, "\\|").slice(0, 140)} |`);
   }
   out.push("");
 
@@ -168,11 +211,25 @@ export function renderBundle(b) {
   out.push("## 6. Open threads / not-done");
   out.push("");
   const failed = (b.verification ?? []).filter((v) => !v.ok);
+  const transient = failed.filter((v) => v.scope === "dirty");
+  const real = failed.filter((v) => v.scope !== "dirty"); // committed/mixed/unknown/unset → attention
   if (failed.length === 0 && (b.uncommitted ?? []).length === 0) {
     out.push("_All gates green; working tree clean at handoff time._");
   } else {
-    for (const v of failed) out.push(`- ⚠️ Gate **${v.name}** is failing — ${(v.detail ?? "").slice(0, 200)}`);
-    for (const u of b.uncommitted ?? []) out.push(`- Uncommitted: \`${u}\``);
+    if (real.length) {
+      out.push("**Needs attention (committed / real):**");
+      for (const v of real) out.push(`- ⚠️ Gate **${v.name}** failing — ${(v.detail ?? "").slice(0, 180)}`);
+      out.push("");
+    }
+    if (transient.length) {
+      out.push("**Likely transient (dirty-tree — uncommitted local churn; verify against origin before acting):**");
+      for (const v of transient) out.push(`- ◐ Gate **${v.name}** cites uncommitted file(s) — ${(v.detail ?? "").slice(0, 140)}`);
+      out.push("");
+    }
+    if ((b.uncommitted ?? []).length) {
+      out.push("**Uncommitted files:**");
+      for (const u of b.uncommitted) out.push(`- \`${u}\``);
+    }
   }
   out.push("");
 

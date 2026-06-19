@@ -19,7 +19,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 import {
-  loadCheckpoint, nextCheckpoint, parseNameStatus, parseCommits, renderBundle, FIELD_SEP,
+  loadCheckpoint, nextCheckpoint, parseNameStatus, parseCommits, renderBundle, classifyScope, FIELD_SEP,
 } from "./core.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -81,7 +81,10 @@ function main() {
   const uncommitted = git(["status", "--porcelain"]).out
     .split("\n").map((l) => l.slice(3).trim()).filter(Boolean);
 
-  // Verification — resilient: each gate captured, never aborts the handoff.
+  // Verification — resilient: each gate captured, never aborts the handoff. Each FAILING gate is
+  // classified committed (real) vs dirty-tree (cites an uncommitted file -> likely transient local
+  // churn from the many parallel writers in this repo).
+  const dirtySet = new Set(uncommitted);
   let verification = [];
   if (!flag("--no-verify")) {
     verification = [
@@ -91,7 +94,7 @@ function main() {
       runGate("glass-box", [ENFORCER("glass-box"), "--all"]),
       runGate("secret-scan", [ENFORCER("secret-scan"), "--all"]),
       runGate("coherence", ["tooling/coherence/src/coherence.mjs", "all"]),
-    ];
+    ].map((v) => (v.ok ? v : { ...v, scope: classifyScope(v.detail, dirtySet) }));
   }
 
   const contextCandidates = [

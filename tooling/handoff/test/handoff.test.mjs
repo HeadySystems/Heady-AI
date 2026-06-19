@@ -65,7 +65,7 @@ test("renderBundle produces all 7 sections and reflects verification", () => {
     assert.ok(md.includes(h), `missing section: ${h}`);
   }
   assert.ok(md.includes("packages/new.mjs"), "lists added file");
-  assert.ok(md.includes("coherence** is failing"), "surfaces failing gate in open threads");
+  assert.ok(md.includes("coherence** failing"), "surfaces failing gate in open threads");
   assert.ok(md.includes("wip.mjs"), "surfaces uncommitted file");
   assert.ok(md.includes("deadbee"), "shows new checkpoint head");
 });
@@ -76,4 +76,39 @@ test("renderBundle marks first-run baseline", () => {
     commits: [], files: [], verification: [], contextFiles: [], uncommitted: [],
   });
   assert.ok(md.includes("first run") || md.includes("baseline"), "notes baseline on first run");
+});
+
+test("extractFiles pulls paths from enforcer JSON and path:line forms", async () => {
+  const { extractFiles } = await import("../src/core.mjs");
+  const a = extractFiles('{"enforcer":"glass-box","file":"apps/x/index.ts","line":92}');
+  assert.ok(a.includes("apps/x/index.ts"));
+  const b = extractFiles("  /tooling/handoff/src/core.mjs:12 [esm-only] msg");
+  assert.ok(b.includes("tooling/handoff/src/core.mjs"));
+  assert.deepEqual(extractFiles("no files here"), []);
+});
+
+test("classifyScope distinguishes dirty-tree from committed failures", async () => {
+  const { classifyScope } = await import("../src/core.mjs");
+  const dirty = new Set(["facts.yaml", "apps/x/index.ts"]);
+  assert.equal(classifyScope('{"file":"facts.yaml"}', dirty), "dirty");
+  assert.equal(classifyScope('{"file":"packages/committed.mjs"}', dirty), "committed");
+  assert.equal(classifyScope('{"file":"facts.yaml"} and {"file":"packages/c.mjs"}', dirty), "mixed");
+  assert.equal(classifyScope("no path cited", dirty), "unknown");
+});
+
+test("renderBundle separates dirty-tree (transient) from committed failures", async () => {
+  const { renderBundle } = await import("../src/core.mjs");
+  const md = renderBundle({
+    nowIso: "t", head: "h", headShort: "h", branch: "rebuild", firstRun: false, sinceShort: "s",
+    commits: [], files: [], contextFiles: [], uncommitted: ["facts.yaml"],
+    verification: [
+      { name: "coherence", ok: false, scope: "dirty", detail: '{"file":"facts.yaml"}' },
+      { name: "law-lint", ok: false, scope: "committed", detail: "packages/x.mjs:1 bad" },
+      { name: "governance", ok: true, detail: "ok" },
+    ],
+  });
+  assert.ok(md.includes("Tree state:** ⚠️ DIRTY"), "flags dirty tree in TL;DR");
+  assert.ok(md.includes("Needs attention (committed / real)"), "real bucket present");
+  assert.ok(md.includes("Likely transient (dirty-tree"), "transient bucket present");
+  assert.ok(/coherence\*\* cites uncommitted/.test(md), "coherence is in transient bucket");
 });
