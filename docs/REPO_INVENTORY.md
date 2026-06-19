@@ -42,3 +42,15 @@ repo-update/archive API is exposed). To archive a repo:
 
 Agents may apply a **soft-archive banner** (README notice + `ARCHIVED.md`) on request
 to signal intent before the GitHub switch is flipped.
+
+### Archived-repo agent stop-notice (standard)
+
+Every soft-archived repo MUST carry an **agent-facing stop-notice** at the top of the
+files agents boot from — `CLAUDE.md` and `AGENTS.md` (create them if absent) — stating:
+
+> ⛔ ARCHIVED. The only legitimate reason to be here is to retrieve archived/historical
+> information. Do not develop, build, deploy, or commit. Source of truth:
+> `HeadySystems/heady-ai`. If your task is to create or change anything, you are in the
+> wrong repo — stop and switch.
+
+This guarantees an agent that lands in an archived repo is told to leave before it acts.
