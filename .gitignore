@@ -186,3 +186,11 @@ secrets_registry.json
 # ── Loose credential files ─────────────────────────────
 !package-lock.json
 auth-service/node_modules/
+
+# Audit S5: generated status reports are local outputs, not source
+FINALIZATION-REPORT.md
+AUTO_DEPLOY_STATUS.md
+SYNC_STATUS_REPORT.md
+deployment-status.*
+deployment-complete.txt
+failed_test_summary.txt
