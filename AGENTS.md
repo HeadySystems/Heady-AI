@@ -111,12 +111,21 @@ agent-discoverable surface automatically:
 * When you add a workflow or skill, you do **not** need to hand-create its command; just author the
   source file. To verify: `node tooling/skill-registry/sync-workflows.mjs --check`.
 
-**Self-modifying persistence requires explicit human approval.** An agent may NOT silently install
-anything that auto-executes or persists across sessions — git hooks, `SessionStart`/`PostToolUse`
-hooks, cron/scheduled jobs, daemons, shell-profile edits, or changes to `.claude/settings.json`
-itself. These are powerful, durable surfaces. Propose them, explain the blast radius, and get a
-human's explicit OK first (the safety classifier enforces this; do not route around it). "It was
-useful to me" is never sufficient authorization on its own.
+**Self-installed persistence — founder standing approval (granted 2026-06-19), with limits.**
+Eric (founder) has granted **standing approval** for agents to self-install useful persistence —
+git hooks, `SessionStart`/`PostToolUse` hooks, cron/scheduled jobs, daemons, and `.claude/settings.json`
+hook wiring — when it is genuinely beneficial to the system. You do **not** need to ask first for each
+one. This is what makes Heady self-extending (e.g. the `sync-commands.mjs` auto-sync hook).
+
+Standing approval is **not** a blank check — these non-negotiables hold regardless:
+1. **Transparent:** announce what you installed, where, and its blast radius in your response — never silent.
+2. **Reversible & non-destructive:** no data loss, no irreversible side effects; an installed surface must be cleanly removable. Destructive ops still require explicit per-action confirmation.
+3. **Fail-open:** an auto-executing hook must never block/break a session on its own error (exit 0 on failure).
+4. **Secret-safe:** never embed credentials; nothing that exfiltrates or weakens the security posture.
+5. **Out of scope of this grant:** disabling/weakening the safety guardrails themselves (the rule hooks, gates, secret scan, patent-lock/ARBITER) or the harness safety classifier. Those still require a fresh, explicit OK.
+
+Note: the **harness safety classifier is independent of this file** and may still prompt for a given
+install — that's expected; satisfy it, don't route around it.
 
 ## Patent Lock Zones
 
