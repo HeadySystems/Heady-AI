@@ -1,0 +1,15 @@
+{
+  "name": "@heady/service-registry",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reconciler + query API over configs/service-providers.yaml — the SoT for every external service. Cross-links the secrets registry; backs the heady_subscriptions MCP tool.",
+  "bin": { "heady-services": "src/service-registry.mjs" },
+  "exports": { ".": "./src/service-registry.mjs" },
+  "dependencies": { "yaml": "^2.6.0", "@heady/secrets": "workspace:*" },
+  "scripts": {
+    "test": "node --test test/service-registry.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  }
+}

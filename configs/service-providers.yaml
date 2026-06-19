@@ -1,0 +1,256 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Service Provider Registry — the single source of truth for ║
+# ║  every external service the org pays for or depends on.            ║
+# ║  Curated SoT (this file) + auto-discovery (Gmail "Subscription     ║
+# ║  Radar") reconcile against each other — a charge with no entry, or ║
+# ║  an entry with no recent charge, is a coherence finding.           ║
+# ║  Cross-links packages/secrets/src/registry.mjs via `secrets:`.     ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# NO SECRET VALUES here — only the secret NAMES each provider consumes (the values
+# live in GCP Secret Manager / the secrets registry). `status` and `cost` are seeded
+# from a 2026-06-18 Gmail scan and are advisory until the Radar reconciler verifies them.
+#
+# schema:
+#   id           kebab-case unique key
+#   category     db | cloud | edge | ai | hosting | productivity | comms | vcs | analytics | payments | secrets
+#   entity       which legal entity pays (HeadySystems = for-profit · HeadyConnection = 501c3)
+#   plan         human label
+#   cost         { amount, currency, cadence }   (null where unknown)
+#   status       active | failing | suspended | canceled | trial | exposed | unknown
+#   criticality  production | useful | trial | cancel-candidate
+#   secrets      [SECRET_NAME...] cross-ref to packages/secrets/src/registry.mjs
+#   discount     { program, state }              (nonprofit etc.)
+#   notes        free text
+
+schema: service-providers.v1
+generated_from: gmail-scan-2026-06-18
+reconciler: tooling/service-registry  # (to build) — verifies this against the Subscription Radar
+
+# ─── SECURITY INCIDENT (open) ───────────────────────────────────────
+security_incidents:
+  - id: SEC-002-neon-public-exposure
+    opened: 2026-06-17
+    severity: critical
+    summary: >
+      Live PRODUCTION Neon connection string (neondb_owner@ep-cold-snow-aesmiwt9...us-east-2)
+      hardcoded in HeadySystems/Heady-Main/.github/workflows/fix-gcp-secrets.yml on a PUBLIC
+      repo since ~2026-04-05. Detected by GitHub secret-scanning → Neon alert (Jun 17 + Jun 19).
+    blast_radius: "13 public org repos; 30 secret-scanning alerts on Heady-Main alone"
+    assume_compromised: true   # public ~10 weeks → assume the DB password was readable by anyone
+    remediation:
+      - "ROTATE Neon password NOW (console → project → Connect → Reset password) — human-gated, destructive to live app"
+      - "Audit Neon/Databricks access logs for unauthorized connections during exposure window"
+      - "Make legacy mirror repos PRIVATE or delete (Heady-Main/Testing/Staging/Ecosystem/sandbox...)"
+      - "Enable GitHub push protection + secret scanning (blocks future inline-secret commits)"
+      - "Triage the other 29 Heady-Main alerts + sweep the remaining 12 public repos"
+      - "Replace inline secrets in workflows with ${{ secrets.* }} references"
+    related: [SEC-001, sec-001-containment, colab-neon-live-key]
+
+providers:
+  # ── PRODUCTION (fix-first; failure = outage) ──────────────────────
+  - id: neon
+    category: db
+    entity: HeadyConnection
+    plan: Postgres (retrieval authority, ADR-0003)
+    cost: { amount: null, currency: USD, cadence: usage }
+    status: exposed
+    criticality: production
+    secrets: [DATABASE_URL, NEON_API_KEY, NEON_PROJECT_ID]
+    notes: "SEC-002 — credential exposed in public repo; ROTATE + audit. ep-cold-snow-aesmiwt9, us-east-2."
+  - id: cloudflare
+    category: edge
+    entity: HeadyConnection
+    plan: Workers / DNS / SSL (heady-ai.com, headybuddy.org, headyconnection.org)
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: active
+    criticality: production
+    secrets: [CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_EMAIL]
+  - id: gcp
+    category: cloud
+    entity: HeadyConnection
+    plan: Cloud Run / Firebase / Secret Manager / APIs
+    cost: { amount: null, currency: USD, cadence: usage }
+    status: failing
+    criticality: production
+    secrets: [GOOGLE_API_KEY, FIREBASE_API_KEY]
+    notes: "Billing acct 01BD26-CDBFFA-872518 SUSPENDED (card declined); a second acct active (payments $100/$13.89/$0.54 seen)."
+  - id: upstash
+    category: cache
+    entity: HeadyConnection
+    plan: Redis (REST hot tier)
+    cost: { amount: null, currency: USD, cadence: usage }
+    status: active
+    criticality: production
+    secrets: [UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN]
+  - id: vercel
+    category: hosting
+    entity: HeadyConnection
+    plan: Team "Heady"
+    cost: { amount: 41.76, currency: USD, cadence: monthly }   # also a $31.31 line; you HAVE paid some (receipts #2281-6579, #2682-2613)
+    status: failing
+    criticality: production
+    secrets: []
+    notes: "Mixed: paid invoices AND repeated failed charges (card 5245). Two amounts → possibly 2 projects/teams."
+  - id: anthropic
+    category: ai
+    entity: HeadyConnection
+    plan: Claude Team
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: active
+    criticality: production
+    secrets: [ANTHROPIC_API_KEY, ANTHROPIC_API_KEY2, ANTHROPIC_API_KEY3, ANTHROPIC_ORG_ID]
+    discount: { program: nonprofit, state: approved-apply-it }  # "Claude for Nonprofits" approved Jun 11
+
+  # ── USEFUL (fix or decide) ────────────────────────────────────────
+  - id: google-workspace-headyconnection
+    category: productivity
+    entity: HeadyConnection
+    plan: Workspace Enterprise Standard
+    cost: { amount: 140.25, currency: USD, cadence: monthly }
+    status: active
+    criticality: useful
+    secrets: []
+  - id: google-workspace-headysystems
+    category: productivity
+    entity: HeadySystems
+    plan: Workspace Business Plus
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: suspended
+    criticality: useful
+    secrets: []
+    notes: "Overdue/suspended — no payment method. Consolidation candidate with the headyconnection.org tenant."
+  - id: github
+    category: vcs
+    entity: HeadySystems
+    plan: paid + Enterprise trial (expires 2026-07-18)
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: failing
+    criticality: useful
+    secrets: [GITHUB_TOKEN]
+    discount: { program: nonprofit, state: candidate }  # via HeadyConnection 501c3 (see ORG layout)
+    notes: "Billing failure on paid plan; Advanced Security (push protection) would block the SEC-002 class of leak."
+  - id: openai
+    category: ai
+    entity: HeadyConnection
+    plan: ChatGPT Business
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: active
+    criticality: useful
+    secrets: [OPENAI_API_KEY]
+    discount: { program: nonprofit, state: approved-apply-it }  # approved Jun 11
+  - id: microsoft
+    category: productivity
+    entity: HeadyConnection
+    plan: "M365/Azure (invoices G156931057, G163323651, G151596061)"
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: failing
+    criticality: useful
+    secrets: []
+    notes: "Card declined repeatedly — insufficient funds, since ~May."
+  - id: slack
+    category: comms
+    entity: HeadyConnection
+    plan: Business+ (1 active user, heady-ai.slack.com)
+    cost: { amount: 9.00, currency: USD, cadence: monthly }
+    status: failing
+    criticality: useful
+    secrets: []
+    notes: "Renewed 4/25 then failing since 5/25."
+  - id: notion
+    category: productivity
+    entity: HeadyConnection
+    plan: paid
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: failing
+    criticality: useful
+    secrets: []
+    notes: "Payment failing since ~April; downgrade threatened."
+
+  # ── CANCEL CANDIDATES ─────────────────────────────────────────────
+  - id: google-voice
+    category: comms
+    entity: HeadyConnection
+    plan: Voice Starter
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: suspended
+    criticality: cancel-candidate
+    secrets: []
+    notes: "Suspended May 4, scheduled for cancellation — decide keep vs let go."
+  - id: looker-studio
+    category: analytics
+    entity: HeadySystems
+    plan: Looker Studio Pro
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: canceled
+    criticality: cancel-candidate
+    secrets: []
+  - id: pinecone
+    category: db
+    entity: HeadyConnection
+    plan: vector DB
+    cost: { amount: null, currency: USD, cadence: monthly }
+    status: unknown
+    criticality: cancel-candidate
+    secrets: [PINECONE_API_KEY]
+    notes: "VESTIGIAL — stack uses Neon pgvector (ADR-0003). Not in architecture; candidate for removal."
+
+  # ── DECLARED IN SECRETS REGISTRY, billing not yet seen in scan ─────
+  - id: groq        # secrets: [GROQ_API_KEY]
+    category: ai
+    entity: HeadyConnection
+    status: unknown
+    criticality: useful
+    secrets: [GROQ_API_KEY]
+  - id: perplexity  # secrets: [PERPLEXITY_API_KEY]
+    category: ai
+    entity: HeadyConnection
+    status: unknown
+    criticality: useful
+    secrets: [PERPLEXITY_API_KEY]
+  - id: huggingface
+    category: ai
+    entity: HeadyConnection
+    status: unknown
+    criticality: useful
+    secrets: [HUGGINGFACE_TOKEN, HF_TOKEN, HEADY_ALLOW_HF_EMBED]
+  - id: sentry
+    category: cloud
+    entity: HeadyConnection
+    status: unknown
+    criticality: useful
+    secrets: [SENTRY_AUTH_TOKEN, SENTRY_DSN, SENTRY_PERSONAL_TOKEN, SENTRY_ORG, SENTRY_PROJECT]
+  - id: stripe
+    category: payments
+    entity: HeadySystems
+    status: unknown
+    criticality: useful
+    secrets: [STRIPE_SECRET_KEY, STRIPE_PUBLIC_KEY]
+    notes: "Heady as MERCHANT (billing customers), not a cost subscription."
+  - id: onepassword
+    category: secrets
+    entity: HeadyConnection
+    status: unknown
+    criticality: useful
+    secrets: [OP_SERVICE_ACCOUNT_TOKEN]
+
+# ─── CROSS-CUTTING FINDINGS (from the scan) ─────────────────────────
+findings:
+  payment_failure_cluster:
+    note: >
+      ONE funding problem cascading across ~7 services (insufficient funds / declined on cards
+      5245, 5124, 1492): vercel, microsoft, slack, notion, google-workspace-headysystems, gcp, github.
+      Fix the funding source once rather than per-service.
+  unapplied_discounts: [anthropic, openai]   # nonprofit approved, apply to cut cost
+  consolidation: ["two Google Workspace tenants (headyconnection.org + headysystems.com)"]
+
+# ─── CONNECTOR CAPABILITIES (the Gmail "Subscription Radar") ────────
+connectors:
+  gmail:
+    purpose: "Discover + reconcile subscriptions/charges; send/draft on Heady's behalf."
+    scopes:
+      read:  gmail.readonly      # discovery (Subscription Radar)
+      write: gmail.compose       # draft + send: cancellation requests, billing follow-ups, digests  ← per founder 2026-06-18
+    status: planned
+    notes: "Write capability requested — Heady drafts/sends (cancellations, payment-fix follow-ups), CSL privileged-gate + confirmation before any send."
