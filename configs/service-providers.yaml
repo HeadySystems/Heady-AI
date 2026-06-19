@@ -235,6 +235,22 @@ providers:
     criticality: useful
     secrets: [OP_SERVICE_ACCOUNT_TOKEN]
 
+  # ── DISCOVERED via SEC-002 secret-scanning sweep (not previously tracked) ──
+  - id: mongodb-atlas
+    category: db
+    entity: HeadyConnection
+    status: exposed
+    criticality: production       # a DB URI was public — treat as production until proven legacy
+    secrets: []                   # ⚠️ undocumented — add MONGODB_URI to the secrets registry once located
+    notes: "SEC-002 — Atlas connection URI (with creds) found public in the mirror repos. A Mongo cluster is in use somewhere (likely legacy). Identify, rotate the DB user, and decide keep vs retire (stack authority is Neon pgvector, ADR-0003)."
+  - id: npm
+    category: vcs
+    entity: HeadySystems
+    status: exposed
+    criticality: useful
+    secrets: []                   # npm access token — not in the secrets registry
+    notes: "SEC-002 — npm access token exposed (publish access = supply-chain risk). Revoke + reissue; add NPM_TOKEN to the registry if CI publishes."
+
 # ─── CROSS-CUTTING FINDINGS (from the scan) ─────────────────────────
 findings:
   payment_failure_cluster:
