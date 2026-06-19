@@ -160,6 +160,14 @@ core.*
 *.zip
 logs/resource-events.jsonl
 
+# ── Audit S1: prevent cruft accumulation (see docs/SYSTEM_AUDIT_AND_REMEDIATION_PLAN.md) ──
+_downloads/
+**/_downloads/
+*.docx
+*.pdf
+*\ (1).*
+*\ (2).*
+
 !.env.example
 !.env.template
 
