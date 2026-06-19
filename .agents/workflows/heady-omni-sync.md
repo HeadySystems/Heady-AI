@@ -38,7 +38,7 @@ In a swarm architecture, when a specialized agent finishes its discrete task, it
 - **Git Pre-Commit Hook:** Run a lightweight scan prior to commits to block semantic drift.
 - **CI/CD Action Hook:** Trigger on push to the `rebuild` branch to run the full scan before deployment.
 
-## The 7-Stage Execution Pipeline
+## The 8-Stage Execution Pipeline
 
 ### Stage 1: Context Acquisition & System Scan (The Eyes)
 *Goal: Detect state changes, map the repo, and identify semantic drift.*
@@ -128,7 +128,19 @@ In a swarm architecture, when a specialized agent finishes its discrete task, it
 4. **Deploy:** 
    Roll out to Cloud Run / Workers with `/heady-deployment`.
 
-### Stage 7: Global Sync & Auto-Commit (The Memory)
+### Stage 7: System Verification & Testing (The Sandbox)
+*Goal: Guarantee system stability and run test suites before finalizing global sync.*
+
+1. **Test Execution:**
+   Execute full suite via `pnpm turbo run test` and capture results.
+2. **Health Probe:**
+   Trigger `/heady-health-watch-swarm` and `/health-check` to verify cross-domain stability.
+3. **Deployment Validation:**
+   Run `/deployment-verification` if Cloud Run/Worker updates were pushed.
+4. **Halt on Failure:**
+   If tests or health checks fail, halt Omni-Sync, log failure, and initiate `/incident-response`.
+
+### Stage 8: Global Sync & Auto-Commit (The Memory)
 *Goal: Push context changes globally, merging vector space and git history.*
 
 1. **Git Operations:** 
@@ -139,4 +151,4 @@ In a swarm architecture, when a specialized agent finishes its discrete task, it
 ---
 
 > [!CAUTION]
-> This workflow initiates a cascading autonomous process that has the potential to modify massive swaths of the codebase. Ensure that `/heady-ide-governed-codeflow` is active if human review is required before Stage 7 executes the final auto-commit.
+> This workflow initiates a cascading autonomous process that has the potential to modify massive swaths of the codebase. Ensure that `/heady-ide-governed-codeflow` is active if human review is required before Stage 8 executes the final auto-commit.
