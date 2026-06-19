@@ -138,6 +138,69 @@ When you need to be precise for engineers, refer to internal dev hosts as manage
 - **Testing:** Jest for Node.js, pytest for Python
 - **Security:** Timing-safe API key validation, no hardcoded secrets, least-privilege access
 
+## DEVELOPMENT FLOW (Canonical)
+
+> **`HeadySystems/heady-ai` is the source of truth for the Heady platform.**
+> The authoritative repo roles, branching model, PR/merge, and promotion rules live in
+> **`docs/DEVELOPMENT_FLOW.md`** — read it before touching any repo. It supersedes the
+> older `docs/REPO_ROLES.md` and `docs/REPO_LANDSCAPE.md`.
+
+- Branch off `heady-ai/main`; never commit directly to `main`.
+- Prefixes: `feature/ fix/ chore/ docs/ release/ hotfix/ spike/ claude/`.
+- Flow: branch → ready-for-review PR → CI + 1 review → merge → promote to
+  `Heady-Staging` → promote to `Heady-Main` (production). Reconcile cross-repo
+  changes **up to source of truth first**, then promote down.
+
+### HEADY.md ⇄ CLAUDE.md Sync Rule (permanent)
+`HEADY.md` (Heady-native agent instructions, root) and this `CLAUDE.md` are **bound
+documents**. Any change to a shared convention — development flow, artifact criteria,
+stop rule, ORS, checkpoint protocol, source-of-truth — MUST be applied to **both files
+in the same change** and verified at every checkpoint. Divergence is a defect under the
+Standing Rule. `HEADY.md` governs all Heady agents; `CLAUDE.md` governs Claude Code.
+
+## ARTIFACT CREATION CRITERIA
+
+> **Standing bias: materialize durable work. Default to building the artifact, not pasting it inline.**
+
+The most common failure mode is *under-production* — leaving a real deliverable
+stranded in chat when it should have been written, committed, and registered.
+When in doubt, build it. "Artifact" spans three senses in this ecosystem; the
+bias applies to all three.
+
+### 1. Repo files & deliverables (primary)
+Write to disk and commit — do **not** leave inline in the conversation — whenever
+the output is **durable, reusable, or iterated on**. Concretely:
+
+- **Length/substance:** roughly **>15 lines** or larger than one screen.
+- **Reuse:** anything that will be edited, run, saved, shared, or referenced again
+  (code modules, configs in `configs/`, scripts, docs, schemas, registries).
+- **Iteration expected:** we'll revise it across turns — a file is a stable edit
+  target; re-pasting is waste.
+- **Self-contained deliverable:** complete component, spec, report, README, YAML
+  config, Mermaid diagram, dataset, or notebook.
+
+Keep inline only: explanations, comparisons, answers to questions, and short
+(<15-line) illustrative snippets that are relevant only in the moment.
+
+When a file artifact is created, follow through per the **Checkpoint Protocol**:
+sync `heady-registry.json`, update referencing docs, and respect `docs/DOC_OWNERS.yaml`.
+
+### 2. Chat-surface artifacts (claude.ai / canvas / Slack canvas)
+In UIs that render side-panel artifacts, promote substantial content (code,
+documents, interactive previews) out of the message body using the same
+length/reuse/iteration thresholds above. For polished frontend/UI deliverables,
+use the `artifact-design` skill rather than sketching inline.
+
+### 3. Build artifacts (HCFullPipeline outputs)
+Compiled bundles, containers, and packages are produced by the `execute-major-phase`
+and finalize stages. Produce them when the **Stop Rule** permits (build aggressively
+when healthy; repair first when not) and the **ORS** thresholds below allow new
+builds. Every build artifact must be registered and observable — no orphaned outputs.
+
+### Decision rule (all senses)
+> If it is substantial, self-contained, and meant to be kept or reused — **build it
+> and persist it**. If it is an explanation or a throwaway snippet — keep it inline.
+
 ## OPERATIONAL READINESS
 
 Operational Readiness Score (ORS) 0–100, computed at each checkpoint:

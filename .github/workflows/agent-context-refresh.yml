@@ -1,0 +1,46 @@
+# HEADY_BRAND:BEGIN
+# FILE: .github/workflows/agent-context-refresh.yml
+# Keeps docs/AGENT_CONTEXT_PACK.md fresh every day for agent bootstrapping.
+# HEADY_BRAND:END
+name: Agent Context Refresh
+
+on:
+  schedule:
+    # Daily at 06:00 UTC — "fresh every day" agent context.
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-context-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Regenerate agent context pack
+        run: node scripts/refresh-agent-context.mjs
+
+      - name: Commit if changed
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain docs/AGENT_CONTEXT_PACK.md)" ]; then
+            git config user.name "heady-context-bot"
+            git config user.email "ops@headyconnection.org"
+            git add docs/AGENT_CONTEXT_PACK.md
+            git commit -m "chore: daily refresh of agent context pack"
+            git push
+          else
+            echo "Agent context pack already current — nothing to commit."
+          fi

@@ -14,6 +14,10 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
+> ⚠️ **SUPERSEDED.** This document is retained for history only. The authoritative
+> repo roles, source-of-truth designation, branching, and promotion rules now live in
+> **`docs/DEVELOPMENT_FLOW.md`**. Where this file disagrees with that one, that one wins.
+
 # Heady™Stack Repository Roles
 
 **Version:** 3.0.1 "Aether"

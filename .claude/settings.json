@@ -7,6 +7,19 @@
       "Agent"
     ]
   },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/heady-sync-check.sh"
+          }
+        ]
+      }
+    ]
+  },
   "agentDefinitions": {
     "heady-orchestrator": {
       "path": ".claude/agents/heady-orchestrator.md",

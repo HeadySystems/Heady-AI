@@ -14,6 +14,10 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
+> ⚠️ **SUPERSEDED.** Retained for history only. Authoritative repo topology and
+> development flow now live in **`docs/DEVELOPMENT_FLOW.md`** (source of truth:
+> `HeadySystems/heady-ai`). Where this file disagrees, `DEVELOPMENT_FLOW.md` wins.
+
 # Repo Landscape
 
 ## Active core references
