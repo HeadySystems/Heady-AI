@@ -1,0 +1,25 @@
+{
+  "name": "@heady-ai/heady-mcp-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "headymcp.com/mcp — the single multiplexed MCP gateway fronting all Heady services (memory, governance, orchestration, recommendation, autocontext). Spec-compliant Streamable-HTTP MCP server on Cloud Run, Firebase-authed, billing-aware.",
+  "main": "src/index.mjs",
+  "scripts": {
+    "start": "node src/index.mjs",
+    "dev": "node --watch src/index.mjs",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/logger": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/studio-registry": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "express": "^4.21.2",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

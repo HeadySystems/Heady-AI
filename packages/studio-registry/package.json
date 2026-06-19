@@ -1,0 +1,21 @@
+{
+  "name": "@heady/studio-registry",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady Studio source-of-truth registry — the data-driven catalog of models, modes, effort tiers, execution modes, skills, workflows, Heady services, external MCP servers, and billing-aware feature flags. Both the MCP gateway and the SPA render from this one manifest.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "keywords": ["heady", "studio", "mcp", "registry", "catalog", "billing", "manifest"]
+}

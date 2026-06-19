@@ -1,0 +1,21 @@
+{
+  "name": "@heady-ai/heady-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady Studio — a Claude-Code-style MCP host. Logs in, connects repos and MCP servers (Heady's via headymcp.com/mcp + external via /mcp), switches models, toggles Heady services, and runs skills/workflows. Registry-driven so options drop in without UI changes.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"(SPA covered by Playwright at repo level)\""
+  },
+  "dependencies": {
+    "@heady/studio-registry": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "firebase": "^12.14.0"
+  },
+  "devDependencies": {
+    "vite": "^8.0.12"
+  }
+}
