@@ -89,7 +89,18 @@ Proposed survivors → retire (after route check):
 - Stale per-domain proxies (`heady-*-proxy`, last-modified 2026-03-18): keep only those
   still bound to a live DNS route; retire the rest.
 
-`wrangler` retirement template (run after confirming routes):
+> ⚠️ **CODE-REVIEW FINDING (2026-06-19) — naming-based consolidation is UNSAFE.**
+> Inspecting `workers_get_worker_code` disproved the duplicate assumption:
+> `heady-intent-router` is **not** a redundant router — it is a **live multi-domain site
+> server** rendering full pages for headybot.com, headyapi.com, headyio.com,
+> headybuddy.com, headyconnection.org, and heady-ai.com, plus health checks, intent
+> redirects, and `ACTIVE_DOMAINS` passthrough. It must be **KEPT**. The other "routers"
+> likewise carry distinct logic and large bundles. **Do not delete any worker on naming
+> evidence.** Each retire-candidate requires hands-on `wrangler` + route-map review by
+> someone with Cloudflare access. The MCP surface can neither list routes nor delete
+> workers, so this step cannot be completed here — it is handed off, not executed.
+
+`wrangler` retirement template (run **only** after per-worker code+route review):
 ```bash
 wrangler delete --name heady-api            # only after routes moved to heady-api-production
 wrangler delete --name heady-router
