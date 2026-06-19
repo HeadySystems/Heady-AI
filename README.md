@@ -2,6 +2,8 @@
 
 > **The Synapse** — Private Hub repository for the Heady Autonomous AI Operating System.
 
+> 🛑 **AI agents start at [`START_HERE.md`](./START_HERE.md)** — the front door explaining what's going on and exactly what to do before touching the repo.
+
 This is the single source of truth where the AI's 3D vector memory (pgvector) synchronizes with flat files. It holds the Swarm logic, the AST mutators, and the Colab kernel scripts.
 
 ## Architecture: Hub & Spoke

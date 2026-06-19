@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Session Context — SessionStart Hook v1.0.0               ║
-// ║  Injects live repo state so each session starts grounded in      ║
-// ║  current branch/HEAD/source-of-truth files, not a stale snapshot.║
+// ║  HEADY™ Session Context — SessionStart Hook v2.0.0               ║
+// ║  ACTIVE front door: reads the live @heady/awareness snapshot and  ║
+// ║  fires a non-blocking awareness reaction so Heady registers the   ║
+// ║  agent session as a durable event. Heady is an always-on          ║
+// ║  projection system — this participates in it, it is not a sign.   ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
@@ -11,8 +13,8 @@
 //   { hookSpecificOutput: { hookEventName, additionalContext } }
 // Always exits 0 — context injection must never block a session.
 
-import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { execFileSync, spawn } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -35,27 +37,68 @@ const branch = git(["rev-parse", "--abbrev-ref", "HEAD"]) || "detached";
 const headSha = git(["rev-parse", "--short", "HEAD"]) || "unknown";
 const headSubject = git(["log", "-1", "--pretty=%s"]) || "n/a";
 
+// ── ACTIVE: read the live awareness snapshot any AI reads ────────────
+function liveAwarenessLine() {
+  const snapPath = resolve(REPO_ROOT, ".data/awareness/context.json");
+  if (!existsSync(snapPath)) {
+    return "- Awareness snapshot not present yet — run `heady-awareness serve --poll` (or `install-hooks`) to keep live state flowing.";
+  }
+  try {
+    const s = JSON.parse(readFileSync(snapPath, "utf8"));
+    const gate = s?.consistency?.gateOk;
+    const gateTxt = gate === null || gate === undefined ? "unknown" : gate ? "PASS" : "BLOCKED";
+    const fresh = s?.currency?.fresh ? "FRESH" : `stale (${s?.currency?.blockedReason ?? "uncommitted edits"})`;
+    const bound = s?.vectorMemory?.embedderBound ? "bound" : "unbound/enqueue-only";
+    const pending = s?.vectorMemory?.pendingEmbedJobs ?? "?";
+    return `- LIVE awareness (.data/awareness/context.json @ ${s?.generatedAt ?? "?"}): gate ${gateTxt}, currency ${fresh}, embedder ${bound}, ${pending} embed job(s) pending.`;
+  } catch (err) {
+    return "- Awareness snapshot present but unreadable — treat live state as unknown.";
+  }
+}
+
+// ── ACTIVE: fire a non-blocking awareness reaction (durable event) ───
+// Registers this session in the awareness lens (.data/awareness/lens.ndjson) and
+// refreshes the snapshot. Detached + unref'd so it never blocks session start.
+function fireAwarenessReaction() {
+  const cli = resolve(REPO_ROOT, "tooling/awareness/src/cli.mjs");
+  if (!existsSync(cli)) return;
+  try {
+    const child = spawn(
+      process.execPath,
+      [cli, "react", "--quiet", "--trigger", "agent-session-start"],
+      { cwd: REPO_ROOT, detached: true, stdio: "ignore" },
+    );
+    child.unref();
+  } catch (err) {
+    // Awareness optional / unavailable — never block the session on it.
+  }
+}
+
+fireAwarenessReaction();
+
 const SOURCE_OF_TRUTH = [
+  "START_HERE.md",
   "AGENTS.md",
   "CLAUDE_MEMORY.md",
   "governance/CONSTITUTION.md",
-  "governance/PRIME_DIRECTIVE.md",
   "facts.yaml",
-  "turbo.json",
-  "pnpm-workspace.yaml",
 ];
 const present = SOURCE_OF_TRUTH.filter((f) => existsSync(resolve(REPO_ROOT, f)));
 
 const additionalContext = [
   `HEADY SESSION CONTEXT (auto-loaded ${new Date().toISOString()}):`,
   `- Branch: ${branch} @ ${headSha} — "${headSubject}"`,
+  `- READ START_HERE.md FIRST — the agent front door: what's going on + exactly what`,
+  `  to do. It routes you to AGENTS.md (rules) and CLAUDE_MEMORY.md (current state).`,
+  liveAwarenessLine(),
+  `- Fired a non-blocking awareness reaction (trigger=agent-session-start); on an`,
+  `  installed workspace this records a durable event in .data/awareness/lens.ndjson.`,
   `- Source-of-truth files present: ${present.length ? present.join(", ") : "(none found)"}`,
-  `- Read AGENTS.md (architecture rules) and CLAUDE_MEMORY.md (handoff state) BEFORE`,
-  `  authoring; follow their pointers. They are the spec — neighbouring files are not.`,
+  `- They are the spec — neighbouring files are examples, never a substitute.`,
   `- Context budget: 1M window, auto-compact at the boundary, xhigh effort. Use the`,
   `  full window — read whole files and configs rather than fragments.`,
-  `- The 8+1 Unbreakable Laws are CI-enforced: new code under the scanned trees must`,
-  `  pass the cloud-only-URL, structured-logging, and credential-signature gates.`,
+  `- Heady is an always-on projection system: what you build for it should be ACTIVE`,
+  `  (reacts/emits/stays current), not a passive file, unless it is genuinely inert.`,
 ].join("\n");
 
 process.stdout.write(

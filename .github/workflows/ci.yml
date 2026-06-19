@@ -143,6 +143,13 @@ jobs:
       # retroactively failing the rebuild baseline.
       - name: autocontext
         run: node tooling/enforcers/autocontext.mjs ${{ steps.scope.outputs.args }}
+      # ── Agent-onboarding integrity (the front door stays wired) ────
+      # Keeps START_HERE.md present and linked from every agent entry point
+      # (CLAUDE.md/AGENTS.md/README.md) and the .claude agent config sound, so any
+      # agent entering the repo is oriented. Whole-config check — scope-independent.
+      - name: agent-onboarding
+        run: node tooling/enforcers/agent-onboarding.mjs
       # The enforcers carry their own unit tests proving they are not no-ops.
+      # Glob (not the bare dir) so every *.test.mjs is discovered across Node versions.
       - name: enforcer self-tests
-        run: node --test tooling/enforcers/test/
+        run: node --test tooling/enforcers/test/*.test.mjs

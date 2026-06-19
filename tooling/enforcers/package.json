@@ -8,7 +8,8 @@
     "heady-no-localhost": "no-localhost.mjs",
     "heady-glass-box": "glass-box.mjs",
     "heady-secret-scan": "secret-scan.mjs",
-    "heady-autocontext": "autocontext.mjs"
+    "heady-autocontext": "autocontext.mjs",
+    "heady-agent-onboarding": "agent-onboarding.mjs"
   },
   "scripts": {
     "test": "node --test",

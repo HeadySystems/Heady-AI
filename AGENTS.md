@@ -19,6 +19,9 @@
 > Version: 2.0.0 | Updated: 2026-06-15 | Applies to the Heady-AI Monorepo
 > Drop this file in the root of every repository for AI coding agent compatibility.
 
+> 🛑 **New to this repo? Read [`START_HERE.md`](./START_HERE.md) first** — it tells
+> any agent what's going on and exactly what to do, then sends you back here for the rules.
+
 ## Identity
 
 This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Operating System.
@@ -54,6 +57,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 9. **Tests alongside code.** Vitest for unit, Playwright for E2E, k6 for load.
 10. **Error handling everywhere.** No empty catch blocks. No swallowed promises.
 11. **Vector Embeddings Trigger.** File indexing is triggered locally via **Merkle-tree file hashing**, never Postgres CDC.
+12. **Default to ACTIVE, never passive.** Heady is an always-on **projection system** — continuous derivation/sync, the `@heady/awareness` loop, the event bus, `@heady/auto-context` enrichment. Anything you build for Heady is presumed to be a **live, reactive participant**: it reacts to changes, emits/consumes events, refreshes or reads the live awareness snapshot, or hangs off a projection. A passive artifact (a static doc, an inert file) is the rare exception and must be justified as genuinely inert. Before shipping, ask: *what makes this live — what does it react to, emit, or keep current?* If the answer is "nothing," wire it into the runtime instead.
 
 ## File Header Template
 
