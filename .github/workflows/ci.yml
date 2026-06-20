@@ -146,3 +146,34 @@ jobs:
       # The enforcers carry their own unit tests proving they are not no-ops.
       - name: enforcer self-tests
         run: node --test tooling/enforcers/test/
+
+  orphans:
+    name: orphan / dead-module gate (knip ∩ dependency-cruiser)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.9 --activate
+      - name: install
+        run: pnpm install --frozen-lockfile
+      # A confirmed dead file is flagged by BOTH dependency-cruiser (graph-orphan)
+      # AND knip (unused file) — the intersection filters out CLI entry points that
+      # only one tool misreads. ALWAYS --diff (never --all): the 8 known baseline
+      # orphans are advisory; only NEW dead files introduced by a change fail.
+      - name: resolve scope
+        id: scope
+        run: |
+          if [ -n "${{ github.event.pull_request.base.sha }}" ]; then
+            echo "args=--diff ${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=--diff origin/rebuild" >> "$GITHUB_OUTPUT"
+          fi
+      - name: orphans gate
+        run: node tooling/enforcers/orphans.mjs ${{ steps.scope.outputs.args }}
+      - name: orphans tests
+        run: node --test tooling/enforcers/test/orphans.test.mjs
