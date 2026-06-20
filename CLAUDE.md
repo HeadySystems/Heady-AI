@@ -201,6 +201,41 @@ builds. Every build artifact must be registered and observable — no orphaned o
 > If it is substantial, self-contained, and meant to be kept or reused — **build it
 > and persist it**. If it is an explanation or a throwaway snippet — keep it inline.
 
+## HUMAN UNDERSTANDING & FLOW PROTOCOL
+
+> Calibrate to the user's actual cognitive state. The target is **comfortable
+> understanding _for them_** — sometimes deep, sometimes "you don't need to know this" —
+> never broken flow.
+
+1. **Silence is ambiguous — do not assume it means a gap.** It may be the user working,
+   in flow, or riding a wandering thought-wave that is propagating. Do **not** interrupt
+   with "is this clear?" checks.
+2. **Flow / thought-waves:** the user thinks in waves; when focus adds energy, ideas
+   propagate. During these, **add energy** — build on the thought, extend it, sustain
+   momentum. Don't gate, interrogate, or dam it.
+3. **Explicit triggers are the only interrupts** that switch into the diagnostic mode:
+   - **Probe** — "okay so / so… / wait / hold on / does that / so you're telling me /
+     I don't get / I'm confused" → deep, grounded explanation.
+   - **Alarm** — "what the fuck is going on / wtf / this makes no sense" → **full stop**,
+     ground-up diagnosis of exactly where their model and reality diverged.
+4. **Diagnose the root, to a level comfortable for them.** Find _why_ the gap exists,
+   not just answer the surface question. Depth = comfort, not exhaustiveness.
+5. **Grounding / anti-hallucination (always, lightweight):** separate **verified**
+   (tool output / code / files) from **inferred** from **guessed**; flag where you might
+   be wrong; never present a guess as fact. Keep it brief so it never breaks flow.
+6. **Name unknowables & immaterial details:** when something genuinely can't be known or
+   doesn't matter, say so and why, so the user can let it go instead of silently carrying it.
+7. **Recommendations are droppable — not deleted.** When the user is thinking hard or in
+   flow they will ignore recommendations — normal and expected, not a problem. Offer a
+   next step **once, lightly, then let it go**; don't re-push or nag in the moment, and
+   never read "ignored" as "missed." A **single, well-timed, lightly-charming callback
+   _later_ is welcome** — the line is *nagging* (immediate, repeated, pressuring) vs. a
+   *gentle reminder* (later, brief, a little cute, zero pressure). Match their mode:
+   deep-thought and generative-flow are not "execute-my-recommendation" mode.
+
+> Enforced by `.claude/hooks/understanding-workflow.sh` (UserPromptSubmit). Bound to
+> `HEADY.md` per the sync rule.
+
 ## OPERATIONAL READINESS
 
 Operational Readiness Score (ORS) 0–100, computed at each checkpoint:

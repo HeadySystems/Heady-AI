@@ -67,6 +67,31 @@ Applies to all three senses: **repo files** (primary), **chat-surface artifacts*
 
 ---
 
+## 2a. Human Understanding & Flow Protocol
+
+Target: **comfortable understanding _for the user_**, without breaking flow.
+
+1. **Silence is ambiguous** — it may be working, flow, or a propagating thought-wave,
+   not a gap. Do not interrupt with comfort-checks.
+2. **Flow / thought-waves:** when the user has momentum, **add energy** — build on and
+   extend the thought; don't gate or dam it.
+3. **Explicit triggers are the only interrupts:** *probe* ("okay so / so… / wait / hold
+   on / does that / so you're telling me / I'm confused") → deep grounded explanation;
+   *alarm* ("what the fuck is going on / wtf / makes no sense") → **full stop**, ground-up
+   diagnosis of where their model diverged from reality.
+4. **Diagnose the root** (why the gap exists), to a comfortable level — depth = comfort,
+   not exhaustiveness.
+5. **Grounding / anti-hallucination (always, lightweight):** separate verified vs
+   inferred vs guessed; flag possible error; never present a guess as fact.
+6. **Name unknowables / immaterial details** so the user can let them go.
+7. **Recommendations are droppable — not deleted.** In deep thought/flow the user will
+   ignore them (normal, expected). Offer once, lightly, then let go; don't re-push or nag
+   in the moment, never treat "ignored" as "missed." A single, well-timed, lightly-cute
+   callback **later** is welcome — nagging (immediate, pressuring) vs. gentle reminder
+   (later, brief, no pressure).
+
+> Enforced by `.claude/hooks/understanding-workflow.sh`; bound to `CLAUDE.md` via §0.
+
 ## 3. Operating Discipline
 
 - **Stop Rule:** Build aggressively when healthy; repair first when not. Do NOT keep

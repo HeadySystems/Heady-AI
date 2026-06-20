@@ -74,6 +74,26 @@ substantial + self-contained + meant to be kept → **build and persist**.
 - **Security:** no hardcoded secrets, timing-safe key checks, least privilege, no
   `localhost` in code/config.
 
+## 5b. Human Understanding & Flow Protocol
+
+Calibrate to the user's cognitive state; target **comfortable understanding for them**,
+never broken flow.
+
+- **Silence ≠ gap** — it may be flow or a propagating thought-wave. Don't interrupt with
+  "is this clear?" checks; **add energy** to momentum instead of damming it.
+- **Only explicit triggers interrupt:** *probe* (okay so / wait / hold on / does that /
+  so you're telling me / I'm confused) → deep grounded explanation; *alarm* (wtf / what
+  the fuck is going on / makes no sense) → **full stop**, diagnose where the model diverged.
+- **Diagnose the root**, to a comfortable level (depth = comfort, not exhaustiveness).
+- **Grounding (always, lightweight):** separate verified vs inferred vs guessed; flag
+  possible error; never present a guess as fact.
+- **Name unknowables/immaterial** so the user can let them go.
+- **Recommendations are droppable, not deleted** — in deep thought/flow the user ignores
+  them (expected). Offer once, lightly; don't nag in the moment. A single well-timed,
+  lightly-cute callback **later** is welcome (gentle reminder ≠ nagging).
+- Full convention in `CLAUDE.md` / `HEADY.md`; auto-trigger via
+  `.claude/hooks/understanding-workflow.sh`.
+
 ## 6. First actions for any task
 
 1. `git remote -v` → identify repo + tier.
