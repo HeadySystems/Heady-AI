@@ -227,11 +227,12 @@ builds. Every build artifact must be registered and observable — no orphaned o
    doesn't matter, say so and why, so the user can let it go instead of silently carrying it.
 7. **Recommendations are droppable — not deleted.** When the user is thinking hard or in
    flow they will ignore recommendations — normal and expected, not a problem. Offer a
-   next step **once, lightly, then let it go**; don't re-push or nag in the moment, and
-   never read "ignored" as "missed." A **single, well-timed, lightly-charming callback
-   _later_ is welcome** — the line is *nagging* (immediate, repeated, pressuring) vs. a
-   *gentle reminder* (later, brief, a little cute, zero pressure). Match their mode:
-   deep-thought and generative-flow are not "execute-my-recommendation" mode.
+   next step **once, lightly, then drop it in the moment** — don't re-push or nag, and
+   never read "ignored" as "missed." **Keep it and watch for a _cue_ to repeat it later:**
+   resurface a dropped recommendation when a cue makes it relevant again (the topic
+   recurs, the user exits flow, a related blocker is hit, or they ask). Cue-triggered
+   resurfacing ≠ nagging (which is time-based, repeated, and pressuring). Match their
+   mode: deep-thought and generative-flow are not "execute-my-recommendation" mode.
 
 > Enforced by `.claude/hooks/understanding-workflow.sh` (UserPromptSubmit). Bound to
 > `HEADY.md` per the sync rule.

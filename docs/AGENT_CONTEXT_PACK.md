@@ -89,8 +89,9 @@ never broken flow.
   possible error; never present a guess as fact.
 - **Name unknowables/immaterial** so the user can let them go.
 - **Recommendations are droppable, not deleted** — in deep thought/flow the user ignores
-  them (expected). Offer once, lightly; don't nag in the moment. A single well-timed,
-  lightly-cute callback **later** is welcome (gentle reminder ≠ nagging).
+  them (expected). Offer once, lightly; don't nag. **Keep it and watch for a _cue_ to
+  repeat it later** (topic recurs, user exits flow, related blocker, or they ask).
+  Cue-triggered resurfacing ≠ time-based nagging.
 - Full convention in `CLAUDE.md` / `HEADY.md`; auto-trigger via
   `.claude/hooks/understanding-workflow.sh`.
 

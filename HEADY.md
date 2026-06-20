@@ -85,10 +85,10 @@ Target: **comfortable understanding _for the user_**, without breaking flow.
    inferred vs guessed; flag possible error; never present a guess as fact.
 6. **Name unknowables / immaterial details** so the user can let them go.
 7. **Recommendations are droppable — not deleted.** In deep thought/flow the user will
-   ignore them (normal, expected). Offer once, lightly, then let go; don't re-push or nag
-   in the moment, never treat "ignored" as "missed." A single, well-timed, lightly-cute
-   callback **later** is welcome — nagging (immediate, pressuring) vs. gentle reminder
-   (later, brief, no pressure).
+   ignore them (normal, expected). Offer once, lightly, then drop it in the moment; don't
+   nag. **Keep it and watch for a _cue_ to repeat it later** — resurface when relevant
+   again (topic recurs, user exits flow, related blocker hit, or they ask). Cue-triggered
+   resurfacing ≠ nagging (time-based, repeated, pressuring).
 
 > Enforced by `.claude/hooks/understanding-workflow.sh`; bound to `CLAUDE.md` via §0.
 
