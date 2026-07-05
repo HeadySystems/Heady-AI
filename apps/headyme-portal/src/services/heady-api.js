@@ -53,6 +53,69 @@ export const services = {
   dispatch: (body, token) => cf('POST', '/api/service',         body, token),
 };
 
+// ── Origin event fabric (SSE, GET /api/events on heady-manager) ────
+// Same base as the codeflow/service APIs (VITE_CODEFLOW_API — no host
+// hardcoded). The endpoint is unauthenticated-read like /health, but we
+// stream via fetch + ReadableStream (the proven lens.stream parser) so
+// reconnects carry replay position as ?lastEventId= — a plain query
+// param, no preflight-triggering header, and one code path with lens.
+export const events = {
+  streamUrl: (lastEventId) => {
+    const qs = lastEventId != null ? `?lastEventId=${encodeURIComponent(lastEventId)}` : '';
+    return `${CODEFLOW_BASE}/api/events${qs}`;
+  },
+  /**
+   * Open the origin SSE stream. `onEvent` fires per parsed event
+   * ({id, ts, type, payload}); `type` is the bus subject (e.g.
+   * heady.system.service.health). The hello bootstrap frame
+   * (heady.system.stream.hello) arrives through `onEvent` too.
+   * @param {(evt: {id:number|null, ts:string, type:string, payload:object}) => void} onEvent
+   * @param {{ signal?: AbortSignal, lastEventId?: number, onOpen?: () => void, onClose?: (err?: Error) => void }} [opts]
+   * @returns {{ close: () => void, lastEventId: () => number|null }}
+   */
+  stream(onEvent, { signal, lastEventId = null, onOpen, onClose } = {}) {
+    const ctrl = new AbortController();
+    if (signal) signal.addEventListener('abort', () => ctrl.abort(), { once: true });
+    let lastId = lastEventId;
+    (async () => {
+      try {
+        const res = await fetch(this.streamUrl(lastId), {
+          headers: { accept: 'text/event-stream' },
+          signal: ctrl.signal,
+        });
+        if (!res.ok || !res.body) throw new Error(`events stream ${res.status} ${res.statusText}`);
+        onOpen?.();
+        const reader = res.body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buf += dec.decode(value, { stream: true });
+          let nl;
+          while ((nl = buf.indexOf('\n\n')) !== -1) {
+            const frame = buf.slice(0, nl);
+            buf = buf.slice(nl + 2);
+            if (frame.startsWith(':')) continue; // φ⁷ keep-alive comment
+            const idMatch = frame.match(/^id:\s*(\d+)$/m);
+            if (idMatch) lastId = Number(idMatch[1]);
+            const dataMatch = frame.match(/^data:\s*([\s\S]+)$/m);
+            if (!dataMatch) continue;
+            let parsed;
+            try { parsed = JSON.parse(dataMatch[1]); } catch { continue; }
+            onEvent?.(parsed);
+          }
+        }
+        // Server closed the stream (deploy/shutdown) — surface it honestly.
+        if (!ctrl.signal.aborted) onClose?.();
+      } catch (err) {
+        if (!ctrl.signal.aborted) onClose?.(err);
+      }
+    })();
+    return { close: () => ctrl.abort(), lastEventId: () => lastId };
+  },
+};
+
 // ── legacy advisor API ─────────────────────────────────────────────
 const LEGACY_BASE = import.meta.env.VITE_LEGACY_API ?? '';
 

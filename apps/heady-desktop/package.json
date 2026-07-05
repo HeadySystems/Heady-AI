@@ -1,0 +1,62 @@
+{
+  "name": "heady-desktop",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Heady native desktop shell — wraps the deployed HeadyMe portal in a hardened Electron window",
+  "author": "HeadySystems Inc. <eric@headyconnection.org>",
+  "homepage": "https://1ime1.com",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "src/main.mjs",
+  "scripts": {
+    "sync:facts": "node scripts/sync-from-facts.mjs",
+    "predev": "node scripts/sync-from-facts.mjs",
+    "dev": "electron .",
+    "prebuild": "node scripts/sync-from-facts.mjs",
+    "build": "electron-builder --dir",
+    "predist": "node scripts/sync-from-facts.mjs",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
+    "yaml": "^2.9.0"
+  },
+  "build": {
+    "appId": "com.headysystems.heady-ai",
+    "productName": "Heady",
+    "copyright": "© 2026 HeadySystems Inc.",
+    "electronLanguages": ["en-US"],
+    "files": [
+      "src/**/*",
+      "!src/**/*.md",
+      "!**/node_modules/**"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "publish": null,
+    "npmRebuild": false,
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png",
+      "category": "Utility",
+      "synopsis": "Heady portal desktop shell",
+      "maintainer": "HeadySystems Inc. <eric@headyconnection.org>"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "mac": {
+      "target": ["dmg"],
+      "icon": "build/icon.png",
+      "category": "public.app-category.productivity"
+    }
+  }
+}

@@ -13,6 +13,14 @@
  *   - Shared context broadcast
  *   - Presence tracking (which devices are online)
  *   - Event relay for realtime orchestration
+ *
+ * ⚠ DEPRECATED (2026-07-04): superseded by @heady/sync-fabric
+ * (packages/sync-fabric — createSyncFabric). The port makes the auth token
+ * MANDATORY (SYNC_TOKEN via @heady/secrets, fail-closed), φ-caps message
+ * size (FIB[13] KB), rate (FIB[8] msg/s), and heartbeat (2·φ⁷ s), and adds
+ * event receipts + an anonymized /api/sync/presence surface. This file
+ * remains only for the legacy heady-manager.js wiring; do not add new
+ * consumers.
  */
 
 const crypto = require("crypto");

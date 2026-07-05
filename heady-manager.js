@@ -937,6 +937,84 @@ try {
   logger.logNodeActivity("CONDUCTOR", `  ⚠ Cross-Device Sync not loaded: ${err.message}`);
 }
 
+// ─── BUDDY AGENT HUB — Cross-Device Agent Orchestrator (SEC-hardened) ─
+// ESM guards arrive over dynamic import() bridges (CJS host — precedent:
+// src/heady-conductor.js adminGuard bridge). Deny-by-default posture:
+//   · every mutation/control route → @heady/admin-guard (503 unarmed, 401 mismatch)
+//   · platform-control tier (DeviceBridge PLATFORMS matrix) → additionally the
+//     SYNC_TOKEN device credential (@heady/secrets registry, fail-closed).
+let buddyAgentHub = null;
+{
+  const guardBridge = import("./packages/admin-guard/src/index.mjs").then((guard) => {
+    guard.initAdminAuth();
+    return guard;
+  });
+  guardBridge.catch((err) =>
+    logger.logNodeActivity("CONDUCTOR", `  🔐 BuddyHub admin-guard bridge failed — control routes stay 503: ${err.message}`));
+
+  const requireAdmin = (req, res, next) => {
+    guardBridge
+      .then((guard) => guard.requireAdminMutation(req, res, next))
+      .catch(() => res.status(503).json({ ok: false, error: "admin auth unavailable — privileged mutations are fail-closed" }));
+  };
+
+  let syncTokenDigest = null;
+  const syncTokenBridge = Promise.all([
+    import("node:crypto"),
+    import("./packages/secrets/src/index.mjs").then((secrets) =>
+      secrets.loadSecrets({ only: ["SYNC_TOKEN"], require: ["SYNC_TOKEN"] })),
+  ]).then(([cryptoMod, secrets]) => {
+    syncTokenDigest = cryptoMod.createHash("sha256").update(String(secrets.SYNC_TOKEN), "utf8").digest();
+    logger.logNodeActivity("CONDUCTOR", "  🔐 BuddyHub: SYNC_TOKEN armed — platform-control tier live");
+    return cryptoMod;
+  });
+  syncTokenBridge.catch((err) =>
+    logger.logNodeActivity("CONDUCTOR", `  🔐 BuddyHub: SYNC_TOKEN unavailable — platform-control routes stay 503: ${err.message}`));
+
+  const requirePlatformControl = (req, res, next) => {
+    syncTokenBridge
+      .then((cryptoMod) => {
+        if (!syncTokenDigest) {
+          return res.status(503).json({ ok: false, error: "sync token unavailable — platform control is fail-closed" });
+        }
+        const presented = String(req.headers["x-sync-token"] || "");
+        const presentedDigest = cryptoMod.createHash("sha256").update(presented, "utf8").digest();
+        if (!presented || !cryptoMod.timingSafeEqual(presentedDigest, syncTokenDigest)) {
+          return res.status(401).json({ ok: false, error: "Unauthorized" });
+        }
+        return next();
+      })
+      .catch(() => res.status(503).json({ ok: false, error: "sync token unavailable — platform control is fail-closed" }));
+  };
+
+  import("./src/buddy-agent-hub.js")
+    .then((mod) => {
+      const { BuddyAgentHub } = mod.default || mod;
+      buddyAgentHub = new BuddyAgentHub();
+      buddyAgentHub.registerRoutes(app, {
+        requireAdmin,
+        requirePlatformControl,
+        log: (entry) => logger.logNodeActivity("CONDUCTOR", `  🤖 [BuddyHub] ${entry.event}${entry.error ? ` — ${entry.error}` : ""}`),
+      });
+      buddyAgentHub.on("buddy:event", (e) => eventBus.emit("system:action", {
+        actor: "buddy-agent-hub",
+        action: e.type,
+        target: e.deviceId || e.taskId || e.sessionId || "buddy",
+        outcome: "recorded",
+        details: e,
+      }));
+      buddyAgentHub.on("buddy:confirm", (e) => eventBus.emit("system:action", {
+        actor: "buddy-agent-hub",
+        action: "confirmation_required",
+        target: e.sessionId || "buddy",
+        outcome: "pending",
+        details: e,
+      }));
+      logger.logNodeActivity("CONDUCTOR", "  🤖 Buddy Agent Hub: ACTIVE (guarded surface /api/buddy/hub/* — 4 public catalogs, 3 admin, 5 platform-control)");
+    })
+    .catch((err) => logger.logNodeActivity("CONDUCTOR", `  ⚠ Buddy Agent Hub not loaded: ${err.message}`));
+}
+
 // ─── Structured Telemetry API ───────────────────────────────────────
 app.get("/api/telemetry/recent", (req, res) => {
   const limit = parseInt(req.query.limit) || 50;

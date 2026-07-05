@@ -1,21 +1,39 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ <heady-service-nav> v1.0.0                                ║
+// ║  HEADY™ <heady-service-nav> v1.1.0                                ║
 // ║  Vanilla Web Component: the categorized Heady service directory.   ║
 // ║  Fetches the LIVE catalog (GET /api/service/catalog), groups it    ║
 // ║  by the navigation IA (7 categories + More fallback keyed by       ║
 // ║  service name — unknown services degrade, never break), renders    ║
 // ║  progressive-disclosure <details> with plain-language labels.      ║
+// ║  v1.1: subscribes to the origin SSE fabric (GET /api/events) —     ║
+// ║  service-health transitions update badges IN PLACE (no refetch),   ║
+// ║  with an honest live/offline stream indicator + φ backoff          ║
+// ║  reconnect carrying Last-Event-ID replay position.                 ║
 // ║  Honest states: directory-unavailable + health-unknown are shown   ║
 // ║  as exactly that. φ⁷ heartbeat (29034ms) retry cadence.            ║
 // ║  Spec: docs/blueprints/headyme-navigation-ia.md §3/§5.3            ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
-import { services } from '../services/heady-api.js';
+import { services, events } from '../services/heady-api.js';
 import { buildGroups } from '../services/service-categories.js';
 
 const PHI = 1.618033988749895;
 const PHI7_MS = 29034;               // golden heartbeat (ADR-0026) — retry base
 const MAX_BACKOFF_MS = PHI7_MS * 6;  // cap, matching heady-build-narrative
+
+// Event-fabric subjects (heady-manager src/events.mjs taxonomy).
+const EV_SERVICE_HEALTH = 'heady.system.service.health';
+const EV_ORIGIN_STATUS = 'heady.system.origin.status';
+const EV_HELLO = 'heady.system.stream.hello';
+
+// State colors from docs/design/design-tokens.json color.state (+ text.muted for unknown).
+const STATE_COLOR = {
+  healthy: '#00d4aa',
+  degraded: '#7c5eff',
+  blocked: '#ffb020',
+  fail: '#ff5470',
+  unknown: '#5a5a6a',
+};
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -34,8 +52,16 @@ export class HeadyServiceNav extends HTMLElement {
     this._tokenProvider = null;
     this._groups = null;
     this._health = null;      // dispatcher health or null = unknown (shown honestly)
+    this._count = 0;
     this._retries = 0;
     this._timer = null;
+    // SSE fabric state — live badges update in place, never via refetch.
+    this._stream = null;
+    this._streamLive = false;
+    this._streamRetries = 0;
+    this._streamTimer = null;
+    this._lastEventId = null;
+    this._kernelChecks = null; // last known origin checks (re-applied after re-render)
   }
 
   /** The mounting view injects the Firebase ID token getter (AdminUI pattern). */
@@ -48,6 +74,8 @@ export class HeadyServiceNav extends HTMLElement {
 
   disconnectedCallback() {
     if (this._timer) clearTimeout(this._timer);
+    if (this._streamTimer) clearTimeout(this._streamTimer);
+    if (this._stream) { this._stream.close(); this._stream = null; }
   }
 
   attributeChangedCallback(name) {
@@ -71,9 +99,11 @@ export class HeadyServiceNav extends HTMLElement {
         this._health = (h && h.ok === true) ? h : null;
       } catch { this._health = null; }
 
+      this._count = data.services.length;
       this._renderGroups();
-      this._setStatus('live', this._healthLine(data.services.length));
       this._applySelection();
+      this._openStream(); // catalog is up — go live on the event fabric
+      this._renderStreamStatus();
     } catch (err) {
       this._renderUnavailable(err);
       // φ⁷ golden-heartbeat backoff, capped — plus the manual Retry button.
@@ -88,6 +118,80 @@ export class HeadyServiceNav extends HTMLElement {
   _healthLine(count) {
     if (!this._health) return `${count} services · dispatcher health unknown`;
     return `${this._health.totalServices ?? count} services · ${this._health.recentSuccessRate}% recent success · ${this._health.avgLatencyMs}ms avg`;
+  }
+
+  // ── SSE event fabric: live badges, honest live/offline indicator ──
+
+  /** Header dot+text tells the truth about the stream, not just the catalog. */
+  _renderStreamStatus(extra) {
+    const line = this._healthLine(this._count);
+    if (this._streamLive) this._setStatus('live', `live${extra ? ` · ${extra}` : ''} · ${line}`);
+    else if (this._stream) this._setStatus('loading', `${extra ?? 'connecting live stream…'} · ${line}`);
+    else this._setStatus('offline', `${extra ?? 'stream offline'} · ${line}`);
+  }
+
+  _openStream() {
+    if (this._stream) return; // already connected or reconnecting
+    if (this._streamTimer) { clearTimeout(this._streamTimer); this._streamTimer = null; }
+    this._stream = events.stream((evt) => this._onFabricEvent(evt), {
+      lastEventId: this._lastEventId, // replay what we missed while offline
+      onOpen: () => {
+        this._streamLive = true;
+        this._streamRetries = 0;
+        this._renderStreamStatus();
+      },
+      onClose: () => {
+        this._lastEventId = this._stream?.lastEventId() ?? this._lastEventId;
+        this._stream = null;
+        this._streamLive = false;
+        if (!this.isConnected) return;
+        // φ backoff: 1000·φⁿ ms (1.6s, 2.6s, 4.2s, …) capped at 6·φ⁷s.
+        const delay = Math.min(1000 * PHI ** (this._streamRetries + 1), MAX_BACKOFF_MS);
+        this._streamRetries += 1;
+        this._renderStreamStatus(`stream offline — reconnecting in ${Math.round(delay / 1000)}s`);
+        this._streamTimer = setTimeout(() => { if (this.isConnected) this._openStream(); }, delay);
+      },
+    });
+  }
+
+  _onFabricEvent(evt) {
+    if (!evt || typeof evt.type !== 'string') return;
+    if (Number.isInteger(evt.id)) this._lastEventId = evt.id;
+    if (evt.type === EV_HELLO) {
+      // Bootstrap: seed badges from the origin's current per-service checks.
+      const checks = evt.payload?.origin?.checks;
+      if (checks && typeof checks === 'object') {
+        this._kernelChecks = { ...checks };
+        this._applyBadges();
+      }
+      return;
+    }
+    if (evt.type === EV_SERVICE_HEALTH) {
+      const { service, status } = evt.payload ?? {};
+      if (typeof service !== 'string' || typeof status !== 'string') return;
+      this._kernelChecks = { ...(this._kernelChecks ?? {}), [service]: status };
+      this._applyBadge(service, status);
+      return;
+    }
+    if (evt.type === EV_ORIGIN_STATUS) {
+      const { status } = evt.payload ?? {};
+      if (typeof status === 'string') this._renderStreamStatus(status === 'ok' ? undefined : `origin ${status}`);
+    }
+  }
+
+  /** Update ONE health badge in place — no refetch, no re-render. */
+  _applyBadge(service, status) {
+    const dot = this.shadowRoot.querySelector(`.sn-health[data-health-for="${CSS.escape(service)}"]`);
+    if (!dot) return; // event about a service not in this directory — fine
+    const state = status === 'ok' ? 'ok' : status === 'degraded' ? 'degraded' : 'down';
+    dot.dataset.state = state;
+    dot.title = `live health: ${status}`;
+  }
+
+  /** Re-apply every known check (after a directory re-render resets badges). */
+  _applyBadges() {
+    if (!this._kernelChecks) return;
+    for (const [service, status] of Object.entries(this._kernelChecks)) this._applyBadge(service, status);
   }
 
   _renderUnavailable(err) {
@@ -120,6 +224,7 @@ export class HeadyServiceNav extends HTMLElement {
             <li>
               <details class="sn-svc" data-service="${esc(s.name)}">
                 <summary>
+                  <span class="sn-health" data-health-for="${esc(s.name)}" data-state="unknown" title="live health: unknown"></span>
                   <span class="sn-svc-label">${esc(s.label)}</span>
                   <code class="sn-code">${esc(s.name)}</code>
                 </summary>
@@ -135,6 +240,8 @@ export class HeadyServiceNav extends HTMLElement {
             </li>`).join('')}
         </ul>
       </details>`).join('');
+
+    this._applyBadges(); // a re-render resets badges — restore known live health
 
     body.querySelectorAll('.sn-ask').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -167,8 +274,9 @@ export class HeadyServiceNav extends HTMLElement {
   _setStatus(state, text) {
     const el = this.shadowRoot.querySelector('.sn-status');
     if (!el) return;
-    const colors = { loading: '#ffb020', live: '#00d4aa', offline: '#ff5470' };
-    el.style.setProperty('--dot', colors[state] || '#9aa');
+    // design-tokens color.state: blocked=loading, healthy=live, fail=offline.
+    const colors = { loading: STATE_COLOR.blocked, live: STATE_COLOR.healthy, offline: STATE_COLOR.fail };
+    el.style.setProperty('--dot', colors[state] || STATE_COLOR.unknown);
     el.querySelector('.sn-status-text').textContent = text;
   }
 
@@ -193,6 +301,12 @@ export class HeadyServiceNav extends HTMLElement {
         .sn-list { list-style:none; margin:0; padding:4px 12px 12px; display:flex; flex-direction:column; gap:6px; }
         .sn-svc summary { padding:9px 12px; }
         .sn-svc.selected { border-color:#00d4aa; box-shadow:0 0 0 1px rgba(0,212,170,.4); }
+        /* Live health badge — design-tokens color.state; unknown = text.muted. */
+        .sn-health { width:8px; height:8px; border-radius:50%; align-self:center; flex:none;
+          background:${STATE_COLOR.unknown}; transition:background .382s ease, box-shadow .382s ease; }
+        .sn-health[data-state="ok"] { background:${STATE_COLOR.healthy}; box-shadow:0 0 6px ${STATE_COLOR.healthy}; }
+        .sn-health[data-state="degraded"] { background:${STATE_COLOR.degraded}; box-shadow:0 0 6px ${STATE_COLOR.degraded}; }
+        .sn-health[data-state="down"] { background:${STATE_COLOR.fail}; box-shadow:0 0 6px ${STATE_COLOR.fail}; }
         .sn-svc-label { font-weight:500; color:#fff; }
         .sn-svc-body { padding:0 13px 12px; display:flex; flex-direction:column; gap:6px; }
         .sn-blurb { margin:0; opacity:.85; }

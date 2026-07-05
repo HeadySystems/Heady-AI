@@ -103,6 +103,8 @@ export const SECRETS = Object.freeze([
     rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Heady platform API key (client → API authentication)." },
   { name: "ADMIN_TOKEN", required: false, secret: true, minLength: 20,
     rotation: { strategy: "manual", maxAgeDays: FIB[9] }, description: "Admin bearer token for privileged portal/admin routes." },
+  { name: "SYNC_TOKEN", required: false, secret: true, minLength: 20,
+    rotation: { strategy: "internal", maxAgeDays: FIB[8] }, description: "Cross-device sync-fabric bearer: authenticates /ws/sync device upgrades (@heady/sync-fabric) and the platform-control route tier (BuddyAgentHub). Heady-generated; cleanly auto-rotatable." },
   { name: "HF_TOKEN", required: false, secret: true, minLength: 20,
     rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Hugging Face access token (legacy alias of HUGGINGFACE_TOKEN; both names are consumed across paths)." },
   { name: "GOOGLE_API_KEY", required: false, secret: true, minLength: 20,

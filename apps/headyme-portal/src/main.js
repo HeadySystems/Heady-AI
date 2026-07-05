@@ -8,7 +8,9 @@ import { OnboardingUI } from './components/OnboardingUI.js';
 import { AdminUI }      from './components/AdminUI.js';
 import { LegacyUI }     from './components/LegacyUI.js';
 import { ServicesUI }   from './components/ServicesUI.js';
+import './components/LiveStatus.js'; // self-registers <heady-live-status> (SSE fabric tiles)
 import { onAuthStateChanged, auth } from './services/firebase.js';
+import { initPwa } from './pwa/register.js';
 
 const PHI = 1.618033988749895;
 const appContainer = document.querySelector('#app');
@@ -70,6 +72,7 @@ function handleRoute(user) {
 }
 
 // ── boot ───────────────────────────────────────────────────────────
+initPwa();
 renderLoader();
 
 onAuthStateChanged(auth, (user) => {

@@ -30,6 +30,14 @@ gcloud secrets add-iam-policy-binding ADMIN_TOKEN --project=heady-ai \
 ```
 (The write was attempted and denied by the session permission classifier — correctly: external secret-store writes are yours.)
 
+Same pattern for **SYNC_TOKEN** (device sync fabric + buddy platform-control tier; generated into `.env` on 2026-07-05):
+```bash
+grep '^SYNC_TOKEN=' .env | cut -d= -f2 | tr -d '\n' | \
+  gcloud secrets create SYNC_TOKEN --project=heady-ai --replication-policy=automatic --data-file=-
+```
+Until provisioned, `/ws/sync` and the 5 platform-control buddy routes correctly refuse with 503 (fail-closed by design).
+Related findings recorded this run: the legacy CrossDeviceSyncHub has been silently dead in prod (TDZ throw, caught at boot) — superseded by `@heady/sync-fabric`; `src/buddy-authorization.js:194` auto-approves unknown actions (fail-open) — mitigated today by the admin guard in front, queued for its own hardening leg.
+
 ## 3 — Mint working Cloudflare tokens · HIGH (clears TWO blockers)
 The `.env` token authenticates nothing (HTTP 401, code 10000). Mint two scoped tokens in the Cloudflare dashboard:
 - **Workers AI: Read** → unblocks the embed pipeline (432 jobs queued, 0 vectors written — pipeline verified fail-closed, re-run `node tooling/embed-corpus/src/embed.mjs` after updating `CLOUDFLARE_API_TOKEN` in `.env`).

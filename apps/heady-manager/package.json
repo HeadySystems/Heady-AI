@@ -12,6 +12,7 @@
   "dependencies": {
     "@heady/kernel": "workspace:*",
     "@heady/config": "workspace:*",
+    "@heady/phi-math": "workspace:*",
     "@heady/logger": "workspace:*",
     "@heady/shared": "workspace:*",
     "@heady/resilience": "workspace:*",
