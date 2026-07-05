@@ -38,6 +38,21 @@ export const api = {
   rollback:      (id, token)     => cf('POST', `/codeflow/proposals/${id}/rollback`, {}, token),
 };
 
+// ── HeadyService dispatcher API ────────────────────────────────────
+// registerServiceRoutes (src/hc_service_dispatcher.js) mounts on the
+// heady-manager app — the same base as the codeflow API. No host is
+// hardcoded: base comes from VITE_CODEFLOW_API.
+export const services = {
+  /** GET /api/service/catalog → { ok, services:[{name,endpoint,method,capabilities,component}] } */
+  catalog:  (token)       => cf('GET',  '/api/service/catalog', null, token),
+  /** GET /api/service/health → { ok, status, totalServices, recentSuccessRate, avgLatencyMs, ts } */
+  health:   (token)       => cf('GET',  '/api/service/health',  null, token),
+  /** POST /api/service/resolve { intent?|service? } → { ok, resolved, confidence, endpoint, method, capabilities } */
+  resolve:  (body, token) => cf('POST', '/api/service/resolve', body, token),
+  /** POST /api/service { intent?, service?, params? } → { ok, service, confidence, result } */
+  dispatch: (body, token) => cf('POST', '/api/service',         body, token),
+};
+
 // ── legacy advisor API ─────────────────────────────────────────────
 const LEGACY_BASE = import.meta.env.VITE_LEGACY_API ?? '';
 

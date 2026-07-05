@@ -9,9 +9,17 @@ name: ci
 on:
   push:
   pull_request:
+  # Manual lever while push-event runs are suppressed for the HeadyMe account
+  # (evidence: Dependabot pushes fire, owner pushes create zero runs with all
+  # policies enabled — account-level Actions flag, GitHub Support ticket).
+  workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verify:

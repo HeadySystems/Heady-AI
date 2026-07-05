@@ -1,0 +1,15 @@
+{
+  "name": "@heady/admin-guard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Deny-by-default admin mutation guard (SEC-002) — generic fail-closed Express middleware; secret loading stays in @heady/secrets.",
+  "type": "module",
+  "main": "src/index.mjs",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@heady/secrets": "workspace:*"
+  }
+}

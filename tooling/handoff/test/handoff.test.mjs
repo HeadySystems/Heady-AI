@@ -50,7 +50,7 @@ test("summarizeFiles groups and counts by status", () => {
   assert.equal(s.counts.M, 1);
 });
 
-test("renderBundle produces all 7 sections and reflects verification", () => {
+test("renderBundle produces all 8 sections and reflects verification", () => {
   const md = renderBundle({
     nowIso: "2026-06-17T12:00:00Z", head: "deadbeef", headShort: "deadbee", branch: "rebuild",
     sinceRef: "cafe", sinceShort: "cafe", firstRun: false,
@@ -61,7 +61,8 @@ test("renderBundle produces all 7 sections and reflects verification", () => {
     contextFiles: [{ path: "AGENTS.md", exists: true, note: "rules" }],
   });
   for (const h of ["# Heady Agent Handoff", "## 1. TL;DR", "## 2. Commits", "## 3. Files changed",
-    "## 4. Verification", "## 5. Context to read", "## 6. Open threads", "## 7. Checkpoint"]) {
+    "## 4. Verification", "## 5. Context to read", "## 6. Open threads",
+    "## 7. Optimal Execution Guidelines (Agent Primer)", "## 8. Checkpoint"]) {
     assert.ok(md.includes(h), `missing section: ${h}`);
   }
   assert.ok(md.includes("packages/new.mjs"), "lists added file");

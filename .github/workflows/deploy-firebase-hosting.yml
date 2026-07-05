@@ -1,14 +1,17 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Deploy — headyme-portal → Firebase Hosting v2.0.0         ║
+# ║  Canonical (and only) Firebase deploy workflow. Builds             ║
+# ║  apps/headyme-portal and deploys against its firebase.json         ║
+# ║  (project heady-ai, default site). WIF-first auth, SA fallback.    ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
 name: Deploy Portal to Firebase Hosting
 
 on:
   push:
-    branches: [rebuild]
+    branches: [main]
     paths:
-      - 'apps/headyme-portal/src/**'
-      - 'apps/headyme-portal/package.json'
-      - 'apps/headyme-portal/vite.config.*'
-      - 'apps/headyme-portal/firebase.json'
-      - 'apps/headyme-portal/.firebaserc'
+      - 'apps/headyme-portal/**'
       - '.github/workflows/deploy-firebase-hosting.yml'
 
   workflow_dispatch:
@@ -33,18 +36,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: rebuild
+
+      - name: Install pnpm (version from root packageManager field)
+        uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: apps/headyme-portal/package-lock.json
+          cache: 'pnpm'
 
-      - name: Install portal dependencies
-        working-directory: apps/headyme-portal
-        run: npm ci
+      - name: Install workspace dependencies (portal scope)
+        run: pnpm install --frozen-lockfile --filter headyme-portal...
 
       - name: Build portal
         working-directory: apps/headyme-portal
@@ -57,10 +59,10 @@ jobs:
           VITE_FIREBASE_APP_ID: '1:1003436179562:web:1ab30825a7119a82578a13'
           VITE_FIREBASE_MESSAGING_SENDER_ID: '1003436179562'
         run: |
-          npx vite build --mode production
+          pnpm exec vite build --mode production
           sed -i 's|/vite.svg|/favicon.svg|g' dist/index.html
           printf '/* /index.html 200\n' > dist/_redirects
-          echo "✅ Built:"
+          echo "Built:"
           ls -lh dist/ dist/assets/
 
       - name: Install Firebase CLI
@@ -104,7 +106,9 @@ jobs:
         if: steps.auth.outcome == 'success'
         run: |
           sleep 8
-          for URL in "https://heady-ai.firebaseapp.com/" "https://heady-ai.web.app/"; do
+          for URL in "https://heady-ai.firebaseapp.com/" "https://heady-ai.web.app/" "https://1ime1.com/"; do
             STATUS=$(curl -sf -o /dev/null -w "%{http_code}" --max-time 15 "$URL" 2>/dev/null || echo "000")
             echo "  $URL → $STATUS"
           done
+          # 1ime1.com may report 302 until the Firebase custom-domain attach
+          # (human-gated, docs/runbooks/1IME1_ADMIN_SURFACE_RUNBOOK.md) completes.

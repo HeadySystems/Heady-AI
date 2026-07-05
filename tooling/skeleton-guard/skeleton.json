@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "updated": "2026-06-16",
-  "authority": "Locked scaffold from rebuild branch. Expand by adding entries here — never by dropping files ad-hoc.",
+  "updated": "2026-07-04",
+  "authority": "Locked scaffold from rebuild branch. Expand by adding entries here \u2014 never by dropping files ad-hoc.",
   "directories": [
     {
       "pattern": "apps/*/src/**",
@@ -192,12 +192,21 @@
       "notes": "Pipeline tasks, shared config"
     },
     {
+      "pattern": "docs/design/**",
+      "purpose": "Design-data bundle: canon-derived tokens + briefs for Claude design tools and v0",
+      "allowedExtensions": [
+        ".md",
+        ".json"
+      ],
+      "notes": "design-tokens.json is machine-readable W3C design-tokens format, derived from facts.yaml + phi-math"
+    },
+    {
       "pattern": "docs/**",
       "purpose": "Documentation, ADRs, specs, compendium",
       "allowedExtensions": [
         ".md"
       ],
-      "notes": "Markdown only — no code in docs/"
+      "notes": "Markdown only \u2014 no code in docs/"
     },
     {
       "pattern": ".agents/skills/*/**",
@@ -352,7 +361,7 @@
       "allowedExtensions": [
         "*"
       ],
-      "notes": "Exempt from strict placement rules — any file type allowed"
+      "notes": "Exempt from strict placement rules \u2014 any file type allowed"
     },
     {
       "pattern": "heady-commander-plugin/**",
@@ -367,6 +376,16 @@
         ".yml"
       ],
       "notes": "Plugin package"
+    },
+    {
+      "pattern": "src/**",
+      "purpose": "LEGACY manager tree (pre-rebuild) \u2014 maintenance and security hardening only",
+      "allowedExtensions": [
+        ".js",
+        ".mjs",
+        ".json"
+      ],
+      "notes": "SEC-002 remediation surface. New modules belong in packages/* \u2014 do not grow this tree; port out of it (REBUILD_PLAN_V2 port-and-verify)."
     }
   ],
   "rootFiles": [
@@ -414,7 +433,8 @@
     "node_modules",
     ".git",
     ".turbo",
-    ".firebase"
+    ".firebase",
+    "src"
   ],
   "antiPatterns": [
     {

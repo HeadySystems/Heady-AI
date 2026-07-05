@@ -1,0 +1,196 @@
+{
+  "$description": "HEADY(TM) design tokens v1.0.0 - W3C design-tokens format. Machine-readable single source for Claude design tools and v0.dev generation. Every value is derived from repo canon: packages/phi-math/src/index.mjs (phi constants, FIB), .agents/skills/heady-sacred-geometry-css-generator/SKILL.md (dark palette, type scale, motion), docs/adr/0026-mcp-console-ui-architecture.md (state colors, heartbeat), docs/compendium/09-infra-and-services.md SI6/SI7 (fonts, site accents, radius, 0.382s transition), apps/headyme-portal/src/components/heady-build-narrative.js (beat palette). (c) 2026 HeadySystems Inc. - Eric Haywood, Founder.",
+  "$extensions": {
+    "com.headysystems.provenance": {
+      "generatedFrom": [
+        "facts.yaml (platform.phi = 1.618033988749895)",
+        "packages/phi-math/src/index.mjs (PHI, PSI, PSI2, PHI_7, HEARTBEAT_MS, FIB, CSL_THRESHOLDS)",
+        ".agents/skills/heady-sacred-geometry-css-generator/SKILL.md",
+        "docs/adr/0026-mcp-console-ui-architecture.md",
+        "docs/compendium/09-infra-and-services.md#I6-design-system",
+        "apps/headyme-portal/src/components/heady-build-narrative.js"
+      ],
+      "regeneration": "Values marked derived:true in $extensions have no canon source and were computed from the canonical dark palette + phi-math; see docs/design/README.md for the derivation rules.",
+      "wcagValidated": "Contrast ratios computed 2026-07-04 with the WCAG 2.1 relative-luminance formula; ratios quoted in $description fields."
+    }
+  },
+  "phi": {
+    "$description": "Golden-ratio constants, verbatim from packages/phi-math/src/index.mjs (the phi source of truth, AGENTS.md #8).",
+    "PHI": { "$type": "number", "$value": 1.618033988749895, "$description": "phi = (1+sqrt(5))/2" },
+    "PSI": { "$type": "number", "$value": 0.6180339887498948, "$description": "1/phi = phi - 1" },
+    "PSI2": { "$type": "number", "$value": 0.3819660112501051, "$description": "phi^-2 - the 0.382 minor ratio (golden-section complement)" },
+    "PHI_7": { "$type": "number", "$value": 29.03444185374864, "$description": "phi^7 - heartbeat scalar" },
+    "goldenSection": {
+      "major": { "$type": "number", "$value": 61.8, "$description": "Layout major fraction (%) = PSI*100; canvas:drawer and grid splits per REBUILD_PLAN_V2 S8 (canvas:drawer ~ phi:1) and heady-living-dashboard SKILL (61.8fr/38.2fr grid)." },
+      "minor": { "$type": "number", "$value": 38.2, "$description": "Layout minor fraction (%) = PSI2*100." }
+    },
+    "coherenceBands": {
+      "$description": "CSL_THRESHOLDS from phi-math; heady-living-dashboard maps them to state color: >= HIGH healthy, >= LOW warning, < LOW danger.",
+      "high": { "$type": "number", "$value": 0.8819660112501052 },
+      "low": { "$type": "number", "$value": 0.6909830056250525 }
+    }
+  },
+  "color": {
+    "dark": {
+      "$description": "Canonical dark premium palette - heady-sacred-geometry-css-generator SKILL.md :root block (authoritative).",
+      "bg": {
+        "primary": { "$type": "color", "$value": "#0a0a0f" },
+        "secondary": { "$type": "color", "$value": "#12121a" },
+        "tertiary": { "$type": "color", "$value": "#1a1a26" },
+        "card": { "$type": "color", "$value": "#ffffff08", "$description": "rgba(255,255,255,0.03) as 8-digit hex" },
+        "glass": { "$type": "color", "$value": "#ffffff0d", "$description": "rgba(255,255,255,0.05)" },
+        "glassDeep": { "$type": "color", "$value": "#ffffff14", "$description": "rgba(255,255,255,0.08)" }
+      },
+      "text": {
+        "primary": { "$type": "color", "$value": "#e8e8f0", "$description": "16.21:1 on bg.primary - AAA" },
+        "secondary": { "$type": "color", "$value": "#9898a8", "$description": "6.95:1 on bg.primary - AA" },
+        "muted": { "$type": "color", "$value": "#5a5a6a", "$description": "De-emphasis only; below AA for body text - never for load-bearing copy" }
+      },
+      "border": {
+        "subtle": { "$type": "color", "$value": "#ffffff14", "$description": "rgba(255,255,255,0.08)" },
+        "glow": { "$type": "color", "$value": "#ffffff26", "$description": "rgba(255,255,255,0.15)" }
+      }
+    },
+    "light": {
+      "$description": "DERIVED - no light palette exists in canon (canon gap, see README.md). Derivation rule: invert the dark neutrals about the same hue family (indigo-tinted neutrals, hue held), keep state hues, darken accents until text-grade >= 4.5:1 on bg.primary. All ratios computed, not asserted.",
+      "$extensions": { "com.headysystems.provenance": { "derived": true, "rule": "contrast-inversion of color.dark; hue family preserved" } },
+      "bg": {
+        "primary": { "$type": "color", "$value": "#f6f6f9" },
+        "secondary": { "$type": "color", "$value": "#ededf2" },
+        "tertiary": { "$type": "color", "$value": "#e3e3ea" },
+        "card": { "$type": "color", "$value": "#0a0a0f08", "$description": "same 3% overlay, dark-on-light" },
+        "glass": { "$type": "color", "$value": "#0a0a0f0d" },
+        "glassDeep": { "$type": "color", "$value": "#0a0a0f14" }
+      },
+      "text": {
+        "primary": { "$type": "color", "$value": "#16161d", "$description": "16.69:1 on light bg.primary - AAA (mirrors dark 16.21:1)" },
+        "secondary": { "$type": "color", "$value": "#4c4c5c", "$description": "7.80:1 on light bg.primary - AA" },
+        "muted": { "$type": "color", "$value": "#8a8a9a", "$description": "De-emphasis only" }
+      },
+      "border": {
+        "subtle": { "$type": "color", "$value": "#0a0a0f14" },
+        "glow": { "$type": "color", "$value": "#0a0a0f26" }
+      }
+    },
+    "state": {
+      "$description": "Status honesty palette - ADR-0026 (teal healthy / violet degraded-or-projection / amber token-expired) + heady-build-narrative.js BEAT_STYLE (amber #ffb020 blocked, red #ff5470 fail). These are STATE SIGNALS, not wallpaper (REBUILD_PLAN_V2 S8).",
+      "healthy": { "$type": "color", "$value": "#00d4aa", "$description": "Teal - healthy/live/done. 10.34:1 on dark bg (AAA)." },
+      "degraded": { "$type": "color", "$value": "#7c5eff", "$description": "Violet - degraded, projection-only, plan/decision/gate beats. 4.61:1 on dark bg (AA)." },
+      "blocked": { "$type": "color", "$value": "#ffb020", "$description": "Amber - blocked/waiting/token_expired. 10.80:1 on dark bg (AAA)." },
+      "fail": { "$type": "color", "$value": "#ff5470", "$description": "Red - fail/error. 6.35:1 on dark bg (AA)." },
+      "onLight": {
+        "$description": "DERIVED text-grade variants for light theme (raw state hues fail on light: #00d4aa = 1.77:1, #7c5eff = 3.97:1). Same hue, darkened to >= 4.5:1 on light bg.primary.",
+        "$extensions": { "com.headysystems.provenance": { "derived": true } },
+        "healthy": { "$type": "color", "$value": "#007a62", "$description": "4.92:1 on #f6f6f9 - AA" },
+        "degraded": { "$type": "color", "$value": "#5436d6", "$description": "6.77:1 - AA" },
+        "blocked": { "$type": "color", "$value": "#8a5a00", "$description": "5.49:1 - AA" },
+        "fail": { "$type": "color", "$value": "#c41f44", "$description": "5.37:1 - AA" }
+      }
+    },
+    "siteAccents": {
+      "$description": "Per-site accent hues - docs/compendium/09-infra-and-services.md SI7 (the reconciled v2 list of 11 sites). NOTE canon drift: the sacred-geometry skill's older table gives headysystems.com #00d4aa; SI7 + ADR-0026 pair teal(headyme)+violet(headysystems) - SI7 wins (see README canon-gaps).",
+      "headyme": { "$type": "color", "$value": "#00d4aa" },
+      "headysystems": { "$type": "color", "$value": "#7c5eff" },
+      "headyconnectionOrg": { "$type": "color", "$value": "#00b4ff" },
+      "headybuddy": { "$type": "color", "$value": "#ff6b35" },
+      "headymcp": { "$type": "color", "$value": "#f0c040" },
+      "headyio": { "$type": "color", "$value": "#ff3d82" },
+      "headybot": { "$type": "color", "$value": "#4caf50" },
+      "headyapi": { "$type": "color", "$value": "#ff9800" },
+      "headylens": { "$type": "color", "$value": "#e91e8c" },
+      "headyai": { "$type": "color", "$value": "#00bcd4" },
+      "headyfinance": { "$type": "color", "$value": "#4caf50" }
+    }
+  },
+  "spacing": {
+    "$description": "Fibonacci spacing scale in px - values from phi-math FIB[4..12]. The sacred-geometry SKILL uses these exact px values (its fib() index comments are off by one; the phi-math array is authoritative: FIB[5]=5, FIB[6]=8, FIB[7]=13, FIB[8]=21, FIB[9]=34, FIB[10]=55, FIB[11]=89, FIB[12]=144).",
+    "3xs": { "$type": "dimension", "$value": "3px", "$description": "FIB[4]" },
+    "2xs": { "$type": "dimension", "$value": "5px", "$description": "FIB[5]" },
+    "xs": { "$type": "dimension", "$value": "8px", "$description": "FIB[6]" },
+    "sm": { "$type": "dimension", "$value": "13px", "$description": "FIB[7]" },
+    "md": { "$type": "dimension", "$value": "21px", "$description": "FIB[8]" },
+    "lg": { "$type": "dimension", "$value": "34px", "$description": "FIB[9]" },
+    "xl": { "$type": "dimension", "$value": "55px", "$description": "FIB[10]" },
+    "2xl": { "$type": "dimension", "$value": "89px", "$description": "FIB[11]" },
+    "3xl": { "$type": "dimension", "$value": "144px", "$description": "FIB[12]" }
+  },
+  "typography": {
+    "fontFamily": {
+      "display": { "$type": "fontFamily", "$value": ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"], "$description": "Admin console display face - compendium SI6 (MCP Console design system)." },
+      "body": { "$type": "fontFamily", "$value": ["Inter", "ui-sans-serif", "system-ui", "sans-serif"], "$description": "User-facing site body face - compendium SI6 (V9 site system)." },
+      "mono": { "$type": "fontFamily", "$value": ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"], "$description": "ALL machine values (ids, hashes, traceIds, endpoints, logs) - compendium SI6, both expressions." }
+    },
+    "scale": {
+      "$description": "phi type scale from heady-sacred-geometry-css-generator SKILL.md. xl/2xl/3xl/4xl are exact phi powers from phi-math: PHI=1.618033988749895, PHI2=2.618..., PHI3=4.236..., PHI4=6.854... (quoted at 3dp as canon CSS does).",
+      "xs": { "$type": "dimension", "$value": "0.75rem" },
+      "sm": { "$type": "dimension", "$value": "0.875rem" },
+      "base": { "$type": "dimension", "$value": "1rem" },
+      "lg": { "$type": "dimension", "$value": "1.125rem" },
+      "xl": { "$type": "dimension", "$value": "1.618rem", "$description": "base x PHI" },
+      "2xl": { "$type": "dimension", "$value": "2.618rem", "$description": "base x PHI^2" },
+      "3xl": { "$type": "dimension", "$value": "4.236rem", "$description": "base x PHI^3" },
+      "4xl": { "$type": "dimension", "$value": "6.854rem", "$description": "base x PHI^4" }
+    }
+  },
+  "radius": {
+    "$description": "Fibonacci radii. 13px is the canonical --heady-radius (compendium SI6, V9 system); glass panels use 13/21 (skill .glass/.glass-deep).",
+    "sm": { "$type": "dimension", "$value": "5px", "$description": "FIB[5] - focus rings, chips" },
+    "md": { "$type": "dimension", "$value": "8px", "$description": "FIB[6] - beats, inputs" },
+    "lg": { "$type": "dimension", "$value": "13px", "$description": "FIB[7] - cards/panels (--heady-radius)" },
+    "xl": { "$type": "dimension", "$value": "21px", "$description": "FIB[8] - deep glass, modals" }
+  },
+  "elevation": {
+    "$description": "Heady elevation = glassmorphism depth, not drop shadows (sacred-geometry skill .glass/.glass-deep). Depth is expressed by backdrop blur + saturation + border strength.",
+    "glass": {
+      "blur": { "$type": "dimension", "$value": "20px" },
+      "saturate": { "$type": "number", "$value": 1.8, "$description": "saturate(180%)" },
+      "background": { "$type": "color", "$value": "#ffffff0d" },
+      "border": { "$type": "color", "$value": "#ffffff14" }
+    },
+    "glassDeep": {
+      "blur": { "$type": "dimension", "$value": "40px" },
+      "saturate": { "$type": "number", "$value": 2.0, "$description": "saturate(200%)" },
+      "background": { "$type": "color", "$value": "#ffffff14" },
+      "border": { "$type": "color", "$value": "#ffffff26" }
+    },
+    "statusGlow": {
+      "$type": "shadow",
+      "$value": { "color": "#00d4aa", "offsetX": "0px", "offsetY": "0px", "blur": "8px", "spread": "0px" },
+      "$description": "Live-status dot glow - heady-build-narrative.js (.hbn-status::before box-shadow: 0 0 8px var(--dot)). Color follows the state token."
+    }
+  },
+  "motion": {
+    "$description": "phi-scaled motion. Durations from the sacred-geometry skill ramp (each step x phi); 382ms = PSI2 x 1000 is the V9 site transition (compendium SI6 'transition: 0.382s'); 29034ms = PHI_7 x 1000 is the golden heartbeat (phi-math HEARTBEAT_MS, ADR-0026 probe cadence).",
+    "easing": {
+      "phi": { "$type": "cubicBezier", "$value": [0.618, 0, 0.382, 1], "$description": "--ease-phi: golden-section bezier (PSI, 0, PSI2, 1)" }
+    },
+    "duration": {
+      "fast": { "$type": "duration", "$value": "192ms" },
+      "normal": { "$type": "duration", "$value": "309ms" },
+      "site": { "$type": "duration", "$value": "382ms", "$description": "PSI2 x 1000 - V9 user-site transitions" },
+      "slow": { "$type": "duration", "$value": "500ms" },
+      "heartbeat": { "$type": "duration", "$value": "29034ms", "$description": "PHI_7 x 1000 - health probe / SSE reconnect cadence. Ambient pulse on healthy cells; suppressed under prefers-reduced-motion (REBUILD_PLAN_V2 S8)." }
+    },
+    "backoff": {
+      "$description": "phiBackoffMs(n) = round(1000 x PHI^n) - reconnect/retry choreography (phi-math).",
+      "attempt1": { "$type": "duration", "$value": "1618ms" },
+      "attempt2": { "$type": "duration", "$value": "2618ms" },
+      "attempt3": { "$type": "duration", "$value": "4236ms" },
+      "attempt4": { "$type": "duration", "$value": "6854ms" }
+    }
+  },
+  "breakpoints": {
+    "$description": "DERIVED - no canonical breakpoints exist in the repo (canon gap, see README.md). Derivation: phi-native Fibonacci px straight from phi-math FIB[14..17], keeping the whole ramp on one lattice.",
+    "$extensions": { "com.headysystems.provenance": { "derived": true, "rule": "FIB[14]=377, FIB[15]=610, FIB[16]=987, FIB[17]=1597" } },
+    "narrow": { "$type": "dimension", "$value": "377px", "$description": "FIB[14] - single-column floor" },
+    "medium": { "$type": "dimension", "$value": "610px", "$description": "FIB[15] - two-column" },
+    "wide": { "$type": "dimension", "$value": "987px", "$description": "FIB[16] - full dashboard grid" },
+    "max": { "$type": "dimension", "$value": "1597px", "$description": "FIB[17] - content max-width" }
+  },
+  "layout": {
+    "$description": "Layout grammar constants.",
+    "goldenGrid": { "$type": "string", "$value": "61.8fr 38.2fr", "$description": "Primary dashboard split (heady-living-dashboard SKILL grid-template-columns)." },
+    "beatDomCap": { "$type": "number", "$value": 144, "$description": "FIB[12] - max live-feed rows kept in DOM (heady-build-narrative MAX_BEATS)." },
+    "logLineCap": { "$type": "number", "$value": 89, "$description": "FIB[11] - max log-stream lines (LegacyUI)." }
+  }
+}

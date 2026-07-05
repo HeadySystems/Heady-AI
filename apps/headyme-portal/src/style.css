@@ -342,6 +342,11 @@ button.small {
   color: #7c5eff;
 }
 
+.tab-badge.services {
+  background: rgba(255, 176, 32, 0.15);
+  color: #ffb020;
+}
+
 /* ── Legacy Dashboard Grid (mirrors .admin-dashboard layout) ──────── */
 .legacy-dashboard .dashboard-grid {
   display: grid;
