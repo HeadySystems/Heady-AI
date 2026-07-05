@@ -286,6 +286,114 @@ class BuddyAgentHub extends EventEmitter {
     }
 
     /**
+     * Mount the hub's HTTP surface. SECURITY CONTRACT (SEC-002):
+     *   - `requireAdmin` (deny-by-default admin guard) and `requirePlatformControl`
+     *     (SYNC_TOKEN device-tier check) are MANDATORY — without both middlewares
+     *     this method throws and nothing mounts. Fail-closed, never fail-open.
+     *   - Every mutation/control route is admin-guarded; routes that drive the
+     *     DeviceBridge PLATFORMS matrix (task dispatch, device registration,
+     *     heartbeat, task completion, device removal) additionally demand the
+     *     sync token. Only static catalogs and health stay public.
+     *
+     * @param {import("express").Application} app
+     * @param {{ requireAdmin: Function, requirePlatformControl: Function, log?: Function }} guards
+     */
+    registerRoutes(app, { requireAdmin, requirePlatformControl, log } = {}) {
+        if (!app || typeof app.get !== "function" || typeof app.post !== "function") {
+            throw new TypeError("BuddyAgentHub.registerRoutes: an Express-compatible app is mandatory");
+        }
+        if (typeof requireAdmin !== "function" || typeof requirePlatformControl !== "function") {
+            throw new TypeError("BuddyAgentHub.registerRoutes: requireAdmin and requirePlatformControl middleware are mandatory — control routes never mount unguarded");
+        }
+        const logFn = typeof log === "function" ? log : () => { };
+        const guardedJson = (handler) => async (req, res) => {
+            try {
+                await handler(req, res);
+            } catch (err) {
+                logFn({ event: "buddy-hub.route-error", path: req.path, error: err.message });
+                res.status(err.statusCode || 500).json({ ok: false, error: err.message });
+            }
+        };
+
+        // ── Read-only static catalogs + health (no user data — public-safe) ──
+        app.get("/api/buddy/hub/health", guardedJson(async (req, res) => {
+            res.json({ ok: true, ...this.getHealth() });
+        }));
+        app.get("/api/buddy/hub/capabilities", guardedJson(async (req, res) => {
+            res.json({ ok: true, capabilities: this.getCapabilities() });
+        }));
+        app.get("/api/buddy/hub/platforms", guardedJson(async (req, res) => {
+            res.json({ ok: true, platforms: this.getPlatforms() });
+        }));
+        app.get("/api/buddy/hub/actions", guardedJson(async (req, res) => {
+            res.json({ ok: true, actions: this.bridge.getAvailableActions() });
+        }));
+
+        // ── Sensitive per-user reads (admin) ─────────────────────────────────
+        app.get("/api/buddy/hub/devices/:userId", requireAdmin, guardedJson(async (req, res) => {
+            res.json({ ok: true, userId: req.params.userId, devices: this.bridge.listDevices(req.params.userId) });
+        }));
+        app.get("/api/buddy/hub/permissions/:userId", requireAdmin, guardedJson(async (req, res) => {
+            res.json({ ok: true, userId: req.params.userId, permissions: this.getPermissions(req.params.userId) });
+        }));
+
+        // ── Mutations (admin) ────────────────────────────────────────────────
+        app.post("/api/buddy/hub/permissions", requireAdmin, guardedJson(async (req, res) => {
+            const { userId, actionId, riskTier } = req.body || {};
+            if (!userId || !actionId || !riskTier) {
+                return res.status(400).json({ ok: false, error: "userId, actionId and riskTier are all mandatory" });
+            }
+            const override = this.setPermission(userId, actionId, riskTier);
+            logFn({ event: "buddy-hub.permission-override", userId, actionId, riskTier });
+            res.json({ ok: true, override });
+        }));
+
+        // ── Platform-control tier (admin + SYNC_TOKEN) — drives real devices ─
+        app.post("/api/buddy/hub/task", requireAdmin, requirePlatformControl, guardedJson(async (req, res) => {
+            const { userId, instruction } = req.body || {};
+            if (!userId || !instruction) {
+                return res.status(400).json({ ok: false, error: "userId and instruction are mandatory" });
+            }
+            const { preferredDevice, priority, context, confirmed } = req.body;
+            const result = await this.executeTask(userId, instruction, { preferredDevice, priority, context, confirmed });
+            logFn({ event: "buddy-hub.task", userId, taskId: result.taskId, status: result.status });
+            res.status(result.status === "denied" ? 403 : 200).json({ ok: result.status !== "denied", ...result });
+        }));
+        app.post("/api/buddy/hub/devices", requireAdmin, requirePlatformControl, guardedJson(async (req, res) => {
+            const { userId, ...deviceInfo } = req.body || {};
+            if (!userId || !deviceInfo.platform) {
+                return res.status(400).json({ ok: false, error: "userId and platform are mandatory" });
+            }
+            const registration = this.registerDevice(userId, deviceInfo);
+            logFn({ event: "buddy-hub.device-registered", userId, deviceId: registration.deviceId, platform: deviceInfo.platform });
+            res.json({ ok: true, ...registration });
+        }));
+        app.post("/api/buddy/hub/devices/:deviceId/heartbeat", requireAdmin, requirePlatformControl, guardedJson(async (req, res) => {
+            res.json({ ok: true, ...this.bridge.heartbeat(req.params.deviceId, req.body?.status || {}) });
+        }));
+        app.post("/api/buddy/hub/tasks/:taskId/complete", requireAdmin, requirePlatformControl, guardedJson(async (req, res) => {
+            const { success, data, error } = req.body || {};
+            if (typeof success !== "boolean") {
+                return res.status(400).json({ ok: false, error: "success (boolean) is mandatory" });
+            }
+            res.json({ ok: true, ...this.bridge.completeTask(req.params.taskId, { success, data, error }) });
+        }));
+        app.delete("/api/buddy/hub/devices/:deviceId", requireAdmin, requirePlatformControl, guardedJson(async (req, res) => {
+            const removed = this.bridge.removeDevice(req.params.deviceId);
+            logFn({ event: "buddy-hub.device-removed", deviceId: req.params.deviceId });
+            res.json({ ok: true, ...removed });
+        }));
+
+        logFn({
+            event: "buddy-hub.routes-registered",
+            surface: "/api/buddy/hub/*",
+            publicRoutes: 4,
+            adminRoutes: 3,
+            platformControlRoutes: 5,
+        });
+    }
+
+    /**
      * Get device setup instructions for each platform.
      */
     _getDeviceSetupInstructions() {

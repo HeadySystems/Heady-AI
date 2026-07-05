@@ -71,7 +71,7 @@ test("registry rotation metadata is well-formed (valid strategy + FIB-derived ma
   }
   // Only Heady-generated internal secrets are cleanly auto-rotatable.
   const internal = SECRETS.filter((s) => s.rotation?.strategy === "internal").map((s) => s.name);
-  assert.deepEqual(internal, ["INTERNAL_NODE_SECRET"]);
+  assert.deepEqual(internal, ["INTERNAL_NODE_SECRET", "SYNC_TOKEN"]);
 });
 
 test("planRotation flags only secrets past maxAgeDays; never-rotated counts as due (age unknown)", () => {
@@ -97,7 +97,7 @@ test("partitionPlan separates auto-rotatable from provider/manual (honest scope)
   const reg = SECRETS.filter((s) => s.rotation);
   const plan = planRotation(reg, {}, 10_000 * DAY); // everything due
   const { auto, providerAssisted, manual } = partitionPlan(plan);
-  assert.deepEqual(auto.map((a) => a.name), ["INTERNAL_NODE_SECRET"]);
+  assert.deepEqual(auto.map((a) => a.name), ["INTERNAL_NODE_SECRET", "SYNC_TOKEN"]);
   assert.ok(providerAssisted.length >= 1, "Neon/Upstash are provider-assisted");
   assert.ok(manual.some((m) => m.name === "VAULT_PASSPHRASE"), "encryption root is not auto");
 });

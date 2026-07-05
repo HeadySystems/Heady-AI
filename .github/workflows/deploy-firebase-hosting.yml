@@ -77,11 +77,13 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Deploy → Firebase Hosting (WIF)
+        id: deploy_wif
         if: steps.auth.outcome == 'success'
         working-directory: apps/headyme-portal
         run: firebase deploy --only hosting --project ${{ env.FIREBASE_PROJECT }} --non-interactive
 
       - name: Deploy → Firebase Hosting (SA key fallback)
+        id: deploy_sa
         if: steps.auth.outcome != 'success' && secrets.FIREBASE_SERVICE_ACCOUNT != ''
         working-directory: apps/headyme-portal
         env:
@@ -112,3 +114,115 @@ jobs:
           done
           # 1ime1.com may report 302 until the Firebase custom-domain attach
           # (human-gated, docs/runbooks/1IME1_ADMIN_SURFACE_RUNBOOK.md) completes.
+
+      # ── Release contract (heady-installable-package-release-ops) ────────
+      # Emits release-manifest.json: package, facts.yaml version, dist byte
+      # size, and sha256 of the three installability-critical files.
+      # index.html is produced by the vite build above; sw.js and
+      # manifest.webmanifest land in apps/headyme-portal from the PWA leg —
+      # this step fails closed until that leg is merged.
+      - name: Release manifest (installable-package contract)
+        id: release_manifest
+        if: steps.deploy_wif.outcome == 'success' || steps.deploy_sa.outcome == 'success'
+        run: |
+          set -euo pipefail
+          DIST=apps/headyme-portal/dist
+          VERSION=$(python3 -c "import yaml; print(yaml.safe_load(open('facts.yaml'))['product']['version'])")
+          for f in index.html sw.js manifest.webmanifest; do
+            if [ ! -f "$DIST/$f" ]; then
+              echo "::error::$DIST/$f missing — sw.js + manifest.webmanifest are delivered by the portal PWA leg; release manifest refuses to ship without them"
+              exit 1
+            fi
+          done
+          DIST_BYTES=$(du -sb "$DIST" | cut -f1)
+          jq -n \
+            --arg package "headyme-portal" \
+            --arg channel "firebase-hosting" \
+            --arg project "${{ env.FIREBASE_PROJECT }}" \
+            --arg version "$VERSION" \
+            --arg commit "${GITHUB_SHA}" \
+            --arg builtAt "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --argjson distBytes "$DIST_BYTES" \
+            --arg idxSha "$(sha256sum "$DIST/index.html" | cut -d' ' -f1)" \
+            --argjson idxBytes "$(stat -c%s "$DIST/index.html")" \
+            --arg swSha "$(sha256sum "$DIST/sw.js" | cut -d' ' -f1)" \
+            --argjson swBytes "$(stat -c%s "$DIST/sw.js")" \
+            --arg mfSha "$(sha256sum "$DIST/manifest.webmanifest" | cut -d' ' -f1)" \
+            --argjson mfBytes "$(stat -c%s "$DIST/manifest.webmanifest")" \
+            '{
+              schema: "heady.release-manifest.v1",
+              package: $package,
+              channel: $channel,
+              project: $project,
+              version: $version,
+              commit: $commit,
+              builtAt: $builtAt,
+              distBytes: $distBytes,
+              files: {
+                "index.html":           { sha256: $idxSha, bytes: $idxBytes },
+                "sw.js":                { sha256: $swSha,  bytes: $swBytes },
+                "manifest.webmanifest": { sha256: $mfSha,  bytes: $mfBytes }
+              },
+              hosts: ["https://heady-ai.web.app", "https://1ime1.com"]
+            }' > release-manifest.json
+          echo "Release manifest:"
+          cat release-manifest.json
+
+      - name: Upload release manifest artifact
+        if: steps.release_manifest.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-manifest
+          path: release-manifest.json
+          if-no-files-found: error
+          retention-days: 90
+
+      # ── Post-deploy PWA smoke test (fail-closed installability gate) ────
+      # Asserts the live hosting headers that installability + SW update
+      # depend on. sw.js/manifest.webmanifest are shipped by the PWA leg;
+      # the Cache-Control: no-cache contract on /sw.js is what makes the
+      # service-worker auto-update toast pick up new releases immediately.
+      - name: PWA smoke test (manifest + service worker + shell)
+        if: steps.deploy_wif.outcome == 'success' || steps.deploy_sa.outcome == 'success'
+        run: |
+          set -euo pipefail
+          BASE="https://heady-ai.web.app"
+          sleep 5
+
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$BASE/")
+          echo "GET / → $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::error::app shell GET $BASE/ returned $CODE (expected 200)"
+            exit 1
+          fi
+
+          MF_HEADERS=$(curl -sI --max-time 20 "$BASE/manifest.webmanifest")
+          MF_CODE=$(printf '%s' "$MF_HEADERS" | head -1 | awk '{print $2}')
+          echo "GET /manifest.webmanifest → $MF_CODE"
+          if [ "$MF_CODE" != "200" ]; then
+            echo "::error::manifest.webmanifest returned $MF_CODE (expected 200) — PWA leg files not deployed?"
+            exit 1
+          fi
+          if ! printf '%s' "$MF_HEADERS" | grep -i '^content-type:' | grep -qi 'application/manifest+json'; then
+            echo "::error::manifest.webmanifest content-type is not application/manifest+json — check firebase.json headers from the PWA leg"
+            printf '%s\n' "$MF_HEADERS" | grep -i '^content-type:' || true
+            exit 1
+          fi
+
+          SW_HEADERS=$(curl -sI --max-time 20 "$BASE/sw.js")
+          SW_CODE=$(printf '%s' "$SW_HEADERS" | head -1 | awk '{print $2}')
+          echo "GET /sw.js → $SW_CODE"
+          if [ "$SW_CODE" != "200" ]; then
+            echo "::error::sw.js returned $SW_CODE (expected 200) — PWA leg files not deployed?"
+            exit 1
+          fi
+          if ! printf '%s' "$SW_HEADERS" | grep -i '^cache-control:' | grep -qi 'no-cache'; then
+            echo "::error::sw.js missing Cache-Control no-cache — stale service workers would pin users to old releases"
+            printf '%s\n' "$SW_HEADERS" | grep -i '^cache-control:' || true
+            exit 1
+          fi
+
+          # Best-effort report only: 1ime1.com sits behind Cloudflare Access
+          # (302) until the human-gated custom-domain attach completes.
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "https://1ime1.com/" || echo "000")
+          echo "GET https://1ime1.com/ → $CODE (informational)"

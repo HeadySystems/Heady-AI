@@ -21,7 +21,10 @@ const ROOT = rootArgIdx !== -1 ? process.argv[rootArgIdx + 1] : _defaultRoot;
 const CODE_EXT = /\.(mjs|cjs|jsx?|tsx?)$/;
 const IN_SCOPE = /\/(apps|packages|tooling|configs)\//;
 // Generated bundles, vendored/legacy imports, templates, tests, docs are out of scope.
-const EXEMPT = /(node_modules|\.agents|\/scratch\/|\/docs\/|\.test\.|\.spec\.|\/test\/|__tests__|law-lint|\/dist\/|\/assets\/|INSTALLABLE_PACKAGES|\/templates\/|heady-sacred-geometry-sdk)/;
+// heady-desktop preload: Electron sandboxed preloads are CJS-only by platform design —
+// an ESM preload would force sandbox OFF (a real security downgrade to satisfy a style
+// law). Narrow, single-file exemption; everything else in heady-desktop stays ESM.
+const EXEMPT = /(node_modules|\.agents|\/scratch\/|\/docs\/|\.test\.|\.spec\.|\/test\/|__tests__|law-lint|\/dist\/|\/assets\/|INSTALLABLE_PACKAGES|\/templates\/|heady-sacred-geometry-sdk|heady-desktop\/src\/preload\.cjs)/;
 
 const RULES = [
   {

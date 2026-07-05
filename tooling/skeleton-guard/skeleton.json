@@ -5,6 +5,23 @@
   "authority": "Locked scaffold from rebuild branch. Expand by adding entries here \u2014 never by dropping files ad-hoc.",
   "directories": [
     {
+      "pattern": "configs/INSTALLABLE_PACKAGES/**",
+      "purpose": "Legacy prebuilt installable bundles (superseded by portal PWA + heady-desktop; kept for reference)",
+      "allowedExtensions": [
+        ".md",
+        ".json",
+        ".html",
+        ".js",
+        ".css",
+        ".map",
+        ".sh",
+        ".png",
+        ".svg",
+        ".ico"
+      ],
+      "notes": "Read-mostly archive; disposition documented in its README."
+    },
+    {
       "pattern": "apps/*/src/**",
       "purpose": "Application source code",
       "allowedExtensions": [
@@ -405,6 +422,7 @@
     "claude_desktop_config.json",
     "heady-latent-os-commander.plugin",
     "scaffold_heady.sh",
+    "heady-manager.js",
     ".gitignore",
     ".env.example",
     ".env",
@@ -442,7 +460,8 @@
       "description": "No source files at repo root",
       "pattern": "^[^/]+\\.(mjs|js|ts|jsx|tsx)$",
       "except": [
-        "scaffold_heady.sh"
+        "scaffold_heady.sh",
+        "heady-manager.js"
       ],
       "message": "Source files must live in apps/*/src/, packages/*/src/, or tooling/*/. Move this file to the appropriate source tree."
     },

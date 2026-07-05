@@ -16,12 +16,13 @@ import { HEALTH } from "@heady/shared";
 import { loadFacts } from "@heady/config";
 import { createConsistencyMiddleware } from "@heady/consistency-bus/express";
 import { createIntelligence } from "./intelligence.mjs";
+import { createEventsService } from "./events.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -64,8 +65,20 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
   });
   app.use(consistency.middleware);
 
+  // SSE event fabric: projects the shared in-process bus (intel.bus — ONE spine,
+  // no duplicate) onto /api/events. Kernel-managed so /health reports the fabric.
+  const events = createEventsService({
+    bus: intel.bus,
+    kernel,
+    log,
+    getRequestCount: () => requestCount,
+    getConsistencyStatus: () => consistency.status(),
+    ...eventsOpts,
+  });
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
+  kernel.register(events.service);
 
   kernel.register({
     name: "http",
@@ -100,6 +113,8 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
 
   app.get("/metrics", async (_req, res) => res.json(await kernel.metrics()));
 
+  app.get("/api/events", (req, res) => events.sseHandler(req, res));
+
   app.get("/intelligence", async (_req, res) => {
     const h = await intel.selfCheck();
     res.status(h.status === HEALTH.DOWN ? 503 : 200).json({
@@ -116,7 +131,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
     product,
     version,
     tier: "origin (Cloud Run modular monolith)",
-    endpoints: ["/health", "/metrics"],
+    endpoints: ["/health", "/metrics", "/api/events"],
   }));
 
   app.use((_req, res) => res.status(404).json({ error: "not_found" }));
@@ -125,6 +140,8 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
     app,
     kernel,
     intel,
+    /** SSE event fabric handle — `events.publish(subject, payload)` is the app-level hook. */
+    events,
     log,
     /** Boot the kernel (dependency-ordered; the `http` service listens here). */
     start: () => kernel.boot(),

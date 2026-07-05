@@ -1,3 +1,9 @@
+> **DISPOSITION (2026-07-04): superseded — kept for reference.**
+> These legacy Cloudflare-Pages/static bundles (HeadyBuddy, HeadyAI-IDE, HeadyWeb) are superseded by
+> the **portal PWA** (`apps/headyme-portal`, deployed via `.github/workflows/deploy-firebase-hosting.yml`
+> with a release-manifest + smoke-test contract) and the **native desktop shell** (`apps/heady-desktop`).
+> Install paths for every device: `docs/runbooks/INSTALL_HEADY_ON_YOUR_DEVICES.md`. Do not deploy from here.
+
 # 🚀 Heady Systems Installable Packages
 
 **Production-Ready Build Packages for All Heady Applications**

@@ -40,6 +40,8 @@ export class AdminUI {
           </div>
         </header>
 
+        <heady-live-status></heady-live-status>
+
         <main class="dashboard-grid">
           <section class="card glass-panel" id="system-status">
             <h2>System Coherence</h2>

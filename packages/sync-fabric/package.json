@@ -1,0 +1,22 @@
+{
+  "name": "@heady/sync-fabric",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Hardened cross-device sync fabric — mandatory-auth /ws/sync WebSocket transport with device presence, session handoff (resumable context), shared context broadcast, debounced persistent user/workspace state, and event receipts. φ-capped: FIB[13] KB messages, FIB[8] msg/s, 2·φ⁷s heartbeat.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "build": "echo \"(no build — runnable ESM)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "@heady/secrets": "workspace:*",
+    "ws": "^8.21.0"
+  },
+  "keywords": ["heady", "sync", "cross-device", "websocket", "handoff", "presence", "session"]
+}
