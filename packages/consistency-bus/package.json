@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "description": "Runtime global-consistency bus: recognize HeadyRegistry-linked values in all ingress/egress data, propagate changes everywhere, verify coherence.",
-  "exports": { ".": "./src/index.mjs" },
+  "exports": {
+    ".": "./src/index.mjs",
+    "./express": "./src/express.mjs"
+  },
   "scripts": {
     "test": "node --test",
     "lint": "echo \"(lint wired at repo level)\"",
-    "build": "echo \"(no build — runnable ESM)\""
+    "build": "echo \"(no build \u2014 runnable ESM)\""
   },
   "dependencies": {
     "@heady/codeflow": "workspace:*"

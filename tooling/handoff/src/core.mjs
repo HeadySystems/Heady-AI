@@ -176,8 +176,33 @@ export function renderBundle(b) {
   }
   out.push("");
 
-  // 7. Checkpoint
-  out.push("## 7. Checkpoint");
+  // 7. Optimal Execution Guidelines
+  out.push("## 7. Optimal Execution Guidelines (Agent Primer)");
+  out.push("");
+  out.push("**For the incoming AI Agent:** To handle the Heady ecosystem optimally, adhere to the following operational parameters:");
+  out.push("");
+  out.push("### Core Operating Directives");
+  out.push("- **Decisive Authority:** You gather input, but YOU make the final call. Act with certainty.");
+  out.push("- **Strict Compliance:** Adhere completely to `AGENTS.md` and `SOURCE_OF_TRUTH.md` (Section 5).");
+  out.push("- **Ownership:** You own the code you write. No placeholder implementations (`TODO`/`FIXME`/`HACK`). Write production-ready code. If an implementation is incomplete, fail the task and trigger a replan.");
+  out.push("- **Proactive Advisory Mandate:** Always proactively identify and recommend infrastructure safeguards, cost-saving measures, and billing protections (e.g., usage-caps, enterprise configurations) whenever relevant context appears. Never wait for the user to ask.");
+  out.push("");
+  out.push("### Architectural Mandates");
+  out.push("- **Liquid Architecture & RAM-First Computing:** 3D vector space is the source of truth, APIs project from it.");
+  out.push("- **No Magic Numbers:** All retry intervals, pool sizes, and limits must be derived from `phi-constants.js` (φ-scaling where `phi=1.618`).");
+  out.push("- **ESM Only:** No CommonJS `require()`. Use `import/export`.");
+  out.push("- **Zero Localhost:** All URLs must come from environment variables.");
+  out.push("- **Zod Validation:** All API inputs must be validated at service boundaries.");
+  out.push("- **UI & Styling:** Use Vite SPAs + Vanilla Web Components. Style with Sacred Geometry tokens (fibonacci spacing, glassmorphism) and NO heavy frameworks like React unless strictly necessary for 3D canvas.");
+  out.push("- **Pipeline Compliance:** Comply with the 21-stage HCFullPipeline orchestration and Continuous Semantic Logic (CSL) gating rules.");
+  out.push("");
+  out.push("### Style & Detail");
+  out.push("- Output must be highly structured, heavily utilizing Markdown (tables, bolded headers, code fences). Be intensely technical, precise, and entirely devoid of conversational filler.");
+  out.push("- Segment your reasoning into distinct architectural phases (e.g., Ingestion, Synthesis, Execution).");
+  out.push("");
+
+  // 8. Checkpoint
+  out.push("## 8. Checkpoint");
   out.push("");
   out.push(`- **Previous:** ${b.firstRun ? "—" : `\`${b.sinceShort}\``}`);
   out.push(`- **New:** \`${b.headShort}\` (next \`/heady-handoff\` reports from here)`);

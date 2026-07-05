@@ -2,10 +2,12 @@
  * © 2026 Heady Systems LLC.
  * PROPRIETARY AND CONFIDENTIAL.
  *
- * GLOBAL CONFIG — Single Source of Truth
+ * GLOBAL CONFIG — Single Source of Truth for env/runtime constants
  * ═══════════════════════════════════════
  * ALL environment variables, URLs, ports, and constants are defined HERE.
  * No other file should read process.env directly.
+ * Domain canon SoT is facts.yaml `domains:` — the DOMAINS list below is a
+ * projection of it and must stay consistent (coherence gate).
  * Import this module: const config = require('../config/global');
  */
 
@@ -47,16 +49,26 @@ const URLS = Object.freeze({
 });
 
 // ═══════════════════════════════════════════════════════════════════════
-// DOMAINS — All production domains whitelist
+// DOMAINS — Production routing/CORS whitelist
+// SoT: facts.yaml `domains:` (repo root). Every entry below MUST exist
+// there. Contents = the four verified canon surfaces (headyme.com primary,
+// 1ime1.com admin portal, headymcp.com MCP, headyconnection.org nonprofit)
+// plus the Cloudflare-hosted operational sites from
+// configs/_domains/site-registry.yaml. Speculative brand domains whose DNS
+// points outside the Heady Cloudflare account (headyai.com, headybuddy.com,
+// headytrade.com, headylab.com) are deliberately EXCLUDED from CORS until
+// the human-gated zone verification recorded in facts.yaml completes.
 // ═══════════════════════════════════════════════════════════════════════
 const DOMAINS = Object.freeze([
-    'headyme.com',
-    'headysystems.com',
-    'headyconnection.org',
-    'headymcp.com',
-    'headyio.com',
-    'headybuddy.org',
-    '1ime1.com',
+    'headyme.com',          // verified — primary user surface
+    '1ime1.com',            // verified — admin surface (apps/headyme-portal)
+    'headymcp.com',         // verified — MCP endpoint
+    'headyconnection.org',  // verified — org/nonprofit
+    'headysystems.com',     // unverified — operational (site-registry)
+    'headybuddy.org',       // unverified — operational (site-registry)
+    'headyio.com',          // unverified — operational (site-registry)
+    'headyapi.com',         // unverified — operational (site-registry; URLS.MANAGER/BRAIN target)
+    'headyos.com',          // unverified — operational (site-registry)
 ]);
 
 const ALLOWED_ORIGINS = Object.freeze([

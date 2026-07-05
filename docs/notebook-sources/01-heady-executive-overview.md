@@ -1,6 +1,6 @@
 # Heady™ AI Platform — Executive Overview
 
-> © 2026 Heady Systems LLC. All Rights Reserved.
+> © 2026 HeadySystems Inc. All Rights Reserved.
 
 ## What Is Heady?
 
@@ -31,7 +31,7 @@ Heady is built on three foundational principles:
 
 - **Current Assessment**: $4.17M (Series A readiness)
 - **One-Year Projection (60% probability)**: $45M–$65M as autonomous computing standard
-- **IP Portfolio**: 51+ provisional patent applications protecting core innovations (8 filed March 6, 2026)
+- **IP Portfolio**: 51 provisional patent applications protecting core innovations (filed March 2026)
 - **Engineering Investment**: ~4,800 refined engineering hours
 
 ## The Heady Ecosystem
@@ -48,7 +48,7 @@ Heady operates across multiple domains:
 
 | Repository | Purpose |
 |---|---|
-| **Heady-pre-production-9f2f0642** | Official monorepo — single source of truth |
+| **Heady-AI** | Official monorepo — single source of truth |
 | **latent-core-dev** | Synaptic Dev — pgvector ↔ Antigravity mirror |
 | **template-mcp-server** | Template — MCP protocol server shell |
 | **template-swarm-bee** | Template — Swarm Agent with Pub/Sub lifecycle |

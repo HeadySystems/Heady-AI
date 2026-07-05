@@ -66,6 +66,11 @@ const SERVICE_CATALOG = {
     daw: { endpoint: "/api/daw/bridge", method: "POST", caps: ["midi-bridge", "daw-control", "audio-data-transfer", "osc-transport"], component: "creative" },
     midi: { endpoint: "/api/daw/midi", method: "POST", caps: ["midi-to-data", "midi-transform", "note-mapping", "cc-routing"], component: "creative" },
     spatial: { endpoint: "/api/spatial/context", method: "POST", caps: ["spatial-context", "3d-position", "audio-spatial", "ump-transport"], component: "deep-intel" },
+
+    // ─── Native Sovereign Capabilities (Antigravity replacement) ─
+    browser: { endpoint: "/api/native/browser", method: "POST", caps: ["web-browse", "ui-test", "navigate", "dom-interaction"], component: "native-core" },
+    terminal: { endpoint: "/api/native/sandbox", method: "POST", caps: ["bash", "shell", "execute", "sandbox"], component: "native-core" },
+    datacloud: { endpoint: "/api/native/datacloud", method: "POST", caps: ["bigquery", "spanner", "sql"], component: "native-core" },
 };
 
 // ─── Intent Keywords → Service Mapping ──────────────────────────────
@@ -98,6 +103,9 @@ const INTENT_KEYWORDS = {
     "orchestrate": "orchestrator", "coordinate": "orchestrator", "route": "orchestrator",
     "midi": "midi", "daw": "daw", "audio": "daw", "osc": "daw", "note": "midi",
     "spatial": "spatial", "3d": "spatial", "position": "spatial", "ump": "spatial",
+    "browser": "browser", "browse": "browser", "navigate": "browser", "ui test": "browser",
+    "terminal": "terminal", "bash": "terminal", "shell": "terminal", "execute": "terminal",
+    "bigquery": "datacloud", "spanner": "datacloud", "sql": "datacloud",
 };
 
 // ─── Service Dispatcher Class ───────────────────────────────────────
@@ -107,7 +115,10 @@ class HeadyServiceDispatcher extends EventEmitter {
         this.catalog = { ...SERVICE_CATALOG };
         this.dispatchLog = [];
         this.totalDispatches = 0;
-        this.managerUrl = opts.managerUrl || "https://127.0.0.1:3301";
+        // Zero-localhost law: the manager origin comes from config/env only.
+        // Left null when unconfigured — dispatch() then refuses honestly
+        // instead of silently targeting a loopback that cannot exist in prod.
+        this.managerUrl = opts.managerUrl || process.env.HEADY_MANAGER_URL || null;
     }
 
     /**
@@ -179,6 +190,9 @@ class HeadyServiceDispatcher extends EventEmitter {
 
         try {
             const fetch = globalThis.fetch || require("node-fetch");
+            if (!this.managerUrl) {
+                throw new Error("managerUrl unconfigured — set HEADY_MANAGER_URL (AGENTS.md #4: origins come from env, no loopback default)");
+            }
             const url = `${this.managerUrl}${resolved.entry.endpoint}`;
             const opts = { signal: AbortSignal.timeout(25000) };
 
@@ -247,6 +261,25 @@ class HeadyServiceDispatcher extends EventEmitter {
     }
 }
 
+// SEC-002: shared deny-by-default admin guard — same armed instance as the
+// conductor (@heady/admin-guard default guard). POST /api/service can dispatch
+// ANY catalog service, so it is a privileged mutation: refused until armed.
+let adminGuard = null;
+import("../packages/admin-guard/src/index.mjs")
+    .then((mod) => { adminGuard = mod; return mod.initAdminAuth(); })
+    .catch((err) => logger.logSystem(`  🔐 admin-guard load failed — POST /api/service stays refused: ${err.message}`));
+
+function requireAdminDispatch(req, res, next) {
+    if (!adminGuard) {
+        return res.status(503).json({
+            ok: false,
+            error: "admin auth unavailable — privileged dispatch is fail-closed",
+            state: "loading",
+        });
+    }
+    return adminGuard.requireAdminMutation(req, res, next);
+}
+
 // ─── Express Routes ─────────────────────────────────────────────────
 function registerServiceRoutes(app, dispatcher) {
 
@@ -263,7 +296,7 @@ function registerServiceRoutes(app, dispatcher) {
         res.json({ ok: true, history: dispatcher.getHistory(limit), total: dispatcher.totalDispatches });
     });
 
-    app.post("/api/service", async (req, res) => {
+    app.post("/api/service", requireAdminDispatch, async (req, res) => {
         try {
             const result = await dispatcher.dispatch(req.body);
             res.json(result);

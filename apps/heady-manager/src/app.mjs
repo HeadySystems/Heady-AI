@@ -14,6 +14,7 @@ import { Kernel } from "@heady/kernel";
 import { createLogger, runWithTrace } from "@heady/logger";
 import { HEALTH } from "@heady/shared";
 import { loadFacts } from "@heady/config";
+import { createConsistencyMiddleware } from "@heady/consistency-bus/express";
 import { createIntelligence } from "./intelligence.mjs";
 
 /**
@@ -52,6 +53,17 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
     });
   });
 
+  // Consistency bus at the app level: EVERY route on the origin gets ingress
+  // recognition (locked-value drift ⇒ 409, fail-closed) and egress
+  // normalization (stale linked values never leave the process). The governed
+  // codeflow channel is exempt — it IS the sanctioned path for linked-value
+  // change. Degrades to visible passthrough if HeadyRegistry is unreadable.
+  const consistency = createConsistencyMiddleware({
+    exemptPaths: ["/api/codeflow"],
+    log,
+  });
+  app.use(consistency.middleware);
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
 
@@ -81,6 +93,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger } = 
       version,
       tier: "origin",
       checks: h.checks ?? {},
+      consistencyBus: consistency.status(),
       timestamp: new Date().toISOString(),
     });
   });

@@ -1,7 +1,8 @@
-# Heady Canonical Site Registry
-# SINGLE SOURCE OF TRUTH — 24 web properties total
-# Last audited: 2026-02-25 01:48 MST
-# Rule: This file is the ONLY authority on what sites exist. Period.
+# Heady Canonical Site Registry — local site processes (PM2 / ports / dirs)
+# 24 web properties total
+# Domain canon SoT: facts.yaml `domains:` (repo root) — this file must stay
+# consistent with it and is authoritative ONLY for process/port/dir layout.
+# Last audited: 2026-02-25 01:48 MST · Domain canon reconciled: 2026-07-04
 
 sites:
   # ── Primary Branded Domains (8 public domains) ──
@@ -90,11 +91,14 @@ sites:
     purpose: "Instant preview/demo"
     dir: /home/headyme/sites/instant
 
+  # 1ime1.com root serves apps/headyme-portal via Firebase Hosting (project
+  # heady-ai) — see docs/runbooks/1IME1_ADMIN_SURFACE_RUNBOOK.md. The local
+  # process/port below is reserved for tasks.1ime1.com (Drupal task-manager).
   - id: 1ime1
-    domain: null
+    domain: 1ime1.com
     port: 9011
     pm2: site-1ime1
-    purpose: "1ime1 creative project"
+    purpose: "Heady admin surface (headyme-portal)"
     dir: /home/headyme/sites/1ime1
 
   # ── Duplicate/Alias Processes (serve same content on different ports) ──
@@ -156,11 +160,12 @@ sites:
     deploy_script: scripts/deploy-hf-spaces.js
 
 # ── Summary ──
-# 8 public branded domains
-# 5 internal/secondary sites
+# 9 public domains (8 branded + 1ime1.com admin surface)
+# 4 internal/secondary sites
 # 6 alias/duplicate processes
 # 2 Discord bots
 # 3 HuggingFace Spaces
 # = 24 total web properties
 # = 22 PM2 site processes
 # = 8 public domains routed through Cloudflare tunnels
+#   + 1ime1.com served via Firebase Hosting custom domain (headyme-portal)

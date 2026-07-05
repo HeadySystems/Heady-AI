@@ -59,6 +59,135 @@ deploy_targets:
     kind: cloudflare-workers
   pages:
     kind: cloudflare-pages
+domains:
+  # ── Domain canon (SoT) — reconciles the three code registries ──────────
+  # source tokens:
+  #   domain-registry = src/config/domain-registry.js   (brand/tenant/CORS map)
+  #   global-config   = src/config/global.js            (runtime whitelist)
+  #   site-registry   = configs/_domains/site-registry.yaml (PM2 site processes)
+  # status semantics:
+  #   verified   — founder-ruled canonical surface, confirmed live.
+  #   unverified — declared by a registry only; Cloudflare zone/account
+  #     verification is a HUMAN-GATED step (the available Cloudflare API token
+  #     lacks zone scope — zones API returns success:false).
+  # dns_observed — read-only public DNS/HTTPS evidence (dns_checked date) to
+  #   speed the human gate; evidence is NOT verification.
+  dns_checked: "2026-07-04"
+  headyme:
+    fqdn: headyme.com
+    role: primary-user-surface
+    status: verified
+    sources:
+      - domain-registry
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  1ime1:
+    fqdn: 1ime1.com
+    role: admin-surface
+    app: apps/headyme-portal
+    status: verified
+    runbook: docs/runbooks/1IME1_ADMIN_SURFACE_RUNBOOK.md
+    sources:
+      - domain-registry
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-302-cloudflare-access
+  headymcp:
+    fqdn: headymcp.com
+    role: mcp-endpoint
+    status: verified
+    sources:
+      - domain-registry
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headyconnection:
+    fqdn: headyconnection.org
+    role: org-nonprofit
+    status: verified
+    sources:
+      - domain-registry
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headysystems:
+    fqdn: headysystems.com
+    role: platform-operations
+    status: unverified
+    sources:
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headybuddy-org:
+    fqdn: headybuddy.org
+    role: companion-assistant
+    status: unverified
+    sources:
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headybuddy-com:
+    fqdn: headybuddy.com
+    role: companion-assistant
+    status: unverified
+    note: resolves to a third-party Shopify IP via Namecheap NS — likely not Heady-owned; do not route until human-verified
+    sources:
+      - domain-registry
+    dns_observed: external-ns-namecheap shopify-ip https-unreachable
+  headyai:
+    fqdn: headyai.com
+    role: ai-orchestration-hub
+    status: unverified
+    sources:
+      - domain-registry
+    dns_observed: external-ns-godaddy https-200
+  headyos:
+    fqdn: headyos.com
+    role: latent-os-dashboard
+    status: unverified
+    sources:
+      - domain-registry
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headytrade:
+    fqdn: headytrade.com
+    role: fintech-trading
+    status: unverified
+    sources:
+      - domain-registry
+    dns_observed: external-ns-godaddy https-unreachable
+  headylab:
+    fqdn: headylab.com
+    role: research-patent-lab
+    status: unverified
+    sources:
+      - domain-registry
+    dns_observed: external-ns-namebright https-unreachable
+  headyweb:
+    fqdn: headyweb.com
+    role: web-frontend-hub
+    status: unverified
+    sources:
+      - domain-registry
+    dns_observed: cloudflare-ns https-200
+  headyio:
+    fqdn: headyio.com
+    role: developer-portal
+    status: unverified
+    sources:
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
+  headyapi:
+    fqdn: headyapi.com
+    role: api-playground
+    status: unverified
+    sources:
+      - global-config
+      - site-registry
+    dns_observed: cloudflare-ns https-200
 pipeline:
   stages:
     - lint

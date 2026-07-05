@@ -15,6 +15,9 @@ const TAB_NAV = `
   <a href="#legacy" class="tab-btn" aria-current="false">
     ◈ Legacy <span class="tab-badge legacy">ADVISOR</span>
   </a>
+  <a href="#services" class="tab-btn" aria-current="false">
+    ⬢ Services <span class="tab-badge services">GUIDE</span>
+  </a>
 </nav>`;
 
 export class AdminUI {

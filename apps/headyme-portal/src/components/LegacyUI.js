@@ -26,6 +26,9 @@ export class LegacyUI {
         <a href="#legacy" class="tab-btn active" aria-current="page">
           ◈ Legacy <span class="tab-badge legacy">ADVISOR</span>
         </a>
+        <a href="#services" class="tab-btn" aria-current="false">
+          ⬢ Services <span class="tab-badge services">GUIDE</span>
+        </a>
       </nav>
 
       <div class="legacy-dashboard">

@@ -12,8 +12,12 @@
  *
  * Projection API (registered on Express app):
  *   GET  /api/vault/project  → shows masked credentials
- *   POST /api/vault/project  → shows full credentials (requires passphrase)
  *   GET  /api/vault/health   → vault status
+ *
+ * SEC-002 (2026-07-04): the former POST /api/vault/project full-plaintext
+ * projection was REMOVED — a passphrase-gated HTTP route that returned every
+ * live credential was a credential-exfiltration surface. Full values are
+ * never served over HTTP; use `heady-secrets` (GCP Secret Manager) locally.
  */
 
 const logger = require('../utils/logger');
@@ -164,29 +168,7 @@ function registerVaultProjectionRoutes(app) {
         });
     });
 
-    // POST /api/vault/project — full credential projection (requires passphrase in body)
-    app.post('/api/vault/project', (req, res) => {
-        const { passphrase } = req.body;
-        if (passphrase !== process.env.VAULT_PASSPHRASE) {
-            return res.status(403).json({ ok: false, error: 'Invalid passphrase' });
-        }
-
-        const projection = {};
-        for (const [credName, envVar] of Object.entries(CREDENTIAL_ENV_MAP)) {
-            const val = process.env[envVar];
-            projection[envVar] = {
-                credential: credName,
-                domain: _domainFromName(credName),
-                status: val ? 'active' : 'missing',
-                value: val || null,
-            };
-        }
-        res.json({
-            ok: true, service: 'vault-projection',
-            mode: 'full', credentialCount: Object.keys(projection).length,
-            projection, timestamp: new Date().toISOString(),
-        });
-    });
+    // SEC-002: full-credential POST projection removed — masked GET only.
 
     // GET /api/vault/health — vault status
     app.get('/api/vault/health', (req, res) => {

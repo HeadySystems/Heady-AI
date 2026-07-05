@@ -7,6 +7,7 @@ import './style.css';
 import { OnboardingUI } from './components/OnboardingUI.js';
 import { AdminUI }      from './components/AdminUI.js';
 import { LegacyUI }     from './components/LegacyUI.js';
+import { ServicesUI }   from './components/ServicesUI.js';
 import { onAuthStateChanged, auth } from './services/firebase.js';
 
 const PHI = 1.618033988749895;
@@ -37,6 +38,13 @@ function handleRoute(user) {
     return;
   }
 
+  // #services sub-routes (#services/<category>/<service>) re-route in place —
+  // no remount, so BuddyGuide keeps its state while the nav highlights.
+  if (user && hash.startsWith('#services') && _currentUI instanceof ServicesUI) {
+    _currentUI.route(hash);
+    return;
+  }
+
   // tear down any previous stream before replacing DOM
   if (_currentUI && typeof _currentUI._destroyStream === 'function') {
     _currentUI._destroyStream();
@@ -52,6 +60,9 @@ function handleRoute(user) {
     _currentUI = new LegacyUI(appContainer, user);
     _currentUI.render();
     window.dispatchEvent(new CustomEvent('navigation:legacy:entered'));
+  } else if (user && hash.startsWith('#services')) {
+    _currentUI = new ServicesUI(appContainer, user);
+    _currentUI.render();
   } else {
     _currentUI = new OnboardingUI(appContainer);
     _currentUI.render();

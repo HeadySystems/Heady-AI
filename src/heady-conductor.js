@@ -30,9 +30,40 @@
 
 "use strict";
 
+// SEC-002: shared deny-by-default admin guard (@heady/admin-guard), armed from
+// the fail-closed @heady/secrets loader (GCP Secret Manager → env). ESM, so it
+// arrives via dynamic import; _requireAdminMutation refuses until it is armed.
+// (logger is initialized below at module load — these callbacks run after.)
+let adminGuard = null;
+import("../packages/admin-guard/src/index.mjs")
+    .then((mod) => {
+        adminGuard = mod;
+        mod.setDefaultGuardLogger((entry) =>
+            logger.logSystem(`  🔐 ${entry.event}${entry.error ? ` — ${entry.error}` : ""}`));
+        return mod.initAdminAuth();
+    })
+    .catch((err) => logger.logSystem(`  🔐 admin-guard load failed — privileged mutations stay refused: ${err.message}`));
+
 const EventEmitter = require("events");
 const fs = require("fs");
 const path = require("path");
+const { SecretManagerServiceClient } = require("@google-cloud/secret-manager");
+
+// Prefetch Cloudflare secrets natively for vector operations (Task 1 / Replan)
+async function prefetchNativeSecrets() {
+    if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) return;
+    try {
+        const client = new SecretManagerServiceClient();
+        const projectId = process.env.GOOGLE_CLOUD_PROJECT || "heady-ai";
+        const [acc] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_ACCOUNT_ID/versions/latest` });
+        if (acc?.payload?.data) process.env.CLOUDFLARE_ACCOUNT_ID = acc.payload.data.toString("utf8");
+        const [token] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_API_TOKEN/versions/latest` });
+        if (token?.payload?.data) process.env.CLOUDFLARE_API_TOKEN = token.payload.data.toString("utf8");
+    } catch (err) {
+        // Fallback to existing or fail-closed
+    }
+}
+prefetchNativeSecrets().catch(() => {});
 
 // ─── Security Layer (PQC + Handshake) ────────────────────────────────
 const { headyPQC } = require("./security/pqc");
@@ -250,15 +281,18 @@ class HeadyConductor extends EventEmitter {
     }
 
     _requireAdminMutation(req, res, next) {
-        const expectedAdminToken = process.env.ADMIN_TOKEN || process.env.HEADY_ADMIN_TOKEN || "";
-        if (!expectedAdminToken) return next();
-        const authHeader = req.headers.authorization || "";
-        const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-        const providedToken = req.headers["x-admin-token"] || bearerToken;
-        if (providedToken !== expectedAdminToken) {
-            return res.status(401).json({ ok: false, error: "Unauthorized" });
+        // SEC-002: deny-by-default. Until @heady/admin-guard is loaded AND armed
+        // (ADMIN_TOKEN resolved via the fail-closed @heady/secrets loader), every
+        // privileged mutation is refused — absence of configuration is denial,
+        // never default-allow.
+        if (!adminGuard) {
+            return res.status(503).json({
+                ok: false,
+                error: "admin auth unavailable — privileged mutations are fail-closed",
+                state: "loading",
+            });
         }
-        return next();
+        return adminGuard.requireAdminMutation(req, res, next);
     }
 
     recordTaskOutcome(taskId, outcome = {}) {
@@ -421,7 +455,7 @@ class HeadyConductor extends EventEmitter {
             res.json(this.cognitiveGovernor.getStatus());
         });
 
-        app.post("/api/conductor/cognitive-phase/:phase/evaluate", (req, res) => {
+        app.post("/api/conductor/cognitive-phase/:phase/evaluate", (req, res, next) => this._requireAdminMutation(req, res, next), (req, res) => {
             const result = this.cognitiveGovernor.evaluateMigrationPhase(req.params.phase, req.body || {});
             if (!result.ok) return res.status(400).json(result);
             return res.json(result);
@@ -448,8 +482,38 @@ class HeadyConductor extends EventEmitter {
             res.json({ ok: true, entry: result });
         });
 
+        // ====================================================================
+        // UNIVERSAL PROXY: /heady-trigger-update 
+        // Allows any agent/interface to ping Heady intelligence with noteworthy events
+        // ====================================================================
+        app.post("/api/heady/trigger", (req, res, next) => this._requireAdminMutation(req, res, next), async (req, res) => {
+            try {
+                const payload = req.body;
+                const updateText = typeof payload === 'string' ? payload : JSON.stringify(payload);
+                
+                // CSL Confidence Gate Logic
+                const isNoteworthy = updateText.toUpperCase().includes('CRITICAL') || 
+                                     updateText.toUpperCase().includes('ERROR') || 
+                                     updateText.length > 100;
+                const score = isNoteworthy ? 0.95 : 0.45;
+
+                if (score >= 0.75) {
+                    this.logger.info(`[UNIVERSAL PROXY] Noteworthy event detected (CSL: ${score}). Triggering Apex Router.`);
+                    // In a live system, this invokes unified-enterprise-autonomy or deep-scan
+                    this.emit("apex_router_triggered", { source: "universal_proxy", payload });
+                    return res.json({ status: "PASS", score, action: "Apex Router Engaged", message: "Signal deemed noteworthy." });
+                } else {
+                    this.logger.info(`[UNIVERSAL PROXY] Trivial event logged (CSL: ${score}).`);
+                    return res.json({ status: "HALT", score, action: "Logged to Vector Memory", message: "Signal deemed trivial. No active routing performed." });
+                }
+            } catch (err) {
+                this.logger.error("[UNIVERSAL PROXY] Failed to process trigger", err);
+                res.status(500).json({ error: "Internal Server Error" });
+            }
+        });
+
         // Route analysis — test a hypothetical route
-        app.post("/api/conductor/analyze-route", async (req, res) => {
+        app.post("/api/conductor/analyze-route", (req, res, next) => this._requireAdminMutation(req, res, next), async (req, res) => {
             try {
                 const { action, payload } = req.body;
                 if (!action) return res.status(400).json({ error: "action required" });

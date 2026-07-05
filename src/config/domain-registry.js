@@ -1,13 +1,15 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════
- *  HEADY DOMAIN REGISTRY — Canonical Source of Truth
+ *  HEADY DOMAIN REGISTRY — code projection of the domain canon
+ *  SoT: facts.yaml `domains:` (repo root, golden record). This file MUST
+ *  stay consistent with it — the coherence gate treats facts.yaml as canon.
  *  ADR-0019: Nine-domain brand architecture
- *  ADR-0024: Domain registry canonical file
+ *  ADR-0024: Domain registry canonical file (code-level)
  *  ADR-0011: Node.js ESM only
  *  ADR-0006: phi-math — no magic numbers
  * ═══════════════════════════════════════════════════════════════════════
  *
- * This file is the SINGLE source of truth for:
+ * This file is the code-level registry for:
  *   - Domain → legal entity mapping  (IRS compliance)
  *   - Domain → Firebase Auth tenant  (session isolation)
  *   - Domain → Sacred Geometry layer (topology)
@@ -18,6 +20,15 @@
  * NEVER hard-code domain strings elsewhere. Import from here.
  * ADR Sentinel CI job verifies all Cloudflare/Firebase/routing configs
  * reference only domains present in this registry.
+ *
+ * `status` mirrors facts.yaml domains: 'verified' = founder-ruled canonical
+ * surface confirmed live; 'unverified' = declared by a registry, but
+ * Cloudflare zone/account verification is a recorded HUMAN-GATED step (the
+ * available Cloudflare API token lacks zone scope). Domains carried only by
+ * configs/_domains/site-registry.yaml (headysystems.com, headybuddy.org,
+ * headyio.com, headyapi.com) are catalogued in facts.yaml and join this
+ * registry when the founder ratifies their brand architecture
+ * (entity/tenant/revenue).
  */
 
 // ─── Enumerations ──────────────────────────────────────────────────────
@@ -42,6 +53,7 @@ export const Layer = Object.freeze({
 /** @enum {string} Domain categories */
 export const Category = Object.freeze({
   CORE:      'core',
+  ADMIN:     'admin',
   AI:        'ai',
   MCP:       'mcp',
   COMPANION: 'companion',
@@ -50,6 +62,12 @@ export const Category = Object.freeze({
   RESEARCH:  'research',
   NONPROFIT: 'nonprofit',
   WEB:       'web',
+});
+
+/** @enum {string} Domain verification status — mirrors facts.yaml domains */
+export const DomainStatus = Object.freeze({
+  VERIFIED:   'verified',
+  UNVERIFIED: 'unverified',
 });
 
 /** @enum {string} Revenue model types */
@@ -62,6 +80,7 @@ export const Revenue = Object.freeze({
   REVENUE_SHARE:     'revenue_share',
   GRANTS_DONATIONS:  'grants_donations',
   AD_SUPPORTED:      'ad_supported',
+  INTERNAL:          'internal',
 });
 
 // ─── Canonical Registry ───────────────────────────────────────────────
@@ -74,6 +93,7 @@ export const Revenue = Object.freeze({
  * @property {string}   tenant      - Firebase Auth tenant ID
  * @property {string}   revenue     - Revenue model (Revenue enum)
  * @property {boolean}  commercial  - false = nonprofit (IRS boundary)
+ * @property {string}   status      - Verification status (DomainStatus enum, mirrors facts.yaml)
  * @property {string}   description - Human-readable purpose
  */
 
@@ -86,7 +106,18 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headyme',
     revenue:     Revenue.SAAS_SUBSCRIPTION,
     commercial:  true,
-    description: 'Core platform — user workspace, dashboard, primary SaaS entrypoint',
+    status:      DomainStatus.VERIFIED,
+    description: 'Primary user surface — user workspace, dashboard, primary SaaS entrypoint',
+  },
+  '1ime1.com': {
+    entity:      Entity.HEADY_SYSTEMS,
+    category:    Category.ADMIN,
+    layer:       Layer.OPS,
+    tenant:      '1ime1',
+    revenue:     Revenue.INTERNAL,
+    commercial:  true,
+    status:      DomainStatus.VERIFIED,
+    description: 'Admin surface — apps/headyme-portal via Firebase Hosting (project heady-ai)',
   },
   'headyai.com': {
     entity:      Entity.HEADY_SYSTEMS,
@@ -95,6 +126,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headyai',
     revenue:     Revenue.API_CREDITS,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'AI orchestration hub — HCFullPipeline API, swarm access, model racing',
   },
   'headymcp.com': {
@@ -104,6 +136,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headymcp',
     revenue:     Revenue.API_PER_REQUEST,
     commercial:  true,
+    status:      DomainStatus.VERIFIED,
     description: 'MCP gateway — Model Context Protocol server, tool registry, JSON-RPC',
   },
   'headybuddy.com': {
@@ -113,6 +146,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headybuddy',
     revenue:     Revenue.SAAS_USAGE,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'HeadyBuddy companion AI — conversational agent, cross-device bridge',
   },
   'headyos.com': {
@@ -122,6 +156,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headyos',
     revenue:     Revenue.ENTERPRISE,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'Heady Latent OS — enterprise licensing, sovereign AI platform',
   },
   'headytrade.com': {
@@ -131,6 +166,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headytrade',
     revenue:     Revenue.REVENUE_SHARE,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'FinTech / trading — HeadyCoin, Apex trading risk, subscription tiers',
   },
   'headylab.com': {
@@ -140,6 +176,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headylab',
     revenue:     Revenue.ENTERPRISE,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'Research + patent lab — IP portfolio, provisional patents, R&D docs',
   },
   'headyconnection.org': {
@@ -149,6 +186,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headyconnection',
     revenue:     Revenue.GRANTS_DONATIONS,
     commercial:  false,  // IRS 501(c)(3) — zero commercial features allowed
+    status:      DomainStatus.VERIFIED,
     description: 'HeadyConnection Inc. nonprofit portal — grants, community, education',
   },
   'headyweb.com': {
@@ -158,6 +196,7 @@ export const DOMAIN_REGISTRY = Object.freeze({
     tenant:      'headyweb',
     revenue:     Revenue.AD_SUPPORTED,
     commercial:  true,
+    status:      DomainStatus.UNVERIFIED,
     description: 'Web / frontend hub — open access, landing pages, micro-frontend host',
   },
 });
@@ -183,6 +222,16 @@ export const NONPROFIT_DOMAINS = Object.freeze(
 /** Commercial domains */
 export const COMMERCIAL_DOMAINS = Object.freeze(
   ALL_DOMAINS.filter(d => DOMAIN_REGISTRY[d].commercial)
+);
+
+/** Founder-verified canonical surfaces (facts.yaml domains, status: verified) */
+export const VERIFIED_DOMAINS = Object.freeze(
+  ALL_DOMAINS.filter(d => DOMAIN_REGISTRY[d].status === DomainStatus.VERIFIED)
+);
+
+/** Declared but pending human-gated Cloudflare zone verification */
+export const UNVERIFIED_DOMAINS = Object.freeze(
+  ALL_DOMAINS.filter(d => DOMAIN_REGISTRY[d].status === DomainStatus.UNVERIFIED)
 );
 
 /** Domains grouped by Sacred Geometry layer */
