@@ -6,7 +6,7 @@
 //
 // The HTTP listener is itself a kernel-managed service ({start,stop,health,metrics}),
 // so /health reflects the same dependency-ordered boot the kernel performs. ESM only,
-// binds 0.0.0.0 + $PORT (no localhost), pino structured logs with X-Heady-Trace-Id.
+// binds all interfaces + $PORT (loopback-free), pino structured logs with X-Heady-Trace-Id.
 
 import { randomUUID } from "node:crypto";
 import express from "express";
@@ -84,7 +84,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     name: "http",
     start: async () => {
       await new Promise((resolve, reject) => {
-        server = app.listen(port, "0.0.0.0");
+        server = app.listen(port, "0.0.0.0");  // heady-allow:no-localhost — Cloud Run/container contract requires the all-interfaces bind
         server.once("listening", resolve);
         server.once("error", reject);
       });

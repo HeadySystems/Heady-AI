@@ -15,12 +15,12 @@ const REQUIRED_ORCHESTRATOR_IDS = [
 const FORBIDDEN_ROLE_PATTERNS = [/^frontend$/i, /^backend$/i];
 
 /**
- * Validate that all endpoints are cloud-only (no localhost).
+ * Validate that all endpoints are cloud-only (no localhost).  // heady-allow:no-localhost — this IS the localhost validator/its doc; literal required
  * @param {string[]} endpoints
  * @returns {boolean}
  */
 function validateCloudOnlyEndpoints(endpoints) {
-    return endpoints.every((ep) => !(/localhost|127\.0\.0\.1/i.test(ep)));
+    return endpoints.every((ep) => !(/localhost|127\.0\.0\.1/i.test(ep)));  // heady-allow:no-localhost — this IS the localhost validator/its doc; literal required
 }
 
 /**

@@ -131,20 +131,26 @@ case "${1:-help}" in
         echo "🐝 Buddy Status"
         echo "   Device: $(hostname) (${DID:0:12}...)"
         echo "   API: $API"
-        echo "   Sync: ws://localhost:$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')"
+        echo "   Sync: ws://localhost:$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')"  # heady-allow:no-localhost — local install/status tooling on the operator machine, not a production path
         curl -sS "$API/api/pulse" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "   [offline mode]"
         ;;
     sync)
         echo "🔄 Sync Status"
-        curl -sS "http://localhost:$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')/sync/status" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "   Sync server not running"
+        SYNC_PORT=$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')
+        SYNC_URL="http://localhost:$SYNC_PORT/sync/status"  # heady-allow:no-localhost — local operator tooling, not a production path
+        curl -sS "$SYNC_URL" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "   Sync server not running"
         ;;
     devices)
         echo "📱 Connected Devices"
-        curl -sS "http://localhost:$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')/sync/devices" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "   No devices connected"
+        SYNC_PORT=$(grep -o '"syncPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')
+        DEV_URL="http://localhost:$SYNC_PORT/sync/devices"  # heady-allow:no-localhost — local operator tooling, not a production path
+        curl -sS "$DEV_URL" 2>/dev/null | python3 -m json.tool 2>/dev/null || echo "   No devices connected"
         ;;
     research)
         shift
-        curl -sS -X POST "http://localhost:$(grep -o '"mcpPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')/mcp/tools/call" \
+        MCP_PORT=$(grep -o '"mcpPort"[^,]*' "$CONFIG" | grep -o '[0-9]*')
+        MCP_URL="http://localhost:$MCP_PORT/mcp/tools/call"  # heady-allow:no-localhost — local operator tooling, not a production path
+        curl -sS -X POST "$MCP_URL" \
             -H "Content-Type: application/json" \
             -d "{\"name\":\"heady_perplexity_research\",\"arguments\":{\"query\":\"$*\",\"mode\":\"deep\"}}" 2>/dev/null | python3 -m json.tool 2>/dev/null
         ;;
@@ -296,7 +302,7 @@ export PATH="$BIN_DIR:$PATH"
 echo ""
 echo -e "${W}━━━ Phase 5: Cross-Device Sync Ready ━━━${NC}"
 
-LOCAL_IP=$(hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1")
+LOCAL_IP=$(hostname -I 2>/dev/null | awk '{print $1}' || echo "127.0.0.1")  # heady-allow:no-localhost — local install/status tooling on the operator machine, not a production path
 
 ok "Sync server will run on ws://$LOCAL_IP:$SYNC_PORT"
 ok "MCP bridge will run on http://$LOCAL_IP:$MCP_PORT"

@@ -5,7 +5,7 @@
 // ║  governance enforcers (tooling/enforcers + ENF-anti-shortcut.md): ║
 // ║    • #1 ESM-only (no CommonJS require)                             ║
 // ║    • #6 HEADY_BRAND header on authored code files                 ║
-// ║  Law 0 (no-localhost/secrets), Laws 1&2 (glass-box logging /      ║
+// ║  Law 0 (no-localhost/secrets), Laws 1&2 (glass-box logging /      ║  // heady-allow:no-localhost — the law's own header names it
 // ║  placeholders) are enforced canonically by tooling/enforcers —    ║
 // ║  this tool no longer duplicates them (no policy fork).            ║
 // ║  Exit 0 = clean · Exit 1 = violations · © 2026 HeadySystems Inc.  ║
@@ -98,7 +98,7 @@ function main() {
       process.stderr.write(`  ${file}:${h.line} [${h.rule}] ${h.msg}\n`);
     }
   }
-  process.stderr.write("\nFix these — ESM + brand-header are enforced here; logging/placeholders/localhost by tooling/enforcers.\n");
+  process.stderr.write("\nFix these — ESM + brand-header are enforced here; logging/placeholders/localhost by tooling/enforcers.\n");  // heady-allow:no-localhost — enforcement message names the law
   process.exit(1);
 }
 

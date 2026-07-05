@@ -87,7 +87,7 @@ function main() {
     verification = [
       runGate("law-lint", ["tooling/law-lint/src/law-lint.mjs"]),
       runGate("governance", ["tooling/governance-gate/src/governance-gate.mjs", "all"]),
-      runGate("no-loopback", [ENFORCER("no-localhost"), "--all"]),
+      runGate("no-loopback", [ENFORCER("no-localhost"), "--all"]),  // heady-allow:no-localhost — gate-runner references the law by name
       runGate("glass-box", [ENFORCER("glass-box"), "--all"]),
       runGate("secret-scan", [ENFORCER("secret-scan"), "--all"]),
       runGate("coherence", ["tooling/coherence/src/coherence.mjs", "all"]),
