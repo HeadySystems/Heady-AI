@@ -19,7 +19,7 @@ module.exports = {
         color: '#fff',
         bg: '#4285F4',
         envKey: 'GOOGLE_CLIENT_ID',
-        envSecret: 'GOOGLE_CLIENT_SECRET',
+        envSecret: 'GOOGLE_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
         tokenUrl: 'https://oauth2.googleapis.com/token',
         profileUrl: null, // uses id_token
@@ -39,7 +39,7 @@ module.exports = {
         color: '#fff',
         bg: '#24292e',
         envKey: 'GITHUB_CLIENT_ID',
-        envSecret: 'GITHUB_CLIENT_SECRET',
+        envSecret: 'GITHUB_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://github.com/login/oauth/authorize',
         tokenUrl: 'https://github.com/login/oauth/access_token',
         profileUrl: 'https://api.github.com/user',
@@ -67,7 +67,7 @@ module.exports = {
         color: '#fff',
         bg: '#2f2f2f',
         envKey: 'MICROSOFT_CLIENT_ID',
-        envSecret: 'MICROSOFT_CLIENT_SECRET',
+        envSecret: 'MICROSOFT_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: () => `https://login.microsoftonline.com/${process.env.MICROSOFT_TENANT_ID || 'common'}/oauth2/v2.0/authorize`,
         tokenUrl: () => `https://login.microsoftonline.com/${process.env.MICROSOFT_TENANT_ID || 'common'}/oauth2/v2.0/token`,
         profileUrl: 'https://graph.microsoft.com/v1.0/me',
@@ -108,7 +108,7 @@ module.exports = {
         color: '#111',
         bg: '#FF9900',
         envKey: 'AMAZON_CLIENT_ID',
-        envSecret: 'AMAZON_CLIENT_SECRET',
+        envSecret: 'AMAZON_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://www.amazon.com/ap/oa',
         tokenUrl: 'https://api.amazon.com/auth/o2/token',
         profileUrl: 'https://api.amazon.com/user/profile',
@@ -148,7 +148,7 @@ module.exports = {
         color: '#fff',
         bg: '#5865F2',
         envKey: 'DISCORD_CLIENT_ID',
-        envSecret: 'DISCORD_CLIENT_SECRET',
+        envSecret: 'DISCORD_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://discord.com/api/oauth2/authorize',
         tokenUrl: 'https://discord.com/api/oauth2/token',
         profileUrl: 'https://discord.com/api/users/@me',
@@ -190,7 +190,7 @@ module.exports = {
         color: '#fff',
         bg: '#0077B5',
         envKey: 'LINKEDIN_CLIENT_ID',
-        envSecret: 'LINKEDIN_CLIENT_SECRET',
+        envSecret: 'LINKEDIN_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://www.linkedin.com/oauth/v2/authorization',
         tokenUrl: 'https://www.linkedin.com/oauth/v2/accessToken',
         profileUrl: 'https://api.linkedin.com/v2/userinfo',
@@ -211,7 +211,7 @@ module.exports = {
         color: '#fff',
         bg: '#000',
         envKey: 'TWITTER_CLIENT_ID',
-        envSecret: 'TWITTER_CLIENT_SECRET',
+        envSecret: 'TWITTER_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://twitter.com/i/oauth2/authorize',
         tokenUrl: 'https://api.twitter.com/2/oauth2/token',
         profileUrl: 'https://api.twitter.com/2/users/me?user.fields=profile_image_url',
@@ -234,7 +234,7 @@ module.exports = {
         color: '#fff',
         bg: '#191414',
         envKey: 'SPOTIFY_CLIENT_ID',
-        envSecret: 'SPOTIFY_CLIENT_SECRET',
+        envSecret: 'SPOTIFY_CLIENT_SECRET',  // heady-allow:secret-scan — env var NAME (resolved via @heady/secrets), never a value
         authorizeUrl: 'https://accounts.spotify.com/authorize',
         tokenUrl: 'https://accounts.spotify.com/api/token',
         profileUrl: 'https://api.spotify.com/v1/me',

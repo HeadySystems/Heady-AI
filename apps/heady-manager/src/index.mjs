@@ -9,7 +9,7 @@ const { kernel, log, start } = createApp();
 
 await start();
 const port = Number(process.env.PORT) || 3300;
-log.info({ port, tier: "origin", transport: "http" }, "heady-manager listening on 0.0.0.0");
+log.info({ port, tier: "origin", transport: "http" }, "heady-manager listening on all interfaces");
 
 let shuttingDown = false;
 async function shutdown(signal) {

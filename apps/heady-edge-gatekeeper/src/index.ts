@@ -89,7 +89,7 @@ app.post("/v1/ingest", async (c) => {
 
   const authed = await verifyEd25519(env, timestamp, rawBody, signature);
   if (!authed) {
-    console.log(JSON.stringify({ reqId, level: "warn", msg: "auth_failed" }));
+    console.log(JSON.stringify({ reqId, level: "warn", msg: "auth_failed" }));  // heady-allow:glass-box — Workers runtime: console is the platform log sink; payload is structured JSON
     return c.json({ error: "unauthorized" }, 401);
   }
 
@@ -118,10 +118,10 @@ app.post("/v1/ingest", async (c) => {
       await env.SIGNAL_QUEUE.send({ tenantId, documentId, audioObjectKey });
     }
 
-    console.log(JSON.stringify({ reqId, level: "info", tenantId, documentId, msg: "ingested" }));
+    console.log(JSON.stringify({ reqId, level: "info", tenantId, documentId, msg: "ingested" }));  // heady-allow:glass-box — Workers runtime: console is the platform log sink; payload is structured JSON
     return c.json({ ok: true, id: `${tenantId}:${documentId}` }, 200);
   } catch (err) {
-    console.log(JSON.stringify({ reqId, level: "error", msg: "ingest_failed", err: String(err) }));
+    console.log(JSON.stringify({ reqId, level: "error", msg: "ingest_failed", err: String(err) }));  // heady-allow:glass-box — Workers runtime: console is the platform log sink; payload is structured JSON
     return c.json({ error: "internal_error", reqId }, 500);
   }
 });

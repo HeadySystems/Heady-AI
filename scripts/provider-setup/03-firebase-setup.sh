@@ -161,7 +161,7 @@ echo "  Authorized domains to add in ${REBUILD}:"
 echo "    headykey.com"
 echo "    headyme.com"
 echo "    headysystems.com"
-echo "    localhost (dev only)"
+echo "    localhost (dev only)"  # heady-allow:no-localhost — local install/status tooling on the operator machine, not a production path
 echo ""
 
 # ── 8. Output SDK config for HeadyKey deploy ────────────────────────

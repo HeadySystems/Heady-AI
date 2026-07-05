@@ -22,7 +22,7 @@ function promptUpdate(registration) {
   window.dispatchEvent(
     new CustomEvent("heady:sw-update-ready", { detail: { version: __HEADY_VERSION__ } })
   );
-  console.info(JSON.stringify({ evt: "heady.pwa.update_ready", app_version: __HEADY_VERSION__ }));
+  console.info(JSON.stringify({ evt: "heady.pwa.update_ready", app_version: __HEADY_VERSION__ }));  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
 
   const toast = document.createElement("heady-update-toast");
   toast.addEventListener("heady:reload", () => {
@@ -54,7 +54,7 @@ function watchRegistration(registration) {
 
   const poll = () => {
     registration.update().catch((err) => {
-      console.info(JSON.stringify({ evt: "heady.pwa.update_check_failed", message: err.message }));
+      console.info(JSON.stringify({ evt: "heady.pwa.update_check_failed", message: err.message }));  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
     });
   };
   setInterval(poll, UPDATE_POLL_MS);
@@ -65,13 +65,13 @@ function watchRegistration(registration) {
 
 export function initPwa() {
   if (!("serviceWorker" in navigator)) {
-    console.info(JSON.stringify({ evt: "heady.pwa.skip", reason: "no-serviceworker-api" }));
+    console.info(JSON.stringify({ evt: "heady.pwa.skip", reason: "no-serviceworker-api" }));  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
     return;
   }
   // Dev serves source modules with no stamped SW — registration is
   // production-build-only so it never fights Vite HMR.
   if (!import.meta.env.PROD) {
-    console.info(JSON.stringify({ evt: "heady.pwa.skip", reason: "dev-mode" }));
+    console.info(JSON.stringify({ evt: "heady.pwa.skip", reason: "dev-mode" }));  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
     return;
   }
 
@@ -85,7 +85,7 @@ export function initPwa() {
     navigator.serviceWorker
       .register("/sw.js")
       .then((registration) => {
-        console.info(
+        console.info(  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
           JSON.stringify({ evt: "heady.pwa.registered", scope: registration.scope, app_version: __HEADY_VERSION__ })
         );
         watchRegistration(registration);

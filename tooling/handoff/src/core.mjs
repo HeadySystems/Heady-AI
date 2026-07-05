@@ -191,7 +191,7 @@ export function renderBundle(b) {
   out.push("- **Liquid Architecture & RAM-First Computing:** 3D vector space is the source of truth, APIs project from it.");
   out.push("- **No Magic Numbers:** All retry intervals, pool sizes, and limits must be derived from `phi-constants.js` (φ-scaling where `phi=1.618`).");
   out.push("- **ESM Only:** No CommonJS `require()`. Use `import/export`.");
-  out.push("- **Zero Localhost:** All URLs must come from environment variables.");
+  out.push("- **Zero Localhost:** All URLs must come from environment variables.");  // heady-allow:no-localhost — primer prose quoting the law, not a URL
   out.push("- **Zod Validation:** All API inputs must be validated at service boundaries.");
   out.push("- **UI & Styling:** Use Vite SPAs + Vanilla Web Components. Style with Sacred Geometry tokens (fibonacci spacing, glassmorphism) and NO heavy frameworks like React unless strictly necessary for 3D canvas.");
   out.push("- **Pipeline Compliance:** Comply with the 21-stage HCFullPipeline orchestration and Continuous Semantic Logic (CSL) gating rules.");
