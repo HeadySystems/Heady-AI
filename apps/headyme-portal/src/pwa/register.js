@@ -91,7 +91,7 @@ export function initPwa() {
         watchRegistration(registration);
       })
       .catch((err) => {
-        console.error(JSON.stringify({ evt: "heady.pwa.register_failed", message: err.message }));
+        console.error(JSON.stringify({ evt: "heady.pwa.register_failed", message: err.message }));  // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
       });
   });
 }
