@@ -1,0 +1,107 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Liquid OS — Bee Catalog                                   ║
+# ║  ∞ SACRED GEOMETRY ∞  Task Swarms · Dynamic Blast Allocation      ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Static catalog of every bee worker module discoverable in src/bees/.
+# At runtime, src/bees/registry.js auto-discovers each module that exports
+# { domain, getWork() }; this file is the declarative counterpart used for
+# capability planning, documentation, and swarm-matrix routing.
+#
+# Routing (src/orchestration/swarm-intelligence.js):
+#   score = 0.5·cos(task_vec, bee_domain_vec)
+#         + 0.2·σ((priority - ψ)/T)
+#         + 0.3·max cos(task_vec, memory_k)
+# Blast size is chosen dynamically by HeadyBees.blast() from φ/Fibonacci pools.
+
+version: "1.0.0"
+name: HeadyBeeCatalog
+runtime_discovery: src/bees/registry.js
+routing_engine: src/orchestration/swarm-intelligence.js
+default_priority: 0.5   # ψ-centered
+
+bees:
+  # ─── Orchestration & lifecycle ──────────────────────────────────────
+  - { id: agents-bee,          file: agents-bee.js,          domain: orchestration, priority: 0.7 }
+  - { id: orchestration-bee,   file: orchestration-bee.js,   domain: orchestration, priority: 0.8 }
+  - { id: pipeline-bee,        file: pipeline-bee.js,        domain: orchestration, priority: 0.8 }
+  - { id: lifecycle-bee,       file: lifecycle-bee.js,       domain: lifecycle,     priority: 0.7 }
+  - { id: auto-success-bee,    file: auto-success-bee.js,    domain: orchestration, priority: 0.8 }
+  - { id: routes-bee,          file: routes-bee.js,          domain: system,        priority: 0.5 }
+  - { id: services-bee,        file: services-bee.js,        domain: system,        priority: 0.6 }
+  - { id: engines-bee,         file: engines-bee.js,         domain: system,        priority: 0.6 }
+  - { id: middleware-bee,      file: middleware-bee.js,      domain: system,        priority: 0.6 }
+  - { id: config-bee,          file: config-bee.js,          domain: config,        priority: 0.5 }
+
+  # ─── Intelligence & memory ──────────────────────────────────────────
+  - { id: brain-bee,           file: brain-bee.js,           domain: intelligence,  priority: 0.8 }
+  - { id: intelligence-bee,    file: intelligence-bee.js,    domain: intelligence,  priority: 0.8 }
+  - { id: memory-bee,          file: memory-bee.js,          domain: intelligence,  priority: 0.8 }
+  - { id: context-weaver-bee,  file: context-weaver-bee.js,  domain: intelligence,  priority: 0.7 }
+  - { id: vector-ops-bee,      file: vector-ops-bee.js,      domain: intelligence,  priority: 0.7 }
+  - { id: vector-template-bee, file: vector-template-bee.js, domain: intelligence,  priority: 0.6 }
+  - { id: embedder-bee,        file: embedder-bee-bee.js,    domain: intelligence,  priority: 0.7 }
+
+  # ─── Deployment & cloud ─────────────────────────────────────────────
+  - { id: deployment-bee,             file: deployment-bee.js,             domain: deployment, priority: 0.8 }
+  - { id: cloud-run-deployer-bee,     file: cloud-run-deployer-bee.js,     domain: deployment, priority: 0.8 }
+  - { id: full-cloud-deploy-swarm-bee, file: full-cloud-deploy-swarm-bee.js, domain: deployment, priority: 0.9 }
+  - { id: gcloud-auth-automator-bee,  file: gcloud-auth-automator-bee.js,  domain: deployment, priority: 0.7 }
+  - { id: colab-gpu-runtime-bee,      file: colab-gpu-runtime-bee.js,      domain: compute,    priority: 0.6 }
+  - { id: device-provisioner-bee,     file: device-provisioner-bee.js,     domain: deployment, priority: 0.6 }
+  - { id: service-connection-racer-bee, file: service-connection-racer-bee.js, domain: deployment, priority: 0.6 }
+
+  # ─── Security, governance & compliance ──────────────────────────────
+  - { id: security-bee,        file: security-bee.js,        domain: security,      priority: 0.9 }
+  - { id: governance-bee,      file: governance-bee.js,      domain: compliance,    priority: 0.9 }
+  - { id: credential-bee,      file: credential-bee.js,      domain: security,      priority: 0.8 }
+  - { id: auth-flow-bee,       file: auth-flow-bee.js,       domain: security,      priority: 0.7 }
+  - { id: auth-provider-bee,   file: auth-provider-bee.js,   domain: security,      priority: 0.7 }
+  - { id: auth-platform-bees,  file: auth-platform-bees.js,  domain: security,      priority: 0.7 }
+  - { id: patent-bee,          file: patent-bee.js,          domain: compliance,    priority: 0.8 }
+
+  # ─── Resilience & health ────────────────────────────────────────────
+  - { id: resilience-bee,      file: resilience-bee.js,      domain: resilience,    priority: 0.8 }
+  - { id: health-bee,          file: health-bee.js,          domain: observability, priority: 0.8 }
+  - { id: telemetry-bee,       file: telemetry-bee.js,       domain: observability, priority: 0.7 }
+  - { id: pruner-bee,          file: pruner-bee-bee.js,      domain: maintenance,   priority: 0.6 }
+  - { id: tester-bee,          file: tester-bee-bee.js,      domain: quality,       priority: 0.7 }
+  - { id: refactor-bee,        file: refactor-bee.js,        domain: quality,       priority: 0.7 }
+
+  # ─── Connectors & providers ─────────────────────────────────────────
+  - { id: connectors-bee,      file: connectors-bee.js,      domain: connectors,    priority: 0.7 }
+  - { id: providers-bee,       file: providers-bee.js,       domain: connectors,    priority: 0.7 }
+  - { id: mcp-bee,             file: mcp-bee.js,             domain: connectors,    priority: 0.8 }
+
+  # ─── Creative & content ─────────────────────────────────────────────
+  - { id: creative-bee,               file: creative-bee.js,               domain: creative, priority: 0.6 }
+  - { id: midi-bee,                   file: midi-bee.js,                   domain: creative, priority: 0.6 }
+  - { id: hologram-bee,               file: hologram-bee.js,               domain: creative, priority: 0.5 }
+  - { id: audio-overview-generator-bee, file: audio-overview-generator-bee.js, domain: creative, priority: 0.5 }
+  - { id: documentation-bee,          file: documentation-bee.js,          domain: content,  priority: 0.6 }
+  - { id: landing-page-builder-bee,   file: landing-page-builder-bee.js,   domain: content,  priority: 0.6 }
+  - { id: template-bee,               file: template-bee.js,               domain: content,  priority: 0.5 }
+
+  # ─── Business, trading & onboarding ─────────────────────────────────
+  - { id: trading-bee,                    file: trading-bee.js,                    domain: fintech,   priority: 0.7 }
+  - { id: valuation-analyzer-bee,         file: valuation-analyzer-bee.js,         domain: fintech,   priority: 0.7 }
+  - { id: valuation-report-swarm-bee,     file: valuation-report-swarm-bee.js,     domain: fintech,   priority: 0.7 }
+  - { id: platform-onboarding-analyzer-bee, file: platform-onboarding-analyzer-bee.js, domain: onboarding, priority: 0.6 }
+
+  # ─── Ingestion & reactive ───────────────────────────────────────────
+  - { id: input-task-extractor-bee, file: input-task-extractor-bee.js, domain: ingestion, priority: 0.6 }
+  - { id: dropzone-reaction-bee,    file: dropzone-reaction-bee.js,    domain: ingestion, priority: 0.6 }
+  - { id: sync-projection-bee,      file: sync-projection-bee.js,      domain: projection, priority: 0.7 }
+  - { id: hf-auth-3d-bees,          file: hf-auth-3d-bees.js,          domain: intelligence, priority: 0.6 }
+  - { id: ops-bee,                  file: ops-bee.js,                  domain: system,    priority: 0.7 }
+
+factories:
+  # Non-bee helpers in src/bees/ that construct or template bees rather than acting as workers.
+  - { id: bee-factory,               file: bee-factory.js,               role: "Constructs bee instances from templates" }
+  - { id: registry,                  file: registry.js,                  role: "Runtime auto-discovery of bee workers" }
+  - { id: headybee-template-registry, file: headybee-template-registry.js, role: "Bee template registry" }
+  - { id: vector-template-bee,       file: vector-template-bee.js,       role: "Vector-templated bee generator" }
+  - { id: session-templates,         file: session-templates.js,         role: "Session template definitions" }

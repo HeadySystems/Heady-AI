@@ -1,0 +1,52 @@
+{
+  "$comment": "HEADY_BRAND — MCP tool manifest for src/heady-mcp-server.js. Classifies every heady_* tool by HITL approval tier and MCP annotation hints. Source of truth for the zero-trust MCP gateway (heady-mcp-gateway-zero-trust skill) and .well-known/mcp.json discovery. Grounded in the tool surface exported by src/heady-mcp-server.js.",
+  "manifest": {
+    "name": "heady-mcp-tools",
+    "version": "1.0.0",
+    "server": "src/heady-mcp-server.js",
+    "discovery": ".well-known/mcp.json",
+    "spec_version": "2025-06-18",
+    "mandatory_tools": {
+      "$comment": "Per AGENTS.md — agents MUST invoke these on the stated triggers.",
+      "heady_autocontext_enrich": "on context mutation (new invariants/routes/secret metadata)",
+      "heady_autocontext_history": "on debugging or phiGATE confidence failure",
+      "heady_governance_enforce": "before PR creation / canary deploy",
+      "heady_project_tree": "on startup — establish monorepo scope",
+      "heady_env_audit": "on startup — establish environment variables"
+    },
+    "tiers": {
+      "tier1_readonly": {
+        "description": "Read-only cognitive/query tools — auto-approve, no HITL gate",
+        "approval": "auto",
+        "annotations": { "readOnlyHint": true, "destructiveHint": false, "openWorldHint": false },
+        "tools": [
+          "heady_chat", "heady_explain", "heady_health", "heady_hcfp_status",
+          "heady_memory", "heady_soul", "heady_lens", "heady_risks", "heady_battle",
+          "heady_search", "heady_edge_ai", "heady_notion", "heady_maid",
+          "heady_claude", "heady_openai", "heady_gemini", "heady_groq",
+          "heady_huggingface_model", "heady_perplexity_research",
+          "heady_orchestrator", "heady_autocontext_history", "heady_project_tree",
+          "heady_env_audit"
+        ]
+      },
+      "tier2_write": {
+        "description": "Write / mutating tools — require session-scoped approval",
+        "approval": "session_scoped",
+        "annotations": { "readOnlyHint": false, "destructiveHint": false, "openWorldHint": true },
+        "tools": [
+          "heady_analyze", "heady_architect", "heady_coder", "heady_code_review",
+          "heady_complete", "heady_debug", "heady_refactor", "heady_write_tests",
+          "heady_deep_scan", "heady_auto_flow", "heady_embed", "heady_patterns",
+          "heady_maintenance", "heady_vinci", "heady_buddy", "heady_codex",
+          "heady_copilot", "heady_autocontext_enrich"
+        ]
+      },
+      "tier3_destructive": {
+        "description": "Destructive / deploy tools — mandatory human-in-the-loop + Ed25519 trust receipts",
+        "approval": "human_in_the_loop",
+        "annotations": { "readOnlyHint": false, "destructiveHint": true, "openWorldHint": true },
+        "tools": ["heady_deploy", "heady_ops", "heady_jules_task", "heady_governance_enforce"]
+      }
+    }
+  }
+}

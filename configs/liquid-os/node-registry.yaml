@@ -1,0 +1,203 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Liquid OS — Node Registry                                 ║
+# ║  ∞ SACRED GEOMETRY ∞  Orchestration · Intelligence · Edge         ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Canonical registry of every runtime node in the Heady Liquid Latent OS
+# as it exists in this (rebuild) repository. A "node" is a long-lived,
+# addressable runtime unit that exports the Latent Service contract
+# ({ start, stop, health, metrics }) and participates in CSL-gated routing.
+#
+# Source of truth for node identity, ownership, criticality, and health
+# endpoints. Health/latency fields in heady-registry.json are populated at
+# scan time; this file declares the static topology those scans validate.
+#
+# Grounding: heady-registry.json (services[]), src/orchestration/*,
+# src/heady-conductor.js, src/heady-mcp-server.js, src/edge/*.
+
+version: "1.0.0"
+name: HeadyNodeRegistry
+generated_from:
+  - heady-registry.json
+  - src/orchestration/
+  - src/heady-conductor.js
+  - src/edge/
+phi_constants:
+  # Pool sizes and thresholds derive from φ/Fibonacci (packages/phi-math), never magic numbers.
+  hot_pool: 34   # FIB[9]
+  warm_pool: 21  # FIB[8]
+  cold_pool: 13  # FIB[7]
+  csl_gate_medium: 0.809
+
+# ─── ORCHESTRATION NODES ──────────────────────────────────────────────
+orchestration:
+  - id: conductor
+    name: heady-conductor
+    role: "Master orchestrator — CSL-gated domain routing, Hot/Warm/Cold pool dispatch"
+    impl: src/heady-conductor.js
+    endpoint: /api/conductor/health
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [autocontext, brain, registry]
+    pools: { hot: 34, warm: 21, cold: 13 }
+
+  - id: agent-orchestrator
+    name: heady-agent-orchestrator
+    role: "Liquid Architecture engine — swarm ignition, Fibonacci pool pre-warming"
+    impl: src/agent-orchestrator.js
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [conductor, heady-bees]
+
+  - id: swarm-intelligence
+    name: heady-swarm-intelligence
+    role: "Swarm consensus + superposition scoring for dynamic bee allocation"
+    impl: src/orchestration/swarm-intelligence.js
+    csl_domain: orchestration
+    criticality: high
+    dependencies: [conductor, swarm-consensus]
+
+  - id: cognitive-runtime-governor
+    name: heady-cognitive-runtime-governor
+    role: "Cognitive load governor — throttles reasoning stages under backpressure"
+    impl: src/orchestration/cognitive-runtime-governor.js
+    csl_domain: orchestration
+    criticality: high
+    dependencies: [conductor]
+
+# ─── INTELLIGENCE NODES ───────────────────────────────────────────────
+intelligence:
+  - id: brain
+    name: heady-brain
+    role: "Inference meta-controller — system-prompt loader, multi-model routing"
+    impl: src/brain_connector.js
+    endpoint: /api/brain/health
+    csl_domain: intelligence
+    criticality: critical
+    dependencies: [autocontext, memory]
+
+  - id: soul
+    name: heady-soul
+    role: "Reflection / self-critique node — value alignment and introspection"
+    endpoint: /api/soul/health
+    impl: src/routes/soul.js
+    csl_domain: intelligence
+    criticality: critical
+    dependencies: [brain]
+
+  - id: buddy-core
+    name: heady-buddy-core
+    role: "Primary AI companion runtime — user-facing escalation target"
+    impl: src/orchestration/buddy-core.js
+    endpoint: /api/buddy
+    csl_domain: creative
+    criticality: critical
+    dependencies: [brain, memory, soul]
+
+  - id: buddy-watchdog
+    name: heady-buddy-watchdog
+    role: "Hallucination / drift watchdog guarding buddy-core outputs"
+    impl: src/orchestration/buddy-watchdog.js
+    csl_domain: intelligence
+    criticality: high
+    dependencies: [buddy-core]
+
+  - id: memory
+    name: heady-memory
+    role: "3-tier context store (T0 Redis → T1 Neon pgvector → T2 edge cache)"
+    impl: src/vector-memory.js
+    endpoint: /api/memory/health
+    csl_domain: intelligence
+    criticality: high
+    dependencies: [neon-pgvector, upstash-redis]
+
+# ─── PIPELINE & RESILIENCE NODES ──────────────────────────────────────
+pipeline:
+  - id: hcfp
+    name: heady-hcfp
+    role: "HCFullPipeline — multi-stage generate/verify/correct loop"
+    impl: src/hc-full-pipeline.js
+    endpoint: /api/hcfp/health
+    csl_domain: orchestration
+    criticality: critical
+    dependencies: [conductor, brain, patterns]
+
+  - id: patterns
+    name: heady-patterns
+    role: "Resilience patterns — circuit breakers, pools, hot/cold cache"
+    impl: src/resilience/index.js
+    endpoint: /api/patterns/health
+    csl_domain: resilience
+    criticality: critical
+    dependencies: []
+
+  - id: auto-success
+    name: heady-auto-success
+    role: "Background task engine — continuous optimization loop"
+    impl: src/hc_auto_success.js
+    endpoint: /api/auto-success/health
+    csl_domain: orchestration
+    criticality: high
+    dependencies: [conductor, patterns]
+
+# ─── EDGE & CONNECTOR NODES ───────────────────────────────────────────
+edge:
+  - id: edge-daemon
+    name: heady-edge-daemon
+    role: "Local edge daemon — MIDI/SysEx + device bridge, port 9876"
+    impl: src/edge/heady-edge-daemon.js
+    port: 9876
+    csl_domain: edge
+    criticality: medium
+    dependencies: [cloud]
+
+  - id: cloud
+    name: heady-cloud
+    role: "Cloud connector — Cloudflare/GCP/HF projection dispatch"
+    endpoint: /api/cloud/status
+    impl: src/orchestration/cloud-orchestrator.js
+    csl_domain: edge
+    criticality: critical
+    dependencies: []
+
+  - id: mcp-server
+    name: heady-mcp-server
+    role: "MCP host — exposes 40 heady_* tools over stdio/SSE/streamable-http"
+    impl: src/heady-mcp-server.js
+    csl_domain: intelligence
+    criticality: critical
+    dependencies: [conductor, brain, memory]
+    tool_manifest: configs/mcp-tools.json
+    discovery: .well-known/mcp.json
+
+# ─── SYSTEM NODES ─────────────────────────────────────────────────────
+system:
+  - id: registry
+    name: heady-registry
+    role: "Component/workflow/doc catalog authority"
+    impl: src/heady-registry.js
+    endpoint: /api/registry
+    csl_domain: system
+    criticality: critical
+    dependencies: []
+
+  - id: nodes
+    name: heady-nodes
+    role: "AI-node registry surface — reflects this file at runtime"
+    impl: src/routes/nodes.js
+    endpoint: /api/nodes/health
+    csl_domain: system
+    criticality: medium
+    dependencies: [registry]
+
+  - id: ops
+    name: heady-ops
+    role: "Operations node — deploy gates, incident, maintenance ops"
+    impl: src/routes/ops.js
+    endpoint: /api/ops/health
+    csl_domain: system
+    criticality: critical
+    dependencies: [conductor]

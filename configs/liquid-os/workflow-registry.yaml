@@ -1,0 +1,66 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Liquid OS — Workflow Registry                             ║
+# ║  ∞ SACRED GEOMETRY ∞  CI Gates · Internal Pipelines · Commands    ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Single index of every workflow that governs this repo, across two planes:
+#   • ci      — GitHub Actions under .github/workflows/ (build/test/deploy/gates)
+#   • internal — agent-facing pipelines under .agents/workflows/, auto-mirrored
+#                to .claude/commands/ as /heady-* slash commands by
+#                tooling/skill-registry/sync-workflows.mjs.
+#
+# The governance-gate `workflow-sync` check fails CI if the .agents ↔ .claude
+# surfaces drift. Author the source in .agents/workflows/ only.
+
+version: "1.0.0"
+name: HeadyWorkflowRegistry
+mirror_tool: tooling/skill-registry/sync-workflows.mjs
+sync_check: "node tooling/skill-registry/sync-workflows.mjs --check"
+
+ci:
+  - { id: ci,                      file: .github/workflows/ci.yml,                      purpose: "Turborepo affected build + test + lint on PR" }
+  - { id: heady-consolidated-ci,   file: .github/workflows/heady-consolidated-ci.yml,   purpose: "Consolidated multi-gate pipeline (security, coherence, sync)" }
+  - { id: deploy,                  file: .github/workflows/deploy.yml,                  purpose: "Cloud Run container deploy (φ-stepped canary)" }
+  - { id: deploy-firebase-hosting, file: .github/workflows/deploy-firebase-hosting.yml, purpose: "Firebase Hosting deploy for headyme-portal" }
+  - { id: adr-sentinel,            file: .github/workflows/adr-sentinel.yml,            purpose: "Fails PRs that change architecture without an ADR" }
+  - { id: derive-gate,             file: .github/workflows/derive-gate.yml,             purpose: "Verifies derived artifacts (contracts, docs) match source" }
+  - { id: compliance-bee,          file: .github/workflows/compliance-bee.yml,          purpose: "License / PII / brand compliance scan" }
+  - { id: ableton-projection,      file: .github/workflows/ableton-projection.yml,      purpose: "Projects ableton-edge integration surface" }
+  - { id: liquid-projection,       file: .github/workflows/liquid-projection.yml,       purpose: "Liquid runtime projection to edge targets" }
+  - { id: systems-projection,      file: .github/workflows/systems-projection.yml,      purpose: "headysystems.com site projection" }
+
+internal:
+  source_dir: .agents/workflows/
+  command_dir: .claude/commands/
+  pipelines:
+    - { id: deep-scan-init,             command: /deep-scan-init,             purpose: "Full ecosystem deep scan bootstrap" }
+    - { id: health-check,               command: /health-check,               purpose: "Aggregate node/service health probe" }
+    - { id: incident-response,          command: /incident-response,          purpose: "Incident triage + mitigation runbook" }
+    - { id: deployment-verification,    command: /deployment-verification,    purpose: "Post-deploy smoke + projection integrity" }
+    - { id: provider-failover-drill,    command: /provider-failover-drill,    purpose: "Exercise multi-provider failover chain" }
+    - { id: continuous-embedding,       command: /continuous-embedding,       purpose: "Gate-then-embed corpus refresh" }
+    - { id: vector-space-ops,           command: /vector-space-ops,           purpose: "Vector memory maintenance ops" }
+    - { id: memory-compaction,          command: /memory-compaction,          purpose: "Compact T0/T1/T2 memory tiers" }
+    - { id: code-projection,            command: /code-projection,            purpose: "Project source into downstream mirrors" }
+    - { id: projection-hygiene,         command: /projection-hygiene,         purpose: "Detect stale/broken projections" }
+    - { id: concept-alignment,          command: /concept-alignment,          purpose: "Align concepts-index with code reality" }
+    - { id: heady-drift-monitor,        command: /heady-drift-monitor,        purpose: "6-signal drift detection loop" }
+    - { id: domain-branding-audit,      command: /domain-branding-audit,      purpose: "Verify canonical domains / brand headers" }
+    - { id: bee-swarm-diagnostic,       command: /bee-swarm-diagnostic,       purpose: "Diagnose bee swarm allocation + load" }
+    - { id: agent-performance-review,   command: /agent-performance-review,   purpose: "Score agent/persona performance" }
+    - { id: pipeline-dry-run,           command: /pipeline-dry-run,           purpose: "Dry-run HCFullPipeline without side effects" }
+    - { id: edge-cache-warm,            command: /edge-cache-warm,            purpose: "Warm edge caches ahead of projection" }
+    - { id: heady-handoff,              command: /heady-handoff,              purpose: "Session handoff + CLAUDE_MEMORY update" }
+    - { id: heady-sync,                 command: /heady-sync,                 purpose: "Sync .agents ↔ .claude surfaces" }
+    - { id: heady-omni-sync,            command: /heady-omni-sync,            purpose: "Cross-surface omni sync" }
+    - { id: heady-service-bootstrap,    command: /heady-service-bootstrap,    purpose: "Scaffold a new Latent Service" }
+    - { id: heady-prompt-pipeline,      command: /heady-prompt-pipeline,      purpose: "Prompt orchestration pipeline" }
+    - { id: heady-command,              command: /heady-command,              purpose: "Generic Heady command router" }
+    - { id: heady-battle-sim,           command: /heady-battle-sim,           purpose: "Multi-model battle simulation" }
+    - { id: foundational-pillars,       command: /foundational-pillars,       purpose: "Verify foundation laws / pins" }
+    - { id: auto-extract-tasks,         command: /auto-extract-tasks,         purpose: "Extract tasks from inputs into ledger" }
+    - { id: ram-ops,                    command: /ram-ops,                    purpose: "Realtime awareness/memory ops" }
+    - { id: antigravity-runtime,        command: /antigravity-runtime,        purpose: "Antigravity UI runtime operations" }

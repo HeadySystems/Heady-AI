@@ -1,3 +1,38 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Service Catalog                                           ║
+# ║  ∞ SACRED GEOMETRY ∞  Latent Services · Health Contracts         ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Declarative catalog of the Latent Services exposed by the manager
+# (heady-manager.js) and registered in heady-registry.json. Every service
+# follows the Latent Service pattern: exports { start, stop, health, metrics }
+# and publishes a /health endpoint. `critical: true` services gate deploys.
+#
+# Grounding: heady-registry.json services[] and src/routes/*.
+
+version: "1.0.0"
+name: HeadyServiceCatalog
+generated_from: heady-registry.json
 services:
-  - id: test-service
-    name: Test Service
+  - { id: brain,        name: heady-brain,        role: inference,          critical: true,  endpoint: /api/brain/health }
+  - { id: soul,         name: heady-soul,         role: reflection,         critical: true,  endpoint: /api/soul/health }
+  - { id: conductor,    name: heady-conductor,    role: orchestration,      critical: true,  endpoint: /api/conductor/health }
+  - { id: hcfp,         name: heady-hcfp,         role: pipeline,           critical: true,  endpoint: /api/hcfp/health }
+  - { id: patterns,     name: heady-patterns,     role: resilience,         critical: true,  endpoint: /api/patterns/health }
+  - { id: ops,          name: heady-ops,          role: operations,         critical: true,  endpoint: /api/ops/health }
+  - { id: maintenance,  name: heady-maintenance,  role: housekeeping,       critical: true,  endpoint: /api/maintenance/health }
+  - { id: registry,     name: heady-registry,     role: catalog,            critical: true,  endpoint: /api/registry }
+  - { id: auto-success, name: heady-auto-success, role: background-tasks,   critical: true,  endpoint: /api/auto-success/health }
+  - { id: cloud,        name: heady-cloud,        role: cloud-connector,    critical: true,  endpoint: /api/cloud/status }
+  - { id: battle,       name: heady-battle,       role: competition,        critical: false, endpoint: /api/battle/health }
+  - { id: lens,         name: heady-lens,         role: differentials,      critical: false, endpoint: /api/lens/health }
+  - { id: vinci,        name: heady-vinci,        role: creative,           critical: false, endpoint: /api/vinci/health }
+  - { id: notion,       name: heady-notion,       role: knowledge,          critical: false, endpoint: /api/notion/health }
+  - { id: stream,       name: heady-stream,       role: real-time,          critical: false, endpoint: /api/stream/clients }
+  - { id: memory,       name: heady-memory,       role: context-store,      critical: false, endpoint: /api/memory/health }
+  - { id: config,       name: heady-config,       role: configuration,      critical: false, endpoint: /api/config/health }
+  - { id: system,       name: heady-system,       role: system-info,        critical: false, endpoint: /api/system/health }
+  - { id: nodes,        name: heady-nodes,        role: ai-node-registry,   critical: false, endpoint: /api/nodes/health }

@@ -1,0 +1,67 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Liquid OS — Agent Registry                                ║
+# ║  ∞ SACRED GEOMETRY ∞  Personas · Governance Agents · Runtimes     ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+#
+# Registry of first-class agents in the rebuild. Distinct from bees
+# (short-lived task workers in bee-catalog.yaml): agents are durable,
+# named reasoning entities with a persona and an escalation contract.
+#
+# Two surfaces:
+#   • runtime agents  — JS runtimes under src/agents/ (executed by the manager)
+#   • governance agents — review/gate personas under .agents/agents/
+#                          (mirrored to .claude/agents/ by sync-commands.mjs)
+#   • personas        — behavioural archetypes under .agents/personas/
+
+version: "1.0.0"
+name: HeadyAgentRegistry
+mirror_hook: .claude/hooks/sync-commands.mjs
+
+runtime_agents:
+  - id: heady-buddy-agent
+    impl: src/agents/heady-buddy-agent.js
+    role: "Primary companion agent — conversational orchestration + tool dispatch"
+    escalation_target: buddy-core
+    criticality: critical
+  - id: claude-code-agent
+    impl: src/agents/claude-code-agent.js
+    role: "Code-generation agent bound to Claude via provider registry"
+    criticality: high
+  - id: heady-fintech-agent
+    impl: src/agents/heady-fintech-agent.js
+    role: "Trading / valuation reasoning agent"
+    criticality: medium
+  - id: nonprofit-agent
+    impl: src/agents/nonprofit-agent.js
+    role: "Nonprofit-vertical assistance agent"
+    criticality: medium
+  - id: buddy-error-protocol
+    impl: src/agents/buddy-error-protocol.js
+    role: "Structured error-recovery protocol for companion failures"
+    criticality: high
+
+governance_agents:
+  # Review/gate agents — invoked before merges, deploys, or patent-lock edits.
+  - id: arbiter
+    spec: .agents/agents/arbiter.md
+    role: "ARBITER — patent-lock and architectural review authority (HS-2026-051..062)"
+    gate: pre-merge
+    criticality: critical
+  - id: eval-gate
+    spec: .agents/agents/eval-gate.md
+    role: "Evaluation gate — quality/coherence scoring before promotion"
+    gate: pre-promotion
+    criticality: high
+  - id: security-bee
+    spec: .agents/agents/security-bee.md
+    role: "Security review agent — secret-scan, zero-trust, CORS/auth conformance"
+    gate: pre-deploy
+    criticality: critical
+
+personas:
+  # Behavioural archetypes (tone + strategy) selectable by conductor/brain.
+  source_dir: .agents/personas/
+  archetypes: [ANT, BEAVER, BEE, DOLPHIN, EAGLE, ELEPHANT, FOX, LION, OWL, RABBIT]
