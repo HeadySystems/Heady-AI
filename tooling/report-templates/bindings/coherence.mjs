@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ report binding — coherence + drift state                  ║
 // ║  Prints JSON for {{coherence.*}} slots. Reads the generated        ║

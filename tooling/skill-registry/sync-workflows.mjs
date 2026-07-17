@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Workflow→Command Sync v1.1.0                              ║
 // ║  Recognizes every AUTOMATED flow (.agents/workflows/*.md) and      ║

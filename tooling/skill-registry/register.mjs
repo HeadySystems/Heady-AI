@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Skill Registry — Claude Code registration v1.0.0         ║
 // ║  Normalizes .agents/skills/* into .claude/skills/* so Claude Code ║

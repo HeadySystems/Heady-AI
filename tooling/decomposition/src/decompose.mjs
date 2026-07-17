@@ -1,3 +1,4 @@
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Decomposition Engine v1.0.0                                ║
 // ║  Reverse-engineers legacy Heady into transfer-ready component       ║

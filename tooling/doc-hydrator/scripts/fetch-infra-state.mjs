@@ -1,3 +1,4 @@
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Infra State Fetcher                                    ║
 // ║  Simulates gathering live data from Heady services/MCP tools.  ║

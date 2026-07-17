@@ -1,3 +1,4 @@
+// heady-allow:orphans — baseline orphan (rebuild in progress); triage dead-vs-wire in follow-up (audit FILE_MANIFEST)
 // Types for the dependency-free core (core.mjs).
 export interface ModelLock {
   id: string;
