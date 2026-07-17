@@ -13,12 +13,15 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const EventEmitter = require("events");
 
-class DriftDetector {
+class DriftDetector extends EventEmitter {
     constructor(opts = {}) {
+        super();
         this.snapshots = new Map();   // key → { hash, ts, data }
         this.events = [];
         this.maxEvents = opts.maxEvents || 1000;
+        this.lastTriggerEmit = 0;     // basic debounce mechanism
     }
 
     // ─── Hash content deterministically ──────────────────────────
@@ -50,6 +53,19 @@ class DriftDetector {
             };
             this.events.push(event);
             if (this.events.length > this.maxEvents) this.events.shift();
+
+            // Destroy read-only mode: Alert the intelligence layer immediately (with 5000ms debounce)
+            const now = Date.now();
+            if (now - this.lastTriggerEmit > 5000) {
+                this.emit("apex_router_triggered", {
+                    source: "drift_detector",
+                    payload: {
+                        reason: `Severe drift detected in ${event.kind}: ${key}`,
+                        event: event
+                    }
+                });
+                this.lastTriggerEmit = now;
+            }
         }
 
         this.snapshots.set(key, { hash, ts: new Date().toISOString(), data });

@@ -19,5 +19,16 @@
     "lint": "echo \"(lint wired at repo level)\"",
     "build": "echo \"(no build — runnable ESM)\""
   },
-  "keywords": ["heady", "embedding", "merkle", "consistency", "workflow", "pgvector", "vectorize"]
+  "keywords": [
+    "heady",
+    "embedding",
+    "merkle",
+    "consistency",
+    "workflow",
+    "pgvector",
+    "vectorize"
+  ],
+  "dependencies": {
+    "@google-cloud/secret-manager": "^6.2.0"
+  }
 }

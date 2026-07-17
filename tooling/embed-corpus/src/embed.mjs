@@ -19,6 +19,21 @@ import { planCorpusEmbedding } from "../../../packages/embedding/src/corpus.mjs"
 import { resolveEmbedder, hfTokenPresent } from "./embedder.mjs";
 import { embedJobs, mergeOutbox } from "./pipeline.mjs";
 import { createStore, FILES } from "./store.mjs";
+import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
+
+async function fetchCloudflareSecrets() {
+  if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) return;
+  try {
+    const client = new SecretManagerServiceClient();
+    const projectId = process.env.GOOGLE_CLOUD_PROJECT || "heady-ai";
+    const [acc] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_ACCOUNT_ID/versions/latest` });
+    if (acc?.payload?.data) process.env.CLOUDFLARE_ACCOUNT_ID = acc.payload.data.toString("utf8");
+    const [token] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_API_TOKEN/versions/latest` });
+    if (token?.payload?.data) process.env.CLOUDFLARE_API_TOKEN = token.payload.data.toString("utf8");
+  } catch (err) {
+    // Fall back to environment variables / graceful fail
+  }
+}
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, "..", "..", "..");
@@ -92,6 +107,7 @@ async function run(argv) {
   const plan = planCorpusEmbedding({ files, prevIndex, ledger });
 
   // ── Phase 4 — embed (every ledger-missing job; locked model) ──────────────
+  await fetchCloudflareSecrets();
   const embedder = resolveEmbedder(process.env, { allowHf });
   const hfGated = !embedder && hfTokenPresent() && !allowHf;
   let embedded = 0;

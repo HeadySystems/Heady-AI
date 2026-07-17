@@ -25,7 +25,7 @@ reports only what changed since — then advances the checkpoint.
 3. **Bundle** — writes one agent-readable doc (`docs/handoff/HANDOFF-<ts>.md`) with: TL;DR,
    commits, files-by-status, the verification table, the ordered list of context to read
    (`AGENTS.md`, `CLAUDE_MEMORY.md`, the live `.data/awareness/context.json` snapshot, key docs),
-   open threads (failing gates + uncommitted files), and the checkpoint move.
+   open threads (failing gates + uncommitted files), optimal execution guidelines, and the checkpoint move.
 4. **Advance** — writes the new checkpoint so the next run is incremental.
 
 ## Run

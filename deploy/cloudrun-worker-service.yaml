@@ -1,0 +1,30 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: heady-background-worker
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        # Enforce CPU to always be allocated so background NATS listener doesn't die
+        run.googleapis.com/cpu-throttling: "false"
+        # Require at least 1 instance always running
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "10"
+        # Optional VPC connector if NATS is internal
+        # run.googleapis.com/vpc-access-connector: "projects/heady-ai/locations/us-central1/connectors/vpc-connector"
+    spec:
+      containerConcurrency: 80
+      containers:
+      - image: gcr.io/heady-ai/heady-manager:latest
+        command: ["pnpm", "start:worker"] # Points to the NATS continuous listener
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        env:
+        - name: NODE_ENV
+          value: production
+        # OIDC fetched from Secret Manager will natively resolve Cloudflare / other secrets here

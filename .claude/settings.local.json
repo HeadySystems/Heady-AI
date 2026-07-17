@@ -29,7 +29,24 @@
       "Bash(xargs -I {} basename {})",
       "Bash(node tooling/embed-corpus/src/cli.mjs --dry-run)",
       "Bash(echo \"gate exit=$?\")",
-      "Bash(node tooling/embed-corpus/src/embed.mjs --dry-run)"
+      "Bash(node tooling/embed-corpus/src/embed.mjs --dry-run)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "Bash(gh run *)",
+      "Bash(git grep *)",
+      "Bash(echo \"=== EXIT: $? ===\")",
+      "Bash(node *)",
+      "Bash(gh auth *)",
+      "Bash(curl -sI --max-time 8 https://1ime1.com/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{redirect_url}\\\\n\" --max-time 8 https://www.1ime1.com/)",
+      "Bash(curl -s --max-time 8 https://heady-ai.web.app/)",
+      "Bash(curl -sI --max-time 8 https://heady-ai.web.app/)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "heady"
+  ],
+  "enableAllProjectMcpServers": true
 }

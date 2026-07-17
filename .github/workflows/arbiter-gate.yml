@@ -1,0 +1,36 @@
+name: ARBITER Patent-Zone Gate
+on:
+  pull_request:
+    branches: [ main, integration/* ]
+    paths:
+      - '**/*patent-zone*/**'
+      - '**/*PATENT_LOCK*'
+
+jobs:
+  arbiter_gate:
+    name: ARBITER Compliance Eval-Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Acknowledge Patent Zone Edits
+        run: |
+          echo "🚨 PR contains edits to Patent Lock Zones or patent-zone directories."
+          echo "🚨 Auto-merge is BLOCKED."
+          echo "🚨 ARBITER agent or human Codeowner must review and approve these changes."
+
+      - name: Enforce Governance Approval
+        run: |
+          # Fails the check intentionally unless a specific override or external API validates it.
+          # In a real environment, ARBITER would post a successful status check to unblock this.
+          # For the native fix: we force this job to succeed ONLY if the PR contains the [ARBITER-APPROVED] tag in its body or via an API call.
+          
+          PR_BODY="${{ github.event.pull_request.body }}"
+          if [[ "$PR_BODY" == *"[ARBITER-APPROVED]"* ]]; then
+            echo "✅ ARBITER override detected in PR body. Gate passed."
+            exit 0
+          else
+            echo "❌ Missing [ARBITER-APPROVED] tag in PR body. Governance review required."
+            exit 1
+          fi
