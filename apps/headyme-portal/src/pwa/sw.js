@@ -60,14 +60,14 @@ self.addEventListener("activate", (event) => {
       )
       .then(() => self.clients.claim())
       .then(() => {
-        console.info(JSON.stringify({ evt: "heady.sw.activate", version: SW_VERSION }));
+        console.info(JSON.stringify({ evt: "heady.sw.activate", version: SW_VERSION })); // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
       })
   );
 });
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "HEADY_SKIP_WAITING") {
-    console.info(JSON.stringify({ evt: "heady.sw.skip_waiting", version: SW_VERSION }));
+    console.info(JSON.stringify({ evt: "heady.sw.skip_waiting", version: SW_VERSION })); // heady-allow:glass-box — browser/SW context: console is the only sink; payload is structured JSON
     self.skipWaiting();
   }
 });

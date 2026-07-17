@@ -203,9 +203,6 @@ Select a domain above.</pre>
   }
 
   initStream() {
-    const host = typeof VITE_LEGACY_API !== 'undefined'
-      ? VITE_LEGACY_API : (import.meta.env?.VITE_LEGACY_API ?? '');
-
     const wrap = this.container.querySelector('#legacy-stream-container');
     wrap.innerHTML = `
       <div id="legacy-log" class="log-stream" role="log" aria-live="polite"
@@ -219,45 +216,42 @@ Select a domain above.</pre>
     const status  = wrap.querySelector('#stream-status');
     let attempt   = 0;
 
-    const connect = () => {
+    const appendLine = (d) => {
+      const line = document.createElement('p');
+      line.style.cssText = 'margin:2px 0;color:inherit';
+      const lvl = (d.level || 'INFO').toUpperCase();
+      const col = lvl === 'ERROR' ? '#ff6b6b'
+                : lvl === 'WARN'  ? '#ffd93d'
+                : lvl === 'DEBUG' ? '#8a8a9a'
+                : '#c0caf5';
+      line.style.color = col;
+      line.textContent = `[${lvl}] ${d.msg ?? d.message ?? JSON.stringify(d)}`;
+      logDiv.appendChild(line);
+      // keep last 89 (fib[11]) lines
+      while (logDiv.children.length > 89) logDiv.removeChild(logDiv.firstChild);
+      logDiv.scrollTop = logDiv.scrollHeight;
+    };
+
+    // The advisor stream is Bearer-guarded; EventSource cannot send an
+    // Authorization header, so this rides legacyApi.stream (fetch + SSE parser).
+    const connect = async () => {
       this._destroyStream();
-      const src = new EventSource(`${host}/api/advisor/stream`);
-      this._streamSrc = src;
-
-      src.onopen = () => {
-        attempt = 0;
-        status.textContent = 'Connected — streaming live logs';
-      };
-
-      src.onmessage = (e) => {
-        const line = document.createElement('p');
-        line.style.cssText = 'margin:2px 0;color:inherit';
-        try {
-          const d = JSON.parse(e.data);
-          const lvl = d.level || 'INFO';
-          const col = lvl === 'ERROR' ? '#ff6b6b'
-                    : lvl === 'WARN'  ? '#ffd93d'
-                    : lvl === 'DEBUG' ? '#8a8a9a'
-                    : '#c0caf5';
-          line.style.color = col;
-          line.textContent = `[${lvl}] ${d.msg ?? e.data}`;
-        } catch {
-          line.textContent = e.data;
-        }
-        logDiv.appendChild(line);
-        // keep last 89 (fib[11]) lines
-        while (logDiv.children.length > 89) logDiv.removeChild(logDiv.firstChild);
-        logDiv.scrollTop = logDiv.scrollHeight;
-      };
-
-      src.onerror = () => {
-        attempt++;
-        // PHI^attempt reconnect backoff (ms), capped at fib[13]=233s
-        const delay = Math.min(1000 * Math.pow(PHI, attempt), 233000);
-        status.textContent = `Reconnecting in ${(delay / 1000).toFixed(1)}s… (attempt ${attempt})`;
-        this._destroyStream();
-        setTimeout(connect, delay);
-      };
+      const tok = await this.token();
+      this._streamSrc = legacyApi.stream(tok, {
+        onOpen: () => {
+          attempt = 0;
+          status.textContent = 'Connected — streaming live logs';
+        },
+        onLine: appendLine,
+        onClose: () => {
+          attempt++;
+          // PHI^attempt reconnect backoff (ms), capped at fib[13]=233s
+          const delay = Math.min(1000 * Math.pow(PHI, attempt), 233000);
+          status.textContent = `Reconnecting in ${(delay / 1000).toFixed(1)}s… (attempt ${attempt})`;
+          this._destroyStream();
+          setTimeout(connect, delay);
+        },
+      });
     };
 
     connect();

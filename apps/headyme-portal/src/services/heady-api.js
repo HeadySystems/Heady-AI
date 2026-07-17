@@ -19,6 +19,54 @@ async function _call(base, method, path, body, token) {
   return data;
 }
 
+// ── shared SSE-over-fetch parser ───────────────────────────────────
+// EventSource cannot send an Authorization header, so every stream in
+// this client goes through fetch + ReadableStream. One parser, three
+// consumers (events, lens, legacy advisor). Frames are split on \n\n;
+// `:` keep-alive comments are dropped; onFrame receives
+// { id: number|null, event: string|undefined, data: object } per frame
+// whose data parses as JSON.
+function _sseStream(url, { headers = {}, signal, onFrame, onOpen, onClose } = {}) {
+  const ctrl = new AbortController();
+  if (signal) signal.addEventListener('abort', () => ctrl.abort(), { once: true });
+  (async () => {
+    try {
+      const res = await fetch(url, {
+        headers: { accept: 'text/event-stream', ...headers },
+        signal: ctrl.signal,
+      });
+      if (!res.ok || !res.body) throw new Error(`stream ${res.status} ${res.statusText}`);
+      onOpen?.();
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let nl;
+        while ((nl = buf.indexOf('\n\n')) !== -1) {
+          const frame = buf.slice(0, nl);
+          buf = buf.slice(nl + 2);
+          if (frame.startsWith(':')) continue; // keep-alive comment
+          const idMatch = frame.match(/^id:\s*(\d+)$/m);
+          const evMatch = frame.match(/^event:\s*(.+)$/m);
+          const dataMatch = frame.match(/^data:\s*([\s\S]+)$/m);
+          if (!dataMatch) continue;
+          let data;
+          try { data = JSON.parse(dataMatch[1]); } catch { continue; }
+          onFrame?.({ id: idMatch ? Number(idMatch[1]) : null, event: evMatch?.[1]?.trim(), data });
+        }
+      }
+      // Server closed the stream (deploy/shutdown) — surface it honestly.
+      if (!ctrl.signal.aborted) onClose?.();
+    } catch (err) {
+      if (!ctrl.signal.aborted) onClose?.(err);
+    }
+  })();
+  return { close: () => ctrl.abort() };
+}
+
 // ── rebuild codeflow API ───────────────────────────────────────────
 const CODEFLOW_BASE = import.meta.env.VITE_CODEFLOW_API ?? '';
 
@@ -74,45 +122,17 @@ export const events = {
    * @returns {{ close: () => void, lastEventId: () => number|null }}
    */
   stream(onEvent, { signal, lastEventId = null, onOpen, onClose } = {}) {
-    const ctrl = new AbortController();
-    if (signal) signal.addEventListener('abort', () => ctrl.abort(), { once: true });
     let lastId = lastEventId;
-    (async () => {
-      try {
-        const res = await fetch(this.streamUrl(lastId), {
-          headers: { accept: 'text/event-stream' },
-          signal: ctrl.signal,
-        });
-        if (!res.ok || !res.body) throw new Error(`events stream ${res.status} ${res.statusText}`);
-        onOpen?.();
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let buf = '';
-        for (;;) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          buf += dec.decode(value, { stream: true });
-          let nl;
-          while ((nl = buf.indexOf('\n\n')) !== -1) {
-            const frame = buf.slice(0, nl);
-            buf = buf.slice(nl + 2);
-            if (frame.startsWith(':')) continue; // φ⁷ keep-alive comment
-            const idMatch = frame.match(/^id:\s*(\d+)$/m);
-            if (idMatch) lastId = Number(idMatch[1]);
-            const dataMatch = frame.match(/^data:\s*([\s\S]+)$/m);
-            if (!dataMatch) continue;
-            let parsed;
-            try { parsed = JSON.parse(dataMatch[1]); } catch { continue; }
-            onEvent?.(parsed);
-          }
-        }
-        // Server closed the stream (deploy/shutdown) — surface it honestly.
-        if (!ctrl.signal.aborted) onClose?.();
-      } catch (err) {
-        if (!ctrl.signal.aborted) onClose?.(err);
-      }
-    })();
-    return { close: () => ctrl.abort(), lastEventId: () => lastId };
+    const handle = _sseStream(this.streamUrl(lastId), {
+      signal,
+      onOpen,
+      onClose,
+      onFrame: ({ id, data }) => {
+        if (id != null) lastId = id;
+        onEvent?.(data);
+      },
+    });
+    return { close: handle.close, lastEventId: () => lastId };
   },
 };
 
@@ -137,6 +157,20 @@ export const legacyApi = {
   patterns:    (domain, token)   => la('GET', `/api/advisor/patterns/${domain}`,        null, token),
   /** GET /api/advisor/config/:service — service config advisor */
   config:      (service, token)  => la('GET', `/api/advisor/config/${service}`,         null, token),
+  /**
+   * GET /api/advisor/stream (SSE) — Bearer-authenticated live log stream.
+   * `onLine` fires per structured log entry ({level, msg, ts, ...}).
+   * @returns {{ close: () => void }}
+   */
+  stream(token, { signal, onLine, onOpen, onClose } = {}) {
+    return _sseStream(`${LEGACY_BASE}/api/advisor/stream`, {
+      headers: token ? { authorization: `Bearer ${token}` } : {},
+      signal,
+      onOpen,
+      onClose,
+      onFrame: ({ data }) => onLine?.(data),
+    });
+  },
 };
 // ── HeadyLens: the live build narrative ──────────────────────────────
 // The lens server is Bearer-auth + GET-only (no `*` CORS). EventSource cannot
@@ -161,40 +195,14 @@ export const lens = {
    * @returns {{ close: () => void }}
    */
   stream(token, { subject, detail, sinceMs, onRecord, onReady, onError } = {}) {
-    const ctrl = new AbortController();
-    (async () => {
-      try {
-        const res = await fetch(this.streamUrl(subject, detail, sinceMs), {
-          headers: { accept: 'text/event-stream', ...(token ? { authorization: `Bearer ${token}` } : {}) },
-          signal: ctrl.signal,
-        });
-        if (!res.ok || !res.body) throw new Error(`lens stream ${res.status} ${res.statusText}`);
-        const reader = res.body.getReader();
-        const dec = new TextDecoder();
-        let buf = '';
-        for (;;) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          buf += dec.decode(value, { stream: true });
-          let nl;
-          while ((nl = buf.indexOf('\n\n')) !== -1) {
-            const frame = buf.slice(0, nl);
-            buf = buf.slice(nl + 2);
-            if (frame.startsWith(':')) continue; // keep-alive comment
-            const evMatch = frame.match(/^event:\s*(.+)$/m);
-            const dataMatch = frame.match(/^data:\s*([\s\S]+)$/m);
-            if (!dataMatch) continue;
-            let parsed;
-            try { parsed = JSON.parse(dataMatch[1]); } catch { continue; }
-            if (evMatch && evMatch[1].trim() === 'ready') onReady?.(parsed);
-            else onRecord?.(parsed);
-          }
-        }
-      } catch (err) {
-        if (!ctrl.signal.aborted) onError?.(err);
-      }
-    })();
-    return { close: () => ctrl.abort() };
+    return _sseStream(this.streamUrl(subject, detail, sinceMs), {
+      headers: token ? { authorization: `Bearer ${token}` } : {},
+      onClose: (err) => { if (err) onError?.(err); },
+      onFrame: ({ event, data }) => {
+        if (event === 'ready') onReady?.(data);
+        else onRecord?.(data);
+      },
+    });
   },
 };
 

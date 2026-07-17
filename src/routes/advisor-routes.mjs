@@ -17,6 +17,9 @@ router.use((req, res, next) => {
     'https://headyme.com',
     'https://headyme.firebaseapp.com',
     'https://headyme.web.app',
+    'https://heady-ai.web.app',
+    'https://1ime1.com',
+    'https://www.1ime1.com',
     ...(process.env.PORTAL_ORIGIN_EXTRA ?? '').split(',').filter(Boolean),
   ];
   const origin = req.headers.origin;
@@ -37,6 +40,12 @@ router.use(async (req, res, next) => {
 
   try {
     // lazy-init firebase-admin — avoids import at module level for faster cold starts
+    const { getApps, initializeApp } = await import('firebase-admin/app');
+    if (getApps().length === 0) {
+      // Portal tokens are minted by the heady-ai Firebase project; the monolith may run
+      // in a different GCP project, so the audience project must be pinned explicitly.
+      initializeApp({ projectId: process.env.FIREBASE_PROJECT_ID ?? 'heady-ai' });
+    }
     const { getAuth } = await import('firebase-admin/auth');
     const decoded = await getAuth().verifyIdToken(token);
     req.uid   = decoded.uid;
