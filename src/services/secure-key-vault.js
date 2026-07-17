@@ -89,6 +89,7 @@ class SecureKeyVault {
     constructor() {
         this.credentials = new Map(); // in-memory cache (decrypted)
         this.indexLoaded = false;
+        this.unlockPromise = null;
     }
 
     // ── Master Key Management ───────────────────────────────────
@@ -97,49 +98,60 @@ class SecureKeyVault {
      * The passphrase never leaves this process.
      */
     async unlock(passphrase) {
-        if (!passphrase || passphrase.length < 8) {
-            throw new Error('Passphrase must be at least 8 characters');
-        }
+        if (_unlocked) return { credentialCount: this.credentials.size };
+        if (this.unlockPromise) return this.unlockPromise;
 
-        // Generate or load salt from vector memory
-        const saltEntry = await vectorMemory.queryMemory('vault:master:salt', 1);
-        if (saltEntry && saltEntry.length > 0 && saltEntry[0].metadata?.salt) {
-            _masterSalt = Buffer.from(saltEntry[0].metadata.salt, 'hex');
-        } else {
-            _masterSalt = crypto.randomBytes(SALT_LENGTH);
-            await vectorMemory.ingestMemory({
-                content: 'vault:master:salt',
-                metadata: {
-                    type: 'vault-salt',
-                    salt: _masterSalt.toString('hex'),
-                    domain: 'system',
-                    memoryType: 'procedural',
-                    createdAt: Date.now(),
-                },
-            });
-        }
+        this.unlockPromise = (async () => {
+            try {
+                if (!passphrase || passphrase.length < 8) {
+                    throw new Error('Passphrase must be at least 8 characters');
+                }
 
-        _masterKey = crypto.pbkdf2Sync(
-            passphrase, _masterSalt, PBKDF2_ITERATIONS, KEY_LENGTH, PBKDF2_DIGEST
-        );
-        _unlocked = true;
+                // Generate or load salt from vector memory
+                const saltEntry = await vectorMemory.queryMemory('vault:master:salt', 1);
+                if (saltEntry && saltEntry.length > 0 && saltEntry[0].metadata?.salt) {
+                    _masterSalt = Buffer.from(saltEntry[0].metadata.salt, 'hex');
+                } else {
+                    _masterSalt = crypto.randomBytes(SALT_LENGTH);
+                    await vectorMemory.ingestMemory({
+                        content: 'vault:master:salt',
+                        metadata: {
+                            type: 'vault-salt',
+                            salt: _masterSalt.toString('hex'),
+                            domain: 'system',
+                            memoryType: 'procedural',
+                            createdAt: Date.now(),
+                        },
+                    });
+                }
 
-        // Auto-lock after inactivity
-        this._resetLockTimer();
+                _masterKey = crypto.pbkdf2Sync(
+                    passphrase, _masterSalt, PBKDF2_ITERATIONS, KEY_LENGTH, PBKDF2_DIGEST
+                );
+                _unlocked = true;
 
-        // Load credential index from vector memory
-        await this._loadIndex();
+                // Auto-lock after inactivity
+                this._resetLockTimer();
 
-        logger.info(`[SecureKeyVault] Unlocked — ${this.credentials.size} credentials loaded`);
+                // Load credential index from vector memory
+                await this._loadIndex();
 
-        if (global.eventBus) {
-            global.eventBus.emit('vault:unlocked', {
-                credentialCount: this.credentials.size,
-                domains: [...new Set([...this.credentials.values()].map(c => c.domain))],
-            });
-        }
+                logger.info(`[SecureKeyVault] Unlocked — ${this.credentials.size} credentials loaded`);
 
-        return { credentialCount: this.credentials.size };
+                if (global.eventBus) {
+                    global.eventBus.emit('vault:unlocked', {
+                        credentialCount: this.credentials.size,
+                        domains: [...new Set([...this.credentials.values()].map(c => c.domain))],
+                    });
+                }
+
+                return { credentialCount: this.credentials.size };
+            } finally {
+                this.unlockPromise = null;
+            }
+        })();
+
+        return this.unlockPromise;
     }
 
     lock() {

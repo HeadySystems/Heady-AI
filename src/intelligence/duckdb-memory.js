@@ -35,14 +35,7 @@ class HeadyEmbeddedDuckDB {
 
         this.conn = this.db.connect();
 
-        // Install and load VSS extension for vector similarity search
-        this.conn.run("INSTALL vss; LOAD vss;", (err) => {
-          if (err) {
-            logger.warn(`⚠️ [DuckDB] VSS extension not available, falling back to manual cosine similarity: ${err.message}`);
-          } else {
-            logger.logSystem("💿 [DuckDB] VSS Extension loaded successfully.");
-          }
-
+        const createTable = () => {
           // Create the actual conversation vectors table
           this.conn.run(`
                         CREATE TABLE IF NOT EXISTS conversation_vectors (
@@ -74,7 +67,23 @@ class HeadyEmbeddedDuckDB {
               });
             });
           });
-        });
+        };
+
+        // Skip installing VSS if disabled or not explicitly requested (VSS is known to cause glibc malloc aborts on Linux and is unused by similaritySearch)
+        const skipVss = process.env.DISABLE_DUCKDB_VSS !== 'false';
+        if (skipVss) {
+          logger.logSystem("💿 [DuckDB] Skipping VSS extension load (using built-in list_cosine_similarity).");
+          createTable();
+        } else {
+          this.conn.run("INSTALL vss; LOAD vss;", (err) => {
+            if (err) {
+              logger.warn(`⚠️ [DuckDB] VSS extension not available: ${err.message}`);
+            } else {
+              logger.logSystem("💿 [DuckDB] VSS Extension loaded successfully.");
+            }
+            createTable();
+          });
+        }
       });
     });
   }

@@ -1597,6 +1597,16 @@ try {
   logger.logNodeActivity("CONDUCTOR", `  ⚠ Swarm Ignition not started: ${err.message}`);
 }
 
+// ─── HeadyService Dispatcher (Unified Intelligent Router) ─────────────
+try {
+  const { HeadyServiceDispatcher, registerServiceRoutes } = require("./src/hc_service_dispatcher");
+  const dispatcher = new HeadyServiceDispatcher({ managerUrl: `http://localhost:${PORT}` });
+  registerServiceRoutes(app, dispatcher);
+  logger.logNodeActivity("CONDUCTOR", "  🔀 HeadyService Dispatcher: LOADED (unified intelligent routing)");
+} catch (err) {
+  logger.logNodeActivity("CONDUCTOR", `  ⚠ HeadyService Dispatcher not started: ${err.message}`);
+}
+
 // ─── HeadyBee Template Registry (Scenario-Based Bee Templates) ───────
 try {
   const { registerRoutes: registerTemplateRoutes } = require("./src/bees/headybee-template-registry");
