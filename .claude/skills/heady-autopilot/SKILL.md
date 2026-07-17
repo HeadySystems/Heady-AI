@@ -62,6 +62,10 @@ repo state and runs at the default level (**L2**).
 ## Execution loop
 
 ```
+0. CATCH-UP → /heady-handoff-check (always, all levels, even --dry-run): locate the latest
+              docs/handoff/HANDOFF-*.md, classify CURRENT/BEHIND/NO_BUNDLE against the
+              checkpoint↔HEAD, and ingest the bundle (+ commit gap) before anything else;
+              seed a bundle via /heady-handoff only when appropriate (never for read-only runs)
 1. ORIENT   → read live session + repo state; resolve --goal (or grill-me to set the destination)
 2. MAP      → tooling/build-plan: map the route to the goal (mapped, straight-through DAG)
 3. ROUTE    → @heady/perspective (CSL cosine) ranks which /heady-* skills/agents fit each leg;

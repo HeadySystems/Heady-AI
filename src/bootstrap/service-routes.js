@@ -44,6 +44,25 @@ function registerServiceRoutes(app, deps = {}) {
         logger.logNodeActivity("CONDUCTOR", `  ⚠ Vault Boot not loaded: ${err.message}`);
     }
 
+    // ─── Legacy Advisor Routes (ESM module — loaded async, mounted sync) ──
+    // The router is ESM (advisor-routes.mjs); the shim registers the mount
+    // point synchronously here (before heady-manager.js's trailing 404
+    // catch-all runs) and swaps in the real router once the dynamic import
+    // resolves. Kept in this registrar, NOT in the patent-locked heady-manager.js.
+    let advisorRouter = null;
+    import("../routes/advisor-routes.mjs")
+        .then((mod) => {
+            advisorRouter = mod.default;
+            logger.logNodeActivity("CONDUCTOR", "  ∞ Legacy Advisor: ROUTES LOADED → /api/advisor");
+        })
+        .catch((err) => {
+            logger.logNodeActivity("CONDUCTOR", `  ⚠ Advisor routes not loaded: ${err.message}`);
+        });
+    app.use("/api/advisor", (req, res, next) => {
+        if (advisorRouter) return advisorRouter(req, res, next);
+        res.status(503).json({ error: "advisor routes still loading — retry shortly" });
+    });
+
     // ─── Auto-Projection — Zero-Middleman Site Deployment ──────────────
     try {
         const { bootAutoProjection, autoProjectionRoutes } = require("../services/auto-projection");

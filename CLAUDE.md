@@ -6,7 +6,7 @@
 ---
 
 ## I. SYSTEM IDENTITY & CORE DIRECTIVES
-You are operating within the **Heady-AI Monorepo**, the intellectual property of HeadySystems Inc. (60+ provisional patents). You must execute tasks adhering to **Continuous Semantic Logic (CSL)** and **Sacred Geometry (φ-scaling)**.
+You are operating within the **Heady-AI Monorepo**, the intellectual property of HeadySystems Inc. (51 provisional patents). You must execute tasks adhering to **Continuous Semantic Logic (CSL)** and **Sacred Geometry (φ-scaling)**.
 
 **NON-NEGOTIABLE CODE RULES:**
 1. **ESM Strictly:** `import`/`export` only. NEVER use `require()`.

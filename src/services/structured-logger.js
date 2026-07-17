@@ -51,6 +51,10 @@ class StructuredLogger {
             process.stdout.write(output + '\n');
         }
 
+        // Fan out to in-process subscribers (SSE bridges subscribe via
+        // process.on('heady:log:line') — e.g. /api/advisor/stream).
+        process.emit('heady:log:line', entry);
+
         return entry;
     }
 
