@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const token = "VGNo4jwin3V6eFO0HpGGYUyn2iWFM6JpkPfdIqUa";
+const token = process.env.CLOUDFLARE_API_TOKEN;
 const zoneId = "d71262d0faa509f890fd5fea413c39bc";
 const target = "heady-manager-609590223909.us-central1.run.app";
 

@@ -48,7 +48,8 @@
                     "label": "AI Nodes"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "production"
         },
         "headysystems.com": {
             "name": "HeadySystems",
@@ -108,7 +109,8 @@
                     "label": "Patents"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "production"
         },
         "headyconnection.org": {
             "name": "HeadyConnection",
@@ -158,7 +160,8 @@
                     "label": "For NPOs"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "beta"
         },
         "headymcp.com": {
             "name": "HeadyMCP",
@@ -208,7 +211,8 @@
                     "label": "Ready"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "beta"
         },
         "headyos.com": {
             "name": "HeadyOS",
@@ -258,7 +262,8 @@
                     "label": "Memory"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "beta"
         },
         "headyapi.com": {
             "name": "HeadyAPI",
@@ -308,7 +313,8 @@
                     "label": "Version"
                 }
             ],
-            "chatEnabled": false
+            "chatEnabled": false,
+            "launchStatus": "coming-soon"
         },
         "headybuddy.org": {
             "name": "HeadyBuddy",
@@ -358,7 +364,8 @@
                     "label": "Nudges"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "beta"
         },
         "headybot.com": {
             "name": "HeadyBot",
@@ -408,7 +415,8 @@
                     "label": "Healing"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "production"
         },
         "headyio.com": {
             "name": "HeadyIO",
@@ -458,7 +466,8 @@
                     "label": "Test"
                 }
             ],
-            "chatEnabled": true
+            "chatEnabled": true,
+            "launchStatus": "beta"
         }
     },
     "externalLinks": {
@@ -476,6 +485,7 @@
             "features": "array of { icon, title, desc } (max 6)",
             "stats": "array of { value, label } (max 4)",
             "chatEnabled": "boolean (default: true)",
+            "launchStatus": "production | beta | coming-soon | maintenance (default: coming-soon)",
             "customCSS": "string (optional raw CSS injection)"
         },
         "_note": "Custom sites are stored in data/user-sites.json at runtime, created during onboarding"

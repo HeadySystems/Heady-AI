@@ -326,6 +326,24 @@ class HeadyAutonomy extends EventEmitter {
                 const patterns = this.patternEngine.getConvergedPatterns();
                 if (patterns && patterns.length > 0) {
                     this.stats.patternsDetected += patterns.length;
+                    
+                    // Evaluate CSL score of patterns to bridge the Execution Gap
+                    const actionablePatterns = patterns.filter(p => (p.cslScore || p.confidence || 0.85) >= 0.85);
+                    
+                    if (actionablePatterns.length > 0) {
+                        logger.logSystem(`⚡ PATTERN ENGINE: ${actionablePatterns.length} actionable patterns detected (CSL >= 0.85). Triggering Apex Router.`);
+                        
+                        this.emit("converged_pattern_actionable", { patterns: actionablePatterns });
+                        
+                        // Bridge directly to the Universal Proxy / Apex Router pipeline
+                        this.emit("apex_router_triggered", { 
+                            source: "pattern_engine", 
+                            payload: {
+                                reason: "High-confidence converged pattern detected",
+                                patterns: actionablePatterns
+                            }
+                        });
+                    }
                 }
             }
         } catch (err) {

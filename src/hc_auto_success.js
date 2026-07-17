@@ -683,6 +683,10 @@ const TASK_CATALOG = [
         id: "intel-010", name: "Monitor HeadyBattle competitive analysis freshness", cat: "deep-intel", pool: "warm", w: 3,
         desc: "Ensure competitive benchmarks are recent and relevant"
     },
+    {
+        id: "intel-011", name: "Synchronize Linear Autopilot Tasks", cat: "deep-intel", pool: "hot", w: 5,
+        desc: "Pull assigned issues from Linear, analyze velocity, and detect >48h staleness"
+    },
 
     // ═══ HIVE-INTEGRATION (20) — External APIs, MCP Aggregation, SDK ════════
     {
@@ -1265,6 +1269,20 @@ class AutoSuccessEngine extends EventEmitter {
     /** React: group tasks by bee domain, fire each bee ONCE.
      *  Most effective: no redundancy, every task covered, every bee fires exactly once. */
     async _performWork(task) {
+        if (task.id === 'intel-011') {
+            try {
+                const { syncLinearIssues } = require('./auto-success/linear-sync');
+                const result = await syncLinearIssues();
+                return {
+                    finding: `Linear Sync: ${result.status}. ${result.metrics ? `Active: ${result.metrics.activeIssues}, Stale: ${result.metrics.staleIssues}` : (result.reason || result.error)}`,
+                    adjusted: result.status === 'completed'
+                };
+            } catch (err) {
+                logger.error('[AutoSuccessEngine] intel-011 execution failed', { error: err.message });
+                throw err;
+            }
+        }
+
         if (task.id === 'hive-021') {
             try {
                 const registry = require('./services/dynamic-model-registry');

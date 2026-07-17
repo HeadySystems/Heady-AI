@@ -420,6 +420,7 @@
     ".dockerignore",
     "Dockerfile",
     "claude_desktop_config.json",
+    ".mcp.json",
     "heady-latent-os-commander.plugin",
     "scaffold_heady.sh",
     "heady-manager.js",
