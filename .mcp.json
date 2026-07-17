@@ -2,7 +2,10 @@
   "mcpServers": {
     "heady": {
       "type": "http",
-      "url": "https://heady-mcp-server-n5s7hbzdga-ue.a.run.app/mcp/v1"
+      "url": "https://heady-mcp-server-n5s7hbzdga-ue.a.run.app/mcp/v1",
+      "headers": {
+        "Authorization": "Bearer ${HEADY_MCP_BEARER}"
+      }
     }
   }
 }
