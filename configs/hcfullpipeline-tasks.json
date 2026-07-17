@@ -1,7 +1,7 @@
 {
-  "version": "1.0.1",
-  "taskCount": 4,
-  "lastFineTuned": "2026-06-15T12:00:00Z",
+  "version": "1.0.3",
+  "taskCount": 16,
+  "lastFineTuned": "2026-07-17T13:52:43Z",
   "tasks": [
     {
       "id": "SEC-001",
@@ -42,6 +42,126 @@
       "csl_confidence": 0.8,
       "estimated_hours": 4,
       "source": "heady_current_state_handoff.md - Projection Workstream"
+    },
+    {
+      "id": "ARCH-002",
+      "category": "ARCHITECTURE",
+      "title": "Expand configs/service-catalog.yaml to 19 Latent Services",
+      "description": "Expand the service-catalog.yaml stub to include all 19 Latent Services from heady-registry.json to establish routing and health authority.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "ARCH-003",
+      "category": "ARCHITECTURE",
+      "title": "Create configs/liquid-os/node-registry.yaml",
+      "description": "Add declarative node topology in node-registry.yaml grounded in orchestration (src/orchestration/*) and edge (src/edge/*) patterns.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "ARCH-004",
+      "category": "ARCHITECTURE",
+      "title": "Create configs/liquid-os/bee-catalog.yaml",
+      "description": "Create a static catalog of the 61 bee modules for capability planning and swarm routing, rather than relying solely on runtime auto-discovery.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 3,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "ARCH-005",
+      "category": "ARCHITECTURE",
+      "title": "Create configs/liquid-os/agent-registry.yaml",
+      "description": "Unify the agent indexing by adding agent-registry.yaml to index agents split across src/agents/, .agents/agents/, and .agents/personas/.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "ARCH-006",
+      "category": "ARCHITECTURE",
+      "title": "Create configs/liquid-os/workflow-registry.yaml",
+      "description": "Create a workflow registry file to index the 10 CI and 29 internal workflows.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "SEC-003",
+      "category": "SECURITY",
+      "title": "Create configs/mcp-tools.json tool manifest",
+      "description": "Classify the 40 heady_* tools in src/heady-mcp-server.js into tiers and scopes for zero-trust gateway enforcement.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "INFRA-002",
+      "category": "INFRASTRUCTURE",
+      "title": "Create .well-known/mcp.json discovery document",
+      "description": "Add standard MCP server discovery document reflecting real tools and OAuth 2.1 metadata.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Registries & manifests"
+    },
+    {
+      "id": "DOC-001",
+      "category": "DOCUMENTATION",
+      "title": "Create CONTRIBUTING.md for rebuild branch",
+      "description": "Add contributor checklist, branch policy, and registry-sync table to CONTRIBUTING.md.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "gap-matrix-rebuild-vs-production.md - Root governance / meta docs"
+    },
+    {
+      "id": "SEC-004",
+      "category": "SECURITY",
+      "title": "Update SECURITY.md with secrets policy",
+      "description": "Add vulnerability-reporting and secrets policy at the root of SECURITY.md.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "gap-matrix-rebuild-vs-production.md - Root governance / meta docs"
+    },
+    {
+      "id": "DOC-002",
+      "category": "DOCUMENTATION",
+      "title": "Create ARCHITECTURE.md overview",
+      "description": "Create a single architecture overview document outside of ADRs with a concise layer map.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 2,
+      "source": "gap-matrix-rebuild-vs-production.md - Root governance / meta docs"
+    },
+    {
+      "id": "DOC-003",
+      "category": "DOCUMENTATION",
+      "title": "Create CHANGELOG.md in Keep-a-Changelog format",
+      "description": "Add CHANGELOG.md using Keep-a-Changelog format for releases run from this repository.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "gap-matrix-rebuild-vs-production.md - Root governance / meta docs"
+    },
+    {
+      "id": "QUAL-001",
+      "category": "QUALITY",
+      "title": "Verify well-formedness and consistency of optimal filesystem registries",
+      "description": "Run YAML/JSON syntax checks and the data-consistency gate (pnpm run consistency:verify) on the added registries/manifests.",
+      "status": "pending",
+      "csl_confidence": 0.618,
+      "estimated_hours": 1,
+      "source": "optimal-filesystem-plan-rebuild.md - Sync / validation after merge"
     }
   ]
 }
