@@ -1,7 +1,7 @@
 {
-  "version": "1.0.3",
-  "taskCount": 16,
-  "lastFineTuned": "2026-07-17T13:52:43Z",
+  "version": "1.0.4",
+  "taskCount": 28,
+  "lastFineTuned": "2026-07-19T12:05:00Z",
   "tasks": [
     {
       "id": "SEC-001",
@@ -162,6 +162,126 @@
       "csl_confidence": 0.618,
       "estimated_hours": 1,
       "source": "optimal-filesystem-plan-rebuild.md - Sync / validation after merge"
+    },
+    {
+      "id": "FEAT-001",
+      "category": "FEATURES",
+      "title": "Extend Admin UI w/ task-management, error triage, and sync health panels",
+      "description": "Add task board, error triage, roadmap, sync health, and chat context panels to the Admin UI, backed by proxy APIs.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 12,
+      "source": "task-management-sync-architecture.md - Section 2.2 / 8.2"
+    },
+    {
+      "id": "FEAT-002",
+      "category": "FEATURES",
+      "title": "Implement the Heady Sync Hub Cloudflare Worker",
+      "description": "Create Cloudflare Worker for webhook endpoints (/webhooks/linear, /webhooks/github, /webhooks/sentry, /webhooks/monday) w/ HMAC verification and KV-based deduplication.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 16,
+      "source": "task-management-sync-architecture.md - Section 6.1"
+    },
+    {
+      "id": "SEC-005",
+      "category": "SECURITY",
+      "title": "Hardening Admin UI CORS and authentication",
+      "description": "Remove wildcard CORS from Admin UI, enforce Cloudflare Access JWT validation in Express middleware, and restrict API tokens.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 6,
+      "source": "task-management-sync-architecture.md - Section 8.5"
+    },
+    {
+      "id": "SEC-006",
+      "category": "SECURITY",
+      "title": "Provision and configure Sentry internal integration for Heady Sync Hub",
+      "description": "Create Sentry internal integration client secrets and register webhook subscriptions to forward production error events to the sync hub.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 3,
+      "source": "task-management-sync-architecture.md - Section 7.2"
+    },
+    {
+      "id": "INFRA-003",
+      "category": "INFRASTRUCTURE",
+      "title": "Align Slack channel architecture to prefix-scope-topic conventions",
+      "description": "Set up and restrict #ops-sync-hub, #alerts-sentry, #eng-linear, and #eng-releases channels in Slack workspace.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 2,
+      "source": "task-management-sync-architecture.md - Section 5.1"
+    },
+    {
+      "id": "INFRA-004",
+      "category": "INFRASTRUCTURE",
+      "title": "Automate Sentry alert rules across all 11 projects",
+      "description": "Extend scripts/setup-sentry-alerts.js to programmatically configure standard rules (New Issue, Regression, Escalation) across all projects.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 4,
+      "source": "task-management-sync-architecture.md - Section 7.2"
+    },
+    {
+      "id": "INFRA-005",
+      "category": "INFRASTRUCTURE",
+      "title": "Deploy extended Admin UI to Cloud Run behind Cloudflare Access",
+      "description": "Build and deploy the admin-ui container to Cloud Run, configure Cloudflare DNS, and lock ingress behind Cloudflare Access.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 4,
+      "source": "task-management-sync-architecture.md - Section 8.4"
+    },
+    {
+      "id": "ARCH-007",
+      "category": "ARCHITECTURE",
+      "title": "Define entity_map Drizzle schema in D1/Neon",
+      "description": "Add Drizzle schema for entity_map table w/ canonical_id, system, external_id, and timestamps for multi-tool ID mapping.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 3,
+      "source": "task-management-sync-architecture.md - Section 6.4"
+    },
+    {
+      "id": "ARCH-008",
+      "category": "ARCHITECTURE",
+      "title": "Codify the 12 Linear/GitHub state-to-monday mapping rules",
+      "description": "Implement declarative state transition resolver in Heady Sync Hub supporting the 12 mapping rules.",
+      "status": "pending",
+      "csl_confidence": 0.85,
+      "estimated_hours": 6,
+      "source": "task-management-sync-architecture.md - Section 6.6"
+    },
+    {
+      "id": "REM-001",
+      "category": "REMEDIATION",
+      "title": "Normalize Sentry Org Slug across workspace code",
+      "description": "Update sentry-tool.js and Sentry client configs to use SENTRY_ORG_SLUG env var defaulted to headyconnection-inc.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 2,
+      "source": "task-management-sync-architecture.md - Section 2.2 / 7.2"
+    },
+    {
+      "id": "QUAL-002",
+      "category": "QUALITY",
+      "title": "Enable and verify native integrations",
+      "description": "Configure and verify native workspace integrations: Linear-GitHub PR linking, Linear-Slack alerting, and Sentry-Linear alert-creation.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 3,
+      "source": "task-management-sync-architecture.md - Section 7.1"
+    },
+    {
+      "id": "QUAL-003",
+      "category": "QUALITY",
+      "title": "Implement one-off backfill sync script",
+      "description": "Write and execute a script to match existing Linear projects & GitHub milestones to monday Roadmap rows and seed entity_map.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 4,
+      "source": "task-management-sync-architecture.md - Section 6.4 / 9.0"
     }
   ]
 }
