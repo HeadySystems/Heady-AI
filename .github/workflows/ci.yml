@@ -18,8 +18,8 @@ jobs:
     name: lint · test · build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: enable pnpm
@@ -44,8 +44,8 @@ jobs:
     name: constitutional law gate (AGENTS.md rules → CI)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # Mirror of .claude/hooks/heady-rules.mjs — ensures humans, git, and CI are
@@ -59,8 +59,8 @@ jobs:
     name: governance coverage (patent-CODEOWNERS · workflow-sync)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # Every ⚠️ PATENT-marked file must be CODEOWNERS-covered (routes required human
@@ -76,8 +76,8 @@ jobs:
     name: coherence gate (the OS of the OS)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # Fail-closed structural gate: builds the System Map, regenerates the master
@@ -100,10 +100,10 @@ jobs:
       # Full history so the enforcers can diff the PR against its base (compliant
       # day one: new code is held to the Unbreakable Laws without retroactively
       # failing the rebuild baseline). fetch-depth: 0 = complete history.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       # ── LAW 0 · secret-leak detection ──────────────────────────────
@@ -114,7 +114,7 @@ jobs:
       # secret to activate it. (Renovate digest-pins this action.)
       - name: secret-leak (gitleaks)
         if: ${{ env.GITLEAKS_LICENSE != '' }}
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITLEAKS_LICENSE: ${{ env.GITLEAKS_LICENSE }}

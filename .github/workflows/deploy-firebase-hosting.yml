@@ -32,11 +32,11 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: rebuild
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -68,7 +68,7 @@ jobs:
 
       - name: Authenticate → Google Cloud (Workload Identity)
         id: auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         continue-on-error: true
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
