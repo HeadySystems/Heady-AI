@@ -129,15 +129,15 @@
     "@octokit/rest": "^21.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.55.0",
-    "@typescript-eslint/parser": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^8.64.0",
+    "@typescript-eslint/parser": "^8.64.0",
     "concurrently": "^10.0.3",
-    "eslint": "^10.0.1",
+    "eslint": "^10.7.0",
     "jest": "^30.2.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.2.2",
     "yaml-jest": "^1.2.0",
-    "turbo": "^2.9.18"
+    "turbo": "^2.10.5"
   },
   "packageManager": "pnpm@9.15.9",
   "engines": {
