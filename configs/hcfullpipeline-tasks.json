@@ -1,7 +1,7 @@
 {
-  "version": "1.0.4",
-  "taskCount": 28,
-  "lastFineTuned": "2026-07-19T12:05:00Z",
+  "version": "1.0.5",
+  "taskCount": 41,
+  "lastFineTuned": "2026-07-22T19:17:44Z",
   "tasks": [
     {
       "id": "SEC-001",
@@ -282,6 +282,136 @@
       "csl_confidence": 0.9,
       "estimated_hours": 4,
       "source": "task-management-sync-architecture.md - Section 6.4 / 9.0"
+    },
+    {
+      "id": "SEC-007",
+      "category": "SECURITY",
+      "title": "BFG purge .env.hybrid and rotate DB credentials",
+      "description": "Purge plaintext DB credential in .env.hybrid from git history and rotate ALL exposed credentials immediately.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 2,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 0"
+    },
+    {
+      "id": "INFRA-006",
+      "category": "INFRASTRUCTURE",
+      "title": "Fix merge conflicts in .env.example",
+      "description": "Resolve <<<<<<< HEAD markers at line 1 that kill the CI pipeline, keeping v4.0.0 cloud config.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 0"
+    },
+    {
+      "id": "SEC-008",
+      "category": "SECURITY",
+      "title": "Replace wildcard CORS in server.js",
+      "description": "Remove Access-Control-Allow-Origin: * in HeadyMe/headysystems/server.js and use an explicit origin whitelist.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 0"
+    },
+    {
+      "id": "INFRA-007",
+      "category": "INFRASTRUCTURE",
+      "title": "Update NODE_VERSION to 22 in all workflows",
+      "description": "Update all 46 GitHub Actions workflows to use NODE_VERSION: '22' to match package.json.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 1,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 0"
+    },
+    {
+      "id": "ARCH-009",
+      "category": "ARCHITECTURE",
+      "title": "Create missing entrypoints",
+      "description": "Create or fix paths for phi-math-foundation/index.js, mcp-server/index.js, backend/app.js which currently 404.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 2,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 0"
+    },
+    {
+      "id": "SEC-009",
+      "category": "SECURITY",
+      "title": "Resolve critical protobufjs Dependabot alert",
+      "description": "Run pnpm update to resolve critical (protobufjs) and high (undici) security alerts.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1,
+      "source": "HEADY-ASAP-ENTERPRISE-ROADMAP.md - Phase 1"
+    },
+    {
+      "id": "REM-002",
+      "category": "REMEDIATION",
+      "title": "Add date-arrival automations in Monday.com UI",
+      "description": "Manually add date-arrival automations for task due dates, patent deadlines, and renewals in the Monday.com UI.",
+      "status": "pending",
+      "csl_confidence": 0.9,
+      "estimated_hours": 1,
+      "source": "heady-audit-findings-recommendations.md - Monday.com"
+    },
+    {
+      "id": "INFRA-008",
+      "category": "INFRASTRUCTURE",
+      "title": "Consolidate Slack channel duplicates",
+      "description": "Consolidate duplicate Slack channels (#incidents -> #ops-incidents, etc.) and rename/archive #new-channel.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 1,
+      "source": "heady-audit-findings-recommendations.md - Slack"
+    },
+    {
+      "id": "SEC-010",
+      "category": "SECURITY",
+      "title": "Make #exec-ip-patents channel private",
+      "description": "Convert #exec-ip-patents (and any IP channel) to private to prevent confidentiality exposure.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 1,
+      "source": "heady-audit-findings-recommendations.md - Slack"
+    },
+    {
+      "id": "INFRA-009",
+      "category": "INFRASTRUCTURE",
+      "title": "Enforce exception-only bot posting in Slack",
+      "description": "Filter SEV-level alerts to human channels and mute everything else to swarm/log channels.",
+      "status": "pending",
+      "csl_confidence": 0.8,
+      "estimated_hours": 2,
+      "source": "heady-audit-findings-recommendations.md - Slack"
+    },
+    {
+      "id": "SEC-011",
+      "category": "SECURITY",
+      "title": "Protect rebuild branch before default flip",
+      "description": "Add required checks and include-admins (but no required review while solo) to the rebuild branch before making it default.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 1,
+      "source": "heady-audit-findings-recommendations.md - Repo & security"
+    },
+    {
+      "id": "INFRA-010",
+      "category": "INFRASTRUCTURE",
+      "title": "Flip default branch to rebuild",
+      "description": "Flip the default branch to rebuild, drain legacy PRs, and verify 777 alerts drop to 0.",
+      "status": "pending",
+      "csl_confidence": 0.95,
+      "estimated_hours": 1,
+      "source": "heady-audit-findings-recommendations.md - Repo & security"
+    },
+    {
+      "id": "SEC-012",
+      "category": "SECURITY",
+      "title": "Setup break-glass admin and hardware 2FA",
+      "description": "Configure a break-glass admin, hardware 2FA, and corporate account ownership across Monday, Slack, and GitHub.",
+      "status": "pending",
+      "csl_confidence": 1.0,
+      "estimated_hours": 2,
+      "source": "heady-audit-findings-recommendations.md - Repo & security"
     }
   ]
 }

@@ -51,3 +51,31 @@ Summary Metrics:
 - Quality: 3
 - Features: 2
 - Remediation: 1
+
+## 2026-07-22 (Auto-Extract via Heady Apex Router)
+
+Following the `/auto-extract-tasks` workflow, the following priorities have been parsed directly from the recent Dropzone and Downloads ingestion:
+
+- **SEC-007**: BFG purge .env.hybrid and rotate DB credentials (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **INFRA-006**: Fix merge conflicts in .env.example (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **SEC-008**: Replace wildcard CORS in server.js (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **INFRA-007**: Update NODE_VERSION to 22 in all workflows (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **ARCH-009**: Create missing entrypoints (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **SEC-009**: Resolve critical protobufjs Dependabot alert (Source: `HEADY-ASAP-ENTERPRISE-ROADMAP.md`)
+- **REM-002**: Add date-arrival automations in Monday.com UI (Source: `heady-audit-findings-recommendations.md`)
+- **INFRA-008**: Consolidate Slack channel duplicates (Source: `heady-audit-findings-recommendations.md`)
+- **SEC-010**: Make #exec-ip-patents channel private (Source: `heady-audit-findings-recommendations.md`)
+- **INFRA-009**: Enforce exception-only bot posting in Slack (Source: `heady-audit-findings-recommendations.md`)
+- **SEC-011**: Protect rebuild branch before default flip (Source: `heady-audit-findings-recommendations.md`)
+- **INFRA-010**: Flip default branch to rebuild (Source: `heady-audit-findings-recommendations.md`)
+- **SEC-012**: Setup break-glass admin and hardware 2FA (Source: `heady-audit-findings-recommendations.md`)
+
+Summary Metrics Updated:
+- Total Extracted: 41
+- Security: 12
+- Infrastructure: 9
+- Architecture: 9
+- Documentation: 3
+- Quality: 3
+- Features: 2
+- Remediation: 2
