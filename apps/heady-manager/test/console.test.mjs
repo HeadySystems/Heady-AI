@@ -12,8 +12,14 @@ import { writeFileSync, mkdtempSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-import { createConsoleService, classifyHttp, PROBE_TIMEOUT_MS } from "../src/console.mjs";
+import { createConsoleService, classifyHttp, classifyProjectionManifest, PROBE_TIMEOUT_MS } from "../src/console.mjs";
 import { createApp } from "../src/app.mjs";
+
+const PROJ_MANIFEST = {
+  schema: "projection.v1", id: "headyos", source_path: "apps/mcp-dashboard",
+  target_repo: "HeadySystems/headyos-core", projection_type: "worker-shell",
+  deploy_target: "cloudflare-workers", status: "proposed",
+};
 
 const noLog = { info: () => {}, warn: () => {}, error: () => {} };
 
@@ -70,6 +76,46 @@ test("classifyHttp: manifest anti-masquerade beats a bare 200", () => {
   assert.equal(invalid.state, "degraded");
   assert.equal(classifyHttp({ status: 302 }).state, "degraded");
   assert.equal(classifyHttp({ status: 503 }).state, "degraded");
+});
+
+test("classifyProjectionManifest: valid manifest ⇒ projection_only, invalid/absent ⇒ null (fall through)", () => {
+  const c = classifyProjectionManifest(PROJ_MANIFEST);
+  assert.equal(c.state, "projection_only");
+  assert.match(c.detail, /HeadySystems\/headyos-core \(proposed\)/);
+  assert.equal(classifyProjectionManifest(null), null);
+  assert.equal(classifyProjectionManifest({ ...PROJ_MANIFEST, status: "bogus" }), null);
+});
+
+test("projection connector renders projection_only from its committed manifest — never probes the .com (anti-masquerade)", async () => {
+  let networkHit = false;
+  const svc = createConsoleService({
+    log: noLog, kernel: { services: [] }, publish: async () => {},
+    registryPath: fixtureRegistry([
+      { id: "headyos", name: "HeadyOS", kind: "heady", role: "dashboard", deploy_class: false, expected: "projection", probe: { kind: "https", url: "https://headyos.com/" } },
+    ]),
+    fetchImpl: async () => { networkHit = true; return { status: 200, json: async () => ({ status: "ok" }) }; },
+    readProjection: (id) => (id === "headyos" ? PROJ_MANIFEST : null),
+  });
+  await svc.service.start();
+  await svc.service.stop();
+  const os = svc.summary().connectors.find((c) => c.id === "headyos");
+  assert.equal(os.state, "projection_only");
+  assert.match(os.detail, /projected → HeadySystems\/headyos-core/);
+  assert.equal(networkHit, false, "a governed projection must not have its public URL probed");
+});
+
+test("projection connector WITHOUT a governed manifest falls through to the live server-manifest probe", async () => {
+  const svc = createConsoleService({
+    log: noLog, kernel: { services: [] }, publish: async () => {},
+    registryPath: fixtureRegistry([
+      { id: "shell", name: "Shell", kind: "heady", role: "shell", deploy_class: false, expected: "projection", probe: { kind: "https", url: "https://shell.example.headysystems.com/manifest" } },
+    ]),
+    fetchImpl: fakeFetch,
+    readProjection: () => null, // no committed manifest → fall through
+  });
+  await svc.service.start();
+  await svc.service.stop();
+  assert.equal(svc.summary().connectors.find((c) => c.id === "shell").state, "projection_only");
 });
 
 test("a sweep measures every §8 state honestly", async () => {
@@ -209,6 +255,14 @@ test("live app serves /api/console/summary — real 15-connector registry, injec
     assert.equal(unwired.state, "not_connected");
     const origin = s.connectors.find((c) => c.id === "heady-manager");
     assert.equal(origin.state, "healthy"); // the http service is genuinely listening
+    // The headyX projection shells now render projection_only from their committed
+    // ADR-0017 manifests — NOT "healthy" off a bare 200 (anti-masquerade), even
+    // though the injected fetch answers 200 for every https probe.
+    for (const id of ["headysystems", "headyos", "headyio", "headyapi", "headyweb"]) {
+      const shell = s.connectors.find((c) => c.id === id);
+      assert.equal(shell.state, "projection_only", `${id} must render projection_only from its governed manifest`);
+      assert.match(shell.detail, /projected → HeadySystems\//);
+    }
   } finally {
     await a.stop();
   }

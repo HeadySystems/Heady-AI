@@ -13,13 +13,29 @@ import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PHI, HEARTBEAT_MS } from "@heady/phi-math";
-import { validateConnectorRegistry, validateServerManifest, buildConsoleSummary } from "@heady/contracts";
+import { validateConnectorRegistry, validateServerManifest, validateProjectionManifest, buildConsoleSummary } from "@heady/contracts";
 import { HEALTH } from "@heady/shared";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const REGISTRY_PATH = join(REPO_ROOT, "configs", "connectors.json");
+const PROJECTIONS_DIR = join(REPO_ROOT, "configs", "projections");
 /** Per-probe timeout: φ² seconds (≈2 618 ms) — φ-derived, no magic numbers. */
 export const PROBE_TIMEOUT_MS = Math.round(PHI * PHI * 1000);
+
+/**
+ * Map a governed projection manifest (ADR-0017, configs/projections/<id>.projection.json)
+ * to the §8 state. A projection shell tells the truth about itself via its manifest,
+ * so an `expected: "projection"` connector renders projection_only from the committed
+ * manifest — the console never probes its public URL as if it were a real backend
+ * (that is exactly the masquerade §8 forbids). Exported pure for tests.
+ * @returns {{state:string, detail:string}|null} null ⇒ no/invalid manifest (caller falls through)
+ */
+export function classifyProjectionManifest(manifest) {
+  if (!manifest) return null;
+  const v = validateProjectionManifest(manifest);
+  if (!v.ok) return null;
+  return { state: "projection_only", detail: `projected → ${manifest.target_repo} (${manifest.status})` };
+}
 
 /** Map an HTTPS probe outcome to the §8 state model. Exported for tests. */
 export function classifyHttp({ status, body }) {
@@ -54,6 +70,11 @@ export function createConsoleService({
   registryPath = REGISTRY_PATH, fetchImpl = fetch, heartbeatMs = HEARTBEAT_MS, now = () => Date.now(),
   deps = [],
   resolveSecrets = null, // composition-root owned (index.mjs wires the vault); null ⇒ vault probes report not_connected
+  // Governed projection-manifest reader (ADR-0017). Default reads the committed
+  // configs/projections/<id>.projection.json; absent/unreadable ⇒ null (fall through to probe).
+  readProjection = (id) => {
+    try { return JSON.parse(readFileSync(join(PROJECTIONS_DIR, `${id}.projection.json`), "utf8")); } catch { return null; }
+  },
 }) {
   let registry = null;
   let loadError = null;
@@ -145,6 +166,14 @@ export function createConsoleService({
   }
 
   async function probeOne(connector) {
+    // A governed projection (ADR-0017) declares itself via its committed manifest —
+    // trust that over any network probe of its public URL (anti-masquerade §8).
+    if (connector.expected === "projection") {
+      const fromManifest = classifyProjectionManifest(readProjection(connector.id));
+      if (fromManifest) return fromManifest;
+      // No governed manifest yet → fall through: a deployed shell may still serve
+      // a live server-manifest.v1 body (handled by classifyHttp).
+    }
     if (connector.probe === null) return { state: "not_connected", detail: "token/OAuth lifecycle not wired yet" };
     if (connector.probe.kind === "kernel") return probeKernel(connector.probe.service);
     if (connector.probe.kind === "vault") return probeVault(connector);
