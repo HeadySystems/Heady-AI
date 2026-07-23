@@ -85,7 +85,7 @@ const PROVIDER_TIERS = [
 ];
 
 // Daily budget tracking
-let dailyBudget = {
+const dailyBudget = {
     maxDailyCostUSD: parseFloat(process.env.HEADY_DAILY_BUDGET || "5.00"),
     currentDayCost: 0,
     dayStart: new Date().toISOString().split("T")[0],

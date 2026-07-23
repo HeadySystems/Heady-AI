@@ -10,6 +10,8 @@
  * or RCE attacks against the HeadyConductor node.
  */
 
+import { logger } from '../utils/logger.js';
+
 class WasmSandbox {
     constructor() {
         this.isolateConfig = {
@@ -28,9 +30,9 @@ class WasmSandbox {
                 throw new Error("Security Violation: Access to host environment denied.");
             }
 
+            // eslint-disable-next-line no-new-func
             const safeEval = new Function('context', `
         "use strict";
-const logger = require("../utils/logger");
         const console = { log: () => {} }; // Silence
         ${userCode}
       `);
@@ -45,4 +47,4 @@ const logger = require("../utils/logger");
     }
 }
 
-module.exports = new WasmSandbox();
+export const wasmSandbox = new WasmSandbox();

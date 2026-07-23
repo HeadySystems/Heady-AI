@@ -186,7 +186,7 @@ function generateStatusContent() {
     const ts = now.toISOString();
 
     // Read connectivity patterns
-    let connPatterns = { total: 0, byService: {} };
+    const connPatterns = { total: 0, byService: {} };
     try {
         const pPath = path.join(DATA_DIR, "connectivity-patterns.json");
         if (fs.existsSync(pPath)) {
@@ -196,7 +196,7 @@ function generateStatusContent() {
     } catch { }
 
     // Read memory receipts
-    let memReceipts = { total: 0, fallback: 0 };
+    const memReceipts = { total: 0, fallback: 0 };
     try {
         const mPath = path.join(DATA_DIR, "memory-receipts.json");
         if (fs.existsSync(mPath)) {

@@ -143,7 +143,7 @@ function randomHex(length) {
 // ── HTTP Sender ─────────────────────────────────────────────
 const _queue = [];
 let _sending = false;
-let _stats = { sent: 0, errors: 0, dropped: 0 };
+const _stats = { sent: 0, errors: 0, dropped: 0 };
 
 function sendEvent(event) {
     if (!isEnabled) return;

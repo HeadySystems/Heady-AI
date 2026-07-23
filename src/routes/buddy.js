@@ -63,7 +63,7 @@ module.exports = function mountBuddyRoutes(app, deps = {}) {
         const activeNodes = Object.values(reg.nodes || {}).filter(n => n.status === "active").length;
 
         const hour = new Date().getHours();
-        let greeting = hour < 12 ? "Good morning!" : hour < 17 ? "Good afternoon!" : "Good evening!";
+        const greeting = hour < 12 ? "Good morning!" : hour < 17 ? "Good afternoon!" : "Good evening!";
         const lowerMsg = message.toLowerCase();
         let reply = "";
 
@@ -255,7 +255,7 @@ module.exports = function mountBuddyRoutes(app, deps = {}) {
     });
 
     // ─── State Sync ────────────────────────────────────────────
-    let buddyState = { conversation: [], viewState: 'pill', pipelineState: {}, config: null };
+    const buddyState = { conversation: [], viewState: 'pill', pipelineState: {}, config: null };
 
     app.post('/api/buddy/state', (req, res) => {
         try {

@@ -631,13 +631,13 @@ class HeadyBattleService extends EventEmitter {
 }
 
 // Singleton instance for continuous service
-let HeadyBattleService = null;
+let headyBattleServiceInstance = null;
 
 function getHeadyBattleService(config = {}) {
-  if (!HeadyBattleService) {
-    HeadyBattleService = new HeadyBattleService(config);
+  if (!headyBattleServiceInstance) {
+    headyBattleServiceInstance = new HeadyBattleService(config);
   }
-  return HeadyBattleService;
+  return headyBattleServiceInstance;
 }
 
 // Auto-start if this is the main module

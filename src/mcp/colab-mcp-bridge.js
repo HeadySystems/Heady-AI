@@ -394,7 +394,7 @@ function handleWebSocketUpgrade(req, socket, head) {
     );
 
     wsClients.add(socket);
-    let msgBuffer = Buffer.alloc(0);
+    const msgBuffer = Buffer.alloc(0);
 
     socket.on('data', async (data) => {
         // Decode WebSocket frame

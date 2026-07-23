@@ -16,7 +16,15 @@
   "dependencies": {
     "@heady/phi-math": "workspace:*",
     "@heady/secrets": "workspace:*",
-    "ws": "^8.21.0"
+    "ws": "^8.21.1"
   },
-  "keywords": ["heady", "sync", "cross-device", "websocket", "handoff", "presence", "session"]
+  "keywords": [
+    "heady",
+    "sync",
+    "cross-device",
+    "websocket",
+    "handoff",
+    "presence",
+    "session"
+  ]
 }

@@ -42,7 +42,7 @@ router.post("/infrastructure", (req, res) => {
     if (opsLog.length > 200) opsLog.splice(0, opsLog.length - 200);
 
     // Gather real system info where safe
-    let systemInfo = {};
+    const systemInfo = {};
     try {
         systemInfo.hostname = execSync("hostname", { timeout: 2000 }).toString().trim();
         systemInfo.loadAvg = execSync("cat /proc/loadavg 2>/dev/null || echo 'N/A'", { timeout: 2000 }).toString().trim();

@@ -1,5 +1,6 @@
-packages:  
-  - 'apps/*'  
-  - 'packages/*'  
-  - 'tooling/*'  
-  - 'configs/*'
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "tooling/*"
+  - "configs/*"
+  - "heady-commander-plugin"

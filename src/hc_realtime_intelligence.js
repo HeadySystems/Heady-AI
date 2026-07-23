@@ -175,7 +175,7 @@ class RealtimeIntelligenceEngine extends EventEmitter {
         // Ingest into the realtime pipeline
         this.ingest({ ...event, source: "ableton", meta: { sessionId: this.abletonSession.id } });
         // Forward CC metrics on the MIDI bus
-        if (global.midiBus && event.cc != null) {
+        if (global.midiBus && event.cc !== null && event.cc !== undefined) {
             global.midiBus.ccMetric(event.cc, event.value || 0, event.channel || 0);
         }
         this.abletonSession.latencyMs = Date.now() - start;

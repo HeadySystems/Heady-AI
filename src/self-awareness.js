@@ -52,7 +52,7 @@ const BRAND_CHECKS = {
     requiredBranding: ['heady', 'HeadySystems'],
 };
 
-let monitorState = {
+const monitorState = {
     lastScan: null, results: {}, alerts: [],
     scanCount: 0, healthy: 0, degraded: 0,
 };

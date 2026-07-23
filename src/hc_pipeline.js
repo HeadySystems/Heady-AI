@@ -902,7 +902,7 @@ class HCFullPipeline extends EventEmitter {
       for (const [stageId, stage] of Object.entries(stageData)) {
         const tasks = stage.tasks || {};
         for (const [taskName, taskResult] of Object.entries(tasks)) {
-          if (taskResult.durationMs != null && taskResult.durationMs > 0) {
+          if (taskResult.durationMs !== null && taskResult.durationMs > 0) {
             try {
               this._mcScheduler.recordResult(
                 taskName,

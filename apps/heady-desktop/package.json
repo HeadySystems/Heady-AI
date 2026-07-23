@@ -18,7 +18,7 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^43.0.0",
+    "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
     "yaml": "^2.9.0"
   },
@@ -26,7 +26,9 @@
     "appId": "com.headysystems.heady-ai",
     "productName": "Heady",
     "copyright": "© 2026 HeadySystems Inc.",
-    "electronLanguages": ["en-US"],
+    "electronLanguages": [
+      "en-US"
+    ],
     "files": [
       "src/**/*",
       "!src/**/*.md",
@@ -39,14 +41,19 @@
     "publish": null,
     "npmRebuild": false,
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "icon": "build/icon.png",
       "category": "Utility",
       "synopsis": "Heady portal desktop shell",
       "maintainer": "HeadySystems Inc. <eric@headyconnection.org>"
     },
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "icon": "build/icon.png"
     },
     "nsis": {
@@ -54,7 +61,9 @@
       "allowToChangeInstallationDirectory": true
     },
     "mac": {
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "icon": "build/icon.png",
       "category": "public.app-category.productivity"
     }

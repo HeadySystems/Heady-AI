@@ -23,6 +23,14 @@
 
 "use strict";
 
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const PHI = 1.6180339887;
 const PHI_INTERVALS = {
     pulse: Math.round(PHI ** 2 * 1000),  // 2.6s   — heartbeat
@@ -361,7 +369,6 @@ class ProjectionManager {
 
         // ─── GIT REPO STATE — what users see on GitHub ─────────────
         try {
-            const { execSync } = require('child_process');
             const gitLog = execSync('git log --oneline -5', { cwd: rootDir, timeout: 5000 }).toString().trim();
             const gitBranch = execSync('git branch --show-current', { cwd: rootDir, timeout: 3000 }).toString().trim();
             const gitStatus = execSync('git status --short', { cwd: rootDir, timeout: 3000 }).toString().trim();
@@ -512,10 +519,9 @@ class VectorSpaceOps {
         // Auto-success reactor — lives INSIDE vector space, not outside it
         // Event-driven: reacts instantly to system events, no cycles, no timers
         this.autoSuccess = null;
-        try {
-            const { AutoSuccessEngine } = require('./hc_auto_success');
-            this.autoSuccess = new AutoSuccessEngine();
-        } catch { /* auto-success not available yet */ }
+        import('./hc_auto_success.js')
+            .then(m => { this.autoSuccess = new m.AutoSuccessEngine(); })
+            .catch(() => { /* auto-success not available yet */ });
 
         this._intervals = [];
         this.started = false;
@@ -553,9 +559,9 @@ class VectorSpaceOps {
 
         // PHI-timed projection sync check
         this._intervals.push(setInterval(() => {
-            try {
-                const syncBee = require('./bees/sync-projection-bee');
-                if (syncBee.hasStateChanged()) {
+            import('./bees/sync-projection-bee.js').then(syncBeeModule => {
+                const syncBee = syncBeeModule.default || syncBeeModule;
+                if (syncBee.hasStateChanged && syncBee.hasStateChanged()) {
                     // RAM state changed — mark all projections stale
                     for (const target of this.projectionManager.projections.keys()) {
                         this.projectionManager.markStale(target);
@@ -565,7 +571,7 @@ class VectorSpaceOps {
                         targets: [...this.projectionManager.projections.keys()],
                     });
                 }
-            } catch { }
+            }).catch(() => {});
         }, PHI_INTERVALS.analyze));
     }
 
@@ -649,7 +655,7 @@ class VectorSpaceOps {
     }
 }
 
-module.exports = {
+export {
     VectorSpaceOps,
     AntiSprawlEngine,
     VectorSecurityScanner,
@@ -658,4 +664,3 @@ module.exports = {
     ProjectionManager,
     PHI_INTERVALS,
 };
-

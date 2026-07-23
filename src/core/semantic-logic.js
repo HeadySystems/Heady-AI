@@ -194,7 +194,7 @@ class HeadySemanticLogic {
      * @returns {Float32Array} Purified vector with all rejections removed
      */
     static batch_orthogonal(target_vec, reject_vecs) {
-        let current = Float32Array.from(target_vec);
+        const current = Float32Array.from(target_vec);
         for (const reject of reject_vecs) {
             const dotTR = this.dot_product(current, reject);
             const dotRR = this.dot_product(reject, reject);

@@ -118,7 +118,7 @@ function allocate(intentText, targetNode, scoredNodes, modelRouting = 'default',
         + `${targetCode}\n\n`;
 
     // ── Section 3: CONTEXT (greedily packed) ───────────────────
-    let contextHeader = `### RELEVANT SYSTEM CONTEXT ###\n`;
+    const contextHeader = `### RELEVANT SYSTEM CONTEXT ###\n`;
 
     const coreTokens = countTokens(intentSection)
         + countTokens(targetSection)

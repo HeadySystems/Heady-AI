@@ -118,7 +118,7 @@ class XetStorageEngine {
         }
 
         const repoName = datasetName || this.datasetTemplate;
-        const isReady = await _ensureDataset(repoName);
+        const isReady = await this._ensureDataset(repoName);
         if (!isReady) throw new Error("Dataset repository not ready.");
 
         try {

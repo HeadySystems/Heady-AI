@@ -6,7 +6,7 @@
  * ════════════════════════════════════════════════════════════════════
  */
 
-const logger = require('../utils/logger');
+import { logger } from '../utils/logger.js';
 
 class DynamicConnectorSynthesizer {
     constructor() {
@@ -23,6 +23,7 @@ class DynamicConnectorSynthesizer {
         const mediatorCode = this._generateMediator(constraints);
 
         // JIT compile the bridging logic
+        // eslint-disable-next-line no-new-func
         const mediatorFn = new Function('payload', mediatorCode);
         this.activeMediators.set(targetOntology.id, mediatorFn);
 
@@ -53,4 +54,4 @@ class DynamicConnectorSynthesizer {
     }
 }
 
-module.exports = new DynamicConnectorSynthesizer();
+export const dynamicConnectorSynthesizer = new DynamicConnectorSynthesizer();

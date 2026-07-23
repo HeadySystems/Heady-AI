@@ -21,6 +21,7 @@
  *   });
  */
 
+/* global __webpack_init_sharing__, __webpack_share_scopes__ */
 const _remoteCache = new Map();
 const _loadLog = [];
 

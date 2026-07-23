@@ -5,10 +5,14 @@
  * Model Benchmarking Suite — Run standard test suites to determine LLM ELOs.
  */
 
-const fs = require('fs');
-const path = require('path');
-const logger = require('../utils/logger');
-const { InferenceGateway } = require('../inference-gateway');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { logger } from '../utils/logger.js';
+import { InferenceGateway } from '../inference-gateway.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const ROSTER_FILE = path.join(__dirname, '..', '..', 'data', 'model-roster.json');
 
@@ -40,6 +44,7 @@ const BENCHMARK_TESTS = [
             if (cleanText.includes('function addNumbers') || cleanText.includes('const addNumbers')) {
                 // Test parsing
                 try {
+                    // eslint-disable-next-line no-new-func
                     new Function(cleanText);
                     return 1.0;
                 } catch (e) {
@@ -159,4 +164,4 @@ class ModelBenchmarker {
     }
 }
 
-module.exports = new ModelBenchmarker();
+export const modelBenchmarker = new ModelBenchmarker();

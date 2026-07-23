@@ -90,7 +90,7 @@ class BiometricHITL {
     _bufferToBase64Url(buffer) {
         const bytes = new Uint8Array(buffer);
         let str = '';
-        for (let charCode of bytes) {
+        for (const charCode of bytes) {
             str += String.fromCharCode(charCode);
         }
         return window.btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');

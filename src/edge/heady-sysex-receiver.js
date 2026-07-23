@@ -29,18 +29,18 @@
 
 // Max for Live globals
 // In M4L context, these are provided by the runtime:
-// autowatch, inlets, outlets, post, messnamed, LiveAPI
+/* global autowatch, inlets, outlets, arrayfromargs, outlet, post, messnamed, LiveAPI */
 autowatch = 1;
 
 inlets = 1;   // SysEx bytes in
 outlets = 4;  // [0] = LOM path, [1] = LOM property, [2] = LOM value, [3] = status/debug
 
-var MANUFACTURER_ID = 0x7D;  // Non-commercial SysEx ID
+const MANUFACTURER_ID = 0x7D;  // Non-commercial SysEx ID
 
 // ── SysEx Input Handler ─────────────────────────────────────────
 
 function sysex() {
-    var bytes = arrayfromargs(arguments);
+    const bytes = arrayfromargs(arguments);
 
     // Validate minimum length: F0 7D cmd F7
     if (bytes.length < 4) return;
@@ -48,8 +48,8 @@ function sysex() {
     if (bytes[1] !== MANUFACTURER_ID) return;
     if (bytes[bytes.length - 1] !== 0xF7) return;
 
-    var command = bytes[2];
-    var payload = bytes.slice(3, bytes.length - 1);
+    const command = bytes[2];
+    const payload = bytes.slice(3, bytes.length - 1);
 
     outlet(3, 'sysex_received', 'cmd:' + command.toString(16), 'len:' + payload.length);
 
@@ -70,21 +70,21 @@ function sysex() {
 
 function handleSetTempo(payload) {
     if (payload.length < 2) return;
-    var bpm = (payload[0] << 7) | payload[1];  // 14-bit tempo value
+    const bpm = (payload[0] << 7) | payload[1];  // 14-bit tempo value
     if (bpm < 20 || bpm > 999) return;
 
-    var api = new LiveAPI('live_set');
+    const api = new LiveAPI('live_set');
     api.set('tempo', bpm);
     outlet(3, 'tempo_set', bpm);
 }
 
 function handleSetTrackVolume(payload) {
     if (payload.length < 2) return;
-    var trackIdx = payload[0];
-    var volume = payload[1] / 127.0;  // Normalize 0-127 → 0.0-1.0
+    const trackIdx = payload[0];
+    const volume = payload[1] / 127.0;  // Normalize 0-127 → 0.0-1.0
 
     try {
-        var api = new LiveAPI('live_set tracks ' + trackIdx + ' mixer_device volume');
+        const api = new LiveAPI('live_set tracks ' + trackIdx + ' mixer_device volume');
         api.set('value', volume);
         outlet(3, 'volume_set', 'track:' + trackIdx, 'vol:' + volume.toFixed(3));
     } catch (e) {
@@ -94,11 +94,11 @@ function handleSetTrackVolume(payload) {
 
 function handleTriggerClip(payload) {
     if (payload.length < 2) return;
-    var trackIdx = payload[0];
-    var sceneIdx = payload[1];
+    const trackIdx = payload[0];
+    const sceneIdx = payload[1];
 
     try {
-        var api = new LiveAPI('live_set tracks ' + trackIdx + ' clip_slots ' + sceneIdx + ' clip');
+        const api = new LiveAPI('live_set tracks ' + trackIdx + ' clip_slots ' + sceneIdx + ' clip');
         if (api.get('is_triggered') === 0) {
             api.call('fire');
             outlet(3, 'clip_fired', 'track:' + trackIdx, 'scene:' + sceneIdx);
@@ -110,13 +110,13 @@ function handleTriggerClip(payload) {
 
 function handleSetDeviceParam(payload) {
     if (payload.length < 4) return;
-    var trackIdx = payload[0];
-    var deviceIdx = payload[1];
-    var paramIdx = payload[2];
-    var value = payload[3] / 127.0;
+    const trackIdx = payload[0];
+    const deviceIdx = payload[1];
+    const paramIdx = payload[2];
+    const value = payload[3] / 127.0;
 
     try {
-        var api = new LiveAPI(
+        const api = new LiveAPI(
             'live_set tracks ' + trackIdx +
             ' devices ' + deviceIdx +
             ' parameters ' + paramIdx
@@ -131,9 +131,9 @@ function handleSetDeviceParam(payload) {
 
 function handleTransport(payload) {
     if (payload.length < 1) return;
-    var action = payload[0];
+    const action = payload[0];
 
-    var api = new LiveAPI('live_set');
+    const api = new LiveAPI('live_set');
     switch (action) {
         case 0: // Stop
             api.set('is_playing', 0);
@@ -155,10 +155,10 @@ function handleTransport(payload) {
 
 function handleStatusRequest() {
     try {
-        var api = new LiveAPI('live_set');
-        var tempo = api.get('tempo');
-        var playing = api.get('is_playing');
-        var trackCount = api.get('tracks').length / 2;  // LOM returns id pairs
+        const api = new LiveAPI('live_set');
+        const tempo = api.get('tempo');
+        const playing = api.get('is_playing');
+        const trackCount = api.get('tracks').length / 2;  // LOM returns id pairs
 
         outlet(0, 'live_set');
         outlet(1, 'status');
@@ -176,13 +176,13 @@ function handleStatusRequest() {
 
 function handleAIArrangement(payload) {
     // Convert SysEx bytes to JSON string
-    var jsonStr = '';
-    for (var i = 0; i < payload.length; i++) {
+    let jsonStr = '';
+    for (let i = 0; i < payload.length; i++) {
         jsonStr += String.fromCharCode(payload[i]);
     }
 
     try {
-        var arrangement = JSON.parse(jsonStr);
+        const arrangement = JSON.parse(jsonStr);
         outlet(3, 'ai_arrangement_received', 'sections:' + (arrangement.sections || []).length);
 
         // Apply arrangement sections
@@ -192,8 +192,8 @@ function handleAIArrangement(payload) {
 
         // Fire clips based on arrangement timeline
         if (arrangement.sections) {
-            for (var s = 0; s < arrangement.sections.length; s++) {
-                var section = arrangement.sections[s];
+            for (let s = 0; s < arrangement.sections.length; s++) {
+                const section = arrangement.sections[s];
                 if (section.track !== undefined && section.scene !== undefined) {
                     // Schedule clip triggers (simplified — in production, use Transport.scheduleCallback)
                     handleTriggerClip([section.track, section.scene]);

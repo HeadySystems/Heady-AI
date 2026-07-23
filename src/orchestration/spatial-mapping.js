@@ -35,9 +35,9 @@ class SpatialActionMapper {
         // Y: Architectural complexity derived from ast/depth
         // Z: Pure determinism vs probabilistic LLM creativity
 
-        let x = event.priority === 'urgent' ? 1.0 : (event.priority === 'high' ? 0.7 : 0.3);
+        const x = event.priority === 'urgent' ? 1.0 : (event.priority === 'high' ? 0.7 : 0.3);
         let y = (event.filesTargeted || 1) * 0.1; // 10 files = max complexity 1.0
-        let z = event.requiresCreativity ? -1.0 : 1.0;
+        const z = event.requiresCreativity ? -1.0 : 1.0;
 
         // Normalize
         y = Math.min(y, 1.0);
@@ -52,7 +52,7 @@ class SpatialActionMapper {
         else if (vector.x > 0.4) pool = 'Warm';
 
         // High complexity + High probability = HITL Interception
-        let hitl = (vector.y > 0.7 && vector.z < 0);
+        const hitl = (vector.y > 0.7 && vector.z < 0);
 
         return { pool, hitl };
     }

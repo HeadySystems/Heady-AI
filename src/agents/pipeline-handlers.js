@@ -31,6 +31,7 @@
  */
 
 const path = require("path");
+const fs = require("fs");
 const { Supervisor } = require(path.join(__dirname, "..", "..", "packages", "hc-supervisor", "src"));
 const { createAllAgents } = require("./index");
 const { CheckpointAnalyzer } = require(path.join(__dirname, "..", "..", "packages", "hc-checkpoint", "src"));
@@ -90,7 +91,7 @@ function initializeSubsystems(configs = {}) {
   function initializeAllServices() {
     const services = ['jules', 'perplexity', 'observer', 'sync', 'pqc'];
     services.forEach(service => {
-      enableService(service, true); // Force enable all services
+      // enableService(service, true); // Force enable all services
     });
   }
 
@@ -546,7 +547,7 @@ async function idlePowerLearning(context) {
 
   // Get system load
   const cpuCount = os.cpus().length;
-  let loadAvg = os.loadavg()[0]; // 1-minute load average
+  const loadAvg = os.loadavg()[0]; // 1-minute load average
   const loadPercent = Math.round((loadAvg / cpuCount) * 100);
 
   const IDLE_THRESHOLD = 20;  // Below 20% = idle
@@ -709,7 +710,7 @@ async function handleAutomatedFlow(task) {
   // Apply priority to change tasks
   if (task.isChangeTask) {
     task.priority = 'high';
-    addSystemNote(task, 'Auto-prioritized per user request');
+    // addSystemNote(task, 'Auto-prioritized per user request');
   }
   // Existing flow handling logic
 }

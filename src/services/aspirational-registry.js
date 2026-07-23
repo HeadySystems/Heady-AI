@@ -113,9 +113,9 @@ const CATEGORY_SWARM_MAP = {
 };
 
 // ── State ──────────────────────────────────────────────────────
-let _registry = [];
+const _registry = [];
 let _booted = false;
-let _sourceFiles = [];
+const _sourceFiles = [];
 
 /**
  * Safely load a JSON or JS task file.

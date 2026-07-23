@@ -77,7 +77,7 @@ if (!fs.existsSync(SHARD_DIR)) fs.mkdirSync(SHARD_DIR, { recursive: true });
 
 // ── Sharded Storage ─────────────────────────────────────────────
 const shards = [];
-let hfClients = [];
+const hfClients = [];
 let ingestCount = 0;
 let queryCount = 0;
 let remoteEmbedCount = 0;
@@ -374,7 +374,7 @@ function initHFClients() {
 }
 
 // ── Embedding ───────────────────────────────────────────────────
-let embedRoundRobin = 0;
+const embedRoundRobin = 0;
 
 async function embed(text) {
     const truncated = typeof text === "string" ? text.substring(0, 2000) : String(text).substring(0, 2000);

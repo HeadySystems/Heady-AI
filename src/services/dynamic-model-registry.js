@@ -214,9 +214,9 @@ class DynamicModelRegistry {
 
         let guessedTier = 'fast';
         let guessedCostTier = 'economy';
-        let guessedContext = 128000;
+        const guessedContext = 128000;
         let guessedLatency = 'medium';
-        let guessedCaps = ['text-generation', 'streaming'];
+        const guessedCaps = ['text-generation', 'streaming'];
 
         if (idLower.includes('pro') || idLower.includes('large') || idLower.includes('70b') || idLower.includes('opus')) {
             guessedTier = 'quality';

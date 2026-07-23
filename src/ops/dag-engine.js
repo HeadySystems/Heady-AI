@@ -6,11 +6,11 @@
  */
 
 const EventEmitter = require('events');
+const logger = require("../utils/logger");
 let redisClient = null;
 
 try {
     const redis = require('redis');
-const logger = require("../utils/logger");
     redisClient = redis.createClient({ url: process.env.REDIS_URL || 'redis://127.0.0.1:6379' });
     redisClient.on('error', (err) => logger.warn('Redis Cluster not connected. Using in-memory state.'));
     redisClient.connect().catch(() => { });
@@ -61,7 +61,7 @@ class DAGEngine extends EventEmitter {
         if (!nodes) throw new Error(`DAG ${graphId} not found`);
 
         const runId = `run-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        let state = {
+        const state = {
             runId,
             graphId,
             status: 'running',

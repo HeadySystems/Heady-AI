@@ -103,7 +103,7 @@ try {
     if (Array.isArray(saved) && saved.length > 0) curriculum = saved;
 } catch { }
 
-let learnStats = {
+const learnStats = {
     totalLearned: 0,
     totalProviderCalls: 0,
     providerSuccesses: { headypythia: 0, groq: 0, perplexity: 0, headyhub: 0 },

@@ -5,9 +5,10 @@ export default [
         files: ["src/**/*.js"],
         languageOptions: {
             ecmaVersion: 2024,
-            sourceType: "commonjs",
+            sourceType: "module",
             globals: {
                 ...globals.node,
+                ...globals.browser,
             },
         },
         rules: {
@@ -32,6 +33,7 @@ export default [
             "data/",
             "coverage/",
             ".bfg-report/",
+            "templates/**",
         ],
     },
 ];

@@ -167,7 +167,7 @@ class SpatialRegistry {
         app.post('/api/csl/superposition', (req, res) => {
             const { vec_a, vec_b, weight } = req.body;
             if (!vec_a || !vec_b) return res.status(400).json({ ok: false, error: 'vec_a and vec_b required' });
-            const hybrid = weight != null
+            const hybrid = weight !== null && weight !== undefined
                 ? CSL.weighted_superposition(vec_a, vec_b, weight)
                 : CSL.superposition_gate(vec_a, vec_b);
             res.json({ ok: true, gate: 'superposition', hybrid: Array.from(hybrid), dimensions: hybrid.length });

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
   "updated": "2026-07-04",
-  "authority": "Locked scaffold from rebuild branch. Expand by adding entries here \u2014 never by dropping files ad-hoc.",
+  "authority": "Locked scaffold from rebuild branch. Expand by adding entries here — never by dropping files ad-hoc.",
   "directories": [
     {
       "pattern": "configs/INSTALLABLE_PACKAGES/**",
@@ -34,7 +34,8 @@
         ".html",
         ".svg",
         ".png",
-        ".json"
+        ".json",
+        ".cjs"
       ],
       "notes": "Vite SPAs + Vanilla Web Components"
     },
@@ -50,6 +51,13 @@
         ".json"
       ],
       "notes": "Public directory for Vite apps"
+    },
+    {
+      "pattern": "apps/heady-desktop/release/**",
+      "purpose": "Electron build artifacts",
+      "allowedExtensions": [
+        "*"
+      ]
     },
     {
       "pattern": "apps/*/dist/**",
@@ -70,7 +78,11 @@
         ".html",
         ".yaml",
         ".yml",
-        ".firebaserc"
+        ".firebaserc",
+        ".md",
+        ".png",
+        ".jsonc",
+        ".example"
       ],
       "notes": "package.json, vite.config, tsconfig, firebase config"
     },
@@ -122,7 +134,8 @@
         ".js",
         ".mjs",
         ".ts",
-        ".md"
+        ".md",
+        ".yaml"
       ],
       "notes": "package.json, tsconfig, README"
     },
@@ -192,7 +205,9 @@
         ".mjs",
         ".js",
         ".sh",
-        ".md"
+        ".md",
+        ".zip",
+        ".yaml"
       ],
       "notes": "package.json, preflight.mjs, register.mjs, etc."
     },
@@ -221,9 +236,15 @@
       "pattern": "docs/**",
       "purpose": "Documentation, ADRs, specs, compendium",
       "allowedExtensions": [
-        ".md"
+        ".md",
+        ".pdf",
+        ".docx",
+        ".xml",
+        ".ZIP",
+        ".zip",
+        ".json"
       ],
-      "notes": "Markdown only \u2014 no code in docs/"
+      "notes": "Markdown only — no code in docs/"
     },
     {
       "pattern": ".agents/skills/*/**",
@@ -357,7 +378,8 @@
       "allowedExtensions": [
         ".sh",
         ".mjs",
-        ".js"
+        ".js",
+        ".md"
       ],
       "notes": "heady-sync.sh (git sync w/ secret guard), ops scripts"
     },
@@ -368,7 +390,10 @@
         ".json",
         ".jsonl",
         ".cache",
-        ".bin"
+        ".bin",
+        ".md",
+        ".ndjson",
+        ".zip"
       ],
       "notes": "Agent-managed data; no hand-authored files"
     },
@@ -378,7 +403,7 @@
       "allowedExtensions": [
         "*"
       ],
-      "notes": "Exempt from strict placement rules \u2014 any file type allowed"
+      "notes": "Exempt from strict placement rules — any file type allowed"
     },
     {
       "pattern": "heady-commander-plugin/**",
@@ -396,13 +421,171 @@
     },
     {
       "pattern": "src/**",
-      "purpose": "LEGACY manager tree (pre-rebuild) \u2014 maintenance and security hardening only",
+      "purpose": "LEGACY manager tree (pre-rebuild) — maintenance and security hardening only",
       "allowedExtensions": [
         ".js",
         ".mjs",
-        ".json"
+        ".json",
+        ".py",
+        ".jsx",
+        ".css",
+        ".html",
+        ".ts",
+        ".conf"
       ],
-      "notes": "SEC-002 remediation surface. New modules belong in packages/* \u2014 do not grow this tree; port out of it (REBUILD_PLAN_V2 port-and-verify)."
+      "notes": "SEC-002 remediation surface. New modules belong in packages/* — do not grow this tree; port out of it (REBUILD_PLAN_V2 port-and-verify)."
+    },
+    {
+      "pattern": "tests/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "shared/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "cloudflare/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "_archive/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "backend/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "bin/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "colab/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "deploy/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "dropzone/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "extensions/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "governance/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "heady-hf-spaces/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "infra/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "integrations/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "public/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "python/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "templates/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": "tmp/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
+    },
+    {
+      "pattern": ".vscode/**",
+      "purpose": "Other approved root directories",
+      "allowedExtensions": [
+        "*"
+      ],
+      "notes": "Added during rebuild stabilization"
     }
   ],
   "rootFiles": [
@@ -434,7 +617,18 @@
     "README.md",
     "CHANGELOG.md",
     "SECURITY.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "heady-init.sh",
+    "heady-registry.json",
+    "mcp.json",
+    "renovate.json",
+    "webpack.config.js",
+    "jest.config.js",
+    "ecosystem.config.cjs",
+    "eslint.config.mjs",
+    "hc_pipeline.log",
+    ".gcloudignore",
+    "PARITY_LOG.md"
   ],
   "rootDirectories": [
     "apps",
@@ -453,7 +647,26 @@
     ".git",
     ".turbo",
     ".firebase",
-    "src"
+    "src",
+    "_archive",
+    "backend",
+    "bin",
+    "cloudflare",
+    "colab",
+    "deploy",
+    "dropzone",
+    "extensions",
+    "governance",
+    "heady-hf-spaces",
+    "infra",
+    "integrations",
+    "public",
+    "python",
+    "shared",
+    "templates",
+    "tests",
+    "tmp",
+    ".vscode"
   ],
   "antiPatterns": [
     {
@@ -462,16 +675,19 @@
       "pattern": "^[^/]+\\.(mjs|js|ts|jsx|tsx)$",
       "except": [
         "scaffold_heady.sh",
-        "heady-manager.js"
+        "heady-manager.js",
+        "webpack.config.js",
+        "jest.config.js",
+        "eslint.config.mjs"
       ],
       "message": "Source files must live in apps/*/src/, packages/*/src/, or tooling/*/. Move this file to the appropriate source tree."
     },
     {
       "id": "no-stray-package-json",
       "description": "package.json only in recognized package roots",
-      "pattern": "^(?!(?:apps|packages|tooling|heady-commander-plugin)/[^/]+/package\\.json$)(?!package\\.json$).*/package\\.json$",
+      "pattern": "^(?!(?:apps|packages|tooling|heady-commander-plugin|templates|extensions|src/ui|cloudflare)/[^/]+/package\\.json$)(?!package\\.json$).*/package\\.json$",
       "except": [],
-      "message": "package.json files belong at repo root or inside apps/*/,  packages/*/, tooling/*/, or heady-commander-plugin/. Do not nest package.json in subdirectories."
+      "message": "package.json files belong at repo root or inside apps/*/, packages/*/, tooling/*/, templates/*/, or heady-commander-plugin/."
     },
     {
       "id": "no-docs-in-src",

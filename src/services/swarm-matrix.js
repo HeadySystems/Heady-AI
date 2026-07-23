@@ -23,7 +23,7 @@ const MATRIX_PATH = path.resolve(__dirname, '..', '..', 'configs', 'HeadySwarmMa
 
 // ── Runtime state ──────────────────────────────────────────────
 let _matrix = null;
-let _runtimeState = new Map();  // beeClass → runtime overrides
+const _runtimeState = new Map();  // beeClass → runtime overrides
 let _bootTimestamp = null;
 
 /**
