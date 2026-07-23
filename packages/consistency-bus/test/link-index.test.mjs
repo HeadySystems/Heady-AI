@@ -32,3 +32,19 @@ test("explicit vars are used verbatim (source=provided)", () => {
   assert.equal(idx.source, "provided");
   assert.equal(lookup(idx, "x.y").value, "1");
 });
+
+test("egress never rewrites generic single-segment keys (the Console schema bug)", async () => {
+  const { egressNormalize } = await import("../src/process.mjs");
+  const idx = loadLinkIndex({ vars: [
+    { class: "fact", name: "schema", value: "facts.v1", sot: "facts.yaml" },
+    { class: "fact", name: "embedding.dim", value: "384", sot: "facts.yaml" },
+  ] });
+  // top-level generic key sharing a single-segment fact name → untouched
+  const a = egressNormalize({ schema: "console-summary.v1", ok: true }, idx);
+  assert.equal(a.payload.schema, "console-summary.v1");
+  assert.equal(a.rewrites.length, 0);
+  // exact multi-segment linked path → still normalized to canon
+  const b = egressNormalize({ embedding: { dim: 1536 } }, idx);
+  assert.equal(b.payload.embedding.dim, 384);
+  assert.equal(b.rewrites.length, 1);
+});

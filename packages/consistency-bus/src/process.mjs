@@ -42,13 +42,22 @@ export function ingressGuard(payload, index, { authorizedKeys = [] } = {}) {
   return { verdict: blocked.length ? 'BLOCK' : 'ALLOW', blocked, findings };
 }
 
-/** Egress: rewrite any stale linked value to canonical — never emit drift. */
+/**
+ * Egress: rewrite any stale linked value to canonical — never emit drift.
+ * Rewrites fire ONLY on exact multi-segment dotted paths (byName): a silent
+ * rewrite of a generic top-level key would corrupt innocent payloads — found
+ * live when the Console summary's `schema: "console-summary.v1"` was rewritten
+ * to the golden record's `schema: facts.v1`. Ingress keeps single-segment
+ * recognition (blocking is loud + has the authorized-header channel; silent
+ * egress corruption has no such escape).
+ */
 export function egressNormalize(payload, index) {
   const clone = structuredClone(payload);
   const rewrites = [];
   for (const { path, value } of flatten(payload)) {
-    const e = lookup(index, path);
-    if (e && String(value) !== String(e.value)) { setPath(clone, path, coerce(e.value, value)); rewrites.push({ path, from: value, to: e.value }); }
+    if (!path.includes('.') || !index.byName.has(path)) continue;
+    const e = index.byName.get(path);
+    if (String(value) !== String(e.value)) { setPath(clone, path, coerce(e.value, value)); rewrites.push({ path, from: value, to: e.value }); }
   }
   return { payload: clone, rewrites };
 }
