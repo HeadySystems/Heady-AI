@@ -15,14 +15,16 @@ import { createLogger, runWithTrace } from "@heady/logger";
 import { HEALTH } from "@heady/shared";
 import { loadFacts } from "@heady/config";
 import { createConsistencyMiddleware } from "@heady/consistency-bus/express";
+import { createSentryExporter, noopExporter } from "@heady/observability";
 import { createIntelligence } from "./intelligence.mjs";
 import { createEventsService } from "./events.mjs";
+import { createTasksService } from "./tasks.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -76,9 +78,35 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     ...eventsOpts,
   });
 
+  // Observability exporter: Sentry when the DSN is present in the environment
+  // (Cloud Run injects vault secrets as env), noop otherwise — status is honest
+  // either way, and the exporter can never break serving.
+  let exporter = noopExporter;
+  if (process.env.SENTRY_DSN) {
+    try {
+      exporter = createSentryExporter({ dsn: process.env.SENTRY_DSN, release: version, environment: process.env.HEADY_ENV ?? "production" });
+      log.info({}, "observability: sentry exporter live");
+    } catch (err) {
+      log.warn({ err: String(err?.message ?? err) }, "observability: bad SENTRY_DSN — noop exporter");
+    }
+  }
+
+  // Tasks — the GATE-2 write path (OpenAPI enqueueTask/getTask over the live
+  // DbPort + task-ledger). The composition root owns secret resolution: the
+  // production entrypoint (index.mjs) injects the live vault resolver; without
+  // a factory the service is DISABLED (health ok/disabled, routes 503) so unit
+  // tests and dev boots never implicitly touch a live database.
+  const tasks = createTasksService({
+    log,
+    publish: (subject, payload) => events.publish(subject, payload),
+    exporter,
+    getDbPort: tasksOpts?.getDbPort ?? null,
+  });
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
   kernel.register(events.service);
+  kernel.register(tasks.service);
 
   kernel.register({
     name: "http",
@@ -115,6 +143,9 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
 
   app.get("/api/events", (req, res) => events.sseHandler(req, res));
 
+  // Tasks routes (OpenAPI: enqueueTask / getTask) — the GATE-2 write path.
+  tasks.routes(app);
+
   app.get("/intelligence", async (_req, res) => {
     const h = await intel.selfCheck();
     res.status(h.status === HEALTH.DOWN ? 503 : 200).json({
@@ -131,7 +162,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     product,
     version,
     tier: "origin (Cloud Run modular monolith)",
-    endpoints: ["/health", "/metrics", "/api/events"],
+    endpoints: ["/health", "/metrics", "/api/events", "/tasks"],
   }));
 
   app.use((_req, res) => res.status(404).json({ error: "not_found" }));
@@ -142,6 +173,8 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     intel,
     /** SSE event fabric handle — `events.publish(subject, payload)` is the app-level hook. */
     events,
+    /** Tasks service handle (GATE-2 write path); `tasks.port()` for integration tests. */
+    tasks,
     log,
     /** Boot the kernel (dependency-ordered; the `http` service listens here). */
     start: () => kernel.boot(),

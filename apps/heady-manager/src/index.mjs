@@ -5,7 +5,19 @@
 
 import { createApp } from "./app.mjs";
 
-const { kernel, log, start } = createApp();
+// Production composition root: the tasks service gets the LIVE vault resolver
+// here (and only here) — createApp without it boots tasks in disabled mode, so
+// tests/dev shells never implicitly touch a live database.
+const { kernel, log, start } = createApp({
+  tasks: {
+    getDbPort: async () => {
+      const { loadSecrets } = await import("@heady/secrets");
+      const { createDbPort } = await import("@heady/db/port");
+      const { DATABASE_URL } = await loadSecrets({ require: ["DATABASE_URL"] });
+      return createDbPort({ connectionString: DATABASE_URL });
+    },
+  },
+});
 
 await start();
 const port = Number(process.env.PORT) || 3300;

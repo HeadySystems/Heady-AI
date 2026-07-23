@@ -68,3 +68,6 @@ export function captureError(error, context = {}, { exporter = noopExporter, reg
   registry.counter("errors.total").inc();
   try { exporter.error(error, { traceId: currentTraceId() ?? null, ...context }); } catch { /* never throw */ }
 }
+
+// ── Sentry adapter (envelope API, dependency-free) ──
+export { createSentryExporter, parseDsn } from "./sentry-exporter.mjs";

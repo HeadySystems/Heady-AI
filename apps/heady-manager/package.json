@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo '(no build \u2014 runnable ESM)'",
+    "build": "echo '(no build — runnable ESM)'",
     "test": "node --test",
     "start": "node src/index.mjs"
   },
@@ -22,6 +22,10 @@
     "@heady/events": "workspace:*",
     "@heady/perspective": "workspace:*",
     "@heady/auto-context": "workspace:*",
-    "@heady/consistency-bus": "workspace:*"
+    "@heady/consistency-bus": "workspace:*",
+    "@heady/db": "workspace:*",
+    "@heady/task-ledger": "workspace:*",
+    "@heady/observability": "workspace:*",
+    "@heady/secrets": "workspace:*"
   }
 }

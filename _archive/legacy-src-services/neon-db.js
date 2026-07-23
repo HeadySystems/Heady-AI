@@ -45,7 +45,7 @@ const NEON_CONFIG = {
 };
 
 let _pool = null;
-let _neonApi = null;
+const _neonApi = null;
 let _connectionCount = 0;
 let _queryCount = 0;
 let _lastError = null;
