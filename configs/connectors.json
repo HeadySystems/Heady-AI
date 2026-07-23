@@ -1,0 +1,22 @@
+{
+  "schema": "connectors.v1",
+  "note": "§8 Console connector registry — 15 connectors (10 heady + 5 infra), validated by @heady/contracts validateConnectorRegistry (strict). Domain probes derive from the facts.yaml domain canon; expected:projection marks the headyX shell candidates whose truth-telling manifests land with the projection engine (ADR-0017). probe:null = token/OAuth lifecycle not wired yet → honest not_connected, never faked. Qdrant is ABSENT by design: dropped store (ADR-0003 amended) — decommissioned, not displayed. Kernel probes read heady-manager's own service health (neon via the live tasks/DbPort signal).",
+  "connectors": [
+    { "id": "heady-manager", "name": "Heady Manager (origin)", "kind": "heady", "role": "cloud-run-origin", "deploy_class": true, "expected": "real", "probe": { "kind": "kernel", "service": "http" } },
+    { "id": "headymcp", "name": "HeadyMCP endpoint", "kind": "heady", "role": "mcp-endpoint", "deploy_class": true, "expected": "real", "probe": { "kind": "https", "url": "https://headymcp.com/healthz" } },
+    { "id": "headyme", "name": "HeadyMe portal", "kind": "heady", "role": "primary-user-surface", "deploy_class": false, "expected": "real", "probe": { "kind": "https", "url": "https://headyme.com/" } },
+    { "id": "1ime1", "name": "1ime1 admin surface", "kind": "heady", "role": "admin-surface", "deploy_class": true, "expected": "real", "probe": { "kind": "https", "url": "https://1ime1.com/" } },
+    { "id": "headyconnection", "name": "HeadyConnection (org)", "kind": "heady", "role": "org-nonprofit", "deploy_class": false, "expected": "real", "probe": { "kind": "https", "url": "https://headyconnection.org/" } },
+    { "id": "headysystems", "name": "HeadySystems (ops)", "kind": "heady", "role": "platform-operations", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headysystems.com/" } },
+    { "id": "headyos", "name": "HeadyOS dashboard", "kind": "heady", "role": "latent-os-dashboard", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headyos.com/" } },
+    { "id": "headyio", "name": "HeadyIO dev portal", "kind": "heady", "role": "developer-portal", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headyio.com/" } },
+    { "id": "headyapi", "name": "HeadyAPI playground", "kind": "heady", "role": "api-playground", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headyapi.com/" } },
+    { "id": "headyweb", "name": "HeadyWeb hub", "kind": "heady", "role": "web-frontend-hub", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headyweb.com/" } },
+
+    { "id": "neon", "name": "Neon Postgres (SoR)", "kind": "infra", "role": "system-of-record", "deploy_class": false, "expected": "real", "probe": { "kind": "kernel", "service": "tasks" } },
+    { "id": "upstash-redis", "name": "Upstash Redis (T0 cache)", "kind": "infra", "role": "best-effort-cache", "deploy_class": false, "expected": "real", "probe": null },
+    { "id": "vectorize", "name": "Cloudflare Vectorize (T2 cache)", "kind": "infra", "role": "derived-edge-cache", "deploy_class": false, "expected": "real", "probe": null },
+    { "id": "github", "name": "GitHub (4 orgs)", "kind": "infra", "role": "source-control", "deploy_class": true, "expected": "real", "probe": { "kind": "https", "url": "https://api.github.com/" } },
+    { "id": "google-drive", "name": "Google Drive", "kind": "infra", "role": "document-store", "deploy_class": false, "expected": "real", "probe": null }
+  ]
+}

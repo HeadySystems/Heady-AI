@@ -19,12 +19,13 @@ import { createSentryExporter, noopExporter } from "@heady/observability";
 import { createIntelligence } from "./intelligence.mjs";
 import { createEventsService } from "./events.mjs";
 import { createTasksService } from "./tasks.mjs";
+import { createConsoleService } from "./console.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts, console: consoleOpts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -103,10 +104,21 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     getDbPort: tasksOpts?.getDbPort ?? null,
   });
 
+  // Console — §8 connector probes on the φ⁷ heartbeat; serves the honeycomb's
+  // measured state (never asserted). Kernel probes read this same kernel.
+  const consoleSvc = createConsoleService({
+    log,
+    kernel,
+    publish: (subject, payload) => events.publish(subject, payload),
+    deps: ["http", "tasks"], // boot last: the first sweep must see live services
+    ...consoleOpts, // tests inject { fetchImpl, registryPath } — no network in suites
+  });
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
   kernel.register(events.service);
   kernel.register(tasks.service);
+  kernel.register(consoleSvc.service);
 
   kernel.register({
     name: "http",
@@ -146,6 +158,9 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   // Tasks routes (OpenAPI: enqueueTask / getTask) — the GATE-2 write path.
   tasks.routes(app);
 
+  // Console summary (§8) — the honeycomb's data source.
+  consoleSvc.routes(app);
+
   app.get("/intelligence", async (_req, res) => {
     const h = await intel.selfCheck();
     res.status(h.status === HEALTH.DOWN ? 503 : 200).json({
@@ -162,7 +177,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     product,
     version,
     tier: "origin (Cloud Run modular monolith)",
-    endpoints: ["/health", "/metrics", "/api/events", "/tasks"],
+    endpoints: ["/health", "/metrics", "/api/events", "/tasks", "/api/console/summary"],
   }));
 
   app.use((_req, res) => res.status(404).json({ error: "not_found" }));

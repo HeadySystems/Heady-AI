@@ -71,3 +71,9 @@ export const spec = loadSpec();
 
 // ── facts.v1 — the golden-record schema (the law about what a fact is) ──
 export { FACTS_V1, FACTS_V1_VERSION, validateFactsV1 } from "./facts-schema.mjs";
+
+// ── MCP Console shared contract (§8): connectors, manifests, summary ──
+export {
+  CONNECTOR_STATES, PROBE_KINDS,
+  validateConnector, validateConnectorRegistry, validateServerManifest, buildConsoleSummary,
+} from "./mcp-shapes.mjs";
