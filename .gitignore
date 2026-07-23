@@ -160,3 +160,8 @@ scripts/provider-setup/.env.*
 # pnpm monorepo — npm lockfile is not used; prevent accidental regeneration
 package-lock.json
 npm-shrinkwrap.json
+
+# Local-only provenance archive (contains secret-bearing legacy tarballs — never push)
+/_archive/
+# Throwaway session scratch
+/scratch/
