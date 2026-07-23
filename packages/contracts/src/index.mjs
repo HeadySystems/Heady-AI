@@ -80,3 +80,9 @@ export {
 
 // ── Task API boundary shapes (AGENTS.md #5 — the strict EnqueueTask validator) ──
 export { validateEnqueueTask, ENQUEUE_TASK_FIELDS, TASK_UUID_RE } from "./task-shapes.mjs";
+
+// ── Projection engine contract (ADR-0017): projection.yaml + lifecycle + drift ──
+export {
+  PROJECTION_STATES, PROJECTION_TRANSITIONS, DRIFT_STATES, PROJECTION_TYPES,
+  validateProjectionManifest, isLegalProjectionTransition,
+} from "./projection-shapes.mjs";

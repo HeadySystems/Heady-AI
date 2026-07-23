@@ -42,11 +42,12 @@
       "Bash(curl -s --max-time 8 https://heady-ai.web.app/)",
       "Bash(curl -sI --max-time 8 https://heady-ai.web.app/)",
       "Bash(python3 -c ' *)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(git push *)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "heady"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }

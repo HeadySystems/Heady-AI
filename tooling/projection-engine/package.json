@@ -1,0 +1,25 @@
+{
+  "name": "@heady/projection-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ADR-0017 governed projection engine: content-addressable hashing, drift classification, and manifest emission — one-way derivations from the monorepo SoR into truth-telling shells (projection_only + Provenance the §8 console reads).",
+  "bin": {
+    "heady-project": "bin/generate-manifests.mjs"
+  },
+  "exports": {
+    "./projector": "./src/projector.mjs",
+    "./hash": "./src/hash.mjs",
+    "./sync-projection-bee": "./src/sync-projection-bee.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "generate": "node bin/generate-manifests.mjs",
+    "generate:dry": "node bin/generate-manifests.mjs --dry-run",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "projection", "adr-0017", "manifest", "drift", "shell"],
+  "dependencies": {
+    "@heady/contracts": "workspace:*"
+  }
+}
