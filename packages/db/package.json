@@ -1,15 +1,21 @@
 {
   "name": "@heady/db",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
-  "description": "Heady system of record — Neon Postgres + pgvector (384-dim) schema, transactional outbox, idempotency helpers.",
+  "description": "Heady system of record — Neon Postgres + pgvector (384-dim) schema, transactional outbox, idempotency helpers, forward-only migration runner.",
   "main": "src/index.mjs",
-  "exports": { ".": "./src/index.mjs" },
+  "exports": { ".": "./src/index.mjs", "./migrate": "./src/migrate.mjs", "./port": "./src/port.mjs" },
+  "bin": { "heady-db-migrate": "bin/migrate.mjs" },
   "scripts": {
     "build": "echo \"(no build — runnable ESM)\"",
     "test": "node --test",
+    "migrate": "node bin/migrate.mjs",
     "lint": "echo \"(lint wired at repo level)\""
   },
-  "keywords": ["heady", "postgres", "neon", "pgvector", "outbox", "idempotency", "drizzle"]
+  "dependencies": {
+    "@heady/secrets": "workspace:*",
+    "pg": "8.22.0"
+  },
+  "keywords": ["heady", "postgres", "neon", "pgvector", "outbox", "idempotency", "drizzle", "migrations"]
 }
