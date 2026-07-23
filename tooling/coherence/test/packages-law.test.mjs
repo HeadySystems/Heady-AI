@@ -6,7 +6,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkFrameworks, checkTestsAlongside, FORBIDDEN_FRAMEWORKS } from "../src/packages-law.mjs";
+import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger, FORBIDDEN_FRAMEWORKS } from "../src/packages-law.mjs";
 
 test("C-framework FLAGS vue, @vue/*, angular, @angular/* in deps or devDeps", () => {
   const findings = checkFrameworks([
@@ -45,4 +45,23 @@ test("TEST-missing errors on substrate members, INFO on apps, silent when covere
 test("empty / missing input yields no findings (never a false exit-2)", () => {
   assert.equal(checkFrameworks(null).length, 0);
   assert.equal(checkTestsAlongside(undefined).length, 0);
+});
+
+test("LAW11: silent when the Merkle planner is wired and the file path is CDC-free", () => {
+  assert.equal(checkMerkleTrigger({ plannerImported: true, cdcHits: [] }).length, 0);
+});
+
+test("LAW11: FLAGS a de-wired Merkle planner and any CDC machinery in the file path", () => {
+  const gone = checkMerkleTrigger({ plannerImported: false, cdcHits: [] });
+  assert.equal(gone.length, 1);
+  assert.equal(gone[0].id, "LAW11-merkle-trigger");
+  assert.equal(gone[0].tier, "error");
+
+  const cdc = checkMerkleTrigger({
+    plannerImported: true,
+    cdcHits: [{ line: "packages/embedding/src/x.mjs:3:import replication from 'pg-logical-replication'" }],
+  });
+  assert.equal(cdc.length, 1);
+  assert.equal(cdc[0].id, "LAW11-cdc-in-file-path");
+  assert.equal(cdc[0].tier, "error");
 });

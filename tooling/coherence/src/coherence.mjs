@@ -12,7 +12,7 @@ import {
 import { join, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
-import { checkFrameworks, checkTestsAlongside } from './packages-law.mjs';
+import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger } from './packages-law.mjs';
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
 } from '../../enforcers/lib/rules.mjs';
@@ -280,6 +280,15 @@ function check({ facts, pkgs }) {
   const { members, manifests } = workspaceMembers();
   findings.push(...checkFrameworks(manifests));
   findings.push(...checkTestsAlongside(members));
+
+  // LAW11 — file indexing triggers via the Merkle planner (ADR-0023), never
+  // Postgres CDC; DB-level CDC (ADR-0014) must stay out of the file-index path.
+  const embedOrch = has('tooling/embed-corpus/src/embed.mjs') ? rd('tooling/embed-corpus/src/embed.mjs') : '';
+  findings.push(...checkMerkleTrigger({
+    plannerImported: /\bplanCorpusEmbedding\b/.test(embedOrch),
+    cdcHits: grep('pg-logical-replication|wal2json|pgoutput|START_REPLICATION|CREATE PUBLICATION', ['packages/embedding', 'tooling/embed-corpus', 'tooling/awareness'])
+      .filter((l) => !isTest(l)).map((l) => ({ line: l })),
+  }));
 
   return findings;
 }
