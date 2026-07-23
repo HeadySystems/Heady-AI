@@ -92,6 +92,7 @@ function main() {
       runGate("secret-scan", [ENFORCER("secret-scan"), "--all"]),
       runGate("zod-boundary", [ENFORCER("zod-boundary"), "--all"]),
       runGate("phi-timing", [ENFORCER("phi-timing"), "--all"]),
+      runGate("projection-drift", ["tooling/projection-engine/bin/check-drift.mjs"]),
       runGate("coherence", ["tooling/coherence/src/coherence.mjs", "all"]),
     ];
   }

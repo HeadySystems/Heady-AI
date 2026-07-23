@@ -35,6 +35,8 @@
     "db:migrate:apply": "node packages/db/bin/migrate.mjs --apply",
   "consistency:migrate": "node -e \"process.stderr.write('consistency:migrate is retired — the legacy runner pointed at a nonexistent root db/migrations. Use: npm run db:migrate\\n');process.exit(1)\"",
     "consistency:verify": "node tooling/coherence/src/coherence.mjs check",
+    "projections:generate": "node tooling/projection-engine/bin/generate-manifests.mjs",
+    "projections:check": "node tooling/projection-engine/bin/check-drift.mjs",
     "start:mcp": "node heady-manager.js --mcp",
     "cli": "python scripts/heady_cli.py",
     "start": "node heady-manager.js",

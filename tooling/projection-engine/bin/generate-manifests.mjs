@@ -9,43 +9,16 @@
 // ║  shell. NOTHING is deployed — this only emits manifests.             ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
 // ╚══════════════════════════════════════════════════════════════════╝
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { validateProjectionManifest } from "@heady/contracts";
 import { runProjectionBee } from "../src/sync-projection-bee.mjs";
-import { isExcluded } from "../src/hash.mjs";
+import { collectSource } from "../src/collect.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("../../..", import.meta.url)));
 const log = (level, msg, f = {}) => process.stdout.write(`${JSON.stringify({ t: "projection-engine", level, msg, ...f })}\n`);
-
-const MAX_BYTES = 262144; // skip files larger than 256KB from the content hash (bounded, deterministic)
-
-/** Recursively collect {rel, content} under a source dir, honoring excludes. */
-function collect(absDir, relBase) {
-  const out = [];
-  const walk = (abs, rel) => {
-    let entries;
-    try { entries = readdirSync(abs, { withFileTypes: true }); } catch { return; }
-    for (const e of entries) {
-      const childRel = rel ? `${rel}/${e.name}` : e.name;
-      const fullRel = `${relBase}/${childRel}`;
-      if (isExcluded(fullRel)) continue;
-      const abschild = join(abs, e.name);
-      if (e.isDirectory()) { walk(abschild, childRel); continue; }
-      if (!e.isFile()) continue;
-      try {
-        if (statSync(abschild).size > MAX_BYTES) { out.push({ rel: fullRel, content: `__oversize__${e.name}` }); continue; }
-        const buf = readFileSync(abschild);
-        if (buf.includes(0)) { out.push({ rel: fullRel, content: `__binary__${e.name}` }); continue; }
-        out.push({ rel: fullRel, content: buf.toString("utf8") });
-      } catch { /* unreadable — skip */ }
-    }
-  };
-  walk(absDir, "");
-  return out;
-}
 
 function gitSha() {
   try { return execFileSync("git", ["rev-parse", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim(); }
@@ -93,7 +66,7 @@ function main(argv) {
     const mv = validateProjectionManifest(manifest);
     if (!mv.ok) { log("error", "manifest invalid", { id: c.id, errors: mv.errors }); failed++; results.push({ id: c.id, ok: false, reason: "invalid manifest" }); continue; }
 
-    const files = collect(join(ROOT, src.source_path), src.source_path);
+    const files = collectSource(ROOT, src.source_path, { privatePaths: manifest.private_paths ?? [] });
     const bee = runProjectionBee({ manifest, sourceFiles: files, sourceSha, nowIso });
     if (!bee.ok) { log("error", "projection failed", { id: c.id, errors: bee.errors }); failed++; results.push({ id: c.id, ok: false, reason: "projection error" }); continue; }
 
