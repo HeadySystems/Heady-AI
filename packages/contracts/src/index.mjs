@@ -68,3 +68,6 @@ export function generateMcpTools(spec = loadSpec()) {
 
 /** Convenience: the spec object, eagerly loaded. */
 export const spec = loadSpec();
+
+// ── facts.v1 — the golden-record schema (the law about what a fact is) ──
+export { FACTS_V1, FACTS_V1_VERSION, validateFactsV1 } from "./facts-schema.mjs";

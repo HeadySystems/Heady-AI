@@ -212,6 +212,12 @@ hcfullpipeline:
   stage_count: 21
 consistency:
   escalation_threshold: 3
+stage0:
+  # Agent-untouchable bootstrap (rustc-style Stage 0) — the verifier-of-verifiers.
+  # The future coder-agent (STEPWISE 3.19/3.24, Phase 3) can NEVER edit these,
+  # regardless of eval pass-rate. Path-glob SoT + CODEOWNERS lock; enforced live by
+  # tooling/coherence (STAGE0-* checks). Authority: ADR-0016 + STEPWISE §0.8.
+  manifest: configs/stage0-untouchables.json
 legacy:
   source_root: "~/Heady"
   disposition_doc: docs/LEGACY_STACK_COMPONENT_DISPOSITION.md

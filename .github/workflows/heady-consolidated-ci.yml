@@ -2,6 +2,8 @@ name: CI
 jobs:
   build:
     steps:
+      - name: Facts golden-record gate (facts.v1)
+        run: npm run facts:validate
       - name: ESLint Security Scan
         run: npm run lint
       - name: Dependency audit
@@ -10,3 +12,5 @@ jobs:
         run: npm test
       - name: Build all packages
         run: npm run build
+      - name: Anti-Orphan Skeleton Guard
+        run: pnpm --filter @heady/skeleton-guard audit

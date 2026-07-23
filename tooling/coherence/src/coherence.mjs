@@ -10,6 +10,11 @@ import {
   existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync,
 } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
+import { checkLaws } from './laws.mjs';
+import {
+  LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
+} from '../../enforcers/lib/rules.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const OUT = join(ROOT, '.data', 'coherence');
@@ -203,6 +208,14 @@ function check({ facts, pkgs }) {
     }
   }
 
+  // QUAR — quarantined trees must never be referenced by the rebuild. colab/ is
+  // throwaway batch/experiment compute with documented locked-law violations
+  // (configs/laws.json: colab-quarantine); an import from packages/apps/tooling
+  // is a build-blocking contradiction, per the ops-brief quarantine order.
+  for (const l of grep("from ['\\\"][^'\\\"]*colab/|require\\(['\\\"][^'\\\"]*colab/", ['packages', 'apps', 'tooling'])) {
+    err('QUAR-colab', 'quarantined colab/ tree referenced from the rebuild', { line: l.slice(0, 140) });
+  }
+
   // CONTENT — FEDERATE the data-consistency engine as a sub-gate (invoke; do not reimplement its rules)
   if (has('tooling/data-consistency/src/cli.mjs')) {
     try {
@@ -216,6 +229,23 @@ function check({ facts, pkgs }) {
       else err('FED-consistency', 'data-consistency sub-gate could not be evaluated', { error: String(e.message).slice(0, 120) });
     }
   }
+
+  // STAGE0 — the agent-untouchable bootstrap (verifier-of-verifiers) must resolve,
+  // be CODEOWNERS-locked, and include the kernel itself (STEPWISE §0.8 / ADR-0016).
+  findings.push(...checkStage0({
+    manifest: has('configs/stage0-untouchables.json') ? rdj('configs/stage0-untouchables.json') : null,
+    resolves: (glob) => has(glob),
+    codeownerPatterns: has('.github/CODEOWNERS') ? parseCodeownersPatterns(rd('.github/CODEOWNERS')) : [],
+  }));
+
+  // LAW — every AGENTS.md law maps to a live enforcer; no canonical enforcer rule
+  // is silently downgraded; advisory gaps + tracked defects surface (STEPWISE step 6).
+  const libRuleIds = [...LOCALHOST_RULES, ...GLASSBOX_LINE_RULES, ...GLASSBOX_BLOCK_RULES, ...SECRET_RULES].map((r) => r.id);
+  findings.push(...checkLaws({
+    registry: has('configs/laws.json') ? rdj('configs/laws.json') : null,
+    libRuleIds,
+    moduleExists: (p) => has(p),
+  }));
 
   return findings;
 }

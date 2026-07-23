@@ -40,3 +40,21 @@
 /packages/security-mesh/             @HeadyMe/core-team
 /packages/memory-stream/             @HeadyMe/core-team
 /packages/auto-context/              @HeadyMe/core-team
+
+# ── Stage 0 — agent-untouchable bootstrap (verifier-of-verifiers) ──
+# The future coder-agent (STEPWISE 3.19/3.24, Phase 3) can NEVER edit these,
+# regardless of eval pass-rate. SoT path-glob: configs/stage0-untouchables.json;
+# enforced live by tooling/coherence (STAGE0-* checks). ADR-0016 / STEPWISE §0.8.
+# ARBITER + founder review required. Placed last for last-match-wins.
+/.github/CODEOWNERS                          @HeadyMe/core-team
+/configs/stage0-untouchables.json            @HeadyMe/core-team
+/configs/laws.json                           @HeadyMe/core-team
+/tooling/coherence/                          @HeadyMe/core-team
+/packages/contracts/src/facts-schema.mjs     @HeadyMe/core-team
+/tooling/law-lint/                           @HeadyMe/core-team
+/tooling/governance-gate/                    @HeadyMe/core-team
+/tooling/enforcers/                          @HeadyMe/core-team
+/tooling/skeleton-guard/                     @HeadyMe/core-team
+/tooling/data-consistency/                   @HeadyMe/core-team
+/packages/phi-math/                          @HeadyMe/core-team
+/.claude/hooks/heady-rules.mjs               @HeadyMe/core-team

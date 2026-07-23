@@ -36,7 +36,7 @@
             { "id": "p0.secret-purge", "title": "Secret purge + key rotation", "status": "in-progress", "detail": "git filter-repo purge; rotation via heady-secrets. R-1/R-2 live keys flagged.", "refs": ["SEC-001"] },
             { "id": "p0.supply-chain-ci", "title": "Supply-chain CI (gitleaks/Semgrep/Trivy/Renovate)", "status": "pending", "detail": "Actions pinned to digests.", "refs": ["STEPWISE 0.5"] },
             { "id": "p0.agents-md", "title": "AGENTS.md hierarchy + anti-sprawl gates", "status": "done", "detail": "Root AGENTS.md + consistency gate + skeleton-guard + rule-gate hook." },
-            { "id": "p0.stage0", "title": "Stage 0 declared untouchable", "status": "done", "detail": "Eval harness / fidelity gate / phi_circuit_breaker / CODEOWNERS / merge button.", "refs": ["REBUILD_PLAN_V2 §7"] }
+            { "id": "p0.stage0", "title": "Stage 0 declared untouchable", "status": "in-progress", "detail": "Path-glob SoT (configs/stage0-untouchables.json) declared + CODEOWNERS-locked + enforced live by tooling/coherence STAGE0-* checks. 11 verifier-of-verifiers paths untouchable now; gateway/fidelity-gate/merge-button declared pending. 3.19/3.24 agent-loop wiring pending Phase 3.", "refs": ["ADR-0016", "STEPWISE §0.8", "configs/stage0-untouchables.json"] }
           ]
         },
         {

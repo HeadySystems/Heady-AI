@@ -11,6 +11,6 @@
     "test": "node --test",
     "lint": "echo \"(lint wired at repo level)\""
   },
-  "dependencies": { "@heady/shared": "workspace:*" },
+  "dependencies": { "@heady/shared": "workspace:*", "@heady/contracts": "workspace:*" },
   "keywords": ["heady", "config", "facts", "golden-record", "env", "yaml"]
 }

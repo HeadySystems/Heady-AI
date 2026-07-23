@@ -7,6 +7,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { parseYaml, validateFacts, loadFacts, getFact, requireEnv } from "../src/index.mjs";
+import { validateFactsV1 } from "@heady/contracts";
 
 test("parseYaml handles nested maps, scalar lists, scalars, comments", () => {
   const y = parseYaml(`# comment
@@ -51,6 +52,13 @@ test("validateFacts enforces locked invariants", () => {
   const base = loadFacts();
   assert.throws(() => validateFacts({ ...base, embedding: { ...base.embedding, dim: 1536 } }), /must be 384/);
   assert.throws(() => validateFacts({ ...base, stores: { ...base.stores, retrieval_authority: "qdrant" } }), /pgvector/);
+});
+
+test("the REAL facts.yaml conforms to the canonical facts.v1 schema", () => {
+  // Fail-closed guard on the golden record itself (the null-keystone closure):
+  // facts.yaml declares `schema: facts.v1`, and this proves it actually holds.
+  const { ok, errors } = validateFactsV1(loadFacts());
+  assert.equal(ok, true, errors.join("; "));
 });
 
 test("requireEnv is fail-closed and rejects loopback", () => {

@@ -12,6 +12,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ValidationError } from "@heady/shared";
+import { validateFactsV1 } from "@heady/contracts";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const FACTS_PATH = join(REPO_ROOT, "facts.yaml");
@@ -80,28 +81,20 @@ export function parseYaml(text) {
   return root;
 }
 
-const REQUIRED_FACTS = [
-  ["schema"], ["product", "name"], ["product", "version"],
-  ["platform", "node_version"], ["platform", "package_manager"],
-  ["embedding", "model"], ["embedding", "dim"], ["stores", "retrieval_authority"],
-];
-
 function at(obj, path) {
   return path.reduce((acc, k) => (acc == null ? acc : acc[k]), obj);
 }
 
-/** Validate the golden record against required keys + locked invariants. */
+/**
+ * Validate the golden record against the canonical `facts.v1` schema
+ * (@heady/contracts). This package is the LOADER; `facts.v1` is the single
+ * definition of the record's shape + locked invariants — no rules are
+ * duplicated here (ADR-0025: one authority, non-orphanage). Throws with every
+ * aggregated violation joined, so a caller sees all drift in one pass.
+ */
 export function validateFacts(facts) {
-  for (const path of REQUIRED_FACTS) {
-    const v = at(facts, path);
-    if (v === undefined || v === null) throw new ValidationError(`facts.yaml missing required key: ${path.join(".")}`);
-  }
-  if (at(facts, ["embedding", "dim"]) !== 384) {
-    throw new ValidationError(`facts.yaml embedding.dim must be 384 (ADR-0015), got ${at(facts, ["embedding", "dim"])}`);
-  }
-  if (at(facts, ["stores", "retrieval_authority"]) !== "pgvector") {
-    throw new ValidationError("facts.yaml stores.retrieval_authority must be pgvector (ADR-0003)");
-  }
+  const { ok, errors } = validateFactsV1(facts);
+  if (!ok) throw new ValidationError(errors.join("; "));
   return facts;
 }
 

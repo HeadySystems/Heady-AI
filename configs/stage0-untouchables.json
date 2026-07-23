@@ -1,0 +1,22 @@
+{
+  "schema": "stage0-untouchables.v1",
+  "note": "Agent-untouchable bootstrap (rustc-style Stage 0) — the verifier-of-verifiers. The future coder-agent (STEPWISE 3.19/3.24, Phase 3) can NEVER edit these, regardless of eval pass-rate. This is the path-glob SoT for STEPWISE §0.8 / ADR-0016, CODEOWNERS-locked and enforced live by tooling/coherence (STAGE0-* checks). present=true → built + enforced now (glob must resolve + be CODEOWNERS-covered); present=false → §0.8 role declared, path pending Phase 3. Enforced (present) globs are exact files or dir prefixes only (no wildcards) so CODEOWNERS coverage is decidable. Legacy analog to fold at agent-loop time: configs/code-governance.yaml auth_gate.protected_paths.",
+  "entries": [
+    { "role": "codeowners", "glob": ".github/CODEOWNERS", "present": true, "ref": "STEPWISE §0.8 (named artifact)" },
+    { "role": "stage0-manifest", "glob": "configs/stage0-untouchables.json", "present": true, "ref": "this file — self-protecting" },
+    { "role": "law-registry", "glob": "configs/laws.json", "present": true, "ref": "canonical unbreakable-law → enforcer map (STEPWISE step 6)" },
+    { "role": "coherence-kernel", "glob": "tooling/coherence/", "present": true, "ref": "the live gate / verifier-of-verifiers" },
+    { "role": "facts-schema", "glob": "packages/contracts/src/facts-schema.mjs", "present": true, "ref": "facts.v1 — the golden-record law" },
+    { "role": "law-lint", "glob": "tooling/law-lint/", "present": true, "ref": "ESM/brand law gate" },
+    { "role": "governance-gate", "glob": "tooling/governance-gate/", "present": true, "ref": "governance enforcement" },
+    { "role": "enforcers", "glob": "tooling/enforcers/", "present": true, "ref": "no-localhost / secret-scan / glass-box / autocontext" },
+    { "role": "skeleton-guard", "glob": "tooling/skeleton-guard/", "present": true, "ref": "anti-orphan gate (CI)" },
+    { "role": "data-consistency", "glob": "tooling/data-consistency/", "present": true, "ref": "federated content-invariant sub-gate" },
+    { "role": "phi-thresholds", "glob": "packages/phi-math/", "present": true, "ref": "phi_circuit_breaker thresholds source (§0.8)" },
+    { "role": "rule-gate-hook", "glob": ".claude/hooks/heady-rules.mjs", "present": true, "ref": "write-time hard-law gate" },
+
+    { "role": "liquid-gateway", "glob": "packages/liquid-gateway/", "present": false, "ref": "ADR-0018 / STEPWISE Phase 3 (egress chokepoint — not yet built in rebuild form)" },
+    { "role": "fidelity-gate", "glob": "tooling/eval-gate/", "present": false, "ref": "REBUILD_PLAN_V2 §11 eval harness (Phase 2/3)" },
+    { "role": "merge-gate", "glob": ".github/branch-protection/", "present": false, "ref": "GitHub branch protection + merge button (external; dormant — Actions account-suppressed)" }
+  ]
+}
