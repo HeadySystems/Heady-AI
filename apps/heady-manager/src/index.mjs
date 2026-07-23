@@ -17,6 +17,15 @@ const { kernel, log, start } = createApp({
       return createDbPort({ connectionString: DATABASE_URL });
     },
   },
+  console: {
+    // Vault resolver for `vault` probes (the live token lifecycle): resolves
+    // ONLY the names the registry declares; absent optional secrets resolve
+    // to undefined (the probe reports not_connected honestly, never throws).
+    resolveSecrets: async (names) => {
+      const { loadSecrets } = await import("@heady/secrets");
+      return loadSecrets({ only: names });
+    },
+  },
 });
 
 await start();

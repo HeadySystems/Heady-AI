@@ -37,6 +37,17 @@ test("validateConnector: valid https/kernel/null probes pass; strict rejects unk
   assert.match(validateConnector({ ...okConnector(), expected: "maybe" }).errors.join(" "), /real\|projection/);
 });
 
+test("vault probes: secrets[] + mandatory measured ping, exactly one url source", () => {
+  const vault = (probe) => validateConnector({ ...okConnector(), probe: { kind: "vault", ...probe } });
+  assert.equal(vault({ secrets: ["A_TOKEN"], ping: { url: "https://api.example.headysystems.com/v", authSecret: "A_TOKEN" } }).ok, true);
+  assert.equal(vault({ secrets: ["A_URL", "A_TOKEN"], ping: { urlSecret: "A_URL", path: "/ping", authSecret: "A_TOKEN" } }).ok, true);
+  assert.match(vault({ secrets: [], ping: { url: "https://x.example.headysystems.com/", authSecret: "A" } }).errors.join(" "), /secrets\[\]/);
+  assert.match(vault({ secrets: ["A_TOKEN"] }).errors.join(" "), /requires a ping/); // existence proves nothing
+  assert.match(vault({ secrets: ["A_TOKEN"], ping: { authSecret: "A_TOKEN" } }).errors.join(" "), /exactly one of url/);
+  assert.match(vault({ secrets: ["A_TOKEN"], ping: { url: "https://x.example.headysystems.com/", urlSecret: "A_URL", authSecret: "A_TOKEN" } }).errors.join(" "), /exactly one of url/);
+  assert.match(vault({ secrets: ["A_TOKEN"], ping: { url: "https://x.example.headysystems.com/" } }).errors.join(" "), /authSecret/);
+});
+
 test("validateConnectorRegistry: duplicate ids fail closed", () => {
   const reg = { schema: "connectors.v1", connectors: [okConnector(), okConnector()] };
   assert.match(validateConnectorRegistry(reg).errors.join(" "), /duplicate connector id/);

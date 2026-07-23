@@ -108,6 +108,56 @@ test("state transitions publish console.connector.state events", async () => {
   assert.equal(t.payload.to, "unreachable");
 });
 
+test("vault probe: full token lifecycle — healthy / token_expired / missing / no-resolver", async () => {
+  const VAULT_CONNECTORS = [
+    { id: "cache-ok", name: "Cache", kind: "infra", role: "cache", deploy_class: false, expected: "real", probe: { kind: "vault", secrets: ["C_URL", "C_TOKEN"], ping: { urlSecret: "C_URL", path: "/ping", authSecret: "C_TOKEN" } } },
+    { id: "api-expired", name: "API", kind: "infra", role: "edge", deploy_class: false, expected: "real", probe: { kind: "vault", secrets: ["A_TOKEN"], ping: { url: "https://api.example.headysystems.com/verify", authSecret: "A_TOKEN" } } },
+    { id: "no-secret", name: "Missing", kind: "infra", role: "docs", deploy_class: false, expected: "real", probe: { kind: "vault", secrets: ["ABSENT_ONE"], ping: { url: "https://x.example.headysystems.com/", authSecret: "ABSENT_ONE" } } },
+  ];
+  const seen = [];
+  const vaultFetch = async (url, opts) => {
+    seen.push({ url, auth: opts.headers.authorization });
+    if (url.includes("secret-host")) return { status: 200, json: async () => ({}) };
+    return { status: 401, json: async () => ({}) };
+  };
+  const svc = createConsoleService({
+    log: noLog, kernel: { services: [] }, publish: async () => {},
+    registryPath: fixtureRegistry(VAULT_CONNECTORS), fetchImpl: vaultFetch,
+    resolveSecrets: async () => ({ C_URL: "https://secret-host.upstash.example/", C_TOKEN: "tok-cache", A_TOKEN: "tok-api" }),
+  });
+  await svc.service.start();
+  await svc.service.stop();
+  const byId = Object.fromEntries(svc.summary().connectors.map((c) => [c.id, c]));
+  assert.equal(byId["cache-ok"].state, "healthy");
+  assert.equal(byId["api-expired"].state, "token_expired"); // 401 = the live Re-authorize signal
+  assert.match(byId["api-expired"].detail, /re-authorize/);
+  assert.equal(byId["no-secret"].state, "not_connected");
+  assert.match(byId["no-secret"].detail, /ABSENT_ONE/);
+  // secret hygiene: the auth header carried the token, but NO detail leaks values or vault URLs
+  assert.equal(seen[0].auth, "Bearer tok-cache");
+  for (const c of Object.values(byId)) {
+    assert.ok(!String(c.detail).includes("secret-host"), "vault URL must never leak into details");
+    assert.ok(!String(c.detail).includes("tok-"), "token values must never leak into details");
+  }
+  // trailing-slash join: urlSecret base + path must not double the slash
+  assert.equal(seen[0].url, "https://secret-host.upstash.example/ping");
+});
+
+test("vault probe without a resolver = not_connected (dev/test never touches the vault)", async () => {
+  const svc = createConsoleService({
+    log: noLog, kernel: { services: [] }, publish: async () => {},
+    registryPath: fixtureRegistry([
+      { id: "v", name: "V", kind: "infra", role: "cache", deploy_class: false, expected: "real", probe: { kind: "vault", secrets: ["X_TOKEN"], ping: { url: "https://x.example.headysystems.com/", authSecret: "X_TOKEN" } } },
+    ]),
+    fetchImpl: async () => { throw new Error("must not be called"); },
+  });
+  await svc.service.start();
+  await svc.service.stop();
+  const v = svc.summary().connectors.find((c) => c.id === "v");
+  assert.equal(v.state, "not_connected");
+  assert.match(v.detail, /resolver not configured/);
+});
+
 test("kernel probe: disabled service = not_connected (never fake healthy)", async () => {
   const svc = createConsoleService({
     log: noLog,

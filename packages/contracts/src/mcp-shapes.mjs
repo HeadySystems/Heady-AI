@@ -15,8 +15,12 @@ export const CONNECTOR_STATES = Object.freeze([
   "unreachable", "token_expired", "projection_only", "empty",
 ]);
 
-/** Probe kinds: https = public endpoint; kernel = a heady-manager service's own health. */
-export const PROBE_KINDS = Object.freeze(["https", "kernel"]);
+/** Probe kinds: https = public endpoint; kernel = a heady-manager service's own
+ *  health; vault = credentialed ping with vault-resolved secrets, where a
+ *  401/403 IS the live token_expired signal (§8 token lifecycle). */
+export const PROBE_KINDS = Object.freeze(["https", "kernel", "vault"]);
+
+const SECRET_NAME_RE = /^[A-Z][A-Z0-9_]+$/;
 
 const isStr = (v) => typeof v === "string" && v.length > 0;
 const push = (errors, msg) => { errors.push(msg); return false; };
@@ -46,12 +50,28 @@ export function validateConnector(c) {
   if (c.probe !== null) {
     if (!c.probe || typeof c.probe !== "object") push(errors, `connector ${c.id}: probe must be null or an object`);
     else {
-      noUnknown(c.probe, ["kind", "url", "service"], errors, `connector ${c.id}.probe`);
+      noUnknown(c.probe, ["kind", "url", "service", "secrets", "ping"], errors, `connector ${c.id}.probe`);
       if (!PROBE_KINDS.includes(c.probe.kind)) push(errors, `connector ${c.id}: probe.kind must be ${PROBE_KINDS.join("|")}`);
       if (c.probe.kind === "https" && !(isStr(c.probe.url) && c.probe.url.startsWith("https://"))) {
         push(errors, `connector ${c.id}: https probe needs an https:// url`);
       }
       if (c.probe.kind === "kernel" && !isStr(c.probe.service)) push(errors, `connector ${c.id}: kernel probe needs a service name`);
+      if (c.probe.kind === "vault") {
+        const p = c.probe;
+        if (!Array.isArray(p.secrets) || p.secrets.length === 0 || p.secrets.some((s) => !SECRET_NAME_RE.test(String(s)))) {
+          push(errors, `connector ${c.id}: vault probe needs secrets[] of UPPER_SNAKE names`);
+        }
+        // A credential's existence proves nothing — a vault probe MUST ping so
+        // the state is measured (2xx healthy · 401/403 token_expired · else degraded).
+        if (!p.ping || typeof p.ping !== "object") push(errors, `connector ${c.id}: vault probe requires a ping`);
+        else {
+          noUnknown(p.ping, ["url", "urlSecret", "path", "authSecret", "scheme"], errors, `connector ${c.id}.probe.ping`);
+          const hasUrl = isStr(p.ping.url) && p.ping.url.startsWith("https://");
+          const hasUrlSecret = SECRET_NAME_RE.test(String(p.ping.urlSecret ?? ""));
+          if (hasUrl === hasUrlSecret) push(errors, `connector ${c.id}: ping needs exactly one of url (https://) or urlSecret`);
+          if (!SECRET_NAME_RE.test(String(p.ping.authSecret ?? ""))) push(errors, `connector ${c.id}: ping.authSecret required`);
+        }
+      }
     }
   } else if (c.probe === undefined) push(errors, `connector ${c.id}: probe required (null = not wired yet)`);
   return { ok: errors.length === 0, errors };

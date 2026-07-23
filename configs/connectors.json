@@ -14,8 +14,8 @@
     { "id": "headyweb", "name": "HeadyWeb hub", "kind": "heady", "role": "web-frontend-hub", "deploy_class": false, "expected": "projection", "probe": { "kind": "https", "url": "https://headyweb.com/" } },
 
     { "id": "neon", "name": "Neon Postgres (SoR)", "kind": "infra", "role": "system-of-record", "deploy_class": false, "expected": "real", "probe": { "kind": "kernel", "service": "tasks" } },
-    { "id": "upstash-redis", "name": "Upstash Redis (T0 cache)", "kind": "infra", "role": "best-effort-cache", "deploy_class": false, "expected": "real", "probe": null },
-    { "id": "vectorize", "name": "Cloudflare Vectorize (T2 cache)", "kind": "infra", "role": "derived-edge-cache", "deploy_class": false, "expected": "real", "probe": null },
+    { "id": "upstash-redis", "name": "Upstash Redis (T0 cache)", "kind": "infra", "role": "best-effort-cache", "deploy_class": false, "expected": "real", "probe": { "kind": "vault", "secrets": ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"], "ping": { "urlSecret": "UPSTASH_REDIS_REST_URL", "path": "/ping", "authSecret": "UPSTASH_REDIS_REST_TOKEN" } } },
+    { "id": "vectorize", "name": "Cloudflare Vectorize (T2 cache)", "kind": "infra", "role": "derived-edge-cache", "deploy_class": false, "expected": "real", "probe": { "kind": "vault", "secrets": ["CLOUDFLARE_API_TOKEN"], "ping": { "url": "https://api.cloudflare.com/client/v4/user/tokens/verify", "authSecret": "CLOUDFLARE_API_TOKEN" } } },
     { "id": "github", "name": "GitHub (4 orgs)", "kind": "infra", "role": "source-control", "deploy_class": true, "expected": "real", "probe": { "kind": "https", "url": "https://api.github.com/" } },
     { "id": "google-drive", "name": "Google Drive", "kind": "infra", "role": "document-store", "deploy_class": false, "expected": "real", "probe": null }
   ]

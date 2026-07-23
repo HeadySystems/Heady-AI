@@ -53,11 +53,13 @@ export function createConsoleService({
   log, kernel, publish,
   registryPath = REGISTRY_PATH, fetchImpl = fetch, heartbeatMs = HEARTBEAT_MS, now = () => Date.now(),
   deps = [],
+  resolveSecrets = null, // composition-root owned (index.mjs wires the vault); null ⇒ vault probes report not_connected
 }) {
   let registry = null;
   let loadError = null;
   let timer = null;
   let lastSweepAt = null;
+  let secretCache = null; // name → value, resolved ONCE at start (rotation ⇒ restart)
   const states = new Map(); // id → { state, detail, latencyMs, checkedAt }
 
   function loadRegistry() {
@@ -101,9 +103,51 @@ export function createConsoleService({
     }
   }
 
+  /**
+   * Vault probe — the live token lifecycle (§8): resolve the connector's
+   * credentials from the vault and ping authenticated. 2xx = healthy,
+   * 401/403 = token_expired (the Re-authorize signal), else degraded/
+   * unreachable. Details NEVER carry URLs or values — a vault-resolved URL
+   * (e.g. an Upstash instance host) is itself sensitive.
+   */
+  async function probeVault({ id, probe }) {
+    if (!resolveSecrets) return { state: "not_connected", detail: "vault resolver not configured" };
+    if (!secretCache) {
+      const names = [...new Set(registry.connectors.flatMap((c) => (c.probe?.kind === "vault" ? c.probe.secrets : [])))];
+      try { secretCache = await resolveSecrets(names); } catch (err) {
+        secretCache = {};
+        log.warn({ err: String(err?.message ?? err) }, "console: vault resolution failed — vault probes degrade honestly");
+      }
+    }
+    const missing = probe.secrets.filter((n) => !secretCache[n]);
+    if (missing.length) return { state: "not_connected", detail: `vault: ${missing.join(", ")} not present` };
+
+    const base = probe.ping.url ?? secretCache[probe.ping.urlSecret];
+    if (!base) return { state: "not_connected", detail: "vault: ping url unresolved" };
+    const url = `${String(base).replace(/\/+$/, "")}${probe.ping.path ?? ""}`;
+    const controller = new AbortController();
+    const kill = setTimeout(() => controller.abort(), PROBE_TIMEOUT_MS);
+    const startedAt = now();
+    try {
+      const res = await fetchImpl(url, {
+        signal: controller.signal,
+        headers: { authorization: `${probe.ping.scheme ?? "Bearer"} ${secretCache[probe.ping.authSecret]}` },
+      });
+      const latencyMs = now() - startedAt;
+      if (res.status === 401 || res.status === 403) return { state: "token_expired", detail: `credential rejected (HTTP ${res.status}) — re-authorize`, latencyMs };
+      if (res.status >= 200 && res.status < 300) return { state: "healthy", detail: "authenticated ping ok", latencyMs };
+      return { state: "degraded", detail: `HTTP ${res.status}`, latencyMs };
+    } catch (err) {
+      return { state: "unreachable", detail: `ping failed: ${String(err?.name ?? "error")}`, latencyMs: now() - startedAt };
+    } finally {
+      clearTimeout(kill);
+    }
+  }
+
   async function probeOne(connector) {
     if (connector.probe === null) return { state: "not_connected", detail: "token/OAuth lifecycle not wired yet" };
     if (connector.probe.kind === "kernel") return probeKernel(connector.probe.service);
+    if (connector.probe.kind === "vault") return probeVault(connector);
     return probeHttps(connector.probe.url);
   }
 
