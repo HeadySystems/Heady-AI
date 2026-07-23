@@ -1,137 +1,78 @@
-/*
- * © 2026 Heady Systems LLC.
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * ═══ Hologram Router — Cloudflare Edge Worker ═══
- *
- * The edge worker that intercepts traffic to all 9 Heady domains,
- * checks the KV edge cache, and triggers the Colab compiler
- * if the UI isn't materialized. Serves holographic projections
- * from KV with strict TTL — files evaporate after 1 hour.
- *
- * Domains: headymcp.com, headysystems.com, headyconnection.org,
- *          headyme.com, headyapi.com, headyio.com, headytrader.com,
- *          headymusic.com, headyfoundation.org, myheady.ai
- */
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  HEADY™ Edge Router — Cloudflare Worker                            ║
+// ║  Transparent reverse proxy fronting the Heady domains onto the      ║
+// ║  live origin, with MCP passthrough for headymcp.com (the /sse       ║
+// ║  Streamable-SSE surface + /health). Origin is env-derived          ║
+// ║  (HEADY_ORIGIN) — no hardcoded URLs (AGENTS.md #4); fail-closed     ║
+// ║  503 when unconfigured. Replaces the prior KV-hologram/Colab-       ║
+// ║  compiler router, which pointed at a decommissioned us-east1 origin ║
+// ║  and a dead compile webhook (AGENTS.md: no dead-end integrations).  ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ╚══════════════════════════════════════════════════════════════════╝
 
-// Domain → UI module mapping
-const DOMAIN_MODULES = {
-    'headymcp.com': 'mcp-dashboard',
-    'www.headymcp.com': 'mcp-dashboard',
-    'headysystems.com': 'systems-portal',
-    'www.headysystems.com': 'systems-portal',
-    'headyme.com': 'personal-hub',
-    'www.headyme.com': 'personal-hub',
-    'headyapi.com': 'api-docs',
-    'headyio.com': 'io-platform',
-    'headytrader.com': 'trading-desk',
-    'headymusic.com': 'music-studio',
-    'headyfoundation.org': 'foundation-portal',
-    'headyconnection.org': 'connection-hub',
-    'myheady.ai': 'ai-assistant',
-    'heady.headyme.com': 'edge-mcp',
-};
+// Hosts that speak the MCP surface (tagged for origin-side routing/telemetry).
+const MCP_HOSTS = new Set(["headymcp.com", "www.headymcp.com"]);
 
-const CACHE_TTL = 3600; // 1 hour — UI projections evaporate after this
-const COLAB_COMPILER_WEBHOOK = 'https://heady-manager-1073792900703.us-east1.run.app/api/hologram/compile';
+// Hop-by-hop response headers a proxy must not forward verbatim.
+const STRIP_RESPONSE_HEADERS = ["transfer-encoding", "connection", "keep-alive"];
 
 export default {
-    async fetch(request, env) {
-        const url = new URL(request.url);
-        const hostname = url.hostname;
-        const module = DOMAIN_MODULES[hostname];
+  async fetch(request, env) {
+    const origin = env && env.HEADY_ORIGIN;
+    if (!origin) {
+      // Fail-closed: an unconfigured router must not silently hardcode a target.
+      return new Response(
+        JSON.stringify({ error: "router_unconfigured", detail: "HEADY_ORIGIN is not set" }),
+        { status: 503, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-        if (!module) {
-            return new Response('Unknown domain', { status: 404 });
-        }
+    let originHost;
+    try {
+      originHost = new URL(origin).host;
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "router_misconfigured", detail: "HEADY_ORIGIN is not a valid URL" }),
+        { status: 503, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-        // ── MCP Protocol routes — proxy to MCP API, not HTML dashboard ──
-        // When headymcp.com receives JSON-RPC or API requests, forward them
-        // to Cloud Run instead of serving the cached HTML dashboard.
-        if ((hostname === 'headymcp.com' || hostname === 'www.headymcp.com') &&
-            (url.pathname === '/mcp' || url.pathname === '/sse' ||
-             url.pathname.startsWith('/.well-known/') ||
-             url.pathname.startsWith('/registry/') ||
-             url.pathname.startsWith('/v1/') ||
-             url.pathname.startsWith('/catalog/') ||
-             url.pathname === '/health')) {
-            const mcpOrigin = 'https://heady-manager-1073792900703.us-east1.run.app';
-            const headers = new Headers(request.headers);
-            headers.set('Host', hostname);
-            headers.set('X-Forwarded-Host', hostname);
-            headers.set('X-Heady-Module', 'mcp-gateway');
+    const url = new URL(request.url);
+    const host = url.hostname;
 
-            return fetch(`${mcpOrigin}${url.pathname}${url.search}`, {
-                method: request.method,
-                headers,
-                body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
-            });
-        }
+    // Forward with the visitor's identity preserved; the origin sees who it is for.
+    const headers = new Headers(request.headers);
+    headers.set("Host", originHost);
+    headers.set("X-Forwarded-Host", host);
+    headers.set("X-Heady-Edge", "worker-heady-router");
+    if (MCP_HOSTS.has(host)) headers.set("X-Heady-Module", "mcp-gateway");
 
-        // Check KV edge cache for pre-compiled UI
-        const cacheKey = `hologram:${module}:${url.pathname}`;
-        const cached = await env.HEADY_UI_MANIFEST.get(cacheKey, { type: 'text' });
+    const init = { method: request.method, headers, redirect: "manual" };
+    if (request.method !== "GET" && request.method !== "HEAD") init.body = request.body;
 
-        if (cached) {
-            const contentType = url.pathname.endsWith('.js') ? 'application/javascript'
-                : url.pathname.endsWith('.css') ? 'text/css'
-                    : url.pathname.endsWith('.json') ? 'application/json'
-                        : 'text/html';
+    let response;
+    try {
+      response = await fetch(`${origin}${url.pathname}${url.search}`, init);
+    } catch (err) {
+      return new Response(
+        JSON.stringify({ error: "origin_unreachable", detail: String(err && err.message ? err.message : err) }),
+        { status: 502, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-            return new Response(cached, {
-                headers: {
-                    'Content-Type': contentType,
-                    'Cache-Control': `public, max-age=${CACHE_TTL}`,
-                    'X-Heady-Source': 'edge-cache',
-                    'X-Heady-Module': module,
-                },
-            });
-        }
+    // Rewrite any origin-host redirect Location back onto the caller's host.
+    const out = new Headers(response.headers);
+    for (const h of STRIP_RESPONSE_HEADERS) out.delete(h);
+    const location = out.get("Location");
+    if (location && location.includes(originHost)) {
+      out.set("Location", location.split(originHost).join(host));
+    }
+    out.set("X-Heady-Origin", originHost);
 
-        // UI not materialized — trigger Colab compiler
-        try {
-            const compileResponse = await fetch(COLAB_COMPILER_WEBHOOK, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${env.HEADY_INTERNAL_TOKEN}`,
-                },
-                body: JSON.stringify({
-                    domain: hostname,
-                    module,
-                    path: url.pathname,
-                    timestamp: new Date().toISOString(),
-                }),
-            });
-
-            if (compileResponse.ok) {
-                const compiled = await compileResponse.text();
-
-                // Cache the compiled UI in KV with TTL
-                await env.HEADY_UI_MANIFEST.put(cacheKey, compiled, {
-                    expirationTtl: CACHE_TTL,
-                });
-
-                return new Response(compiled, {
-                    headers: {
-                        'Content-Type': 'text/html',
-                        'X-Heady-Source': 'just-compiled',
-                        'X-Heady-Module': module,
-                    },
-                });
-            }
-        } catch (err) {
-            // Fall through to Cloud Run origin
-        }
-
-        // Fallback: proxy to Cloud Run origin
-        const originUrl = `https://heady-manager-1073792900703.us-east1.run.app${url.pathname}`;
-        return fetch(originUrl, {
-            headers: {
-                'Host': hostname,
-                'X-Forwarded-Host': hostname,
-                'X-Heady-Module': module,
-            },
-        });
-    },
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: out,
+    });
+  },
 };
