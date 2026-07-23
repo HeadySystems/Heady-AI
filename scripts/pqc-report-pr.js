@@ -25,6 +25,9 @@ const ADR_BASE     = `https://github.com/${REPO}/blob/main/docs/ADR`;
 const SENTINEL_TAG = '<!-- heady-pqc-sentinel -->';
 const API_BASE     = `https://api.github.com/repos/${REPO}`;
 
+// Structured CI log lines (glass-box: JSON on stdout, no console.*)
+const logLine = (level, msg, fields = {}) => process.stdout.write(`${JSON.stringify({ t: 'pqc-report-pr', level, msg, ...fields })}\n`);
+
 // Severity icons and ordering
 const ICON = { CRITICAL: '🔴', HIGH: '🟠', MEDIUM: '🟡', INFO: 'ℹ️' };
 
@@ -50,10 +53,10 @@ async function upsertComment(prNum, body) {
   const existing = comments.find(c => c.body?.includes(SENTINEL_TAG));
   if (existing) {
     await ghFetch(`/issues/comments/${existing.id}`, 'PATCH', { body });
-    console.log(`Updated PQC Sentinel comment #${existing.id} on PR #${prNum}`);
+    logLine('info', 'updated PQC Sentinel comment', { commentId: existing.id, pr: prNum });
   } else {
     await ghFetch(`/issues/${prNum}/comments`, 'POST', { body });
-    console.log(`Posted new PQC Sentinel comment on PR #${prNum}`);
+    logLine('info', 'posted new PQC Sentinel comment', { pr: prNum });
   }
 }
 
@@ -226,9 +229,9 @@ function buildFailedComment(report) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
-if (!GITHUB_TOKEN) { console.error('GITHUB_TOKEN not set'); process.exit(1); }
-if (!PR_NUMBER)    { console.log('PR_NUMBER not set — skipping comment'); process.exit(0); }
-if (!fs.existsSync(REPORT_PATH)) { console.error(`Report not found: ${REPORT_PATH}`); process.exit(1); }
+if (!GITHUB_TOKEN) { logLine('error', 'GITHUB_TOKEN not set'); process.exit(1); }
+if (!PR_NUMBER)    { logLine('info', 'PR_NUMBER not set — skipping comment'); process.exit(0); }
+if (!fs.existsSync(REPORT_PATH)) { logLine('error', 'report not found', { path: REPORT_PATH }); process.exit(1); }
 
 const report = JSON.parse(fs.readFileSync(REPORT_PATH, 'utf8'));
 const body = report.gate_passed ? buildCleanComment(report) : buildFailedComment(report);

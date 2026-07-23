@@ -444,18 +444,15 @@ if (summaryFile) {
   fs.appendFileSync(summaryFile, lines.join('\n'));
 }
 
-// Console summary
-const statusIcon = report.gate_passed ? '✅' : '❌';
-console.log(`\nPQC Scan complete — ${report.files_scanned} files, ${report.total_findings} findings`);
-console.log(`  CRITICAL: ${report.critical}  HIGH: ${report.high}  MEDIUM: ${report.medium}  INFO: ${report.info}`);
-console.log(`  Gate: ${statusIcon} ${report.gate_passed ? 'PASSED' : 'FAILED'}`);
-
-if (bySeverity.CRITICAL.length > 0 || bySeverity.HIGH.length > 0) {
-  console.error('\nBlocking findings:');
-  for (const f of [...bySeverity.CRITICAL, ...bySeverity.HIGH]) {
-    console.error(`  [${f.severity}] ${f.ruleId} ${f.file}:${f.line} — ${f.title}`);
-    console.error(`    Fix: ${f.fix}`);
-  }
+// Structured gate summary (glass-box: JSON lines on stdout, no console.*)
+const logLine = (level, msg, fields = {}) => process.stdout.write(`${JSON.stringify({ t: 'pqc-scanner', level, msg, ...fields })}\n`);
+logLine(report.gate_passed ? 'info' : 'error', 'pqc scan complete', {
+  files: report.files_scanned, findings: report.total_findings,
+  critical: report.critical, high: report.high, medium: report.medium, info: report.info,
+  gate: report.gate_passed ? 'PASSED' : 'FAILED',
+});
+for (const f of [...bySeverity.CRITICAL, ...bySeverity.HIGH]) {
+  logLine('error', 'pqc blocking finding', { severity: f.severity, ruleId: f.ruleId, file: f.file, line: f.line, title: f.title, fix: f.fix });
 }
 
 // Exit code

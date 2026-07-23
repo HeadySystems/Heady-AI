@@ -685,7 +685,7 @@
     {
       "id": "no-stray-package-json",
       "description": "package.json only in recognized package roots",
-      "pattern": "^(?!(?:apps|packages|tooling|heady-commander-plugin|templates|extensions|src/ui|cloudflare)/[^/]+/package\\.json$)(?!package\\.json$).*/package\\.json$",
+      "pattern": "^(?!(?:apps|packages|tooling|heady-commander-plugin|templates|extensions|src/ui|cloudflare)/[^/]+/package\\.json$)(?!package\\.json$)(?!_archive/).*/package\\.json$",
       "except": [],
       "message": "package.json files belong at repo root or inside apps/*/, packages/*/, tooling/*/, templates/*/, or heady-commander-plugin/."
     },

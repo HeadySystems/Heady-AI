@@ -51,8 +51,6 @@
     "test:domains": "node scripts/domain-connectivity-test.js",
     "test:branding": "node scripts/validate-branding.js",
     "build-all": "echo 'HeadyBrowser desktop/mobile builds not yet available'",
-    "deploy": "node scripts/deploy.js",
-    "deploy:auto": "node scripts/deploy.js --auto",
     "services:start": "node src/services/service-manager.js",
     "services:status": "node -e \"const {getServiceManager}=require('./src/services/service-manager');const mgr=getServiceManager();mgr.start().then(()=>console.log(JSON.stringify(mgr.getStatus(),null,2)))\"",
     "hcfp": "node -e \"const {pipeline}=require('./src/hc_pipeline');pipeline.run({fullAuto:true}).then(console.log).catch(console.error)\"",
@@ -89,13 +87,7 @@
     "system:sync": "node scripts/autonomous/unified-system-sync.js",
     "unified:runtime": "node scripts/autonomous/unified-runtime-orchestrator.js",
     "rebuild:unified": "node scripts/autonomous/rebuild-heady-unified.js",
-    "rebuild:autonomy": "node scripts/autonomous/rebuild-unified-autonomy.js",
-    "battle": "node scripts/battle.js",
-    "battle:status": "node scripts/battle.js --status",
-    "battle:blueprint": "node scripts/battle.js --blueprint",
-    "battle:repos": "node scripts/battle.js --repos",
-    "battle:build": "node scripts/battle-build.js",
-    "battle:extract": "node scripts/battle-extract.js"
+    "rebuild:autonomy": "node scripts/autonomous/rebuild-unified-autonomy.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

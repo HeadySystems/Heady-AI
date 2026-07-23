@@ -181,7 +181,7 @@ async function _tryAutoGenerateSecret(secretName) {
         type: "service_account",
         project_id: "heady-sovereign-mock",
         private_key_id: "mock_key_id_" + crypto.randomBytes(8).toString('hex'),
-        private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDh...\n-----END PRIVATE KEY-----\n",
+        private_key: "-----BEGIN MOCK PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDh...\n-----END MOCK PRIVATE KEY-----\n",
         client_email: "firebase-adminsdk-mock@heady-sovereign-mock.iam.gserviceaccount.com",
         client_id: "mock_client_id_123456789",
         auth_uri: "https://accounts.google.com/o/oauth2/auth",
@@ -205,7 +205,7 @@ async function _tryAutoGenerateSecret(secretName) {
       break;
       
     case 'mtls-ca-key':
-      value = '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...\n-----END PRIVATE KEY-----\n';
+      value = '-----BEGIN MOCK PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC...\n-----END MOCK PRIVATE KEY-----\n';
       break;
       
     case 'cloudflare-api-token':
