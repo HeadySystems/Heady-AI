@@ -136,6 +136,11 @@ export const events = {
   },
 };
 
+// ── Console summary (§8 honeycomb data source, same origin as events) ──
+export const consoleApi = {
+  summary: (token) => _call(CODEFLOW_BASE, 'GET', '/api/console/summary', undefined, token),
+};
+
 // ── legacy advisor API ─────────────────────────────────────────────
 const LEGACY_BASE = import.meta.env.VITE_LEGACY_API ?? '';
 

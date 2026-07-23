@@ -6,6 +6,7 @@
 import { auth, signOut } from '../services/firebase.js';
 import { api } from '../services/heady-api.js';
 import './heady-build-narrative.js'; // registers <heady-build-narrative>
+import './ConsoleHoneycomb.js'; // registers <heady-console-honeycomb> (§8 living honeycomb)
 
 const TAB_NAV = `
 <nav class="system-tabs glass-panel" aria-label="System switcher">
@@ -59,6 +60,11 @@ export class AdminUI {
             <h2>Legacy Decomposition</h2>
             <div class="status-indicator">loading…</div>
             <p>—</p>
+          </section>
+
+          <section class="card glass-panel" id="console-honeycomb-panel" style="grid-column: 1 / -1;">
+            <h2>MCP Console <span class="muted">— the living honeycomb; every cell reports its measured state (§8)</span></h2>
+            <heady-console-honeycomb></heady-console-honeycomb>
           </section>
 
           <section class="card glass-panel" id="build-narrative-panel" style="grid-column: 1 / -1;">
