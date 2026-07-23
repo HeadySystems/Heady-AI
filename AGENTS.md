@@ -53,7 +53,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 8. **φ-derived constants.** Timeouts, TTLs, pool sizes from `phi-constants.js`. Zero magic numbers.
 9. **Tests alongside code.** Vitest for unit, Playwright for E2E, k6 for load.
 10. **Error handling everywhere.** No empty catch blocks. No swallowed promises.
-11. **Vector Embeddings Trigger.** File indexing is triggered locally via **Merkle-tree file hashing**, never Postgres CDC.
+11. **Vector Embeddings Trigger.** File indexing is triggered locally via **Merkle-tree file hashing**, never Postgres CDC. Scope (ADR-0023 §Reconciliation, compendium R11): this governs *file/source-content* indexing only — derived-store sync from the database SoR uses WAL CDC per ADR-0014. Two triggers, two sources.
 
 ## File Header Template
 

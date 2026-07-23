@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Rule-Enforcement Hook v1.1.0                              ║
+// ║  HEADY™ Rule-Enforcement Hook v1.2.0                              ║
 // ║  PreToolUse gate — mechanically enforces AGENTS.md coding rules   ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
@@ -18,6 +18,15 @@
 // prior inline behavior rather than bricking the edit path. ESM (#1) and BRAND
 // (#6) are owned by law-lint (no shared-lib export) and stay inline.
 //
+// v1.2.0 — waiver-contract alignment (founder-approved 2026-07-23): the hook
+// now scans LINE-BY-LINE and honors exactly the per-line `heady-allow:` waivers
+// the downstream gate scripts honor (glass-box: `heady-allow:(glass-box|<rule>)`;
+// no-localhost: `heady-allow:no-localhost` only), tested against the same
+// trimmed 200-char window the enforcers use. Previously a line waiver the gate
+// scripts accept was unauthorable through Edit/Write (the second half of the
+// policy fork). ESM has NO waiver — law-lint accepts none, and the hook must
+// never accept a waiver the downstream gate would reject.
+//
 // Scope: only code files (.js/.mjs/.cjs/.ts/.tsx/.jsx) under the authored
 // source trees. Tests, node_modules, .agents, docs, scratch are exempt.
 
@@ -29,19 +38,21 @@ const IN_SCOPE = /\/(apps|packages|src|tooling|configs)\//;
 // Never enforce inside these.
 const EXEMPT = /(node_modules|\.agents|\/scratch\/|\/docs\/|\.test\.|\.spec\.|\/test\/|__tests__)/;
 
-// ESM (#1) is law-lint-owned and has no shared-lib export → always inline (identical regex).
+// ESM (#1) is law-lint-owned and has no shared-lib export → always inline (identical
+// regex). family:null = NO waiver token exists for it (law-lint accepts none).
 const ESM_RULE = {
   id: "esm-only",
   re: /\brequire\s*\(\s*['"`]/,
   msg: "AGENTS.md #1: ESM only — use import/export, never CommonJS require().",
+  family: null,
 };
 
 // Inline FALLBACK for the canonical line rules — used ONLY if the lib import fails,
 // so a broken import degrades to prior (weaker) behavior instead of bricking edits.
 const FALLBACK_LINE_RULES = [
-  { id: "console", re: /\bconsole\.log\s*\(/, msg: "AGENTS.md #2: zero console.log — use the pino structured logger with X-Heady-Trace-Id." },
-  { id: "placeholder", re: /\b(TODO|FIXME|HACK)\b/, msg: "AGENTS.md #3: zero TODO/FIXME/HACK — if it's not done, don't commit it." },
-  { id: "localhost", re: /\b(localhost|127\.0\.0\.1)\b/, msg: "AGENTS.md #4: zero localhost/127.0.0.1 — all URLs come from env vars (cloud-deployed only)." },
+  { id: "console", re: /\bconsole\.log\s*\(/, msg: "AGENTS.md #2: zero console.log — use the pino structured logger with X-Heady-Trace-Id.", family: "glass-box" },
+  { id: "placeholder", re: /\b(TODO|FIXME|HACK)\b/, msg: "AGENTS.md #3: zero TODO/FIXME/HACK — if it's not done, don't commit it.", family: "glass-box" },
+  { id: "localhost", re: /\b(localhost|127\.0\.0\.1)\b/, msg: "AGENTS.md #4: zero localhost/127.0.0.1 — all URLs come from env vars (cloud-deployed only).", family: "no-localhost" },
 ];
 
 // AGENTS.md message per canonical rule id (falls back to a generic message).
@@ -57,6 +68,21 @@ const MSG = {
   "hardcoded-port": "AGENTS.md #4: no hardcoded host:port — derive from env vars.",
 };
 
+// Family per canonical rule id — which gate script owns it (drives the waiver token).
+const GLASSBOX_IDS = new Set(["console", "placeholder", "ts-suppress", "stub-throw"]);
+const LOCALHOST_IDS = new Set(["localhost", "loopback-v4", "all-ifaces", "loopback-v6", "hardcoded-port"]);
+const familyFor = (id) => (GLASSBOX_IDS.has(id) ? "glass-box" : LOCALHOST_IDS.has(id) ? "no-localhost" : null);
+
+// Mirror of each gate script's waiver contract (per flagged line):
+//   glass-box.mjs    → /heady-allow:\s*(glass-box|<ruleId>)/
+//   no-localhost.mjs → /heady-allow:\s*no-localhost/   (family token ONLY)
+//   esm-only / brand → NO waiver (law-lint accepts none)
+function waiverRe(rule) {
+  if (rule.family === "glass-box") return new RegExp(`heady-allow:\\s*(glass-box|${rule.id})`);
+  if (rule.family === "no-localhost") return /heady-allow:\s*no-localhost/;
+  return null;
+}
+
 /** Load the canonical line rules (console/placeholder/localhost family) from the single
  *  SoT; on any import failure, fall back to the inline subset so edits never brick. */
 async function loadLineRules() {
@@ -66,6 +92,7 @@ async function loadLineRules() {
       id: r.id,
       re: r.re,
       msg: MSG[r.id] ?? `AGENTS.md: forbidden pattern "${r.id}".`,
+      family: familyFor(r.id),
     }));
     return [ESM_RULE, ...mapped];
   } catch {
@@ -117,9 +144,17 @@ async function main() {
   if (!text) process.exit(0);
 
   const rules = await loadLineRules();
+  const lines = text.split("\n");
   const hits = [];
   for (const rule of rules) {
-    if (rule.re.test(text)) hits.push(`  ✗ [${rule.id}] ${rule.msg}`);
+    const waiver = waiverRe(rule);
+    for (const raw of lines) {
+      if (!rule.re.test(raw)) continue;
+      // Same evidence window the gate scripts test waivers against (trim + 200 chars).
+      if (waiver && waiver.test(raw.trim().slice(0, 200))) continue;
+      hits.push(`  ✗ [${rule.id}] ${rule.msg}`);
+      break; // one report per rule is enough
+    }
   }
 
   // HEADY_BRAND header: only enforced on whole-file Writes of code files.
