@@ -32,6 +32,7 @@ the Rego policy. A patent-locked HCP needs 2 distinct approvers before `status: 
 |-----|-------|--------|---------------|--------|
 | [HCP-0001](HCP-0001-headykey-rotation-executor.md) | HeadyKey secret-rotation executor | draft | yes (HS-2026-051+) | U1: pin the exact claim id; needs 2 approvals |
 | [HCP-0002](HCP-0002-kernel-csl-stage-gate.md) | Kernel CSL stage-transition gate (C1 / Step 4) | draft | yes (HS-058) | U1: pin the exact claim id; U2: tau source; U3: HALT disposition; needs 2 approvals |
+| [HCP-0003](HCP-0003-bee-swarm-runtime.md) | Canonical HeadyBee and swarm runtime | draft | yes (HS-052/053/058/059/060) | U1–U4; ARBITER BLOCK; needs 2 signed approvals |
 
 ---
 *© 2026 HeadySystems Inc. — Eric Haywood, Founder*

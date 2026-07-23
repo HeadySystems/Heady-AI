@@ -8,7 +8,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -99,4 +99,12 @@ test("canonical home resolves to packages/db/migrations and contains 0001_init.s
   const files = listMigrations();
   assert.ok(files.some((f) => f.version === "0001_init.sql"), "the real 0001_init.sql must be listed");
   assert.equal(planMigrations({ files, applied: [] }).pending.length, files.length);
+});
+
+test("Data API migration removes existing and future authenticated-role access", () => {
+  const sql = readFileSync(join(MIGRATIONS_DIR, "0003_data_api_least_privilege.sql"), "utf8");
+  assert.match(sql, /REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM authenticated/);
+  assert.match(sql, /REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM authenticated/);
+  assert.match(sql, /ALTER DEFAULT PRIVILEGES FOR ROLE neondb_owner IN SCHEMA public/);
+  assert.doesNotMatch(sql, /\bGRANT\b[^;]*\bauthenticated\b/i);
 });
