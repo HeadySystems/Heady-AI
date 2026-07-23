@@ -37,20 +37,23 @@
       "patent-locked/**"
     ],
     "patent_claims": [
-      "HS-2026-060 Claims 1-3, 5, 7, 9",
-      "HS-2026-052 Claim 3",
-      "HS-2026-053 Claims 1, 7",
-      "HS-2026-058 Claims 2, 6",
-      "HS-2026-059 Claims 1, 5-7"
+      "HS-2026-060 Claims 1-3, 5, 7, 9"
+    ],
+    "reviewed_but_excluded_claims": [
+      "HS-2026-052 Claim 3 — no source-of-truth projection enforcement or remediation",
+      "HS-2026-053 Claims 1, 7 — telemetry is operational-only and not proof-bearing inference telemetry",
+      "HS-2026-058 Claims 2, 6 — no vector or CSL-weighted consensus",
+      "HS-2026-059 Claims 1, 5-7 — no multi-agent vector consensus"
     ],
     "diff_hash": null
   },
-  "blocking_questions": [
-    "U1: choose the canonical execution timeout: round(PHI*1000) or round(PHI^4*1000)",
-    "U2: decide whether runtime-created bees may persist beyond one durable workflow execution",
-    "U3: keep generic DAG orchestration separate from protected vector-weighted consensus",
-    "U4: decide whether lifecycle telemetry is operational-only or proof-bearing inference telemetry"
-  ],
+  "blocking_questions": [],
+  "resolved_questions": {
+    "U1": "Use round(PHI^4 * 1000) through the canonical phi-math export; no literal timeout in runtime code.",
+    "U2": "Runtime-created bees may not persist beyond one durable workflow execution. Retire is terminal; durable receipts remain separate.",
+    "U3": "Generic DAG orchestration and all vector/CSL-weighted consensus remain outside this proposal and outside packages/bees.",
+    "U4": "Lifecycle telemetry is operational-only. It may not encode proof-bearing inference decisions or consensus evidence."
+  },
   "approvers": [],
   "approver_shape": {
     "principal": "identity id",
@@ -65,6 +68,18 @@
       "type": "drafted",
       "by": "heady-autopilot",
       "note": "ARBITER BLOCK recorded. The founder's chat instruction expresses intent to proceed but is not represented as an approval because it is not an approval-API event or signed receipt."
+    },
+    {
+      "at": "2026-07-23T17:04:03Z",
+      "type": "human-approval-intent-recorded",
+      "by": "eric@headysystems.com",
+      "note": "The founder instructed autopilot to sign and continue. U1-U4 were resolved and the claim surface was narrowed. This event is intent evidence only: the required approval API, Neon approval tables, and signed-receipt minting path are not implemented, so it is not counted as an approver receipt."
+    },
+    {
+      "at": "2026-07-23T17:06:32Z",
+      "type": "arbiter-rereview-blocked",
+      "by": "ARBITER",
+      "note": "The narrowing plausibly limits the active surface to HS-2026-060 Claims 1-3, 5, 7, 9, but no implementation may begin without the exact non-applied diff, diff hash, approval-system bootstrap, CODEOWNERS coverage, two valid receipts from distinct authorized principals, approved status, and a final ARBITER review."
     }
   ],
   "policy": "policies/approval.rego",
@@ -74,7 +89,7 @@
     "tooling/governance-gate",
     "ARBITER re-review of the narrowed diff"
   ],
-  "gate": "Do not create or modify packages/bees until status=approved, two distinct signed approvals exist, blocking questions are resolved, and ARBITER returns ALLOW on the narrowed diff."
+  "gate": "Do not create or modify packages/bees until status=approved, two distinct signed approvals exist, a diff_hash is bound to the reviewed change, and ARBITER returns ALLOW on the narrowed diff."
 }
 ```
 
@@ -94,10 +109,16 @@ Workflow/Queue work rather than a permanently resident process.
 
 ## ARBITER verdict
 
-**BLOCK.** The proposed runtime is substantive patent claim-surface rather than a cosmetic transfer.
-ARBITER identified HS-2026-060 as the primary factory/lifecycle surface, HS-2026-052 for
-source-of-truth projection enforcement, HS-2026-058/059 for vector-weighted consensus, and
-HS-2026-053 when telemetry becomes proof-bearing around inference.
+**BLOCK.** After U1–U4 were resolved, ARBITER found that the narrowed proposal plausibly limits the
+active surface to HS-2026-060 Claims 1–3, 5, 7, and 9. The adjacent HS-052/053/058/059 surfaces are
+excluded by design, but those exclusions cannot be confirmed until ARBITER can inspect an exact,
+non-applied diff. The approval system, its Neon tables, a bound diff hash, signed receipts, and
+`/packages/bees/` CODEOWNERS coverage do not yet exist.
+
+The founder's instruction to sign is recorded as approval intent. It is not a signed receipt, and an
+agent may not invoke the founder's private key or manufacture a second principal. The repository-
+supported bootstrap is a founder-controlled stage-0 ADR and externally gated approval-system change;
+the bee runtime remains downstream of that bootstrap.
 
 ## Decision drivers
 
@@ -117,8 +138,8 @@ capabilities require separately reviewed adapters or proposals.
 
 ## Verification required before approval
 
-1. Resolve U1–U4 in the machine-readable record.
-2. Submit the proposal through `POST /api/approvals`.
+1. Submit the resolved proposal through `POST /api/approvals`.
+2. Bind the exact proposed change through `subject.diff_hash`.
 3. Obtain two detached Ed25519-signed approval receipts from distinct authorized principals.
 4. Re-run ARBITER against the exact proposed diff and record `ALLOW`.
 5. Require lifecycle, cleanup-order, capacity, circuit-breaker, health, telemetry, and event-envelope tests.
