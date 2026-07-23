@@ -108,3 +108,11 @@ test("parseEnvLines splits on first '=', skips comments/blanks, and keeps '=' in
   assert.equal(parsed[0].key, "DATABASE_URL");
   assert.equal(parsed[0].value, "postgres://u:p=q@h/db");
 });
+
+test("positionalArg never mistakes a value-flag's value for the quarantine file (rotate --project bug)", async () => {
+  const { positionalArg } = await import("../src/cli.mjs");
+  assert.equal(positionalArg(["--create", "--project", "heady-ai"]), undefined);
+  assert.equal(positionalArg(["--project", "heady-ai", "new-values.env"]), "new-values.env");
+  assert.equal(positionalArg(["rotate", "--dry-run", "quarantine.env"], { exclude: ["rotate"] }), "quarantine.env");
+  assert.equal(positionalArg(["--dry-run"]), undefined);
+});

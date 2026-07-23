@@ -19,20 +19,17 @@ import { planCorpusEmbedding } from "../../../packages/embedding/src/corpus.mjs"
 import { resolveEmbedder, hfTokenPresent } from "./embedder.mjs";
 import { embedJobs, mergeOutbox } from "./pipeline.mjs";
 import { createStore, FILES } from "./store.mjs";
-import { SecretManagerServiceClient } from "@google-cloud/secret-manager";
+import { loadSecrets } from "@heady/secrets";
 
+/** Resolve the Workers AI credentials through the canonical @heady/secrets path
+ *  (auto: GCP Secret Manager via gcloud CLI → env fallback — the same chain the
+ *  console vault probe uses; the previous SDK-based fetch here needed ADC and
+ *  failed silently where gcloud CLI auth succeeded — a vault-access fork). */
 async function fetchCloudflareSecrets() {
   if (process.env.CLOUDFLARE_ACCOUNT_ID && process.env.CLOUDFLARE_API_TOKEN) return;
-  try {
-    const client = new SecretManagerServiceClient();
-    const projectId = process.env.GOOGLE_CLOUD_PROJECT || "heady-ai";
-    const [acc] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_ACCOUNT_ID/versions/latest` });
-    if (acc?.payload?.data) process.env.CLOUDFLARE_ACCOUNT_ID = acc.payload.data.toString("utf8");
-    const [token] = await client.accessSecretVersion({ name: `projects/${projectId}/secrets/CLOUDFLARE_API_TOKEN/versions/latest` });
-    if (token?.payload?.data) process.env.CLOUDFLARE_API_TOKEN = token.payload.data.toString("utf8");
-  } catch (err) {
-    // Fall back to environment variables / graceful fail
-  }
+  const s = await loadSecrets({ source: "auto", only: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"] });
+  if (s.CLOUDFLARE_ACCOUNT_ID) process.env.CLOUDFLARE_ACCOUNT_ID = s.CLOUDFLARE_ACCOUNT_ID;
+  if (s.CLOUDFLARE_API_TOKEN) process.env.CLOUDFLARE_API_TOKEN = s.CLOUDFLARE_API_TOKEN;
 }
 
 const HERE = dirname(fileURLToPath(import.meta.url));

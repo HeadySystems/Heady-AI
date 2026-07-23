@@ -24,6 +24,25 @@ function flagValue(argv, name, fallback) {
   return i >= 0 && argv[i + 1] ? argv[i + 1] : fallback;
 }
 
+// Flags that consume the NEXT argv token as their value — their values must
+// never be mistaken for a positional (the rotate quarantine-file bug:
+// `rotate --project heady-ai` read "heady-ai" as a file → ENOENT).
+const VALUE_FLAGS = new Set(["--project", "--source", "--require"]);
+
+/** First true positional: skips flags AND the value token of value-taking flags. */
+export function positionalArg(argv, { exclude = [] } = {}) {
+  const skip = new Set(exclude);
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith("--")) {
+      if (VALUE_FLAGS.has(a)) i++; // consume the flag's value token too
+      continue;
+    }
+    if (!skip.has(a)) return a;
+  }
+  return undefined;
+}
+
 function projectArgs(project) {
   return project ? ["--project", project] : [];
 }
@@ -103,7 +122,7 @@ async function cmdRotate(argv, write) {
   const dryRun = argv.includes("--dry-run");
   const create = argv.includes("--create");
   const allowUnknown = argv.includes("--allow-unknown");
-  const fileArg = argv.find((a) => !a.startsWith("--") && a !== "rotate");
+  const fileArg = positionalArg(argv, { exclude: ["rotate"] });
 
   // Read the new values from a quarantine file or stdin (fd 0). Values stay in memory only.
   const raw = fileArg ? readFileSync(fileArg, "utf8") : readFileSync(0, "utf8");
