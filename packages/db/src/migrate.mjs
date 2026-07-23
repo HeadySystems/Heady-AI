@@ -5,7 +5,8 @@
 // ║  check: an applied file that changed or vanished HALTS the runner.  ║
 // ║  Pure + injected-executor (the task-ledger tx idiom) so every path  ║
 // ║  unit-tests without a database; the driver wires in bin/migrate.    ║
-// ║  Supersedes the legacy src/consistency/migrate.js (broken path).    ║
+// ║  Supersedes the legacy runner now archived at                       ║
+// ║  _archive/legacy-src-services/consistency/migrate.js.               ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
