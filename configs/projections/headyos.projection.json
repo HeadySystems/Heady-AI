@@ -1,0 +1,15 @@
+{
+  "schema": "projection.v1",
+  "id": "headyos",
+  "source_path": "apps/mcp-dashboard",
+  "target_repo": "HeadySystems/headyos-core",
+  "projection_type": "worker-shell",
+  "deploy_target": "cloudflare-workers",
+  "status": "proposed",
+  "owner": "eric@headyconnection.org",
+  "license": "UNLICENSED",
+  "private_paths": [],
+  "last_sync_hash": "33c21a2dfd9d3d8ee0de609d0f15a6a1035a686b9df92c75ff13adef4088097f",
+  "last_sync_commit": "a04419e4ea167519efefde935b9e815813edea69",
+  "last_verified_at": "2026-07-23T17:00:31.188Z"
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "projection.v1",
+  "id": "headysystems",
+  "source_path": "apps/headysystems",
+  "target_repo": "HeadySystems/headysystems-core",
+  "projection_type": "worker-shell",
+  "deploy_target": "cloudflare-workers",
+  "status": "proposed",
+  "owner": "eric@headyconnection.org",
+  "license": "UNLICENSED",
+  "private_paths": [],
+  "last_sync_hash": "40c826428c2197d54a08d0565dc286091ba72e484d59d7dd1b6b4816144afb02",
+  "last_sync_commit": "a04419e4ea167519efefde935b9e815813edea69",
+  "last_verified_at": "2026-07-23T17:00:31.188Z"
+}

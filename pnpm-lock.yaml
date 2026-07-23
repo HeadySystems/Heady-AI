@@ -496,6 +496,12 @@ importers:
 
   tooling/law-lint: {}
 
+  tooling/projection-engine:
+    dependencies:
+      '@heady/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
+
   tooling/report-templates: {}
 
   tooling/scaffold-planner: {}

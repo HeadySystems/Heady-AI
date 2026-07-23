@@ -1,0 +1,15 @@
+{
+  "schema": "projection.v1",
+  "id": "headyweb",
+  "source_path": "apps/headyme-portal",
+  "target_repo": "HeadySystems/headyweb-core",
+  "projection_type": "pages-app",
+  "deploy_target": "cloudflare-pages",
+  "status": "proposed",
+  "owner": "eric@headyconnection.org",
+  "license": "UNLICENSED",
+  "private_paths": [],
+  "last_sync_hash": "f6da71e5132e98e4cee09164b1b3cc3bef4cd93073fe98b53f03ff61b3c091bc",
+  "last_sync_commit": "a04419e4ea167519efefde935b9e815813edea69",
+  "last_verified_at": "2026-07-23T17:00:31.188Z"
+}
