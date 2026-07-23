@@ -193,6 +193,9 @@ importers:
       '@heady/consistency-bus':
         specifier: workspace:*
         version: link:../../packages/consistency-bus
+      '@heady/contracts':
+        specifier: workspace:*
+        version: link:../../packages/contracts
       '@heady/csl-engine':
         specifier: workspace:*
         version: link:../../packages/csl-engine
@@ -345,8 +348,6 @@ importers:
       '@heady/shared':
         specifier: workspace:*
         version: link:../shared
-
-  packages/heady-sacred-geometry-sdk: {}
 
   packages/headylens:
     dependencies:

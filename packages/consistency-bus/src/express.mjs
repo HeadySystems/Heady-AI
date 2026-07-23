@@ -66,12 +66,12 @@ export function createConsistencyMiddleware({
     };
 
     // INGRESS: fail-closed on locked-value drift in mutating payloads.
-    if (MUTATING.has(req.method) && req.body && typeof req.body === "object") {
+    if (MUTATING.has(req.method) && req.body && typeof req.body === "object") { // heady-allow:zod-boundary — cross-cutting drift guard; shape validation stays at each route
       const authorizedKeys = String(req.headers[authorizedHeader] || "")
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
-      const guard = ingressGuard(req.body, linkIndex, { authorizedKeys });
+      const guard = ingressGuard(req.body, linkIndex, { authorizedKeys }); // heady-allow:zod-boundary — polices ANY payload for locked-value drift, schema-less by design
       if (guard.verdict === "BLOCK") {
         if (log) log.warn({ path: req.path, blocked: guard.blocked }, "consistency-bus: locked-value drift refused");
         return res.status(409).json({

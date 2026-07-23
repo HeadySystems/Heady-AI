@@ -77,3 +77,6 @@ export {
   CONNECTOR_STATES, PROBE_KINDS,
   validateConnector, validateConnectorRegistry, validateServerManifest, buildConsoleSummary,
 } from "./mcp-shapes.mjs";
+
+// ── Task API boundary shapes (AGENTS.md #5 — the strict EnqueueTask validator) ──
+export { validateEnqueueTask, ENQUEUE_TASK_FIELDS, TASK_UUID_RE } from "./task-shapes.mjs";

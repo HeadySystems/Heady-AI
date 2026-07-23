@@ -90,6 +90,8 @@ function main() {
       runGate("no-loopback", [ENFORCER("no-localhost"), "--all"]),  // heady-allow:no-localhost — gate-runner references the law by name
       runGate("glass-box", [ENFORCER("glass-box"), "--all"]),
       runGate("secret-scan", [ENFORCER("secret-scan"), "--all"]),
+      runGate("zod-boundary", [ENFORCER("zod-boundary"), "--all"]),
+      runGate("phi-timing", [ENFORCER("phi-timing"), "--all"]),
       runGate("coherence", ["tooling/coherence/src/coherence.mjs", "all"]),
     ];
   }

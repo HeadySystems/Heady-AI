@@ -26,6 +26,7 @@
     "@heady/db": "workspace:*",
     "@heady/task-ledger": "workspace:*",
     "@heady/observability": "workspace:*",
-    "@heady/secrets": "workspace:*"
+    "@heady/secrets": "workspace:*",
+    "@heady/contracts": "workspace:*"
   }
 }

@@ -5,6 +5,7 @@
   "type": "module",
   "description": "File placement verification — ensures every file lands in a recognized scaffold location per skeleton.json.",
   "scripts": {
+    "test": "node --test",
     "verify": "node verify-placement.mjs",
     "audit": "node audit-orphans.mjs",
     "audit:json": "node audit-orphans.mjs --json",

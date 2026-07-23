@@ -1,11 +1,13 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Document Hydrator v1.0.0                                ║
-// ║  Compiles Handlebars-style templates using live ecosystem data. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  HEADY™ Document Hydrator v1.1.0                                   ║
+// ║  Compiles Handlebars-style templates using live ecosystem data.     ║
+// ║  v1.1.0: pure template core exported for tests (resolvePath /       ║
+// ║  renderTemplate), CLI entry behind the argv guard (importing this   ║
+// ║  module no longer executes it), structured JSON log lines.          ║
+// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import fs from 'node:fs/promises';
-import path from 'node:path';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 
@@ -15,6 +17,25 @@ const BINDINGS_PATH = new URL('./bindings.json', import.meta.url);
 const TEMPLATES_DIR = new URL('./templates/', import.meta.url);
 const OUTPUT_DIR = new URL('../../docs/compendium/', import.meta.url);
 
+const logLine = (level, msg, fields = {}) => process.stdout.write(`${JSON.stringify({ t: 'doc-hydrator', level, msg, ...fields })}\n`);
+
+/** Simple dot-notation resolver (e.g. "infra.services.count"). Pure. */
+export function resolvePath(obj, pathStr) {
+  return pathStr.split('.').reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), obj);
+}
+
+/**
+ * Replace {{foo.bar}} placeholders from dataContext. Pure — unknown keys are
+ * left untouched and reported through the injected onMissing callback.
+ */
+export function renderTemplate(content, dataContext, onMissing = () => {}) {
+  return content.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (match, key) => {
+    const val = resolvePath(dataContext, key);
+    if (val === undefined) { onMissing(key); return match; }
+    return String(val);
+  });
+}
+
 async function loadBindings() {
   const content = await fs.readFile(BINDINGS_PATH, 'utf-8');
   return JSON.parse(content);
@@ -22,7 +43,7 @@ async function loadBindings() {
 
 async function fetchBindingData(namespace, config) {
   if (config.type === 'exec') {
-    console.log(`[Hydrator] Fetching data for '${namespace}' via: ${config.command}`);
+    logLine('info', 'fetching binding data', { namespace, command: config.command });
     const { stdout } = await execAsync(config.command, { cwd: new URL('.', import.meta.url) });
     try {
       return JSON.parse(stdout.trim());
@@ -33,60 +54,46 @@ async function fetchBindingData(namespace, config) {
   throw new Error(`Unknown binding type: ${config.type}`);
 }
 
-// Simple dot-notation resolver (e.g. "infra.services.count")
-function resolvePath(obj, pathStr) {
-  return pathStr.split('.').reduce((acc, part) => acc && acc[part] !== undefined ? acc[part] : undefined, obj);
-}
-
 async function hydrateTemplates(dataContext) {
   const files = await fs.readdir(TEMPLATES_DIR);
-  
+
   for (const file of files) {
     if (!file.endsWith('.hbs')) continue;
-    
+
     const templatePath = new URL(file, TEMPLATES_DIR);
-    let content = await fs.readFile(templatePath, 'utf-8');
-    
-    // Replace {{foo.bar}} with values from dataContext
-    content = content.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (match, key) => {
-      const val = resolvePath(dataContext, key);
-      if (val === undefined) {
-        console.warn(`[Hydrator] Warning: missing value for template key '${key}' in ${file}`);
-        return match; // leave untouched if not found
-      }
-      return String(val);
+    const raw = await fs.readFile(templatePath, 'utf-8');
+    const rendered = renderTemplate(raw, dataContext, (key) => {
+      logLine('warn', 'missing value for template key', { key, file });
     });
 
-    // Add a generated warning header
     const warningHeader = `<!-- \n  ⚠️ GENERATED FILE — DO NOT EDIT DIRECTLY \n  This file is compiled from tooling/doc-hydrator/templates/${file}.\n  Run \`pnpm run hydrate\` to update it.\n-->\n\n`;
-    content = warningHeader + content;
-
     const outFilename = file.replace(/\.hbs$/, '.md');
     const outPath = new URL(outFilename, OUTPUT_DIR);
-    
-    await fs.writeFile(outPath, content, 'utf-8');
-    console.log(`[Hydrator] Wrote hydrated output: docs/compendium/${outFilename}`);
+
+    await fs.writeFile(outPath, warningHeader + rendered, 'utf-8');
+    logLine('info', 'wrote hydrated output', { out: `docs/compendium/${outFilename}` });
   }
 }
 
 async function main() {
-  console.log("HEADY™ Document Hydrator starting...");
+  logLine('info', 'document hydrator starting');
   const bindings = await loadBindings();
   const dataContext = {};
 
   // Fetch all bound data in parallel
-  const fetchPromises = Object.entries(bindings).map(async ([ns, config]) => {
+  await Promise.all(Object.entries(bindings).map(async ([ns, config]) => {
     dataContext[ns] = await fetchBindingData(ns, config);
-  });
-  
-  await Promise.all(fetchPromises);
-  console.log("[Hydrator] Live data fetched successfully.");
-  
+  }));
+  logLine('info', 'live data fetched');
+
   await hydrateTemplates(dataContext);
-  console.log("HEADY™ Document Hydrator finished.");
+  logLine('info', 'document hydrator finished');
 }
 
-main().catch(err => {
-  console.error("Hydrator failed:", err);
-  process.exit(1);
-});
+// CLI entry only — importing this module must never hydrate (tests import the pure core).
+if (process.argv[1] && process.argv[1].endsWith('hydrate.mjs')) {
+  main().catch((err) => {
+    logLine('error', 'hydrator failed', { error: String(err?.message ?? err) });
+    process.exit(1);
+  });
+}

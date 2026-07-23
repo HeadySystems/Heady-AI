@@ -4,6 +4,7 @@
   "description": "Heady™ Document Hydrator - Live ecosystem state injection",
   "type": "module",
   "scripts": {
+    "test": "node --test",
     "hydrate": "node hydrate.mjs"
   },
   "dependencies": {},

@@ -12,6 +12,7 @@
     "./flows/skill-preflight": "./flows/skill-preflight.flow.mjs"
   },
   "scripts": {
+    "test": "node --test",
     "preflight": "node preflight.mjs",
     "lint": "echo \"(lint wired at repo level)\"",
     "build": "echo \"(no build — runnable ESM)\""

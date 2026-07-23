@@ -13,22 +13,13 @@ import { createTask } from "@heady/task-ledger";
 import { startSpan, captureError, metrics, noopExporter } from "@heady/observability";
 import { currentTraceId } from "@heady/logger";
 import { HEALTH } from "@heady/shared";
+import { validateEnqueueTask, TASK_UUID_RE } from "@heady/contracts";
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE = TASK_UUID_RE;
 
-/** Strict boundary validation per components.schemas.EnqueueTask (contract SoT). */
-export function validateEnqueue(body) {
-  const errors = [];
-  if (!body || typeof body !== "object" || Array.isArray(body)) return { ok: false, errors: ["body must be a JSON object"] };
-  if (typeof body.kind !== "string" || !body.kind) errors.push("kind (string) is required");
-  if (typeof body.input !== "object" || body.input === null || Array.isArray(body.input)) errors.push("input (object) is required");
-  if (body.deps !== undefined) {
-    if (!Array.isArray(body.deps) || body.deps.some((d) => !UUID_RE.test(String(d)))) errors.push("deps must be an array of task UUIDs");
-  }
-  const known = new Set(["kind", "input", "deps"]);
-  for (const k of Object.keys(body)) if (!known.has(k)) errors.push(`unknown field: ${k}`);
-  return { ok: errors.length === 0, errors };
-}
+/** Strict boundary validation — the shape's single authority is @heady/contracts
+ *  (components.schemas.EnqueueTask); this alias keeps existing importers stable. */
+export const validateEnqueue = validateEnqueueTask;
 
 /**
  * Build the tasks service + routes.

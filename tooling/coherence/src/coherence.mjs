@@ -12,6 +12,7 @@ import {
 import { join, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
+import { checkFrameworks, checkTestsAlongside } from './packages-law.mjs';
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
 } from '../../enforcers/lib/rules.mjs';
@@ -87,6 +88,32 @@ function packages() {
 }
 const skillNames = (root) => lsd(root).filter((d) => d.isDirectory()).map((d) => d.name);
 const adrs = () => lsd('docs/adr').filter((f) => f.name.endsWith('.md') && /^\d/.test(f.name)).map((f) => f.name.match(/^(\d{4})/)[1]);
+
+// Workspace members across the three source scopes, with their manifests and a
+// recursive test-file probe — the IO side of packages-law (checks stay pure).
+const TEST_FILE_RE = /\.(test|spec)\.[cm]?jsx?$/;
+const WALK_SKIP = new Set(['node_modules', 'dist', '.turbo', 'coverage']);
+function hasTestFileUnder(rel, depth = 0) {
+  if (depth > 5) return false;
+  for (const e of lsd(rel)) {
+    if (e.isFile() && TEST_FILE_RE.test(e.name)) return true;
+    if (e.isDirectory() && !WALK_SKIP.has(e.name) && hasTestFileUnder(`${rel}/${e.name}`, depth + 1)) return true;
+  }
+  return false;
+}
+function workspaceMembers() {
+  const members = []; const manifests = [];
+  if (has('package.json')) manifests.push({ path: 'package.json', ...rdj('package.json') });
+  for (const scope of ['apps', 'packages', 'tooling']) {
+    for (const d of lsd(scope).filter((x) => x.isDirectory())) {
+      const pj = `${scope}/${d.name}/package.json`;
+      if (!has(pj)) continue;
+      manifests.push({ path: pj, ...rdj(pj) });
+      members.push({ dir: d.name, scope, hasTestFile: hasTestFileUnder(`${scope}/${d.name}`) });
+    }
+  }
+  return { members, manifests };
+}
 
 // ── build the System Map (entities + DERIVED edges) ──
 function buildMap() {
@@ -246,6 +273,13 @@ function check({ facts, pkgs }) {
     libRuleIds,
     moduleExists: (p) => has(p),
   }));
+
+  // PKG-LAW — no forbidden frontend framework in any workspace manifest
+  // (C-framework) and tests-alongside for every substrate member (TEST-missing);
+  // apps without tests surface as INFO debt (AGENTS.md #9 / Do-Not list).
+  const { members, manifests } = workspaceMembers();
+  findings.push(...checkFrameworks(manifests));
+  findings.push(...checkTestsAlongside(members));
 
   return findings;
 }
