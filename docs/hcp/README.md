@@ -20,6 +20,13 @@ The record drives `policies/approval.rego`:
 Enforcement is layered and any one layer blocks: CI (`opa eval --fail-defined`), runtime
 (`opa-wasm`), GitHub Deployment Protection Rules, and CODEOWNERS on `/patent-locked/**`.
 
+## Approval-system bootstrap
+
+The approval API and its Neon tables are not yet implemented. Proposed ADR-0031 and
+`docs/design/APPROVAL_SERVICE_BOOTSTRAP_SPEC.md` define a single-use, founder-controlled stage-0
+bootstrap and a typed solo-founder quorum. They are not active policy: no HCP may count a chat
+instruction, Git signature, duplicate founder key, or agent identity as an approval receipt.
+
 ## How an approver acts
 
 Approvers do **not** hand-edit the record. They act through the approval API
