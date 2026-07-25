@@ -1,15 +1,15 @@
 {
   "schema": "projection.v1",
   "id": "headyapi",
-  "source_path": "apps/mcp-dashboard",
+  "source_path": "apps/headyme-portal",
   "target_repo": "HeadySystems/headyapi-core",
-  "projection_type": "worker-shell",
-  "deploy_target": "cloudflare-workers",
+  "projection_type": "pages-app",
+  "deploy_target": "cloudflare-pages",
   "status": "proposed",
   "owner": "eric@headyconnection.org",
   "license": "UNLICENSED",
   "private_paths": [],
-  "last_sync_hash": "33c21a2dfd9d3d8ee0de609d0f15a6a1035a686b9df92c75ff13adef4088097f",
-  "last_sync_commit": "a04419e4ea167519efefde935b9e815813edea69",
-  "last_verified_at": "2026-07-23T17:00:31.188Z"
+  "last_sync_hash": "f6da71e5132e98e4cee09164b1b3cc3bef4cd93073fe98b53f03ff61b3c091bc",
+  "last_sync_commit": "e10a1872bc486c4ea47097453f6929fa89ee29f2",
+  "last_verified_at": "2026-07-25T04:04:46.643Z"
 }

@@ -1,12 +1,12 @@
 {
   "schema": "projection-sources.v1",
-  "note": "ADR-0017 domain→source_path mapping for the headyX projection shells. Each shell is a one-way derivation FROM a monorepo source path (the SoR) INTO a target *-core repo. 'confirmed': true = founder-ruled source; false = engine default that needs founder confirmation of intent (the projection is still generated as status:proposed — nothing is deployed). Edit this file to correct a mapping; the generator fails closed if a source_path does not exist.",
+  "note": "ADR-0017 domain→source_path mapping for the headyX projection shells. Each shell is a one-way derivation FROM a monorepo source path (the SoR) INTO a target *-core repo. 'confirmed': true = founder-ruled source; false = engine default that needs founder confirmation. The generator fails closed if a source_path does not exist. 2026-07-24: founder approved these mappings — headysystems derives from its own app (dedicated systems-projection deploy workflow); headyos/headyio/headyapi/headyweb have no dedicated app yet, so they project the canonical Heady frontend (apps/headyme-portal, the one substantial SPA) as their proposed source until each gets its own app. Edit source_path here + re-run `npm run projections:generate` when a domain's dedicated app lands.",
   "target_repo_pattern": "HeadySystems/{id}-core",
   "sources": [
     { "id": "headysystems", "source_path": "apps/headysystems", "projection_type": "worker-shell", "deploy_target": "cloudflare-workers", "confirmed": true },
-    { "id": "headyos", "source_path": "apps/mcp-dashboard", "projection_type": "worker-shell", "deploy_target": "cloudflare-workers", "confirmed": false },
-    { "id": "headyio", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": false },
-    { "id": "headyapi", "source_path": "apps/mcp-dashboard", "projection_type": "worker-shell", "deploy_target": "cloudflare-workers", "confirmed": false },
-    { "id": "headyweb", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": false }
+    { "id": "headyos", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": true },
+    { "id": "headyio", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": true },
+    { "id": "headyapi", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": true },
+    { "id": "headyweb", "source_path": "apps/headyme-portal", "projection_type": "pages-app", "deploy_target": "cloudflare-pages", "confirmed": true }
   ]
 }
