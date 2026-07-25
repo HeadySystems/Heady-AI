@@ -1,0 +1,58 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Projection Drift Cron — ADR-0017 §4                        ║
+# ║  Recomputes each committed projection's source hash vs its         ║
+# ║  recorded last_sync_hash and fails on drift (source-ahead = stale  ║
+# ║  shell → re-run `npm run projections:generate`). This is the       ║
+# ║  scheduled realization of the ADR-0017 §4 drift detector.          ║
+# ║  Founder-approved + signed 2026-07-24 (per ADR-0013) — the         ║
+# ║  scheduled/persistent job the anti-silent-persistence rule gates.  ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ╚══════════════════════════════════════════════════════════════════╝
+name: projection-drift
+
+on:
+  # ADR-0017 §4 specifies a 15-min cadence for the live-shell projection-ahead
+  # page-and-freeze. Pre-deploy, only source-ahead (build-time, low-churn) is
+  # detectable, so this runs HOURLY as the cost-aware setting (cuts scheduled
+  # runs ~4×). Bump to '*/15 * * * *' once shells deploy and projection-ahead
+  # (live-manifest probe) is live. (Also: Actions are account-suppressed today —
+  # see ci.yml — so scheduled runs are dormant until that clears.)
+  schedule:
+    - cron: '0 * * * *'
+  pull_request:
+    paths:
+      - 'configs/projections/**'
+      - 'tooling/projection-engine/**'
+      - 'apps/headysystems/**'
+      - 'apps/mcp-dashboard/**'
+      - 'apps/headyme-portal/**'
+  push:
+    paths:
+      - 'configs/projections/**'
+      - 'tooling/projection-engine/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    name: projection drift gate (ADR-0017 §4)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.9 --activate
+      - name: install
+        run: pnpm install --frozen-lockfile
+      # Fail-closed (exit 2) if any committed projection manifest is stale vs its
+      # source. Fix = `npm run projections:generate` then commit the manifests.
+      - name: projection drift check
+        run: npm run projections:check

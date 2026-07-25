@@ -141,6 +141,12 @@ jobs:
       # ── LAWS 1 & 2 · glass-box logging + no placeholders ───────────
       - name: glass-box
         run: node tooling/enforcers/glass-box.mjs ${{ steps.scope.outputs.args }}
+      # ── LAW 5 · validated boundaries (req.body ⇒ @heady/contracts|zod) ─
+      - name: zod-boundary
+        run: node tooling/enforcers/zod-boundary.mjs ${{ steps.scope.outputs.args }}
+      # ── LAW 8 · φ-derived timing (no bare ms literals in set{Timeout,Interval}) ─
+      - name: phi-timing
+        run: node tooling/enforcers/phi-timing.mjs ${{ steps.scope.outputs.args }}
       # ── LAW 0 · high-signal secret-scan (complements gitleaks) ─────
       - name: secret-scan
         run: node tooling/enforcers/secret-scan.mjs ${{ steps.scope.outputs.args }}
