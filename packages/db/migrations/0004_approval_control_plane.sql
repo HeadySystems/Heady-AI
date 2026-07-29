@@ -16,13 +16,13 @@ BEGIN
 END
 $role$;
 
-ALTER ROLE heady_approval_api WITH
-  NOLOGIN
-  NOSUPERUSER
-  NOCREATEDB
-  NOCREATEROLE
-  NOREPLICATION
-  NOBYPASSRLS;
+-- NB (2026-07-29): a redundant `ALTER ROLE heady_approval_api WITH NOLOGIN NOSUPERUSER
+-- NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS` was REMOVED here. `CREATE ROLE ...
+-- NOLOGIN` above already yields exactly those attributes as defaults, so the ALTER added
+-- nothing — except that setting the SUPERUSER/BYPASSRLS attributes requires a Postgres
+-- superuser, which Neon never grants `neondb_owner`. The ALTER therefore failed with
+-- "permission denied to alter role" and halted the ENTIRE migration chain on every Neon
+-- endpoint (verified live). The role's least-privilege posture is unchanged.
 
 CREATE TABLE heady_approval.principals (
   id                       UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
