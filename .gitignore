@@ -120,7 +120,8 @@ data/patent-evidence.jsonl
 
 # Database dumps and state
 *.sql
-!packages/db/migrations/0004_approval_control_plane.sql
+# Forward-only DB migrations are source, not dumps — keep them all tracked.
+!packages/db/migrations/*.sql
 *.dump
 *.sqlite
 *.db

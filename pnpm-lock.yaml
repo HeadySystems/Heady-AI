@@ -417,6 +417,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
 
+  packages/heady990: {}
+
   packages/headyfinance:
     dependencies:
       '@heady/csl-engine':

@@ -1,0 +1,18 @@
+{
+  "name": "@heady/heady990",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady 990 Intelligence — ingest IRS Form 990 MeF XML into normalized, provenance-linked org + filing records (the 990 vertical, Phase-A). Lawful public IRS bulk data; no regulatory weight.",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./parse": "./src/parse.mjs",
+    "./loader": "./src/loader.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "990", "irs", "nonprofit", "ingestion", "provenance", "mef"],
+  "dependencies": {}
+}
