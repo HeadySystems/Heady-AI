@@ -108,3 +108,28 @@ test("Data API migration removes existing and future authenticated-role access",
   assert.match(sql, /ALTER DEFAULT PRIVILEGES FOR ROLE neondb_owner IN SCHEMA public/);
   assert.doesNotMatch(sql, /\bGRANT\b[^;]*\bauthenticated\b/i);
 });
+
+test("approval migration makes history append-only and requires one receipt per event", () => {
+  const sql = readFileSync(join(MIGRATIONS_DIR, "0004_approval_control_plane.sql"), "utf8");
+  assert.match(sql, /CREATE SCHEMA IF NOT EXISTS heady_approval/);
+  assert.match(sql, /CREATE CONSTRAINT TRIGGER approval_event_receipt_required/);
+  assert.match(sql, /DEFERRABLE INITIALLY DEFERRED/);
+  assert.match(sql, /CREATE TRIGGER approval_events_append_only/);
+  assert.match(sql, /CREATE TRIGGER approval_receipts_append_only/);
+  assert.match(sql, /CREATE TRIGGER approval_bootstrap_immutable/);
+  assert.match(sql, /CREATE TRIGGER approval_bootstrap_insert_guard/);
+  assert.match(sql, /adr-0031-accepted-e064a8943/);
+  assert.match(sql, /event_actor_key_owner/);
+  assert.match(sql, /event_evidence_timing/);
+  assert.match(sql, /CREATE TRIGGER approval_event_actor_guard/);
+  assert.match(sql, /CREATE TRIGGER approval_event_binding_guard/);
+  assert.match(sql, /CREATE TRIGGER approval_outbox_update_guard/);
+  assert.match(sql, /CREATE TRIGGER approval_receipt_signer_guard/);
+  assert.match(sql, /approval_deployment_artifact/);
+  assert.match(sql, /principal_role_evidence_shape/);
+  assert.match(sql, /revocation is irreversible/);
+  assert.match(sql, /\^sha256:\[a-f0-9\]\{64\}\$/);
+  assert.match(sql, /FOR UPDATE/);
+  assert.match(sql, /REVOKE ALL ON SCHEMA heady_approval FROM PUBLIC/);
+  assert.doesNotMatch(sql, /\bGRANT\b[^;]*\bauthenticated\b/i);
+});

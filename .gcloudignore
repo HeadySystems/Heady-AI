@@ -7,6 +7,20 @@
 # Respect .gitignore
 #!include:.gitignore
 
+# Credentials and local secret material
+.env
+.env.*
+!.env.example
+**/*.credentials
+**/credentials.json
+**/*-credentials.json
+**/service-account.json
+*.key
+*.pem
+*.p12
+*.pfx
+*.jwk
+
 # Git
 .git/
 .github/
@@ -29,11 +43,14 @@ tsconfig.*
 # Docs we don't need at runtime (strategic docs)
 docs/strategic/
 docs/patents/
+docs/investor/
 
 # Tests
 __tests__/
 **/*.test.js
 **/*.spec.js
+**/*.test.mjs
+**/*.spec.mjs
 coverage/
 
 # Build artifacts
@@ -41,6 +58,9 @@ coverage/
 *.log
 
 # Large unnecessary directories
+node_modules/
+.data/
+tmp/
 cloudflare-workers/
 src/landing/
 

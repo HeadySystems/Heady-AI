@@ -5,9 +5,10 @@ HEADY_BRAND:END -->
 
 # ADR-0031: Solo-Founder Approval-System Bootstrap
 
-- **Status:** Proposed (2026-07-23)
+- **Status:** Accepted (2026-07-24)
 - **Decider:** Eric Anthony Haywood
-- **Security review:** Required before acceptance
+- **Acceptance:** Founder-signed tag `adr-0031-accepted-e064a8943`
+- **Security review:** Required again on the complete implementation before genesis
 - **Implementation spec:** `docs/design/APPROVAL_SERVICE_BOOTSTRAP_SPEC.md`
 
 ## Context
@@ -28,8 +29,8 @@ accountability without pretending one founder is two humans.
 
 ## Decision
 
-This ADR proposes the following model. It does not become active until the founder accepts it through
-the stage-0 procedure below.
+This ADR establishes the following model. The founder activated its implementation authority through
+the stage-0 acceptance record below.
 
 ### 1. Replace untyped counts with a typed quorum
 
@@ -43,16 +44,20 @@ Approval policy evaluates evidence classes, not an undifferentiated number of si
   after genesis.
 
 Standard sensitive changes require the founder decision. Patent-locked changes require both the
-founder decision and ARBITER attestation. An external human may replace or supplement ARBITER, but an
-agent attestation is never described or stored as a human approval.
+founder decision and ARBITER attestation. An external human resolves a recorded ARBITER escalation
+or may supplement an `ALLOW`; they do not silently replace a missing technical attestation. An agent
+attestation is never described or stored as a human approval.
 
 The policy expression is conceptually:
 
 ```text
 standard_allow = founder_approvals >= 1
 patent_allow   = founder_approvals >= 1
-               AND (arbiter_allows >= 1 OR external_human_approvals >= 1)
-               AND arbiter_escalations == 0
+               AND (
+                 (arbiter_allows >= 1 AND arbiter_escalations == 0)
+                 OR
+                 (arbiter_escalations >= 1 AND external_human_resolutions >= 1)
+               )
 ```
 
 Distinct keys owned by the same human remain one principal. Service identities cannot issue founder
@@ -138,6 +143,14 @@ return to ARBITER for final review before any `packages/bees` file is created.
 
 ## Acceptance record
 
-This ADR is **Proposed**. A signed commit that merely contains this document is authorship evidence,
-not acceptance. Acceptance requires an explicit founder-controlled stage-0 record naming ADR-0031
-and the exact accepted commit.
+The founder accepted this ADR on 2026-07-24 through the annotated, OpenPGP-signed tag
+`adr-0031-accepted-e064a8943`.
+
+- accepted commit: `e064a8943b1dc4d9737f542d530e023fc8441282`;
+- annotated tag object: `5b7226f218ff6b888b5aaee581ced89fa574e9ac`;
+- signer: `HeadyMe <eric@headysystems.com>`;
+- signing key fingerprint: `1050B59E7296C46C26DDF95DA7D2108BB3C6101C`; and
+- scope: approval-system implementation and the one-time founder-controlled genesis procedure only.
+
+The acceptance does not approve HCP-0003, authorize `packages/bees`, permit an agent to use founder or
+service signing keys, modify stage-0 protected files, deploy the service, or execute genesis.

@@ -1,0 +1,36 @@
+{
+  "name": "@heady/approval-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady approval control plane API — Neon SoT, typed OPA quorum, Firebase/workload identity, and KMS receipts.",
+  "headyBrand": "© 2026 HeadySystems Inc. — Eric Haywood, Founder",
+  "main": "src/index.mjs",
+  "scripts": {
+    "build": "echo '(no build — runnable ESM with precompiled policy WASM)'",
+    "evidence:sign": "node bin/sign-evidence-envelope.mjs",
+    "key:public": "node bin/export-kms-public-jwk.mjs",
+    "test": "node --test",
+    "start": "node src/index.mjs",
+    "lint": "echo '(lint wired at repo level)'"
+  },
+  "dependencies": {
+    "@google-cloud/kms": "5.7.0",
+    "@heady/approvals": "workspace:*",
+    "@heady/logger": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/secrets": "workspace:*",
+    "@heady/shared": "workspace:*",
+    "express": "5.2.1",
+    "express-rate-limit": "8.6.0",
+    "fast-crc32c": "2.0.0",
+    "firebase-admin": "14.2.0",
+    "google-auth-library": "10.9.1",
+    "helmet": "8.3.0",
+    "pg": "8.22.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "supertest": "7.2.2"
+  }
+}

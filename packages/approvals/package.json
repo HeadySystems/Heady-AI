@@ -1,0 +1,31 @@
+{
+  "heady_brand": "HEADY™ Approvals v1.0.0 — © 2026 HeadySystems Inc.",
+  "name": "@heady/approvals",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Typed HCP approval policy, canonical state machine, signed receipts, and Neon transaction service.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./policy": "./src/policy.mjs",
+    "./schemas": "./src/schemas.mjs"
+  },
+  "scripts": {
+    "build": "node bin/verify-policy.mjs",
+    "policy:build": "node bin/build-policy.mjs",
+    "genesis:prepare": "node bin/prepare-genesis-manifest.mjs",
+    "test": "node --test",
+    "test:integration": "node --test test/integration.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "@heady/shared": "workspace:*",
+    "@open-policy-agent/opa-wasm": "1.10.0",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "pg": "8.22.0"
+  }
+}

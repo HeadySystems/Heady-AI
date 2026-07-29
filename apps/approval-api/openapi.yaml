@@ -1,0 +1,420 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Approval API Contract v1.0.0                            ║
+# ║  Exact non-bulk HTTP surface for typed approval evidence.       ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+openapi: 3.1.0
+info:
+  title: Heady Approval API
+  version: 1.0.0
+  description: >-
+    ADR-0031 approval control plane. This contract has no principal-seeding,
+    genesis, code-application, or bulk-approval endpoint.
+security:
+  - bearerAuth: []
+paths:
+  /health/live:
+    get:
+      security: []
+      operationId: liveness
+      responses:
+        "200":
+          description: Process is live.
+  /health/ready:
+    get:
+      security: []
+      operationId: readiness
+      responses:
+        "200":
+          description: Neon is reachable.
+        "503":
+          description: Authoritative storage is unavailable.
+  /api/approvals:
+    post:
+      operationId: createApproval
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/TraceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateApproval"
+      responses:
+        "201":
+          description: Draft and its signed creation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Approval"
+  /api/approvals/{approvalId}:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+    get:
+      operationId: getApproval
+      responses:
+        "200":
+          description: Materialized state and append-only history.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Approval"
+  /api/approvals/{approvalId}/submit:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: submitApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  minLength: 1
+                  maxLength: 1597
+      responses:
+        "200":
+          description: Hashes frozen and approval pending.
+  /api/approvals/{approvalId}/approve:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: approveApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/HumanDecision"
+                - type: object
+                  properties:
+                    decision:
+                      const: approve
+      responses:
+        "200":
+          description: Human evidence recorded and policy re-evaluated.
+  /api/approvals/{approvalId}/reject:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: rejectApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/HumanDecision"
+                - type: object
+                  properties:
+                    decision:
+                      const: reject
+      responses:
+        "200":
+          description: Terminal human rejection recorded.
+  /api/approvals/{approvalId}/attest:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: attestApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Attestation"
+      responses:
+        "200":
+          description: Workload attestation recorded and policy re-evaluated.
+  /api/approvals/{approvalId}/supersede:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: supersedeApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Supersede"
+      responses:
+        "200":
+          description: Immutable history linked to its replacement.
+  /api/approvals/{approvalId}/verify:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+      - $ref: "#/components/parameters/IdempotencyKey"
+      - $ref: "#/components/parameters/TraceId"
+    post:
+      operationId: verifyApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                reason:
+                  type: string
+                  minLength: 1
+                  maxLength: 1597
+      responses:
+        "200":
+          description: Receipt, event, and policy replay result.
+  /api/approvals/{approvalId}/receipts:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+    get:
+      operationId: listApprovalReceipts
+      responses:
+        "200":
+          description: Detached signatures and public verification keys.
+  /api/deployment-protection:
+    post:
+      operationId: deploymentProtection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [approvalId, diffSha256, artifactDigest, policySha256]
+              properties:
+                approvalId:
+                  $ref: "#/components/schemas/Ulid"
+                diffSha256:
+                  $ref: "#/components/schemas/Sha256"
+                artifactDigest:
+                  type: string
+                  pattern: "^sha256:[a-f0-9]{64}$"
+                policySha256:
+                  $ref: "#/components/schemas/Sha256"
+      responses:
+        "200":
+          description: Exact artifact, diff, policy, evidence, and replay all allow.
+        "409":
+          description: Deployment denied with stable reason codes.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Firebase-ID-token-or-Google-workload-ID-token
+  parameters:
+    ApprovalId:
+      name: approvalId
+      in: path
+      required: true
+      schema:
+        $ref: "#/components/schemas/Ulid"
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 13
+        maxLength: 233
+        pattern: "^[A-Za-z0-9._:-]+$"
+    TraceId:
+      name: X-Heady-Trace-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 233
+  schemas:
+    Ulid:
+      type: string
+      pattern: "^[0-9A-HJKMNP-TV-Z]{26}$"
+    Sha256:
+      type: string
+      pattern: "^[a-f0-9]{64}$"
+    CreateApproval:
+      type: object
+      additionalProperties: false
+      allOf:
+        - if:
+            properties:
+              subjectType:
+                const: deployment
+            required: [subjectType]
+          then:
+            required: [artifactDigest]
+      required:
+        - hcpIdentifier
+        - title
+        - subjectType
+        - patentLocked
+        - zonePaths
+        - payload
+        - diffSha256
+      properties:
+        hcpIdentifier:
+          type: string
+          pattern: "^HCP-[0-9]{4}$"
+        title:
+          type: string
+          minLength: 1
+          maxLength: 233
+        subjectType:
+          enum: [change, deployment, policy, approval_system, dependency_update]
+        patentLocked:
+          type: boolean
+        zonePaths:
+          type: array
+          minItems: 1
+          maxItems: 144
+          items:
+            type: string
+            minLength: 1
+            maxLength: 610
+        payload:
+          type: object
+        payloadSha256:
+          $ref: "#/components/schemas/Sha256"
+        diffSha256:
+          $ref: "#/components/schemas/Sha256"
+        artifactDigest:
+          type: string
+          pattern: "^sha256:[a-f0-9]{64}$"
+        renovatePatchOnly:
+          type: boolean
+          default: false
+    HumanDecision:
+      type: object
+      additionalProperties: false
+      required: [decision, reason, nonce, evidenceExpiresAt, signature]
+      properties:
+        decision:
+          enum: [approve, reject]
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1597
+        nonce:
+          $ref: "#/components/schemas/Nonce"
+        evidenceExpiresAt:
+          type: string
+          format: date-time
+        signature:
+          $ref: "#/components/schemas/Signature"
+        resolvesEscalation:
+          type: boolean
+          default: false
+    Attestation:
+      type: object
+      additionalProperties: false
+      required:
+        - verdict
+        - patentClaims
+        - reviewedPaths
+        - rationaleSha256
+        - nonce
+        - evidenceExpiresAt
+        - signature
+      properties:
+        verdict:
+          enum: [ALLOW, BLOCK, ESCALATE]
+        patentClaims:
+          type: array
+          maxItems: 89
+          items:
+            type: string
+            minLength: 1
+            maxLength: 610
+        reviewedPaths:
+          type: array
+          minItems: 1
+          maxItems: 144
+          items:
+            type: string
+            minLength: 1
+            maxLength: 610
+        rationaleSha256:
+          $ref: "#/components/schemas/Sha256"
+        nonce:
+          $ref: "#/components/schemas/Nonce"
+        evidenceExpiresAt:
+          type: string
+          format: date-time
+        signature:
+          $ref: "#/components/schemas/Signature"
+    Supersede:
+      type: object
+      additionalProperties: false
+      required: [replacementApprovalId, reason, nonce, evidenceExpiresAt, signature]
+      properties:
+        replacementApprovalId:
+          $ref: "#/components/schemas/Ulid"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1597
+        nonce:
+          $ref: "#/components/schemas/Nonce"
+        evidenceExpiresAt:
+          type: string
+          format: date-time
+        signature:
+          $ref: "#/components/schemas/Signature"
+    Nonce:
+      type: string
+      minLength: 21
+      maxLength: 233
+      pattern: "^[A-Za-z0-9_-]+$"
+    Signature:
+      type: string
+      minLength: 64
+      maxLength: 610
+      pattern: "^[A-Za-z0-9_-]+$"
+    Approval:
+      type: object
+      required:
+        - approvalId
+        - state
+        - payloadSha256
+        - diffSha256
+        - policySha256
+        - requiredEvidence
+        - events
+      properties:
+        approvalId:
+          $ref: "#/components/schemas/Ulid"
+        state:
+          enum: [draft, pending, approved, rejected, expired, superseded]
+        payloadSha256:
+          $ref: "#/components/schemas/Sha256"
+        diffSha256:
+          $ref: "#/components/schemas/Sha256"
+        policySha256:
+          $ref: "#/components/schemas/Sha256"
+        requiredEvidence:
+          type: array
+          items:
+            type: string
+        events:
+          type: array
+          items:
+            type: object

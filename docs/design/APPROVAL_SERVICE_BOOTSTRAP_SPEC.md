@@ -7,8 +7,9 @@ HEADY_BRAND:END -->
 
 ## Status and scope
 
-**Status:** Proposed. This document specifies the implementation required by ADR-0031; it does not
-authorize deployment or activate the proposed quorum.
+**Status:** Accepted for implementation by the founder-signed ADR-0031 tag
+`adr-0031-accepted-e064a8943`. This document does not authorize production deployment, execute the
+one-time genesis procedure, or approve a downstream HCP.
 
 The approval service is the authoritative control plane for HCP decisions, independent attestations,
 policy evaluation, and signed receipts. Neon Postgres is its source of truth. HeadyLens, GitHub checks,
@@ -34,19 +35,25 @@ by `@heady/approvals`; codeflow cannot promote its local `approved` state into a
 Internal primary keys are UUIDs, timestamps are `TIMESTAMPTZ`, and external approval identifiers are
 ULIDs with unique constraints.
 
-### `approval_principals`
+### `heady_approval.principals`
 
 - internal UUID primary key;
 - stable principal identifier and principal type: `human`, `service`, or `external_reviewer`;
 - verified Firebase UID/email for humans or workload identity for services;
-- public verification JWK and key fingerprint;
 - allowed evidence classes;
 - active/revoked timestamps and revocation reason;
-- creator and immutable creation event reference.
+- immutable identity fields and creation timestamp.
 
 One human controlling multiple keys remains one principal.
 
-### `approvals`
+### `heady_approval.principal_keys` and `heady_approval.receipt_signing_keys`
+
+- multiple Ed25519 public-key versions per principal, each with a canonical fingerprint;
+- a separate registry for KMS receipt-signing key versions;
+- immutable key identity fields and irreversible revocation; and
+- historical public keys retained so old evidence and receipts remain replayable.
+
+### `heady_approval.approvals`
 
 - internal UUID primary key and external ULID;
 - HCP identifier, title, subject type, patent-lock flag, and exact zone paths;
@@ -58,7 +65,7 @@ One human controlling multiple keys remains one principal.
 The payload or diff hash cannot change after transition to `pending`. A changed diff creates a new
 approval or superseding version.
 
-### `approval_events`
+### `heady_approval.events`
 
 - append-only UUID primary key, approval UUID, and monotonically increasing sequence;
 - event type, actor principal, evidence class, decision, reason, and canonical event hash;
@@ -68,7 +75,7 @@ approval or superseding version.
 
 Database permissions deny `UPDATE` and `DELETE`. A trigger rejects mutation even for the API role.
 
-### `approval_receipts`
+### `heady_approval.receipts`
 
 - append-only UUID primary key and approval event reference;
 - canonical receipt payload and SHA-256;
@@ -78,10 +85,17 @@ Database permissions deny `UPDATE` and `DELETE`. A trigger rejects mutation even
 Ed25519 is the current baseline established by the HCP reconciliation. ML-DSA can be added as a
 parallel signature without invalidating the baseline receipt.
 
-### `approval_bootstrap`
+### `heady_approval.bootstrap`
 
-Exactly one row is permitted. It records the ADR-0031 accepted commit/tag, canonical genesis manifest
-hash, migration checksum, deployment artifact digest, founder principal, and bootstrap event.
+Exactly one row is permitted. It records the ADR-0031 accepted commit/tag and pinned signer
+fingerprint, canonical genesis manifest hash, migration checksum, deployment and rollback artifact
+digests, founder principal, and bootstrap event.
+
+### `heady_approval.outbox` and `heady_approval.audit_replays`
+
+The outbox stores one immutable typed projection record per authoritative event; only retry timing,
+attempt count, and terminal dispatch time can change. Audit-replay rows are append-only verification
+snapshots and never replace the event chain as authority.
 
 ## State machine
 
@@ -105,8 +119,7 @@ Rules:
 
 ## Typed quorum policy
 
-The initial policy version must preserve the current rule until ADR-0031 is explicitly accepted.
-After acceptance, the proposed typed policy is:
+The initial policy version implements the accepted typed policy:
 
 | Change class | Required evidence |
 |---|---|
@@ -182,7 +195,7 @@ One database transaction must:
 4. evaluate the pinned policy version;
 5. update only the materialized approval state;
 6. request and persist the signed receipt;
-7. append an outbox event for NATS/HeadyLens/GitHub projections.
+7. append a typed `heady.approval.*` outbox event for NATS/HeadyLens/GitHub projections.
 
 If signing fails, the decision event is not committed. Derived projection failure does not roll back
 the authoritative decision; the transactional outbox retries projection delivery with φ-backoff.

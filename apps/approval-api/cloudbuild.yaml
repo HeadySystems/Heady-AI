@@ -1,0 +1,25 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Approval API Build v1.0.0                               ║
+# ║  Builds and records an immutable image; performs no deployment. ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file
+      - apps/approval-api/Dockerfile
+      - --tag
+      - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/approval-api:${_IMAGE_TAG}
+      - .
+
+images:
+  - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/approval-api:${_IMAGE_TAG}
+
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: heady
+
+options:
+  logging: CLOUD_LOGGING_ONLY
