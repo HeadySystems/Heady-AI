@@ -12,6 +12,7 @@
   "scripts": {
     "test": "node --test",
     "sim": "node bin/demo-sim.mjs",
+    "backtest": "node bin/demo-backtest.mjs",
     "lint": "echo \"(lint wired at repo level)\""
   },
   "keywords": ["heady", "headyfinance", "trading", "risk", "advisory", "apex", "paper-mode", "signals"],

@@ -120,6 +120,7 @@ data/patent-evidence.jsonl
 
 # Database dumps and state
 *.sql
+!packages/db/migrations/0004_approval_control_plane.sql
 *.dump
 *.sqlite
 *.db
@@ -159,9 +160,13 @@ scripts/provider-setup/output/
 scripts/provider-setup/.env.*
 # pnpm monorepo — npm lockfile is not used; prevent accidental regeneration
 package-lock.json
+!apps/approval-api/runtime/package-lock.json
 npm-shrinkwrap.json
 
 # Local-only provenance archive (contains secret-bearing legacy tarballs — never push)
 /_archive/
 # Throwaway session scratch
 /scratch/
+
+# Ephemeral agent worktrees (Agent tool isolation:worktree) — never commit
+.claude/worktrees/
