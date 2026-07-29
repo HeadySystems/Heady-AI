@@ -24,6 +24,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.9 --activate
+      - name: install
+        run: pnpm install --frozen-lockfile
       # Fail-closed if any managed region diverges from facts.yaml/lexicon.yaml.
       - name: derive check
         run: node tooling/heady-derive/src/derive.mjs check

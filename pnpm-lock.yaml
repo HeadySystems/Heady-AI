@@ -583,7 +583,11 @@ importers:
 
   tooling/report-templates: {}
 
-  tooling/scaffold-planner: {}
+  tooling/scaffold-planner:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../../packages/phi-math
 
   tooling/service-registry:
     dependencies:

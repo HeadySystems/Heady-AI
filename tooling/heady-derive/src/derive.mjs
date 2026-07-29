@@ -40,6 +40,9 @@ function targetFiles() {
 export function applyRegions(text, canon) {
   const changed = [];
   const next = text.replace(RE, (m, key, body) => {
+    // `KEY` is the canonical documentation sentinel used to explain the marker
+    // grammar. It is not a source-of-truth lookup and must remain literal.
+    if (key === "KEY") return m;
     const val = canonValue(key, canon);
     if (body !== val) changed.push({ key, old: body, new: val });
     return `<!--heady:inject ${key}-->${val}<!--/heady:inject-->`;

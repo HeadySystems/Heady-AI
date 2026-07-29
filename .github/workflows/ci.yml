@@ -159,4 +159,4 @@ jobs:
         run: node tooling/enforcers/autocontext.mjs ${{ steps.scope.outputs.args }}
       # The enforcers carry their own unit tests proving they are not no-ops.
       - name: enforcer self-tests
-        run: node --test tooling/enforcers/test/
+        run: node --test tooling/enforcers/test/*.test.mjs

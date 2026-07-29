@@ -18,5 +18,8 @@
     "lint": "echo \"(lint wired at repo level)\"",
     "build": "echo \"(no build — runnable ESM)\""
   },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*"
+  },
   "keywords": ["heady", "scaffold", "rebuild-plan", "interactive", "heady-v1", "heady-ai"]
 }
