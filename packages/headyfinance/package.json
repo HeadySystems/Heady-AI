@@ -1,0 +1,21 @@
+{
+  "name": "@heady/headyfinance",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "headyfinance — personal/prop trading risk + signal advisory engine. Paper-mode by default (no order execution, no custody): it computes risk verdicts and ternary signals over price/P&L ticks. Ported + corrected from the legacy Apex risk agent onto the governed foundation (ADR-0032 Field model; @heady/csl-engine gates).",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./risk-engine": "./src/risk-engine.mjs",
+    "./paper-sim": "./src/paper-sim.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "sim": "node bin/demo-sim.mjs",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "headyfinance", "trading", "risk", "advisory", "apex", "paper-mode", "signals"],
+  "dependencies": {
+    "@heady/csl-engine": "workspace:*"
+  }
+}

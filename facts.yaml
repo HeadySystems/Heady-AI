@@ -188,6 +188,15 @@ domains:
       - global-config
       - site-registry
     dns_observed: cloudflare-ns https-200
+  headyfinance:
+    fqdn: headyfinance.com
+    role: fintech-advisory
+    status: unverified
+    note: "Trading risk+signal advisory, paper-mode default (no execution, no custody). Founder reconciliation 2026-07-29 — headyfinance IS the trading-advisory product (was headytrade in the canon); code = @heady/headyfinance, ported+corrected from the legacy Apex risk agent. Light-regulatory only while advisory + own-account/paper. See @heady/headyfinance, ADR-0032."
+    app: packages/headyfinance
+    sources:
+      - domain-registry
+    dns_observed: cloudflare-ns https-200 portal-interim
 pipeline:
   stages:
     - lint
