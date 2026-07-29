@@ -543,22 +543,21 @@ integration("signer failures roll back and database history rejects rewrite or d
     );
     await client.query("ROLLBACK");
 
-    await client.query("BEGIN");
-    await client.query("SET LOCAL ROLE heady_approval_api");
-    await assert.rejects(
-      () => client.query("UPDATE heady_approval.outbox SET payload = payload"),
-      /permission denied/,
-    );
-    await client.query("ROLLBACK");
-
-    await client.query("BEGIN");
-    await client.query("SET LOCAL ROLE heady_approval_api");
-    await assert.rejects(
-      () => client.query("INSERT INTO heady_approval.bootstrap (singleton) VALUES (TRUE)"),
-      /permission denied/,
-    );
-    await client.query("ROLLBACK");
   } finally {
     client.release();
+  }
+
+  const runtimeClient = await runtimePool.connect();
+  try {
+    await assert.rejects(
+      () => runtimeClient.query("UPDATE heady_approval.outbox SET payload = payload"),
+      /permission denied/,
+    );
+    await assert.rejects(
+      () => runtimeClient.query("INSERT INTO heady_approval.bootstrap (singleton) VALUES (TRUE)"),
+      /permission denied/,
+    );
+  } finally {
+    runtimeClient.release();
   }
 });
