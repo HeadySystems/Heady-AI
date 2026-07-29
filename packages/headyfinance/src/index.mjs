@@ -14,3 +14,7 @@ export { sma, ema, rsi } from "./indicators.mjs";
 export { smaCrossover, rsiReversion, runStrategy, STRATEGIES } from "./strategy.mjs";
 export { runBacktest } from "./backtest.mjs";
 export { parseCsvBars } from "./bars.mjs";
+
+// ── Leg 2: the live path (paper first) — execution adapter + trading loop ──
+export { createPaperBroker } from "./execution.mjs";
+export { runLivePaper } from "./live-loop.mjs";
