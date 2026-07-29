@@ -478,6 +478,9 @@ importers:
       '@heady/events':
         specifier: workspace:*
         version: link:../events
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/narrative:
     dependencies:
