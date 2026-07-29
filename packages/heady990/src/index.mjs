@@ -5,5 +5,6 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 export { parse990, tagText, contentSha256 } from "./parse.mjs";
 export { normalize990 } from "./normalize.mjs";
-export { validateOrg, validateFiling, RETURN_TYPES } from "./shapes.mjs";
+export { validateOrg, validateFiling, validateSearchQuery, RETURN_TYPES } from "./shapes.mjs";
 export { loadFiling } from "./loader.mjs";
+export { rrfFuse, keywordSql, vectorSql, hydrateSql, RRF_K } from "./search.mjs";

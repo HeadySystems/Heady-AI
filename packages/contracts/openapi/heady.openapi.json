@@ -60,6 +60,44 @@
           }
         }
       }
+    },
+    "/990/search": {
+      "get": {
+        "operationId": "search990",
+        "summary": "Hybrid (keyword + semantic) search over 990 organizations; provenance-linked results.",
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "minimum": 1, "maximum": 200, "default": 20 } },
+          { "name": "state", "in": "query", "required": false, "schema": { "type": "string", "pattern": "^[A-Z]{2}$" } },
+          { "name": "minRevenue", "in": "query", "required": false, "schema": { "type": "number", "minimum": 0 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Search990Result" } } }
+          }
+        }
+      }
+    },
+    "/990/orgs/{ein}": {
+      "get": {
+        "operationId": "getOrg990",
+        "summary": "Fetch one tax-exempt organization by EIN.",
+        "parameters": [
+          { "name": "ein", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[0-9]{9}$" } }
+        ],
+        "responses": { "200": { "description": "Organization" }, "404": { "description": "Not found" } }
+      }
+    },
+    "/990/orgs/{ein}/filings": {
+      "get": {
+        "operationId": "getOrgFilings990",
+        "summary": "Fetch an organization's 990 filings (newest first), provenance-linked.",
+        "parameters": [
+          { "name": "ein", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^[0-9]{9}$" } }
+        ],
+        "responses": { "200": { "description": "Filings" } }
+      }
     }
   },
   "components": {
@@ -88,6 +126,40 @@
           "taskId": { "type": "string", "format": "uuid" },
           "status": { "type": "string", "enum": ["PENDING", "RUNNING", "SUCCEEDED", "FAILED", "CANCELLED"] },
           "result": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "Provenance990": {
+        "type": "object",
+        "description": "Every 990 result carries its source lineage (IRS MeF object) — no assertion without provenance.",
+        "required": ["contentSha256"],
+        "properties": {
+          "sourceObjectId": { "type": "string" },
+          "sourceUrl": { "type": "string", "format": "uri" },
+          "contentSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        }
+      },
+      "Search990Result": {
+        "type": "object",
+        "required": ["mode", "count", "results"],
+        "properties": {
+          "mode": { "type": "string", "enum": ["hybrid", "keyword-only", "disabled"] },
+          "count": { "type": "integer", "minimum": 0 },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ein", "name", "score", "provenance"],
+              "properties": {
+                "ein": { "type": "string", "pattern": "^[0-9]{9}$" },
+                "name": { "type": "string" },
+                "state": { "type": "string", "pattern": "^[A-Z]{2}$" },
+                "nteeCode": { "type": "string" },
+                "score": { "type": "number", "description": "Reciprocal-rank-fusion score (k=60)." },
+                "latestFiling": { "type": "object", "additionalProperties": true },
+                "provenance": { "$ref": "#/components/schemas/Provenance990" }
+              }
+            }
+          }
         }
       }
     }

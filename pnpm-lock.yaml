@@ -257,6 +257,9 @@ importers:
       '@heady/events':
         specifier: workspace:*
         version: link:../../packages/events
+      '@heady/heady990':
+        specifier: workspace:*
+        version: link:../../packages/heady990
       '@heady/kernel':
         specifier: workspace:*
         version: link:../../packages/kernel

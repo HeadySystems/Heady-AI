@@ -3,20 +3,53 @@
 // ║  for graceful shutdown (Cloud Run sends SIGTERM). © 2026 Heady.     ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
+import { createLogger } from "@heady/logger";
 import { createApp } from "./app.mjs";
+
+// One logger for the composition root — shared with createApp so the embedder
+// wiring and the app log to the same structured stream.
+const log = createLogger({ base: { module: "heady-manager" } });
+
+// Live DbPort factory (vault-resolved). Shared shape used by both write paths
+// (tasks) and the 990 read plane — each service owns its own connection lifecycle.
+const liveDbPort = async () => {
+  const { loadSecrets } = await import("@heady/secrets");
+  const { createDbPort } = await import("@heady/db/port");
+  const { DATABASE_URL } = await loadSecrets({ require: ["DATABASE_URL"] });
+  return createDbPort({ connectionString: DATABASE_URL });
+};
+
+// 990 query embedder (hybrid search). The Cloud Run origin has no Workers-AI
+// binding, so it embeds queries over the CF REST API — activated ONLY when the
+// account id + token are present in the vault. Absent ⇒ null ⇒ keyword-only
+// (honest degrade; never throws the boot). Resolved once, eagerly.
+let embedQuery = null;
+try {
+  const { loadSecrets } = await import("@heady/secrets");
+  const cf = await loadSecrets({ only: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_EMAIL"] });
+  if (cf.CLOUDFLARE_ACCOUNT_ID && cf.CLOUDFLARE_API_TOKEN) {
+    const { createWorkersAiQueryEmbedder } = await import("./embed-query.mjs");
+    embedQuery = createWorkersAiQueryEmbedder({
+      accountId: cf.CLOUDFLARE_ACCOUNT_ID,
+      apiToken: cf.CLOUDFLARE_API_TOKEN,
+      email: cf.CLOUDFLARE_EMAIL ?? null,
+      log,
+    });
+    log.info({}, "heady990: Workers-AI query embedder wired — hybrid search active");
+  } else {
+    log.info({}, "heady990: no Workers-AI creds — keyword-only search");
+  }
+} catch (err) {
+  log.warn({ err: String(err?.message ?? err) }, "heady990: embedder wiring failed — keyword-only search");
+}
 
 // Production composition root: the tasks service gets the LIVE vault resolver
 // here (and only here) — createApp without it boots tasks in disabled mode, so
 // tests/dev shells never implicitly touch a live database.
-const { kernel, log, start } = createApp({
-  tasks: {
-    getDbPort: async () => {
-      const { loadSecrets } = await import("@heady/secrets");
-      const { createDbPort } = await import("@heady/db/port");
-      const { DATABASE_URL } = await loadSecrets({ require: ["DATABASE_URL"] });
-      return createDbPort({ connectionString: DATABASE_URL });
-    },
-  },
+const { kernel, start } = createApp({
+  logger: log,
+  tasks: { getDbPort: liveDbPort },
+  heady990: { getDbPort: liveDbPort, embedQuery },
   console: {
     // Vault resolver for `vault` probes (the live token lifecycle): resolves
     // ONLY the names the registry declares; absent optional secrets resolve

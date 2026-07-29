@@ -20,12 +20,13 @@ import { createIntelligence } from "./intelligence.mjs";
 import { createEventsService } from "./events.mjs";
 import { createTasksService } from "./tasks.mjs";
 import { createConsoleService } from "./console.mjs";
+import { createHeady990Service } from "./heady990.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts, console: consoleOpts } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts, console: consoleOpts, heady990: heady990Opts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -114,11 +115,22 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     ...consoleOpts, // tests inject { fetchImpl, registryPath } — no network in suites
   });
 
+  // 990 Intelligence (Phase-A A3) — hybrid search + org/filings API over the 990
+  // data plane. Composition-root injects getDbPort + a Workers-AI query embedder
+  // (index.mjs); no factory ⇒ disabled (503), no embedder ⇒ keyword-only.
+  const heady990 = createHeady990Service({
+    log,
+    exporter,
+    getDbPort: heady990Opts?.getDbPort ?? null,
+    embedQuery: heady990Opts?.embedQuery ?? null,
+  });
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
   kernel.register(events.service);
   kernel.register(tasks.service);
   kernel.register(consoleSvc.service);
+  kernel.register(heady990.service);
 
   kernel.register({
     name: "http",
@@ -160,6 +172,9 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
 
   // Console summary (§8) — the honeycomb's data source.
   consoleSvc.routes(app);
+
+  // 990 Intelligence routes (A3) — hybrid search + org/filings, provenance-linked.
+  heady990.routes(app);
 
   app.get("/intelligence", async (_req, res) => {
     const h = await intel.selfCheck();

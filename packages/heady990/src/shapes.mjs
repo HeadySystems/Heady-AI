@@ -9,6 +9,33 @@
 export const RETURN_TYPES = Object.freeze(["990", "990-EZ", "990-PF", "990-N"]);
 
 const isStr = (v) => typeof v === "string" && v.length > 0;
+
+/**
+ * Validate a 990 search query (the A3 API boundary). Strict: q required,
+ * limit 1..200, optional state (2-letter) + minRevenue (>=0). @returns {{ok,errors,value}}
+ */
+export function validateSearchQuery(input) {
+  const e = [];
+  if (!input || typeof input !== "object") return { ok: false, errors: ["query must be an object"], value: null };
+  const q = typeof input.q === "string" ? input.q.trim() : "";
+  if (q === "" || q.length > 200) e.push("q is required (1..200 chars)");
+  let limit = 20;
+  if (input.limit !== undefined) {
+    limit = Number(input.limit);
+    if (!(Number.isInteger(limit) && limit >= 1 && limit <= 200)) e.push("limit must be an integer 1..200");
+  }
+  let state = null;
+  if (input.state !== undefined && input.state !== null && input.state !== "") {
+    state = String(input.state).toUpperCase();
+    if (!/^[A-Z]{2}$/.test(state)) e.push("state must be a 2-letter code");
+  }
+  let minRevenue = null;
+  if (input.minRevenue !== undefined && input.minRevenue !== null && input.minRevenue !== "") {
+    minRevenue = Number(input.minRevenue);
+    if (!(Number.isFinite(minRevenue) && minRevenue >= 0)) e.push("minRevenue must be a non-negative number");
+  }
+  return { ok: e.length === 0, errors: e, value: e.length === 0 ? { q, limit, state, minRevenue } : null };
+}
 const numOrNull = (v) => v === null || (typeof v === "number" && Number.isFinite(v));
 const intOrNull = (v) => v === null || (Number.isInteger(v) && v >= 0);
 const push = (e, m) => { e.push(m); return false; };
