@@ -94,10 +94,17 @@ test("mid-run failure: ROLLBACK, journal untouched for the failed one, later one
   assert.ok(!db.calls.includes("C;"), "migrations after a failure must not run");
 });
 
-test("canonical home resolves to packages/db/migrations and contains 0001_init.sql", () => {
+test("canonical home resolves to packages/db/migrations and contains the complete ordered chain", () => {
   assert.match(MIGRATIONS_DIR, /packages[/\\]db[/\\]migrations$/);
   const files = listMigrations();
-  assert.ok(files.some((f) => f.version === "0001_init.sql"), "the real 0001_init.sql must be listed");
+  assert.deepEqual(files.map((f) => f.version), [
+    "0001_init.sql",
+    "0002_legacy_capture.sql",
+    "0003_data_api_least_privilege.sql",
+    "0004_approval_control_plane.sql",
+    "0005_990_intelligence.sql",
+    "0006_990_search.sql",
+  ]);
   assert.equal(planMigrations({ files, applied: [] }).pending.length, files.length);
 });
 
