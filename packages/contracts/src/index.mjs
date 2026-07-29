@@ -86,3 +86,8 @@ export {
   PROJECTION_STATES, PROJECTION_TRANSITIONS, DRIFT_STATES, PROJECTION_TYPES,
   validateProjectionManifest, isLegalProjectionTransition,
 } from "./projection-shapes.mjs";
+
+// ── Field / agent-wave contract (ADR-0032): seeds + the wave lifecycle ──
+export {
+  SEED_ORIGINS, WAVE_STATES, validateSeed, isLegalWaveTransition,
+} from "./seed-shapes.mjs";
