@@ -172,5 +172,5 @@ npm-shrinkwrap.json
 # Ephemeral agent worktrees (Agent tool isolation:worktree) — never commit
 .claude/worktrees/
 
-# session-local 990 live-verify harness (do not commit)
-tooling/verify990.local.mjs
+# session-local live Neon verify/inspect harnesses (do not commit — hit the live API)
+tooling/*.local.mjs
