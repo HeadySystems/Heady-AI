@@ -36,6 +36,14 @@ test("applyRegions is a no-op when the region already matches canon", () => {
   assert.equal(changed.length, 0);
 });
 
+test("applyRegions preserves the documented KEY sentinel", () => {
+  const canon = resolveCanon();
+  const example = "<!--heady:inject KEY-->value<!--/heady:inject-->";
+  const { text, changed } = applyRegions(example, canon);
+  assert.equal(text, example);
+  assert.equal(changed.length, 0);
+});
+
 test("applyRegions handles multiple regions in one document", () => {
   const canon = resolveCanon();
   const doc = [

@@ -15,6 +15,9 @@
     "test": "node --test",
     "lint": "echo \"(lint wired at repo level)\""
   },
-  "dependencies": { "@heady/events": "workspace:*" },
+  "dependencies": {
+    "@heady/events": "workspace:*",
+    "@heady/shared": "workspace:*"
+  },
   "keywords": ["heady", "midi", "messaging", "event-bus", "transport", "sysex", "data-injection"]
 }

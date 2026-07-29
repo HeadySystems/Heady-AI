@@ -478,6 +478,9 @@ importers:
       '@heady/events':
         specifier: workspace:*
         version: link:../events
+      '@heady/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/narrative:
     dependencies:
@@ -583,7 +586,11 @@ importers:
 
   tooling/report-templates: {}
 
-  tooling/scaffold-planner: {}
+  tooling/scaffold-planner:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../../packages/phi-math
 
   tooling/service-registry:
     dependencies:
