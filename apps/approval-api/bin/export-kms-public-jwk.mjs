@@ -13,7 +13,9 @@ const ArgumentsSchema = z.tuple([
   z.string().regex(/^projects\/[^/]+\/locations\/[^/]+\/keyRings\/[^/]+\/cryptoKeys\/[^/]+\/cryptoKeyVersions\/[1-9]\d*$/),
 ]);
 
-const [, keyVersionName] = ArgumentsSchema.parse(process.argv.slice(2));
+const [, keyVersionName] = ArgumentsSchema.parse(
+  process.argv[2] === "--" ? process.argv.slice(3) : process.argv.slice(2),
+);
 const key = await createKmsReceiptSigner({ keyVersionName });
 process.stdout.write(`${JSON.stringify({
   keyVersionName,

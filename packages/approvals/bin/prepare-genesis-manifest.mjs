@@ -91,7 +91,8 @@ function trackedSourceTreeSha256(commit) {
   return sha256(tree);
 }
 
-const args = ArgumentsSchema.parse(argumentsObject(process.argv.slice(2)));
+const inputArguments = process.argv[2] === "--" ? process.argv.slice(3) : process.argv.slice(2);
+const args = ArgumentsSchema.parse(argumentsObject(inputArguments));
 if (git("status", "--porcelain", "--untracked-files=all")) {
   throw new TypeError("genesis manifest preparation requires a clean committed worktree");
 }
