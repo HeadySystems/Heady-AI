@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "@heady/phi-math": "workspace:*",
-    "firebase": "^12.16.0"
+    "firebase": "^12.17.0"
   }
 }
