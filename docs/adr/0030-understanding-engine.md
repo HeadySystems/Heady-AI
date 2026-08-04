@@ -1,7 +1,8 @@
 # ADR-0030: The Heady Understanding Engine (HUE)
 
-- **Status:** Proposed (2026-06-18)
+- **Status:** Accepted (2026-08-04)
 - **Deciders:** Eric Anthony Haywood
+- **Acceptance:** Founder-signed tag `adr-0030-accepted-ba9da4fe9`
 - **Design doc:** `docs/research/HEADY_UNDERSTANDING_ENGINE.md`
 
 ## Context
@@ -48,3 +49,13 @@ versioned and governed by this ADR.
 - **Ad-hoc understanding (status quo)** — rejected: implicit, drift-prone, non-auditable; the source of
   the confident-wrong failures this cycle.
 - **A static checklist** — rejected: cannot improve; HUE's efficacy loop makes the method self-correcting.
+
+## Acceptance record
+
+The founder accepted this ADR on 2026-08-04 through the annotated, OpenPGP-signed tag
+`adr-0030-accepted-ba9da4fe9`.
+
+- accepted commit: `ba9da4fe90d55184cc2593d52fc4b221dbc1bdb9`;
+- annotated tag object: `58c2bc911bda52d3daf3c8c6799283f9dd54c9d7`;
+- signer: `HeadyMe <eric@headysystems.com>`; and
+- signing key fingerprint: `1050B59E7296C46C26DDF95DA7D2108BB3C6101C`.

@@ -1,7 +1,8 @@
 # ADR-0032: The Field & Agent-Waves — one substrate, ephemeral localized cognition
 
-- **Status:** Proposed (drafted 2026-07-29 at founder direction; acceptance via the ADR-0031 ceremony)
+- **Status:** Accepted (2026-08-04)
 - **Deciders:** Eric Anthony Haywood
+- **Acceptance:** Founder-signed tag `adr-0032-accepted-dd08f78a9`
 
 ## Context
 
@@ -83,3 +84,13 @@ system is sentient, and it must never be stated to customers or investors as suc
   undercuts the (real) technical credibility. This guardrail is part of the decision.
 - Implements the "no positions" frame; extends ADR-0017 (projection of artifacts) to cognition;
   bounded by ADR-0000 (no latent-as-truth), ADR-0003 (pgvector authority), ADR-0016 (agent loop).
+
+## Acceptance record
+
+The founder accepted this ADR on 2026-08-04 through the annotated, OpenPGP-signed tag
+`adr-0032-accepted-dd08f78a9`.
+
+- accepted commit: `dd08f78a9c9e5467434c5e3b5f9baf126305079c`;
+- annotated tag object: `0ad5983667267d697fd4c0c84d50417ae21f18d3`;
+- signer: `HeadyMe <eric@headysystems.com>`; and
+- signing key fingerprint: `1050B59E7296C46C26DDF95DA7D2108BB3C6101C`.
