@@ -128,7 +128,7 @@ land in `GOVERNANCE_PENDING` = Linear **In Review** awaiting human/ARBITER appro
 
 ## 4. HCFP & auto-success injection (current + potential)
 
-### 4.1 HCFullPipeline (21-stage DAG)
+### 4.1 HCFullPipeline (22-stage DAG per ADR-0040)
 - **Current [LEGACY]:** external items enter at `POST /api/hcfp/ingest` →
   `pipeline-runner.ingest()` (validate `TaskManifest`) → `decompose()` → `route()` →
   `task-dispatcher.classify()`. **Stage-04 TRIAGE already has a `heady-connection` route keyed on

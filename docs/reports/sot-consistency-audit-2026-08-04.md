@@ -114,10 +114,14 @@ current-state banner deferring to `SOURCE_OF_TRUTH.md` for branch canon and poin
 
 ## 4. Cross-repo note (out of monorepo scope)
 `headyai/heady-production` `CLAUDE.md` describes a **22-stage** HCFullPipeline
-(`configs/hcfullpipeline.yaml` v8.0.0, order 0–21) ending in `distiller`. The canon here
-(`facts.yaml` + ADR-0012) is **21 stages**, CHANNEL_ENTRY → RECEIPT, with the "22 (00–21)"
-form ruled an off-by-one. Downstream repos still carrying the 22-stage prose should be
-reconciled when they next sync from the canonical monorepo.
+(`configs/hcfullpipeline.yaml` v8.0.0, order 0–21) ending in `distiller`. At audit time the
+canon here was **21 stages** (CHANNEL_ENTRY → RECEIPT), with the "22 (00–21)" form ruled an
+off-by-one.
+
+> ✅ **Superseded (2026-08-04, same day):** founder re-ruled the stage count to **22** —
+> DISTILL is a first-class terminal stage (order 21) — via **ADR-0040**, which inverted this
+> section's reconciliation direction: the monorepo's prose moved up to 22, and
+> `heady-production`'s shipped 22-stage DAG is conformant as-is.
 
 φ = 1.618033988749895 — Fibonacci-scaled per LAW-10
 © 2026 HeadySystems Inc. — Eric Haywood, Founder

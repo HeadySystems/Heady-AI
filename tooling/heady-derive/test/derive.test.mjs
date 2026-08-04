@@ -10,7 +10,7 @@ import { applyRegions } from "../src/derive.mjs";
 test("canon resolves load-bearing values from the golden record", () => {
   const c = resolveCanon();
   assert.equal(c["facts.company.patents_provisional"], "51");
-  assert.equal(c["facts.hcfullpipeline.stage_count"], "21");
+  assert.equal(c["facts.hcfullpipeline.stage_count"], "22");
   assert.equal(c["facts.embedding.dim"], "384");
   assert.equal(c["facts.embedding.model"], "@cf/baai/bge-small-en-v1.5");
 });
@@ -31,7 +31,7 @@ test("applyRegions rewrites a drifted managed region to canon", () => {
 
 test("applyRegions is a no-op when the region already matches canon", () => {
   const canon = resolveCanon();
-  const ok = "x <!--heady:inject facts.hcfullpipeline.stage_count-->21<!--/heady:inject--> y";
+  const ok = "x <!--heady:inject facts.hcfullpipeline.stage_count-->22<!--/heady:inject--> y";
   const { changed } = applyRegions(ok, canon);
   assert.equal(changed.length, 0);
 });
@@ -53,5 +53,5 @@ test("applyRegions handles multiple regions in one document", () => {
   const { text, changed } = applyRegions(doc, canon);
   assert.equal(changed.length, 2);
   assert.match(text, /-->51<!--/);
-  assert.match(text, /-->21<!--/);
+  assert.match(text, /-->22<!--/);
 });

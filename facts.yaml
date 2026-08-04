@@ -220,14 +220,16 @@ pipeline:
     - test
     - scan
 hcfullpipeline:
-  # HCFullPipeline — the autonomous orchestration DAG. Canonical = 21 stages (0–20),
-  # CHANNEL_ENTRY → RECEIPT, anchored to fib(8)=21 (φ-native; 22 is not a Fibonacci number and
-  # cannot be canonical). Authority: .agents/context/HEADY_SUPER_PROMPT_v5.md §6 + the Accepted
-  # "21-Stage HCFullPipeline as Canonical" ADR. The compendium's "22 (00–21)" was an off-by-one
-  # (numbered from 00 and appended DISTILL past the canonical terminal RECEIPT). Full path = 21;
-  # variants: Fast 7 / Arena 9 / Learning 7. Any prose/skill asserting "N-stage HCFullPipeline" or
-  # "HCFP — N Stages" is checked against this by the coherence gate.
-  stage_count: 21
+  # HCFullPipeline — the autonomous orchestration DAG. Canonical = 22 stages (0–21),
+  # CHANNEL_ENTRY → … → RECEIPT (order 20, terminal accounting) → DISTILL (order 21,
+  # terminal stage). Authority: ADR-0040 (founder re-ruling 2026-08-04), superseding the
+  # prior 21-stage canon (fib(8) anchor consciously dropped for the stage count — shape
+  # follows function; φ still governs timeouts/backoff/TTLs per LAW-10). Matches the shipped
+  # production DAG (headyai/heady-production configs/hcfullpipeline.yaml v8.0.0, terminal
+  # distiller). Variants select subsets (Fast/EXPRESS, FULL, ARENA, LEARNING); only LEARNING
+  # and FULL include DISTILL by default. Any prose/skill asserting "N-stage HCFullPipeline"
+  # or "HCFP — N Stages" is checked against this by the coherence gate.
+  stage_count: 22
 consistency:
   escalation_threshold: 3
 stage0:

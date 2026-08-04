@@ -35,7 +35,7 @@ Use this skill when:
 | AutoContext Injection | Pre-action context enrichment middleware |
 | CSL Routing | Cosine Similarity Layer for deterministic AI routing |
 | Multi-model Council | Competitive AI provider evaluation systems |
-| HCFullPipeline | 21-stage cognitive state machine |
+| HCFullPipeline | 22-stage cognitive state machine |
 | Bee Architecture | Hierarchical concurrent AI worker pools |
 
 ## Instructions

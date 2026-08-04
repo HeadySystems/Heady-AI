@@ -12,7 +12,7 @@ All non-trivial tasks flow through HCFullPipeline — the deterministic, auditab
 system. **22 stages (00–21)** whose execution order is a **data-dependency DAG** (stages fire when their
 inputs are ready, **not** by priority). Critical path = 16 stages; 6 run off-path in parallel pools.
 Backed by **durable Cloudflare Workflows** (each stage = `step.do`; human gate = `step.waitForEvent`).
-*(Canonical per `docs/compendium/03-pipeline-and-nodes.md`, v9.0. This supersedes the legacy 21-stage
+*(Canonical per `docs/compendium/03-pipeline-and-nodes.md`, v9.0. This supersedes the legacy 22-stage
 count from `RECONCILIATION_DECISIONS.md` — stage 21 `DISTILL` was added in the v9.0 compendium scan
 2026-03-16. The legacy "12-stage" reference is also stale.)*
 

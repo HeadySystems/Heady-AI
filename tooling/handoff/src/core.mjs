@@ -194,7 +194,7 @@ export function renderBundle(b) {
   out.push("- **Zero Localhost:** All URLs must come from environment variables.");  // heady-allow:no-localhost — primer prose quoting the law, not a URL
   out.push("- **Zod Validation:** All API inputs must be validated at service boundaries.");
   out.push("- **UI & Styling:** Use Vite SPAs + Vanilla Web Components. Style with Sacred Geometry tokens (fibonacci spacing, glassmorphism) and NO heavy frameworks like React unless strictly necessary for 3D canvas.");
-  out.push("- **Pipeline Compliance:** Comply with the 21-stage HCFullPipeline orchestration and Continuous Semantic Logic (CSL) gating rules.");
+  out.push("- **Pipeline Compliance:** Comply with the 22-stage HCFullPipeline orchestration and Continuous Semantic Logic (CSL) gating rules.");
   out.push("");
   out.push("### Style & Detail");
   out.push("- Output must be highly structured, heavily utilizing Markdown (tables, bolded headers, code fences). Be intensely technical, precise, and entirely devoid of conversational filler.");

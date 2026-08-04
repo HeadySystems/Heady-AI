@@ -478,13 +478,13 @@ User/Trigger → HeadyBuddy (companion interface)
             → HeadyBuddy (deliver result)
 ```
 
-### HCFullPipeline (HCFP) — the 21-stage DAG (stages 0–20, fib(8)=21)
+### HCFullPipeline (HCFP) — the 22-stage DAG (stages 0–21, DISTILL terminal per ADR-0040)
 
 Execution order is a **data-dependency DAG** (stages fire when inputs are ready, not by priority).
 Full path = **21 stages, CHANNEL_ENTRY → RECEIPT**, φ-anchored to **fib(8)=21** (22 is not a
 Fibonacci number → not canonical). Variants: Fast 7 / Arena 9 / Learning 7. Backed by durable
 Cloudflare Workflows (each stage = `step.do`). Authority: `.agents/context/HEADY_SUPER_PROMPT_v5.md`
-§6 + the Accepted "21-Stage HCFullPipeline as Canonical" ADR. **Not 8 (fabricated) and not 22
+§6 + ADR-0040 (22-stage, superseded the "21-Stage HCFullPipeline as Canonical" ruling). **Not 8 (fabricated) and not 22
 (compendium off-by-one that numbered from 00 and appended DISTILL past RECEIPT).**
 
 ```

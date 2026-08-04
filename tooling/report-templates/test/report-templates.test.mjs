@@ -18,7 +18,7 @@ test("fillTemplate injects {{canon key}} from the golden record", () => {
 
 test("fillTemplate rewrites a managed region from canon (drift-proof)", () => {
   const out = fillTemplate("x<!--heady:inject facts.hcfullpipeline.stage_count-->999<!--/heady:inject-->y", {}, canon);
-  assert.match(out, /-->21<!--\/heady:inject-->/);
+  assert.match(out, /-->22<!--\/heady:inject-->/);
 });
 
 test("fillTemplate fills {{ns.dotted.key}} from binding context, — for missing", () => {
@@ -35,7 +35,7 @@ test("distiller analyzeDoc extracts headings, shape, focus, derivable data-point
     "# Title",
     "## What",
     "Heady has 51 provisional patents.",
-    "The HCFullPipeline is a 21-stage DAG.",
+    "The HCFullPipeline is a 22-stage DAG.",
     "## Why",
     "35 bee types across the swarm.",
   ].join("\n");

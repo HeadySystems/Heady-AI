@@ -161,7 +161,7 @@ Workflows live in `.agents/workflows/*.md` and are mirrored 1:1 into `.claude/co
 **New in rebuild (~20, not in legacy):** `heady-arena-productization`, `heady-autopilot`, `heady-buddy-permission-ops`, `heady-cross-device-handoff`, `heady-delegation-architect`, `heady-feature-forge`, `heady-forensic-analyst`, `heady-hypothesis-lab`, `heady-knowledge-cartographer`, `heady-liquid-module-design`, `heady-living-dashboard`, `heady-manager-surface-design`, `heady-memory-ledger-design`, `heady-narrative-engine`, `heady-projection-composer`, `heady-resource-crystallizer`, `heady-semantic-firewall`, `heady-skill-foundry`, `heady-swarm-evolution`, `heady-synaptic-mesh`, `heady-trust-receipts`. Plus workflow `heady-omni-sync`.
 
 **Drift flags (skill assertions vs facts.yaml / compendium):**
-1. ⚠ **`heady-auto-flow`: HCFP acronym collision** — "Heady Core Functionality Platform" vs locked HCFP = HCFullPipeline (21 stages). **Load-bearing; decide a rename/qualifier.**
+1. ⚠ **`heady-auto-flow`: HCFP acronym collision** — "Heady Core Functionality Platform" vs locked HCFP = HCFullPipeline (22 stages, ADR-0040). **Load-bearing; decide a rename/qualifier.**
 2. ⚠ **`INDEX.md` undercount** — header says 135, tables enumerate 134; `heady-autopilot` missing from all tables. Regenerate INDEX (Category 2 → 18).
 3. ⚠ **`INDEX.md` stale stub tag** — `heady-auto-flow` marked `⚠(stub)` but is fully written (94 lines); durable-execution one-liner still reads "activity-based" (Temporal-flavored) though the skill body is corrected to CF Workflows.
 4. (soft) **`heady-omni-sync`** "over 60 components" — round number, not a hard count.

@@ -79,7 +79,7 @@ mathematical constants, scaling, and resource allocation throughout the system.
 
 The user is actively building a Liquid Architecture — dynamic routing via
 HeadyConductor using CSL cosine-similarity matching across 5 topology layers,
-30+ nodes, 90+ HeadyBee types, 175+ services, 21-stage HCFullPipeline.
+30+ nodes, 90+ HeadyBee types, 175+ services, 22-stage HCFullPipeline (ADR-0040).
 - Evidence: HEADY_CONTEXT_INDEX.docx and audit-data-consolidated.md.
   Date: 2026-03-19.
 
