@@ -1,8 +1,9 @@
 # ADR-0042: Deterministic LLM Execution — Temperature-0 + SHA-256 Proof Receipts
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-08-04
-**Deciders:** Eric Haywood (HeadySystems Inc.) — acceptance via the ADR-0031 founder ceremony
+**Accepted:** 2026-08-04 by Eric Haywood (HeadySystems Inc.) — founder acceptance per the ADR-0031 ceremony.
+**Deciders:** Eric Haywood (HeadySystems Inc.)
 **Strength of Acceptance:** ⭐⭐⭐ (Medium — load-bearing for ADR-0018's cache and the governance posture)
 
 > **Provenance:** rewritten from legacy `docs/ADR/0014-determinism-temperature-zero-seed-42.md`

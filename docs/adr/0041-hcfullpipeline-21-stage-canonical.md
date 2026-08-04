@@ -1,8 +1,9 @@
 # ADR-0041: 21-Stage HCFullPipeline as the Canonical Execution Model
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-08-04
-**Deciders:** Eric Haywood (HeadySystems Inc.) — acceptance via the ADR-0031 founder ceremony
+**Accepted:** 2026-08-04 by Eric Haywood (HeadySystems Inc.) — founder acceptance per the ADR-0031 ceremony.
+**Deciders:** Eric Haywood (HeadySystems Inc.)
 **Strength of Acceptance:** ⭐⭐⭐⭐ (High — rebuild ADRs already treat this as authoritative)
 
 > **Provenance:** rewritten from legacy `docs/ADR/0012-21-stage-pipeline-canonical.md`
