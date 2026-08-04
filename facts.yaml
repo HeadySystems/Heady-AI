@@ -222,7 +222,7 @@ pipeline:
 hcfullpipeline:
   # HCFullPipeline — the autonomous orchestration DAG. Canonical = 22 stages (0–21),
   # CHANNEL_ENTRY → … → RECEIPT (order 20, terminal accounting) → DISTILL (order 21,
-  # terminal stage). Authority: ADR-0040 (founder re-ruling 2026-08-04), superseding the
+  # terminal stage). Authority: ADR-0045 (founder re-ruling 2026-08-04), superseding the
   # prior 21-stage canon (fib(8) anchor consciously dropped for the stage count — shape
   # follows function; φ still governs timeouts/backoff/TTLs per LAW-10). Matches the shipped
   # production DAG (headyai/heady-production configs/hcfullpipeline.yaml v8.0.0, terminal

@@ -17,7 +17,16 @@ Per-file `Status:` headers are authoritative.
 Proposed records beyond the accepted canonical set:
 
 - `0030` — Heady Understanding Engine.
-- `0032` — Field & Agent Waves (drafted 2026-07-29 at founder direction; acceptance via the ADR-0031 ceremony).
+
+`0032` — Field & Agent Waves — **Accepted 2026-08-04** (founder acceptance per the ADR-0031
+ceremony; ratifies the Field / agent-waves cognition substrate). `0040`–`0044` were also
+accepted 2026-08-04 (legacy→rebuild ADR reconciliation).
+
+> ⚠️ **ADR-0041 superseded same-day by ADR-0045 (2026-08-04):** the canonical HCFullPipeline
+> FULL count is **22 stages** (order 0–21), DISTILL as first-class terminal stage — founder
+> ruling issued after reviewing ADR-0041's `21 = fib(8)` rationale and overriding it. The
+> `facts.yaml hcfullpipeline.stage_count` golden record and the coherence scalar guard both
+> pin 22. ADR-0041's variant table and single-canonical-module requirement still stand.
 
 > ✅ **Numbering-collision resolved (2026-08-04):** the seven Accepted ADRs that lived in the
 > UPPERCASE `docs/ADR/` directory under numbers `0019`–`0025` (colliding with the different

@@ -1,11 +1,19 @@
-# ADR-0040: 22-Stage HCFullPipeline — DISTILL as First-Class Terminal Stage
+# ADR-0045: 22-Stage HCFullPipeline — DISTILL as First-Class Terminal Stage
 
 **Status:** Accepted
 **Date:** 2026-08-04
 **Deciders:** Eric Haywood (HeadySystems Inc.)
-**Supersedes:** the "21-Stage HCFullPipeline as Canonical" ruling (ADR-0012 in the retired
-`docs/ADR/INDEX.md` numbering, file-less; carried operationally by `facts.yaml
-hcfullpipeline.stage_count` and `HEADY_SUPER_PROMPT_v5 §6`)
+**Supersedes:** **ADR-0041** ("21-Stage HCFullPipeline as the Canonical Execution Model",
+Accepted 2026-08-04 — itself a rewrite of the retired file-less `docs/ADR/0012`), and with it
+the 21-stage canon previously carried operationally by `facts.yaml
+hcfullpipeline.stage_count` and `HEADY_SUPER_PROMPT_v5 §6`.
+**Note on same-day supersession:** ADR-0041 landed via the legacy→rebuild ADR reconciliation
+(PR #271) hours before this ruling. The founder issued the 22-stage ruling *after* being shown
+ADR-0041's core argument (`21 = fib(8)`, "20 stages rejected — breaks Fibonacci alignment"),
+and overrode it deliberately: pipeline shape follows function, not Fibonacci membership.
+ADR-0041's variant table (FAST/STANDARD/ARENA/LEARNING as subsets of one canonical
+definition) and its single-canonical-module requirement survive unchanged — only the FULL
+count moves 21 → 22.
 **Strength of Acceptance:** ⭐⭐⭐⭐⭐ (Critical — pins the pipeline's canonical shape; the
 coherence gate checks every "N-stage HCFullPipeline" prose claim against this number)
 

@@ -119,7 +119,7 @@ canon here was **21 stages** (CHANNEL_ENTRY → RECEIPT), with the "22 (00–21)
 off-by-one.
 
 > ✅ **Superseded (2026-08-04, same day):** founder re-ruled the stage count to **22** —
-> DISTILL is a first-class terminal stage (order 21) — via **ADR-0040**, which inverted this
+> DISTILL is a first-class terminal stage (order 21) — via **ADR-0045**, which inverted this
 > section's reconciliation direction: the monorepo's prose moved up to 22, and
 > `heady-production`'s shipped 22-stage DAG is conformant as-is.
 

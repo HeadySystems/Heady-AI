@@ -2,6 +2,7 @@
 
 **Renumbered:** ADR-0022 → ADR-0036 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Amended:** 2026-08-04 (founder ruling, master-plan D5) — canonical GCP project is **`heady-ai`**, the live project hosting the Cloud Run origin, Artifact Registry, and the Firebase project (whose ID is immutable). This exercises the original decision's "`heady-rebuild` (or successor)" clause; `heady-rebuild` was nominal and never provisioned. Region lock (`us-east1`) unchanged.  
+**Cross-ref reconciled (2026-08-04, founder-authorized):** the "ADR-0012" references below used the *legacy* number (rebuild `0012` is `finops-spend-reporting`). The 21-stage pipeline's canonical rebuild home is **ADR-0041**; references updated accordingly.  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -18,9 +19,9 @@ A critical divergence exists between legacy documentation and the active rebuild
 | GCP Project | `heady-prod-609590223909` | `heady-ai` (amended 2026-08-04; originally nominal `heady-rebuild` (or successor)) |
 | Region | `us-central1` | `us-east1` |
 | Database | Cloud SQL (Postgres 14) | Neon Postgres (serverless, `us-east1`) |
-| Pipeline | 9-stage | 21-stage (ADR-0012) |
+| Pipeline | 9-stage | 21-stage (ADR-0041) |
 
-The legacy project `heady-prod-609590223909` in `us-central1` was used during the initial production phase. It contains Cloud SQL instances, Cloud Run services, and Cloud Storage buckets that are **not compatible** with the rebuild architecture (ADR-0016, ADR-0012).
+The legacy project `heady-prod-609590223909` in `us-central1` was used during the initial production phase. It contains Cloud SQL instances, Cloud Run services, and Cloud Storage buckets that are **not compatible** with the rebuild architecture (ADR-0016, ADR-0041).
 
 Incidents have occurred where:
 1. CI/CD pipelines resolved the wrong GCP project from environment variables and deployed to `us-central1`.
@@ -141,5 +142,5 @@ DO NOT set CLOUDSQL_INSTANCE env var — use DATABASE_URL pointing to Neon (ADR-
 
 - ADR-0016: Neon replaces Cloud SQL (Neon in us-east1)
 - ADR-0018: CI/CD GitHub Actions gates (ADR Sentinel enforcement)
-- ADR-0012: 21-stage pipeline canonical
+- ADR-0041: 21-stage pipeline canonical
 - REBUILD_INSTRUCTIONS.md: explicit legacy warnings

@@ -1,6 +1,7 @@
 # ADR-0032: The Field & Agent-Waves — one substrate, ephemeral localized cognition
 
-- **Status:** Proposed (drafted 2026-07-29 at founder direction; acceptance via the ADR-0031 ceremony)
+- **Status:** Accepted
+- **Accepted:** 2026-08-04 by Eric Haywood (HeadySystems Inc.) — founder acceptance per the ADR-0031 ceremony; ratifies the Field / agent-waves model as the canonical cognition substrate.
 - **Deciders:** Eric Anthony Haywood
 
 ## Context
