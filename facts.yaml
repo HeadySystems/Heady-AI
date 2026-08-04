@@ -53,6 +53,11 @@ supply_chain:
 deploy_targets:
   origin:
     kind: gcp-cloud-run
+    # Canonical GCP project per ADR-0036 amendment (2026-08-04, master-plan D5):
+    # heady-ai is the live project (Cloud Run origin, Artifact Registry, Firebase);
+    # the nominal heady-rebuild was never provisioned. Legacy projects
+    # 609590223909 and gen-lang-client-0920560496 are read-only.
+    project: heady-ai
     # Canonical region per ADR-0036 (GCP region lock, ex docs/ADR/0022) — the live
     # Cloud Run service (project heady-ai) runs in us-east1; us-central1 belongs to
     # the legacy project 609590223909 (read-only, zero new deploys). Master-plan
