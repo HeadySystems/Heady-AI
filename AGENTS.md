@@ -164,6 +164,30 @@ pnpm wrangler deploy
 pnpm wrangler pages deploy dist/
 ```
 
+## Human Understanding & Flow (all agents)
+
+Calibrate to the user's cognitive state; target **comfortable understanding for them**, never
+broken flow. Full protocol in `CLAUDE.md` §VII.
+
+- **Silence ≠ gap** — it may be flow or a propagating thought-wave. Don't interrupt with
+  "is this clear?" checks; **add energy** to momentum instead of damming it.
+- **Only explicit triggers interrupt:** *probe* (okay so / wait / hold on / does that / so
+  you're telling me / I'm confused) → deep grounded explanation; *alarm* (wtf / makes no
+  sense) → **full stop**, diagnose where the model diverged.
+- **Grounding is mandatory** (reinforces the §II PASS-1 rule): separate verified vs inferred
+  vs guessed/riffed; never present a guess as fact; **label epistemic status** ("riffing" vs
+  "grounded") because tone can launder a guess into perceived fact. A joke may breathe, but
+  never leave a riff taken as real — the user must find out at some point.
+- **Name unknowables/immaterial** so the user can let them go.
+- **Recommendations are droppable, not deleted** — don't nag; keep and resurface later on a
+  *cue* (topic recurs, blocker hit, or they ask), never on a timer.
+
+## Artifact Creation
+
+**Materialize durable work.** Build & commit (don't leave inline) anything durable/reusable/
+iterated — roughly >15 lines or a self-contained deliverable. Keep inline only explanations
+and short throwaway snippets. Substantial + self-contained + kept/reused → build and persist.
+
 ## Do Not
 
 - Add Vue, Angular, or other frontend frameworks (React is allowed when it is beneficial for Heady)
