@@ -518,7 +518,7 @@ HEADY_BRAND:END -->
 | ADR-0041 | 21-Stage HCFullPipeline as the Canonical Execution Model |
 | ADR-0042 | Deterministic LLM Execution — Temperature-0 + SHA-256 Proof Receipts |
 | ADR-0043 | Runtime Capacity Ceiling — fib(20)=6765 Enforced, 10000 Aspirational |
-| ADR-0044 | Sacred Geometry Node Topology (Ring Layout) |
+| ADR-0044 | Sacred Geometry Resource-Tier & Escalation Overlay (on Agent-Waves) |
 
 ---
 *© 2026 HeadySystems Inc. — Eric Haywood, Founder*
