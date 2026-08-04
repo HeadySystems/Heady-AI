@@ -25,14 +25,14 @@
  *   - Knowledge Vault integrity verification
  *
  * ADR-0011: Node.js ESM only — no require(), no module.exports
- * ADR-0021: Post-quantum cryptography mandate (ML-KEM-768 / ML-DSA-65)
+ * ADR-0035: Post-quantum cryptography mandate (ML-KEM-768 / ML-DSA-65)
  * ADR-0006: phi-math single source of truth — all constants from phi.js
  */
 
 import crypto from 'node:crypto';
 
 // ─── PQC Configuration ────────────────────────────────────────────────
-// ADR-0021: FIPS 203/204 canonical algorithm names — no pre-NIST aliases
+// ADR-0035: FIPS 203/204 canonical algorithm names — no pre-NIST aliases
 export const PQC_CONFIG = {
   // NIST Post-Quantum Standards
   kem: {
@@ -128,7 +128,7 @@ export class HeadyPQCKeyStore {
     const classicalSig = crypto.sign(null, msgBuffer, keyRecord.privateKey.classical);
 
     // PQC signature (SHA3-HMAC as interim until native ML-DSA lands in Node.js)
-    // ADR-0021: Phase 2 — replace with liboqs ML-DSA-65 when available
+    // ADR-0035: Phase 2 — replace with liboqs ML-DSA-65 when available
     const pqcSig = crypto
       .createHmac('sha3-256', keyRecord.privateKey.pqc)
       .update(msgBuffer)
@@ -156,7 +156,7 @@ export class HeadyPQCKeyStore {
 
   /**
    * Verify a hybrid signature
-   * ADR-0023: timing-safe comparison enforced throughout
+   * ADR-0037: timing-safe comparison enforced throughout
    * @param {string}        serviceId    - Service whose key to verify against
    * @param {Buffer|string} message      - Original message
    * @param {string}        signatureB64 - Base64-encoded hybrid signature
@@ -186,7 +186,7 @@ export class HeadyPQCKeyStore {
       classicalValid = false;
     }
 
-    // Verify PQC — ADR-0023: timing-safe comparison (P0 fix applied here too)
+    // Verify PQC — ADR-0037: timing-safe comparison (P0 fix applied here too)
     const expectedPqcSig = crypto
       .createHmac('sha3-256', keyRecord.privateKey.pqc)
       .update(msgBuffer)
@@ -248,7 +248,7 @@ export class HeadyPQCKeyStore {
 
   /**
    * Quantum-resistant key encapsulation (hybrid KEM)
-   * For service-to-service key exchange — ADR-0021
+   * For service-to-service key exchange — ADR-0035
    * @param {string} recipientServiceId
    * @returns {{ sharedSecret: string, algorithm: string, recipientFingerprint: string }}
    */

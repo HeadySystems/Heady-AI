@@ -182,12 +182,12 @@ Autobiographer-name) are skill/doc/MCP claims with thin or no load-bearing code 
   services into one runtime.
 - **Legacy:** 8 refs. Primary: root `heady-manager.js` (~76 KB monolithic **CJS**); kernel target
   `core/heady-manager-kernel.js` (BE-02).
-- **Rebuild:** `packages/kernel` (Latent Service boot ordering, microkernel) + 5 ESM modules per **ADR-0023**.
+- **Rebuild:** `packages/kernel` (Latent Service boot ordering, microkernel) + 5 ESM modules per **ADR-0037**.
 - **Parts (2 levels):**
   - **Current monolith concerns:** middleware (helmet/compression/CORS) · secrets (GCP SM + env) · request-id
     + graceful shutdown · EdgeContextCache · service routes (`/api`, claude, vm, imagination) · Sentry · multi-
     domain site renderer · rate-limit.
-  - **ADR-0023 target modules:** `auth-middleware` (`src/middleware/auth.js`, Governance) · `cors-policy`
+  - **ADR-0037 target modules:** `auth-middleware` (`src/middleware/auth.js`, Governance) · `cors-policy`
     (`src/middleware/cors.js`, Governance) · `route-orchestrator` (`src/routes/orchestrator.js`, Center) ·
     `health-monitor` (`src/monitoring/health.js`, Ops) · `manager-core` (`src/core/manager.js`, Inner).
 - **OSS:** Express today; rebuild → `@heady/kernel` microkernel + Latent Service Pattern.
@@ -197,7 +197,7 @@ Autobiographer-name) are skill/doc/MCP claims with thin or no load-bearing code 
   (`heady-manager.js:223` → `crypto.timingSafeEqual`) and CORS wildcard `*` with credentials
   (`heady-manager.js:142`). (2) Decompose into 5 ESM modules. (3) ESM-only migration (ADR-0011). (4) Move
   magic numbers to `core/constants/phi.js` (ADR-0006).
-- **⚠ Drift / law touchpoints:** **ADR-0023** mandates decomposition BEFORE any further `heady-manager.js`
+- **⚠ Drift / law touchpoints:** **ADR-0037** mandates decomposition BEFORE any further `heady-manager.js`
   change merges to `rebuild`. P0 security = **SEC-002 fail-open auth** + the CORS wildcard (security-mesh
   law). Blocks ADR-0018 CI gates until decomposed. **No placeholders** — the two P0 fixes are action-now.
 
@@ -486,8 +486,8 @@ Autobiographer-name) are skill/doc/MCP claims with thin or no load-bearing code 
   Arena/Sims/Socratic must reconcile with real VERIFY gates — do not carry literal infallibility claims into
   the rebuild (no-fake-data / observability law).
 - **Unbreakable-law touchpoints:** APPROVE/11 Progressive Autonomy Gate (ADR-0005/0016, rustc stage0/1/2,
-  "Approve all" forbidden) · HeadyManager P0 security (SEC-002 fail-open + CORS wildcard, ADR-0023 must
+  "Approve all" forbidden) · HeadyManager P0 security (SEC-002 fail-open + CORS wildcard, ADR-0037 must
   decompose first) · HeadyKey HCP-0001 patent-lock (HS-2026-051…062, ARBITER gate) · VSA integration patent
   HS-058 (BZ-05) · strict global consistency / non-orphanage (ADR-0025) enforced by HeadyScientist →
-  `tooling/coherence`. ADR-0023 (Manager decomposition) and ADR-0004 (durable orchestration) are the two
+  `tooling/coherence`. ADR-0037 (Manager decomposition) and ADR-0004 (durable orchestration) are the two
   immediate decision anchors for this domain.

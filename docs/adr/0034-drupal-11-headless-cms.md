@@ -1,5 +1,6 @@
-# ADR-0020: Drupal 11 as Headless CMS
+# ADR-0034: Drupal 11 as Headless CMS
 
+**Renumbered:** ADR-0020 → ADR-0034 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -65,7 +66,7 @@ Heady Micro-Frontend (headyconnection.org, headylab.com docs)
 
 4. **Content moderation:** All public-facing content types (grant pages, blog posts, event listings) require at least one Editorial Review workflow state before publication. Direct `Published` transitions without review are disabled.
 
-5. **Infrastructure:** Drupal 11 deploys on Cloud Run `us-east1` (ADR-0016, ADR-0022) backed by Neon Postgres (ADR-0016). File assets (images, PDFs) go to Cloudflare R2 via the S3-compatible adapter.
+5. **Infrastructure:** Drupal 11 deploys on Cloud Run `us-east1` (ADR-0016, ADR-0036) backed by Neon Postgres (ADR-0016). File assets (images, PDFs) go to Cloudflare R2 via the S3-compatible adapter.
 
 6. **ESM boundary:** Drupal is PHP-based and runs outside the Node.js ESM boundary (ADR-0011). The content-gateway Cloudflare Worker (Node.js ESM) is the adapter layer. No PHP code is permitted inside `src/` of the heady-ai monorepo.
 
@@ -123,5 +124,5 @@ On Drupal content publish webhook (`POST /webhook/content-update`):
 - ADR-0009: Firebase Auth + httpOnly cookies (OIDC integration)
 - ADR-0013: Upstash Redis as EventSpine (publish webhooks)
 - ADR-0016: Neon replaces Cloud SQL (Drupal DB backend)
-- ADR-0019: Nine-domain brand architecture (headyconnection.org, headylab.com)
-- ADR-0022: GCP region canonical lock (Cloud Run us-east1)
+- ADR-0033: Nine-domain brand architecture (headyconnection.org, headylab.com)
+- ADR-0036: GCP region canonical lock (Cloud Run us-east1)

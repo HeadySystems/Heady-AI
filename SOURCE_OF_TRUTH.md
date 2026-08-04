@@ -56,7 +56,7 @@ Collapse 4 orgs → 1 (`HeadySystems`) as the first migration step, before code 
 - `docs/BUILD_NARRATIVE.md` — the story of how the build should go (read before accepting ADRs).
 - `docs/PROVIDER_AND_OSS_MASTER_PLAN.md` — provider & open-source utilization.
 - `docs/compendium/` — exhaustive component-by-component reference (bees, swarms, governance, transforms, …).
-- `docs/adr/0000–0018` — architecture decisions (0000 + 0014–0018 added, 0003/0005 amended in v2 reconciliation).
+- `docs/adr/0000–0039` — architecture decisions (0000 + 0014–0018 added, 0003/0005 amended in v2 reconciliation; 0019–0032 added post-v2; 0033–0039 renumbered in from the retired `docs/ADR/` directory on 2026-08-04, resolving the numbering collision — see `docs/reports/sot-consistency-audit-2026-08-04.md`).
 - `docs/ENV_SEPARATION.md` — legacy vs rebuild provider namespacing spec.
 
 φ = 1.618033988749895 — Fibonacci-scaled per LAW-10

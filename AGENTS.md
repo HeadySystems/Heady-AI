@@ -151,7 +151,9 @@ pnpm turbo run build test --filter='...[origin/main...HEAD]'
 ## Deploy
 
 ```bash
-# Cloud Run (φ-stepped canary)
+# Cloud Run (φ-stepped canary) — LEGACY manager service only (legacy project/region).
+# Canonical region for all NEW infra is us-east1 per ADR-0036 (facts.yaml
+# deploy_targets.origin.region); never target us-central1 for new deploys.
 gcloud run deploy heady-manager --image gcr.io/gen-lang-client-0920560496/heady-manager:$VERSION \
   --region us-central1 --min-instances 1 --max-instances 13
 

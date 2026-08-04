@@ -20,7 +20,7 @@ const REPO         = process.env.GITHUB_REPOSITORY ?? 'HeadySystems/heady-ai';
 const REPORT_PATH  = process.env.REPORT_PATH ?? '/tmp/pqc-scan-report.json';
 const COMMIT_SHA   = process.env.COMMIT_SHA ?? 'unknown';
 const PR_AUTHOR    = process.env.PR_AUTHOR  ?? 'contributor';
-const ADR_BASE     = `https://github.com/${REPO}/blob/main/docs/ADR`;
+const ADR_BASE     = `https://github.com/${REPO}/blob/main/docs/adr`;
 
 const SENTINEL_TAG = '<!-- heady-pqc-sentinel -->';
 const API_BASE     = `https://api.github.com/repos/${REPO}`;
@@ -67,7 +67,7 @@ function buildCleanComment(report) {
     SENTINEL_TAG,
     '## ✅ PQC Sentinel — No Cryptographic Compliance Issues',
     '',
-    `> Commit \`${COMMIT_SHA.slice(0, 8)}\` · ${report.files_scanned} files scanned · [ADR-0021](${ADR_BASE}/0021-post-quantum-cryptography-mandate.md)`,
+    `> Commit \`${COMMIT_SHA.slice(0, 8)}\` · ${report.files_scanned} files scanned · [ADR-0035](${ADR_BASE}/0035-post-quantum-cryptography-mandate.md)`,
     '',
     `| Category | Count |`,
     `|----------|-------|`,
@@ -101,7 +101,7 @@ function buildCleanComment(report) {
     lines.push('');
   }
 
-  lines.push(`---\n_PQC Sentinel enforced by [ADR-0021](${ADR_BASE}/0021-post-quantum-cryptography-mandate.md)_`);
+  lines.push(`---\n_PQC Sentinel enforced by [ADR-0035](${ADR_BASE}/0035-post-quantum-cryptography-mandate.md)_`);
   return lines.join('\n');
 }
 
@@ -115,7 +115,7 @@ function buildFailedComment(report) {
     SENTINEL_TAG,
     '## ❌ PQC Sentinel — Cryptographic Compliance Violations',
     '',
-    `> @${PR_AUTHOR} — this PR introduces cryptographic patterns prohibited by **ADR-0021** (Post-Quantum Cryptography Mandate).`,
+    `> @${PR_AUTHOR} — this PR introduces cryptographic patterns prohibited by **ADR-0035** (Post-Quantum Cryptography Mandate).`,
     `> Commit \`${COMMIT_SHA.slice(0, 8)}\` · ${report.files_scanned} files scanned`,
     '',
     '**The build is blocked.** All CRITICAL and HIGH findings must be resolved before merge.',
@@ -222,7 +222,7 @@ function buildFailedComment(report) {
   lines.push('```');
   lines.push('');
   lines.push('---');
-  lines.push(`_PQC Sentinel enforced by [ADR-0021](${ADR_BASE}/0021-post-quantum-cryptography-mandate.md) · [PQC Compliance Brief](https://github.com/${REPO}/blob/main/docs/PQC-COMPLIANCE-BRIEF.md)_`);
+  lines.push(`_PQC Sentinel enforced by [ADR-0035](${ADR_BASE}/0035-post-quantum-cryptography-mandate.md) · [PQC Compliance Brief](https://github.com/${REPO}/blob/main/docs/PQC-COMPLIANCE-BRIEF.md)_`);
 
   return lines.join('\n');
 }

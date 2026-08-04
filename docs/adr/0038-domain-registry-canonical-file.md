@@ -1,5 +1,6 @@
-# ADR-0024: src/config/domain-registry.js as Canonical Domain File
+# ADR-0038: src/config/domain-registry.js as Canonical Domain File
 
+**Renumbered:** ADR-0024 → ADR-0038 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -9,7 +10,7 @@
 
 ## Context
 
-ADR-0019 established the nine-domain brand architecture as policy. That ADR defines which domains belong to which legal entity, Sacred Geometry layer, Firebase Auth tenant, and revenue model. However, ADR-0019 did not mandate a specific file format or location for the machine-readable registry.
+ADR-0033 established the nine-domain brand architecture as policy. That ADR defines which domains belong to which legal entity, Sacred Geometry layer, Firebase Auth tenant, and revenue model. However, ADR-0033 did not mandate a specific file format or location for the machine-readable registry.
 
 Without a canonical file, the policy leaks into multiple places:
 
@@ -83,7 +84,7 @@ import { pqcKeyNamespace } from '../config/domain-registry.js';
 
 ### Registry Mutation Rules
 
-1. **Adding a domain:** Requires a new ADR amending ADR-0019. The ADR must specify entity, layer, tenant, commercial flag, and revenue model. The ADR number becomes a comment in the registry entry.
+1. **Adding a domain:** Requires a new ADR amending ADR-0033. The ADR must specify entity, layer, tenant, commercial flag, and revenue model. The ADR number becomes a comment in the registry entry.
 
 2. **Removing a domain:** Requires a deprecation ADR. The domain stays in the registry with `deprecated: true` for one full release cycle before removal, to allow CDN cache invalidation.
 
@@ -136,9 +137,9 @@ domain-registry-lint:
 
 ## Related ADRs
 
-- ADR-0019: Nine-domain brand architecture (the policy this file implements)
+- ADR-0033: Nine-domain brand architecture (the policy this file implements)
 - ADR-0009: Firebase Auth + httpOnly cookies (tenant ID resolution)
 - ADR-0018: CI/CD GitHub Actions gates (domain-registry-lint job)
-- ADR-0021: PQC mandate (key namespace derivation)
-- ADR-0023: heady-manager.js decomposition (cors.js and auth.js consumers)
-- ADR-0025: content-gateway Cloudflare Worker (CORS origins at edge)
+- ADR-0035: PQC mandate (key namespace derivation)
+- ADR-0037: heady-manager.js decomposition (cors.js and auth.js consumers)
+- ADR-0039: content-gateway Cloudflare Worker (CORS origins at edge)

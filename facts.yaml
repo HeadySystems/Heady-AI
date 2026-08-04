@@ -53,7 +53,11 @@ supply_chain:
 deploy_targets:
   origin:
     kind: gcp-cloud-run
-    region: us-central1
+    # Canonical region per ADR-0036 (GCP region lock, ex docs/ADR/0022) — the live
+    # Cloud Run service (project heady-ai) runs in us-east1; us-central1 belongs to
+    # the legacy project 609590223909 (read-only, zero new deploys). Master-plan
+    # drift D1/AD-4 resolved 2026-08-04.
+    region: us-east1
     node: 22
   edge:
     kind: cloudflare-workers

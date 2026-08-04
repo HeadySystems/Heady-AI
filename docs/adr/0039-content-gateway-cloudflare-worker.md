@@ -1,25 +1,26 @@
-# ADR-0025: Content-Gateway Cloudflare Worker Contract
+# ADR-0039: Content-Gateway Cloudflare Worker Contract
 
+**Renumbered:** ADR-0025 → ADR-0039 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
-**Strength of Acceptance:** ⭐⭐⭐⭐ (High — required for Drupal JSON:API delivery pipeline; blocked on ADR-0020 Drupal deployment)
+**Strength of Acceptance:** ⭐⭐⭐⭐ (High — required for Drupal JSON:API delivery pipeline; blocked on ADR-0034 Drupal deployment)
 
 ---
 
 ## Context
 
-ADR-0020 establishes Drupal 11 as the headless CMS for `headyconnection.org` and `headylab.com` documentation. Drupal runs on Cloud Run `us-east1` and exposes content via JSON:API. The problem: Drupal's origin (`headless-cms.headyconnection.org`) cannot be directly called from browser clients due to CORS, auth complexity, and cache-busting requirements. A purpose-built Cloudflare Worker is needed as the adapter layer.
+ADR-0034 establishes Drupal 11 as the headless CMS for `headyconnection.org` and `headylab.com` documentation. Drupal runs on Cloud Run `us-east1` and exposes content via JSON:API. The problem: Drupal's origin (`headless-cms.headyconnection.org`) cannot be directly called from browser clients due to CORS, auth complexity, and cache-busting requirements. A purpose-built Cloudflare Worker is needed as the adapter layer.
 
 This Worker — the **content-gateway** — sits between frontend micro-frontends and the Drupal origin, providing:
 
-1. **Edge caching** via Cloudflare KV (phi-scaled TTLs per ADR-0020)
-2. **CORS normalization** using DOMAIN_REGISTRY (ADR-0024)
+1. **Edge caching** via Cloudflare KV (phi-scaled TTLs per ADR-0034)
+2. **CORS normalization** using DOMAIN_REGISTRY (ADR-0038)
 3. **Cache invalidation** on Drupal publish webhook
 4. **Request authentication** — proxy adds Drupal API token from Workers Secrets, clients never see it
 5. **Content-type routing** — maps URL patterns to Drupal JSON:API resource paths
-6. **Rate limiting** per ADR-0024 (Fibonacci tiers: anonymous 8 req/s, authenticated 21 req/s)
-7. **PQC request signing** — Worker signs every origin request with ML-DSA-65 service key (ADR-0021)
+6. **Rate limiting** per ADR-0038 (Fibonacci tiers: anonymous 8 req/s, authenticated 21 req/s)
+7. **PQC request signing** — Worker signs every origin request with ML-DSA-65 service key (ADR-0035)
 
 ---
 
@@ -72,7 +73,7 @@ Cloudflare Worker: content-gateway
     │         return cached + meta.source='kv'
     │
     └── MISS → Drupal JSON:API (Cloud Run us-east1)
-              │  PQC-signed request (ADR-0021)
+              │  PQC-signed request (ADR-0035)
               │  Authorization: Bearer {DRUPAL_API_TOKEN}
               ▼
               Store in KV → return + meta.source='origin'
@@ -155,7 +156,7 @@ async function handleContentRequest(request, env, url) {
     });
   }
 
-  // Origin fetch — PQC signed (ADR-0021)
+  // Origin fetch — PQC signed (ADR-0035)
   const drupalUrl   = buildDrupalUrl(contentType, url.searchParams, env);
   const drupalResp  = await fetch(drupalUrl, {
     headers: {
@@ -219,7 +220,7 @@ const TTL_BY_TIER = {
 - Drupal origin is fully protected behind the Worker — never directly accessible from browsers.
 - `DRUPAL_API_TOKEN` stays in Workers Secrets — never exposed to clients.
 - Cloudflare KV edge cache absorbs >90% of content requests, eliminating Cloud Run origin load for public content.
-- PQC-signed origin requests satisfy ADR-0021 service-to-service requirement.
+- PQC-signed origin requests satisfy ADR-0035 service-to-service requirement.
 - Cache invalidation is precise (per content type) and event-driven via Upstash.
 - Rate limiting at Fibonacci tiers prevents DDoS amplification against Drupal.
 
@@ -237,7 +238,7 @@ const TTL_BY_TIER = {
 
 - ADR-0002: Cloudflare edge + Cloud Run origin (Worker is the edge adapter)
 - ADR-0013: Upstash Redis EventSpine (invalidation events)
-- ADR-0019: Nine-domain brand architecture (served domains)
-- ADR-0020: Drupal 11 headless CMS (origin being proxied)
-- ADR-0021: PQC mandate (request signing)
-- ADR-0024: Domain registry canonical file (CORS origins)
+- ADR-0033: Nine-domain brand architecture (served domains)
+- ADR-0034: Drupal 11 headless CMS (origin being proxied)
+- ADR-0035: PQC mandate (request signing)
+- ADR-0038: Domain registry canonical file (CORS origins)

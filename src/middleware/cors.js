@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════
  *  HEADY CORS POLICY MIDDLEWARE
- *  ADR-0023: heady-manager.js decomposition — Phase 1 (P0 security fix)
- *  ADR-0019: Nine-domain brand architecture (allowlist source)
- *  ADR-0024: Domain registry canonical file (ALLOWED_ORIGINS_SET)
+ *  ADR-0037: heady-manager.js decomposition — Phase 1 (P0 security fix)
+ *  ADR-0033: Nine-domain brand architecture (allowlist source)
+ *  ADR-0038: Domain registry canonical file (ALLOWED_ORIGINS_SET)
  *  ADR-0011: Node.js ESM only
  *
  *  P0 FIX: Replaces heady-manager.js:197 CORS wildcard '*'
@@ -51,7 +51,7 @@ export function corsPolicy(req, res, next) {
     return res.status(403).json({
       ok:    false,
       error: 'CORS_ORIGIN_REJECTED',
-      msg:   `Origin '${origin}' is not in the Heady domain registry (ADR-0019)`,
+      msg:   `Origin '${origin}' is not in the Heady domain registry (ADR-0033)`,
     });
   }
   // No origin header = same-origin or server-to-server — allow through

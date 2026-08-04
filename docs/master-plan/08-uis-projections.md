@@ -46,8 +46,8 @@
 ## (b) The 9 public domain sites
 
 ⚠ **DRIFT — the "9 domains" list is contradictory across ≥3 sources.** Canonical = the newest, highest-strength
-ADR: **`docs/ADR/0019-nine-domain-brand-architecture.md`** (2026-06-17, registry mirror `src/config/domain-registry.js`).
-Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-frontend-framework-selection.md` (lowercase).
+ADR: **`docs/adr/0033-nine-domain-brand-architecture.md`** (2026-06-17, registry mirror `src/config/domain-registry.js`;
+renumbered from `docs/ADR/0019` on 2026-08-04 — case-collision with `docs/adr/0019-frontend-framework-selection.md` resolved).
 
 | Domain | Entity | UI / Purpose | Status |
 |---|---|---|---|
@@ -128,11 +128,11 @@ Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-fronte
 
 ## Open decisions / drift to resolve
 - **R1 — React vs vanilla Web Components for console/app** (compendium §I6 + MEMORY): ADR-0019 reconciliation says vanilla WC default, React only for complex canvas/console/MCP; the explicit per-surface call for the console/app SPA is still **open**.
-- **9-domain canonical list** — ≥3 conflicting sources (9 vs 11 vs 3 vs ~16). Canonical chosen here = `docs/ADR/0019-nine-domain-brand-architecture.md` (newest); others flagged but unreconciled.
+- **9-domain canonical list** — ≥3 conflicting sources (9 vs 11 vs 3 vs ~16). Canonical chosen here = `docs/adr/0033-nine-domain-brand-architecture.md` (newest, ex `docs/ADR/0019`); others flagged but unreconciled.
 - **mcp-dashboard stack drift** — README claims Webpack Module Federation (a Dropped `FE-06` pattern), contradicting ADR-0019. Stub must be rebuilt to Vite + vanilla WC.
-- **ADR-0019 case-collision** — two different ADR-0019 files (`docs/adr/` frontend vs `docs/ADR/` nine-domain); rename one to avoid ambiguity.
+- **ADR-0019 case-collision** — ✅ resolved 2026-08-04: the `docs/ADR/` nine-domain decision renumbered to `docs/adr/0033`; ADR-0019 now uniquely = frontend-framework-selection.
 - **gateway SA key** — long-lived JSON SA key as Worker secret; migrate to WIF/keyless + rotate.
 - **headyme.com last mile** — DNS cutover, `firebase login`, Cloud Run org-policy / `secretAccessor` grant — externally blocked.
 
 ## Sources
-`apps/headyme-portal/src/{main.js,components/*,services/*}`, `apps/heady-portal-{gateway,proxy}/src/index.ts` + `wrangler.json`, `apps/heady-edge-gatekeeper/src/index.ts`, `apps/heady-manager/src/{app,index}.mjs`, `apps/{ableton-edge,headysystems,mcp-dashboard}/README.md`; `docs/adr/0017,0019(frontend),0022,0023,0026,0028`; `docs/ADR/0019-nine-domain-brand-architecture.md`; `tooling/decomposition/manifest.json` (G09, G03); `docs/HEADYME_LAUNCH_RUNBOOK.md`; `docs/compendium/09-infra-and-services.md`; `docs/LEGACY_STACK_COMPONENT_DISPOSITION.md`; `facts.yaml`; `packages/headylens/`; skills `heady-living-dashboard`, `heady-vector-projection`, `heady-projection-composer`, `code-projection`; MEMORY.md.
+`apps/headyme-portal/src/{main.js,components/*,services/*}`, `apps/heady-portal-{gateway,proxy}/src/index.ts` + `wrangler.json`, `apps/heady-edge-gatekeeper/src/index.ts`, `apps/heady-manager/src/{app,index}.mjs`, `apps/{ableton-edge,headysystems,mcp-dashboard}/README.md`; `docs/adr/0017,0019(frontend),0022,0023,0026,0028`; `docs/adr/0033-nine-domain-brand-architecture.md`; `tooling/decomposition/manifest.json` (G09, G03); `docs/HEADYME_LAUNCH_RUNBOOK.md`; `docs/compendium/09-infra-and-services.md`; `docs/LEGACY_STACK_COMPONENT_DISPOSITION.md`; `facts.yaml`; `packages/headylens/`; skills `heady-living-dashboard`, `heady-vector-projection`, `heady-projection-composer`, `code-projection`; MEMORY.md.

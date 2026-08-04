@@ -3,10 +3,10 @@
  * pqc-scanner.js
  * ──────────────────────────────────────────────────────────────────────────────
  * Heady™ PQC Static Analysis Scanner
- * Compliance authority: ADR-0021 (Post-Quantum Cryptography Mandate)
+ * Compliance authority: ADR-0035 (Post-Quantum Cryptography Mandate)
  *
  * Crawls the repository for legacy cryptographic primitives that are prohibited
- * by ADR-0021 and reports them as compliance findings. Distinguishes:
+ * by ADR-0035 and reports them as compliance findings. Distinguishes:
  *
  *   CRITICAL  — Net-new code introducing classical-only asymmetric crypto
  *               (RSA, ECDSA, ECDH, DSA). Blocks the build.
@@ -62,7 +62,7 @@ const RULES = [
     pattern: /\bcreateDiffieHellman\b|\bcreateDiffieHellmanGroup\b|\bDiffieHellman\b/,
     title: 'Classical Diffie-Hellman key exchange',
     detail: 'DH/DHE is broken by Shor\'s algorithm. Replace with ML-KEM-768 hybrid KEM.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'hybridKEM.encapsulate() from src/security/pqc.js',
   },
   {
@@ -71,7 +71,7 @@ const RULES = [
     pattern: /\bcreateECDH\b|\bECDH\b(?!\s*\/\/\s*PQC-HYBRID)/,
     title: 'ECDH key exchange (classical-only)',
     detail: 'ECDH alone is broken by Shor\'s algorithm. Hybrid X25519+ML-KEM is required.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'hybridKEM from src/security/pqc.js (wraps X25519+ML-KEM composite)',
   },
   {
@@ -80,7 +80,7 @@ const RULES = [
     pattern: /['"]rsa['"]\s*[:=]|algorithm\s*[:=]\s*['"]RS[A-Z0-9]+['"]|createSign\s*\(\s*['"]RSA/i,
     title: 'RSA signature or key operation',
     detail: 'RSA is broken by Shor\'s algorithm at any key size. Replace with ML-DSA (Dilithium3) hybrid.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'hybridSign.sign() from src/security/pqc.js',
   },
   {
@@ -89,7 +89,7 @@ const RULES = [
     pattern: /generateKeyPair\s*\(\s*['"]rsa['"]/i,
     title: 'RSA key pair generation',
     detail: 'RSA key generation produces keys that will be broken by a CRQC. Use ML-DSA hybrid keypairs.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'headyPQC.generateHybridKeyPair() from src/security/pqc.js',
   },
   {
@@ -98,7 +98,7 @@ const RULES = [
     pattern: /generateKeyPair\s*\(\s*['"]ec['"]/i,
     title: 'EC key pair generation (classical-only)',
     detail: 'Classical EC key pairs are quantum-vulnerable. Use ML-DSA hybrid keypairs.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'headyPQC.generateHybridKeyPair() from src/security/pqc.js',
   },
   {
@@ -107,7 +107,7 @@ const RULES = [
     pattern: /algorithm\s*[:=]\s*['"]ES(?:256|384|512)['"]/,
     title: 'ECDSA JWT algorithm (ES256/ES384/ES512)',
     detail: 'ECDSA-based JWT algorithms are quantum-vulnerable. Migrate to ML-DSA composite JWT.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Use HS256 (HMAC-SHA256) for symmetric JWT or ML-DSA composite for asymmetric.',
   },
   {
@@ -116,7 +116,7 @@ const RULES = [
     pattern: /algorithm\s*[:=]\s*['"]RS(?:256|384|512)['"]/,
     title: 'RSA JWT algorithm (RS256/RS384/RS512)',
     detail: 'RSA-based JWT algorithms are quantum-vulnerable.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Use HS256 (HMAC-SHA256) for symmetric JWT.',
   },
 
@@ -127,7 +127,7 @@ const RULES = [
     pattern: /\bCRYSTALS[_-]Kyber\b|\bKyber(?:512|768|1024)\b/i,
     title: 'Pre-NIST name: CRYSTALS-Kyber',
     detail: 'CRYSTALS-Kyber was standardised as ML-KEM (FIPS 203). Update algorithm IDs to ML-KEM-512/768/1024.',
-    adrRef: 'ADR-0021 §Approved Algorithm Registry',
+    adrRef: 'ADR-0035 §Approved Algorithm Registry',
     fix: 'Rename to ML-KEM-768 (NIST Security Level 3)',
   },
   {
@@ -136,7 +136,7 @@ const RULES = [
     pattern: /\bCRYSTALS[_-]Dilithium\b|\bDilithium[235]\b/i,
     title: 'Pre-NIST name: CRYSTALS-Dilithium',
     detail: 'CRYSTALS-Dilithium was standardised as ML-DSA (FIPS 204). Update algorithm IDs to ML-DSA-44/65/87.',
-    adrRef: 'ADR-0021 §Approved Algorithm Registry',
+    adrRef: 'ADR-0035 §Approved Algorithm Registry',
     fix: 'Rename to ML-DSA-65 (NIST Security Level 3)',
   },
   {
@@ -145,7 +145,7 @@ const RULES = [
     pattern: /\bSPHINCS\+?\b|\bSPHINCSPlus\b/i,
     title: 'Pre-NIST name: SPHINCS+',
     detail: 'SPHINCS+ was standardised as SLH-DSA (FIPS 205). Update to SLH-DSA-SHAKE-256s.',
-    adrRef: 'ADR-0021 §Approved Algorithm Registry',
+    adrRef: 'ADR-0035 §Approved Algorithm Registry',
     fix: 'Rename to SLH-DSA-SHAKE-256s (long-lived certificates only)',
   },
   {
@@ -153,8 +153,8 @@ const RULES = [
     severity: 'HIGH',
     pattern: /hybridMode\s*[:=]\s*false/,
     title: 'Hybrid mode explicitly disabled',
-    detail: 'ADR-0021 mandates hybrid mode for all asymmetric operations. hybridMode: false is prohibited.',
-    adrRef: 'ADR-0021 §Hybrid Mode Requirement',
+    detail: 'ADR-0035 mandates hybrid mode for all asymmetric operations. hybridMode: false is prohibited.',
+    adrRef: 'ADR-0035 §Hybrid Mode Requirement',
     fix: 'Set hybridMode: true in PQC_CONFIG',
   },
 
@@ -165,7 +165,7 @@ const RULES = [
     pattern: /['"]aes-(?:128|192|256)-cbc['"]/i,
     title: 'AES-CBC mode (unauthenticated)',
     detail: 'CBC mode provides no authentication — vulnerable to padding oracle attacks. Use AES-256-GCM.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Replace with aes-256-gcm (authenticated encryption)',
   },
   {
@@ -174,7 +174,7 @@ const RULES = [
     pattern: /['"]aes-(?:128|192|256)-ecb['"]/i,
     title: 'AES-ECB mode (deterministic, insecure)',
     detail: 'ECB mode is always prohibited — identical plaintext blocks produce identical ciphertext.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Replace with aes-256-gcm',
   },
   {
@@ -183,7 +183,7 @@ const RULES = [
     pattern: /['"]aes-128-/i,
     title: 'AES-128 key size',
     detail: 'Grover\'s algorithm halves symmetric key strength. AES-128 = 64-bit post-quantum security. Use AES-256.',
-    adrRef: 'ADR-0021 §Approved Algorithms — AES-256-GCM',
+    adrRef: 'ADR-0035 §Approved Algorithms — AES-256-GCM',
     fix: 'Replace with aes-256-gcm',
   },
   {
@@ -192,7 +192,7 @@ const RULES = [
     pattern: /createHash\s*\(\s*['"]md5['"]\s*\)/i,
     title: 'MD5 hash function',
     detail: 'MD5 is cryptographically broken (collision attacks since 2004). Use SHA-3-256 or BLAKE3.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'createHash(\'sha3-256\') or import BLAKE3',
   },
   {
@@ -201,7 +201,7 @@ const RULES = [
     pattern: /createHash\s*\(\s*['"]sha1['"]\s*\)/i,
     title: 'SHA-1 hash function',
     detail: 'SHA-1 is collision-weak (SHAttered 2017). Use SHA-256 minimum; prefer SHA-3-256.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'createHash(\'sha3-256\')',
   },
   {
@@ -210,7 +210,7 @@ const RULES = [
     pattern: /['"]des\b|['"]3des\b|['"]des-ede/i,
     title: 'DES or 3DES cipher',
     detail: 'DES is 56-bit (trivially brute-forced). 3DES has Sweet32 vulnerability. Both deprecated.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Replace with aes-256-gcm',
   },
   {
@@ -219,7 +219,7 @@ const RULES = [
     pattern: /['"]rc4['"]/i,
     title: 'RC4 stream cipher',
     detail: 'RC4 is broken — statistical biases allow key recovery. Prohibited.',
-    adrRef: 'ADR-0021 §Prohibited Algorithms',
+    adrRef: 'ADR-0035 §Prohibited Algorithms',
     fix: 'Replace with aes-256-gcm',
   },
 
@@ -230,7 +230,7 @@ const RULES = [
     pattern: /createHmac\s*\(\s*['"]sha256['"]/,
     title: 'HMAC-SHA256 (quantum-safe, audit only)',
     detail: 'HMAC-SHA256 is quantum-safe (symmetric). Flagged for inventory only — no action required.',
-    adrRef: 'ADR-0021 §Exemptions',
+    adrRef: 'ADR-0035 §Exemptions',
     fix: null,
   },
   {
@@ -239,7 +239,7 @@ const RULES = [
     pattern: /x25519|X25519/,
     title: 'X25519 key exchange (approved as hybrid component only)',
     detail: 'X25519 alone is quantum-vulnerable. Ensure it is paired with ML-KEM in hybrid mode.',
-    adrRef: 'ADR-0021 §Approved Algorithms — hybrid KEM',
+    adrRef: 'ADR-0035 §Approved Algorithms — hybrid KEM',
     fix: 'Verify hybridKEM wraps X25519+ML-KEM, not X25519 alone',
   },
   {
@@ -248,7 +248,7 @@ const RULES = [
     pattern: /ed25519|Ed25519/,
     title: 'Ed25519 signing (approved as hybrid component only)',
     detail: 'Ed25519 alone is quantum-vulnerable. Ensure it is paired with ML-DSA in hybrid mode.',
-    adrRef: 'ADR-0021 §Approved Algorithms — hybrid signature',
+    adrRef: 'ADR-0035 §Approved Algorithms — hybrid signature',
     fix: 'Verify hybridSign wraps Ed25519+ML-DSA, not Ed25519 alone',
   },
 ];
@@ -380,7 +380,7 @@ const report = {
   commit_sha:     process.env.GITHUB_SHA ?? 'local',
   pr_number:      process.env.PR_NUMBER ?? null,
   repository:     process.env.GITHUB_REPOSITORY ?? 'HeadySystems/heady-ai',
-  adr_ref:        'ADR-0021',
+  adr_ref:        'ADR-0035',
   scan_mode:      CHANGED_ONLY.length > 0 ? 'pr-diff' : 'full',
   files_scanned:  files.length,
   total_findings: allFindings.length,
@@ -411,7 +411,7 @@ if (outputFile) {
 const summaryFile = process.env.GITHUB_STEP_SUMMARY;
 if (summaryFile) {
   const lines = [
-    '## PQC Compliance Scan — ADR-0021',
+    '## PQC Compliance Scan — ADR-0035',
     '',
     `| Metric | Value |`,
     `|--------|-------|`,

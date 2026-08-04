@@ -125,6 +125,11 @@ it is an independent paraphrase. Drift **D-5**.
 > **⚠ COLLISION — two ADR directories with divergent numbering. Both claim authority; this document
 > flags, it does not resolve (per task).**
 >
+> ✅ **Resolved 2026-08-04** (post-census): the UPPERCASE `docs/ADR/0019–0025` files were renumbered
+> into the canonical set as `docs/adr/0033–0039` with provenance headers; `docs/ADR/INDEX.md` is now
+> a redirect stub. The census tables below are preserved as the pre-resolution snapshot.
+> See `docs/reports/sot-consistency-audit-2026-08-04.md` (F1/F3).
+>
 > - `docs/adr/` (lowercase) — files **0000–0029** + `README.md` + `superseded-v1/`. README declares the
 >   canonical set `0000`–`0029`, all Accepted.
 > - `docs/ADR/` (UPPERCASE) — **only files 0019–0023 exist on disk** + `INDEX.md`. The INDEX *lists*
@@ -200,6 +205,9 @@ it is an independent paraphrase. Drift **D-5**.
 > ⚠ **Note D-ADR-region:** `docs/ADR/0022` locks GCP region to **us-east1**, while `AGENTS.md` deploy
 > blocks + `facts.yaml` use **us-central1**. Region drift between the UPPERCASE ADR set and the golden
 > record.
+>
+> ✅ **Resolved 2026-08-04:** `facts.yaml` corrected to `us-east1` (matches the live service and
+> ADR-0036, ex `ADR/0022`); the `AGENTS.md` deploy block is annotated legacy-only.
 
 ### `docs/adr/superseded-v1/` — quarantined (out of canonical number-space)
 
@@ -339,8 +347,10 @@ it is an independent paraphrase. Drift **D-5**.
   inflates the `enforced=6` count.
 - **D-4 (high):** **two ADR directories** (`docs/adr` vs `docs/ADR`) with divergent numbering; hard
   collision on **0019–0023** (different decisions per dir); `docs/ADR/INDEX.md` documents a file-less
-  0001–0018 parallel set. Both README and INDEX claim authority — unresolved.
-- **D-4b (med):** `docs/ADR/0022` locks region **us-east1** vs golden-record **us-central1**.
+  0001–0018 parallel set. Both README and INDEX claim authority — ✅ **resolved 2026-08-04**:
+  `docs/ADR/0019–0025` renumbered to canonical `docs/adr/0033–0039`; INDEX = redirect stub.
+- **D-4b (med):** `docs/ADR/0022` locks region **us-east1** vs golden-record **us-central1** —
+  ✅ **resolved 2026-08-04**: facts.yaml corrected to `us-east1` (ADR-0036).
 - **D-5 (med):** `heady-maximum-potential` skill carries an 8-item "System Building Directives" list that
   diverges from the canonical 10 Master Directives, and a 3-item code-mutation law set with no enforcer.
 - **Honor-system laws (no fail-closed gate):** Law 5 (determinism), Law 6 (scale-guard), Law 7
