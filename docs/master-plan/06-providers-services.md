@@ -126,11 +126,11 @@ these by hostname.
 - **What** Origin runtime: Node-22 modular monolith, owns the SoR (Neon) write connection. "Push reads to the Worker, route writes to Cloud Run" — every Worker→Cloud Run hop is a $-and-ms tax.
 - **Legacy** Cloud SQL + Cloud Run in legacy project `heady-prod-609590223909` (us-central1) — **incompatible, read-only migration access only**.
 - **Rebuild** `heady-codeflow-api` (live `heady-codeflow-api-1003436179562.us-east1.run.app`), deployed `--no-allow-unauthenticated`; reached only via the edge `heady-portal-gateway` worker.
-- **Parts** GCP project `heady-ai` (live) / `heady-rebuild` (ADR-0036 nominal); region **us-east1**; service `heady-origin`/`heady-codeflow-api`; minimal invoker SA `heady-gateway-invoker`.
+- **Parts** GCP project **`heady-ai`** (canonical per ADR-0036 amendment 2026-08-04; nominal `heady-rebuild` retired); region **us-east1**; service `heady-origin`/`heady-codeflow-api`; minimal invoker SA `heady-gateway-invoker`.
 - **OSS-alternative** *current:* containerized Node on Cloud Run. *potential:* Knative / Fly.io / self-hosted.
 - **Transfer** Image built; pending one `roles/run.invoker` IAM grant + redeploy (memory) and org-policy/edge-worker front (no public unauthenticated surface).
 - **Incorporation** Deploy authenticated → front with `heady-portal-gateway` (Firebase token → Google id_token at edge) so the org policy never relaxes → attach `headyme.com/api/*` Worker route.
-- **⚠ Drift/decisions/ADR** **Region drift (D1):** ✅ resolved 2026-08-04 — `facts.yaml` corrected to **us-east1** per ADR-0036 (⭐⭐⭐⭐⭐), matching the live service; us-central1 remains legacy-only. **Project drift (D5):** ADR-0036 nominal `heady-rebuild` vs live `heady-ai` (still open).
+- **⚠ Drift/decisions/ADR** **Region drift (D1):** ✅ resolved 2026-08-04 — `facts.yaml` corrected to **us-east1** per ADR-0036 (⭐⭐⭐⭐⭐), matching the live service; us-central1 remains legacy-only. **Project drift (D5):** ✅ resolved 2026-08-04 — ADR-0036 amended to canonize the live `heady-ai` project; facts.yaml carries `deploy_targets.origin.project`.
 
 ### Firebase Auth + Hosting — Identity & Site Hosting
 - **Category** Identity / hosting · **Status** live · **Confidence** high (`heady-ai.web.app` live)
@@ -162,7 +162,7 @@ these by hostname.
 - **D2 — Domain registry (3-way).** Task's 9 (incl. `heady-ai.com`, `headybuddy.org`) vs ADR-0033's 9 (incl. `headyai.com`, `headybuddy.com`, headyos/headytrade/headylab/headyweb; **omits headysystems.com**) vs compendium I7's 11 (adds headylens, headyfinance). The **edge router** serves the task's 9 minus heady-ai.com plus headylens.com.
 - **D3 — Firebase project.** Live `heady-ai` vs skill-asserted `gen-lang-client-0920560496` (`heady-firebase-auth-orchestrator`). Skill stale.
 - **D4 — OpenRouter.** Named as the chokepoint path in ADR-0018 but **no wired client and no credential** in the registry.
-- **D5 — GCP project name.** ADR-0036 nominal `heady-rebuild` vs live `heady-ai`.
+- **D5 — GCP project name.** ✅ **Resolved 2026-08-04:** ADR-0036 amended — canonical project = live **`heady-ai`** (Firebase project ID is immutable, so reality wins); `facts.yaml deploy_targets.origin.project: heady-ai` added to the golden record.
 - **D6 — Two ADR directories.** ✅ **Resolved 2026-08-04:** the uppercase `docs/ADR/` set (0019=nine-domain, 0020=Drupal, 0021=PQC, 0022=region, 0023=decomposition, 0024=domain-registry, 0025=content-gateway) was renumbered into the canonical `docs/adr/` set as **0033–0039**; `docs/ADR/INDEX.md` is now a redirect stub. (Was: same numbers, different decisions.)
 - **D7 — Dropped/vestigial stores.** Qdrant **dropped** (facts.yaml + ADR-0003); Pinecone **vestigial** (registry note) — both still leave traces (`PINECONE_API_KEY` slot; Drupal config references a dropped store at a loopback URL — runbook Bucket 2 #3).
 - **D8 — HF off-platform embed.** `BAAI/bge-small-en-v1.5` HF fallback transmits corpus off-platform; **OFF by default** (`HEADY_ALLOW_HF_EMBED=0`, requires `--allow-hf`).

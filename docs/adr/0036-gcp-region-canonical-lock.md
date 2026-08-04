@@ -1,6 +1,7 @@
 # ADR-0036: GCP Project + Region Canonical Lock — us-east1
 
 **Renumbered:** ADR-0022 → ADR-0036 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
+**Amended:** 2026-08-04 (founder ruling, master-plan D5) — canonical GCP project is **`heady-ai`**, the live project hosting the Cloud Run origin, Artifact Registry, and the Firebase project (whose ID is immutable). This exercises the original decision's "`heady-rebuild` (or successor)" clause; `heady-rebuild` was nominal and never provisioned. Region lock (`us-east1`) unchanged.  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -14,7 +15,7 @@ A critical divergence exists between legacy documentation and the active rebuild
 
 | Property | Legacy (DO NOT USE) | Canonical Rebuild |
 |---|---|---|
-| GCP Project | `heady-prod-609590223909` | `heady-rebuild` (or successor) |
+| GCP Project | `heady-prod-609590223909` | `heady-ai` (amended 2026-08-04; originally nominal `heady-rebuild` (or successor)) |
 | Region | `us-central1` | `us-east1` |
 | Database | Cloud SQL (Postgres 14) | Neon Postgres (serverless, `us-east1`) |
 | Pipeline | 9-stage | 21-stage (ADR-0012) |
@@ -37,7 +38,7 @@ This ADR formally locks the canonical GCP project and region, provides machine-r
 ```js
 // src/config/gcp.js  (ESM, phi-scaled)
 export const GCP = {
-  PROJECT_ID:  process.env.GCP_PROJECT_ID ?? 'heady-rebuild',
+  PROJECT_ID:  process.env.GCP_PROJECT_ID ?? 'heady-ai',  // amended 2026-08-04 — live project; was nominal 'heady-rebuild'
   REGION:      'us-east1',         // LOCKED — never us-central1
   ZONE:        'us-east1-b',       // Primary zone
   RUN_SERVICE: 'heady-origin',     // Cloud Run service name
@@ -96,7 +97,7 @@ The ADR Sentinel workflow (`.github/workflows/adr-sentinel.yml`) MUST include a 
 All deployments MUST set:
 
 ```
-GCP_PROJECT_ID=heady-rebuild
+GCP_PROJECT_ID=heady-ai
 GCP_REGION=us-east1
 # Never set CLOUDSQL_INSTANCE — use DATABASE_URL for Neon
 DATABASE_URL=postgresql://...@ep-xxx.us-east1.aws.neon.tech/heady?sslmode=require
