@@ -418,6 +418,15 @@ importers:
         specifier: 8.22.0
         version: 8.22.0
 
+  packages/digital-twin:
+    dependencies:
+      '@heady/csl-engine':
+        specifier: workspace:*
+        version: link:../csl-engine
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+
   packages/embedding: {}
 
   packages/events:

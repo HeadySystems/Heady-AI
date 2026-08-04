@@ -1,0 +1,21 @@
+{
+  "name": "@heady/digital-twin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady digital-twin engine — 384D entity twins, φ-weighted behavioral decay, cosine similarity, what-if perturbation simulation. Public-domain vector math (ADR-0045); CSL gate verdicts are delegated to @heady/csl-engine, not embodied here.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "@heady/csl-engine": "workspace:*"
+  },
+  "keywords": ["heady", "digital-twin", "embedding", "simulation", "what-if", "cosine"]
+}
