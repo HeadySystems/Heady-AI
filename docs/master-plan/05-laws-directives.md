@@ -107,7 +107,7 @@ directives in `governance/directives/`** (10 files confirmed).
 | 4 | Low-Latency Deterministic Orchestration | `04-deterministic-orchestration.md` | active — backs Law 5 |
 | 5 | Graceful Lifecycle Management (no zombies/leaks) | `05-graceful-lifecycle.md` | active |
 | 6 | Empathic Masking & Persona Fidelity | `06-empathic-masking.md` | active |
-| 7 | HCFullPipeline — 21-Stage Cognitive State Machine | `07-hcfullpipeline.md` | active — backs Law 7 |
+| 7 | HCFullPipeline — 22-Stage Cognitive State Machine (ADR-0045; was 21-Stage) | `07-hcfullpipeline.md` | active — backs Law 7 |
 | 8 | Continuous Learning & Pattern Evolution | `08-continuous-learning.md` | active |
 | 9 | Multi-Model Council — Competitive AI Routing | `09-multi-model-council.md` | active — backs Law 8 |
 | 10 | Sacred Geometry Orchestration — φ-Scaled Everything | `10-sacred-geometry.md` | active — backs Law 6 / ALAW-2 |
@@ -189,7 +189,7 @@ it is an independent paraphrase. Drift **D-5**.
 | 0009 | Firebase Auth + httpOnly Cookies Only | Accepted | `ADR` — **NO FILE** |
 | 0010 | Core Module Consolidation | Accepted | `ADR` — **NO FILE** |
 | 0011 | Node.js ESM Only | Accepted | `ADR` — **NO FILE** |
-| 0012 | 21-Stage HCFullPipeline as Canonical | Accepted | `ADR` — **NO FILE** |
+| 0012 | 21-Stage HCFullPipeline as Canonical | Accepted (superseded by ADR-0045 → 22-stage) | `ADR` — **NO FILE** |
 | 0013 | Upstash Redis EventSpine | Accepted | `ADR` — **NO FILE** |
 | 0014 | Deterministic LLM Execution (temp 0 / seed 42) | Accepted | `ADR` — **NO FILE** |
 | 0015 | Sacred Geometry Node Topology | Accepted | `ADR` — **NO FILE** |

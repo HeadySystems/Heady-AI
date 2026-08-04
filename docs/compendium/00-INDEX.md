@@ -35,7 +35,7 @@ Where they diverge, the canonical layer wins and the divergence is recorded in �
 | 00 | `00-INDEX.md` | this index + reconciliation summary | ✅ |
 | 01 | `01-laws-and-constants.md` | 4 Liquid laws · 10 constitutional laws · φ constants · CSL gates + threshold ladder · 7 archetypes · 11 personas | ✅ |
 | 02 | `02-bees-and-swarms.md` | **every bee** (3 taxonomies reconciled) · **every swarm** (17 matrix + 24 domains) · BaseHeadyBee lifecycle · Bee Factory · stigmergy · runtime mapping | ✅ |
-| 03 | `03-pipeline-and-nodes.md` | 21-stage HCFullPipeline · 21 nodes · Socratic loop · scan protocol · 6-layer boot · Monte-Carlo/Arena/Judge | ✅ |
+| 03 | `03-pipeline-and-nodes.md` | 22-stage HCFullPipeline (ADR-0045) · 21 nodes · Socratic loop · scan protocol · 6-layer boot · Monte-Carlo/Arena/Judge | ✅ |
 | 04 | `04-memory-and-retrieval.md` | 3-tier memory · AutoContext 5-pass · CoALA/Letta/mem0/Zep · pgvector+Vectorize · embedding lock · HeadyFS 3D | ✅ |
 | 05 | `05-model-mesh.md` | Liquid Gateway · CF AI Gateway chokepoint · 9-tier provider mesh · Multi-Model Council/Battle Arena · routing formula | ✅ |
 | 06 | `06-governance.md` | **the full governance system**: laws enforcement · CSL gates · HCP approval + OPA/Rego · projection manifests · consistency engine · MCP security · PQC · agent bootstrap · permission graph/delegation vault · trust receipts | ✅ |

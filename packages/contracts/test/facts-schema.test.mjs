@@ -27,7 +27,7 @@ const VALID = Object.freeze({
   supply_chain: { primary: "renovate" },
   deploy_targets: { origin: { kind: "gcp-cloud-run" } },
   pipeline: { stages: ["lint"], required_checks: ["lint"] },
-  hcfullpipeline: { stage_count: 21 },
+  hcfullpipeline: { stage_count: 22 },
   consistency: { escalation_threshold: 3 },
   stage0: { manifest: "configs/stage0-untouchables.json" },
   domains: { headyme: { fqdn: "headyme.com", role: "primary-user-surface", status: "verified" } },
@@ -63,7 +63,7 @@ test("LOCKED architectural decisions fail closed on drift", () => {
   assert.match(msgs(drift((c) => { c.embedding.dim = 1536; })), /embedding\.dim must be 384/);
   assert.match(msgs(drift((c) => { c.embedding.pooling = "cls"; })), /embedding\.pooling must be "mean"/);
   assert.match(msgs(drift((c) => { c.stores.retrieval_authority = "qdrant"; })), /pgvector/);
-  assert.match(msgs(drift((c) => { c.hcfullpipeline.stage_count = 22; })), /stage_count must be 21/);
+  assert.match(msgs(drift((c) => { c.hcfullpipeline.stage_count = 21; })), /stage_count must be 22/);
   assert.match(msgs(drift((c) => { c.platform.module_system = "cjs"; })), /module_system must be "esm"/);
   assert.match(msgs(drift((c) => { c.platform.phi = 1.5; })), /phi must be 1\.618/);
   assert.match(msgs(drift((c) => { c.event_bus = "kafka"; })), /event_bus must be "nats"/);
@@ -93,7 +93,7 @@ test("dynamic domain entries require fqdn/role/status with a recognized status",
 test("validateFactsV1 AGGREGATES — one run surfaces every violation", () => {
   const { ok, errors } = validateFactsV1(drift((c) => {
     c.embedding.dim = 1536;
-    c.hcfullpipeline.stage_count = 22;
+    c.hcfullpipeline.stage_count = 21;
     c.stores.retrieval_authority = "qdrant";
   }));
   assert.equal(ok, false);

@@ -11,7 +11,7 @@
 // Design (per the rebuild invariant order — this is step 3, the null keystone):
 //   • VALUE-LOCK architectural decisions — silent change == corruption
 //     (dim=384, pooling=mean, pgvector, φ, esm, chokepoint, dropped⊇qdrant,
-//      event_bus, agent_harness, stage_count=21=fib(8)). ADR-cited.
+//      event_bus, agent_harness, stage_count=22 per ADR-0045). ADR-cited.
 //   • TYPE-CHECK growing counters — value-locking them forces a schema edit
 //     on every increment (patents_provisional: positive int, not const;
 //     facts.yaml stays the value authority).
@@ -95,7 +95,7 @@ export const FACTS_V1 = [
   { path: "pipeline.required_checks", required: true, type: "array", minItems: 1 },
   { path: "hcfullpipeline", required: true, type: "object" },
   // 21 = fib(8), φ-native; 22 is not a Fibonacci number and cannot be canonical
-  { path: "hcfullpipeline.stage_count", required: true, const: 21, adr: "fib(8) — canonical HCFP DAG" },
+  { path: "hcfullpipeline.stage_count", required: true, const: 22, adr: "ADR-0045 — 22-stage HCFP DAG, DISTILL terminal (superseded the 21=fib(8) canon 2026-08-04)" },
 
   // ── consistency (⌈φ²⌉=3; type-checked, φ-derived) ────────────────
   { path: "consistency", required: true, type: "object" },

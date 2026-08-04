@@ -62,7 +62,7 @@ provides the cognitive frame in which the Laws are applied.
 | Constant | Value | Note |
 |---|---|---|
 | Max Bee Capacity (strategic) | **10,000** | Runtime guard enforces **6765** (Fibonacci) until capacity‑tested |
-| Pipeline | **HCFullPipeline — 22‑stage** v9.0 data-dependency DAG | stages 00–21 (adds `DISTILL`); variants Fast/Full/Arena/Learning. *(Corrected from legacy 21-stage per `docs/compendium/03-pipeline-and-nodes.md`; earlier "12‑stage" also stale.)* |
+| Pipeline | **HCFullPipeline — 22‑stage** v9.0 data-dependency DAG | stages 00–21 (adds `DISTILL`); variants Fast/Full/Arena/Learning. *(Corrected from legacy 22-stage per `docs/compendium/03-pipeline-and-nodes.md`; earlier "12‑stage" also stale.)* |
 | CSL Gate Threshold | φ‑scaled — **0.618 (1/φ)** default, task‑adaptive | HALT <0.382 · CAUTIOUS ≥0.382 · EXECUTE ≥0.618 |
 | Vector Dimensions | **384** | Embedding model **`@cf/baai/bge-small-en-v1.5`**, mean pooling (ADR‑0015). *(Corrected from legacy "all‑MiniLM‑L6‑v2".)* |
 | Projection Dimensions | 3 | 3D spatial memory |

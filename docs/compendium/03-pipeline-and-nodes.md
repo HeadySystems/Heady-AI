@@ -5,7 +5,7 @@
 
 ---
 
-## P1. HCFullPipeline — the 21-stage DAG (fib(8)=21)
+## P1. HCFullPipeline — the 22-stage DAG (DISTILL terminal per ADR-0045; the prior fib(8)=21 canon is superseded)
 
 **What.** The end-to-end autonomous orchestration: a request enters and passes through **21 stages**
 (0–20, CHANNEL_ENTRY → RECEIPT, φ-anchored to fib(8)=21) whose execution order is a

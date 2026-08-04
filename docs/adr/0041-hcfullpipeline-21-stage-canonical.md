@@ -1,6 +1,14 @@
-# ADR-0041: 21-Stage HCFullPipeline as the Canonical Execution Model
+# ADR-0041: 21-Stage HCFullPipeline as the Canonical Execution Model (SUPERSEDED by ADR-0045 → 22 stages)
 
-**Status:** Accepted
+> ⚠️ **SUPERSEDED 2026-08-04 by [ADR-0045](0045-22-stage-hcfullpipeline-distiller-terminal.md)** —
+> the canonical FULL count is now **22 stages** (order 0–21) with DISTILL as a first-class
+> terminal stage. The founder issued that ruling after reviewing this ADR's `21 = fib(8)`
+> rationale and overrode it (shape follows function; φ still governs timeouts/backoff/TTLs
+> per LAW-10). Everything else here still stands: the variant table, variants-as-subsets of a
+> single definition, and the single-canonical-module requirement. Read the stage *count* below
+> as historical.
+
+**Status:** Superseded by ADR-0045 (2026-08-04)
 **Date:** 2026-08-04
 **Accepted:** 2026-08-04 by Eric Haywood (HeadySystems Inc.) — founder acceptance per the ADR-0031 ceremony.
 **Deciders:** Eric Haywood (HeadySystems Inc.)
@@ -20,7 +28,7 @@
 
 ## Context
 
-The 21-stage HCFullPipeline (FULL) is referenced across the rebuild ADR set as the
+The 21-stage HCFullPipeline (FULL) — superseded, now 22 per ADR-0045 — is referenced across the rebuild ADR set as the
 canonical execution model, yet it has **no ADR of record** in rebuild — a dangling
 canonical reference. Other pipeline variants (8-stage FAST, 13-stage STANDARD, 15-stage
 ARENA, 13-stage LEARNING) are derivatives of the FULL definition, not alternatives.
@@ -28,7 +36,7 @@ ARENA, 13-stage LEARNING) are derivatives of the FULL definition, not alternativ
 
 ## Decision
 
-The **21-stage HCFullPipeline (FULL variant)** is the canonical execution model. All
+The **21-stage HCFullPipeline (FULL variant)** was the canonical execution model (superseded 2026-08-04 by ADR-0045 → 22 stages). All
 variants are subsets or extensions of the single 21-stage definition:
 
 | Variant | Stages | fib() | Use case |
