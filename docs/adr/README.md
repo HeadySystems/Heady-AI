@@ -17,7 +17,10 @@ Per-file `Status:` headers are authoritative.
 Proposed records beyond the accepted canonical set:
 
 - `0030` — Heady Understanding Engine.
-- `0032` — Field & Agent Waves (drafted 2026-07-29 at founder direction; acceptance via the ADR-0031 ceremony).
+
+`0032` — Field & Agent Waves — **Accepted 2026-08-04** (founder acceptance per the ADR-0031
+ceremony; ratifies the Field / agent-waves cognition substrate). `0041`–`0044` were also
+accepted 2026-08-04 (legacy→rebuild ADR reconciliation).
 
 > ✅ **Numbering-collision resolved (2026-08-04):** the seven Accepted ADRs that lived in the
 > UPPERCASE `docs/ADR/` directory under numbers `0019`–`0025` (colliding with the different
