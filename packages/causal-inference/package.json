@@ -1,0 +1,20 @@
+{
+  "name": "@heady/causal-inference",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady causal-inference engine — Pearl SCM, do-calculus interventions, counterfactuals, Monte-Carlo. Public-domain math (ADR-0040); the CSL stage-gate (HS-058) is delegated to @heady/csl-engine, not embodied here.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*"
+  },
+  "keywords": ["heady", "causal-inference", "do-calculus", "counterfactual", "scm", "pearl", "monte-carlo"]
+}

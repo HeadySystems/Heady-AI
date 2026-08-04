@@ -514,6 +514,7 @@ HEADY_BRAND:END -->
 | ADR-0037 | heady-manager.js Decomposition Mandate |
 | ADR-0038 | src/config/domain-registry.js as Canonical Domain File |
 | ADR-0039 | Content-Gateway Cloudflare Worker Contract |
+| ADR-0040 | Causal-Inference Engine (`@heady/causal-inference`) |
 
 ---
 *© 2026 HeadySystems Inc. — Eric Haywood, Founder*
