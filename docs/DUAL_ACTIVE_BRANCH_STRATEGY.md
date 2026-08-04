@@ -22,6 +22,13 @@
 **Status:** Active policy
 **Supersedes:** `MAIN_TO_REBUILD_MIGRATION_PLAN.md` (retirement model)
 
+> **Current state (2026-08-04):** the divergent `main` this policy describes was archived to
+> `legacy/main-archive` (`3a54aeee`, tag `archive/main-2026-06-17`); `main` now tracks the
+> `rebuild` tip as a legacy pointer per `SOURCE_OF_TRUTH.md` ("will be retired after
+> verification period"). The dual-active model below documents the pre-archive arrangement —
+> read it together with `SOURCE_OF_TRUTH.md`, which is authoritative for branch canon.
+> See audit F6, `docs/reports/sot-consistency-audit-2026-08-04.md`.
+
 ## 1. Purpose
 Both `main` and `rebuild` are first-class, always-deployable branches in `HeadySystems/heady-ai`. Neither branch is retired, frozen, or subordinate to the other. They serve distinct but parallel purposes and can be interchanged as the active deployment target at any time.
 

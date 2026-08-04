@@ -3,8 +3,8 @@
  *  HEADY DOMAIN REGISTRY — code projection of the domain canon
  *  SoT: facts.yaml `domains:` (repo root, golden record). This file MUST
  *  stay consistent with it — the coherence gate treats facts.yaml as canon.
- *  ADR-0019: Nine-domain brand architecture
- *  ADR-0024: Domain registry canonical file (code-level)
+ *  ADR-0033: Nine-domain brand architecture
+ *  ADR-0038: Domain registry canonical file (code-level)
  *  ADR-0011: Node.js ESM only
  *  ADR-0006: phi-math — no magic numbers
  * ═══════════════════════════════════════════════════════════════════════
@@ -264,7 +264,7 @@ export const DOMAINS_BY_ENTITY = Object.freeze(
  */
 export function assertDomain(domain) {
   const entry = DOMAIN_REGISTRY[domain];
-  if (!entry) throw new Error(`Domain '${domain}' is not registered in DOMAIN_REGISTRY (ADR-0019/ADR-0024)`);
+  if (!entry) throw new Error(`Domain '${domain}' is not registered in DOMAIN_REGISTRY (ADR-0033/ADR-0038)`);
   return entry;
 }
 
@@ -288,7 +288,7 @@ export function tenantForOrigin(origin) {
 }
 
 /**
- * Return the PQC key namespace for a domain (ADR-0021).
+ * Return the PQC key namespace for a domain (ADR-0035).
  * Format: '{tenant}:{serviceId}'
  * @param {string} domain
  * @param {string} serviceId

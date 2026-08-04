@@ -1,5 +1,6 @@
-# ADR-0023: heady-manager.js Decomposition Mandate
+# ADR-0037: heady-manager.js Decomposition Mandate
 
+**Renumbered:** ADR-0023 → ADR-0037 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -67,7 +68,7 @@ if (tokenBuf.length === expectedBuf.length &&
 res.setHeader('Access-Control-Allow-Origin', '*');
 
 // AFTER (allowlisted origins from domain registry):
-import { DOMAIN_REGISTRY } from '../config/domain-registry.js';  // ADR-0019
+import { DOMAIN_REGISTRY } from '../config/domain-registry.js';  // ADR-0033
 const ALLOWED_ORIGINS = new Set(Object.keys(DOMAIN_REGISTRY).map(d => `https://${d}`));
 
 const origin = req.headers.origin ?? '';
@@ -84,7 +85,7 @@ if (ALLOWED_ORIGINS.has(origin)) {
 
 **Phase 1 — Security (P0, immediate):**
 - Extract `auth-middleware` with `crypto.timingSafeEqual` fix.
-- Extract `cors-policy` with origin allowlist from `DOMAIN_REGISTRY` (ADR-0019).
+- Extract `cors-policy` with origin allowlist from `DOMAIN_REGISTRY` (ADR-0033).
 - Ship as single PR with full unit tests (timing attack test, CORS bypass test).
 
 **Phase 2 — Routing (within 2 sprints):**
@@ -159,5 +160,5 @@ export const CORS_MAX_AGE_SEC          = FIB[13];            // 233 seconds
 - ADR-0011: Node.js ESM only (CJS elimination)
 - ADR-0015: Sacred Geometry node topology (layer separation)
 - ADR-0018: CI/CD GitHub Actions gates (test coverage requirement)
-- ADR-0019: Nine-domain brand architecture (CORS allowlist source)
-- ADR-0021: PQC mandate (timing-safe operations)
+- ADR-0033: Nine-domain brand architecture (CORS allowlist source)
+- ADR-0035: PQC mandate (timing-safe operations)

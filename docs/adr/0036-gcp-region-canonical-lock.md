@@ -1,5 +1,6 @@
-# ADR-0022: GCP Project + Region Canonical Lock — us-east1
+# ADR-0036: GCP Project + Region Canonical Lock — us-east1
 
+**Renumbered:** ADR-0022 → ADR-0036 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -81,7 +82,7 @@ The ADR Sentinel workflow (`.github/workflows/adr-sentinel.yml`) MUST include a 
       src/ infra/ .github/ scripts/ \
       --include="*.js" --include="*.yml" --include="*.yaml" --include="*.tf" \
       --exclude-dir="scripts/migrate" \
-      | grep -v "LEGACY\|# DO NOT USE\|ADR-0022" || true)
+      | grep -v "LEGACY\|# DO NOT USE\|ADR-0036" || true)
     if [ -n "$FOUND" ]; then
       echo "❌ Legacy region/project references found:"
       echo "$FOUND"
@@ -129,7 +130,7 @@ Add to `REBUILD_INSTRUCTIONS.md` under `## DO NOT` section:
 
 ```
 DO NOT use GCP project heady-prod-609590223909 — legacy project, read-only migration access only
-DO NOT deploy to us-central1 — canonical region is us-east1 (ADR-0022)
+DO NOT deploy to us-central1 — canonical region is us-east1 (ADR-0036)
 DO NOT set CLOUDSQL_INSTANCE env var — use DATABASE_URL pointing to Neon (ADR-0016)
 ```
 

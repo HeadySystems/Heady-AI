@@ -1,4 +1,4 @@
-# ADR-0021: Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid Mode
+# ADR-0035: Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid Mode
 **Date:** 2026-06-17 | **Status:** Accepted | **Author:** Eric Haywood  
 **Compliance:** NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA)  
 **Enforced by:** `scripts/pqc-scanner.js` + `adr-sentinel.yml` pqc-scan job
@@ -71,11 +71,11 @@ const signature = await hybridSign.sign(message, privateKey);
 
 // ❌ PROHIBITED — classical-only RSA
 import { createSign } from 'node:crypto';
-const sign = createSign('RSA-SHA256');    // ADR-0021 violation
+const sign = createSign('RSA-SHA256');    // ADR-0035 violation
 
 // ❌ PROHIBITED — ECDH alone
 import { createECDH } from 'node:crypto';
-const ecdh = createECDH('prime256v1');    // ADR-0021 violation
+const ecdh = createECDH('prime256v1');    // ADR-0035 violation
 ```
 
 ### Migration Timeline

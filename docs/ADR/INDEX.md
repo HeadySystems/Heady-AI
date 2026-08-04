@@ -1,34 +1,27 @@
-# Heady Rebuild — ADR Index
+# Heady Rebuild — ADR Index (REDIRECT STUB)
 
-| # | Title | Status | Strength |
-|---|-------|--------|---------|
-| [0001](0001-mcp-protocol-adoption.md) | Adopt MCP as Unified Tool Gateway | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0002](0002-canonical-topology.md) | Cloudflare Edge + Cloud Run Origin | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0003](0003-hybrid-vector-memory.md) | pgvector Source of Truth + Vectorize Edge Cache | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0004](0004-liquid-gateway-provider-racing.md) | Liquid Gateway — Provider Racing at Edge | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0005](0005-capacity-ceiling.md) | Runtime Ceiling fib(20)=6765 | Accepted | ⭐⭐⭐⭐ High |
-| [0006](0006-phi-math-single-source-of-truth.md) | φ-Math Single Source of Truth | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0007](0007-csl-replaces-boolean-gates.md) | CSL Replaces Boolean Gates | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0008](0008-dual-active-legacy-rebuild.md) | Dual-Active Legacy + Rebuild Strategy | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0009](0009-auth-firebase-httponly-cookies.md) | Firebase Auth + httpOnly Cookies Only | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0010](0010-core-module-consolidation.md) | Core Module Consolidation | Accepted | ⭐⭐⭐⭐ High |
-| [0011](0011-nodejs-esm-only.md) | Node.js ESM Only | Accepted | ⭐⭐⭐⭐ High |
-| [0012](0012-21-stage-pipeline-canonical.md) | 21-Stage HCFullPipeline as Canonical | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0013](0013-upstash-redis-event-spine.md) | Upstash Redis EventSpine | Accepted | ⭐⭐⭐⭐ High |
-| [0014](0014-determinism-temperature-zero-seed-42.md) | Deterministic LLM Execution | Accepted | ⭐⭐⭐⭐ High |
-| [0015](0015-sacred-geometry-node-topology.md) | Sacred Geometry Node Topology | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0016](0016-neon-replaces-cloud-sql.md) | Neon Postgres Replaces Cloud SQL | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0017](0017-structured-logging-pino.md) | Structured Logging — Pino Only | Accepted | ⭐⭐⭐⭐ High |
-| [0018](0018-cicd-github-actions-gates.md) | CI/CD — GitHub Actions + Coherence Gate | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0019](0019-nine-domain-brand-architecture.md) | Nine-Domain Brand Architecture — Nonprofit/Commercial Split | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0020](0020-drupal-11-headless-cms.md) | Drupal 11 as Headless CMS | Accepted | ⭐⭐⭐⭐ High |
-| [0021](0021-post-quantum-cryptography-mandate.md) | Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0022](0022-gcp-region-canonical-lock.md) | GCP Project + Region Canonical Lock — us-east1 | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0023](0023-heady-manager-decomposition.md) | heady-manager.js Decomposition Mandate | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0024](0024-domain-registry-canonical-file.md) | src/config/domain-registry.js Canonical Domain File | Accepted | ⭐⭐⭐⭐⭐ Critical |
-| [0025](0025-content-gateway-cloudflare-worker.md) | Content-Gateway Cloudflare Worker Contract | Accepted | ⭐⭐⭐⭐ High |
+> **This directory is retired.** The canonical ADR set lives in **`docs/adr/`** (lowercase).
+> On 2026-08-04 the seven ADR files that lived here under numbers 0019–0025 — which collided
+> with *different* Accepted decisions at the same numbers in `docs/adr/` — were renumbered
+> into the canonical set. See `docs/reports/sot-consistency-audit-2026-08-04.md` (F1).
 
-Generated: 2026-06-17 | Updated: 2026-06-17 | Author: Eric Haywood
+## Renumber map
 
-> 25 ADRs documented. All reserved slots filled. Full coverage from MCP adoption through content delivery.
-> Next recommended: ADR-0026 (workers/content-gateway deployment spec), ADR-0027 (heady-manager Phase 2 route extraction)
+| Old (`docs/ADR/`) | New (`docs/adr/`) | Title |
+|---|---|---|
+| 0019 | [0033](../adr/0033-nine-domain-brand-architecture.md) | Nine-Domain Brand Architecture — Nonprofit/Commercial Split |
+| 0020 | [0034](../adr/0034-drupal-11-headless-cms.md) | Drupal 11 as Headless CMS |
+| 0021 | [0035](../adr/0035-post-quantum-cryptography-mandate.md) | Post-Quantum Cryptography Mandate — ML-DSA/ML-KEM Hybrid |
+| 0022 | [0036](../adr/0036-gcp-region-canonical-lock.md) | GCP Project + Region Canonical Lock — us-east1 |
+| 0023 | [0037](../adr/0037-heady-manager-decomposition.md) | heady-manager.js Decomposition Mandate |
+| 0024 | [0038](../adr/0038-domain-registry-canonical-file.md) | src/config/domain-registry.js Canonical Domain File |
+| 0025 | [0039](../adr/0039-content-gateway-cloudflare-worker.md) | Content-Gateway Cloudflare Worker Contract |
+
+## Historical note
+
+The previous INDEX in this directory listed entries 0001–0018 with titles that never had
+files here (a file-less parallel numbering — audit finding F3). Those decisions are covered
+by the canonical records in `docs/adr/0000`–`0018`; consult `docs/adr/README.md` for the
+authoritative status of every ADR.
+
+Updated: 2026-08-04 | Author: audit remediation (founder-approved), see PR #267

@@ -3,7 +3,7 @@
  * PROPRIETARY AND CONFIDENTIAL.
  *
  * ADR-0011: Node.js ESM only — no require(), no module.exports
- * ADR-0021: Post-quantum cryptography mandate (ML-KEM-768 / ML-DSA-65)
+ * ADR-0035: Post-quantum cryptography mandate (ML-KEM-768 / ML-DSA-65)
  */
 
 /**

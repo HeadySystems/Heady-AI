@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════
  *  HEADY AUTH MIDDLEWARE
- *  ADR-0023: heady-manager.js decomposition — Phase 1 (P0 security fix)
+ *  ADR-0037: heady-manager.js decomposition — Phase 1 (P0 security fix)
  *  ADR-0009: Firebase Auth + httpOnly cookies only
- *  ADR-0021: PQC mandate — timing-safe comparisons (crypto.timingSafeEqual)
+ *  ADR-0035: PQC mandate — timing-safe comparisons (crypto.timingSafeEqual)
  *  ADR-0011: Node.js ESM only
  *
  *  P0 FIX #1: heady-manager.js:399 — string token === comparison

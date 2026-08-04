@@ -41,7 +41,7 @@ Legacy lineage fully intact on the remote — five preserved branches:
 | Golden record schema | `pnpm facts:validate` | ✅ `facts.yaml conforms to facts.v1, rules: all-passed` |
 | Coherence gate | `pnpm consistency:verify` | ✅ 0 contradictions · 12 `info`-tier incompletes (all pre-tracked debt: 3 STAGE0-pending, 2 LAW-advisory, 2 resolved LAW-defects, 4 TEST-missing-app, 1 FED-clean) |
 
-## 3. Findings — data inconsistencies requiring action
+## 3. Findings — data inconsistencies (remediated 2026-08-04 unless noted)
 
 ### F1 · ADR number collision: `docs/ADR/` vs `docs/adr/` (HIGH)
 Seven ADR numbers (0019–0025) resolve to **two different Accepted decisions** depending on directory case:
@@ -56,45 +56,61 @@ Seven ADR numbers (0019–0025) resolve to **two different Accepted decisions** 
 | 0024 | embedding-pipeline-instantaneous-acquisition | domain-registry-canonical-file |
 | 0025 | strict-global-consistency-and-non-orphanage-governance | content-gateway-cloudflare-worker |
 
-Any prose citing "ADR-0019"…"ADR-0025" is ambiguous. Already flagged in
+Any prose citing "ADR-0019"…"ADR-0025" was ambiguous. Already flagged in
 `docs/master-plan/08-uis-projections.md` ("rename one to avoid ambiguity") but unresolved.
-**Recommendation:** founder ruling to renumber the UPPERCASE set into free canonical slots
-(0033+) and fold them into `docs/adr/`, updating `docs/ADR/INDEX.md` to a redirect stub.
+**✅ Resolved (founder-approved):** the UPPERCASE set is renumbered into the canonical slots
+**`docs/adr/0033–0039`** with `Renumbered:` provenance headers and rewritten cross-references;
+`docs/ADR/INDEX.md` is now a redirect stub with the old→new map. References in living code and
+docs (`src/middleware/*`, `src/security/pqc.js`, `src/config/domain-registry.js`,
+`scripts/pqc-*`, `docs/PQC-COMPLIANCE-BRIEF.md`, master-plan) retargeted; Stage-0-locked files
+needed no change (they cite only the lowercase set); historical handoffs/dated reports left
+untouched.
 
 ### F2 · GCP region contradiction (HIGH)
 `docs/ADR/0022-gcp-region-canonical-lock.md` (Accepted) locks the region to **`us-east1`**
 ("LOCKED — never us-central1"), while the golden record `facts.yaml`
 (`deploy_targets.origin.region: us-central1`) and the `AGENTS.md` deploy block
 (`--region us-central1`) both say **`us-central1`**. Noted as "D-ADR-region" drift in
-`docs/master-plan/05-laws-directives.md`, unreconciled. Because `facts.yaml` is the declared
-golden record and passes its gate, downstream generators currently emit `us-central1`.
-**Recommendation:** founder ruling; then either amend ADR-0022 or correct `facts.yaml` +
-`AGENTS.md` in one commit so the coherence gate can pin the survivor.
+`docs/master-plan/05-laws-directives.md`, unreconciled — and the master-plan's deeper census
+(D1/AD-4) rules that the **live Cloud Run service (project `heady-ai`) runs in `us-east1`**,
+making `facts.yaml` the stale side; the `us-central1` endpoints in `src/` belong to the
+deprecated legacy project `609590223909`.
+**✅ Resolved (founder-approved, per master-plan AD-4):** `facts.yaml
+deploy_targets.origin.region` corrected to **`us-east1`** (ADR-0036, ex `ADR/0022`); the
+`AGENTS.md` deploy block is annotated as legacy-manager-only; master-plan D1/AD-4 marked
+resolved. Legacy runtime URLs in `src/` are untouched (they intentionally reference the
+read-only legacy service).
 
 ### F3 · `docs/ADR/INDEX.md` lists 18 file-less ADRs (MEDIUM)
 The UPPERCASE index claims "25 ADRs documented. All reserved slots filled," but entries
 0001–0018 have **no files** in `docs/ADR/` and their titles do not match `docs/adr/0001–0018`.
-A parallel, file-less ADR universe. Resolve together with F1.
+A parallel, file-less ADR universe. **✅ Resolved with F1:** the INDEX is now a redirect stub;
+its file-less 0001–0018 entries are noted as historical, with `docs/adr/README.md`
+authoritative.
 
 ### F4 · `docs/master-plan/05-laws-directives.md` file-count drift (LOW)
 States `docs/ADR/` holds "only files 0019–0023"; on disk the set is **0019–0025** plus
-`INDEX.md`. The master-plan census is stale by two files.
+`INDEX.md`. The master-plan census was stale by two files. **✅ Resolved:** census sections
+carry post-census resolution banners (the snapshot itself is preserved).
 
 ### F5 · `PARITY_LOG.md` placeholder in a "done" row (LOW)
 Row "Governance gate | #207 | rebuild | **#NNN** | ✅ done" carries a `#NNN` placeholder as
-the Port PR. Violates the no-placeholder rule; the actual port PR number needs to be
-back-filled from GitHub history.
+the Port PR. Violates the no-placeholder rule. **✅ Resolved:** GitHub history shows PR #207
+merged **directly into `rebuild`** — no separate port PR ever existed; the row now says so
+explicitly.
 
 ### F6 · Dual-active docs vs. current branch state (LOW / informational)
 `docs/BRANCH-PARITY.md` and `docs/DUAL_ACTIVE_BRANCH_STRATEGY.md` describe a divergent
 `main` (npm, PM2, 69 lockfiles, `_archive/`). Today `main` = `rebuild` tip (`0d6fbaa`); the
 described lineage lives only at `legacy/main-archive`. SOURCE_OF_TRUTH.md already calls
-`main` a "legacy pointer (will be retired)". The dual-active docs should be marked
-superseded-by-archive or moved under a legacy heading once `main` is formally retired.
+`main` a "legacy pointer (will be retired)". **✅ Resolved:** both docs now open with a
+current-state banner deferring to `SOURCE_OF_TRUTH.md` for branch canon and pointing at
+`legacy/main-archive` for the described divergence.
 
 ### F7 · Fixed in this audit
-`SOURCE_OF_TRUTH.md` cited "`docs/adr/0000–0018`" while the canonical set now spans
-**0000–0032** (+ `superseded-v1/` quarantine). Corrected in this change.
+`SOURCE_OF_TRUTH.md` cited "`docs/adr/0000–0018`" while the canonical set had grown to
+**0000–0032** (+ `superseded-v1/` quarantine) — and, after the F1 renumber, now spans
+**0000–0039**. Corrected in this change.
 
 ## 4. Cross-repo note (out of monorepo scope)
 `headyai/heady-production` `CLAUDE.md` describes a **22-stage** HCFullPipeline

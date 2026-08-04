@@ -1,5 +1,6 @@
-# ADR-0019: Nine-Domain Brand Architecture — Nonprofit/Commercial Split
+# ADR-0033: Nine-Domain Brand Architecture — Nonprofit/Commercial Split
 
+**Renumbered:** ADR-0019 → ADR-0033 (2026-08-04) — resolves the `docs/ADR/`↔`docs/adr/` numbering collision (audit F1, `docs/reports/sot-consistency-audit-2026-08-04.md`)  
 **Status:** Accepted  
 **Date:** 2026-06-17  
 **Deciders:** Eric Haywood (HeadySystems Inc.)  
@@ -43,11 +44,11 @@ Establish a canonical nine-domain registry as the single source of truth for all
 
 2. **Auth Tenant Isolation:** Each domain maps to its own Firebase Auth tenant. Cross-tenant session sharing is forbidden. SSO across entity boundary (headyconnection.org ↔ headyme.com) requires an explicit OAuth 2.0 delegation flow with audit logging.
 
-3. **Deployment Target:** All nine domains deploy to Cloudflare Pages (static/edge) backed by Cloud Run `us-east1` (ADR-0016 / ADR-0022). No domain deploys to `us-central1` or legacy `heady-prod-609590223909`.
+3. **Deployment Target:** All nine domains deploy to Cloudflare Pages (static/edge) backed by Cloud Run `us-east1` (ADR-0016 / ADR-0036). No domain deploys to `us-central1` or legacy `heady-prod-609590223909`.
 
 4. **Revenue Attribution:** All billing, Stripe webhooks, and HeadyCoin ledger entries MUST tag the originating domain from this registry. Mixed-entity revenue records are an audit failure.
 
-5. **PQC Key Isolation (ADR-0021):** Each domain's service-to-service calls use domain-scoped ML-DSA signing keys. Key fingerprints are namespaced `{domain}:{serviceId}`.
+5. **PQC Key Isolation (ADR-0035):** Each domain's service-to-service calls use domain-scoped ML-DSA signing keys. Key fingerprints are namespaced `{domain}:{serviceId}`.
 
 ### Registry Enforcement
 
@@ -85,7 +86,7 @@ export const DOMAIN_REGISTRY = {
 - ADR Sentinel must be updated whenever a new domain is considered — prevents organic experimentation.
 
 ### Neutral
-- ADR-0019/ADR-0020 reserved placeholders now filled; INDEX.md gap closed.
+- ADR-0033/ADR-0034 reserved placeholders now filled; INDEX.md gap closed.
 
 ---
 
@@ -96,7 +97,7 @@ export const DOMAIN_REGISTRY = {
 | IRS 501(c)(3) commercial / nonprofit separation | ✅ Enforced by registry |
 | Firebase Auth tenant isolation | ✅ Enforced by registry |
 | Cloudflare deployment targeting | ✅ Enforced via ADR Sentinel |
-| PQC key namespace isolation | ✅ Per ADR-0021 |
+| PQC key namespace isolation | ✅ Per ADR-0035 |
 
 ---
 
@@ -105,5 +106,5 @@ export const DOMAIN_REGISTRY = {
 - ADR-0002: Canonical topology (Cloudflare + Cloud Run)
 - ADR-0009: Firebase Auth + httpOnly cookies
 - ADR-0015: Sacred Geometry node topology
-- ADR-0021: Post-quantum cryptography mandate
-- ADR-0022: GCP region canonical lock
+- ADR-0035: Post-quantum cryptography mandate
+- ADR-0036: GCP region canonical lock

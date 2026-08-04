@@ -70,10 +70,10 @@ Each system is decomposed with BOTH an incorporation plan and a status log:
 
 | # | Finding | Sections | Severity | Suggested resolution |
 |---|---------|----------|----------|----------------------|
-| AD-1 | **Two ADR directories** `docs/adr` (30+superseded) vs `docs/ADR` (5) with **hard 0019–0023 number collisions** (different decisions) + file-less 0001–0018 in the uppercase INDEX | 05,06,08 | 🔴 | Pick one canonical dir; renumber/merge the other; one ADR per number |
+| AD-1 | **Two ADR directories** `docs/adr` (30+superseded) vs `docs/ADR` (5) with **hard 0019–0023 number collisions** (different decisions) + file-less 0001–0018 in the uppercase INDEX | 05,06,08 | ✅ | Resolved 2026-08-04: `docs/ADR/0019–0025` renumbered to `docs/adr/0033–0039`; `docs/ADR/INDEX.md` = redirect stub (audit F1/F3) |
 | AD-2 | **HCFP stage count drift is worse than thought:** the *actually-wired* runner `src/hcfp/pipeline-runner.js` is **5 steps**; also 9 (legacy class), 10 (yaml), canonical **21**, stale **22** | 01 | 🔴 | Bless a buildable subset OR build the full 21-stage CF-Workflow DAG; reconcile to facts=21 |
 | AD-3 | **`governance/` is outside the coherence scan scope** → "60+ patents" drift sits *unguarded* inside CONSTITUTION.md / MASTER_DIRECTIVES.md | 05 | 🔴 | Add `governance/` to coherence CANON; convert patent strings to `heady:inject` regions |
-| AD-4 | **facts.yaml region stale:** `us-central1` vs ADR-0022 + live service `us-east1` | 06 | 🟠 | Fix facts.yaml → us-east1 (or confirm canonical region) |
+| AD-4 | **facts.yaml region stale:** `us-central1` vs ADR-0022 + live service `us-east1` | 06 | ✅ | Resolved 2026-08-04: facts.yaml → `us-east1` per ADR-0036 (ex ADR/0022); AGENTS.md deploy block annotated legacy-only |
 | AD-5 | **9-domain registry diverges across ≥3 sources** (must include headysystems.com) | 06,08 | 🟠 | Single canonical domain registry → derive from facts.yaml |
 | AD-6 | **Bee count drift:** lexicon 35 vs compendium 33 vs skill "30+" vs ~73 legacy files vs blueprint 197 | 02,03 | 🟠 | Canonicalize 35 in facts.yaml; scalar-guard it |
 | AD-7 | **`heady-auto-flow` mislabels HCFP** ("Heady Core Functionality Platform"); also the "Battle→Coder→Analyze" chain lives in `cloud-orchestrator.js`, not auto-success | 01,04 | 🟠 | Fix the skill; auto-flow ≠ AutoSuccessEngine |

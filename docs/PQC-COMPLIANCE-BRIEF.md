@@ -1,6 +1,6 @@
 # Heady™ Post-Quantum Cryptography Compliance Brief
 **Version:** 1.0 | **Date:** 2026-06-17 | **Author:** Eric Haywood  
-**Governing ADR:** [ADR-0021](ADR/0021-post-quantum-cryptography-mandate.md)  
+**Governing ADR:** [ADR-0035](adr/0035-post-quantum-cryptography-mandate.md)  
 **Enforcement:** `scripts/pqc-scanner.js` + `adr-sentinel.yml` pqc-scan / pqc-gate jobs
 
 ---
@@ -30,7 +30,7 @@ NIST finalised the first post-quantum standards in August 2024:
 | **FIPS 205** | **SLH-DSA** | SPHINCS+ | Hash-based signatures (long-lived certificates only) |
 
 The Heady codebase (`src/security/pqc.js`) already implements the underlying algorithms
-under the pre-standardisation names. **ADR-0021 and the PQC scanner enforce alignment
+under the pre-standardisation names. **ADR-0035 and the PQC scanner enforce alignment
 to the final FIPS designations going forward.**
 
 ---
@@ -97,7 +97,7 @@ represent the migration already in progress — not net-new violations:
 
 These findings are tracked but will not block the build until Phase 2 (2026-07-01)
 because they exist in the migration-in-progress paths, not net-new code. Add
-`// PQC-EXEMPT: pre-NIST names — migration tracked in ADR-0021 Phase 2` to these
+`// PQC-EXEMPT: pre-NIST names — migration tracked in ADR-0035 Phase 2` to these
 lines to suppress the HIGH gate until the rename is complete.
 
 ---
@@ -114,7 +114,7 @@ const sign = createSign('SHA256');
 sign.update(payload);
 const signature = sign.sign(privateKey, 'base64');
 
-// ✅ AFTER — Ed25519 + ML-DSA-65 hybrid (ADR-0021 compliant)
+// ✅ AFTER — Ed25519 + ML-DSA-65 hybrid (ADR-0035 compliant)
 import { headyPQC, hybridSign } from './src/security/pqc.js';
 const keyPair = headyPQC.generateHybridKeyPair(serviceId);   // generates Ed25519 + ML-DSA composite
 const { signature, algorithm, timestamp } = hybridSign.sign(serviceId, payload);
@@ -153,7 +153,7 @@ export const PQC_CONFIG = {
     algorithm: 'SHA3-256',
     standard:  'FIPS-202',
   },
-  hybridMode: true,               // MUST remain true per ADR-0021
+  hybridMode: true,               // MUST remain true per ADR-0035
 };
 ```
 
@@ -171,7 +171,7 @@ is ahead of the federal deadline.
 ### Patent coverage
 
 The following Heady provisional patents include PQC claims that are strengthened by
-ADR-0021 enforcement:
+ADR-0035 enforcement:
 
 | Patent | Claim area | PQC relevance |
 |--------|-----------|--------------|
@@ -215,7 +215,7 @@ const hash = createHash('sha1');       // PQC-EXEMPT: git object ID format, not 
 Blanket file-level exemptions require the comment on the first line of the file:
 
 ```js
-// PQC-EXEMPT: legacy compatibility shim — tracked for removal in ADR-0021 Phase 3
+// PQC-EXEMPT: legacy compatibility shim — tracked for removal in ADR-0035 Phase 3
 ```
 
 Exemptions in production paths (`src/`, `packages/`, `core/`) that are not test
@@ -224,5 +224,5 @@ lines in the INFO section of the PR comment so they are visible to reviewers.
 
 ---
 
-_This brief is maintained alongside [ADR-0021](ADR/0021-post-quantum-cryptography-mandate.md).
+_This brief is maintained alongside [ADR-0035](adr/0035-post-quantum-cryptography-mandate.md).
 The scanner rule set is defined in [`scripts/pqc-scanner.js`](../scripts/pqc-scanner.js)._
