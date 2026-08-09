@@ -97,6 +97,11 @@ export const FACTS_V1 = [
   // 21 = fib(8), φ-native; 22 is not a Fibonacci number and cannot be canonical
   { path: "hcfullpipeline.stage_count", required: true, const: 21, adr: "fib(8) — canonical HCFP DAG" },
 
+  // ── capacity — enforced runtime concurrency ceiling ──────────────
+  { path: "capacity", required: true, type: "object" },
+  // fib(20), φ-native; 10000 is roadmap language only — raise only via a soak-tested successor ADR
+  { path: "capacity.max_concurrent_runtime", required: true, const: 6765, adr: "ADR-0040 — fib(20) runtime ceiling" },
+
   // ── consistency (⌈φ²⌉=3; type-checked, φ-derived) ────────────────
   { path: "consistency", required: true, type: "object" },
   { path: "consistency.escalation_threshold", required: true, type: "integer", min: 1 },

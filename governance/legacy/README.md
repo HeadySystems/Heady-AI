@@ -39,5 +39,11 @@ The authoritative, enforced corpus lives one directory up:
 - **R3** — PQC-everywhere is aspirational, not a day-one hard gate.
 - **Scale** — Bee runtime guard **6765** (Fibonacci); **10000** strategic ceiling.
 
+## Sub-archives
+
+| Directory | Contents |
+|---|---|
+| [`windsurf-workflows/`](windsurf-workflows/) | 41 Windsurf/Cascade-era workflows from the legacy Heady repo (snapshot 2026-06-08, transferred 2026-08-09). Historical reference — not wired as Claude Code commands; primary sources for the HCFP 21-stage lineage. See its README for the full table. |
+
 ---
 *Heady™ — HeadySystems Inc. — Frozen provenance. Authority: `governance/CONSTITUTION.md`.*

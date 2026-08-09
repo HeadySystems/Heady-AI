@@ -53,7 +53,7 @@ supply_chain:
 deploy_targets:
   origin:
     kind: gcp-cloud-run
-    region: us-central1
+    region: us-east1
     node: 22
   edge:
     kind: cloudflare-workers
@@ -219,6 +219,12 @@ hcfullpipeline:
   # variants: Fast 7 / Arena 9 / Learning 7. Any prose/skill asserting "N-stage HCFullPipeline" or
   # "HCFP — N Stages" is checked against this by the coherence gate.
   stage_count: 21
+capacity:
+  # Enforced runtime concurrency ceiling — fib(20)=6765 (ADR-0040). 10000 is roadmap/aspirational
+  # language only; runtime configs must not enforce it until live soak tests justify a higher hard
+  # limit, and any successor ceiling stays Fibonacci-aligned. Guarded by the coherence scalar guard
+  # C-capacity and const-locked by facts.v1 (packages/contracts/src/facts-schema.mjs).
+  max_concurrent_runtime: 6765
 consistency:
   escalation_threshold: 3
 stage0:

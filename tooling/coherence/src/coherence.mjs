@@ -12,6 +12,7 @@ import {
 import { join, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
+import { SCALAR_GUARDS, scalarViolations } from './scalar-guards.mjs';
 import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger } from './packages-law.mjs';
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
@@ -57,16 +58,8 @@ const CANON = ['docs', 'packages', 'tooling', 'configs', 'AGENTS.md', 'SOURCE_OF
 // wrong canonical number could live in a SKILL.md undetected. .claude/skills is a generated
 // mirror of .agents/skills, so scanning the source is sufficient.
 const SCALAR_SCOPE = [...CANON, '.agents'];
-// Canonical load-bearing scalars: one row per tracked fact → cross-checked against the golden record
-// (facts.yaml) across SCALAR_SCOPE. Add a row to track a new number; no other code changes needed.
-//   factKey: dotted facts.yaml key · find: ERE that co-locates the SUBJECT with the number
-//   extract: JS regex whose group 1 is the asserted number · allow: regex exempting legit context
-const SCALAR_GUARDS = [
-  { id: 'C-hcfp-stages', factKey: 'hcfullpipeline.stage_count', label: 'HCFullPipeline stage count',
-    find: '[0-9]+[ -][Ss]tage[ -]?(DAG )?HCFullPipeline|HCFullPipeline[^.]{0,40}[0-9]+[ -][Ss]tage|HCFP[^.]{0,24}[0-9]+[ -][Ss]tage',
-    extract: /([0-9]+)[ -][Ss]tage/,
-    allow: /legacy|14 top-level|nested|provenance|\bwas\b|superseded|\bv1\b|older|reduced|buildable|Phase-?3|critical path|off-path|claimed|wrongly|incorrect|drift|disagree|sneak|example|stale/i },
-];
+// Canonical load-bearing scalars live in src/scalar-guards.mjs (table + pure semantics, so the
+// guard contract is unit-tested); the kernel supplies the IO (grep over SCALAR_SCOPE) below.
 const grep = (ere, paths, extraAllow) => {
   try {
     // `drupal` + `superseded-v1` are quarantined legacy/archived surfaces (mirrors
@@ -220,9 +213,8 @@ function check({ facts, pkgs }) {
   for (const g of SCALAR_GUARDS) {
     const want = String(F[g.factKey]);
     if (want === 'undefined') { info(g.id, `scalar-guard references missing fact ${g.factKey}`, {}); continue; }
-    for (const l of grep(g.find, SCALAR_SCOPE, g.allow)) {
-      const n = l.match(g.extract)?.[1];
-      if (n && n !== want) err(g.id, `${g.label} (${n}) disagrees with facts.${g.factKey} (${want})`, { line: l.slice(0, 140) });
+    for (const v of scalarViolations(grep(g.find, SCALAR_SCOPE), g, want)) {
+      err(g.id, `${g.label} (${v.asserted}) disagrees with facts.${g.factKey} (${want})`, { line: v.line.slice(0, 140) });
     }
   }
 

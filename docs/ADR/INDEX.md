@@ -1,5 +1,34 @@
 # Heady Rebuild — ADR Index
 
+> **⚠ LEGACY CORPUS — TRANSFERRED 2026-08-09.** This uppercase `docs/ADR/` corpus predates the
+> canonical lowercase corpus at [`docs/adr/`](../adr/README.md) and is retained as a historical
+> artifact only. Every decision below has been dispositioned into the canonical number-space:
+>
+> | Legacy # | Disposition |
+> |---|---|
+> | 0001 MCP adoption | Covered by canonical `0002` + `0026` |
+> | 0002 Edge+Origin topology | Covered by canonical `0002` + `0004` |
+> | 0003 pgvector + Vectorize | Covered by canonical `0003` |
+> | 0004 Liquid Gateway racing | Covered by canonical `0018` |
+> | 0005 Capacity ceiling fib(20) | **Transferred → canonical `0040`** |
+> | 0006 φ-Math SoT | **Transferred → canonical `0042`** |
+> | 0007 CSL over Boolean | **Transferred → canonical `0043`** |
+> | 0008 Dual-active strategy | Body lost; not transferred (nearest relative: `superseded-v1/0002-strangler-fig`) |
+> | 0009 Firebase + httpOnly | Covered by canonical `0028` |
+> | 0010 Module consolidation | Covered by canonical `0001` + `0002` |
+> | 0011 ESM only | **Transferred → canonical `0044`** |
+> | 0012 21-stage HCFP | **Authored → canonical `0041`** (body was lost; rebuilt from RECONCILIATION_DECISIONS) |
+> | 0013 Upstash EventSpine | Superseded — contradicted by canonical `0003` (Upstash = best-effort cache) + `0020` (pgmq durable path) |
+> | 0014 Deterministic execution | **Transferred → canonical `0046`** |
+> | 0015 Sacred Geometry topology | **Transferred → canonical `0047`** |
+> | 0016 Neon over Cloud SQL | Covered by canonical `0002` |
+> | 0017 Pino logging | **Authored → canonical `0045`** (resolves this corpus's Pino-vs-custom-logger self-conflict) |
+> | 0018 CI/CD + coherence gate | Body lost; substance covered by canonical `0025` + REBUILD_PLAN_V2 §11 (10/11 laws machine-enforced) |
+> | 0019–0025 (bodies below) | **Transferred → canonical `0033`–`0039`** with Reconciliation sections |
+>
+> Full disposition record: [`docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md`](../LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md).
+> Do not add new entries here — the canonical corpus is the only live number-space.
+
 | # | Title | Status | Strength |
 |---|-------|--------|---------|
 | [0001](0001-mcp-protocol-adoption.md) | Adopt MCP as Unified Tool Gateway | Accepted | ⭐⭐⭐⭐⭐ Critical |
