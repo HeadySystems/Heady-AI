@@ -104,8 +104,25 @@ test("canonical home resolves to packages/db/migrations and contains the complet
     "0004_approval_control_plane.sql",
     "0005_990_intelligence.sql",
     "0006_990_search.sql",
+    "0012_neon_universal_source_ledger.sql",
   ]);
   assert.equal(planMigrations({ files, applied: [] }).pending.length, files.length);
+});
+
+test("universal source ledger is append-only and advances refs with compare-and-swap", () => {
+  const sql = readFileSync(join(MIGRATIONS_DIR, "0012_neon_universal_source_ledger.sql"), "utf8");
+  assert.match(sql, /CREATE SCHEMA IF NOT EXISTS heady_source/);
+  assert.match(sql, /digest\(content, 'sha256'\) = decode\(content_sha256, 'hex'\)/);
+  assert.match(sql, /source_blob_append_only/);
+  assert.match(sql, /source_revision_append_only/);
+  assert.match(sql, /CREATE TABLE heady_source[.]source_embedding/);
+  assert.match(sql, /embedding\s+vector\(384\) NOT NULL/);
+  assert.match(sql, /source_embedding_append_only/);
+  assert.match(sql, /source_event_append_only/);
+  assert.match(sql, /source ref compare-and-swap conflict/);
+  assert.match(sql, /source ref advance must descend from current revision/);
+  assert.match(sql, /FOREIGN KEY \(repository_id, parent_revision_id\)/);
+  assert.doesNotMatch(sql, /\bGRANT\b[^;]*\bauthenticated\b/i);
 });
 
 test("Data API migration removes existing and future authenticated-role access", () => {

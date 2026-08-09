@@ -6,8 +6,8 @@ The governing principle for all of these: **pick one source of truth per concern
 
 ## Status
 
-There are **49 Accepted ADRs** (`0000`–`0040`, `0042`–`0044`, `0046`–`0050`) and **2 Proposed**
-(`0041`, `0045`). `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority,
+There are **49 Accepted ADRs** (`0000`–`0040`, `0042`–`0044`, `0046`–`0050`) and **3 Proposed**
+(`0041`, `0045`, `0051`). `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority,
 architecture backbone, pgvector retrieval, durable orchestration, agent governance, idempotency,
 DDL coordination, GDPR, PITR, rate limits, SLO, FinOps, founder governance, CDC, embedding lock,
 agent loop, projections, model gateway) were ratified **2026-06-17 by founder approval per
@@ -29,5 +29,9 @@ Reconciliation sections. `0030` and `0032` were Accepted 2026-08-04 by founder-s
 > Full disposition map (including what was
 > deliberately *not* transferred): [`docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md`](../LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md).
 > The legacy `docs/ADR/` corpus is banner-marked as transferred and frozen.
+
+> 🗄️ **Universal SSOT proposal (2026-08-09):** ADR-0051 proposes moving canonical source bytes,
+> revisions, refs, and Merkle roots into Neon. Until signed ratification and migration activation,
+> ADR-0001 remains authoritative and Git remains the canonical engineering repository.
 
 > ✅ **Doc-drift resolved (2026-06-17):** the stale v1 ADR generation (`0001-canonical-repo`, `0002-strangler-fig-evolution`, `0003-source-of-truth-ledger`, `0004-consistency-model`, Accepted 2026-06-14) — superseded by the canonical `0001-canonical-repository-authority` / `0002-architecture-backbone` / `0003-retrieval-authority-pgvector` / `0004-durable-orchestration-center` — has been **archived to `docs/adr/superseded-v1/`** (content preserved, out of the canonical number-space). This directory indexes the canonical set only; `superseded-v1/` is quarantined from the coherence + data-consistency gates.

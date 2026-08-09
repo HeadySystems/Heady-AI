@@ -526,6 +526,8 @@ importers:
 
   packages/shared: {}
 
+  packages/source-ledger: {}
+
   packages/sync-fabric:
     dependencies:
       '@heady/phi-math':
@@ -602,6 +604,18 @@ importers:
         version: 2.9.0
 
   tooling/skeleton-guard: {}
+
+  tooling/source-ledger:
+    dependencies:
+      '@heady/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@heady/secrets':
+        specifier: workspace:*
+        version: link:../../packages/secrets
+      '@heady/source-ledger':
+        specifier: workspace:*
+        version: link:../../packages/source-ledger
 
 packages:
 
