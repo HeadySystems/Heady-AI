@@ -50,7 +50,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 5. **Zod validation** on all API inputs. No unvalidated data crosses service boundaries.
 6. **HEADY_BRAND header** required in all new files.
 7. **Redis keys** always namespaced: `tenant:{id}:*`.
-8. **φ-derived constants.** Timeouts, TTLs, pool sizes from `phi-constants.js`. Zero magic numbers.
+8. **φ-derived constants.** Timeouts, TTLs, pool sizes from `@heady/phi-math` (`packages/phi-math`). Zero magic numbers.
 9. **Tests alongside code.** Vitest for unit, Playwright for E2E, k6 for load.
 10. **Error handling everywhere.** No empty catch blocks. No swallowed promises.
 11. **Vector Embeddings Trigger.** File indexing is triggered locally via **Merkle-tree file hashing**, never Postgres CDC. Scope (ADR-0023 §Reconciliation, compendium R11): this governs *file/source-content* indexing only — derived-store sync from the database SoR uses WAL CDC per ADR-0014. Two triggers, two sources.
@@ -152,8 +152,8 @@ pnpm turbo run build test --filter='...[origin/main...HEAD]'
 
 ```bash
 # Cloud Run (φ-stepped canary)
-gcloud run deploy heady-manager --image gcr.io/gen-lang-client-0920560496/heady-manager:$VERSION \
-  --region us-central1 --min-instances 1 --max-instances 13
+gcloud run deploy heady-manager --image "gcr.io/${GCP_PROJECT_ID:-heady-rebuild}/heady-manager:${VERSION}" \
+  --region us-east1 --min-instances 1 --max-instances 13
 
 # Cloudflare Workers
 pnpm wrangler deploy

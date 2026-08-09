@@ -16,14 +16,16 @@ import { SCALAR_GUARDS, scalarViolations } from "../src/scalar-guards.mjs";
 const byId = Object.fromEntries(SCALAR_GUARDS.map((g) => [g.id, g]));
 const CAP = byId["C-capacity"];
 const HCFP = byId["C-hcfp-stages"];
+const REGION = byId["C-region"];
 
-test("registry carries both canonical guards with complete rows", () => {
-  for (const g of [CAP, HCFP]) {
+test("registry carries all canonical guards with complete rows", () => {
+  for (const g of [CAP, HCFP, REGION]) {
     assert.ok(g, "guard row present");
     for (const k of ["factKey", "label", "find", "extract", "allow"]) assert.ok(g[k], `${g.id}.${k} present`);
   }
   assert.equal(CAP.factKey, "capacity.max_concurrent_runtime");
   assert.equal(HCFP.factKey, "hcfullpipeline.stage_count");
+  assert.equal(REGION.factKey, "deploy_targets.origin.region");
 });
 
 test("C-capacity fires on an enforced 10000 in config prose", () => {
@@ -94,6 +96,35 @@ test("C-hcfp-stages exempts drift-marked provenance prose", () => {
     "docs/history.md:4: the legacy 8-stage HCFullPipeline description was superseded",
   ];
   assert.deepEqual(scalarViolations(lines, HCFP, "21"), []);
+});
+
+test("C-region fires on live region drift, passes canonical and drift-marked lines", () => {
+  const bad = scalarViolations(["configs/deploy.yaml:5:  region: us-central1"], REGION, "us-east1");
+  assert.equal(bad.length, 1);
+  assert.equal(bad[0].asserted, "us-central1");
+  assert.deepEqual(scalarViolations(["configs/deploy.yaml:5:  region: us-east1"], REGION, "us-east1"), []);
+  assert.deepEqual(
+    scalarViolations(["docs/x.md:9: gcloud --region=us-central1 targets the legacy stack"], REGION, "us-east1"),
+    [], "word-bounded legacy marker exempts",
+  );
+});
+
+test("C-region exempts dated point-in-time records, the lock ADRs, and the dual-active runbook by path", () => {
+  const lines = [
+    "docs/genesis-bundles/2026-06-19_00-52-24/seed.md:330:    region: us-central1",
+    "docs/adr/0036-gcp-region-canonical-lock.md:14:| Region | `us-central1` | `us-east1` |",
+    "docs/DUAL_ACTIVE_BRANCH_STRATEGY.md:119:  --region=us-central1 \\",
+    "tooling/doc-hydrator/snapshots/09-infra-and-services.2026-06-16.md:36:| 3 | Cloud Run (GCP us-central1) |",
+  ];
+  assert.deepEqual(scalarViolations(lines, REGION, "us-east1"), []);
+});
+
+test("C-region date exemption is scoped to the PATH — a date in line content does not exempt", () => {
+  const v = scalarViolations(
+    ["configs/deploy.yaml:5:  region: us-central1  # updated 2026-08-09"],
+    REGION, "us-east1",
+  );
+  assert.equal(v.length, 1, "content dates must not exempt live drift");
 });
 
 test("scalarViolations is pure and order-preserving over mixed input", () => {

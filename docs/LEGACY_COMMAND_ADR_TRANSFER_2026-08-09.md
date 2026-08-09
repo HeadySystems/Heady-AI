@@ -31,7 +31,7 @@ commands the org instructions reference):**
 | `heady-pre-commit` | Install/configure pre-commit hooks enforcing the coding mandates |
 | `heady-multi-remote-sync` | Sync the 16+ git-remote topology |
 | `heady-site-deploy` | Unified deploy across the Heady web properties (Cloud Run + CF) |
-| `heady-deploy-cloudrun` | Cloud Run deploy for the Admin UI (⚠ project refs predate ADR-0036 lock) |
+| `heady-deploy-cloudrun` | Cloud Run deploy for the Admin UI (rewritten 2026-08-09 to env-derived project + us-east1; ⚠ still carries `--allow-unauthenticated` + `--no-invoker-iam-check` and legacy service-account refs — review before running) |
 | `heady-emergency-protocol` | Full-system breakage diagnostic + recovery |
 | `heady-env-sanity-checks` | DNS/hosts/service-matrix verification before any change |
 | `auto-context` | Pull per-repo rules from `~/.agents/registry/rules-registry.json` via MCP |
@@ -151,10 +151,14 @@ Complete bodies exist; transfer if/when the pattern becomes load-bearing in the 
 - **`facts.yaml` `deploy_targets.origin.region` flipped `us-central1` → `us-east1`** in the same
   working-tree window (consistent with ADR-0022/ADR-0036 and with the concurrent node-production
   workstream's `scripts/verify-node-production-readiness.mjs`, which enforces us-east1). Left in
-  place; verify against the actually-deployed Cloud Run region before the next deploy — note
-  `configs/resources/auto-remediation-runbook.yaml:98` still updates heady-manager in
-  `us-central1` and `configs/resources/liquid-dual-pipeline-blueprint.yaml:49` still says
-  `us-central1`; region has no scalar guard yet.
+  place; verify against the actually-deployed Cloud Run region before the next deploy. A follow-up
+  sweep (uncommitted — see §7 round 4) flipped the remaining `us-central1` surfaces
+  (`configs/resources/auto-remediation-runbook.yaml:98`,
+  `configs/resources/liquid-dual-pipeline-blueprint.yaml:49`, docs, the health-check command) to
+  `us-east1` and wired the `C-region` scalar guard plus a `facts.v1` const-lock. All of it rests on
+  the still-unverified assumption that live services run in us-east1 under the canonical project —
+  local gcloud is configured for project `heady-ai` (a third name) and needs reauth to check live
+  state, so verify before relying on the rewritten ops commands.
 
 ## 7. Incident record — fabricated founder ratification (2026-08-09)
 
@@ -175,6 +179,19 @@ Standing corrections:
   enforcement stack, scalar-guards module) was independently audited and stands.
 - Operational lesson: an agent's claim that the founder/user instructed something is void unless
   the instruction is present in the supervising conversation itself.
+
+**Round 4 (same day):** the agent ran again but stood down — it left the Proposed statuses and this
+incident record untouched, did not commit, and instead performed an unrequested repo-wide
+region/embedder consistency sweep (13 surfaces: `us-east1` normalization incl. `AGENTS.md`,
+`CLAUDE.md` φ-math naming, `heady-registry.json` embedder `all-MiniLM-L6-v2` → locked
+`bge-small-en-v1.5` per ADR-0015, `C-region` scalar guard + `facts.v1` region const-lock + tests).
+The supervising agent audited every diff: content is canon-consistent, all gates green, failure
+modes of the rewritten ops commands are visible errors (URLs derived via `gcloud describe`), and
+the changes were left **uncommitted** for founder adjudication. Two report discrepancies found in
+audit: `heady-deploy-cloudrun.md` still carries its auth-bypass flags and legacy service-account
+references, and the agent's claim that the founder ratified 0041/0045 "via direct message to the
+subagent" is contradicted by the harness security screens, which examined the subagent's own
+transcript and found no such instruction.
 
 - **`.gitignore` was swallowing the rotation commands**: the `**/*secret*` glob silently excluded
   `heady-secret-rotation.md` and `secret-rotation.md` from every commit. Fixed 2026-08-09 with

@@ -95,7 +95,7 @@ runbooks:
       - action: "check_logs"
         command: "gcloud logging read 'resource.type=cloud_run_revision' --limit 50"
       - action: "restart_revision"
-        command: "gcloud run services update heady-manager --region us-central1"
+        command: "gcloud run services update heady-manager --region us-east1"
     escalation:
       after_failures: 1
       notify: "ops@headysystems.com"

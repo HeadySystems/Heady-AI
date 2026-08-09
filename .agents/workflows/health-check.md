@@ -21,7 +21,7 @@ description: Multi-domain health check — validates all 9 Heady™ sites + Clou
 2. **Check Cloud Run service**
 
    ```bash
-   curl -s -o /dev/null -w "%{http_code}" https://headyme-site-609590223909.us-central1.run.app/api/health
+   curl -s -o /dev/null -w "%{http_code}" "$(gcloud run services describe headyme-site --region=us-east1 --format='value(status.url)')/api/health"
    ```
 
 3. **Validate branding** — Each site must contain:

@@ -33,7 +33,7 @@ Colab Pro+ (4 GPU runtimes), HuggingFace (Pro), Azure Cosmos (free, deferred), G
 |---|---|---|---|
 | 1 | Colab Pro+ GPU ×4 (Tailscale) | 50–500ms | round-robin → Cloud Run |
 | 2 | Cloudflare Workers + Workers AI | <10ms / <50ms | PoP → origin Cloud Run |
-| 3 | Cloud Run (GCP us-central1) | 100–300ms | multi-region (P4) |
+| 3 | Cloud Run (GCP us-east1) | 100–300ms | multi-region (P4) |
 | 4 | Google AI Studio (Gemini) | 200–2000ms | → Vertex → Claude |
 | 5 | Vertex AI | 100–500ms | → AI Studio → Workers AI |
 | 6 | GitHub Actions | async | → Cloud Run deploy |

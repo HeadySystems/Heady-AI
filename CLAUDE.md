@@ -15,7 +15,7 @@ You are operating within the **Heady-AI Monorepo**, the intellectual property of
 4. **Cloud-Native URLs:** Zero `localhost` or `127.0.0.1`. All URLs derive from environment variables.
 5. **Zod Validation:** All API inputs/boundaries must be strictly validated via `zod`.
 6. **Namespace Strictness:** Redis keys must follow the `tenant:{id}:*` structure.
-7. **No Magic Numbers:** All timeouts, retries, and pool sizes MUST be derived from `phi-constants.js` (e.g., `φ = 1.618`).
+7. **No Magic Numbers:** All timeouts, retries, and pool sizes MUST be derived from `@heady/phi-math` (`packages/phi-math`, e.g. `φ = 1.618`).
 8. **Never Modify Patent Locks:** Files with `⚠️ PATENT LOCK` require ARBITER swarm review before modification.
 
 ---

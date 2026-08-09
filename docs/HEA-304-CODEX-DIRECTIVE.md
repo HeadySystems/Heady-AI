@@ -96,7 +96,7 @@ All files below have been committed or are ready to commit to rebuild.
 All secrets listed in `.env.example`. Add them via:
 ```bash
 gcloud secrets create STRIPE_SECRET_KEY --data-file=- <<< "sk_live_..."
-gcloud run services update heady-origin --update-secrets=STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest --region=us-central1
+gcloud run services update heady-origin --update-secrets=STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest --region=us-east1
 ```
 GitHub Actions: add all secrets at https://github.com/HeadySystems/heady-ai/settings/secrets/actions
 

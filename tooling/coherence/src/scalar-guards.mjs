@@ -30,6 +30,14 @@ export const SCALAR_GUARDS = [
     extract: /((?<=max_concurrent_[a-z_]+\W{0,4})[0-9](?:[0-9,]*[0-9])?|[0-9][0-9,]{2,}[0-9](?=[ -]concurrent))/,
     // "drift(" (a call, e.g. the contracts test helper) is NOT the drift-marker word — hence (?!\s*\()
     allow: /^(docs\/(compendium|master-plan|blueprints)|\.agents\/context)\/|(^|\/)tests?\/|\.(test|spec)\.[cm]?js:|\bsuperseded\b|\bdrifts?\b(?!\s*\()|\broadmap\b|\baspirational\b|\btargets?\b|\breadiness\b|\bclaim(s|ed)?\b|\bsoak\b|\bbounded\b|\bvision\b|\bliterals?\b|\breduced\b|\bvocabulary\b|\blegacy\b|\barchived?\b|\bsnapshots?\b/i },
+  // ADR-0022/ADR-0036: us-east1 is the canonical GCP region; us-central1 is the rejected legacy
+  // region. Subject co-location: a region key/flag, "GCP us-*", or the banned legacy token itself
+  // (written self-avoiding so this row never matches its own source). Dated point-in-time records
+  // (a YYYY-MM-DD in the file path), the lock ADRs, and the dual-active legacy runbook are exempt.
+  { id: 'C-region', factKey: 'deploy_targets.origin.region', label: 'canonical GCP region',
+    find: '([Rr]egion|REGION)[^a-zA-Z0-9]{0,4}us-[a-z]+[0-9]|GCP us-[a-z]+[0-9]|us-centra[l]1',
+    extract: /(us-[a-z]+[0-9])/,
+    allow: /^[^:]*20[0-9]{2}-[0-9]{2}-[0-9]{2}[^:]*:|^docs\/(ADR\/0022|adr\/0036)-gcp-region|^docs\/DUAL_ACTIVE_BRANCH_STRATEGY|^docs\/(compendium|master-plan|blueprints)\/|^\.agents\/context\/|(^|\/)tests?\/|\.(test|spec)\.[cm]?js:|snapshots\/|\blegacy\b|\bnever\b|\brejected\b|\bsuperseded\b|\bwas\b|\bdrifts?\b(?!\s*\()|\bwrongly?\b|\bincorrect\b|LOCKED/i },
 ];
 
 /**

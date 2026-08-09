@@ -88,6 +88,8 @@ export const FACTS_V1 = [
   { path: "deploy_targets", required: true, type: "object" },
   { path: "deploy_targets.origin", required: true, type: "object" },
   { path: "deploy_targets.origin.kind", required: true, type: "string" },
+  // us-east1 is the canonical region; us-central1 is the rejected legacy region
+  { path: "deploy_targets.origin.region", required: true, const: "us-east1", adr: "ADR-0022/ADR-0036 — canonical region lock" },
 
   // ── pipeline + HCFullPipeline ────────────────────────────────────
   { path: "pipeline", required: true, type: "object" },

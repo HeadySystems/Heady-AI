@@ -46,7 +46,7 @@ ableton_sysex:
       target: live_set.tempo
 terraform:
   project: heady-liquid-architecture
-  region: us-central1
+  region: us-east1
   services:
     - artifact-registry
     - pubsub

@@ -64,7 +64,7 @@ kv_namespaces = [{ binding = "KV", id = "<legacy-namespace-id>" }]
 | Service account | existing SA | new SA `heady-rebuild-runner@heady-rebuild.iam.gserviceaccount.com` |
 | Artifact Registry | existing | new repo `heady-rebuild` in `heady-rebuild` project |
 | Secret Manager | existing secrets in `heady-production` | new secrets in `heady-rebuild` |
-| Region | `us-central1` (per ADR) | `us-central1` (same) |
+| Region | `us-central1` (legacy) | `us-east1` (locked per ADR-0022/ADR-0036) |
 | GOOGLE_CLOUD_PROJECT env | `heady-production` | `heady-rebuild` |
 
 ### 2.4 Neon Postgres
