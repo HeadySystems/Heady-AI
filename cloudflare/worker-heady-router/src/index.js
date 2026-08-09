@@ -11,6 +11,8 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // Hosts that speak the MCP surface (tagged for origin-side routing/telemetry).
+import { isProtectedMcpPath, isValidMcpAuthorization } from "./mcp-auth.mjs";
+
 const MCP_HOSTS = new Set(["headymcp.com", "www.headymcp.com"]);
 
 // Hop-by-hop response headers a proxy must not forward verbatim.
@@ -39,6 +41,33 @@ export default {
 
     const url = new URL(request.url);
     const host = url.hostname;
+
+    if (MCP_HOSTS.has(host) && isProtectedMcpPath(url.pathname)) {
+      if (!env.HEADY_MCP_BEARER) {
+        return new Response(
+          JSON.stringify({ error: "mcp_auth_not_configured" }),
+          { status: 503, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } },
+        );
+      }
+
+      const authorized = await isValidMcpAuthorization(
+        request.headers.get("Authorization"),
+        env.HEADY_MCP_BEARER,
+      );
+      if (!authorized) {
+        return new Response(
+          JSON.stringify({ error: "mcp_unauthorized" }),
+          {
+            status: 401,
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-store",
+              "WWW-Authenticate": 'Bearer realm="heady-mcp"',
+            },
+          },
+        );
+      }
+    }
 
     // Forward with the visitor's identity preserved; the origin sees who it is for.
     const headers = new Headers(request.headers);

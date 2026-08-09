@@ -107,16 +107,18 @@ const HEADY_API = {
     EDGE: 'https://heady.headyme.com',
     BRAIN: 'https://manager.headysystems.com',
     BUDDY: 'https://headybuddy.org',
-    KEY: import.meta.env.VITE_HEADY_API_KEY || 'hdy_int_4d2d3fe4becc8ad3eea4c9c9b25ba68a83b28335143b89ab',
+    KEY: import.meta.env.VITE_HEADY_API_KEY || '',
 };
 
 const headyFetch = async (url, options = {}) => {
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${HEADY_API.KEY}`,
-        'X-Heady-Key': HEADY_API.KEY,
         ...options.headers,
     };
+    if (HEADY_API.KEY) {
+        headers.Authorization = `Bearer ${HEADY_API.KEY}`;
+        headers['X-Heady-Key'] = HEADY_API.KEY;
+    }
     try {
         const res = await fetch(url, { ...options, headers, mode: 'cors' });
         return { ok: res.ok, status: res.status, data: await res.json().catch(() => null) };
@@ -237,6 +239,13 @@ const HeadyAntigravityUI = () => {
         setSpaceState('Authenticating...');
         addLog('system', `Connecting to ${HEADY_API.MANAGER}...`);
 
+        if (!HEADY_API.KEY) {
+            addLog('warn', 'Authentication blocked: VITE_HEADY_API_KEY is not configured');
+            setIsAuth(false);
+            setSpaceState('Credential Required');
+            return;
+        }
+
         // Step 1: Check manager health
         const managerRes = await headyFetch(`${HEADY_API.MANAGER}/health`);
         if (managerRes.ok) {
@@ -255,13 +264,13 @@ const HeadyAntigravityUI = () => {
         }
 
         // Step 3: Validate API key
-        addLog('info', 'Validating API key: hdy_int_4d2d...89ab');
+        addLog('info', 'Validating configured API credential...');
         const authRes = await headyFetch(`${HEADY_API.MANAGER}/api/v1/health`, {
             method: 'GET',
         });
 
-        if (authRes.ok || managerRes.ok || edgeRes.ok) {
-            addLog('success', 'Knox Vault: Identity confirmed — at least one service responding');
+        if (authRes.ok) {
+            addLog('success', 'Knox Vault: Identity confirmed');
             setIsAuth(true);
             setSpaceState('3D Space Active');
 
@@ -280,13 +289,11 @@ const HeadyAntigravityUI = () => {
             addLog('success', `Sovereign 3D vector space initialized — ${derivedBeeCount} bees active`);
             addLog('info', `Services: Manager(${managerRes.ok ? 'UP' : 'DOWN'}) Edge(${edgeRes.ok ? 'UP' : 'DOWN'})`);
         } else {
-            addLog('warn', 'All endpoints unreachable — entering offline mode');
-            setIsAuth(true);
-            setSpaceState('Offline Mode');
-            // Even offline, we know the codebase has 9 bee modules
-            setBeeCount(9);
+            addLog('warn', `Authentication rejected: ${authRes.status || authRes.error || 'unreachable'}`);
+            setIsAuth(false);
+            setSpaceState('Authentication Failed');
+            setBeeCount(0);
             setMemoryUsage(0);
-            addLog('info', 'Running in degraded mode — 9 local bees standing by');
         }
     };
 

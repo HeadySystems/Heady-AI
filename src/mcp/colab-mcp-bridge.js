@@ -27,6 +27,11 @@ const path = require('path');
 const PORT = parseInt(process.env.PORT || process.env.HEADY_MCP_PORT || '8420');
 const TRANSPORT = process.env.HEADY_MCP_TRANSPORT || 'all';
 const HEADY_DIR = process.env.HEADY_DIR || path.join(__dirname, '..', '..');
+const mcpAuthModule = import('./mcp-auth.mjs');
+const MCP_PROTECTED_PATHS = new Set([
+    '/sse', '/mcp/message', '/mcp/rpc', '/mcp/tools', '/mcp/tools/call',
+    '/vector/store', '/vector/search', '/vector/stats',
+]);
 
 // ── GPUVectorStore — 3D Vector Space ─────────────────────────────
 const { GPUVectorStore, GPU_CONFIG, setupNgrokTunnel } = require('../colab-runtime');
@@ -561,14 +566,40 @@ function parseBody(req) {
     });
 }
 
-function jsonRes(res, code, data) {
+function jsonRes(res, code, data, additionalHeaders = {}) {
     res.writeHead(code, {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        ...additionalHeaders,
     });
     res.end(JSON.stringify(data));
+}
+
+async function requireMcpAuthentication(req, res) {
+    const { getMcpAuthorizationDecision } = await mcpAuthModule;
+    const decision = getMcpAuthorizationDecision(req.headers.authorization);
+    if (decision.allowed) return true;
+
+    jsonRes(res, decision.status, { error: decision.error }, {
+        'Cache-Control': 'no-store',
+        'WWW-Authenticate': 'Bearer realm="heady-mcp"',
+    });
+    return false;
+}
+
+function rejectWebSocketUpgrade(socket, decision) {
+    const reason = decision.status === 503 ? 'Service Unavailable' : 'Unauthorized';
+    socket.write([
+        `HTTP/1.1 ${decision.status} ${reason}`,
+        'Connection: close',
+        'Content-Length: 0',
+        'WWW-Authenticate: Bearer realm="heady-mcp"',
+        '',
+        '',
+    ].join('\r\n'));
+    socket.destroy();
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -586,6 +617,10 @@ function startHTTPServer() {
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             });
             return res.end();
+        }
+
+        if (MCP_PROTECTED_PATHS.has(url.pathname) && !(await requireMcpAuthentication(req, res))) {
+            return;
         }
 
         // ── SSE endpoint ──
@@ -660,7 +695,13 @@ function startHTTPServer() {
     });
 
     // WebSocket upgrade
-    server.on('upgrade', (req, socket, head) => {
+    server.on('upgrade', async (req, socket, head) => {
+        const { getMcpAuthorizationDecision } = await mcpAuthModule;
+        const decision = getMcpAuthorizationDecision(req.headers.authorization);
+        if (!decision.allowed) {
+            rejectWebSocketUpgrade(socket, decision);
+            return;
+        }
         if (req.headers.upgrade?.toLowerCase() === 'websocket') {
             handleWebSocketUpgrade(req, socket, head);
         } else {

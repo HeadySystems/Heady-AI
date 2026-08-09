@@ -101,6 +101,8 @@ export const SECRETS = Object.freeze([
   // ── App auth + extended integrations (2026-06-17; reconciled with .env.example, all code-referenced) ──
   { name: "HEADY_API_KEY", required: false, secret: true, minLength: 20,
     rotation: { strategy: "manual", maxAgeDays: FIB[11] }, description: "Heady platform API key (client → API authentication)." },
+  { name: "HEADY_MCP_BEARER", required: false, secret: true, minLength: FIB[9],
+    rotation: { strategy: "internal", maxAgeDays: FIB[8] }, description: "Dedicated bearer for authenticated remote MCP transports. MCP routes fail closed when it is absent." },
   { name: "ADMIN_TOKEN", required: false, secret: true, minLength: 20,
     rotation: { strategy: "manual", maxAgeDays: FIB[9] }, description: "Admin bearer token for privileged portal/admin routes." },
   { name: "SYNC_TOKEN", required: false, secret: true, minLength: 20,
