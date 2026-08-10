@@ -1,0 +1,1 @@
+../../.agents/workflows/auto-context.md

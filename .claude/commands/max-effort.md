@@ -1,0 +1,1 @@
+../../.agents/workflows/max-effort.md

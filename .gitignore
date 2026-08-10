@@ -18,6 +18,12 @@
 **/service-account.json
 **/*secret*
 !**/self-awareness.js
+# Rotation PROCEDURE docs (no credentials inside — verified 2026-08-09); without these
+# negations the *secret* glob silently drops the two rotation workflows from every commit.
+!.agents/workflows/heady-secret-rotation.md
+!.agents/workflows/secret-rotation.md
+!.claude/commands/heady-secret-rotation.md
+!.claude/commands/secret-rotation.md
 *.secret
 # Pasted credential dropzone — GCP/Firebase service-account JSON keys live here. NEVER commit.
 dropzone/
@@ -77,6 +83,7 @@ dist/
 /coverage/
 coverage/
 .cache/
+.firebase/
 *.tgz
 
 # Runtime data

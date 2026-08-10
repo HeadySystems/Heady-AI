@@ -1,0 +1,1 @@
+../../.agents/workflows/heady-ide-rules.md
