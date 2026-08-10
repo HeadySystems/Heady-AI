@@ -570,9 +570,9 @@ SHA-256 hash confirming immutable action record.
 ## §19 · KNOWN CONSTRAINTS
 
 1. **Cloud-Only** — Zero localhost, zero tunnels. Everything deploys to Cloud Run, Cloudflare, or HF Spaces. Read `/heady-no-local` workflow first.
-2. **Cloudflare Workers Suspended** — Billing pause. Traffic routes through Cloud Run liquid node.
-3. **GCP Project**: `gen-lang-client-0920560496`
-4. **Active API Keys**: `HEADY_PYTHIA_KEY_COLAB` (AI Studio), `HEADY_PYTHIA_KEY` (Gemini primary)
+2. **Cloudflare Workers** — canonical edge tier (`facts.yaml` `deploy_targets.edge: cloudflare-workers`, `model_layer.edge_tier: workers-ai`); Cloud Run is the origin, not a Workers replacement.
+3. **GCP Project**: `heady-ai` (canonical — ADR-0022/ADR-0036, `infra/variables.tf` const-lock; legacy `gen-lang-client-0920560496` is never a deploy target)
+4. **Active API Keys**: resolved via GCP Secret Manager / HeadyVault (ADR-0031); never hardcoded (SEC-001)
 5. **MIDI**: Network MIDI 2.0 (UDP) via `ump-udp-transport.js` + `midi-event-bus.js`
 6. **Package Manager**: pnpm · **Process Manager**: PM2 · **Container**: Docker
 

@@ -88,6 +88,8 @@ export const FACTS_V1 = [
   { path: "deploy_targets", required: true, type: "object" },
   { path: "deploy_targets.origin", required: true, type: "object" },
   { path: "deploy_targets.origin.kind", required: true, type: "string" },
+  // heady-ai is the canonical project (infra/variables.tf const-lock); legacy projects are rejected
+  { path: "deploy_targets.origin.gcp_project", required: true, const: "heady-ai", adr: "ADR-0022/ADR-0036 — canonical GCP project lock" },
   // us-east1 is the canonical region; us-central1 is the rejected legacy region
   { path: "deploy_targets.origin.region", required: true, const: "us-east1", adr: "ADR-0022/ADR-0036 — canonical region lock" },
 

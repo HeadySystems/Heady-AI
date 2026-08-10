@@ -173,7 +173,7 @@ The user is the sole human admin in the Linear workspace (linear.app/heady-ai,
 team key: HEA). All other users are bots/integrations.
 - Evidence: Linear user list. Date: 2026-03-22.
 
-Google Firebase/GCP project: gen-lang-client-0920560496.
+Google Firebase/GCP project: heady-ai (canonical rebuild project; the 2026-03-19 evidence recorded the legacy `gen-lang-client-0920560496`, superseded per ADR-0036).
 - Evidence: audit-data-consolidated.md. Date: 2026-03-19.
 
 

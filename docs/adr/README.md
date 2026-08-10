@@ -6,7 +6,9 @@ The governing principle for all of these: **pick one source of truth per concern
 
 ## Status
 
-There are **51 Accepted ADRs** (`0000`–`0050`) and **1 Proposed** (`0051`). `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority,
+Of **53 ADRs (`0000`–`0052`)**, `0000`–`0051` are **Accepted** and `0052` (instruction provenance
+and channel authentication) is **Proposed** — authored 2026-08-09 in response to a live
+instruction-provenance incident, awaiting founder signature per its own rule. `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority,
 architecture backbone, pgvector retrieval, durable orchestration, agent governance, idempotency,
 DDL coordination, GDPR, PITR, rate limits, SLO, FinOps, founder governance, CDC, embedding lock,
 agent loop, projections, model gateway) were ratified **2026-06-17 by founder approval per

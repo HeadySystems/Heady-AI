@@ -26,7 +26,7 @@ Use this skill when:
 - Building Heady microservices (50+ services with /health endpoints and AutoContext middleware)
 - Creating infrastructure configs (Envoy, Consul, OpenTelemetry, Kubernetes manifests)
 - Generating skill files for the Heady platform
-- Deploying services to Cloud Run (`gen-lang-client-0920560496 / us-east1`)
+- Deploying services to Cloud Run (`heady-ai / us-east1`)
 - Deploying to Cloudflare Workers (account `8b1fa38f282c691423c6399247d53323`)
 - Wiring service registries, domain routers, or auth systems
 - Running tests, linters, or build pipelines in the workspace
@@ -93,9 +93,9 @@ Before finalizing any orchestration artifact, verify:
 
 | Target | Command Pattern |
 |--------|----------------|
-| Cloud Run | `gcloud run deploy {service} --region us-east1 --project gen-lang-client-0920560496` |
+| Cloud Run | `gcloud run deploy {service} --region us-east1 --project heady-ai` |
 | Cloudflare | `wrangler deploy --env production` in workers/ directory |
-| Docker | `docker build -t gcr.io/gen-lang-client-0920560496/{service}:latest .` |
+| Docker | `docker build -t gcr.io/heady-ai/{service}:latest .` |
 | Kubernetes | `kubectl apply -f infra/kubernetes/{service}/deployment.yaml` |
 
 ### Step 6 — Quality Gate Before Delivery

@@ -57,7 +57,7 @@ Admin surface: 1ime1.com (Drupal task manager + all-site customizer)
 | Database | Neon Postgres + pgvector (HNSW m=34 ef=89 fib-scaled) |
 | Cache | Upstash Redis (T0 working memory) |
 | Vectors | Neon pgvector (authority) + Cloudflare Vectorize (edge) |
-| Auth | Firebase Auth · 27 OAuth providers · project: gen-lang-client-0920560496 |
+| Auth | Firebase Auth · 27 OAuth providers · project: heady-ai |
 | AI routing | Claude Sonnet/Opus → Groq Llama → GPT-4o → Gemini 2.5 → Workers AI |
 | GPU | 4× Colab Pro+ A100 80GB (Cortex), A100 40GB (Synapse), T4/L4 (Reflex) via Tailscale |
 | CI/CD | GitHub Actions (heady-ai) — required checks: verify, scan, governance |

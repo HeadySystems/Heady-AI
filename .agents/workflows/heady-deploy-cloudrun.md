@@ -3,14 +3,16 @@ description: Deploy Heady Admin UI (or any site) to Google Cloud Run production
 ---
 
 > Transferred 2026-08-09 from ~/.agents/workflows during the rebuild command consolidation.
-> ⚠ Project/region references predate the canonical GCP lock (ADR-0036) — verify against current deploy state before running.
+> Normalized 2026-08-09 to the canonical GCP lock (ADR-0022/ADR-0036): project `heady-ai`, region
+> `us-east1`, keyless WIF auth. ⚠ Verify against live deploy state (`gcloud config list`) before running.
 
 // turbo-all
 
 ## Prerequisites
-- GCP Project: `gen-lang-client-0920560496`
+- GCP Project: `${GCP_PROJECT_ID:-heady-ai}` (canonical — ADR-0036; never a legacy project)
 - Account: `eric@headyconnection.org`
-- Service Account: `headyio@gen-lang-client-0920560496.iam.gserviceaccount.com`
+- Auth: keyless Workload Identity Federation (`HeadySystems/heady-ai`) — no exported service-account key.
+  The runner SA is resolved by the WIF provider; do not hardcode or download an SA key (SEC-001).
 - gcloud CLI installed at: `~/google-cloud-sdk/bin/gcloud`
 
 ## Steps
@@ -40,13 +42,13 @@ gcloud config set run/region us-east1
    - Dockerfile should use `node:20-slim`, expose port `8080`
    - package.json should have `"start": "node server.js"`
 
-5. Deploy to Cloud Run
+5. Deploy to Cloud Run (authenticated — the admin UI is a governed surface fronted by Cloudflare Access)
 ```bash
 gcloud run deploy heady-admin-ui \
   --source=/home/headyme/sites/admin-ui \
   --region=us-east1 \
   --platform=managed \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --port=8080 \
   --memory=256Mi \
   --cpu=1 \
@@ -56,9 +58,14 @@ gcloud run deploy heady-admin-ui \
   --quiet
 ```
 
-6. If IAM `allUsers` binding fails due to org policy, disable the invoker check:
+6. Grant invoke ONLY to the Cloudflare Access front-door identity — never `allUsers`, never
+   `--no-invoker-iam-check` (both are fail-open and violate AGENTS.md; the admin surface must sit
+   behind CF Access identity, ADR-0028 cross-domain SSO). Bind the specific principal:
 ```bash
-gcloud run services update heady-admin-ui --region=us-east1 --no-invoker-iam-check --quiet
+gcloud run services add-iam-policy-binding heady-admin-ui \
+  --region=us-east1 \
+  --member="serviceAccount:${CF_ACCESS_INVOKER_SA:?set to the CF Access / front-door invoker SA}" \
+  --role=roles/run.invoker
 ```
 
 7. Verify deployment
@@ -81,4 +88,4 @@ To point `admin.headysystems.com` → Cloud Run:
 ## API Keys (shared G AI Studio / gcloud / Colab)
 - Heady Project key: Use env `GEMINI_API_KEY`
 - Default Gemini key: Use env `GOOGLE_API_KEY`
-- Service Account: `headyio@gen-lang-client-0920560496.iam.gserviceaccount.com`
+- Auth: keyless WIF (`HeadySystems/heady-ai`) — the runner SA is provider-resolved; no SA key is exported (SEC-001).

@@ -1,6 +1,6 @@
 ---
 name: heady-firebase-auth-orchestrator
-description: Skill for managing Firebase Authentication across all 9 Heady multi-site deployments. Use when implementing auth flows, configuring cross-site token relay, setting up httpOnly cookie auth, handling OAuth state/nonce, managing Firestore user profiles, or connecting auth events to HeadyAutoContext vector memory. Firebase project ID is gen-lang-client-0920560496. Triggers on "Firebase", "auth", "login", "sign-in", "OAuth", "JWT", "cross-site auth", "cookie relay", or any authentication task.
+description: Skill for managing Firebase Authentication across all 9 Heady multi-site deployments. Use when implementing auth flows, configuring cross-site token relay, setting up httpOnly cookie auth, handling OAuth state/nonce, managing Firestore user profiles, or connecting auth events to HeadyAutoContext vector memory. Firebase project ID is heady-ai. Triggers on "Firebase", "auth", "login", "sign-in", "OAuth", "JWT", "cross-site auth", "cookie relay", or any authentication task.
 license: proprietary
 metadata:
   author: HeadySystems Inc.
@@ -34,7 +34,7 @@ Use this skill when:
 ## Architecture
 
 ```
-Firebase Auth (gen-lang-client-0920560496)
+Firebase Auth (heady-ai)
     ↓ Google OAuth + Email/Password + Anonymous
 auth.headysystems.com/login
     ↓ Mint custom Firebase token (server-side)
@@ -202,7 +202,7 @@ function checkAnonymousRateLimit(ip) {
 ## Environment Variables
 
 ```
-FIREBASE_PROJECT_ID=gen-lang-client-0920560496
+FIREBASE_PROJECT_ID=heady-ai
 FIREBASE_SERVICE_ACCOUNT_KEY=<path to JSON key>
 AUTH_COOKIE_SECRET=<strong random secret>
 ALLOWED_REDIRECT_DOMAINS=headyme.com,headysystems.com,...
@@ -210,7 +210,7 @@ ALLOWED_REDIRECT_DOMAINS=headyme.com,headysystems.com,...
 
 ## References
 
-- Firebase project: `gen-lang-client-0920560496`
+- Firebase project: `heady-ai`
 - [Firebase Custom Tokens](https://firebase.google.com/docs/auth/admin/create-custom-tokens)
 - [Firebase Extensions](https://firebase.google.com/docs/extensions)
 - Auth service: `auth.headysystems.com` (port 443, Cloud Run)

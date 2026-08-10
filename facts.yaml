@@ -53,6 +53,10 @@ supply_chain:
 deploy_targets:
   origin:
     kind: gcp-cloud-run
+    # Canonical GCP project — locked by infra/variables.tf (const heady-ai) and ADR-0022/ADR-0036.
+    # Legacy heady-prod-609590223909 / gen-lang-client-0920560496 are NEVER deploy targets.
+    # Guarded by the coherence scalar guard C-project + const-locked by facts.v1.
+    gcp_project: heady-ai
     region: us-east1
     node: 22
   edge:

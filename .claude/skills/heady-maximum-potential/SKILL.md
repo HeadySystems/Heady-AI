@@ -589,7 +589,7 @@ Minimum assignment threshold: CSL_THRESHOLDS.LOW ≈ 0.691
 ### Stack
 
 - **Edge**: Cloudflare Workers, Pages, KV, Vectorize, Durable Objects, Workers AI
-- **Origin**: Google Cloud Run (us-east1), project gen-lang-client-0920560496
+- **Origin**: Google Cloud Run (us-east1), project heady-ai
 - **Auth**: Firebase (same project)
 - **Database**: PostgreSQL + pgvector (HNSW indexes)
 - **Latent Space**: 3 Colab Pro+ runtimes (Vector Ops, LLM Inference, Training)

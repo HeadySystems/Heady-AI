@@ -25,7 +25,7 @@ const VALID = Object.freeze({
   auth: "firebase-auth",
   secrets: "gcp-secret-manager",
   supply_chain: { primary: "renovate" },
-  deploy_targets: { origin: { kind: "gcp-cloud-run", region: "us-east1" } },
+  deploy_targets: { origin: { kind: "gcp-cloud-run", gcp_project: "heady-ai", region: "us-east1" } },
   pipeline: { stages: ["lint"], required_checks: ["lint"] },
   hcfullpipeline: { stage_count: 21 },
   capacity: { max_concurrent_runtime: 6765 },
@@ -67,6 +67,7 @@ test("LOCKED architectural decisions fail closed on drift", () => {
   assert.match(msgs(drift((c) => { c.hcfullpipeline.stage_count = 22; })), /stage_count must be 21/);
   assert.match(msgs(drift((c) => { c.capacity.max_concurrent_runtime = 10000; })), /max_concurrent_runtime must be 6765/);
   assert.match(msgs(drift((c) => { c.deploy_targets.origin.region = "us-central1"; })), /region must be "us-east1"/);
+  assert.match(msgs(drift((c) => { c.deploy_targets.origin.gcp_project = "gen-lang-client-0920560496"; })), /gcp_project must be "heady-ai"/);
   assert.match(msgs(drift((c) => { c.platform.module_system = "cjs"; })), /module_system must be "esm"/);
   assert.match(msgs(drift((c) => { c.platform.phi = 1.5; })), /phi must be 1\.618/);
   assert.match(msgs(drift((c) => { c.event_bus = "kafka"; })), /event_bus must be "nats"/);

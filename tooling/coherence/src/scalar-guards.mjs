@@ -38,6 +38,15 @@ export const SCALAR_GUARDS = [
     find: '([Rr]egion|REGION)[^a-zA-Z0-9]{0,4}us-[a-z]+[0-9]|GCP us-[a-z]+[0-9]|us-centra[l]1',
     extract: /(us-[a-z]+[0-9])/,
     allow: /^[^:]*20[0-9]{2}-[0-9]{2}-[0-9]{2}[^:]*:|^docs\/(ADR\/0022|adr\/0036)-gcp-region|^docs\/DUAL_ACTIVE_BRANCH_STRATEGY|^docs\/(compendium|master-plan|blueprints)\/|^\.agents\/context\/|(^|\/)tests?\/|\.(test|spec)\.[cm]?js:|snapshots\/|\blegacy\b|\bnever\b|\brejected\b|\bsuperseded\b|\bwas\b|\bdrifts?\b(?!\s*\()|\bwrongly?\b|\bincorrect\b|LOCKED/i },
+  // ADR-0022/ADR-0036 + infra/variables.tf: heady-ai is the canonical GCP project. The legacy
+  // projects heady-prod-609590223909 and gen-lang-client-0920560496 are rejected deploy targets.
+  // Fires when a legacy project id is used as a live deploy/config target (self-avoiding: this row's
+  // own source is exempt by the tooling/ path). Lock ADRs, migration/dual-active runbooks, dated
+  // snapshots, and word-bounded legacy-marker prose are exempt.
+  { id: 'C-project', factKey: 'deploy_targets.origin.gcp_project', label: 'canonical GCP project',
+    find: 'heady-prod-609590223909|gen-lang-client-0920560496',
+    extract: /(heady-prod-609590223909|gen-lang-client-0920560496)/,
+    allow: /^[^:]*20[0-9]{2}-[0-9]{2}-[0-9]{2}[^:]*:|^docs\/(ADR\/0022|adr\/0036)-gcp-region|^docs\/(ENV_SEPARATION|DUAL_ACTIVE_BRANCH_STRATEGY|HEADY_NODES_PRODUCTION)|^docs\/(compendium|master-plan|blueprints)\/|^\.agents\/context\/|^tooling\/coherence\/|(^|\/)tests?\/|\.(test|spec)\.[cm]?js:|snapshots\/|migrat|\blegacy\b|\bnever\b|\brejected\b|\bsuperseded\b|\bwas\b|read-only|read access|\bwrongly?\b|\bincorrect\b|LOCKED/i },
 ];
 
 /**

@@ -17,15 +17,17 @@ const byId = Object.fromEntries(SCALAR_GUARDS.map((g) => [g.id, g]));
 const CAP = byId["C-capacity"];
 const HCFP = byId["C-hcfp-stages"];
 const REGION = byId["C-region"];
+const PROJECT = byId["C-project"];
 
 test("registry carries all canonical guards with complete rows", () => {
-  for (const g of [CAP, HCFP, REGION]) {
+  for (const g of [CAP, HCFP, REGION, PROJECT]) {
     assert.ok(g, "guard row present");
     for (const k of ["factKey", "label", "find", "extract", "allow"]) assert.ok(g[k], `${g.id}.${k} present`);
   }
   assert.equal(CAP.factKey, "capacity.max_concurrent_runtime");
   assert.equal(HCFP.factKey, "hcfullpipeline.stage_count");
   assert.equal(REGION.factKey, "deploy_targets.origin.region");
+  assert.equal(PROJECT.factKey, "deploy_targets.origin.gcp_project");
 });
 
 test("C-capacity fires on an enforced 10000 in config prose", () => {
@@ -125,6 +127,26 @@ test("C-region date exemption is scoped to the PATH — a date in line content d
     REGION, "us-east1",
   );
   assert.equal(v.length, 1, "content dates must not exempt live drift");
+});
+
+test("C-project fires on a legacy project id used as a live target, passes canonical heady-ai", () => {
+  const bad = scalarViolations(["configs/deploy.yaml:3:  project: gen-lang-client-0920560496"], PROJECT, "heady-ai");
+  assert.equal(bad.length, 1);
+  assert.equal(bad[0].asserted, "gen-lang-client-0920560496");
+  const bad2 = scalarViolations([".agents/workflows/x.md:13:- Project: heady-prod-609590223909"], PROJECT, "heady-ai");
+  assert.equal(bad2.length, 1);
+  assert.deepEqual(scalarViolations(["configs/deploy.yaml:3:  project: heady-ai"], PROJECT, "heady-ai"), []);
+});
+
+test("C-project exempts lock ADRs, migration/dual-active prose, and word-bounded legacy markers", () => {
+  const lines = [
+    "docs/adr/0036-gcp-region-canonical-lock.md:13:| GCP Project | `heady-prod-609590223909` | `heady-rebuild` |",
+    "docs/ENV_SEPARATION.md:60:GCP Project | heady-production (legacy) | heady-ai",
+    "scripts/migrate/pull.mjs:4: // read-only access to gen-lang-client-0920560496 during migration",
+    "docs/x.md:9: the legacy project gen-lang-client-0920560496 is never a deploy target",
+    "tooling/coherence/src/scalar-guards.mjs:70: find: 'heady-prod-609590223909|gen-lang-client-0920560496',",
+  ];
+  assert.deepEqual(scalarViolations(lines, PROJECT, "heady-ai"), []);
 });
 
 test("scalarViolations is pure and order-preserving over mixed input", () => {
