@@ -8,17 +8,14 @@ preview_urls = false
 pattern = "headymcp.com/*"
 zone_name = "headymcp.com"
 
-[[routes]]
-pattern = "www.headymcp.com/*"
-zone_name = "headymcp.com"
-
 # Live origin the edge fronts. Env-derived (AGENTS.md #4 — no hardcoded URLs).
 # Per-domain deploys may override this binding; the router fails closed (503) if unset.
 [vars]
 HEADY_ORIGIN = "https://heady-manager-609590223909.us-central1.run.app"
 
-# Routes are declared above so production cannot silently remain attached to a
-# stale Worker script. This worker fronts headymcp.com only.
+# The primary route is declared above so production cannot silently remain
+# attached to a stale Worker script. www.headymcp.com is intentionally owned by
+# headymcp-edge and forwards to the Streamable HTTP Cloud Run service.
 # The MCP passthrough (X-Heady-Module: mcp-gateway) is headymcp-specific; other
 # Heady domains have their own intended origins and are NOT fronted by this worker
 # by default. Deploy per-domain by PUTting this script's code to a script name and
