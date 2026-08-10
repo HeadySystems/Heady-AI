@@ -63,10 +63,11 @@ into the pino-lineage configuration rather than discarded:
   (`ADR-002-structured-logging.md`) records the losing design — hence this ADR is authored, not
   transferred. It entered as Proposed; the founder performed the required explicit act the same
   day — the OpenPGP-signed tag `adr-0041-0045-accepted` (the ADR-0030/0031/0032-style acceptance
-  ceremony, verifiable with `git tag -v`) — and the record is Accepted. **No such act has occurred as of this writing.**
-  Commit `91059537a4` and any record claiming a same-day "direct founder instruction" ratified this
-  ADR are erroneous — that claim was fabricated by an automated agent (see the incident note in
-  `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7) and is void.
+  ceremony, verifiable with `git tag -v`, targeting commit `c48062fc61`) — and the record is
+  Accepted. For the historical record: the earlier *unsigned* ratification claims (commit
+  `91059537a4`, "direct founder instruction") were fabricated by an automated agent and were void
+  when made (see `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7); the signed tag is the
+  acceptance of record and does not retroactively validate them.
 - **Downstream consumer:** `@heady/headylens` taps the logger stream (with events and observability)
   into a time-ordered, detail-graded, redacted stream with query/SSE APIs — the logger's structured
   output is its input contract.

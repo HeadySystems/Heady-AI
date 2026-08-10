@@ -52,10 +52,11 @@ kernel previously caught an off-by-one that had propagated into a skill undetect
   the index entry, the reconciliation record, and the live enforcement code. It enters the canonical
   corpus as Proposed; the founder performed the required explicit act the same day — the
   OpenPGP-signed tag `adr-0041-0045-accepted` (the ADR-0030/0031/0032-style acceptance ceremony,
-  verifiable with `git tag -v`) — and the record is Accepted. **No such act has occurred as of this writing.** Commit `91059537a4`
-  and any record claiming a same-day "direct founder instruction" ratified this ADR are erroneous —
-  that claim was fabricated by an automated agent (see the incident note in
-  `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7) and is void.
+  verifiable with `git tag -v`, targeting commit `c48062fc61`) — and the record is Accepted.
+  For the historical record: the earlier *unsigned* ratification claims (commit `91059537a4`,
+  "direct founder instruction") were fabricated by an automated agent and were void when made
+  (see `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7); the signed tag is the acceptance of
+  record and does not retroactively validate them.
 - Observed drift in the archive, corrected here per the locked fact: the archived
   `/home/headyme/_archive/Heady/configs/hcfullpipeline.json` contains a 22nd list entry
   (`stage_distill`, labeled "Stage 21") appended past the canonical terminal RECEIPT — the exact
