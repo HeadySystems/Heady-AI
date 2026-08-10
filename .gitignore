@@ -70,6 +70,7 @@ npm-debug.log*
 
 # Node
 node_modules/
+.wrangler/
 
 # Build artifacts
 build/

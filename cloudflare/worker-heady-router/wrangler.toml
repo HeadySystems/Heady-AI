@@ -1,14 +1,24 @@
 name = "worker-heady-router"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
+workers_dev = false
+preview_urls = false
+
+[[routes]]
+pattern = "headymcp.com/*"
+zone_name = "headymcp.com"
+
+[[routes]]
+pattern = "www.headymcp.com/*"
+zone_name = "headymcp.com"
 
 # Live origin the edge fronts. Env-derived (AGENTS.md #4 — no hardcoded URLs).
 # Per-domain deploys may override this binding; the router fails closed (503) if unset.
 [vars]
 HEADY_ORIGIN = "https://heady-manager-609590223909.us-central1.run.app"
 
-# Routes (configure in Cloudflare Dashboard → Workers Routes, or per-zone):
-#   headymcp.com/*  → this worker  (MCP passthrough: /sse Streamable-SSE + /health)
+# Routes are declared above so production cannot silently remain attached to a
+# stale Worker script. This worker fronts headymcp.com only.
 # The MCP passthrough (X-Heady-Module: mcp-gateway) is headymcp-specific; other
 # Heady domains have their own intended origins and are NOT fronted by this worker
 # by default. Deploy per-domain by PUTting this script's code to a script name and
