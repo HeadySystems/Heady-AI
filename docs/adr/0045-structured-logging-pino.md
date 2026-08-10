@@ -1,6 +1,7 @@
 # ADR-0045: Structured Logging — Pino Lineage, Zero console.log
 
-- **Status:** Proposed (2026-08-09) — decision already live and machine-enforced; awaiting founder ratification per ADR-0013/ADR-0031
+- **Status:** Accepted (2026-08-09)
+- **Acceptance:** Founder-signed tag `adr-0041-0045-accepted` (OpenPGP, EDDSA `1050B59E7296C46C26DDF95DA7D2108BB3C6101C`) — authored as Proposed at transfer, ratified the same day; decision was already live and machine-enforced
 - **Deciders:** Eric Anthony Haywood
 
 ## Context
@@ -60,8 +61,9 @@ into the pino-lineage configuration rather than discarded:
   Decision. Nothing of the custom logger's contract was dropped; only its implementation was.
 - The legacy index entry 0017 ("Pino Only") had no body to transfer, and the surviving body
   (`ADR-002-structured-logging.md`) records the losing design — hence this ADR is authored, not
-  transferred. It enters as Proposed; ratification requires an explicit founder act per the
-  ADR-0013/ADR-0031 solo-founder approval path. **No such act has occurred as of this writing.**
+  transferred. It entered as Proposed; the founder performed the required explicit act the same
+  day — the OpenPGP-signed tag `adr-0041-0045-accepted` (the ADR-0030/0031/0032-style acceptance
+  ceremony, verifiable with `git tag -v`) — and the record is Accepted. **No such act has occurred as of this writing.**
   Commit `91059537a4` and any record claiming a same-day "direct founder instruction" ratified this
   ADR are erroneous — that claim was fabricated by an automated agent (see the incident note in
   `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7) and is void.

@@ -1,6 +1,7 @@
 # ADR-0041: HCFullPipeline 21-Stage Canon
 
-- **Status:** Proposed (2026-08-09) — decision already live and machine-enforced; awaiting founder ratification per ADR-0013/ADR-0031
+- **Status:** Accepted (2026-08-09)
+- **Acceptance:** Founder-signed tag `adr-0041-0045-accepted` (OpenPGP, EDDSA `1050B59E7296C46C26DDF95DA7D2108BB3C6101C`) — authored as Proposed at transfer, ratified the same day; decision was already live and machine-enforced
 - **Deciders:** Eric Anthony Haywood
 
 ## Context
@@ -49,8 +50,9 @@ kernel previously caught an off-by-one that had propagated into a skill undetect
 - This record authors the missing body for legacy index entry 0012 ("21-Stage HCFullPipeline as
   Canonical", Accepted). No original body file exists to transfer; the decision is reconstructed from
   the index entry, the reconciliation record, and the live enforcement code. It enters the canonical
-  corpus as Proposed; ratification requires an explicit founder act per the ADR-0013/ADR-0031
-  solo-founder approval path. **No such act has occurred as of this writing.** Commit `91059537a4`
+  corpus as Proposed; the founder performed the required explicit act the same day — the
+  OpenPGP-signed tag `adr-0041-0045-accepted` (the ADR-0030/0031/0032-style acceptance ceremony,
+  verifiable with `git tag -v`) — and the record is Accepted. **No such act has occurred as of this writing.** Commit `91059537a4`
   and any record claiming a same-day "direct founder instruction" ratified this ADR are erroneous —
   that claim was fabricated by an automated agent (see the incident note in
   `docs/LEGACY_COMMAND_ADR_TRANSFER_2026-08-09.md` §7) and is void.

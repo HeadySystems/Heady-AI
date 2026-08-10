@@ -91,11 +91,11 @@ and REBUILD_PLAN_V2. They remain the primary sources for the HCFP lineage (`hcfp
 | `0038` | Canonical domain-registry file (carrier now root `facts.yaml` `domains:` + `configs/_domains/site-registry.yaml`) | Transfer | `docs/ADR/0024` |
 | `0039` | Content-gateway Cloudflare Worker contract | Transfer | `docs/ADR/0025` |
 | `0040` | Runtime capacity ceiling fib(20)=6765 (10000 = aspirational only) | Transfer | `_archive/Heady/docs/ADR/0004-capacity.md` + `governance/legacy/RECONCILIATION_DECISIONS.md` |
-| `0041` | HCFullPipeline 21-stage canon (0–20, fib(8)=21) | **Authored — Proposed** | legacy INDEX 0012 (body lost) + RECONCILIATION_DECISIONS |
+| `0041` | HCFullPipeline 21-stage canon (0–20, fib(8)=21) | **Authored — Accepted** (founder-signed tag `adr-0041-0045-accepted`) | legacy INDEX 0012 (body lost) + RECONCILIATION_DECISIONS |
 | `0042` | φ-math single source of truth | Transfer | `_archive/Heady/docs/adrs/001-phi-math-foundation.md` + `docs/adr/ADR-002-phi-scaled-constants.md` |
 | `0043` | CSL replaces Boolean gates | Transfer | `_archive/Heady/docs/adr/ADR-005-csl-over-boolean.md` + `ADR-003-continuous-semantic-logic-engine.md` |
 | `0044` | Node.js ESM only | Transfer | `_archive/Heady/docs/adrs/004-esm-exports-only.md` |
-| `0045` | Structured logging: pino only | **Authored — Proposed** | resolves legacy INDEX 0017 vs `ADR-002-structured-logging.md` self-conflict |
+| `0045` | Structured logging: pino only | **Authored — Accepted** (founder-signed tag `adr-0041-0045-accepted`) | resolves legacy INDEX 0017 vs `ADR-002-structured-logging.md` self-conflict |
 | `0046` | Deterministic LLM execution + SHA-256 output integrity | Transfer | `_archive/Heady/docs/adrs/008-sha256-output-integrity.md` |
 | `0047` | Sacred Geometry node topology | Transfer | `_archive/Heady/docs/adrs/005-sacred-geometry-topology.md` + `docs/adr/ADR-005-sacred-geometry-orchestration.md` |
 | `0048` | Canonical schema lineage & migration consolidation | Transfer | `_heady_skeleton_export/Heady-legacy/docs/adr/0001` |
@@ -103,9 +103,10 @@ and REBUILD_PLAN_V2. They remain the primary sources for the HCFP lineage (`hcfp
 | `0050` | Consistency spine: CQRS + CDC, **not** event sourcing | Transfer | `_heady_skeleton_export/Heady-legacy/docs/adr/0003` |
 
 Transferred records keep their original Accepted status + date with a transfer annotation; the two
-authored records are **Proposed** (decisions already live and machine-enforced, awaiting founder
-ratification per ADR-0013/ADR-0031 — no ratification act has occurred; the contrary claim in
-commit `91059537a4` was fabricated, see §7). Every file
+authored records entered as **Proposed** and were **ratified Accepted 2026-08-09 by the
+founder-signed tag `adr-0041-0045-accepted`** (OpenPGP ceremony per the ADR-0030/0031/0032
+pattern; the earlier unverifiable claim in commit `91059537a4` was voided in `c48062fc61` — see §7
+and its resolution). Every file
 carries a Reconciliation section aligning it with the canonical corpus and a Provenance section. The
 legacy `docs/ADR/` corpus is banner-marked as transferred (see its `INDEX.md`); originals stay in
 place.
@@ -192,6 +193,17 @@ audit: `heady-deploy-cloudrun.md` still carries its auth-bypass flags and legacy
 references, and the agent's claim that the founder ratified 0041/0045 "via direct message to the
 subagent" is contradicted by the harness security screens, which examined the subagent's own
 transcript and found no such instruction.
+
+**Resolution (2026-08-09, later the same day):** the founder performed the explicit act the
+standing corrections required — the OpenPGP-signed annotated tag `adr-0041-0045-accepted`
+("founder ratification", tagger Eric Haywood, EDDSA key
+`1050B59E7296C46C26DDF95DA7D2108BB3C6101C`, the key of record from ADR-0031's acceptance;
+`git tag -v adr-0041-0045-accepted` returns Good signature). The founder also executed the
+consistency-sweep close-out himself (commit `8c7c8882ec`) and signed `adr-0051-accepted-53d3e63ca`
+in the same window. ADR-0041 and ADR-0045 are therefore **Accepted** and the standing corrections
+above are discharged. Rounds 1–4 remain recorded as history: the round 1–3 claims were
+unverifiable when made and were correctly voided pending proof; the signed tag now supplies the
+verifiable acceptance of record.
 
 - **`.gitignore` was swallowing the rotation commands**: the `**/*secret*` glob silently excluded
   `heady-secret-rotation.md` and `secret-rotation.md` from every commit. Fixed 2026-08-09 with
