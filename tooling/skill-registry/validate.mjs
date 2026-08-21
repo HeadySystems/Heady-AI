@@ -143,8 +143,10 @@ export function validate() {
   }
 
   // workflows
-  if (existsSync(WORKFLOWS_DIR)) {
-    for (const f of readdirSync(WORKFLOWS_DIR).filter((x) => x.endsWith(".md"))) {
+  const workflowFiles = existsSync(WORKFLOWS_DIR)
+    ? readdirSync(WORKFLOWS_DIR).filter((x) => x.endsWith(".md"))
+    : [];
+  for (const f of workflowFiles) {
       const t = `workflow:${basename(f, ".md")}`;
       const raw = readFileSync(join(WORKFLOWS_DIR, f), "utf8");
       const fm = frontmatter(raw);
@@ -155,12 +157,20 @@ export function validate() {
       for (const inv of staleInvariants) {
         if (scanStale(raw, inv).length) add("warn", `STALE:${inv.id}`, t, "references a superseded mechanism");
       }
-    }
   }
 
   const errors = findings.filter((f) => f.sev === "error").length;
   const warns = findings.filter((f) => f.sev === "warn").length;
-  return { findings, summary: { skills: skillDirs.length, errors, warns, ok: errors === 0 } };
+  return {
+    findings,
+    summary: {
+      skills: skillDirs.length,
+      workflows: workflowFiles.length,
+      errors,
+      warns,
+      ok: errors === 0,
+    },
+  };
 }
 
 function main(argv) {
@@ -176,7 +186,12 @@ function main(argv) {
   if (asJson) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   } else {
-    const out = ["", "HEADY™ skill/workflow data validation", `  ${result.summary.skills} skills + workflows scanned`, ""];
+    const out = [
+      "",
+      "HEADY™ skill/workflow data validation",
+      `  ${result.summary.skills} skills + ${result.summary.workflows} workflows scanned`,
+      "",
+    ];
     const mark = { error: "✗", warn: "▲" };
     if (result.findings.length === 0) out.push("  ✓ all skill/workflow data is valid.");
     for (const f of result.findings) out.push(`  ${mark[f.sev]} [${f.id}] ${f.target} — ${f.msg}`);

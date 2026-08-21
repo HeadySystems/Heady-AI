@@ -17,6 +17,8 @@
 | Validation and coherence | Detects metadata, projection, policy, and source drift early | Run isolated gates when aggregate process concurrency is unreliable |
 | Deployment verification | Prevents repository readiness from being mislabeled as live success | Authenticated canary/protocol evidence and exact target identity |
 | Incident and secret operations | Gives urgent work a repeatable sequence | Exact scope, external authorization, revocation, and audit evidence |
+| Governed promotion | `heady-auto-progress` separates inventory, selection, validation, and promotion | Digest-bound bundle selection and destination-specific authority |
+| Destructive manifests | `heady-destructive-approve-all` can batch exact destructive entries without blanket consent | One-time manifest hash, before-state revalidation, native human/platform gates |
 
 ## Principal risks
 

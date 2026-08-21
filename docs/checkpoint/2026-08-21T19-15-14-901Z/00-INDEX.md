@@ -18,8 +18,8 @@ This folder is a durable, read-oriented checkpoint pack for comparing repository
 | HEAD | `4611c0757a933065cb723bd07725d4d833d4146a` |
 | Handoff baseline | `439cb776a69b202f3dd15a06945334cfd5db3689` |
 | Handoff run | 51 |
-| Workflow sources | 52 |
-| Workflow command projections | 52 |
+| Workflow sources | 54 after concurrent close-out additions |
+| Workflow command projections | 54 |
 | Skill source/projection count | 136 / 136 after registration |
 | Evidence timestamp | `2026-08-21T19:15:14.901Z` |
 
@@ -55,3 +55,7 @@ At `2026-08-21T19:53:31Z`, the full local test and build graphs had completed:
 frontmatter normalization exposed that `register.mjs --check` compared counts but
 not content. Check mode now fails on content/resource/orphan drift, seven focused
 registry tests pass, and all 136 source/projection pairs are synchronized.
+
+Two safety-oriented workflows arrived from a concurrent Heady transfer lane
+during commit close-out. They were inspected, validated, projected, and added to
+the inventory, bringing the workflow/command surface to 54/54.

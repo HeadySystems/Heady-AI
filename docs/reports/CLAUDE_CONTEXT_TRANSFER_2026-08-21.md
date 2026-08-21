@@ -166,6 +166,16 @@ system. Rotate or revoke through the provider and canonical secret-manager workf
   `/home/headyme/Heady-AI` entry. The curated mapping is transferred separately while preserving
   the existing entries.
 
+## Installed transfer surfaces
+
+- Repository knowledge pack: `docs/reports/CLAUDE_CONTEXT_TRANSFER_2026-08-21.md`.
+- Heady AutoContext: `/home/headyme/.agents/registry/rules-registry.json` now contains the exact
+  `/home/headyme/Heady-AI` mapping with six durable rules and the `heady-deep-scan`, `heady-handoff`,
+  `heady-git-ops`, and `heady-knowledge-ingestion` skill recommendations.
+- Codex durable memory: `/home/headyme/.codex/memories/extensions/ad_hoc/notes/2026-08-21T13-45-00-claude-context-transfer.md`.
+- No raw transcript, file-history snapshot, credential, or private account record was copied into any
+  installed surface.
+
 ## Recommended doc structure
 
 - Canonical policy and decisions: `AGENTS.md`, `docs/adr/`, facts, contracts, and schemas.

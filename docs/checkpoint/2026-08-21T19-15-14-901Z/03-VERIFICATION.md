@@ -74,7 +74,7 @@ The global skill/workflow validator scanned 136 skills plus workflows and report
 The new `heady-handoff` skill itself passed the skill-creator validator.
 
 After repairing the three metadata sources and the stale tunnel wording, the
-validator reported zero errors and zero warnings across 136 skills and 52
+validator reported zero errors and zero warnings across 136 skills and 54
 workflows.
 
 ## Focused verification
@@ -82,7 +82,7 @@ workflows.
 - `python3 .../quick_validate.py .agents/skills/heady-handoff`: pass.
 - `node --test tooling/handoff/test/handoff.test.mjs`: 1 test, 1 pass.
 - `node tooling/handoff/src/handoff.mjs --dry-run --no-verify --json`: pass and `bundlePath: null`.
-- `node tooling/skill-registry/sync-workflows.mjs --check`: 52 workflows in sync with 52 slash-command symlinks.
+- `node tooling/skill-registry/sync-workflows.mjs --check`: 54 workflows in sync with 54 slash-command symlinks.
 - `node tooling/skill-registry/register.mjs`: 136 of 136 skill packs registered.
 - `node --test tooling/auto-flow/test/*.test.mjs`: 11 tests passed.
 - Focused package tests passed for approvals, approval API, database, events,

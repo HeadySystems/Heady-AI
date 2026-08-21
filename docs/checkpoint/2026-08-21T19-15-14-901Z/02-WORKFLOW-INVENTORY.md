@@ -8,7 +8,7 @@
 
 # Workflow Inventory
 
-The 52 source files below exist under `.agents/workflows/` and have matching
+The 54 source files below exist under `.agents/workflows/` and have matching
 `.claude/commands/` symlink projections. Registry validation proves metadata and
 projection integrity; it does not prove every referenced service, route,
 credential, or production target is currently available.
@@ -29,10 +29,12 @@ credential, or production target is currently available.
 | `edge-cache-warm` | Performance | Reduces cold edge latency | Outward network traffic requires a confirmed target and authorization. |
 | `foundational-pillars` | Architecture gate | Reasserts system invariants | Apply before structural changes; canonical ADRs override stale prose. |
 | `heady-activity-tree` | Audit reporting | Produces safe activity and checkpoint evidence | Repaired to avoid the unsafe legacy generator and checkpoint mutation. |
+| `heady-auto-progress` | Governed promotion | Turns dirty state into exact selectable bundles | First invocation is read-only; commit, push, database, deploy, and file-sync lanes require a digest-bound user selection. |
 | `heady-battle-sim` | Model evaluation | Exercises competitive multi-stage assessment | Requires current battle engine and bounded evaluation inputs. |
 | `heady-command` | Compatibility | Preserves historical command usage | Now aliases the canonical non-recursive `/heady` route. |
 | `heady-connectors` | Integration inventory | Reveals available MCP/services | Discovery or health is not proof that a protected tool call succeeds. |
 | `heady-deploy-cloudrun` | Release execution | Standardizes Cloud Run deployment | Human-gated; verify project, region, identity, image, and canary. |
+| `heady-destructive-approve-all` | Destructive-action governance | Batches exact actions into one auditable manifest | The compatibility name grants nothing; execution requires an exact one-time SHA-256 confirmation and every native external gate. |
 | `heady-drift-monitor` | Reliability | Detects changing output behavior | Needs durable measurements and controlled reconfiguration authority. |
 | `heady-emergency-protocol` | Incident recovery | Gives failures an ordered response path | Prefer containment and evidence preservation before mutation. |
 | `heady-env-sanity-checks` | Environment validation | Finds DNS/config/service mismatches early | Report secret presence only and distinguish local from deployed state. |

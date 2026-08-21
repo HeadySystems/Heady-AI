@@ -13,7 +13,7 @@
 1. Added and registered the Codex `heady-handoff` skill.
 2. Defined the canonical `/heady` intelligence router and legacy aliases.
 3. Repaired all workflow metadata/staleness validator findings.
-4. Synchronized 52 workflow sources with 52 Claude commands.
+4. Synchronized 54 workflow sources with 54 Claude commands.
 5. Regenerated four drifted portal projections with the real source commit.
 6. Isolated aggregate-runner failures and proved all five enforcers clean.
 7. Ran focused approval, API, database, events, source-ledger, manager, portal,
@@ -23,6 +23,9 @@
 9. Completed the serial monorepo test graph (90/90) and build graph (40/40).
 10. Normalized 25 source-skill frontmatters, regenerated affected projections,
     and made content/resource drift fail `register.mjs --check` and CI.
+11. Inspected and retained the concurrent `heady-auto-progress` and
+    `heady-destructive-approve-all` workflows; both preserve exact-scope human
+    gates and have synchronized command projections.
 
 ## Live or human-gated follow-up
 

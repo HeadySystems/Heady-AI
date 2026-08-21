@@ -28,9 +28,9 @@
 <details open>
 <summary><strong>Workflow and command layer</strong></summary>
 
-- Workflow sources present after remediation: 52 of 52 enumerated files in `.agents/workflows/`
-- Matching `.claude/commands/*.md` symlink projections: 52
-- Parseable workflow descriptions: 52
+- Workflow sources present after remediation and concurrent close-out additions: 54 of 54 enumerated files in `.agents/workflows/`
+- Matching `.claude/commands/*.md` symlink projections: 54
+- Parseable workflow descriptions: 54
 - The three initially metadata-defective sources were repaired and revalidated.
 - Static compatibility indicators: 12 workflows contain CommonJS `require(...)` examples, 11 contain `console.log`, and 5 contain stale RAM/vector-as-authority language.
 - The files are operational instructions. Their existence does not prove that referenced engines, services, credentials, routes, or deployments exist or work.
