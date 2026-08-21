@@ -1,0 +1,23 @@
+{
+  "name": "@heady/mcp-intelligence",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Heady MCP intelligence chokepoint, truthful registry, redaction, and tamper-evident audit ports.",
+  "main": "src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "scripts": {
+    "build": "echo '(no build — runnable ESM)'",
+    "test": "node --test",
+    "lint": "echo '(lint wired at repo level)'"
+  },
+  "dependencies": {
+    "@heady/csl-engine": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "@heady/resilience": "workspace:*",
+    "@heady/security-mesh": "workspace:*",
+    "zod4": "npm:zod@4.4.3"
+  }
+}

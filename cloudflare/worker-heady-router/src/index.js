@@ -1,8 +1,8 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Edge Router — Cloudflare Worker                            ║
 // ║  Transparent reverse proxy fronting the Heady domains onto the      ║
-// ║  live origin, with MCP passthrough for headymcp.com (the /sse       ║
-// ║  Streamable-SSE surface + /health). Origin is env-derived          ║
+// ║  live origin, with MCP passthrough for headymcp.com (stateless      ║
+// ║  POST /mcp with request-scoped SSE progress + /health). Origin is  ║
 // ║  (HEADY_ORIGIN) — no hardcoded URLs (AGENTS.md #4); fail-closed     ║
 // ║  503 when unconfigured. Replaces the prior KV-hologram/Colab-       ║
 // ║  compiler router, which pointed at a decommissioned us-east1 origin ║

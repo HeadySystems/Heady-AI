@@ -110,6 +110,7 @@ test("canonical home resolves to packages/db/migrations and contains the complet
     "0010_autonomous_approval_grants.sql",
     "0011_node_orchestration_integrity.sql",
     "0012_neon_universal_source_ledger.sql",
+    "0013_mcp_intelligence_audit.sql",
   ]);
   assert.deepEqual(
     files.slice(6, 9).map((file) => file.checksum),

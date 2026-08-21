@@ -23,12 +23,13 @@ import { createConsoleService } from "./console.mjs";
 import { createHeady990Service } from "./heady990.mjs";
 import { createNodesService } from "./nodes.mjs";
 import { createMaintenanceService } from "./maintenance.mjs";
+import { createMcpService } from "./mcp.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger, eventBus, events: eventsOpts, tasks: tasksOpts, nodes: nodesOpts, console: consoleOpts, heady990: heady990Opts } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, eventBus, events: eventsOpts, tasks: tasksOpts, nodes: nodesOpts, console: consoleOpts, heady990: heady990Opts, mcp: mcpOpts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -122,16 +123,6 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   // belongs in Neon; no runtime route is permitted to prune files or JSONL.
   const maintenance = createMaintenanceService({ nodesReadiness: nodes.readiness });
 
-  // Console — §8 connector probes on the φ⁷ heartbeat; serves the honeycomb's
-  // measured state (never asserted). Kernel probes read this same kernel.
-  const consoleSvc = createConsoleService({
-    log,
-    kernel,
-    publish: (subject, payload) => events.publish(subject, payload),
-    deps: ["http", "tasks"], // boot last: the first sweep must see live services
-    ...consoleOpts, // tests inject { fetchImpl, registryPath } — no network in suites
-  });
-
   // 990 Intelligence (Phase-A A3) — hybrid search + org/filings API over the 990
   // data plane. Composition-root injects getDbPort + a Workers-AI query embedder
   // (index.mjs); no factory ⇒ disabled (503), no embedder ⇒ keyword-only.
@@ -142,14 +133,38 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     embedQuery: heady990Opts?.embedQuery ?? null,
   });
 
+  // MCP — one authenticated Streamable HTTP ingress. Every advertised tool
+  // call crosses the same AutoContext/CSL/policy/audit/event pipeline; tools
+  // whose durable dependencies are absent are not exposed.
+  const mcp = createMcpService({
+    ...mcpOpts,
+    enabled: mcpOpts !== undefined,
+    log,
+    intelligence: intel,
+    events,
+    tasks,
+    heady990,
+  });
+
+  // Console — §8 connector probes on the φ⁷ heartbeat; serves the honeycomb's
+  // measured state (never asserted). Kernel probes read this same kernel.
+  const consoleSvc = createConsoleService({
+    log,
+    kernel,
+    publish: (subject, payload) => events.publish(subject, payload),
+    deps: ["http", "tasks"], // boot last: the first sweep must see live services
+    ...consoleOpts, // tests inject { fetchImpl, registryPath } — no network in suites
+  });
+
   // The HTTP listener as a Latent Service Pattern service, managed by the kernel.
   kernel.register(intel.service);
   kernel.register(events.service);
   kernel.register(tasks.service);
   kernel.register(nodes.service);
   kernel.register(maintenance.service);
-  kernel.register(consoleSvc.service);
   kernel.register(heady990.service);
+  kernel.register(mcp.service);
+  kernel.register(consoleSvc.service);
 
   kernel.register({
     name: "http",
@@ -195,6 +210,9 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   // Read-only Cloud Run filesystem/maintenance posture.
   maintenance.routes(app);
 
+  // MCP Streamable HTTP (2026-07-28 with stateless 2025 compatibility).
+  mcp.routes(app);
+
   // Console summary (§8) — the honeycomb's data source.
   consoleSvc.routes(app);
 
@@ -217,7 +235,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     product,
     version,
     tier: "origin (Cloud Run modular monolith)",
-    endpoints: ["/health", "/metrics", "/api/events", "/tasks", "/api/nodes", "/api/orchestration/readiness", "/api/maintenance/health", "/api/console/summary"],
+    endpoints: ["/health", "/metrics", "/api/events", "/tasks", "/api/nodes", "/api/orchestration/readiness", "/api/maintenance/health", "/mcp", "/mcp/v1", "/api/console/summary"],
   }));
 
   app.use((_req, res) => res.status(404).json({ error: "not_found" }));
@@ -232,6 +250,10 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     tasks,
     nodes,
     maintenance,
+    /** Authenticated intelligence-routed MCP handle. */
+    mcp,
+    /** Provenance-linked 990 intelligence handle. */
+    heady990,
     log,
     /** Boot the kernel (dependency-ordered; the `http` service listens here). */
     start: () => kernel.boot(),

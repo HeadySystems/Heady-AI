@@ -129,7 +129,8 @@
     "swagger-ui-express": "^5.0.1",
     "tinyliquid": "^0.2.34",
     "ws": "^8.21.1",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.65.0",

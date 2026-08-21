@@ -51,9 +51,12 @@ const liveInternalSecret = async () => {
 // account id + token are present in the vault. Absent ⇒ null ⇒ keyword-only
 // (honest degrade; never throws the boot). Resolved once, eagerly.
 let embedQuery = null;
+let mcpBearerToken = null;
 try {
   const { loadSecrets } = await import("@heady/secrets");
-  const cf = await loadSecrets({ only: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_EMAIL"] });
+  const resolved = await loadSecrets({ only: ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN", "CLOUDFLARE_EMAIL", "HEADY_MCP_BEARER"] });
+  mcpBearerToken = resolved.HEADY_MCP_BEARER ?? null;
+  const cf = resolved;
   if (cf.CLOUDFLARE_ACCOUNT_ID && cf.CLOUDFLARE_API_TOKEN) {
     const { createWorkersAiQueryEmbedder } = await import("./embed-query.mjs");
     embedQuery = createWorkersAiQueryEmbedder({
@@ -79,6 +82,14 @@ const { kernel, start } = createApp({
   tasks: { getDbPort: liveDbPort },
   nodes: { getDbPort: liveDbPort, getInternalSecret: liveInternalSecret },
   heady990: { getDbPort: liveDbPort, embedQuery },
+  mcp: {
+    getDbPort: liveDbPort,
+    embedQuery,
+    bearerToken: mcpBearerToken,
+    tenantId: process.env.HEADY_MCP_TENANT_ID ?? null,
+    allowedHosts: (process.env.HEADY_MCP_ALLOWED_HOSTS ?? "").split(",").map((value) => value.trim()).filter(Boolean),
+    allowedOrigins: (process.env.HEADY_MCP_ALLOWED_ORIGINS ?? process.env.HEADY_MCP_ALLOWED_HOSTS ?? "").split(",").map((value) => value.trim()).filter(Boolean),
+  },
   console: {
     // Vault resolver for `vault` probes (the live token lifecycle): resolves
     // ONLY the names the registry declares; absent optional secrets resolve

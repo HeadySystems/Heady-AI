@@ -18,7 +18,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 
 const okConnector = () => ({
   id: "headymcp", name: "HeadyMCP", kind: "heady", role: "mcp-endpoint",
-  deploy_class: true, expected: "real", probe: { kind: "https", url: "https://headymcp.com/healthz" },
+  deploy_class: true, expected: "real", probe: { kind: "https", url: "https://headymcp.com/health" },
 });
 
 test("§8 state model carries the first-class states", () => {

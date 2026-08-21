@@ -20,8 +20,9 @@ const EXEMPT = /(\.test\.|\.spec\.|[/^]__tests__\/|\/fixtures\/|\/mocks\/|\/dist
 // A line that ingests an unparsed request body across the API boundary.
 // (Contract mirrored by test/boundary-timing.test.mjs — keep in lock-step.)
 const BOUNDARY_READ = /\breq\.body\b|\brequest\.json\s*\(/;
-// The file-level anchor proving a contract-owned (or zod) validator is in scope.
-const VALIDATOR_ANCHOR = /from\s+['"]@heady\/contracts['"]|from\s+['"]zod['"]/;
+// The file-level anchor proving a contract-owned (or Zod) validator is in scope.
+// `zod4` is the workspace alias used where SDK v2 must coexist with Zod 3 peers.
+const VALIDATOR_ANCHOR = /from\s+['"]@heady\/contracts['"]|from\s+['"](?:zod|zod4)['"]/;
 // Per-line waiver: `// heady-allow:zod-boundary — reason`
 const WAIVER = /heady-allow:\s*zod-boundary/;
 

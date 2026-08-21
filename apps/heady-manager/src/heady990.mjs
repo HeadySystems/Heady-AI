@@ -50,7 +50,24 @@ export function createHeady990Service({ log, getDbPort = null, embedQuery = null
     metrics: async () => ({ searches: registry.snapshot().counters["heady990.searches"] ?? 0 }),
   };
 
-  const unavailable = (res) => res.status(503).json({ error: "heady990_unavailable", reason: disabled ? "990 service disabled (no DbPort)" : (lastError ?? "db not connected") });
+  function unavailableReason() {
+    return disabled ? "990 service disabled (no DbPort)" : (lastError ?? "db not connected");
+  }
+
+  function assertAvailable() {
+    if (port) return;
+    const error = new Error(unavailableReason());
+    error.code = "heady990_unavailable";
+    throw error;
+  }
+
+  function validateEin(ein) {
+    if (EIN_RE.test(ein)) return;
+    const error = new Error("ein must be 9 digits");
+    error.code = "invalid_request";
+    error.details = [error.message];
+    throw error;
+  }
 
   async function rankedEins({ q, limit, state, minRevenue }) {
     // Filters go INTO both candidate queries so state/minRevenue narrow the population
@@ -76,79 +93,121 @@ export function createHeady990Service({ log, getDbPort = null, embedQuery = null
     return { fused: rrfFuse(lists), mode };
   }
 
+  async function search(input) {
+    const validated = validateSearchQuery(input);
+    if (!validated.ok) {
+      const error = new Error("invalid 990 search request");
+      error.code = "invalid_request";
+      error.details = validated.errors;
+      throw error;
+    }
+    assertAvailable();
+    const span = startSpan("heady990.search", { hasEmbedder: !!embedQuery }, { exporter, registry });
+    try {
+      const { fused, mode } = await rankedEins(validated.value);
+      const top = fused.slice(0, validated.value.limit);
+      registry.counter("heady990.searches").inc();
+      if (top.length === 0) {
+        span.end({ hits: 0 });
+        return { query: validated.value, mode, count: 0, results: [] };
+      }
+      const scoreByEin = new Map(top.map((item) => [item.id, item.score]));
+      const hydrate = hydrateSql(top.map((item) => item.id));
+      const rows = await port.query(hydrate.sql, hydrate.params);
+      // state/minRevenue were already applied in the candidate SQL (pre-rank). Here we only
+      // shape + enforce the contract invariant: a search result MUST carry provenance
+      // (a filing-less org has no source lineage) — drop any that can't, never emit null.
+      const results = rows.rows
+        .map((row) => ({
+          ein: row.ein, name: row.name, state: row.state, nteeCode: row.ntee_code,
+          latestFiling: row.tax_period_end ? {
+            taxPeriodEnd: row.tax_period_end, returnType: row.return_type,
+            totalRevenue: row.total_revenue, totalExpenses: row.total_expenses, netAssetsEoy: row.net_assets_eoy,
+          } : null,
+          score: scoreByEin.get(row.ein) ?? 0,
+          provenance: row.source_object_id ? { sourceObjectId: row.source_object_id, sourceUrl: row.source_url, contentSha256: row.content_sha256 } : null,
+        }))
+        .filter((result) => result.provenance !== null)
+        .sort((left, right) => right.score - left.score);
+      span.end({ hits: results.length, mode });
+      return { query: validated.value, mode, count: results.length, results };
+    } catch (error) {
+      span.end({ failed: true });
+      captureError(error, { operation: "heady990.search" }, { exporter, registry });
+      throw error;
+    }
+  }
+
+  async function getOrg(ein) {
+    validateEin(ein);
+    assertAvailable();
+    const result = await port.query("SELECT ein, name, state, ntee_code, subsection_cd, ruling_year FROM heady_990.organizations WHERE ein = $1", [ein]);
+    if (result.rows.length === 0) {
+      const error = new Error("990 organization not found");
+      error.code = "not_found";
+      throw error;
+    }
+    return { org: result.rows[0] };
+  }
+
+  async function getFilings(ein) {
+    validateEin(ein);
+    assertAvailable();
+    const result = await port.query(
+      `SELECT tax_period_end, return_type, total_revenue, total_expenses, total_assets_eoy,
+              total_liabilities_eoy, net_assets_eoy, voting_members, independent_members,
+              source_object_id, source_url, content_sha256
+       FROM heady_990.filings WHERE ein = $1 ORDER BY tax_period_end DESC`,
+      [ein],
+    );
+    return { ein, count: result.rows.length, filings: result.rows };
+  }
+
+  function respondError(res, error, fallback) {
+    if (error.code === "invalid_request") return res.status(400).json({ error: error.code, details: error.details });
+    if (error.code === "heady990_unavailable") return res.status(503).json({ error: error.code, reason: error.message });
+    if (error.code === "not_found") return res.status(404).json({ error: error.code });
+    return res.status(500).json({ error: fallback });
+  }
+
   function routes(app) {
     // GET /990/search?q=&limit=&state=&minRevenue= — hybrid, provenance-linked.
     app.get("/990/search", async (req, res) => {
-      const v = validateSearchQuery(req.query);
-      if (!v.ok) return res.status(400).json({ error: "invalid_request", details: v.errors });
-      if (!port) return unavailable(res);
-      const span = startSpan("heady990.search", { hasEmbedder: !!embedQuery }, { exporter, registry });
       try {
-        const { fused, mode } = await rankedEins(v.value);
-        const top = fused.slice(0, v.value.limit);
-        registry.counter("heady990.searches").inc();
-        if (top.length === 0) { span.end({ hits: 0 }); return res.json({ query: v.value, mode, count: 0, results: [] }); }
-        const scoreByEin = new Map(top.map((t) => [t.id, t.score]));
-        const hy = hydrateSql(top.map((t) => t.id));
-        const rows = await port.query(hy.sql, hy.params);
-        // state/minRevenue were already applied in the candidate SQL (pre-rank). Here we only
-        // shape + enforce the contract invariant: a search result MUST carry provenance
-        // (a filing-less org has no source lineage) — drop any that can't, never emit null.
-        const results = rows.rows
-          .map((r) => ({
-            ein: r.ein, name: r.name, state: r.state, nteeCode: r.ntee_code,
-            latestFiling: r.tax_period_end ? {
-              taxPeriodEnd: r.tax_period_end, returnType: r.return_type,
-              totalRevenue: r.total_revenue, totalExpenses: r.total_expenses, netAssetsEoy: r.net_assets_eoy,
-            } : null,
-            score: scoreByEin.get(r.ein) ?? 0,
-            provenance: r.source_object_id ? { sourceObjectId: r.source_object_id, sourceUrl: r.source_url, contentSha256: r.content_sha256 } : null,
-          }))
-          .filter((r) => r.provenance !== null)
-          .sort((a, b) => b.score - a.score);
-        span.end({ hits: results.length, mode });
-        return res.json({ query: v.value, mode, count: results.length, results });
-      } catch (err) {
-        span.end({ failed: true });
-        captureError(err, { route: "GET /990/search" }, { exporter, registry });
-        log.error({ err: String(err?.message ?? err) }, "heady990: search failed");
-        return res.status(500).json({ error: "search_failed" });
+        return res.json(await search(req.query));
+      } catch (error) {
+        log.error({ err: String(error?.message ?? error) }, "heady990: search failed");
+        return respondError(res, error, "search_failed");
       }
     });
 
     // GET /990/orgs/:ein — one organization.
     app.get("/990/orgs/:ein", async (req, res) => {
-      if (!EIN_RE.test(req.params.ein)) return res.status(400).json({ error: "invalid_request", details: ["ein must be 9 digits"] });
-      if (!port) return unavailable(res);
       try {
-        const r = await port.query("SELECT ein, name, state, ntee_code, subsection_cd, ruling_year FROM heady_990.organizations WHERE ein = $1", [req.params.ein]);
-        if (r.rows.length === 0) return res.status(404).json({ error: "not_found" });
-        return res.json({ org: r.rows[0] });
-      } catch (err) {
-        captureError(err, { route: "GET /990/orgs/:ein" }, { exporter, registry });
-        return res.status(500).json({ error: "read_failed" });
+        return res.json(await getOrg(req.params.ein));
+      } catch (error) {
+        captureError(error, { route: "GET /990/orgs/:ein" }, { exporter, registry });
+        return respondError(res, error, "read_failed");
       }
     });
 
     // GET /990/orgs/:ein/filings — an org's filings, newest first, with provenance.
     app.get("/990/orgs/:ein/filings", async (req, res) => {
-      if (!EIN_RE.test(req.params.ein)) return res.status(400).json({ error: "invalid_request", details: ["ein must be 9 digits"] });
-      if (!port) return unavailable(res);
       try {
-        const r = await port.query(
-          `SELECT tax_period_end, return_type, total_revenue, total_expenses, total_assets_eoy,
-                  total_liabilities_eoy, net_assets_eoy, voting_members, independent_members,
-                  source_object_id, source_url, content_sha256
-           FROM heady_990.filings WHERE ein = $1 ORDER BY tax_period_end DESC`,
-          [req.params.ein],
-        );
-        return res.json({ ein: req.params.ein, count: r.rows.length, filings: r.rows });
-      } catch (err) {
-        captureError(err, { route: "GET /990/orgs/:ein/filings" }, { exporter, registry });
-        return res.status(500).json({ error: "read_failed" });
+        return res.json(await getFilings(req.params.ein));
+      } catch (error) {
+        captureError(error, { route: "GET /990/orgs/:ein/filings" }, { exporter, registry });
+        return respondError(res, error, "read_failed");
       }
     });
   }
 
-  return { service, routes };
+  return {
+    service,
+    routes,
+    availability: () => port ? true : { available: false, reason: unavailableReason() },
+    search,
+    getOrg,
+    getFilings,
+  };
 }

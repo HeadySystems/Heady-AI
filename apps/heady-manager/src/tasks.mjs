@@ -74,28 +74,86 @@ export function createTasksService({ log, publish, getDbPort = null, exporter = 
     },
   };
 
+  function unavailableReason() {
+    return disabled ? "tasks disabled (no DbPort configured)" : (lastError ?? "db not connected");
+  }
+
+  async function enqueue(value, { traceId = currentTraceId() ?? null } = {}) {
+    const validated = validateEnqueue(value);
+    if (!validated.ok) {
+      const error = new Error("invalid task request");
+      error.code = "invalid_request";
+      error.details = validated.errors;
+      throw error;
+    }
+    if (!port) {
+      const error = new Error(unavailableReason());
+      error.code = "tasks_unavailable";
+      throw error;
+    }
+
+    const span = startSpan("tasks.enqueue", { kind: value.kind }, { exporter, registry });
+    try {
+      const created = await port.tx((tx) => createTask(tx, {
+        kind: value.kind, input: value.input, dependencies: value.deps ?? [],
+      }));
+      registry.counter("tasks.enqueued").inc();
+      span.end({ taskId: created.task_id, status: created.status });
+      await publish("task.created", { taskId: created.task_id, kind: created.kind, status: created.status, traceId });
+      log.info({ taskId: created.task_id, kind: created.kind }, "task enqueued");
+      return { taskId: created.task_id, status: created.status };
+    } catch (err) {
+      span.end({ failed: true });
+      captureError(err, { operation: "tasks.enqueue", kind: value.kind }, { exporter, registry });
+      throw err;
+    }
+  }
+
+  async function get(taskId) {
+    if (!UUID_RE.test(taskId)) {
+      const error = new Error("taskId must be a UUID");
+      error.code = "invalid_request";
+      throw error;
+    }
+    if (!port) {
+      const error = new Error(unavailableReason());
+      error.code = "tasks_unavailable";
+      throw error;
+    }
+
+    const span = startSpan("tasks.get", {}, { exporter, registry });
+    try {
+      const result = await port.query("SELECT id, status, result FROM task WHERE id = $1", [taskId]);
+      registry.counter("tasks.reads").inc();
+      if (result.rows.length === 0) {
+        const error = new Error("task not found");
+        error.code = "not_found";
+        throw error;
+      }
+      const row = result.rows[0];
+      span.end({ found: true });
+      return {
+        taskId: row.id,
+        status: row.status,
+        ...(row.result === null || row.result === undefined ? {} : { result: row.result }),
+      };
+    } catch (err) {
+      span.end({ failed: true });
+      captureError(err, { operation: "tasks.get" }, { exporter, registry });
+      throw err;
+    }
+  }
+
   function routes(app) {
     // POST /tasks — operationId: enqueueTask. Task + outbox row land in ONE
     // transaction (ADR-0002); the response echoes X-Heady-Trace-Id upstream.
     app.post("/tasks", async (req, res) => {
-      const v = validateEnqueue(req.body);
-      if (!v.ok) return res.status(400).json({ error: "invalid_request", details: v.errors });
-      if (!port) return res.status(503).json({ error: "tasks_unavailable", reason: disabled ? "tasks disabled (no DbPort configured)" : (lastError ?? "db not connected") });
-
-      const span = startSpan("tasks.enqueue", { kind: req.body.kind }, { exporter, registry });
       try {
-        const created = await port.tx((tx) => createTask(tx, {
-          kind: req.body.kind, input: req.body.input, dependencies: req.body.deps ?? [],
-        }));
-        registry.counter("tasks.enqueued").inc();
-        span.end({ taskId: created.task_id, status: created.status });
-        await publish("task.created", { taskId: created.task_id, kind: created.kind, status: created.status, traceId: currentTraceId() ?? null });
-        log.info({ taskId: created.task_id, kind: created.kind }, "task enqueued");
-        return res.status(201).json({ taskId: created.task_id, status: created.status });
+        return res.status(201).json(await enqueue(req.body));
       } catch (err) {
-        span.end({ failed: true });
-        captureError(err, { route: "POST /tasks", kind: req.body.kind }, { exporter, registry });
         log.error({ err: String(err?.message ?? err) }, "enqueue failed");
+        if (err.code === "invalid_request") return res.status(400).json({ error: err.code, details: err.details });
+        if (err.code === "tasks_unavailable") return res.status(503).json({ error: err.code, reason: err.message });
         return res.status(500).json({ error: "enqueue_failed" });
       }
     });
@@ -103,26 +161,16 @@ export function createTasksService({ log, publish, getDbPort = null, exporter = 
     // GET /tasks/:taskId — operationId: getTask.
     app.get("/tasks/:taskId", async (req, res) => {
       const { taskId } = req.params;
-      if (!UUID_RE.test(taskId)) return res.status(400).json({ error: "invalid_request", details: ["taskId must be a UUID"] });
-      if (!port) return res.status(503).json({ error: "tasks_unavailable", reason: disabled ? "tasks disabled (no DbPort configured)" : (lastError ?? "db not connected") });
-
-      const span = startSpan("tasks.get", {}, { exporter, registry });
       try {
-        const r = await port.query("SELECT id, status, result FROM task WHERE id = $1", [taskId]);
-        registry.counter("tasks.reads").inc();
-        span.end({ found: r.rows.length > 0 });
-        if (r.rows.length === 0) return res.status(404).json({ error: "not_found" });
-        const row = r.rows[0];
-        const out = { taskId: row.id, status: row.status };
-        if (row.result !== null && row.result !== undefined) out.result = row.result;
-        return res.json(out);
+        return res.json(await get(taskId));
       } catch (err) {
-        span.end({ failed: true });
-        captureError(err, { route: "GET /tasks/:taskId" }, { exporter, registry });
+        if (err.code === "invalid_request") return res.status(400).json({ error: err.code, details: [err.message] });
+        if (err.code === "tasks_unavailable") return res.status(503).json({ error: err.code, reason: err.message });
+        if (err.code === "not_found") return res.status(404).json({ error: err.code });
         return res.status(500).json({ error: "read_failed" });
       }
     });
   }
 
-  return { service, routes, port: () => port };
+  return { service, routes, port: () => port, enqueue, get };
 }
