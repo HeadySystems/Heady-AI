@@ -81,6 +81,8 @@ jobs:
         run: node --test tooling/governance-gate/test/governance-gate.test.mjs
       - name: skill projection sync
         run: node tooling/skill-registry/register.mjs --check
+      - name: Codex workflow shortcut sync
+        run: node tooling/skill-registry/sync-codex-workflows.mjs --check
       - name: skill registry tests
         run: node --test tooling/skill-registry/test/*.test.mjs
 

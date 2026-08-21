@@ -2,18 +2,15 @@
 name: heady-living-dashboard
 description: >
   Living Dashboard for Heady — builds and deploys real-time monitoring dashboards for the Heady
-  ecosystem using vanilla HTML/CSS/JavaScript (no React/Vue/Angular per Heady standards). Creates
-  interactive visualizations of service health, coherence scores, Sacred Geometry topology maps,
-  provider performance, token budgets, swarm activity, and pipeline throughput. Dashboards auto-
-  refresh and can be deployed as static sites. Use when Eric needs visibility into ecosystem health,
-  wants to monitor provider costs, needs a visual representation of the Sacred Geometry topology,
-  wants to track coherence scores across services, or needs any operational dashboard for Heady.
-  Keywords: dashboard, monitoring, visualization, health check, coherence, Sacred Geometry,
+  ecosystem using Vanilla Web Components by default, with React reserved for complex canvas
+  components. Use for interactive visualizations of service health, coherence, topology, provider
+  performance, token budgets, swarm activity, costs, and pipeline throughput. Keywords: dashboard,
+  monitoring, visualization, health check, coherence, Sacred Geometry, React, Web Components,
   provider metrics, token budget, swarm status, pipeline monitoring, real-time, service health,
   topology visualization, operational dashboard.
 metadata:
   author: HeadySystems
-  version: '1.0'
+  version: '1.1'
 ---
 
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
@@ -60,21 +57,35 @@ Use when:
 
 ```
 REQUIRED:
-- Vanilla HTML + CSS + JavaScript ONLY (no React, Vue, Angular, Svelte, Tailwind)
+- Use Vanilla Web Components for standard dashboard UI
+- Use React only for complex canvas components whose state or interaction model materially benefits
+- Reuse an existing React surface only within that complex-canvas boundary
 - Dark theme with sacred geometry aesthetic
 - φ-proportioned layouts (golden ratio grids)
 - Rainbow gradient accents (animated sacred geometry watermarks)
 - Auto-refresh at Fibonacci intervals (5s, 8s, 13s depending on data staleness)
 - Mobile-responsive
-- Deployable as static site via deploy_website
+- Deployable through the surface's governed build and deployment path
 
 FORBIDDEN:
-- npm/build steps
-- Framework dependencies
+- React outside a complex canvas component
+- Vue, Angular, Svelte, or another frontend framework
+- Using npm in this pnpm workspace
 - Tailwind or any CSS framework
 - localStorage (use sessionStorage if needed)
 - Hardcoded URLs (use data attributes or config object)
 ```
+
+### Framework Selection
+
+| Stack | Prefer when |
+|---|---|
+| Vanilla Web Components | All standard dashboard surfaces, panels, forms, and ordinary visualizations |
+| React | A complex canvas component has dense coordinated state or interactions that materially benefit from React |
+
+Honor an explicit React choice only when it fits the complex-canvas exception.
+If repository governance conflicts with the requested stack, surface the
+conflict instead of silently substituting another framework.
 
 ### Visual Language
 
@@ -184,7 +195,12 @@ Components:
 
 1. **Determine dashboard type** — Which of the 4 types (or custom) does Eric need?
 
-2. **Create project structure:**
+2. **Select and fit the project structure:**
+   - Extend the existing Vite application with Vanilla Web Components unless the work is a complex canvas component.
+   - For a small standalone dashboard, Vanilla Web Components remain the simplest default.
+   - For an eligible React canvas, use the repository's existing Vite scaffold, component layout, and pnpm scripts.
+
+   Vanilla standalone example:
    ```
    /home/user/workspace/heady-dashboard-{type}/
    ├── index.html        — Main page with layout
@@ -199,7 +215,11 @@ Components:
        └── mock-data.json — Sample data for development
    ```
 
-3. **Build with vanilla JS:**
+3. **Build with the selected stack:**
+   - Use plain functions or Web Components for low-state dashboards.
+   - Use React components and hooks only when a complex canvas has coordinated state or interactions that warrant them.
+
+   Vanilla example:
    ```javascript
    // All components are plain functions returning DOM elements
    function createSparkline(container, data, options = {}) {
@@ -253,6 +273,7 @@ Components:
 
 7. **Test and deploy:**
    ```
+   - Run the applicable pnpm build and tests when the selected stack has a build step
    - Verify in screenshot (screenshot_page or browser_task)
    - Check responsive layout
    - Verify all text is readable (contrast ratio)
@@ -319,7 +340,8 @@ function renderTopology(container, services) {
 
 ## Anti-Patterns
 
-- Never use React, Vue, Angular, or any framework — vanilla JS only
+- Never use Vue, Angular, Svelte, or another frontend framework
+- Never use React outside a complex canvas component with a documented benefit
 - Never use Tailwind or CSS frameworks
 - Never hardcode service URLs in the dashboard code
 - Never use arbitrary spacing values — derive from Fibonacci

@@ -100,16 +100,24 @@ Agents **must** invoke these tools on specific execution triggers:
 
 ## Self-Extension & Agent Persistence
 
-**Commands & skills auto-sync (every agent benefits, no manual step).** Automated flows live in
-`.agents/workflows/*.md` and skills in `.agents/skills/*/SKILL.md`. They are mirrored to the
-agent-discoverable surface automatically:
+**Commands & skills discovery.** Automated flows live in `.agents/workflows/*.md` and skills in
+`.agents/skills/*/SKILL.md`. Claude projections auto-sync; Codex workflow projections are generated
+and CI-checked so every supported agent surface can discover them:
 * `.agents/workflows/*` → `.claude/commands/*` (relative symlinks) via `tooling/skill-registry/sync-workflows.mjs`.
 * `.agents/skills/*` → `.claude/skills/*` via `tooling/skill-registry/register.mjs`.
-* The `SessionStart` + `PostToolUse` hook `.claude/hooks/sync-commands.mjs` runs these automatically,
+* `.agents/workflows/*` → Codex `$name` shortcuts via generated adapters in `.agents/codex-workflows/*`
+  and relative directory symlinks in `.agents/skills/*`; run `tooling/skill-registry/sync-codex-workflows.mjs`.
+  Generated workflow shortcuts are explicit-only (`allow_implicit_invocation: false`). An authored skill
+  with the same name takes precedence and is never overwritten.
+* The `SessionStart` + `PostToolUse` hook `.claude/hooks/sync-commands.mjs` runs the two Claude
+  projection tools automatically,
   so **a newly created workflow/skill becomes a `/heady-*` shortcut the moment it is written** — no
   manual sync. The `governance-gate workflow-sync` check fails CI if the surfaces ever drift.
 * When you add a workflow or skill, you do **not** need to hand-create its command; just author the
   source file. To verify: `node tooling/skill-registry/sync-workflows.mjs --check`.
+  For Codex workflow shortcuts, run `node tooling/skill-registry/sync-codex-workflows.mjs`; CI fails
+  if the generated adapters or shortcut links drift. Codex discovers skill changes automatically;
+  use `/skills` or `$name` in Codex CLI/IDE and `@name` in ChatGPT.
 
 **Self-modifying persistence requires explicit human approval.** An agent may NOT silently install
 anything that auto-executes or persists across sessions — git hooks, `SessionStart`/`PostToolUse`
