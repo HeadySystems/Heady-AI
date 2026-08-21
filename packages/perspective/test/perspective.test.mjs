@@ -4,6 +4,9 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { loadRoles, levelFor, sourceLevels, assign, train } from '../src/index.mjs';
 
 const VARS = [
@@ -32,6 +35,34 @@ test('every defined role weighs in (agents/bees/skills), with kind weights', () 
   assert.deepEqual([...kinds].sort(), ['agent', 'bee', 'skill']);
   assert.equal(roles.find((r) => r.id === 'Execution').weight, 0.9);
   assert.equal(roles.find((r) => r.id === 'security-bee').weight, 0.7);
+});
+
+test('clean checkouts derive roles from tracked sources when the generated cache is absent', async (context) => {
+  const sourceRoot = await mkdtemp(join(tmpdir(), 'heady-perspective-'));
+  context.after(() => rm(sourceRoot, { recursive: true, force: true }));
+  await mkdir(join(sourceRoot, '.agents', 'skills', 'heady-security-audit'), { recursive: true });
+  await writeFile(join(sourceRoot, 'lexicon.yaml'), [
+    'agents:',
+    '  Sentinel: "Monitoring and security watch"',
+    'bees:',
+    '  security-bee: "Security review and auth"',
+    '',
+  ].join('\n'));
+  await writeFile(join(sourceRoot, '.agents', 'skills', 'heady-security-audit', 'SKILL.md'), [
+    '---',
+    'name: heady-security-audit',
+    'description: "Security audit and vulnerability scanning"',
+    '---',
+    '',
+  ].join('\n'));
+
+  const roles = loadRoles({ sourceRoot });
+
+  assert.deepEqual(roles.map(({ id, kind }) => ({ id, kind })), [
+    { id: 'heady-security-audit', kind: 'skill' },
+    { id: 'security-bee', kind: 'bee' },
+    { id: 'Sentinel', kind: 'agent' },
+  ]);
 });
 
 test('task assignment corresponds to competency × perspective weight', () => {
