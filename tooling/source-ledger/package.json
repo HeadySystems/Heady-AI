@@ -1,0 +1,19 @@
+{
+  "name": "@heady/source-ledger-cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Plan and commit canonical repository snapshots to the Neon universal SSOT.",
+  "bin": { "heady-source-ledger": "src/cli.mjs" },
+  "scripts": {
+    "plan": "node src/cli.mjs",
+    "test": "node --test",
+    "build": "echo \"(no build — runnable ESM)\"",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/db": "workspace:*",
+    "@heady/secrets": "workspace:*",
+    "@heady/source-ledger": "workspace:*"
+  }
+}

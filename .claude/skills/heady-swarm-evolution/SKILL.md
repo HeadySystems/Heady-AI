@@ -3,6 +3,28 @@ name: heady-swarm-evolution
 description: "Heady Swarm Evolution — genetic algorithm optimization engine for evolving agent configurations, prompt strategies, routing tables, and system parameters across generations. Uses φ-scaled mutation rates, Fibonacci-sized populations, CSL fitness scoring via cosine coherence, tournament selection with ELO-weighted brackets, and crossover operators that blend 384D embedding representations. Agents compete, breed, and evolve toward optimal configurations without manual tuning. Use when optimizing agent prompts, routing strategies, pipeline configurations, model selection heuristics, or any system parameter that benefits from evolutionary search. Keywords: genetic algorithm, evolution, mutation, crossover, fitness, population, generation, optimization, agent evolution, prompt evolution, parameter tuning, tournament selection, swarm optimization."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/38-heady-swarm-evolution.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady Swarm Evolution
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

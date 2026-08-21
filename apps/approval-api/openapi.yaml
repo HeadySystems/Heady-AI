@@ -7,7 +7,7 @@
 openapi: 3.1.0
 info:
   title: Heady Approval API
-  version: 1.0.0
+  version: 1.1.0
   description: >-
     ADR-0031 approval control plane. This contract has no principal-seeding,
     genesis, code-application, or bulk-approval endpoint.
@@ -45,6 +45,42 @@ paths:
       responses:
         "201":
           description: Draft and its signed creation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Approval"
+  /api/autonomous-approvals:
+    post:
+      operationId: requestAutonomousApproval
+      description: >-
+        Creates and submits a short-lived, low-risk autonomous request from an
+        automation_requester workload identity. Human-gated paths are rejected.
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/TraceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutonomousApprovalRequest"
+      responses:
+        "201":
+          description: Pending request with a KMS-signed creation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Approval"
+  /api/autonomous-approvals/{approvalId}:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+    get:
+      operationId: getAutonomousApproval
+      description: >-
+        Workload-only read for the automation requester or independent guard.
+      responses:
+        "200":
+          description: Autonomous request and append-only signed history.
           content:
             application/json:
               schema:
@@ -214,6 +250,30 @@ paths:
           description: Exact artifact, diff, policy, evidence, and replay all allow.
         "409":
           description: Deployment denied with stable reason codes.
+  /api/autonomous-protection:
+    post:
+      operationId: consumeAutonomousApproval
+      description: >-
+        Atomically consumes an approved autonomous request once and returns the
+        canonical authorization event plus its KMS-signed receipt.
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/TraceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutonomousProtection"
+      responses:
+        "200":
+          description: One-time signed authorization grant.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AutonomousGrantResult"
+        "409":
+          description: Authorization denied or already consumed.
 components:
   securitySchemes:
     bearerAuth:
@@ -302,6 +362,146 @@ components:
         renovatePatchOnly:
           type: boolean
           default: false
+    AutonomousApprovalRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - hcpIdentifier
+        - title
+        - capability
+        - zonePaths
+        - resourceScopes
+        - subjectSha256
+        - diffSha256
+        - rollbackPlanSha256
+        - riskTier
+        - reversible
+        - dryRunVerified
+        - networkAccess
+        - maxAffectedResources
+        - maxDurationMs
+      properties:
+        hcpIdentifier:
+          type: string
+          pattern: "^HCP-[0-9]{4}$"
+        title:
+          type: string
+          minLength: 1
+          maxLength: 233
+        capability:
+          enum: [source_authorship, build_attestation, maintenance_execution]
+        zonePaths:
+          type: array
+          minItems: 1
+          maxItems: 144
+          items:
+            type: string
+            minLength: 1
+            maxLength: 610
+        resourceScopes:
+          type: array
+          minItems: 1
+          maxItems: 21
+          items:
+            type: string
+            pattern: "^[A-Za-z0-9][A-Za-z0-9._:/@-]*$"
+        subjectSha256:
+          $ref: "#/components/schemas/Sha256"
+        diffSha256:
+          $ref: "#/components/schemas/Sha256"
+        rollbackPlanSha256:
+          $ref: "#/components/schemas/Sha256"
+        riskTier:
+          const: low
+        reversible:
+          const: true
+        dryRunVerified:
+          const: true
+        networkAccess:
+          enum: [none, allowlisted]
+        maxAffectedResources:
+          type: integer
+          minimum: 1
+          maximum: 21
+        maxDurationMs:
+          type: integer
+          minimum: 1
+          maximum: 2038723
+    AutonomousProtection:
+      type: object
+      additionalProperties: false
+      required:
+        - approvalId
+        - capability
+        - subjectSha256
+        - payloadSha256
+        - diffSha256
+        - policySha256
+        - executionNonce
+      properties:
+        approvalId:
+          $ref: "#/components/schemas/Ulid"
+        capability:
+          enum: [source_authorship, build_attestation, maintenance_execution]
+        subjectSha256:
+          $ref: "#/components/schemas/Sha256"
+        payloadSha256:
+          $ref: "#/components/schemas/Sha256"
+        diffSha256:
+          $ref: "#/components/schemas/Sha256"
+        policySha256:
+          $ref: "#/components/schemas/Sha256"
+        executionNonce:
+          $ref: "#/components/schemas/Nonce"
+    AutonomousGrantResult:
+      type: object
+      required: [approvalId, allow, reasons, grant]
+      properties:
+        approvalId:
+          $ref: "#/components/schemas/Ulid"
+        allow:
+          const: true
+        reasons:
+          type: array
+          maxItems: 0
+        grant:
+          type: object
+          required:
+            - schema
+            - capability
+            - subjectSha256
+            - payloadSha256
+            - diffSha256
+            - policySha256
+            - operationSha256
+            - executionNonce
+            - expiresAt
+            - authorizationEvent
+            - authorizationReceipt
+          properties:
+            schema:
+              const: heady.autonomous.grant.v1
+            capability:
+              enum: [source_authorship, build_attestation, maintenance_execution]
+            subjectSha256:
+              $ref: "#/components/schemas/Sha256"
+            payloadSha256:
+              $ref: "#/components/schemas/Sha256"
+            diffSha256:
+              $ref: "#/components/schemas/Sha256"
+            policySha256:
+              $ref: "#/components/schemas/Sha256"
+            operationSha256:
+              $ref: "#/components/schemas/Sha256"
+            executionNonce:
+              $ref: "#/components/schemas/Nonce"
+            expiresAt:
+              type: string
+              format: date-time
+            authorizationEvent:
+              type: object
+            authorizationReceipt:
+              type: object
     HumanDecision:
       type: object
       additionalProperties: false

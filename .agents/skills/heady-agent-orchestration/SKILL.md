@@ -1,3 +1,8 @@
+---
+name: heady-agent-orchestration
+description: Implements Sacred Geometry multi-agent orchestration patterns for the Heady ecosystem, including HeadyBee scouting/foraging and HeadySwarm distributed coordination. Use this skill whenever designing, building, or debugging multi-agent workflows — including agent topology, inter-agent communication, swarm intelligence, task routing, consensus mechanisms, CSL Ternary Gate logic, or agent lifecycle management. Triggers on mentions of "Sacred Geometry", "HeadyBee", "HeadySwarm", "agent topology", "swarm orchestration", "CSL Ternary Gate", "liquid nodes", "agent coordination", or any of the 8 agent names (Alpha, Risk, Execution, Sentinel, Compliance, Data, View, Bridge Builder). Also use for LangGraph, CrewAI, or AutoGen integration work in the Heady context.
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,11 +25,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-agent-orchestration
-description: Implements Sacred Geometry multi-agent orchestration patterns for the Heady ecosystem, including HeadyBee scouting/foraging and HeadySwarm distributed coordination. Use this skill whenever designing, building, or debugging multi-agent workflows — including agent topology, inter-agent communication, swarm intelligence, task routing, consensus mechanisms, CSL Ternary Gate logic, or agent lifecycle management. Triggers on mentions of "Sacred Geometry", "HeadyBee", "HeadySwarm", "agent topology", "swarm orchestration", "CSL Ternary Gate", "liquid nodes", "agent coordination", or any of the 8 agent names (Alpha, Risk, Execution, Sentinel, Compliance, Data, View, Bridge Builder). Also use for LangGraph, CrewAI, or AutoGen integration work in the Heady context.
----
-
 # Heady Agent Orchestration
 
 This skill defines the Sacred Geometry multi-agent orchestration framework — the theoretical backbone and primary differentiator of the Heady system. It organizes agent interactions into a hierarchical topology with cross-links, using CSL Ternary Gate decision logic and swarm intelligence for distributed coordination.

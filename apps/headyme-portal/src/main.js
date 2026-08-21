@@ -15,6 +15,7 @@ import { initPwa } from './pwa/register.js';
 const PHI = 1.618033988749895;
 const appContainer = document.querySelector('#app');
 let _currentUI = null;  // track active component instance
+let _adminAuthorized = false;
 
 // ── loader ─────────────────────────────────────────────────────────
 function renderLoader() {
@@ -36,7 +37,13 @@ function handleRoute(user) {
   }
   // skip onboarding once authed
   if (user && hash === '#onboarding') {
-    window.location.hash = '#admin';
+    window.location.hash = _adminAuthorized ? '#admin' : '#services';
+    return;
+  }
+  // Admin is a role, not merely an authenticated session. The gateway repeats
+  // this check server-side; this route guard prevents misleading UI exposure.
+  if (user && hash === '#admin' && !_adminAuthorized) {
+    window.location.hash = '#services';
     return;
   }
 
@@ -75,7 +82,8 @@ function handleRoute(user) {
 initPwa();
 renderLoader();
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
+  _adminAuthorized = user ? (await user.getIdTokenResult().catch(() => ({ claims: {} }))).claims.admin === true : false;
   handleRoute(user);
   if (user) {
     window.dispatchEvent(new CustomEvent('auth:login:success', { detail: { uid: user.uid } }));

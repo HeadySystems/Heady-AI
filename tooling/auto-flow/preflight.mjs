@@ -21,7 +21,7 @@ import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, "..", "..");
-const SKILLS_DIR = join(REPO_ROOT, ".claude", "skills");
+const SKILLS_DIR = join(REPO_ROOT, ".agents", "skills");
 const WORKFLOWS_DIR = join(REPO_ROOT, ".agents", "workflows");
 
 // φ-derived gate thresholds (golden ratio) — no magic numbers (AGENTS.md #8).
@@ -33,8 +33,10 @@ const TOP_N = FIB[6]; // 13 — max shortlist length
 
 const STOPWORDS = new Set(
   ("the a an and or of to in for on with use using when used this that any all into via across" +
-    " is are be it as at by from your you we our heady™ heady keywords include such etc per each").split(/\s+/),
+    " is are be it as at by from your you we our heady heady™ keywords include such etc per each").split(/\s+/),
 );
+
+const EXPLICIT_REF = /(?:^|\s)[$/@]([a-z0-9][a-z0-9-]*)/gi;
 
 function tokenize(text) {
   return (text.toLowerCase().match(/[a-z0-9]+/g) || [])
@@ -105,16 +107,35 @@ function loadCatalog() {
   return items;
 }
 
+/** Explicit $skill, /workflow, and @command references in user order. */
+function explicitRefs(taskText) {
+  return [...String(taskText).matchAll(EXPLICIT_REF)].map((match) => match[1].toLowerCase());
+}
+
 /** Score every catalog item against the task; gate and rank. */
 export function preflight(taskText) {
   const taskVec = vectorize(tokenize(taskText));
   const catalog = loadCatalog();
+  const requested = explicitRefs(taskText);
+  const requestedSet = new Set(requested);
+  const requestOrder = new Map(requested.map((ref, index) => [ref, index]));
   const scored = catalog
-    .map((it) => ({ kind: it.kind, ref: it.ref, description: it.description, score: cosine(taskVec, it.tokens) }))
-    .sort((a, b) => b.score - a.score);
+    .map((it) => ({
+      kind: it.kind,
+      ref: it.ref,
+      description: it.description,
+      score: cosine(taskVec, it.tokens),
+      explicit: requestedSet.has(it.ref.toLowerCase()),
+    }))
+    .sort((a, b) => {
+      const aOrder = requestOrder.get(a.ref.toLowerCase()) ?? Number.POSITIVE_INFINITY;
+      const bOrder = requestOrder.get(b.ref.toLowerCase()) ?? Number.POSITIVE_INFINITY;
+      return aOrder - bOrder || Number(b.explicit) - Number(a.explicit) || b.score - a.score || a.ref.localeCompare(b.ref);
+    });
 
   const top = scored.find((s) => s.score > 0)?.score ?? 0;
   const gate = (s) => {
+    if (s.explicit) return "EXECUTE";
     // Tier on the score relative to the best available match (relative confidence).
     const rel = top > 0 ? s.score / top : 0;
     if (rel >= EXECUTE && s.score > 0) return "EXECUTE";
@@ -125,6 +146,8 @@ export function preflight(taskText) {
   return {
     task: taskText,
     catalogSize: catalog.length,
+    explicitRefs: requested,
+    unresolvedExplicitRefs: requested.filter((ref) => !catalog.some((item) => item.ref.toLowerCase() === ref)),
     recommended: ranked.filter((r) => r.decision !== "HALT"),
     shortlist: ranked,
     thresholds: { HALT, EXECUTE, basis: "score relative to best match (φ-tiered)" },

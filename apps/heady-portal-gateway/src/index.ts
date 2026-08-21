@@ -18,6 +18,7 @@ export interface Env {
   CLOUD_RUN_URL: string;       // https://heady-codeflow-api-...run.app (private origin + token audience)
   ALLOWED_ORIGINS: string;     // comma list, e.g. https://heady-ai.web.app,https://headyme.com
   GCP_SA_KEY: string;          // SECRET: JSON SA key holding roles/run.invoker on the Cloud Run service
+  INTERNAL_NODE_SECRET: string; // SECRET: service credential injected only after Firebase admin verification
 }
 
 const FIREBASE_JWK_URL = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
@@ -80,7 +81,7 @@ async function verifyFirebaseToken(token: string, projectId: string) {
   const key = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
   const ok = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', key, b64urlToBytes(sig), new TextEncoder().encode(`${h}.${p}`));
   if (!ok) throw new Error('signature verification failed');
-  return { uid: claims.sub as string, email: (claims.email as string) || null };
+  return { uid: claims.sub as string, email: (claims.email as string) || null, admin: claims.admin === true };
 }
 
 // ── GCP identity token minting (SA JWT → id_token, cached ~55m) ─────────────────
@@ -120,7 +121,7 @@ function corsHeaders(origin: string, allowed: string[]): Record<string, string> 
   const ok = allowed.includes(origin);
   return {
     'access-control-allow-origin': ok ? origin : allowed[0] || 'null',
-    'access-control-allow-headers': 'authorization,content-type',
+    'access-control-allow-headers': 'authorization,content-type,idempotency-key,x-heady-trace-id',
     'access-control-allow-methods': 'GET,POST,OPTIONS',
     'vary': 'origin',
   };
@@ -140,12 +141,27 @@ export default {
     // Verify the browser's Firebase ID token — fail-closed.
     const authz = request.headers.get('authorization') || '';
     if (!authz.startsWith('Bearer ')) return json(401, { error: 'missing Firebase bearer token' });
-    let principal: { uid: string; email: string | null };
+    let principal: { uid: string; email: string | null; admin: boolean };
     try {
       principal = await verifyFirebaseToken(authz.slice(7), env.FIREBASE_PROJECT_ID);
     } catch (e: unknown) {
       log('warn', 'firebase verify failed', { err: String((e as Error).message) });
       return json(401, { error: 'invalid Firebase token' });
+    }
+
+    const privilegedNodeRoute = url.pathname === '/api/nodes/audit'
+      || /^\/api\/nodes\/[^/]+\/(dispatch|heartbeat)$/.test(url.pathname)
+      || /^\/api\/orchestration\/tasks\/[^/]+$/.test(url.pathname);
+    const privilegedAdminRoute = privilegedNodeRoute
+      || url.pathname === '/api/files'
+      || url.pathname === '/api/assign'
+      || url.pathname.startsWith('/codeflow/proposals');
+    if (privilegedAdminRoute && !principal.admin) {
+      return json(403, { error: 'admin claim required' });
+    }
+    if (privilegedNodeRoute && !env.INTERNAL_NODE_SECRET) {
+      log('error', 'node service credential unavailable', { path: url.pathname });
+      return json(503, { error: 'admin orchestration unavailable' });
     }
 
     // Mint a Google identity token and forward to the private Cloud Run origin.
@@ -161,6 +177,13 @@ export default {
     const fwd = new Headers(request.headers);
     fwd.set('authorization', `Bearer ${idToken}`);             // Google identity token for Cloud Run
     fwd.set('x-heady-user', principal.email || principal.uid); // verified identity for the app layer
+    if (privilegedNodeRoute) {
+      fwd.set('x-heady-internal-secret', env.INTERNAL_NODE_SECRET);
+      fwd.set('x-heady-actor-node', 'GOVERNANCE');
+    } else {
+      fwd.delete('x-heady-internal-secret');
+      fwd.delete('x-heady-actor-node');
+    }
     fwd.delete('host');
 
     let upstream: Response;

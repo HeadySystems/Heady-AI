@@ -3,6 +3,28 @@ name: heady-narrative-engine
 description: "Heady Narrative Engine — story-driven interaction choreography that transforms raw AI operations into coherent user experiences. Models every user session as a narrative arc with φ-proportioned acts (setup, rising action, climax, resolution), tracks emotional tone via sentiment embeddings, choreographs interaction pacing using Fibonacci timing, and generates contextual micro-copy that maintains personality consistency. Use when designing HeadyBuddy conversation flows, building onboarding experiences, choreographing multi-step workflows, creating adaptive tutorials, or any scenario where the user experience benefits from narrative structure. Keywords: narrative, story, conversation flow, pacing, emotional tone, micro-copy, onboarding, tutorial, choreography, interaction design, user experience, personality, sentiment, arc, dramatic structure."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/35-heady-narrative-engine.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady Narrative Engine
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

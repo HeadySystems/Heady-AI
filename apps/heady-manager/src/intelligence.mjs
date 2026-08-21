@@ -35,8 +35,7 @@ export function embed384(text) {
   return v.map((x) => x / mag); // unit vector → cosine well-defined
 }
 
-export function createIntelligence({ log } = {}) {
-  const bus = new InMemoryBus();
+export function createIntelligence({ log, bus = new InMemoryBus() } = {}) {
 
   // Seed corpus. Production swaps in @heady/memory-stream.retrieveMemories over Neon pgvector.
   const corpus = [
@@ -102,8 +101,11 @@ export function createIntelligence({ log } = {}) {
   const service = {
     name: "intelligence",
     deps: [],
-    start: async () => { log?.info({ components: COMPONENTS, embedDim: DIM }, "intelligence stack online (in-process; prod uses Neon pgvector + Workers-AI)"); },
-    stop: async () => {},
+    start: async () => {
+      await bus.start?.();
+      log?.info({ components: COMPONENTS, embedDim: DIM, eventTransport: bus.status?.().name ?? "in-memory" }, "intelligence stack online (prod retrieval uses Neon pgvector + Workers-AI)");
+    },
+    stop: async () => { await bus.stop?.(); },
     health: async () => selfCheck(),
     metrics: async () => ({ components: COMPONENTS.length, corpus: corpus.length, embedDim: DIM, model: LOCKED_MODEL.id }),
   };

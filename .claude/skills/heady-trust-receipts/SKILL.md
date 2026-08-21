@@ -3,6 +3,28 @@ name: heady-trust-receipts
 description: "Design and implement Heady Trust Receipts and Action Playback for auditability, transparency, and user trust. Use when building action logging, decision replay, accountability trails, consent records, or compliance reporting for Heady agent actions."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/32-heady-trust-receipts.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady Trust Receipts
 
 Use this skill when you need to **design, implement, or query the Trust Receipt system** — Heady's mechanism for recording, replaying, and auditing every significant action taken by agents on behalf of users.

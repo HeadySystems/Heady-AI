@@ -3,6 +3,28 @@ name: heady-living-dashboard
 description: "Living Dashboard for Heady — builds and deploys real-time monitoring dashboards for the Heady ecosystem using vanilla HTML/CSS/JavaScript (no React/Vue/Angular per Heady standards). Creates interactive visualizations of service health, coherence scores, Sacred Geometry topology maps, provider performance, token budgets, swarm activity, and pipeline throughput. Dashboards auto- refresh and can be deployed as static sites. Use when Eric needs visibility into ecosystem health, wants to monitor provider costs, needs a visual representation of the Sacred Geometry topology, wants to track coherence scores across services, or needs any operational dashboard for Heady. Keywords: dashboard, monitoring, visualization, health check, coherence, Sacred Geometry, provider metrics, token budget, swarm status, pipeline monitoring, real-time, service health, topology visualization, operational dashboard."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/42-heady-living-dashboard.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Living Dashboard for Heady
 
 > Perplexity Computer Skill — Real-time monitoring dashboards for the Heady ecosystem

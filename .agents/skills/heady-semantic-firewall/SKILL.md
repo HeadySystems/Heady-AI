@@ -1,3 +1,22 @@
+---
+name: heady-semantic-firewall
+description: >
+  Heady Semantic Firewall — content and prompt security layer using CSL vector gates to detect
+  and block prompt injection, data exfiltration, adversarial inputs, policy violations, and
+  semantic anomalies in real-time. Operates in 384D embedding space with φ-scaled threat
+  thresholds, Fibonacci-windowed behavioral baselines, orthogonal projection attack detection,
+  and quarantine routing for suspicious payloads. Use when securing agent inputs/outputs,
+  protecting against prompt injection, enforcing content policies, detecting adversarial patterns,
+  or building trust boundaries between services. Keywords: firewall, security, prompt injection,
+  adversarial, content policy, threat detection, semantic anomaly, quarantine, trust boundary,
+  input validation, output filtering, DLP, data loss prevention, guardrails.
+metadata:
+  author: HeadySystems
+  version: '1.0'
+  patents: 51
+  phi-compliant: true
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,25 +39,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-semantic-firewall
-description: >
-  Heady Semantic Firewall — content and prompt security layer using CSL vector gates to detect
-  and block prompt injection, data exfiltration, adversarial inputs, policy violations, and
-  semantic anomalies in real-time. Operates in 384D embedding space with φ-scaled threat
-  thresholds, Fibonacci-windowed behavioral baselines, orthogonal projection attack detection,
-  and quarantine routing for suspicious payloads. Use when securing agent inputs/outputs,
-  protecting against prompt injection, enforcing content policies, detecting adversarial patterns,
-  or building trust boundaries between services. Keywords: firewall, security, prompt injection,
-  adversarial, content policy, threat detection, semantic anomaly, quarantine, trust boundary,
-  input validation, output filtering, DLP, data loss prevention, guardrails.
-metadata:
-  author: HeadySystems
-  version: '1.0'
-  patents: 51
-  phi-compliant: true
----
-
 # Heady Semantic Firewall
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

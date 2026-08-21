@@ -3,6 +3,28 @@ name: heady-mcp-gateway
 description: "Blueprints and patterns for building MCP (Model Context Protocol) servers that connect Heady agents to external trading APIs, data feeds, and infrastructure services. Use this skill whenever building, configuring, or debugging MCP servers for the Heady ecosystem — including the central MCP Gateway, Tradovate/Rithmic API bridges, market data MCP servers, MIDI UMP translation layers, or any tool that exposes external functionality to Heady agents. Triggers on mentions of \"MCP server\", \"MCP gateway\", \"tool use\", \"JSON-RPC\", \"Tradovate MCP\", \"Rithmic MCP\", \"market data MCP\", \"MIDI MCP\", or any integration between Heady agents and external APIs through MCP. Also use when the user asks about connecting Claude/LLMs to trading infrastructure via MCP."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/heady-mcp-gateway-SKILL.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady MCP Gateway
 
 The MCP Gateway is the architectural bridge that transitions Heady AI agents from isolated text-generation models into active, deterministic participants capable of executing precise commands against external financial infrastructure. Every external service the agents interact with is exposed through a well-typed MCP tool.

@@ -34,6 +34,8 @@ export function buildPolicyInput({
 }) {
   return {
     changeClass: approval.change_class,
+    subjectType: approval.subject_type,
+    creatorPrincipalId: approval.created_by,
     patentLocked: approval.patent_locked,
     state,
     materializedState: approval.state,
@@ -46,6 +48,9 @@ export function buildPolicyInput({
     nowEpochMs,
     zonePaths: approval.zone_paths,
     renovatePatchOnly: approval.renovate_patch_only,
+    autonomous: approval.change_class === "autonomous_operation"
+      ? approval.canonical_payload
+      : null,
     evidence: [
       ...evidenceRows.map(evidenceFromRow),
       ...extraEvidence,

@@ -28,4 +28,12 @@ describe("maintenance hygiene routes", () => {
         expect(response.body.dryRun).toBe(true);
         expect(Array.isArray(response.body.deleted)).toBe(true);
     });
+
+    test("cleanup apply is blocked on the ephemeral runtime filesystem", async () => {
+        const app = buildApp();
+        const response = await request(app).post("/api/maintenance/cleanup").send({ dryRun: false }).expect(409);
+
+        expect(response.body.ok).toBe(false);
+        expect(response.body.error).toBe("runtime_filesystem_mutation_disabled");
+    });
 });

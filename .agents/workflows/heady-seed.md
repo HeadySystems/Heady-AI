@@ -1,24 +1,42 @@
-# heady-seed
+---
+description: Plan and verify a fresh Heady workspace bootstrap while keeping secrets, persistence, and Neon writes human-gated
+---
 
-**Command:** `/heady-seed`
-**Description:** Initialize and bootstrap the Heady environment, specifically provisioning the Google Antigravity Python SDK worker bridge and injecting default vectors into Neon databases.
+<!-- HEADY_BRAND:BEGIN
+╔══════════════════════════════════════════════════════════════════╗
+║  HEADY™ Workspace Seed v2.0.0                                  ║
+║  Plan-first bootstrap with explicit persistence and data gates. ║
+║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+╚══════════════════════════════════════════════════════════════════╝
+HEADY_BRAND:END -->
 
-## Trigger Conditions
-- Run on completely fresh workspace clones.
-- Run when transitioning to new AI models/runtimes (like adopting Google Antigravity capabilities).
-- Run when the `python/` execution layer is wiped or corrupted.
+# `/heady-seed`
 
-## Workflow Pipeline
-1. **Dependency Sync:**
-   - Detects if `uv` (Python fast package manager) is installed.
-   - Runs `export PATH="$HOME/.local/bin:$PATH" && uv sync` in the `python/` directory.
-2. **Environment Hydration:**
-   - Verifies that `NATS_URL`, `DATABASE_URL`, and `GEMINI_API_KEY` exist in the `.env` file.
-3. **Bootstrapping Latent Service:**
-   - Launches the `python/src/worker.py` in the background (or registers it with PM2).
-   - Polls the Node.js bridge (`src/services/heady-antigravity-bridge.js`) until it confirms `UP` status.
-4. **Vector Injection (Future Scope):**
-   - Hydrates `pgvector` with standard `Heady` baseline spatial embeddings for RAM-First ops.
+Use for a fresh clone or a deliberately rebuilt execution environment. Default
+to inspection and a bootstrap plan; do not install persistent hooks, start
+background workers, mutate Neon, or expose secret values without the applicable
+explicit authorization.
 
-## Success Criteria
-- The Antigravity NATS worker accepts and successfully returns a response to the prompt: `"System Check: Are you alive?"`.
+## Pipeline
+
+1. Read `AGENTS.md`, accepted ADRs, and the canonical environment contract.
+2. Verify Node, pnpm, Python/`uv`, workspace manifests, lockfiles, and required
+   source directories without installing anything automatically.
+3. Audit required environment-variable names through the governed secret
+   resolver. Report presence only; never print values or treat `.env` as the
+   production authority.
+4. Validate migrations in plan mode. Neon remains the durable system of record;
+   no baseline vectors or source data are inserted without a reviewed migration
+   or explicit data-write grant.
+5. Run local unit, build, policy, and readiness checks. Treat missing NATS,
+   cloud identity, database access, or deployed health evidence as blockers to
+   production readiness.
+6. If the user separately approves persistent runtime setup, enumerate the exact
+   worker, hook, service, scheduler, or configuration change and its rollback
+   path before applying it.
+
+## Success criteria
+
+The local dependency graph and relevant tests pass, required secret names are
+accounted for, planned migrations are checksummed, and every unperformed live or
+persistent step is explicitly recorded. Local readiness is not deployed proof.

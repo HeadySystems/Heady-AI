@@ -1,3 +1,11 @@
+---
+name: heady-liquid-module-design
+description: Design the Heady Liquid Module Registry for dynamic app, connector, and workflow delivery. Use when architecting module hot-loading, defining connector interfaces, building a plugin marketplace, or planning dynamic delivery of Heady capabilities across surfaces.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-liquid-module-design
-description: Design the Heady Liquid Module Registry for dynamic app, connector, and workflow delivery. Use when architecting module hot-loading, defining connector interfaces, building a plugin marketplace, or planning dynamic delivery of Heady capabilities across surfaces.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Liquid Module Design
 
 Use this skill when you need to **design, extend, or operate the Liquid Module Registry** — Heady's system for dynamic discovery, delivery, and hot-loading of apps, connectors, skills, and workflows at runtime.

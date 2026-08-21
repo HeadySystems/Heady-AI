@@ -34,6 +34,8 @@ let service;
 let founder;
 let arbiter;
 let deploymentGuard;
+let automationRequester;
+let automationGuard;
 
 function keyPair() {
   const { privateKey, publicKey } = generateKeyPairSync("ed25519");
@@ -215,6 +217,42 @@ function arbiterInput(approval, principal, {
   };
 }
 
+function automationGuardInput(approval, principal, {
+  nonce = "automation-attestation-nonce-0001",
+} = {}) {
+  const detail = {
+    evidenceClass: "automation_attestation",
+    verdict: "ALLOW",
+    patentClaims: [],
+    reviewedPaths: approval.zonePaths,
+    rationaleSha256: "8".repeat(64),
+    resolvesEscalation: false,
+  };
+  const envelope = buildEvidenceEnvelope({
+    approvalId: approval.approvalId,
+    action: "attest:ALLOW",
+    payloadSha256: approval.payloadSha256,
+    diffSha256: approval.diffSha256,
+    policySha256: approval.policySha256,
+    nonce,
+    evidenceExpiresAt: CEREMONY_EXPIRY,
+    detail,
+  });
+  return {
+    verdict: "ALLOW",
+    patentClaims: [],
+    reviewedPaths: approval.zonePaths,
+    rationaleSha256: detail.rationaleSha256,
+    nonce,
+    evidenceExpiresAt: CEREMONY_EXPIRY,
+    signature: sign(
+      null,
+      Buffer.from(canonicalize(envelope)),
+      principal.key.privateKey,
+    ).toString("base64url"),
+  };
+}
+
 before(async () => {
   if (!connectionString) return;
   pool = new pg.Pool({ connectionString, max: 5 });
@@ -224,6 +262,7 @@ before(async () => {
     TRUNCATE
       heady_approval.bootstrap,
       heady_approval.audit_replays,
+      heady_approval.autonomous_grant_claims,
       heady_approval.outbox,
       heady_approval.receipts,
       heady_approval.events,
@@ -271,6 +310,21 @@ before(async () => {
     principalRole: "deployment_guard",
     workloadIdentity: "deployment-guard-subject",
     allowedEvidence: [],
+  });
+  automationRequester = await seedPrincipal({
+    stableIdentifier: "autonomous-requester-workload",
+    principalType: "service",
+    principalRole: "automation_requester",
+    workloadIdentity: "autonomous-requester-subject",
+    allowedEvidence: [],
+  });
+  automationGuard = await seedPrincipal({
+    stableIdentifier: "autonomous-guard-workload",
+    principalType: "service",
+    principalRole: "automation_guard",
+    workloadIdentity: "autonomous-guard-subject",
+    allowedEvidence: ["automation_attestation"],
+    key: keyPair(),
   });
   service = createApprovalService({
     database,
@@ -443,6 +497,93 @@ integration("patent founder and ARBITER decisions serialize into one monotonic c
   assert.equal(final.state, "approved");
   assert.equal(final.eventSequence, 4);
   assert.deepEqual(final.events.map((event) => event.sequence), [1, 2, 3, 4]);
+});
+
+integration("autonomous grants require an independent guard and are consumed once", async () => {
+  const pending = await service.requestAutonomous({
+    actor: automationRequester.actor,
+    input: {
+      hcpIdentifier: "HCP-0033",
+      title: "One-time source authorship grant",
+      capability: "source_authorship",
+      zonePaths: ["packages/example/src/autonomous.mjs"],
+      resourceScopes: ["repo:Heady-AI/packages/example"],
+      subjectSha256: "9".repeat(64),
+      diffSha256: "a".repeat(64),
+      rollbackPlanSha256: "b".repeat(64),
+      riskTier: "low",
+      reversible: true,
+      dryRunVerified: true,
+      networkAccess: "none",
+      maxAffectedResources: 1,
+      maxDurationMs: 1_000,
+    },
+    idempotencyKey: "autonomous-request-0001",
+    traceId: "trace-autonomous-request",
+  });
+  assert.equal(pending.state, "pending");
+  assert.deepEqual(pending.requiredEvidence, ["automation_attestation"]);
+
+  const guardReadable = await service.getAutonomous({
+    approvalId: pending.approvalId,
+    actor: automationGuard.actor,
+  });
+  assert.equal(guardReadable.payload.requesterPrincipalId, automationRequester.id);
+
+  const approved = await service.attest({
+    approvalId: pending.approvalId,
+    actor: automationGuard.actor,
+    input: automationGuardInput(pending, automationGuard),
+    idempotencyKey: "autonomous-attest-0001",
+    traceId: "trace-autonomous-attest",
+  });
+  assert.equal(approved.state, "approved");
+
+  const protectionInput = {
+    approvalId: approved.approvalId,
+    capability: approved.payload.capability,
+    subjectSha256: approved.payload.subjectSha256,
+    payloadSha256: approved.payloadSha256,
+    diffSha256: approved.diffSha256,
+    policySha256: approved.policySha256,
+    executionNonce: "autonomous-execution-nonce-0001",
+  };
+  const granted = await service.autonomousProtection({
+    actor: automationRequester.actor,
+    input: protectionInput,
+    idempotencyKey: "autonomous-protection-0001",
+    traceId: "trace-autonomous-protection",
+  });
+  assert.equal(granted.allow, true);
+  assert.equal(granted.grant.authorizationReceipt.signatureVerified, true);
+
+  const retried = await service.autonomousProtection({
+    actor: automationRequester.actor,
+    input: protectionInput,
+    idempotencyKey: "autonomous-protection-0001",
+    traceId: "trace-autonomous-protection-retry",
+  });
+  assert.equal(retried.grant.operationSha256, granted.grant.operationSha256);
+
+  const replayed = await service.autonomousProtection({
+    actor: automationRequester.actor,
+    input: {
+      ...protectionInput,
+      executionNonce: "autonomous-execution-nonce-0002",
+    },
+    idempotencyKey: "autonomous-protection-0002",
+    traceId: "trace-autonomous-protection-replay",
+  });
+  assert.equal(replayed.allow, false);
+  assert.ok(replayed.reasons.includes("grant_already_consumed"));
+
+  await assert.rejects(
+    () => pool.query(`
+      UPDATE heady_approval.autonomous_grant_claims
+         SET capability = 'maintenance_execution'
+    `),
+    /append-only relation/,
+  );
 });
 
 integration("signer failures roll back and database history rejects rewrite or deletion", async () => {

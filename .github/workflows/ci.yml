@@ -64,7 +64,7 @@ jobs:
         run: node --test tooling/law-lint/test/law-lint.test.mjs
 
   governance-coverage:
-    name: governance coverage (patent-CODEOWNERS · workflow-sync)
+    name: governance coverage (patent-CODEOWNERS · workflow/skill sync)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,6 +79,10 @@ jobs:
         run: node tooling/governance-gate/src/governance-gate.mjs all
       - name: governance gate tests
         run: node --test tooling/governance-gate/test/governance-gate.test.mjs
+      - name: skill projection sync
+        run: node tooling/skill-registry/register.mjs --check
+      - name: skill registry tests
+        run: node --test tooling/skill-registry/test/*.test.mjs
 
   scan:
     name: coherence gate (the OS of the OS)

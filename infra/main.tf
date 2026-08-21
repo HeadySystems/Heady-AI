@@ -22,24 +22,6 @@ terraform {
   }
 }
 
-variable "project_id" {
-  description = "GCP Project ID"
-  type        = string
-  default     = "heady-liquid-architecture"
-}
-
-variable "region" {
-  description = "Primary GCP region"
-  type        = string
-  default     = "us-central1"
-}
-
-variable "environment" {
-  description = "Deployment environment"
-  type        = string
-  default     = "production"
-}
-
 provider "google" {
   project = var.project_id
   region  = var.region

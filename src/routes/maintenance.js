@@ -4,7 +4,8 @@
  * Unauthorized copying, modification, or distribution is strictly prohibited.
  */
 /**
- * HeadyMaintenance — System Health, Backup, and File Hygiene Router
+ * HeadyMaintenance — Legacy read-only file hygiene router.
+ * Cloud Run filesystems are ephemeral; durable audit/task data belongs in Neon.
  */
 const express = require("express");
 const fs = require("fs");
@@ -20,9 +21,13 @@ const CLEANUP_RULES = [
     { label: "backup-files", pattern: /\.bak$/i, deleteMode: "file" },
     { label: "runtime-logs", pattern: /\.log$/i, deleteMode: "file" },
     { label: "runtime-pid", pattern: /server\.pid$/i, deleteMode: "file" },
-    { label: "audit-jsonl", pattern: /\.jsonl$/i, deleteMode: "file" },
-    { label: "service-worker", pattern: /service[-_.]?worker(\.[a-z0-9_-]+)?\.(js|ts)$/i, deleteMode: "file" },
-    { label: "cloudflare-tunnel-config", pattern: /(cloudflared|tunnel).*\.(json|ya?ml)$/i, deleteMode: "file" },
+];
+
+const PROTECTED_PATTERNS = [
+    /(^|[/\\])(audit|audits|observations?)([/\\]|[._-])/i,
+    /\.jsonl$/i,
+    /(^|[/\\])\.github([/\\]|$)/,
+    /(^|[/\\])configs?([/\\]|$)/i,
 ];
 
 function pushLog(entry) {
@@ -34,7 +39,8 @@ function walkDirectory(dirPath, results = []) {
     let entries = [];
     try {
         entries = fs.readdirSync(dirPath, { withFileTypes: true });
-    } catch (_err) {
+    } catch (err) {
+        logger.logError("OBSERVER", "Maintenance scan could not read directory", { path: dirPath, error: err.message });
         return results;
     }
 
@@ -61,6 +67,8 @@ function fileCleanupAudit() {
         const relative = path.relative(ROOT_DIR, filePath);
         const basename = path.basename(filePath);
 
+        if (PROTECTED_PATTERNS.some((pattern) => pattern.test(relative))) continue;
+
         for (const rule of CLEANUP_RULES) {
             if (rule.pattern.test(relative) || rule.pattern.test(basename)) {
                 candidates.push({ path: relative, rule: rule.label, deleteMode: rule.deleteMode });
@@ -72,30 +80,21 @@ function fileCleanupAudit() {
     return candidates;
 }
 
-function executeCleanup(candidates, dryRun = true) {
-    const deleted = [];
-    const errors = [];
-
-    for (const candidate of candidates) {
-        if (dryRun) continue;
-        const target = path.join(ROOT_DIR, candidate.path);
-
-        try {
-            fs.unlinkSync(target);
-            deleted.push(candidate.path);
-        } catch (err) {
-            errors.push({ path: candidate.path, error: err.message });
-        }
+function executeCleanup(_candidates, dryRun = true) {
+    if (!dryRun) {
+        return { deleted: [], errors: [{ error: "runtime filesystem mutation is disabled; replace the immutable image instead" }] };
     }
-
-    return { deleted, errors };
+    return { deleted: [], errors: [] };
 }
 
 router.get("/health", (req, res) => {
     res.json({
         status: "ACTIVE",
         service: "heady-maintenance",
-        mode: "auto",
+        mode: "audit-only",
+        runtimeFilesystem: "ephemeral",
+        localMutationEnabled: false,
+        durableAuditAuthority: "neon.task_outbox",
         uptime: Math.floor((Date.now() - startTime) / 1000),
         tasks: maintenanceLog.length,
         ts: new Date().toISOString(),
@@ -136,12 +135,12 @@ router.post("/backup", (req, res) => {
     const { scope } = req.body;
     const entry = { id: `maint-${Date.now()}`, action: "backup", scope: scope || "data", ts: new Date().toISOString() };
     pushLog(entry);
-    res.json({
-        ok: true,
+    res.status(501).json({
+        ok: false,
         service: "heady-maintenance",
         action: "backup",
         requestId: entry.id,
-        backup: { scope: entry.scope, status: "queued", ts: entry.ts },
+        backup: { scope: entry.scope, status: "unsupported", authority: "Neon point-in-time restore", ts: entry.ts },
     });
 });
 
@@ -165,12 +164,19 @@ router.get("/audit", (_req, res) => {
 
 router.post("/cleanup", (req, res) => {
     const dryRun = req.body?.dryRun !== false;
+    if (!dryRun) {
+        return res.status(409).json({
+            ok: false,
+            error: "runtime_filesystem_mutation_disabled",
+            policy: "Cloud Run images are immutable and durable audit records remain in Neon",
+        });
+    }
     const entry = { id: `maint-${Date.now()}`, action: "cleanup", dryRun, ts: new Date().toISOString() };
     const candidates = fileCleanupAudit();
     const result = executeCleanup(candidates, dryRun);
     pushLog({ ...entry, candidateCount: candidates.length, deleted: result.deleted.length, errors: result.errors.length });
 
-    logger.logNodeActivity("CONDUCTOR", "Maintenance cleanup executed", {
+    logger.logNodeActivity("OBSERVER", "Maintenance cleanup audit executed", {
         dryRun,
         candidateCount: candidates.length,
         deletedCount: result.deleted.length,

@@ -1,3 +1,9 @@
+import {
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from '../services/firebase.js';
+
 export class OnboardingUI {
   constructor(container) {
     this.container = container;
@@ -54,8 +60,6 @@ export class OnboardingUI {
       errorMsg.textContent = '';
 
       try {
-        const { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword } = await import('../services/firebase.js');
-        
         if (isLogin) {
           await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
         } else {

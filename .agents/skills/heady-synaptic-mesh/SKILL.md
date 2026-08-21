@@ -1,3 +1,23 @@
+---
+name: heady-synaptic-mesh
+description: >
+  Heady Synaptic Mesh — bio-inspired inter-service communication fabric that routes messages
+  through learned neural pathways between Heady services. Pathways strengthen with use (Hebbian
+  learning) and weaken with disuse (synaptic pruning), creating an organic topology that
+  self-optimizes for actual traffic patterns. Uses φ-scaled synapse weights, CSL-gated pathway
+  activation thresholds, Fibonacci-tiered latency targets, and 384D service identity embeddings
+  for semantic routing. Use when designing service-to-service communication, optimizing message
+  routing, building self-healing service meshes, implementing circuit breaker networks, or any
+  scenario where inter-service communication should learn and adapt. Keywords: service mesh,
+  routing, neural pathway, Hebbian learning, synapse, pruning, inter-service, message routing,
+  adaptive routing, self-optimizing, circuit breaker, service discovery, topology, organic.
+metadata:
+  author: HeadySystems
+  version: '1.0'
+  patents: 51
+  phi-compliant: true
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,26 +40,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-synaptic-mesh
-description: >
-  Heady Synaptic Mesh — bio-inspired inter-service communication fabric that routes messages
-  through learned neural pathways between Heady services. Pathways strengthen with use (Hebbian
-  learning) and weaken with disuse (synaptic pruning), creating an organic topology that
-  self-optimizes for actual traffic patterns. Uses φ-scaled synapse weights, CSL-gated pathway
-  activation thresholds, Fibonacci-tiered latency targets, and 384D service identity embeddings
-  for semantic routing. Use when designing service-to-service communication, optimizing message
-  routing, building self-healing service meshes, implementing circuit breaker networks, or any
-  scenario where inter-service communication should learn and adapt. Keywords: service mesh,
-  routing, neural pathway, Hebbian learning, synapse, pruning, inter-service, message routing,
-  adaptive routing, self-optimizing, circuit breaker, service discovery, topology, organic.
-metadata:
-  author: HeadySystems
-  version: '1.0'
-  patents: 51
-  phi-compliant: true
----
-
 # Heady Synaptic Mesh
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

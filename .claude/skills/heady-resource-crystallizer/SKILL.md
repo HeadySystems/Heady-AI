@@ -3,6 +3,28 @@ name: heady-resource-crystallizer
 description: "Heady Resource Crystallizer — dynamic resource allocation engine that crystallizes optimal compute, memory, token, and bandwidth distributions across the Heady ecosystem using φ-harmonic resonance patterns. Monitors real-time demand signals, predicts resource needs via temporal forecasting, and allocates using Fibonacci-tiered priority queues with CSL-gated fairness constraints. Handles hot/warm/cold pool rebalancing, token budget crystallization across providers, and elastic scaling decisions. Use when managing compute allocation, token budgets, pool rebalancing, bandwidth distribution, or any multi-resource optimization problem. Keywords: resource allocation, compute, token budget, bandwidth, pool rebalancing, elastic scaling, priority queue, fairness, capacity planning, resource optimization, crystallization, demand prediction, hot warm cold."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/36-heady-resource-crystallizer.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Heady Resource Crystallizer
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

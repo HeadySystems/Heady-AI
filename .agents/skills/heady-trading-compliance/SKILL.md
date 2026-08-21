@@ -1,3 +1,8 @@
+---
+name: heady-trading-compliance
+description: Enforces Apex Trader Funding compliance rules and risk management logic for all Heady trading code. Use this skill whenever writing, reviewing, or debugging ANY trading-related code — including order execution, risk checks, drawdown calculations, position sizing, P&L tracking, Rithmic/Tradovate API integration, or Apex evaluation/funded account logic. Triggers on mentions of "Apex", "drawdown", "trailing threshold", "consistency rule", "funded account", "Rithmic", "Tradovate", "TradersPost", "PickMyTrade", "contract scaling", "position flattening", or any trading risk management code. Also use when the user asks about prop firm rules, trading compliance, or risk agent logic.
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,11 +25,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-trading-compliance
-description: Enforces Apex Trader Funding compliance rules and risk management logic for all Heady trading code. Use this skill whenever writing, reviewing, or debugging ANY trading-related code — including order execution, risk checks, drawdown calculations, position sizing, P&L tracking, Rithmic/Tradovate API integration, or Apex evaluation/funded account logic. Triggers on mentions of "Apex", "drawdown", "trailing threshold", "consistency rule", "funded account", "Rithmic", "Tradovate", "TradersPost", "PickMyTrade", "contract scaling", "position flattening", or any trading risk management code. Also use when the user asks about prop firm rules, trading compliance, or risk agent logic.
----
-
 # Heady Trading Compliance
 
 This skill ensures all Heady trading code complies with Apex Trader Funding rules and implements proper risk management. The Risk Agent has ultimate veto power — it can flatten all positions within 100ms of detecting a breach condition.

@@ -21,6 +21,14 @@ function fixture({
       calls.push(["create", value]);
       return { approvalId: APPROVAL_ID, state: "draft" };
     },
+    async requestAutonomous(value) {
+      calls.push(["requestAutonomous", value]);
+      return { approvalId: APPROVAL_ID, state: "pending" };
+    },
+    async getAutonomous(value) {
+      calls.push(["getAutonomous", value]);
+      return { approvalId: APPROVAL_ID, state: "pending" };
+    },
     async submit(value) {
       calls.push(["submit", value]);
       return { approvalId: APPROVAL_ID, state: "pending" };
@@ -52,6 +60,15 @@ function fixture({
     async deploymentProtection(value) {
       calls.push(["deploymentProtection", value]);
       return { approvalId: APPROVAL_ID, allow: true, reasons: [] };
+    },
+    async autonomousProtection(value) {
+      calls.push(["autonomousProtection", value]);
+      return {
+        approvalId: APPROVAL_ID,
+        allow: true,
+        reasons: [],
+        grant: { schema: "heady.autonomous.grant.v1" },
+      };
     },
   };
   const authenticator = {
@@ -144,6 +161,39 @@ test("workload routes reject human tokens and accept workload identity", async (
   assert.equal(accepted.status, 200);
   assert.equal(calls.at(-1)[0], "deploymentProtection");
   assert.equal(calls.at(-1)[1].actor.authType, "workload_identity");
+});
+
+test("autonomous request and one-time protection routes require workload identity", async () => {
+  const { app, calls } = fixture();
+  const denied = await request(app)
+    .post("/api/autonomous-approvals")
+    .set("Authorization", "Bearer human.token")
+    .send({});
+  assert.equal(denied.status, 401);
+
+  const requested = await request(app)
+    .post("/api/autonomous-approvals")
+    .set("Authorization", "Bearer workload.token")
+    .set("Idempotency-Key", "autonomous-request-0001")
+    .send({ capability: "source_authorship" });
+  assert.equal(requested.status, 201);
+  assert.equal(calls.at(-1)[0], "requestAutonomous");
+  assert.equal(calls.at(-1)[1].actor.authType, "workload_identity");
+
+  const read = await request(app)
+    .get(`/api/autonomous-approvals/${APPROVAL_ID}`)
+    .set("Authorization", "Bearer workload.token");
+  assert.equal(read.status, 200);
+  assert.equal(calls.at(-1)[0], "getAutonomous");
+
+  const protectedResult = await request(app)
+    .post("/api/autonomous-protection")
+    .set("Authorization", "Bearer workload.token")
+    .set("Idempotency-Key", "autonomous-protect-0001")
+    .send({ approvalId: APPROVAL_ID });
+  assert.equal(protectedResult.status, 200);
+  assert.equal(protectedResult.body.grant.schema, "heady.autonomous.grant.v1");
+  assert.equal(calls.at(-1)[0], "autonomousProtection");
 });
 
 test("there is no bulk mutation endpoint and malformed trace headers are rejected", async () => {

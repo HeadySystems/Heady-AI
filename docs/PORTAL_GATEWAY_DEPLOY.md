@@ -35,6 +35,7 @@ heady-codeflow-api  (Cloud Run, --no-allow-unauthenticated, us-east1)
    ```bash
    cd apps/heady-portal-gateway
    wrangler secret put GCP_SA_KEY < /tmp/gateway-invoker.json
+   wrangler secret put INTERNAL_NODE_SECRET
    rm /tmp/gateway-invoker.json
    ```
 
@@ -65,7 +66,10 @@ heady-codeflow-api  (Cloud Run, --no-allow-unauthenticated, us-east1)
 | `CLOUD_RUN_URL` | `https://heady-codeflow-api-1003436179562.us-east1.run.app` |
 | `ALLOWED_ORIGINS` | `https://heady-ai.web.app,https://headyme.com,https://www.headyme.com` |
 | `GCP_SA_KEY` | **secret** — `wrangler secret put GCP_SA_KEY` |
+| `INTERNAL_NODE_SECRET` | **secret** — synchronized from the governed GCP Secret Manager value; injected only for verified Firebase admins on privileged node routes |
 
 Fail-closed: a request without a valid Firebase ID token gets `401` and never reaches Cloud Run.
+Privileged node audit, task, dispatch, and heartbeat routes additionally require the Firebase custom
+claim `admin: true`; the browser never receives the internal service credential.
 The gateway needs a valid Cloudflare API token (the one in `.env` was invalid — mint a Workers-scoped
 token, or run `wrangler login`).

@@ -1,3 +1,22 @@
+---
+name: heady-narrative-engine
+description: >
+  Heady Narrative Engine — story-driven interaction choreography that transforms raw AI operations
+  into coherent user experiences. Models every user session as a narrative arc with φ-proportioned
+  acts (setup, rising action, climax, resolution), tracks emotional tone via sentiment embeddings,
+  choreographs interaction pacing using Fibonacci timing, and generates contextual micro-copy that
+  maintains personality consistency. Use when designing HeadyBuddy conversation flows, building
+  onboarding experiences, choreographing multi-step workflows, creating adaptive tutorials, or any
+  scenario where the user experience benefits from narrative structure. Keywords: narrative, story,
+  conversation flow, pacing, emotional tone, micro-copy, onboarding, tutorial, choreography,
+  interaction design, user experience, personality, sentiment, arc, dramatic structure.
+metadata:
+  author: HeadySystems
+  version: '1.0'
+  patents: 51
+  phi-compliant: true
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,25 +39,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-narrative-engine
-description: >
-  Heady Narrative Engine — story-driven interaction choreography that transforms raw AI operations
-  into coherent user experiences. Models every user session as a narrative arc with φ-proportioned
-  acts (setup, rising action, climax, resolution), tracks emotional tone via sentiment embeddings,
-  choreographs interaction pacing using Fibonacci timing, and generates contextual micro-copy that
-  maintains personality consistency. Use when designing HeadyBuddy conversation flows, building
-  onboarding experiences, choreographing multi-step workflows, creating adaptive tutorials, or any
-  scenario where the user experience benefits from narrative structure. Keywords: narrative, story,
-  conversation flow, pacing, emotional tone, micro-copy, onboarding, tutorial, choreography,
-  interaction design, user experience, personality, sentiment, arc, dramatic structure.
-metadata:
-  author: HeadySystems
-  version: '1.0'
-  patents: 51
-  phi-compliant: true
----
-
 # Heady Narrative Engine
 
 > **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**

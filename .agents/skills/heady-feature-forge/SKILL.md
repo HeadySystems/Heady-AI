@@ -1,3 +1,11 @@
+---
+name: heady-feature-forge
+description: Design and spec new Heady platform features end-to-end. Use when brainstorming, scoping, or writing feature specifications for any Heady service — HeadyWeb, HeadyBuddy, HeadyAI-IDE, or the Latent OS layer. Covers user stories, architecture sketches, API surface, data models, and acceptance criteria.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-feature-forge
-description: Design and spec new Heady platform features end-to-end. Use when brainstorming, scoping, or writing feature specifications for any Heady service — HeadyWeb, HeadyBuddy, HeadyAI-IDE, or the Latent OS layer. Covers user stories, architecture sketches, API surface, data models, and acceptance criteria.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Feature Forge
 
 Use this skill when you need to **design, scope, or write a specification for a new Heady platform feature**. It provides a structured framework for going from rough idea to shippable feature spec.

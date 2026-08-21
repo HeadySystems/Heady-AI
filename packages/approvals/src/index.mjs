@@ -8,6 +8,7 @@ export * from "./canonical.mjs";
 export * from "./constants.mjs";
 export * from "./events.mjs";
 export * from "./audit.mjs";
+export * from "./autonomous.mjs";
 export * from "./genesis.mjs";
 export * from "./identity.mjs";
 export * from "./policy-input.mjs";

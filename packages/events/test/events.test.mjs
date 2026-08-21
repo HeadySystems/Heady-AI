@@ -6,7 +6,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { SUBJECT, subjectMatches, buildEvent, InMemoryBus, projectOutbox } from "../src/index.mjs";
+import { SUBJECT, subjectMatches, buildEvent, InMemoryBus, NatsBus, projectOutbox } from "../src/index.mjs";
 
 test("subject builders", () => {
   assert.equal(SUBJECT.observation("task.done"), "heady.observation.task.done");
@@ -62,4 +62,38 @@ test("projectOutbox publishes rows by topic", async () => {
   );
   assert.equal(res.length, 2);
   assert.deepEqual(seen.sort(), ["heady.observation.embed.done", "heady.observation.task.done"]);
+});
+
+test("NatsBus mirrors local delivery and publishes a typed transport frame", async () => {
+  const frames = [];
+  let closed = false;
+  let finishConsumer;
+  const subscription = {
+    unsubscribe() { finishConsumer?.(); },
+    async *[Symbol.asyncIterator]() { await new Promise((resolve) => { finishConsumer = resolve; }); },
+  };
+  const connectImpl = async (options) => ({
+    options,
+    subscribe: () => subscription,
+    flush: async () => {},
+    publish: (subject, data) => frames.push({ subject, data }),
+    isClosed: () => closed,
+    drain: async () => { closed = true; subscription.unsubscribe(); },
+  });
+  const bus = new NatsBus({ servers: "tls://nats.example.invalid:4222", connectImpl });
+  const seen = [];
+  bus.subscribe("agent.>", (event) => seen.push(event.subject));
+  await bus.start();
+  const result = await bus.publish("agent.heady-brain.action.requested", { taskId: "task-1" });
+  assert.equal(result.transportReady, true);
+  assert.deepEqual(seen, ["agent.heady-brain.action.requested"]);
+  assert.equal(frames[0].subject, "agent.heady-brain.action.requested");
+  assert.equal(JSON.parse(new TextDecoder().decode(frames[0].data)).payload.taskId, "task-1");
+  assert.equal(bus.status().ready, true);
+  await bus.stop();
+  assert.equal(bus.status().ready, false);
+});
+
+test("NatsBus rejects embedded URL credentials", () => {
+  assert.throws(() => new NatsBus({ servers: "tls://user:pass@nats.example.invalid:4222" }), /must not contain credentials/);
 });

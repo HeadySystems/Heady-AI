@@ -1,3 +1,11 @@
+---
+name: heady-projection-composer
+description: Design the Heady Projection Composer for context-driven UI and app delivery. Use when building adaptive interfaces that reshape based on user intent, composing liquid UI projections from modular components, or designing the projection engine that maps tasks to optimal surface layouts.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-projection-composer
-description: Design the Heady Projection Composer for context-driven UI and app delivery. Use when building adaptive interfaces that reshape based on user intent, composing liquid UI projections from modular components, or designing the projection engine that maps tasks to optimal surface layouts.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Projection Composer
 
 Use this skill when you need to **design, build, or extend the Projection Composer** — Heady's engine for dynamically composing and delivering user interfaces and app experiences based on the current task, context, and device.

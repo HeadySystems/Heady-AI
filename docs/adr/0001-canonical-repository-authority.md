@@ -27,3 +27,9 @@ from repo names — itself a governance smell. Satellites (`*-core`) are thin pr
 - (+) Strangler-fig migration has one unambiguous target.
 - (−) One-time cost: org consolidation, DNS/secret reconciliation, history imports (`git filter-repo`).
 - Supersedes the antigravity ARCH-001 intent (formalize manifests) where folding-in is viable.
+
+## Proposed supersession
+
+ADR-0051 proposes moving canonical source bytes, revisions, and refs into Neon and treating Git as a
+signed distribution/worktree projection. This accepted ADR remains authoritative until ADR-0051 is
+signed and its source-ledger migration is activated.

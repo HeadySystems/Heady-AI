@@ -5,10 +5,12 @@
   "type": "module",
   "description": "Auto-Flow preflight + flow definitions — catalog scan and CSL-gated skill/workflow shortlist before a task.",
   "bin": {
-    "heady-preflight": "preflight.mjs"
+    "heady-preflight": "preflight.mjs",
+    "heady-route": "route.mjs"
   },
   "exports": {
     "./preflight": "./preflight.mjs",
+    "./route": "./route.mjs",
     "./flows/skill-preflight": "./flows/skill-preflight.flow.mjs"
   },
   "scripts": {

@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createPolicyEvaluator } from "../src/policy.mjs";
 import {
+  automationEvidence,
   arbiterEvidence,
   founderEvidence,
   policyInput,
@@ -156,4 +157,61 @@ test("Renovate is allowed only for patch-only changes outside protected paths", 
   }));
   assert.equal(approvalMigration.allow, false);
   assert.ok(approvalMigration.reasons.includes("renovate_scope_forbidden"));
+});
+
+test("autonomous approvals require an independent guard and bounded safe payload", async () => {
+  const autonomous = {
+    schema: "heady.autonomous.approval.v1",
+    capability: "source_authorship",
+    requesterPrincipalId: "automation-requester",
+    requesterWorkloadIdentity: "automation-requester-subject",
+    subjectSha256: "5".repeat(64),
+    rollbackPlanSha256: "6".repeat(64),
+    riskTier: "low",
+    reversible: true,
+    dryRunVerified: true,
+    networkAccess: "none",
+    resourceScopes: ["repo:Heady-AI/packages/example"],
+    maxAffectedResources: 1,
+    maxDurationMs: 1_000,
+  };
+  const allowed = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-requester",
+    autonomous,
+    evidence: [automationEvidence()],
+  }));
+  assert.equal(allowed.allow, true);
+
+  const selfApproved = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-guard",
+    autonomous,
+    evidence: [automationEvidence()],
+  }));
+  assert.equal(selfApproved.allow, false);
+  assert.deepEqual(selfApproved.missingEvidence, ["automation_attestation"]);
+
+  const protectedPath = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-requester",
+    zonePaths: ["packages/auth/src/session.mjs"],
+    autonomous,
+    evidence: [automationEvidence({ reviewedPaths: ["packages/auth/src/session.mjs"] })],
+  }));
+  assert.equal(protectedPath.allow, false);
+  assert.ok(protectedPath.reasons.includes("autonomous_scope_forbidden"));
+
+  const irreversible = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-requester",
+    autonomous: { ...autonomous, reversible: false },
+    evidence: [automationEvidence()],
+  }));
+  assert.equal(irreversible.allow, false);
+  assert.ok(irreversible.reasons.includes("autonomous_payload_invalid"));
 });

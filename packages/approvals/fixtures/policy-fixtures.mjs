@@ -13,6 +13,8 @@ const HASHES = Object.freeze({
 export function policyInput(overrides = {}) {
   return {
     changeClass: "standard_sensitive",
+    subjectType: "change",
+    creatorPrincipalId: "founder",
     patentLocked: false,
     state: "pending",
     ...HASHES,
@@ -20,7 +22,27 @@ export function policyInput(overrides = {}) {
     nowEpochMs: 1_000,
     zonePaths: ["packages/example/src/index.mjs"],
     renovatePatchOnly: false,
+    autonomous: null,
     evidence: [],
+    ...overrides,
+  };
+}
+
+export function automationEvidence(overrides = {}) {
+  return {
+    eventId: "automation-guard-event",
+    principalId: "automation-guard",
+    principalType: "service",
+    principalRole: "automation_guard",
+    evidenceClass: "automation_attestation",
+    decision: null,
+    verdict: "ALLOW",
+    resolvesEscalation: false,
+    patentClaims: [],
+    reviewedPaths: ["packages/example/src/index.mjs"],
+    principalActive: true,
+    ceremonyVerified: true,
+    ...HASHES,
     ...overrides,
   };
 }

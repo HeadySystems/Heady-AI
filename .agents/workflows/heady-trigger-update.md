@@ -1,52 +1,31 @@
-<!-- HEADY_BRAND:BEGIN -->
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║ -->
-<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║ -->
-<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║ -->
-<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║ -->
-<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║ -->
-<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║ -->
-<!-- ║                                                                  ║ -->
-<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║ -->
-<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║ -->
-<!-- ║  FILE: heady-trigger-update.md                                      ║ -->
-<!-- ║  LAYER: orchestration                                           ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-<!-- HEADY_BRAND:END -->
+---
+description: Route a noteworthy observation through the canonical @heady intelligence preflight without fabricating an API or silently persisting data
+---
 
-# /heady-trigger-update
+<!-- HEADY_BRAND:BEGIN
+╔══════════════════════════════════════════════════════════════════╗
+║  HEADY™ Trigger Update Compatibility Workflow v2.0.0            ║
+║  Observation intake through the governed intelligence router.   ║
+║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+╚══════════════════════════════════════════════════════════════════╝
+HEADY_BRAND:END -->
 
-This is the universal intelligence proxy for the Heady ecosystem. 
+# `/heady-trigger-update`
 
-It provides a unified surface where any agent, external system, webhook, or human user can submit a "noteworthy observation" to Heady's Universal Proxy endpoint (`POST /api/heady/trigger`).
+Treat the submitted observation as `/heady <observation>` and follow
+`.agents/workflows/heady.md`. Preserve severity, evidence, affected resources,
+and the user's requested outcome in the routed input.
 
-## Execution Logic
-1. **Intake:** The signal is received from the command line, UI, or API proxy.
-2. **CSL Gate (Confidence Scoring):** The system evaluates the payload using Continuous Semantic Logic.
-   - If the signal contains `CRITICAL`, `ERROR`, or is a dense technical block (score >= 0.75), it **passes**.
-   - If the signal is short, vague, or deemed low-impact (score < 0.75), it is **halted**.
-3. **Action:**
-   - **PASS:** Automatically triggers the Apex Router (`/heady`), waking up Heady intelligence to analyze, plan, and execute a fix or optimization autonomously.
-   - **HALT:** The observation is silently logged into the 3D vector memory (`.data/vector-memory`) for future context, but no active agent orchestration occurs.
+## Rules
 
-## Usage
-### CLI
-```bash
-node src/hc_trigger_update.js "Observation details here"
-```
+- Do not claim `POST /api/heady/trigger`, `src/hc_trigger_update.js`, or a local
+  vector-memory sink exists without verifying it in the current checkout and,
+  for live use, exercising its authenticated contract.
+- Do not silently discard low-confidence observations. Report the route and any
+  ambiguity, then continue with safe diagnostics that remain within user scope.
+- Do not write to Neon, emit external events, deploy, or persist a background
+  trigger unless the user authorized that mutation and all governance gates pass.
+- Never recursively invoke this workflow or `@heady` after the initial route.
 
-### Slash Command
-```
-/heady-trigger-update [CRITICAL] The Cloud Run worker is failing on boot.
-```
-
-### API
-```http
-POST /api/heady/trigger
-Content-Type: application/json
-
-{
-  "source": "external_agent",
-  "payload": "High latency detected on Upstash Redis."
-}
-```
+Completion requires the selected capabilities, executed diagnostics/actions,
+verification evidence, and any unresolved live-state blocker.

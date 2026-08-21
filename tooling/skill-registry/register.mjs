@@ -121,6 +121,40 @@ function resourceFiles(dir) {
   return out;
 }
 
+function sameFileContent(left, right) {
+  return existsSync(left) && readFileSync(left).equals(readFileSync(right));
+}
+
+function projectionDrift(name, content) {
+  const sourceSkillDir = join(SRC_DIR, name);
+  const destSkillDir = join(DEST_DIR, name);
+  const drift = [];
+  const destSkill = join(destSkillDir, "SKILL.md");
+
+  if (!existsSync(destSkill)) {
+    drift.push("missing projected SKILL.md");
+  } else if (readFileSync(destSkill, "utf8") !== content) {
+    drift.push("projected SKILL.md content differs");
+  }
+
+  const expectedResources = new Map(
+    resourceFiles(sourceSkillDir).map((source) => [relative(sourceSkillDir, source), source]),
+  );
+  for (const [rel, source] of expectedResources) {
+    const target = join(destSkillDir, rel);
+    if (!sameFileContent(target, source)) drift.push(`resource differs: ${rel}`);
+  }
+
+  if (existsSync(destSkillDir)) {
+    for (const target of resourceFiles(destSkillDir)) {
+      const rel = relative(destSkillDir, target);
+      if (!expectedResources.has(rel)) drift.push(`orphan projected resource: ${rel}`);
+    }
+  }
+
+  return drift;
+}
+
 function buildSkill(name) {
   const srcFile = join(SRC_DIR, name, "SKILL.md");
   const raw = readFileSync(srcFile, "utf8");
@@ -157,6 +191,7 @@ function main(argv) {
   if (!checkOnly && !existsSync(DEST_DIR)) mkdirSync(DEST_DIR, { recursive: true });
 
   let written = 0;
+  let drifted = 0;
   const repaired = [];
   for (const name of names) {
     let built;
@@ -167,7 +202,14 @@ function main(argv) {
       continue;
     }
     if (built.issues.length) repaired.push(`  • ${name}: ${built.issues.join("; ")}`);
-    if (checkOnly) continue;
+    if (checkOnly) {
+      const drift = projectionDrift(name, built.content);
+      if (drift.length) {
+        drifted++;
+        out.push(`  ✗ ${name}: ${drift.join("; ")}`);
+      }
+      continue;
+    }
 
     const destSkillDir = join(DEST_DIR, name);
     if (existsSync(destSkillDir)) rmSync(destSkillDir, { recursive: true, force: true });
@@ -184,6 +226,15 @@ function main(argv) {
     written++;
   }
 
+  if (checkOnly && existsSync(DEST_DIR)) {
+    const sourceNames = new Set(names);
+    for (const entry of readdirSync(DEST_DIR, { withFileTypes: true })) {
+      if (!entry.isDirectory() || sourceNames.has(entry.name)) continue;
+      drifted++;
+      out.push(`  ✗ ${entry.name}: orphan projected skill directory`);
+    }
+  }
+
   if (repaired.length) {
     out.push(`  repairs applied (${repaired.length}):`);
     out.push(...repaired);
@@ -191,11 +242,14 @@ function main(argv) {
   }
   out.push(
     checkOnly
-      ? `  would register ${names.length} skills.`
+      ? drifted === 0
+        ? `  ✓ ${names.length}/${names.length} skill projections are in sync.`
+        : `  ✗ ${drifted} skill projection(s) require registration.`
       : `  ✓ registered ${written}/${names.length} skills into ${relative(REPO_ROOT, DEST_DIR)}.`,
   );
   out.push("");
   process.stdout.write(out.join("\n"));
+  if (checkOnly && drifted > 0) process.exitCode = 1;
 }
 
 main(process.argv.slice(2));

@@ -142,11 +142,16 @@ export async function replayApprovalHistory({
     const replayedPolicy = await policyEvaluator.evaluate(event.policy_input);
     if (
       event.policy_input.changeClass !== approval.change_class
+      || event.policy_input.subjectType !== approval.subject_type
+      || event.policy_input.creatorPrincipalId !== approval.created_by
       || event.policy_input.patentLocked !== approval.patent_locked
       || event.policy_input.payloadSha256 !== approval.payload_sha256
       || event.policy_input.diffSha256 !== approval.diff_sha256
       || event.policy_input.policySha256 !== approval.policy_sha256
       || canonicalize(event.policy_input.zonePaths) !== canonicalize(approval.zone_paths)
+      || canonicalize(event.policy_input.autonomous) !== canonicalize(
+        approval.change_class === "autonomous_operation" ? approval.canonical_payload : null,
+      )
     ) {
       errors.push(`policy input approval binding mismatch at sequence ${expectedSequence}`);
     }

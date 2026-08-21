@@ -46,6 +46,18 @@ export const SECRETS = Object.freeze([
     rotation: { strategy: "provider", maxAgeDays: FIB[9] },
     description: "Upstash Redis REST token." },
 
+  // ── Permanent inter-service event fabric (ADR-0020) ──
+  { name: "NATS_SERVERS", required: false, minLength: 8,
+    description: "Comma-separated TLS NATS endpoints. Connection credentials must be separate secrets." },
+  { name: "NATS_TOKEN", required: false, secret: true, minLength: 16,
+    rotation: { strategy: "provider", maxAgeDays: FIB[9] },
+    description: "NATS account token injected by GCP Secret Manager." },
+  { name: "NATS_USER", required: false,
+    description: "NATS account user paired with NATS_PASS; non-secret identifier." },
+  { name: "NATS_PASS", required: false, secret: true, minLength: 16,
+    rotation: { strategy: "provider", maxAgeDays: FIB[9] },
+    description: "NATS account password injected by GCP Secret Manager." },
+
   // ── Inter-service trust + key vault ──
   { name: "INTERNAL_NODE_SECRET", required: true, secret: true, minLength: 16,
     rotation: { strategy: "internal", maxAgeDays: FIB[8] },

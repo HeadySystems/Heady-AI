@@ -57,7 +57,7 @@ export class HeadyLiveStatus extends HTMLElement {
 
   connectedCallback() {
     this._renderShell();
-    this._openStream();
+    queueMicrotask(() => { if (this.isConnected) this._openStream(); });
     this._ticker = setInterval(() => this._renderTiles(), TICK_MS);
   }
 
@@ -67,13 +67,15 @@ export class HeadyLiveStatus extends HTMLElement {
     if (this._stream) { this._stream.close(); this._stream = null; }
   }
 
-  _openStream() {
+  async _openStream() {
     if (this._stream) return;
     if (this._streamTimer) { clearTimeout(this._streamTimer); this._streamTimer = null; }
     this._streamState = 'connecting';
     this._retryAt = null;
     this._renderTiles();
+    const token = await Promise.resolve(this.tokenProvider?.()).catch(() => '');
     this._stream = events.stream((evt) => this._onFabricEvent(evt), {
+      token,
       lastEventId: this._lastEventId,
       onOpen: () => {
         this._streamState = 'live';
@@ -93,6 +95,12 @@ export class HeadyLiveStatus extends HTMLElement {
         this._streamTimer = setTimeout(() => { if (this.isConnected) this._openStream(); }, delay);
       },
     });
+  }
+
+  reconnect() {
+    this._stream?.close();
+    this._stream = null;
+    this._openStream();
   }
 
   _onFabricEvent(evt) {

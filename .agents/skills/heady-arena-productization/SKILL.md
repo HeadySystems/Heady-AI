@@ -1,3 +1,11 @@
+---
+name: heady-arena-productization
+description: Productize the Heady Arena for multi-model comparison and intelligent route selection. Use when designing model evaluation frameworks, building routing logic that picks the best AI model for a task, creating arena UX for competitive evaluation, or planning arena-as-a-service offerings.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-arena-productization
-description: Productize the Heady Arena for multi-model comparison and intelligent route selection. Use when designing model evaluation frameworks, building routing logic that picks the best AI model for a task, creating arena UX for competitive evaluation, or planning arena-as-a-service offerings.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Arena Productization
 
 Use this skill when you need to **productize, extend, or optimize the Heady Arena** — transforming competitive multi-model evaluation from an internal tool into a user-facing product with intelligent routing, comparison UX, and arena-as-a-service capabilities.

@@ -1,0 +1,9 @@
+# ╭───────────────────────────────────────────────────────────────╮
+# │  HEADY™ Heady Handoff Agent Metadata v1.0.0                 │
+# │  Codex discovery metadata for verified agent handoffs         │
+# │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+# ╰──────────────────────────────────────────────────────────────╯
+interface:
+  display_name: "Heady Handoff"
+  short_description: "Create verified, incremental agent handoffs"
+  default_prompt: "Use $heady-handoff to create a verified handoff for the next agent."

@@ -7,7 +7,8 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "tail": "wrangler tail",
-    "secret:sa": "wrangler secret put GCP_SA_KEY"
+    "secret:sa": "wrangler secret put GCP_SA_KEY",
+    "secret:nodes": "wrangler secret put INTERNAL_NODE_SECRET"
   },
   "devDependencies": {
     "wrangler": "^3.114.17"

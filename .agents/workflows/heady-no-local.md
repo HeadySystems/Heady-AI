@@ -10,7 +10,7 @@ description: "MANDATORY — Heady architecture hard rules. Zero tolerance for lo
 ## HARD RULES
 
 1. **NEVER** use `localhost:*` to serve any Heady site or API
-2. **NEVER** use ngrok, localtunnel, or any tunnel service
+2. **REJECT** legacy tunnel mechanisms such as ngrok and localtunnel; use governed cloud ingress
 3. **NEVER** point buddy widgets or API calls to localhost
 4. **ALWAYS** deploy to Cloud Run (`gcloud run deploy`) or Cloudflare Workers
 

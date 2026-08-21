@@ -6,10 +6,13 @@
 
 import { z } from "zod";
 import {
+  AUTONOMOUS_CAPABILITIES,
+  AUTONOMOUS_MAX_AFFECTED_RESOURCES,
+  AUTONOMOUS_MAX_DURATION_MS,
   ATTESTATION_VERDICTS,
+  CREATE_APPROVAL_SUBJECT_TYPES,
   DECISIONS,
   SHA256_RE,
-  SUBJECT_TYPES,
   ULID_RE,
 } from "./constants.mjs";
 
@@ -55,7 +58,7 @@ const ZonePathSchema = z.string()
 export const CreateApprovalSchema = z.object({
   hcpIdentifier: z.string().regex(/^HCP-\d{4}$/),
   title: z.string().min(1).max(MAX_TITLE),
-  subjectType: z.enum(SUBJECT_TYPES),
+  subjectType: z.enum(CREATE_APPROVAL_SUBJECT_TYPES),
   patentLocked: z.boolean().default(false),
   zonePaths: z.array(ZonePathSchema).min(1).max(MAX_PATHS),
   payload: z.record(z.unknown()),
@@ -72,6 +75,75 @@ export const CreateApprovalSchema = z.object({
     });
   }
 });
+
+const ResourceScopeSchema = z.string()
+  .min(1)
+  .max(MAX_PATH_LENGTH)
+  .regex(/^[A-Za-z0-9][A-Za-z0-9._:/@-]*$/)
+  .refine((value) => !value.includes("//") && !value.includes(".."), {
+    message: "resource scope must be a normalized non-URL identifier",
+  });
+
+export const AutonomousApprovalRequestSchema = z.object({
+  hcpIdentifier: z.string().regex(/^HCP-\d{4}$/),
+  title: z.string().min(1).max(MAX_TITLE),
+  capability: z.enum(AUTONOMOUS_CAPABILITIES),
+  zonePaths: z.array(ZonePathSchema).min(1).max(MAX_PATHS),
+  resourceScopes: z.array(ResourceScopeSchema).min(1).max(AUTONOMOUS_MAX_AFFECTED_RESOURCES),
+  subjectSha256: Sha256Schema,
+  diffSha256: Sha256Schema,
+  rollbackPlanSha256: Sha256Schema,
+  riskTier: z.literal("low"),
+  reversible: z.literal(true),
+  dryRunVerified: z.literal(true),
+  networkAccess: z.enum(["none", "allowlisted"]),
+  maxAffectedResources: z.number().int().min(1).max(AUTONOMOUS_MAX_AFFECTED_RESOURCES),
+  maxDurationMs: z.number().int().min(1).max(AUTONOMOUS_MAX_DURATION_MS),
+}).strict().superRefine((value, context) => {
+  if (value.resourceScopes.length > value.maxAffectedResources) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["maxAffectedResources"],
+      message: "declared resource scopes cannot exceed max affected resources",
+    });
+  }
+});
+
+export const AutonomousProtectionSchema = z.object({
+  approvalId: UlidSchema,
+  capability: z.enum(AUTONOMOUS_CAPABILITIES),
+  subjectSha256: Sha256Schema,
+  payloadSha256: Sha256Schema,
+  diffSha256: Sha256Schema,
+  policySha256: Sha256Schema,
+  executionNonce: NonceSchema,
+}).strict();
+
+export const AutonomousGrantSchema = z.object({
+  schema: z.literal("heady.autonomous.grant.v1"),
+  capability: z.enum(AUTONOMOUS_CAPABILITIES),
+  subjectSha256: Sha256Schema,
+  payloadSha256: Sha256Schema,
+  diffSha256: Sha256Schema,
+  policySha256: Sha256Schema,
+  operationSha256: Sha256Schema,
+  executionNonce: NonceSchema,
+  expiresAt: IsoTimestampSchema,
+  authorizationEvent: z.record(z.unknown()),
+  authorizationReceipt: z.object({
+    receiptId: UlidSchema,
+    eventId: z.string().uuid(),
+    payload: z.record(z.unknown()),
+    payloadSha256: Sha256Schema,
+    signingKeyId: z.string().min(1).max(MAX_PATH_LENGTH),
+    algorithm: z.literal("EC_SIGN_ED25519"),
+    signature: SignatureSchema,
+    publicJwk: z.record(z.unknown()),
+    publicJwkVersion: z.string().min(1).max(MAX_PATH_LENGTH),
+    signatureVerified: z.boolean(),
+    issuedAt: IsoTimestampSchema,
+  }).strict(),
+}).strict();
 
 export const SubmitApprovalSchema = z.object({
   reason: z.string().min(1).max(MAX_REASON),

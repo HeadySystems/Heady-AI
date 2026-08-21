@@ -13,6 +13,7 @@ known_change_classes := {
 	"patent_locked",
 	"approval_system",
 	"renovate_patch",
+	"autonomous_operation",
 }
 
 known_evidence_slots := {
@@ -21,20 +22,26 @@ known_evidence_slots := {
 	"external_human_review",
 	"external_security_review",
 	"renovate_attestation",
+	"automation_attestation",
 }
 
 automation_blocked_prefixes := {
-	".github/CODEOWNERS",
+	".github/",
 	"apps/approval-api/",
 	"auth/",
+	"cloudbuild.yaml",
 	"configs/stage0-untouchables.json",
+	"deploy/",
 	"docs/adr/0031-solo-founder-approval-bootstrap.md",
 	"docs/design/APPROVAL_SERVICE_BOOTSTRAP_SPEC.md",
-	"packages/db/migrations/0004_approval_control_plane.sql",
+	"docs/design/AUTONOMOUS_APPROVAL_SIGNING.md",
+	"infra/",
+	"packages/db/migrations/",
 	"packages/approvals/",
 	"packages/auth/",
 	"packages/bees/",
 	"packages/csl-engine/",
+	"packages/secrets/",
 	"packages/security-mesh/",
 	"policies/",
 	"signer/",
@@ -45,7 +52,18 @@ base_required_evidence := {
 	"patent_locked": ["founder_decision", "arbiter_attestation"],
 	"approval_system": ["founder_decision", "external_security_review"],
 	"renovate_patch": ["renovate_attestation"],
+	"autonomous_operation": ["automation_attestation"],
 }
+
+autonomous_capabilities := {
+	"source_authorship",
+	"build_attestation",
+	"maintenance_execution",
+}
+
+# FIB[8] and round(PHI * FIB[8] * 60 * 1000), pinned to the policy build.
+autonomous_max_affected_resources := 21
+autonomous_max_duration_ms := 2038723
 
 default patent_escalated := false
 
@@ -94,6 +112,139 @@ renovate_scope_forbidden if {
 	some path in input.zonePaths
 	some prefix in automation_blocked_prefixes
 	path_matches_prefix(path, prefix)
+}
+
+autonomous_scope_forbidden if {
+	input.changeClass == "autonomous_operation"
+	some path in input.zonePaths
+	some prefix in automation_blocked_prefixes
+	path_matches_prefix(path, prefix)
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	input.subjectType != "autonomous_process"
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "schema", "") != "heady.autonomous.approval.v1"
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	not object.get(input.autonomous, "capability", "") in autonomous_capabilities
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "riskTier", "") != "low"
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "reversible", false) != true
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "dryRunVerified", false) != true
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "requesterPrincipalId", "") != input.creatorPrincipalId
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	object.get(input.autonomous, "requesterWorkloadIdentity", "") == ""
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	not regex.match("^[a-f0-9]{64}$", object.get(input.autonomous, "subjectSha256", ""))
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	not regex.match("^[a-f0-9]{64}$", object.get(input.autonomous, "rollbackPlanSha256", ""))
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	not object.get(input.autonomous, "networkAccess", "") in {"none", "allowlisted"}
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	not is_array(object.get(input.autonomous, "resourceScopes", null))
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	count(object.get(input.autonomous, "resourceScopes", [])) == 0
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxAffectedResources", 0)
+	not is_number(value)
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxAffectedResources", 0)
+	is_number(value)
+	value <= 0
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxAffectedResources", 0)
+	is_number(value)
+	value != round(value)
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxAffectedResources", 0)
+	is_number(value)
+	value > autonomous_max_affected_resources
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxAffectedResources", 0)
+	is_number(value)
+	count(object.get(input.autonomous, "resourceScopes", [])) > value
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxDurationMs", 0)
+	not is_number(value)
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxDurationMs", 0)
+	is_number(value)
+	value <= 0
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxDurationMs", 0)
+	is_number(value)
+	value != round(value)
+}
+
+autonomous_payload_invalid if {
+	input.changeClass == "autonomous_operation"
+	value := object.get(input.autonomous, "maxDurationMs", 0)
+	is_number(value)
+	value > autonomous_max_duration_ms
 }
 
 renovate_scope_forbidden if {
@@ -159,6 +310,16 @@ slot_matches("renovate_attestation", evidence) if {
 	evidence.principalRole == "renovate"
 	evidence.verdict == "ALLOW"
 	not renovate_scope_forbidden
+}
+
+slot_matches("automation_attestation", evidence) if {
+	evidence.evidenceClass == "automation_attestation"
+	evidence.principalType == "service"
+	evidence.principalRole == "automation_guard"
+	evidence.principalId != input.creatorPrincipalId
+	evidence.verdict == "ALLOW"
+	not autonomous_scope_forbidden
+	not autonomous_payload_invalid
 }
 
 slot_evidence[slot] contains evidence if {
@@ -246,6 +407,14 @@ denial_reasons contains "one_principal_fills_multiple_slots" if {
 
 denial_reasons contains "renovate_scope_forbidden" if {
 	renovate_scope_forbidden
+}
+
+denial_reasons contains "autonomous_scope_forbidden" if {
+	autonomous_scope_forbidden
+}
+
+denial_reasons contains "autonomous_payload_invalid" if {
+	autonomous_payload_invalid
 }
 
 default allowed := false

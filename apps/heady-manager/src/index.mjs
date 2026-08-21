@@ -4,11 +4,32 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createLogger } from "@heady/logger";
+import { NatsBus } from "@heady/events";
 import { createApp } from "./app.mjs";
 
 // One logger for the composition root — shared with createApp so the embedder
 // wiring and the app log to the same structured stream.
 const log = createLogger({ base: { module: "heady-manager" } });
+
+const { loadSecrets: loadRuntimeSecrets } = await import("@heady/secrets");
+const nats = await loadRuntimeSecrets({
+  only: ["NATS_SERVERS", "NATS_TOKEN", "NATS_USER", "NATS_PASS"],
+  require: ["NATS_SERVERS"],
+});
+if (Boolean(nats.NATS_USER) !== Boolean(nats.NATS_PASS)) {
+  throw new Error("NATS_USER and NATS_PASS must be configured together");
+}
+if (nats.NATS_TOKEN && nats.NATS_USER) {
+  throw new Error("configure NATS_TOKEN or NATS_USER/NATS_PASS, not both");
+}
+const eventBus = new NatsBus({
+  servers: nats.NATS_SERVERS,
+  token: nats.NATS_TOKEN,
+  user: nats.NATS_USER,
+  pass: nats.NATS_PASS,
+  name: `heady-manager-${process.env.K_REVISION ?? "unknown-revision"}`,
+  log,
+});
 
 // Live DbPort factory (vault-resolved). Shared shape used by both write paths
 // (tasks) and the 990 read plane — each service owns its own connection lifecycle.
@@ -17,6 +38,12 @@ const liveDbPort = async () => {
   const { createDbPort } = await import("@heady/db/port");
   const { DATABASE_URL } = await loadSecrets({ require: ["DATABASE_URL"] });
   return createDbPort({ connectionString: DATABASE_URL });
+};
+
+const liveInternalSecret = async () => {
+  const { loadSecrets } = await import("@heady/secrets");
+  const { INTERNAL_NODE_SECRET } = await loadSecrets({ only: ["INTERNAL_NODE_SECRET"], require: ["INTERNAL_NODE_SECRET"] });
+  return INTERNAL_NODE_SECRET;
 };
 
 // 990 query embedder (hybrid search). The Cloud Run origin has no Workers-AI
@@ -48,7 +75,9 @@ try {
 // tests/dev shells never implicitly touch a live database.
 const { kernel, start } = createApp({
   logger: log,
+  eventBus,
   tasks: { getDbPort: liveDbPort },
+  nodes: { getDbPort: liveDbPort, getInternalSecret: liveInternalSecret },
   heady990: { getDbPort: liveDbPort, embedQuery },
   console: {
     // Vault resolver for `vault` probes (the live token lifecycle): resolves

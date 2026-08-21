@@ -1,6 +1,6 @@
 # @heady/events
 
-Typed event bus — subject taxonomy + NATS-style wildcard routing. Transport-agnostic: an in-memory bus now, a NATS adapter (`heady-event-bus`) on the same interface once `nats` installs.
+Typed event bus — subject taxonomy + NATS-style wildcard routing. `InMemoryBus` is the deterministic test transport; `NatsBus` uses the official NATS v3 Node transport and mirrors received events onto the same local subscription interface for SSE projection.
 
 ```js
 import { SUBJECT, subjectMatches, buildEvent, InMemoryBus, projectOutbox } from "@heady/events";

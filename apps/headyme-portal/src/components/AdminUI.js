@@ -5,6 +5,7 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import { api } from '../services/heady-api.js';
+import { NodesAdmin } from './NodesAdmin.js';
 import './heady-build-narrative.js'; // registers <heady-build-narrative>
 import './ConsoleHoneycomb.js'; // registers <heady-console-honeycomb> (§8 living honeycomb)
 
@@ -26,6 +27,7 @@ export class AdminUI {
     this.container = container;
     this.user = user;
     this.proposal = null;
+    this.nodesAdmin = null;
   }
 
   render() {
@@ -44,6 +46,8 @@ export class AdminUI {
         <heady-live-status></heady-live-status>
 
         <main class="dashboard-grid">
+          <section class="card glass-panel nodes-admin-panel" id="nodes-admin-panel" style="grid-column: 1 / -1;"></section>
+
           <section class="card glass-panel" id="system-status">
             <h2>System Coherence</h2>
             <div class="status-indicator">loading…</div>
@@ -99,6 +103,12 @@ export class AdminUI {
     // Bearer-authed HeadyLens SSE stream without coupling to firebase directly.
     const narrative = this.container.querySelector('#build-narrative');
     if (narrative) narrative.tokenProvider = () => this.token();
+    const liveStatus = this.container.querySelector('heady-live-status');
+    if (liveStatus) liveStatus.tokenProvider = () => this.token();
+    const consoleHoneycomb = this.container.querySelector('heady-console-honeycomb');
+    if (consoleHoneycomb) consoleHoneycomb.tokenProvider = () => this.token();
+    this.nodesAdmin = new NodesAdmin(this.container.querySelector('#nodes-admin-panel'), this.user);
+    this.nodesAdmin.render();
     window.dispatchEvent(new CustomEvent('navigation:admin:entered'));
     this.loadStatus();
   }
@@ -124,7 +134,7 @@ export class AdminUI {
 
   async loadStatus() {
     try {
-      const s = await api.status();
+      const s = await api.status(await this.token());
       const coh = s.coherence;
       this.setCard('#system-status', coh ? (coh.gate === 'GREEN' ? 'online' : 'alert') : 'offline',
         coh ? `Gate ${coh.gate} · ${coh.contradictions} contradictions · ${coh.incomplete} incomplete` : 'kernel not yet run');
@@ -149,6 +159,11 @@ export class AdminUI {
   }
 
   async token() { try { return await this.user.getIdToken(); } catch { return ''; } }
+
+  _destroyStream() {
+    this.nodesAdmin?.destroy();
+    this.nodesAdmin = null;
+  }
 
   async onSubmit(e) {
     e.preventDefault();

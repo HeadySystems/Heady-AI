@@ -104,8 +104,52 @@ test("canonical home resolves to packages/db/migrations and contains the complet
     "0004_approval_control_plane.sql",
     "0005_990_intelligence.sql",
     "0006_990_search.sql",
+    "0007_heady_runtime_intelligence.sql",
+    "0008_projection_embedding_liveness.sql",
+    "0009_conversation_speaker_attribution.sql",
+    "0010_autonomous_approval_grants.sql",
+    "0011_node_orchestration_integrity.sql",
+    "0012_neon_universal_source_ledger.sql",
   ]);
+  assert.deepEqual(
+    files.slice(6, 9).map((file) => file.checksum),
+    [
+      "2533135060dd9bd3e0c3eba377391acd614e52974f44bd444fb17c5d1236e5ae",
+      "5422a0177a9bd81aefd885084f019a0dd8ab72448d57a5a6a95b7f329fc01a51",
+      "df4c0767835a8f80a0b85bb0e7b030f1795d6bfa31b765ccacc5435a7fc6a0ea",
+    ],
+  );
   assert.equal(planMigrations({ files, applied: [] }).pending.length, files.length);
+});
+
+test("autonomous grant migration preserves separation and one-time consumption", () => {
+  const sql = readFileSync(
+    join(MIGRATIONS_DIR, "0010_autonomous_approval_grants.sql"),
+    "utf8",
+  );
+  assert.match(sql, /automation_requester/);
+  assert.match(sql, /automation_guard/);
+  assert.match(sql, /automation_attestation/);
+  assert.match(sql, /CREATE TABLE heady_approval[.]autonomous_grant_claims/);
+  assert.match(sql, /approval_id\s+UUID NOT NULL UNIQUE/);
+  assert.match(sql, /approval_autonomous_grant_claims_append_only/);
+  assert.match(sql, /autonomous approvals require an active automation requester/);
+});
+
+test("universal source ledger is append-only and advances refs with compare-and-swap", () => {
+  const sql = readFileSync(join(MIGRATIONS_DIR, "0012_neon_universal_source_ledger.sql"), "utf8");
+  assert.match(sql, /CREATE SCHEMA IF NOT EXISTS heady_source/);
+  assert.match(sql, /digest\(content, 'sha256'\) = decode\(content_sha256, 'hex'\)/);
+  assert.match(sql, /source_blob_append_only/);
+  assert.match(sql, /source_revision_append_only/);
+  assert.match(sql, /CREATE TABLE heady_source[.]source_embedding/);
+  assert.match(sql, /embedding\s+vector\(384\) NOT NULL/);
+  assert.match(sql, /source_embedding_append_only/);
+  assert.match(sql, /source_event_append_only/);
+  assert.match(sql, /source ref compare-and-swap conflict/);
+  assert.match(sql, /source ref advance must descend from current revision/);
+  assert.match(sql, /FOREIGN KEY \(repository_id, parent_revision_id\)/);
+  assert.doesNotMatch(sql, /\bGRANT\b[^;]*\bauthenticated\b/i);
 });
 
 test("Data API migration removes existing and future authenticated-role access", () => {

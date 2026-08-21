@@ -3,6 +3,28 @@ name: heady-delegation-architect
 description: "Delegation Architect for Heady — intelligent orchestration of Perplexity Computer subagents, cron jobs, and external tools specifically optimized for Heady ecosystem work. Knows which Heady tasks can be parallelized, which require sequential execution, how to split monorepo work across agents without conflicts, and how to coordinate multi-PR workflows. Manages credit budgets, prevents context overflow, and ensures every delegated task follows Heady's production standards (φ-math, zero placeholders, structured logging, health endpoints). Use when Eric assigns large Heady projects that need to be decomposed and delegated across multiple agents or scheduled tasks. Keywords: delegation, subagent, orchestration, parallel execution, PR coordination, monorepo, task decomposition, credit budget, Heady workflow, multi-agent, coding agent, batch processing, cron scheduling."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/33-heady-delegation-architect.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Delegation Architect for Heady
 
 > Perplexity Computer Skill — Optimal task decomposition and delegation for Heady projects

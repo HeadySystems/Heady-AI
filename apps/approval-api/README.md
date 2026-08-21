@@ -1,5 +1,5 @@
 <!-- HEADY_BRAND:BEGIN
-Heady™ Approval API v1.0.0
+Heady™ Approval API v1.1.0
 © 2026 HeadySystems Inc. — Eric Haywood, Founder
 HEADY_BRAND:END -->
 
@@ -7,7 +7,8 @@ HEADY_BRAND:END -->
 
 The approval API is the standalone control plane accepted by ADR-0031. Neon Postgres is authoritative;
 OPA/Rego decides typed quorum; Firebase verifies human identity; Google workload identity verifies
-ARBITER and deployment guards; Cloud KMS signs every persisted receipt.
+ARBITER, deployment guards, and separated automation workloads; Cloud KMS signs every persisted
+receipt.
 
 This directory is bootstrap implementation only. It does not deploy the service, seed a principal,
 execute genesis, approve HCP-0003, or authorize bee runtime work.
@@ -67,14 +68,29 @@ OPA_BIN=/absolute/path/to/opa pnpm --filter @heady/approvals policy:build
 The compiler command rejects any other OPA version and runs `opa check --strict` before writing the
 artifact.
 
+## Autonomous approval lane
+
+The machine lane uses two different workload principals: an `automation_requester` creates a
+short-lived bounded request, while an `automation_guard` signs the exact-hash attestation. An
+approved request can be consumed once through `/api/autonomous-protection`, which returns the
+canonical authorization event and its KMS-signed receipt. Executors must verify that receipt
+against a trusted registry key with `verifyAutonomousGrant`; an embedded public key is never its own
+trust root.
+
+The lane is limited to low-risk, reversible, dry-run-verified authorship, build-attestation, and
+maintenance capabilities. Approval-system, patent, auth, secrets, infrastructure, deployment,
+policy, and GitHub-control paths remain human-gated. See
+[`AUTONOMOUS_APPROVAL_SIGNING.md`](../../docs/design/AUTONOMOUS_APPROVAL_SIGNING.md) for the protocol,
+roles, provisioning boundary, and revocation behavior.
+
 ## Neon validation sequence
 
 1. Create a temporary copy-on-write branch in the
    [Neon console](https://console.neon.tech/) or through the
    [Neon branching API](https://neon.com/docs/manage/branches).
 2. Give the migration job the branch’s direct connection URL as `DATABASE_URL`.
-3. Run `pnpm db:migrate` first; confirm that only `0004_approval_control_plane.sql` is pending on an
-   already-migrated database.
+3. Run `pnpm db:migrate` first; confirm that the expected ordered migrations are pending and that
+   the chain ends with `0007_autonomous_approval_grants.sql`.
 4. Run `pnpm db:migrate:apply` only against the temporary branch.
 5. Run the integration suite with the temporary owner URL only for fixture setup and the
    least-privilege runtime URL for every service operation:
@@ -120,7 +136,8 @@ The remaining human gate is intentionally external:
 1. review and sign the canonical manifest;
 2. apply the migration to the approved production Neon branch using the direct role;
 3. deploy the exact image digest;
-4. insert the founder, ARBITER, deployment-guard, and public keys through the one-time owner session;
+4. insert the founder, ARBITER, deployment-guard, automation-requester, automation-guard, and public
+   keys through the governed owner session;
 5. insert the single `system_bootstrapped` event, KMS receipt, and `bootstrap` row in one transaction;
 6. replay the complete chain; and
 7. remove the owner session and verify the API role cannot write `bootstrap` or mint a second genesis.

@@ -279,6 +279,65 @@ export async function findReceiptSigningKey(client, keyId) {
   return result.rows[0] ?? null;
 }
 
+export async function findAutonomousGrantClaim(client, approvalInternalId) {
+  const result = await client.query(`
+    SELECT *
+    FROM heady_approval.autonomous_grant_claims
+    WHERE approval_id = $1
+  `, [approvalInternalId]);
+  return result.rows[0] ?? null;
+}
+
+export async function findAutonomousGrantClaimByNonce(client, executionNonce) {
+  const result = await client.query(`
+    SELECT *
+    FROM heady_approval.autonomous_grant_claims
+    WHERE execution_nonce = $1
+  `, [executionNonce]);
+  return result.rows[0] ?? null;
+}
+
+export async function lockAutonomousExecutionNonce(client, executionNonce) {
+  await client.query(
+    "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+    [`autonomous-execution:${executionNonce}`],
+  );
+}
+
+export async function insertAutonomousGrantClaim(client, value) {
+  const result = await client.query(`
+    INSERT INTO heady_approval.autonomous_grant_claims (
+      approval_id,
+      authorization_event_id,
+      requester_principal_id,
+      execution_nonce,
+      capability,
+      subject_sha256,
+      payload_sha256,
+      diff_sha256,
+      policy_sha256,
+      operation_sha256,
+      approval_expires_at,
+      claimed_at
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    RETURNING *
+  `, [
+    value.approvalInternalId,
+    value.authorizationEventId,
+    value.requesterPrincipalId,
+    value.executionNonce,
+    value.capability,
+    value.subjectSha256,
+    value.payloadSha256,
+    value.diffSha256,
+    value.policySha256,
+    value.operationSha256,
+    value.approvalExpiresAt,
+    value.claimedAt,
+  ]);
+  return result.rows[0];
+}
+
 export async function insertEvent(client, value) {
   await client.query(`
     INSERT INTO heady_approval.events (

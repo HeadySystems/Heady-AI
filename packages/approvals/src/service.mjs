@@ -12,7 +12,9 @@ import {
 } from "@heady/shared";
 import {
   APPROVAL_LIFETIME_MS,
+  AUTONOMOUS_APPROVAL_LIFETIME_MS,
   classifyChange,
+  isAutonomousBlockedPath,
   isPatentZonePath,
   normalizeZonePath,
   requiredEvidenceFor,
@@ -23,7 +25,7 @@ import {
   safeHashEqual,
   sha256,
 } from "./canonical.mjs";
-import { buildEventPayload } from "./events.mjs";
+import { buildEventPayload, eventPayloadFromRow } from "./events.mjs";
 import {
   actorSnapshot,
   assertEvidenceAllowed,
@@ -34,6 +36,8 @@ import {
 import { buildPendingPolicyInput, buildPolicyInput } from "./policy-input.mjs";
 import {
   AttestationEvidenceSchema,
+  AutonomousApprovalRequestSchema,
+  AutonomousProtectionSchema,
   CreateApprovalSchema,
   DecisionEvidenceSchema,
   DeploymentProtectionSchema,
@@ -50,11 +54,15 @@ import {
   verifyReceipt,
 } from "./receipts.mjs";
 import { replayApprovalHistory } from "./audit.mjs";
+import { verifyAutonomousGrant } from "./autonomous.mjs";
 import {
   approvalView,
+  findAutonomousGrantClaim,
+  findAutonomousGrantClaimByNonce,
   findReceiptSigningKey,
   findIdempotentEvent,
   insertApproval,
+  insertAutonomousGrantClaim,
   insertAuditReplay,
   insertEvent,
   insertOutbox,
@@ -63,6 +71,7 @@ import {
   loadEvidence,
   loadEvents,
   loadReceipts,
+  lockAutonomousExecutionNonce,
   lockIdempotencyScope,
   markSubmitted,
   markSuperseded,
@@ -508,6 +517,114 @@ export function createApprovalService({
     });
   }
 
+  async function requestAutonomous({ actor: actorInput, input, idempotencyKey, traceId }) {
+    const parsed = parse(AutonomousApprovalRequestSchema, input);
+    const parsedIdempotencyKey = parse(IdempotencyKeySchema, idempotencyKey);
+    const parsedTraceId = parse(TraceIdSchema, traceId);
+    const normalizedPaths = [...new Set(parsed.zonePaths.map(normalizeZonePath))].sort();
+    const normalizedScopes = [...new Set(parsed.resourceScopes)].sort();
+    const normalized = {
+      ...parsed,
+      zonePaths: normalizedPaths,
+      resourceScopes: normalizedScopes,
+    };
+    const expectedOperationSha256 = operationHash("request_autonomous", normalized);
+
+    return database.tx(async (client) => {
+      const { actor, principal, replayApprovalId } = await beginOperation(
+        client,
+        actorInput,
+        parsedIdempotencyKey,
+        expectedOperationSha256,
+      );
+      if (replayApprovalId) return approvalView(client, replayApprovalId);
+      requireRole(principal, ["automation_requester"], "request autonomous approval");
+      const blockedPaths = normalizedPaths.filter(isAutonomousBlockedPath);
+      if (blockedPaths.length > 0) {
+        throw new ForbiddenError("autonomous approval targets a human-gated path", {
+          blockedPaths,
+        });
+      }
+
+      const now = asDate(clock);
+      const expiresAt = new Date(now.getTime() + AUTONOMOUS_APPROVAL_LIFETIME_MS);
+      const payload = {
+        schema: "heady.autonomous.approval.v1",
+        capability: parsed.capability,
+        requesterPrincipalId: principal.id,
+        requesterWorkloadIdentity: principal.workload_identity,
+        resourceScopes: normalizedScopes,
+        subjectSha256: parsed.subjectSha256,
+        rollbackPlanSha256: parsed.rollbackPlanSha256,
+        riskTier: parsed.riskTier,
+        reversible: parsed.reversible,
+        dryRunVerified: parsed.dryRunVerified,
+        networkAccess: parsed.networkAccess,
+        maxAffectedResources: parsed.maxAffectedResources,
+        maxDurationMs: parsed.maxDurationMs,
+      };
+      const payloadSha256 = sha256(payload);
+      const changeClass = classifyChange({
+        subjectType: "autonomous_process",
+        patentLocked: false,
+        zonePaths: normalizedPaths,
+      });
+      if (changeClass !== "autonomous_operation") {
+        throw new ForbiddenError("autonomous request was reclassified into a human-gated lane", {
+          changeClass,
+        });
+      }
+      const approval = await insertApproval(client, {
+        approvalId: ulidFactory(),
+        hcpIdentifier: parsed.hcpIdentifier,
+        title: parsed.title,
+        subjectType: "autonomous_process",
+        changeClass,
+        patentLocked: false,
+        renovatePatchOnly: false,
+        zonePaths: normalizedPaths,
+        payload,
+        payloadSha256,
+        diffSha256: parsed.diffSha256,
+        artifactDigest: null,
+        policyVersion: policyEvaluator.version,
+        policySha256: policyEvaluator.sourceSha256,
+        requiredEvidence: requiredEvidenceFor(changeClass),
+        createdBy: principal.id,
+        traceId: parsedTraceId,
+        idempotencyKey: parsedIdempotencyKey,
+        occurredAt: now.toISOString(),
+      });
+      const pendingApproval = await markSubmitted(client, approval.id, {
+        expiresAt: expiresAt.toISOString(),
+        requiredEvidence: requiredEvidenceFor(changeClass),
+        occurredAt: now.toISOString(),
+      });
+      const policyInput = buildPendingPolicyInput({
+        approval: pendingApproval,
+        evidenceRows: [],
+        nowEpochMs: now.getTime(),
+      });
+      const policyResult = await policyEvaluator.evaluate(policyInput);
+      await appendSignedEvent(client, {
+        approval: pendingApproval,
+        eventId: uuidFactory(),
+        eventType: "autonomous_requested",
+        principal,
+        actor,
+        reason: "bounded autonomous approval requested",
+        policyInput,
+        policyResult,
+        resultingState: "pending",
+        traceId: parsedTraceId,
+        idempotencyKey: parsedIdempotencyKey,
+        operationSha256: expectedOperationSha256,
+        occurredAt: now.toISOString(),
+      });
+      return approvalView(client, approval.approval_id);
+    });
+  }
+
   async function submit({
     approvalId,
     actor: actorInput,
@@ -771,6 +888,19 @@ export function createApprovalService({
         }
         if (parsed.patentClaims.length !== 0) {
           throw new ValidationError("Renovate attestations cannot claim patent review");
+        }
+      } else if (principal.principal_role === "automation_guard") {
+        evidenceClass = "automation_attestation";
+        if (approval.change_class !== "autonomous_operation") {
+          throw new ForbiddenError(
+            "automation guard attestations are limited to autonomous approvals",
+          );
+        }
+        if (principal.id === approval.created_by) {
+          throw new ForbiddenError("an autonomous requester cannot attest its own request");
+        }
+        if (parsed.patentClaims.length !== 0) {
+          throw new ValidationError("automation guard attestations cannot claim patent review");
         }
       } else {
         throw new ForbiddenError("service principal cannot issue approval attestations", {
@@ -1068,6 +1198,21 @@ export function createApprovalService({
     return approvalView(database, parsedApprovalId);
   }
 
+  async function getAutonomous({ approvalId, actor: actorInput }) {
+    const parsedApprovalId = parse(UlidSchema, approvalId);
+    const { principal } = await requirePrincipal(database, actorInput);
+    requireRole(
+      principal,
+      ["automation_requester", "automation_guard"],
+      "read autonomous approvals",
+    );
+    const approval = await requireApproval(database, parsedApprovalId);
+    if (approval.change_class !== "autonomous_operation") {
+      throw new ForbiddenError("workload reads are limited to autonomous approvals");
+    }
+    return approvalView(database, parsedApprovalId);
+  }
+
   async function receipts({ approvalId, actor: actorInput }) {
     const parsedApprovalId = parse(UlidSchema, approvalId);
     await requirePrincipal(database, actorInput);
@@ -1129,15 +1274,191 @@ export function createApprovalService({
     });
   }
 
+  async function autonomousProtection({
+    actor: actorInput,
+    input,
+    idempotencyKey,
+    traceId,
+  }) {
+    const parsed = parse(AutonomousProtectionSchema, input);
+    const parsedIdempotencyKey = parse(IdempotencyKeySchema, idempotencyKey);
+    const parsedTraceId = parse(TraceIdSchema, traceId);
+    const expectedOperationSha256 = operationHash("authorize_autonomous", parsed);
+
+    return database.tx(async (client) => {
+      const { actor, principal, replayApprovalId } = await beginOperation(
+        client,
+        actorInput,
+        parsedIdempotencyKey,
+        expectedOperationSha256,
+      );
+      if (replayApprovalId) {
+        const replayApproval = await requireApproval(client, replayApprovalId);
+        const replayClaim = await findAutonomousGrantClaim(client, replayApproval.id);
+        if (!replayClaim) {
+          throw new ConflictError("autonomous authorization replay is missing its grant claim");
+        }
+        return autonomousGrantView(client, replayApproval, replayClaim);
+      }
+      requireRole(principal, ["automation_requester"], "consume autonomous approval");
+      await lockAutonomousExecutionNonce(client, parsed.executionNonce);
+      const nonceClaim = await findAutonomousGrantClaimByNonce(
+        client,
+        parsed.executionNonce,
+      );
+
+      const approval = await requireApproval(client, parsed.approvalId, { forUpdate: true });
+      const reasons = [];
+      const now = asDate(clock);
+      if (approval.state !== "approved") reasons.push("approval_not_approved");
+      if (approval.change_class !== "autonomous_operation") {
+        reasons.push("not_autonomous_operation");
+      }
+      if (approval.created_by !== principal.id) reasons.push("requester_mismatch");
+      if (!approval.expires_at || new Date(approval.expires_at).getTime() <= now.getTime()) {
+        reasons.push("approval_expired");
+      }
+      if (!safeHashEqual(approval.payload_sha256, parsed.payloadSha256)) {
+        reasons.push("payload_hash_mismatch");
+      }
+      if (!safeHashEqual(approval.diff_sha256, parsed.diffSha256)) {
+        reasons.push("diff_hash_mismatch");
+      }
+      if (!safeHashEqual(approval.policy_sha256, parsed.policySha256)) {
+        reasons.push("policy_hash_mismatch");
+      }
+      if (!safeHashEqual(policyEvaluator.sourceSha256, parsed.policySha256)) {
+        reasons.push("active_policy_drift");
+      }
+      if (approval.canonical_payload.capability !== parsed.capability) {
+        reasons.push("capability_mismatch");
+      }
+      if (!safeHashEqual(approval.canonical_payload.subjectSha256, parsed.subjectSha256)) {
+        reasons.push("subject_hash_mismatch");
+      }
+      if (await findAutonomousGrantClaim(client, approval.id)) {
+        reasons.push("grant_already_consumed");
+      }
+      if (nonceClaim) reasons.push("execution_nonce_reused");
+
+      const evidenceRows = await loadEvidence(client, approval.id);
+      const policyInput = buildPendingPolicyInput({
+        approval,
+        evidenceRows,
+        nowEpochMs: now.getTime(),
+      });
+      const policyResult = await policyEvaluator.evaluate(policyInput);
+      if (!policyResult.allow) reasons.push(...policyResult.reasons, ...policyResult.missingEvidence);
+      const replay = await replayApprovalHistory({
+        approval,
+        events: await loadEvents(client, approval.id),
+        receipts: await loadReceipts(client, approval.id),
+        policyEvaluator,
+      });
+      if (!replay.valid) reasons.push("audit_replay_failed");
+      if (reasons.length > 0) {
+        return {
+          approvalId: parsed.approvalId,
+          allow: false,
+          reasons: [...new Set(reasons)].sort(),
+          policyResult,
+          auditReplay: replay,
+        };
+      }
+
+      const authorizationEventId = uuidFactory();
+      await appendSignedEvent(client, {
+        approval,
+        eventId: authorizationEventId,
+        eventType: "authorized",
+        principal,
+        actor,
+        reason: `one-time ${parsed.capability} authorization consumed`,
+        policyInput,
+        policyResult,
+        resultingState: "approved",
+        traceId: parsedTraceId,
+        idempotencyKey: parsedIdempotencyKey,
+        operationSha256: expectedOperationSha256,
+        occurredAt: now.toISOString(),
+      });
+      const claim = await insertAutonomousGrantClaim(client, {
+        approvalInternalId: approval.id,
+        authorizationEventId,
+        requesterPrincipalId: principal.id,
+        executionNonce: parsed.executionNonce,
+        capability: parsed.capability,
+        subjectSha256: parsed.subjectSha256,
+        payloadSha256: parsed.payloadSha256,
+        diffSha256: parsed.diffSha256,
+        policySha256: parsed.policySha256,
+        operationSha256: expectedOperationSha256,
+        approvalExpiresAt: new Date(approval.expires_at).toISOString(),
+        claimedAt: now.toISOString(),
+      });
+      return autonomousGrantView(client, approval, claim);
+    });
+  }
+
+  async function autonomousGrantView(client, approval, claim) {
+    const events = await loadEvents(client, approval.id);
+    const receipts = await loadReceipts(client, approval.id);
+    const event = events.find((candidate) => candidate.id === claim.authorization_event_id);
+    const receipt = receipts.find((candidate) => candidate.event_id === claim.authorization_event_id);
+    if (!event || !receipt) {
+      throw new HeadyError("autonomous grant is missing signed authorization material", {
+        code: "AUTONOMOUS_GRANT_INCOMPLETE",
+        status: 500,
+      });
+    }
+    const result = {
+      approvalId: approval.approval_id,
+      allow: true,
+      reasons: [],
+      grant: {
+        schema: "heady.autonomous.grant.v1",
+        capability: claim.capability,
+        subjectSha256: claim.subject_sha256,
+        payloadSha256: claim.payload_sha256,
+        diffSha256: claim.diff_sha256,
+        policySha256: claim.policy_sha256,
+        operationSha256: claim.operation_sha256,
+        executionNonce: claim.execution_nonce,
+        expiresAt: new Date(claim.approval_expires_at).toISOString(),
+        authorizationEvent: eventPayloadFromRow({
+          ...event,
+          external_approval_id: approval.approval_id,
+        }),
+        authorizationReceipt: publicReceipts([receipt])[0],
+      },
+    };
+    if (!verifyAutonomousGrant(result.grant, {
+      now: new Date(claim.claimed_at).getTime(),
+      trustedSigner: {
+        signingKeyId: receipt.signing_key_id,
+        publicJwk: receipt.registered_public_jwk,
+      },
+    })) {
+      throw new HeadyError("autonomous grant failed local signature verification", {
+        code: "AUTONOMOUS_GRANT_VERIFICATION",
+        status: 500,
+      });
+    }
+    return result;
+  }
+
   return Object.freeze({
     create,
+    requestAutonomous,
     submit,
     decide,
     attest,
     supersede,
     verify,
     get,
+    getAutonomous,
     receipts,
     deploymentProtection,
+    autonomousProtection,
   });
 }

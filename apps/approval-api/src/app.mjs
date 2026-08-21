@@ -37,6 +37,8 @@ export function createApprovalApi({
     failures: 0,
     decisions: 0,
     attestations: 0,
+    autonomousRequests: 0,
+    autonomousGrants: 0,
   };
   async function databaseHealth() {
     try {
@@ -110,6 +112,25 @@ export function createApprovalApi({
       traceId: request.traceId,
     });
     response.status(201).json({ ...result, traceId: request.traceId });
+  });
+
+  app.post("/api/autonomous-approvals", workload, async (request, response) => {
+    const result = await approvalService.requestAutonomous({
+      actor: request.actor,
+      input: request.body,
+      idempotencyKey: idempotencyKey(request),
+      traceId: request.traceId,
+    });
+    metrics.autonomousRequests += 1;
+    response.status(201).json({ ...result, traceId: request.traceId });
+  });
+
+  app.get("/api/autonomous-approvals/:approvalId", workload, async (request, response) => {
+    const result = await approvalService.getAutonomous({
+      approvalId: request.params.approvalId,
+      actor: request.actor,
+    });
+    response.json({ ...result, traceId: request.traceId });
   });
 
   app.post("/api/approvals/:approvalId/submit", human, async (request, response) => {
@@ -214,6 +235,17 @@ export function createApprovalApi({
       actor: request.actor,
       input: request.body,
     });
+    response.status(result.allow ? 200 : 409).json({ ...result, traceId: request.traceId });
+  });
+
+  app.post("/api/autonomous-protection", workload, async (request, response) => {
+    const result = await approvalService.autonomousProtection({
+      actor: request.actor,
+      input: request.body,
+      idempotencyKey: idempotencyKey(request),
+      traceId: request.traceId,
+    });
+    if (result.allow) metrics.autonomousGrants += 1;
     response.status(result.allow ? 200 : 409).json({ ...result, traceId: request.traceId });
   });
 

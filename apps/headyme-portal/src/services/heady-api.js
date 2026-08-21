@@ -19,6 +19,18 @@ async function _call(base, method, path, body, token) {
   return data;
 }
 
+async function _stateCall(base, path, token) {
+  const res = await fetch(`${base}${path}`, {
+    headers: {
+      accept: 'application/json',
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok && res.status !== 503) throw new Error(data.error || `${res.status} ${res.statusText}`);
+  return { ...data, httpStatus: res.status };
+}
+
 // ── shared SSE-over-fetch parser ───────────────────────────────────
 // EventSource cannot send an Authorization header, so every stream in
 // this client goes through fetch + ReadableStream. One parser, three
@@ -75,7 +87,7 @@ function cf(method, path, body, token) {
 }
 
 export const api = {
-  status:        ()              => cf('GET',  '/api/status'),
+  status:        (token)         => cf('GET',  '/api/status', null, token),
   files:         (path, token)   => cf('GET',  `/api/files?path=${encodeURIComponent(path || '.')}`, null, token),
   assign:        (task, token)   => cf('GET',  `/api/assign?task=${encodeURIComponent(task)}`, null, token),
   listProposals: ()              => cf('GET',  '/codeflow/proposals'),
@@ -121,10 +133,11 @@ export const events = {
    * @param {{ signal?: AbortSignal, lastEventId?: number, onOpen?: () => void, onClose?: (err?: Error) => void }} [opts]
    * @returns {{ close: () => void, lastEventId: () => number|null }}
    */
-  stream(onEvent, { signal, lastEventId = null, onOpen, onClose } = {}) {
+  stream(onEvent, { signal, lastEventId = null, token, onOpen, onClose } = {}) {
     let lastId = lastEventId;
     const handle = _sseStream(this.streamUrl(lastId), {
       signal,
+      headers: token ? { authorization: `Bearer ${token}` } : {},
       onOpen,
       onClose,
       onFrame: ({ id, data }) => {
@@ -139,6 +152,39 @@ export const events = {
 // ── Console summary (§8 honeycomb data source, same origin as events) ──
 export const consoleApi = {
   summary: (token) => _call(CODEFLOW_BASE, 'GET', '/api/console/summary', undefined, token),
+};
+
+// ── Nodes orchestration admin API ─────────────────────────────────
+// Browser requests carry only a Firebase token. The portal gateway verifies
+// the admin custom claim before injecting the internal service credential.
+export const nodesApi = {
+  registry:    (token)              => cf('GET', '/api/nodes', null, token),
+  readiness:   (token)              => _stateCall(CODEFLOW_BASE, '/api/orchestration/readiness', token),
+  maintenance: (token)              => _stateCall(CODEFLOW_BASE, '/api/maintenance/health', token),
+  audit:       (token, { limit, node } = {}) => {
+    const query = new URLSearchParams();
+    if (limit != null) query.set('limit', String(limit));
+    if (node) query.set('node', node);
+    return cf('GET', `/api/nodes/audit?${query.toString()}`, null, token);
+  },
+  task: (taskId, token) => cf('GET', `/api/orchestration/tasks/${encodeURIComponent(taskId)}`, null, token),
+  dispatch: (nodeId, body, token, { idempotencyKey, traceId }) => fetch(
+    `${CODEFLOW_BASE}/api/nodes/${encodeURIComponent(nodeId)}/dispatch`,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${token}`,
+        'idempotency-key': idempotencyKey,
+        'x-heady-trace-id': traceId,
+      },
+      body: JSON.stringify(body),
+    },
+  ).then(async (res) => {
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `${res.status} ${res.statusText}`);
+    return data;
+  }),
 };
 
 // ── legacy advisor API ─────────────────────────────────────────────
@@ -210,4 +256,3 @@ export const lens = {
     });
   },
 };
-

@@ -21,12 +21,14 @@ import { createEventsService } from "./events.mjs";
 import { createTasksService } from "./tasks.mjs";
 import { createConsoleService } from "./console.mjs";
 import { createHeady990Service } from "./heady990.mjs";
+import { createNodesService } from "./nodes.mjs";
+import { createMaintenanceService } from "./maintenance.mjs";
 
 /**
  * Build the origin app + its kernel. Does not listen — call `start()` (which boots the
  * kernel, whose `http` service performs the listen). Returns handles for tests + index.mjs.
  */
-export function createApp({ port = Number(process.env.PORT) || 3300, logger, events: eventsOpts, tasks: tasksOpts, console: consoleOpts, heady990: heady990Opts } = {}) {
+export function createApp({ port = Number(process.env.PORT) || 3300, logger, eventBus, events: eventsOpts, tasks: tasksOpts, nodes: nodesOpts, console: consoleOpts, heady990: heady990Opts } = {}) {
   const log = logger ?? createLogger({ base: { module: "heady-manager" } });
 
   // Golden record (facts.yaml). Resilient: if it can't be located from cwd, serve with
@@ -37,7 +39,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   const version = facts?.product?.version ?? "3.0.0";
 
   const kernel = new Kernel({ logger: log });
-  const intel = createIntelligence({ log });
+  const intel = createIntelligence({ log, bus: eventBus });
   const startedAt = Date.now();
   let server = null;
   let requestCount = 0;
@@ -100,10 +102,25 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   // tests and dev boots never implicitly touch a live database.
   const tasks = createTasksService({
     log,
-    publish: (subject, payload) => events.publish(subject, payload),
+    publish: (subject, payload, opts) => events.publish(subject, payload, opts),
     exporter,
     getDbPort: tasksOpts?.getDbPort ?? null,
   });
+
+  // Governed node integration: authenticated writes land in the existing
+  // Neon task ledger + outbox transaction before their best-effort SSE projection.
+  // Worker liveness is deliberately not inferred from registry presence.
+  const nodes = createNodesService({
+    log,
+    publish: (subject, payload, opts) => events.publish(subject, payload, opts),
+    getDbPort: nodesOpts?.getDbPort ?? null,
+    getInternalSecret: nodesOpts?.getInternalSecret ?? null,
+    getEventTransportStatus: () => intel.bus.status?.() ?? { name: "in-memory", ready: false },
+  });
+
+  // Cloud Run filesystem policy is read-only and explicit. Durable audit data
+  // belongs in Neon; no runtime route is permitted to prune files or JSONL.
+  const maintenance = createMaintenanceService({ nodesReadiness: nodes.readiness });
 
   // Console — §8 connector probes on the φ⁷ heartbeat; serves the honeycomb's
   // measured state (never asserted). Kernel probes read this same kernel.
@@ -129,6 +146,8 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   kernel.register(intel.service);
   kernel.register(events.service);
   kernel.register(tasks.service);
+  kernel.register(nodes.service);
+  kernel.register(maintenance.service);
   kernel.register(consoleSvc.service);
   kernel.register(heady990.service);
 
@@ -170,6 +189,12 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
   // Tasks routes (OpenAPI: enqueueTask / getTask) — the GATE-2 write path.
   tasks.routes(app);
 
+  // Node registry, durable dispatch/audit projection, and readiness truth.
+  nodes.routes(app);
+
+  // Read-only Cloud Run filesystem/maintenance posture.
+  maintenance.routes(app);
+
   // Console summary (§8) — the honeycomb's data source.
   consoleSvc.routes(app);
 
@@ -192,7 +217,7 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     product,
     version,
     tier: "origin (Cloud Run modular monolith)",
-    endpoints: ["/health", "/metrics", "/api/events", "/tasks", "/api/console/summary"],
+    endpoints: ["/health", "/metrics", "/api/events", "/tasks", "/api/nodes", "/api/orchestration/readiness", "/api/maintenance/health", "/api/console/summary"],
   }));
 
   app.use((_req, res) => res.status(404).json({ error: "not_found" }));
@@ -205,6 +230,8 @@ export function createApp({ port = Number(process.env.PORT) || 3300, logger, eve
     events,
     /** Tasks service handle (GATE-2 write path); `tasks.port()` for integration tests. */
     tasks,
+    nodes,
+    maintenance,
     log,
     /** Boot the kernel (dependency-ordered; the `http` service listens here). */
     start: () => kernel.boot(),

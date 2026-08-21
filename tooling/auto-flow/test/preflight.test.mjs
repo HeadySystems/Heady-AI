@@ -31,6 +31,18 @@ test("an unmatchable task yields zero recommendations (never a forced pick)", ()
   assert.equal(r.recommended.length, 0);
 });
 
+test("explicit skill references execute in user order even when descriptions are terse", () => {
+  const r = preflight("$heady-auto-flow $heady-durable-execution clean the repository");
+  assert.deepEqual(r.explicitRefs.slice(0, 2), ["heady-auto-flow", "heady-durable-execution"]);
+  assert.deepEqual(r.shortlist.slice(0, 2).map((x) => x.ref), ["heady-auto-flow", "heady-durable-execution"]);
+  assert.ok(r.shortlist.slice(0, 2).every((x) => x.explicit && x.decision === "EXECUTE"));
+});
+
+test("unknown explicit references are reported", () => {
+  const r = preflight("$heady-not-a-real-capability inspect state");
+  assert.deepEqual(r.unresolvedExplicitRefs, ["heady-not-a-real-capability"]);
+});
+
 test("φ-ternary thresholds hold: HALT ≈ 1/φ² < EXECUTE ≈ 1/φ", () => {
   const { HALT, EXECUTE } = preflight("x").thresholds;
   const PHI = (1 + Math.sqrt(5)) / 2;

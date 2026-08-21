@@ -38,12 +38,17 @@ export class HeadyConsoleHoneycomb extends HTMLElement {
 
   connectedCallback() {
     this._render();
-    this._load();
+    queueMicrotask(() => { if (this.isConnected) this._connect(); });
+  }
+
+  async _connect() {
+    const token = await Promise.resolve(this.tokenProvider?.()).catch(() => '');
+    await this._load(token);
     this._stream = events.stream((evt) => {
       if (evt?.type !== SUBJECT || !this._summary) return;
       this._summary = applyTransition(this._summary, { id: evt.payload.id, to: evt.payload.to, detail: evt.payload.detail });
       this._render();
-    }, { onOpen: () => this._load() }); // reconnect ⇒ refresh the full truth
+    }, { token, onOpen: () => this._load(token) }); // reconnect ⇒ refresh the full truth
   }
 
   disconnectedCallback() {
@@ -51,9 +56,16 @@ export class HeadyConsoleHoneycomb extends HTMLElement {
     this._stream = null;
   }
 
-  async _load() {
+  reconnect() {
+    this._stream?.close();
+    this._stream = null;
+    this._connect();
+  }
+
+  async _load(existingToken) {
     try {
-      this._summary = await consoleApi.summary();
+      const token = existingToken || await Promise.resolve(this.tokenProvider?.()).catch(() => '');
+      this._summary = await consoleApi.summary(token);
       this._error = null;
     } catch (err) {
       // Honest global-error state — the honeycomb never renders stale cells as fresh.

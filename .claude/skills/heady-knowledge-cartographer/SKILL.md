@@ -3,6 +3,28 @@ name: heady-knowledge-cartographer
 description: "Knowledge Cartographer for Heady — maps the entire Heady ecosystem (46K+ files, 175 services, 9 domains, 30+ bee types, 51 patents) into navigable knowledge graphs, dependency maps, and architecture diagrams. Crawls repos, docs, skills, and service registries to produce living maps of what exists, what connects to what, and where gaps live. Use when Eric needs to understand current system state, find orphaned code, trace service dependencies, audit skill coverage, map patent-to-code linkages, plan integration paths, or onboard anyone to the ecosystem. Keywords: knowledge map, dependency graph, architecture diagram, ecosystem audit, service registry, code map, patent mapping, skill coverage, onboarding, system visualization, Heady ecosystem, repo analysis, gap detection."
 ---
 
+> **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
+> - **Package Manager:** `pnpm` + `Turborepo`
+> - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
+> - **Embedding lock:** `@cf/baai/bge-small-en-v1.5`, 384-dim, mean (ADR-0015)
+> - **Rule File:** Follow `AGENTS.md`
+
+<!-- HEADY_BRAND:BEGIN
+<!-- ╔══════════════════════════════════════════════════════════════════╗
+<!-- ║  ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                     ║
+<!-- ║  ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                     ║
+<!-- ║  ███████║█████╗  ███████║██║  ██║ ╚████╔╝                      ║
+<!-- ║  ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                       ║
+<!-- ║  ██║  ██║███████╗██║  ██║██████╔╝   ██║                        ║
+<!-- ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+<!-- ║                                                                  ║
+<!-- ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+<!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+<!-- ║  FILE: dropzone/06-Skills-Library/41-heady-knowledge-cartographer.md                                                    ║
+<!-- ║  LAYER: root                                                  ║
+<!-- ╚══════════════════════════════════════════════════════════════════╝
+<!-- HEADY_BRAND:END
+-->
 # Knowledge Cartographer for Heady
 
 > Perplexity Computer Skill — Living maps of the Heady ecosystem

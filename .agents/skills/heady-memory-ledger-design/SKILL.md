@@ -1,3 +1,11 @@
+---
+name: heady-memory-ledger-design
+description: Design the Heady Memory Ledger with temporal indexing and privacy controls. Use when architecting persistent memory systems, defining retention policies, building privacy-aware recall, implementing memory expiry and redaction, or designing the ledger schema for Heady personal memory.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-memory-ledger-design
-description: Design the Heady Memory Ledger with temporal indexing and privacy controls. Use when architecting persistent memory systems, defining retention policies, building privacy-aware recall, implementing memory expiry and redaction, or designing the ledger schema for Heady personal memory.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Memory Ledger Design
 
 Use this skill when you need to **architect, extend, or refine the Heady Memory Ledger** — the persistent, privacy-aware memory layer that gives Heady long-term recall with temporal indexing and user-controlled data governance.

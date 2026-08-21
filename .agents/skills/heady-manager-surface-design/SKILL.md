@@ -1,3 +1,11 @@
+---
+name: heady-manager-surface-design
+description: Design the Heady Mission Control Manager Surface — a unified dashboard for orchestrating agents, monitoring tasks, managing permissions, and controlling the Heady ecosystem. Use when planning admin UIs, agent dashboards, system health views, or operational control planes.
+metadata:
+  author: eric-haywood
+  version: '1.0'
+---
+
 > **OPTIMAL BUILD NOTICE:** This file was auto-migrated from the current Heady build into the Heady-AI Latent OS (v2.0.0) by `@heady/data-consistency` sync.
 > - **Package Manager:** `pnpm` + `Turborepo`
 > - **Stores:** Neon pgvector (authority) · Vectorize (derived edge cache, 384-dim) · Redis/KV (best-effort). **Qdrant dropped (ADR-0003 amended, R2).**
@@ -20,14 +28,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->
----
-name: heady-manager-surface-design
-description: Design the Heady Mission Control Manager Surface — a unified dashboard for orchestrating agents, monitoring tasks, managing permissions, and controlling the Heady ecosystem. Use when planning admin UIs, agent dashboards, system health views, or operational control planes.
-metadata:
-  author: eric-haywood
-  version: '1.0'
----
-
 # Heady Manager Surface Design
 
 Use this skill when you need to **design, plan, or extend the Mission Control Manager Surface** — Heady's unified operational dashboard for monitoring, managing, and orchestrating the entire Heady ecosystem.

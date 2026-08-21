@@ -24,10 +24,9 @@ function readPolicy() {
             /core\.\d+$/,
             /\.cache$/i,
         ],
-        forbiddenContentPatterns: [
-            /serviceWorker\.register/i,
-            /navigator\.serviceWorker/i,
-        ],
+        // PWA service-worker registration is source code, not a filesystem
+        // hygiene violation. Content policy belongs to governed source review.
+        forbiddenContentPatterns: [],
     };
 }
 
@@ -74,25 +73,41 @@ function runMaintenance(options = {}) {
     const policy = readPolicy();
     let runtimeTracked = [];
     let suspects = [];
+    let scanError = null;
 
     try {
         const gitFiles = require('child_process')
-            .execSync('git ls-files', { cwd: ROOT, encoding: 'utf8' })
+            .execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' })
             .split('\n')
             .filter(Boolean);
+        const existingGitFiles = gitFiles.filter((file) => fs.existsSync(path.join(ROOT, file)));
 
-        runtimeTracked = findRuntimeFileViolations(gitFiles, policy.forbiddenRuntimePatterns);
-        suspects = findForbiddenContentReferences(gitFiles, policy.forbiddenContentPatterns);
-    } catch {
-        // offline or not a git repo
+        runtimeTracked = findRuntimeFileViolations(existingGitFiles, policy.forbiddenRuntimePatterns);
+        suspects = findForbiddenContentReferences(existingGitFiles, policy.forbiddenContentPatterns);
+    } catch (error) {
+        scanError = String(error && error.message ? error.message : error);
     }
 
     return {
         checkedAt: new Date().toISOString(),
         runtimeTrackedCount: runtimeTracked.length,
+        runtimeTracked,
         suspectDefinitionCount: suspects.length,
-        applied: options.apply === true,
+        suspects,
+        mutationRequested: options.apply === true,
+        applied: false,
+        mutationPolicy: 'blocked — runtime filesystems are ephemeral; replace the immutable image',
+        scanError,
     };
+}
+
+if (require.main === module) {
+    const mutationRequested = process.argv.includes('--apply');
+    const report = runMaintenance({ apply: mutationRequested });
+    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    if (mutationRequested || report.scanError || report.runtimeTrackedCount > 0 || report.suspectDefinitionCount > 0) {
+        process.exitCode = 1;
+    }
 }
 
 module.exports = {

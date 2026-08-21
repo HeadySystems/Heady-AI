@@ -1,0 +1,13 @@
+{
+  "name": "@heady/source-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Neon universal SSOT source revision ledger and Merkle reconciliation port.",
+  "exports": { ".": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  }
+}

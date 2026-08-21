@@ -18,11 +18,13 @@ import {
   classifyChange,
   createUlid,
   CreateApprovalSchema,
+  AutonomousApprovalRequestSchema,
   EVIDENCE_CEREMONY_MAX_MS,
   publicJwkFingerprint,
   safeHashEqual,
   sha256,
   verifyEvidenceCeremony,
+  verifyAutonomousGrant,
   verifyReceipt,
 } from "../src/index.mjs";
 
@@ -117,6 +119,40 @@ test("create schema is strict and validates exact digest and repository path sha
   }));
 });
 
+test("autonomous request schema permits only bounded reversible low-risk work", () => {
+  const valid = {
+    hcpIdentifier: "HCP-0033",
+    title: "Sign an autonomous source-authorship operation",
+    capability: "source_authorship",
+    zonePaths: ["packages/example/src/index.mjs"],
+    resourceScopes: ["repo:Heady-AI/packages/example"],
+    subjectSha256: "1".repeat(64),
+    diffSha256: "2".repeat(64),
+    rollbackPlanSha256: "3".repeat(64),
+    riskTier: "low",
+    reversible: true,
+    dryRunVerified: true,
+    networkAccess: "none",
+    maxAffectedResources: 1,
+    maxDurationMs: 1_000,
+  };
+  assert.equal(AutonomousApprovalRequestSchema.parse(valid).reversible, true);
+  assert.throws(() => AutonomousApprovalRequestSchema.parse({ ...valid, reversible: false }));
+  assert.throws(() => AutonomousApprovalRequestSchema.parse({
+    ...valid,
+    resourceScopes: ["https://untrusted.example/path"],
+  }));
+  assert.throws(() => CreateApprovalSchema.parse({
+    hcpIdentifier: "HCP-0033",
+    title: "bypass dedicated route",
+    subjectType: "autonomous_process",
+    patentLocked: false,
+    zonePaths: valid.zonePaths,
+    payload: {},
+    diffSha256: valid.diffSha256,
+  }));
+});
+
 test("evidence ceremonies bind every approval hash and reject expiry or tampering", () => {
   const { privateKey, publicJwk } = signingKey();
   const now = Date.parse("2026-07-24T12:00:00.000Z");
@@ -176,6 +212,132 @@ test("receipt verification detects payload and signature tampering", () => {
     payloadSha256,
     signature: "not_base64url!",
     publicJwk,
+  }), false);
+});
+
+test("autonomous grant verification binds operation, policy, event, and KMS receipt", () => {
+  const { privateKey, publicJwk } = signingKey();
+  const issuedAt = "2026-07-24T12:00:00.000Z";
+  const expiresAt = "2026-07-24T12:21:00.000Z";
+  const approvalId = "01K10000000000000000000000";
+  const hashes = {
+    subjectSha256: "1".repeat(64),
+    payloadSha256: "2".repeat(64),
+    diffSha256: "3".repeat(64),
+    policySha256: "4".repeat(64),
+  };
+  const executionNonce = "one-time-execution-nonce";
+  const operationSha256 = sha256({
+    action: "authorize_autonomous",
+    value: {
+      approvalId,
+      capability: "source_authorship",
+      ...hashes,
+      executionNonce,
+    },
+  });
+  const authorizationEvent = {
+    schema: "heady.approval.event.v1",
+    eventId: "ec9eb2d8-2412-4e16-8956-6e4ccdc863f2",
+    approvalId,
+    sequence: 3,
+    eventType: "authorized",
+    actorPrincipalId: "automation-requester",
+    actorKeyId: null,
+    evidenceClass: null,
+    decision: null,
+    verdict: null,
+    reason: "one-time source_authorship authorization consumed",
+    nonce: null,
+    evidenceExpiresAt: null,
+    evidenceEnvelope: null,
+    evidenceSha256: null,
+    evidenceSignature: null,
+    actorSnapshot: {
+      principalId: "automation-requester",
+      principalType: "service",
+      principalRole: "automation_requester",
+    },
+    policyInput: {
+      state: "pending",
+      changeClass: "autonomous_operation",
+      subjectType: "autonomous_process",
+      creatorPrincipalId: "automation-requester",
+      payloadSha256: hashes.payloadSha256,
+      diffSha256: hashes.diffSha256,
+      policySha256: hashes.policySha256,
+      expiresAtEpochMs: Date.parse(expiresAt),
+      nowEpochMs: Date.parse(issuedAt),
+      autonomous: {
+        capability: "source_authorship",
+        subjectSha256: hashes.subjectSha256,
+      },
+    },
+    policyResult: { allow: true },
+    resultingState: "approved",
+    previousEventSha256: "5".repeat(64),
+    traceId: "autonomous-grant-test",
+    idempotencyKey: "autonomous-grant-test-0001",
+    operationSha256,
+    occurredAt: issuedAt,
+  };
+  const receiptPayload = buildReceiptPayload({
+    receiptId: "01K10000000000000000000001",
+    approvalId,
+    eventId: authorizationEvent.eventId,
+    sequence: authorizationEvent.sequence,
+    eventSha256: sha256(authorizationEvent),
+    previousEventSha256: authorizationEvent.previousEventSha256,
+    payloadSha256: hashes.payloadSha256,
+    diffSha256: hashes.diffSha256,
+    policySha256: hashes.policySha256,
+    state: "approved",
+    issuedAt,
+  });
+  const receiptPayloadSha256 = sha256(receiptPayload);
+  const signature = sign(
+    null,
+    Buffer.from(canonicalize(receiptPayload)),
+    privateKey,
+  ).toString("base64url");
+  const grant = {
+    schema: "heady.autonomous.grant.v1",
+    capability: "source_authorship",
+    ...hashes,
+    operationSha256,
+    executionNonce,
+    expiresAt,
+    authorizationEvent,
+    authorizationReceipt: {
+      receiptId: receiptPayload.receiptId,
+      eventId: authorizationEvent.eventId,
+      payload: receiptPayload,
+      payloadSha256: receiptPayloadSha256,
+      signingKeyId: "projects/heady/locations/global/keyRings/approval/cryptoKeys/receipt/cryptoKeyVersions/1",
+      algorithm: "EC_SIGN_ED25519",
+      signature,
+      publicJwk,
+      publicJwkVersion: "projects/heady/locations/global/keyRings/approval/cryptoKeys/receipt/cryptoKeyVersions/1",
+      signatureVerified: true,
+      issuedAt,
+    },
+  };
+  const trustedSigner = {
+    signingKeyId: grant.authorizationReceipt.signingKeyId,
+    publicJwk,
+  };
+  assert.equal(verifyAutonomousGrant(grant, {
+    now: Date.parse(issuedAt),
+    trustedSigner,
+  }), true);
+  assert.equal(verifyAutonomousGrant(grant, { now: Date.parse(issuedAt) }), false);
+  assert.equal(verifyAutonomousGrant({
+    ...grant,
+    subjectSha256: "9".repeat(64),
+  }, { now: Date.parse(issuedAt), trustedSigner }), false);
+  assert.equal(verifyAutonomousGrant(grant, {
+    now: Date.parse(expiresAt),
+    trustedSigner,
   }), false);
 });
 

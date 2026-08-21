@@ -28,6 +28,7 @@
     "@heady/observability": "workspace:*",
     "@heady/secrets": "workspace:*",
     "@heady/contracts": "workspace:*",
-    "@heady/heady990": "workspace:*"
+    "@heady/heady990": "workspace:*",
+    "zod": "3.25.76"
   }
 }
