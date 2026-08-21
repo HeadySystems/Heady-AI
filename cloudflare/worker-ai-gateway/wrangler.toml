@@ -1,17 +1,16 @@
 name = "worker-ai-gateway"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
-account_id = "" # Set via wrangler secret
 
 # KV: Dynamic routing rules (updated by CostOptimizationBee)
 [[kv_namespaces]]
 binding = "AI_ROUTING_RULES"
-id = "" # Created on deploy
+id = "998b0134e0b24e7682a1b2b0bf4659fd"
 
 # KV: Request/cost tracking
 [[kv_namespaces]]
 binding = "AI_COST_TRACKER"
-id = "" # Created on deploy
+id = "a46c1791fd8247c5987f1ad8e40361b8"
 
 # Workers AI for local inference fallback
 [ai]

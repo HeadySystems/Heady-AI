@@ -15,11 +15,11 @@ id = "238f7a3f1c5c4060bfc07dccb78bd1ee"
 binding = "HEADY_MEMORY_VECS"
 index_name = "heady-memory-idx"
 
-# D1 Database for Leaderboard/Registry (Token lacks permission, skipped for now)
-# [[d1_databases]]
-# binding = "HEADY_D1_DB"
-# database_name = "heady_db"
-# database_id = "PENDING_ID"
+# D1 Database for Leaderboard/Registry
+[[d1_databases]]
+binding = "HEADY_D1_DB"
+database_name = "heady_db"
+database_id = "75ecd31d-2c75-48ab-97d7-f1b10f73effd"
 
 # Workers AI
 [ai]

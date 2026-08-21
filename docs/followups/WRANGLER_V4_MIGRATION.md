@@ -24,9 +24,10 @@ Wrangler v4 ships:
 
 ## Affected packages.json
 
-- `apps/heady-portal-gateway/package.json` — `wrangler: "^3.90.0"`
-- `apps/heady-portal-proxy/package.json` — `wrangler: "^3.90.0"`
+- `apps/heady-portal-gateway/package.json` — `wrangler: "^3.114.17"`
+- `apps/heady-portal-proxy/package.json` — `wrangler: "^3.114.17"`
 - `apps/heady-edge-gatekeeper/package.json` — `wrangler: "^3.114.17"`
+- `cloudflare/heady-edge-node/package.json` — migrated to `wrangler: "4.125.0"`
 
 ## Migration Steps
 
@@ -41,4 +42,5 @@ Wrangler v4 ships:
 
 - `node-gyp@9.4.1` still pins `cacache@16.1.3 → tar@6.2.1`. Upgrading `node-gyp` to v10
   will pick up `cacache@18+` with `tar@7.x`. Check if `node-gyp` is a direct dep anywhere.
-- `cloudflare/heady-edge-node` is a legacy directory — its wrangler version is irrelevant.
+- `cloudflare/heady-edge-node` is now included in the pnpm workspace and root lockfile. Its
+  Wrangler 4.125.0 dry-run resolves the configured KV, D1, Vectorize, and Workers AI bindings.
