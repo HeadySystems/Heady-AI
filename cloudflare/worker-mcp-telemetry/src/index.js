@@ -91,9 +91,13 @@ export default {
         const origin = request.headers.get('Origin') || '';
         const allowedOrigins = (env.ALLOWED_ORIGINS || '').split(',');
 
+        if (origin && !allowedOrigins.includes(origin)) {
+            return Response.json({ error: 'Origin not allowed' }, { status: 403 });
+        }
+
         // CORS headers
         const corsHeaders = {
-            'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
+            ...(origin ? { 'Access-Control-Allow-Origin': origin } : {}),
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Heady-Token',
         };
@@ -113,9 +117,7 @@ export default {
 
         // ── Route to Durable Object ────────────────────────────
         if (url.pathname.startsWith('/telemetry')) {
-            // Auth check
-            const token = request.headers.get('X-Heady-Token') || url.searchParams.get('token');
-            if (!token || token !== env.HEADY_TELEMETRY_TOKEN) {
+            if (!isAuthorized(request, env)) {
                 return Response.json({ error: 'Unauthorized' }, { status: 401, headers: corsHeaders });
             }
 
@@ -133,3 +135,11 @@ export default {
         return Response.json({ error: 'Not found' }, { status: 404, headers: corsHeaders });
     },
 };
+
+function isAuthorized(request, env) {
+    const configured = env.HEADY_TELEMETRY_TOKEN;
+    if (!configured) return false;
+    const bearer = request.headers.get('Authorization') || '';
+    const header = request.headers.get('X-Heady-Token') || '';
+    return bearer === `Bearer ${configured}` || header === configured;
+}

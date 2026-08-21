@@ -32,20 +32,26 @@ const PROVIDER_ENDPOINTS = {
 
 export default {
     async fetch(request, env) {
-        if (request.method !== 'POST') {
-            return new Response(JSON.stringify({ routes: DEFAULT_ROUTES }), {
-                headers: { 'Content-Type': 'application/json' },
-            });
+        if (!isAuthorized(request, env)) {
+            return json({ error: 'Unauthorized' }, 401);
         }
 
-        const body = await request.json();
+        if (request.method !== 'POST') {
+            return json({ routes: DEFAULT_ROUTES });
+        }
+
+        let body;
+        try {
+            body = await request.json();
+        } catch {
+            return json({ error: 'Invalid JSON body' }, 400);
+        }
         const intent = body.intent || 'chat';
-        const authHeader = request.headers.get('Authorization');
 
         // Check for dynamic routing overrides from CostOptimizationBee
         let route;
         try {
-            const override = await env.HEADY_AI_ROUTES.get(`route:${intent}`, { type: 'json' });
+            const override = await env.AI_ROUTING_RULES.get(`route:${intent}`, { type: 'json' });
             route = override || DEFAULT_ROUTES[intent] || DEFAULT_ROUTES.chat;
         } catch {
             route = DEFAULT_ROUTES[intent] || DEFAULT_ROUTES.chat;
@@ -53,7 +59,7 @@ export default {
 
         // Workers AI (local edge inference)
         if (route.provider === 'workers-ai') {
-            const result = await env.HEADY_AI.run(route.model, {
+            const result = await env.WORKERS_AI.run(route.model, {
                 messages: body.messages || [{ role: 'user', content: body.prompt || '' }],
             });
             return new Response(JSON.stringify({ provider: 'workers-ai', model: route.model, result }), {
@@ -67,7 +73,7 @@ export default {
             return new Response(JSON.stringify({ error: 'Unknown provider' }), { status: 400 });
         }
 
-        const apiKey = await env.HEADY_AI_ROUTES.get(`key:${route.provider}`);
+        const apiKey = await env.AI_ROUTING_RULES.get(`key:${route.provider}`);
         if (!apiKey) {
             return new Response(JSON.stringify({ error: 'API key not configured for ' + route.provider }), { status: 500 });
         }
@@ -86,7 +92,7 @@ export default {
             const result = await response.json();
 
             // Log usage for cost tracking
-            await env.HEADY_AI_ROUTES.put(`usage:${route.provider}:${Date.now()}`, JSON.stringify({
+            await env.AI_COST_TRACKER.put(`usage:${route.provider}:${Date.now()}`, JSON.stringify({
                 provider: route.provider,
                 model: route.model,
                 intent,
@@ -94,12 +100,10 @@ export default {
                 timestamp: new Date().toISOString(),
             }), { expirationTtl: 86400 });
 
-            return new Response(JSON.stringify({
+            return json({
                 provider: route.provider,
                 model: route.model,
                 result,
-            }), {
-                headers: { 'Content-Type': 'application/json' },
             });
         } catch (err) {
             // Failover: try next provider
@@ -107,6 +111,20 @@ export default {
         }
     },
 };
+
+function isAuthorized(request, env) {
+    const configured = env.HEADY_API_KEY;
+    if (!configured) return false;
+    const value = request.headers.get('Authorization') || '';
+    return value === `Bearer ${configured}`;
+}
+
+function json(value, status = 200) {
+    return new Response(JSON.stringify(value), {
+        status,
+        headers: { 'Content-Type': 'application/json' },
+    });
+}
 
 function formatForProvider(provider, model, body) {
     const messages = body.messages || [{ role: 'user', content: body.prompt || '' }];

@@ -2,6 +2,19 @@ import { Hono } from 'hono'
 
 const app = new Hono()
 
+const protectedPath = (path) => path === '/mcp' || path.startsWith('/mcp/') || path.startsWith('/api/')
+
+app.use('*', async (c, next) => {
+    if (c.req.method === 'OPTIONS') return next()
+    if (!protectedPath(new URL(c.req.url).pathname)) return next()
+    const configured = c.env.HEADY_API_KEY
+    const authorization = c.req.header('Authorization') || ''
+    if (!configured || authorization !== `Bearer ${configured}`) {
+        return c.json({ error: 'Unauthorized' }, 401)
+    }
+    return next()
+})
+
 // ═══════════════════════════════════════════════════════════════
 // MCP Tool Registry — All Heady tools available at the edge
 // ═══════════════════════════════════════════════════════════════
@@ -57,13 +70,13 @@ async function callTool(name, args, env) {
 
             case 'heady_embed': {
                 if (!ai) return text('Edge AI binding not available')
-                const result = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.text] })
+                const result = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.text] })
                 return json({ dimensions: result.data[0].length, embedding: result.data[0].slice(0, 5).concat(['...']) })
             }
 
             case 'heady_memory': {
                 if (!ai || !vecs) return text('Vectorize/AI bindings not available')
-                const embeddings = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.query] })
+                const embeddings = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.query] })
                 const matches = await vecs.query(embeddings.data[0], { topK: args.limit || 5, returnMetadata: true })
                 return json({
                     query: args.query,
@@ -79,7 +92,7 @@ async function callTool(name, args, env) {
             case 'heady_search': {
                 if (!ai || !vecs) return text('Vectorize/AI bindings not available')
                 // Stage 1: Embed
-                const embeddings = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.query] })
+                const embeddings = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.query] })
                 // Stage 2: Vector search
                 const vectorResults = await vecs.query(embeddings.data[0], { topK: args.limit || 10, returnMetadata: true })
                 const matches = vectorResults.matches.map(m => ({
@@ -110,7 +123,7 @@ async function callTool(name, args, env) {
 
             case 'heady_store': {
                 if (!ai || !vecs) return text('Vectorize/AI bindings not available')
-                const embeddings = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.content] })
+                const embeddings = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.content] })
                 const id = crypto.randomUUID()
                 await vecs.insert([{
                     id,
@@ -156,7 +169,7 @@ async function callTool(name, args, env) {
 
             case 'heady_learn': {
                 if (!ai || !vecs) return text('Vectorize/AI bindings not available')
-                const embeddings = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.content] })
+                const embeddings = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.content] })
                 const id = crypto.randomUUID()
                 await vecs.insert([{
                     id,
@@ -168,7 +181,7 @@ async function callTool(name, args, env) {
 
             case 'heady_recall': {
                 if (!ai || !vecs) return text('Vectorize/AI bindings not available')
-                const embeddings = await ai.run('@cf/baai/bge-large-en-v1.5', { text: [args.query] })
+                const embeddings = await ai.run('@cf/baai/bge-small-en-v1.5', { text: [args.query] })
                 const matches = await vecs.query(embeddings.data[0], { topK: args.topK || 5, returnMetadata: true })
                 return json({
                     query: args.query,
@@ -353,7 +366,7 @@ app.post('/api/memory/search', async (c) => {
     if (!c.env.HEADY_AI || !c.env.HEADY_MEMORY_VECS) {
         return c.json({ error: 'Bindings not active', fallback: true })
     }
-    const embeddings = await c.env.HEADY_AI.run('@cf/baai/bge-large-en-v1.5', { text: [query] })
+    const embeddings = await c.env.HEADY_AI.run('@cf/baai/bge-small-en-v1.5', { text: [query] })
     const matches = await c.env.HEADY_MEMORY_VECS.query(embeddings.data[0], { topK: limit, returnMetadata: true })
     return c.json({ success: true, matches: matches.matches })
 })
@@ -393,7 +406,7 @@ app.options('*', (c) => {
     return new Response(null, {
         status: 204,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'https://headymcp.com',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         },
