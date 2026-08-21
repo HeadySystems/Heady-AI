@@ -69,7 +69,10 @@ export const APPROVAL_LIFETIME_MS = Math.round(PHI * FIB[5] * FIB[3] * HOUR_MS);
 export const AUTONOMOUS_APPROVAL_LIFETIME_MS = Math.round(
   PHI * FIB[8] * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND,
 );
-export const AUTONOMOUS_MAX_AFFECTED_RESOURCES = FIB[8];
+// A full provider-catalog operation currently spans 24 resources. The next
+// Fibonacci boundary preserves a finite ceiling without fragmenting one
+// independently attested operation across multiple grants.
+export const AUTONOMOUS_MAX_AFFECTED_RESOURCES = FIB[9];
 export const AUTONOMOUS_MAX_DURATION_MS = AUTONOMOUS_APPROVAL_LIFETIME_MS;
 
 // A signed human/service evidence challenge may be at most φ × 5 minutes ahead.

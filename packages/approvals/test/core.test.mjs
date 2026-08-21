@@ -19,6 +19,7 @@ import {
   createUlid,
   CreateApprovalSchema,
   AutonomousApprovalRequestSchema,
+  AUTONOMOUS_MAX_AFFECTED_RESOURCES,
   EVIDENCE_CEREMONY_MAX_MS,
   publicJwkFingerprint,
   safeHashEqual,
@@ -137,6 +138,21 @@ test("autonomous request schema permits only bounded reversible low-risk work", 
     maxDurationMs: 1_000,
   };
   assert.equal(AutonomousApprovalRequestSchema.parse(valid).reversible, true);
+  assert.equal(AUTONOMOUS_MAX_AFFECTED_RESOURCES, 34);
+  const ceilingScopes = Array.from(
+    { length: AUTONOMOUS_MAX_AFFECTED_RESOURCES },
+    (_, index) => `provider:catalog-${index + 1}`,
+  );
+  assert.equal(AutonomousApprovalRequestSchema.parse({
+    ...valid,
+    resourceScopes: ceilingScopes,
+    maxAffectedResources: AUTONOMOUS_MAX_AFFECTED_RESOURCES,
+  }).resourceScopes.length, AUTONOMOUS_MAX_AFFECTED_RESOURCES);
+  assert.throws(() => AutonomousApprovalRequestSchema.parse({
+    ...valid,
+    resourceScopes: [...ceilingScopes, "provider:catalog-overflow"],
+    maxAffectedResources: AUTONOMOUS_MAX_AFFECTED_RESOURCES,
+  }));
   assert.throws(() => AutonomousApprovalRequestSchema.parse({ ...valid, reversible: false }));
   assert.throws(() => AutonomousApprovalRequestSchema.parse({
     ...valid,

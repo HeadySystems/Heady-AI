@@ -61,8 +61,10 @@ autonomous_capabilities := {
 	"maintenance_execution",
 }
 
-# FIB[8] and round(PHI * FIB[8] * 60 * 1000), pinned to the policy build.
-autonomous_max_affected_resources := 21
+# FIB[9] resource ceiling and round(PHI * FIB[8] * 60 * 1000) duration,
+# pinned to the policy build. Expanding resource breadth does not expand
+# capability, risk tier, path, duration, evidence, or one-time nonce bounds.
+autonomous_max_affected_resources := 34
 autonomous_max_duration_ms := 2038723
 
 default patent_escalated := false

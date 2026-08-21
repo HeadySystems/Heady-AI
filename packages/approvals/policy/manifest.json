@@ -2,6 +2,6 @@
   "policyVersion": "heady.approval.v2",
   "entrypoint": "heady/approval/decision",
   "opaVersion": "1.18.2",
-  "sourceSha256": "849271cdb90f50789054a139d40c85b33bfa85d41d89fb1c13589b09e8693328",
-  "wasmSha256": "441ec2e9bc0d0cb7e440d9d356e189c3567cfa0549b3b89cfbd55dcebe8c08e4"
+  "sourceSha256": "a58695bb843e9b4b3ec918559c3a0499a06ee20e4ea4d4905fa8f7eb429238f6",
+  "wasmSha256": "a9a0676522a174a6cf0d543db05de14b7271c80f36406607f62cd70f06f485ff"
 }

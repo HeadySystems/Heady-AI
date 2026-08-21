@@ -184,6 +184,37 @@ test("autonomous approvals require an independent guard and bounded safe payload
   }));
   assert.equal(allowed.allow, true);
 
+  const ceilingScopes = Array.from(
+    { length: 34 },
+    (_, index) => `provider:catalog-${index + 1}`,
+  );
+  const ceilingAllowed = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-requester",
+    autonomous: {
+      ...autonomous,
+      resourceScopes: ceilingScopes,
+      maxAffectedResources: ceilingScopes.length,
+    },
+    evidence: [automationEvidence()],
+  }));
+  assert.equal(ceilingAllowed.allow, true);
+
+  const overflowDenied = await evaluate(policyInput({
+    changeClass: "autonomous_operation",
+    subjectType: "autonomous_process",
+    creatorPrincipalId: "automation-requester",
+    autonomous: {
+      ...autonomous,
+      resourceScopes: [...ceilingScopes, "provider:catalog-overflow"],
+      maxAffectedResources: ceilingScopes.length + 1,
+    },
+    evidence: [automationEvidence()],
+  }));
+  assert.equal(overflowDenied.allow, false);
+  assert.ok(overflowDenied.reasons.includes("autonomous_payload_invalid"));
+
   const selfApproved = await evaluate(policyInput({
     changeClass: "autonomous_operation",
     subjectType: "autonomous_process",
