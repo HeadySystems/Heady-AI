@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Agent Handoff — pure core v1.0.0                          ║
+// ║  HEADY™ Agent Handoff — pure core v1.1.0                          ║
 // ║  Side-effect-free: parses git deltas, shapes the checkpoint, and   ║
 // ║  renders the handoff bundle. The CLI (handoff.mjs) feeds it real   ║
 // ║  git/gate output. Pure → fully unit-testable.                     ║
@@ -79,6 +79,15 @@ function verdictGlyph(ok) {
   return ok ? "✓" : "✗";
 }
 
+function verificationGlyph(result) {
+  return result.status === "error" ? "⚠" : verdictGlyph(result.ok);
+}
+
+function verificationLabel(result) {
+  if (result.ok) return "PASS ✓";
+  return result.status === "error" ? "ERROR ⚠" : "FAIL ✗";
+}
+
 /**
  * Render the full agent-readable handoff bundle (markdown).
  * @param {object} b
@@ -92,7 +101,8 @@ function verdictGlyph(ok) {
  */
 export function renderBundle(b) {
   const { groups, counts, total } = summarizeFiles(b.files ?? []);
-  const allGreen = (b.verification ?? []).every((v) => v.ok);
+  const verificationPerformed = (b.verification ?? []).length > 0;
+  const allGreen = verificationPerformed && b.verification.every((v) => v.ok);
   const out = [];
 
   out.push(`# Heady Agent Handoff — ${b.nowIso}`);
@@ -109,8 +119,8 @@ export function renderBundle(b) {
   out.push(`- **Branch:** \`${b.branch}\` at HEAD \`${b.headShort}\`${b.firstRun ? " *(first run — baseline)*" : ""}`);
   out.push(`- **Since:** ${b.firstRun ? "baseline" : `\`${b.sinceShort}\``} → ${(b.commits ?? []).length} commit(s), ${total} file(s) changed`);
   out.push(
-    `- **Verification:** ${(b.verification ?? []).map((v) => `${v.name} ${verdictGlyph(v.ok)}`).join(" · ") || "—"}` +
-      `${allGreen ? "" : "  ⚠️ see §4 for failures"}`
+    `- **Verification:** ${(b.verification ?? []).map((v) => `${v.name} ${verificationGlyph(v)}`).join(" · ") || "not run *(unverified)*"}` +
+      `${verificationPerformed && !allGreen ? "  ⚠️ see §4 for failures" : ""}`
   );
   if ((b.uncommitted ?? []).length) out.push(`- **Uncommitted in tree:** ${b.uncommitted.length} file(s) (§6)`);
   out.push("");
@@ -130,6 +140,7 @@ export function renderBundle(b) {
   out.push("");
   if (total === 0) {
     out.push("_No file changes in range._");
+    out.push("");
   } else {
     for (const code of ["A", "M", "D", "R", "C", "T"]) {
       const g = groups[code];
@@ -149,10 +160,14 @@ export function renderBundle(b) {
   // 4. Verification
   out.push("## 4. Verification results");
   out.push("");
-  out.push("| Gate | Status | Detail |");
-  out.push("|------|--------|--------|");
-  for (const v of b.verification ?? []) {
-    out.push(`| ${v.name} | ${v.ok ? "PASS ✓" : "FAIL ✗"} | ${(v.detail ?? "").replace(/\|/g, "\\|").slice(0, 160)} |`);
+  if (!verificationPerformed) {
+    out.push("_Verification not run; this bundle is unverified._");
+  } else {
+    out.push("| Gate | Status | Detail |");
+    out.push("|------|--------|--------|");
+    for (const v of b.verification ?? []) {
+      out.push(`| ${v.name} | ${verificationLabel(v)} | ${(v.detail ?? "").replace(/\|/g, "\\|").slice(0, 160)} |`);
+    }
   }
   out.push("");
 
@@ -168,37 +183,42 @@ export function renderBundle(b) {
   out.push("## 6. Open threads / not-done");
   out.push("");
   const failed = (b.verification ?? []).filter((v) => !v.ok);
-  if (failed.length === 0 && (b.uncommitted ?? []).length === 0) {
+  if (!verificationPerformed) {
+    out.push("- ⚠️ Verification was not run; this bundle is unverified.");
+    for (const u of b.uncommitted ?? []) out.push(`- Uncommitted: \`${u}\``);
+  } else if (failed.length === 0 && (b.uncommitted ?? []).length === 0) {
     out.push("_All gates green; working tree clean at handoff time._");
   } else {
-    for (const v of failed) out.push(`- ⚠️ Gate **${v.name}** is failing — ${(v.detail ?? "").slice(0, 200)}`);
+    for (const v of failed) {
+      const state = v.status === "error" ? "could not execute" : "is failing";
+      out.push(`- ⚠️ Gate **${v.name}** ${state} — ${(v.detail ?? "").slice(0, 200)}`);
+    }
     for (const u of b.uncommitted ?? []) out.push(`- Uncommitted: \`${u}\``);
   }
   out.push("");
 
-  // 7. Optimal Execution Guidelines
-  out.push("## 7. Optimal Execution Guidelines (Agent Primer)");
+  // 7. Authority-aware execution primer
+  out.push("## 7. Authority-Aware Execution Primer");
   out.push("");
-  out.push("**For the incoming AI Agent:** To handle the Heady ecosystem optimally, adhere to the following operational parameters:");
+  out.push("**For the incoming agent:** Treat this generated primer as explanatory context. Current `AGENTS.md`, accepted ADRs, validated facts/contracts, and implementation evidence remain authoritative.");
   out.push("");
   out.push("### Core Operating Directives");
-  out.push("- **Decisive Authority:** You gather input, but YOU make the final call. Act with certainty.");
-  out.push("- **Strict Compliance:** Adhere completely to `AGENTS.md` and `SOURCE_OF_TRUTH.md` (Section 5).");
+  out.push("- **Scoped Agency:** Act autonomously within the user's request while preserving non-bypassable human-review, cryptographic-governance, credential, destructive, and production gates.");
+  out.push("- **Authority Order:** Follow `AGENTS.md`, governance, accepted ADRs, validated facts/contracts, implementation evidence, then living explanations and plans/history.");
   out.push("- **Ownership:** You own the code you write. No placeholder implementations — no to-do/fix-me markers, no stubs. Write production-ready code. If an implementation is incomplete, fail the task and trigger a replan.");
   out.push("- **Proactive Advisory Mandate:** Always proactively identify and recommend infrastructure safeguards, cost-saving measures, and billing protections (e.g., usage-caps, enterprise configurations) whenever relevant context appears. Never wait for the user to ask.");
   out.push("");
   out.push("### Architectural Mandates");
-  out.push("- **Liquid Architecture & RAM-First Computing:** 3D vector space is the source of truth, APIs project from it.");
-  out.push("- **No Magic Numbers:** All retry intervals, pool sizes, and limits must be derived from `phi-constants.js` (φ-scaling where `phi=1.618`).");
+  out.push("- **Durable Data Authority:** Neon/pgvector is retrieval authority; Redis/KV is best-effort hot state and Vectorize is a reconstructible edge projection. Verify ADR-0051 activation before claiming source-ledger cutover.");
+  out.push("- **No Magic Numbers:** Derive retry intervals, pool sizes, and limits from `@heady/phi-math`.");
   out.push("- **ESM Only:** No CommonJS `require()`. Use `import/export`.");
   out.push("- **Zero Localhost:** All URLs must come from environment variables.");  // heady-allow:no-localhost — primer prose quoting the law, not a URL
   out.push("- **Zod Validation:** All API inputs must be validated at service boundaries.");
   out.push("- **UI & Styling:** Use Vite SPAs + Vanilla Web Components. Style with Sacred Geometry tokens (fibonacci spacing, glassmorphism) and NO heavy frameworks like React unless strictly necessary for 3D canvas.");
-  out.push("- **Pipeline Compliance:** Comply with the 21-stage HCFullPipeline orchestration and Continuous Semantic Logic (CSL) gating rules.");
+  out.push("- **Pipeline Compliance:** Use current governed workflows and CSL gates; historical workflow names do not create authority.");
   out.push("");
   out.push("### Style & Detail");
-  out.push("- Output must be highly structured, heavily utilizing Markdown (tables, bolded headers, code fences). Be intensely technical, precise, and entirely devoid of conversational filler.");
-  out.push("- Segment your reasoning into distinct architectural phases (e.g., Ingestion, Synthesis, Execution).");
+  out.push("- Lead with outcomes, use only the formatting needed for clarity, and separate observed facts from interpretation.");
   out.push("");
 
   // 8. Checkpoint

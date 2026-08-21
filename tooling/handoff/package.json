@@ -1,6 +1,6 @@
 {
   "name": "@heady/handoff",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "Heady agent handoff — incremental since-last-run summary + verification + a single agent-readable bundle to bring the next agent fully up to speed.",
@@ -10,6 +10,9 @@
     "build": "echo \"(no build — runnable ESM)\"",
     "test": "node --test",
     "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*"
   },
   "keywords": ["heady", "handoff", "agent", "context", "summary", "verification"]
 }

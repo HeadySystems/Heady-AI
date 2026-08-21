@@ -62,13 +62,15 @@ test("renderBundle produces all 8 sections and reflects verification", () => {
   });
   for (const h of ["# Heady Agent Handoff", "## 1. TL;DR", "## 2. Commits", "## 3. Files changed",
     "## 4. Verification", "## 5. Context to read", "## 6. Open threads",
-    "## 7. Optimal Execution Guidelines (Agent Primer)", "## 8. Checkpoint"]) {
+    "## 7. Authority-Aware Execution Primer", "## 8. Checkpoint"]) {
     assert.ok(md.includes(h), `missing section: ${h}`);
   }
   assert.ok(md.includes("packages/new.mjs"), "lists added file");
   assert.ok(md.includes("coherence** is failing"), "surfaces failing gate in open threads");
   assert.ok(md.includes("wip.mjs"), "surfaces uncommitted file");
   assert.ok(md.includes("deadbee"), "shows new checkpoint head");
+  assert.ok(md.includes("@heady/phi-math"), "uses the canonical phi-math package");
+  assert.ok(!md.includes("RAM-First"), "does not emit stale RAM-first authority language");
 });
 
 test("renderBundle marks first-run baseline", () => {
@@ -77,4 +79,22 @@ test("renderBundle marks first-run baseline", () => {
     commits: [], files: [], verification: [], contextFiles: [], uncommitted: [],
   });
   assert.ok(md.includes("first run") || md.includes("baseline"), "notes baseline on first run");
+  assert.ok(md.includes("bundle is unverified"), "does not describe skipped verification as green");
+  assert.ok(!md.includes("see §4 for failures"), "does not call skipped verification a failure");
+  assert.ok(md.includes("_Verification not run; this bundle is unverified._"), "labels the empty verification section");
+});
+
+test("renderBundle distinguishes execution errors from failing gates", () => {
+  const md = renderBundle({
+    nowIso: "t", head: "h", headShort: "h", branch: "b", firstRun: false,
+    sinceShort: "a", commits: [], files: [], contextFiles: [], uncommitted: [],
+    verification: [{
+      name: "secret-scan",
+      ok: false,
+      status: "error",
+      detail: "execution error EAGAIN: temporarily unavailable",
+    }],
+  });
+  assert.ok(md.includes("ERROR ⚠"), "labels a runner error separately from a gate failure");
+  assert.ok(md.includes("could not execute"), "uses accurate open-thread language");
 });

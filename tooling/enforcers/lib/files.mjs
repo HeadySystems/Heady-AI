@@ -8,11 +8,15 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
+import { workerData } from 'node:worker_threads';
 
 export const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 
 const git = (args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 })
   .split('\n').map((s) => s.trim()).filter(Boolean);
+const injectedFiles = Array.isArray(workerData?.headyGateFiles)
+  ? workerData.headyGateFiles.filter((file) => typeof file === 'string' && file.length > 0)
+  : null;
 
 /**
  * Select files to scan.
@@ -35,5 +39,5 @@ export function selectFiles(argv) {
     }
     return { mode: 'diff', base, files };
   }
-  return { mode: 'all', base: null, files: git(['ls-files']) };
+  return { mode: 'all', base: null, files: injectedFiles ?? git(['ls-files']) };
 }

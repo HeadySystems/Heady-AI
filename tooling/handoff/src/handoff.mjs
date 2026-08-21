@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  HEADY™ Agent Handoff v1.0.0                                      ║
+// ║  HEADY™ Agent Handoff v1.1.0                                      ║
 // ║  Catch the NEXT agent fully up to speed since the last handoff:    ║
 // ║   • delta of commits + files since the stored checkpoint           ║
 // ║   • verifies the change (law-lint · governance · enforcers ·       ║
-// ║     coherence) and records pass/fail                               ║
+// ║     coherence) and records pass/fail/execution-error               ║
 // ║   • emits one agent-readable bundle (docs/handoff/HANDOFF-*.md)    ║
 // ║     listing every file/doc/context source to read, in order        ║
 // ║   • advances the checkpoint so the next run is incremental         ║
@@ -21,6 +21,7 @@ import { spawnSync } from "node:child_process";
 import {
   loadCheckpoint, nextCheckpoint, parseNameStatus, parseCommits, renderBundle, FIELD_SEP,
 } from "./core.mjs";
+import { runGate } from "./gate-runner.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(HERE, "..", "..", "..");
@@ -40,21 +41,12 @@ function git(args) {
   return { code: r.status ?? 1, out: (r.stdout ?? "").replace(/\s+$/, ""), err: (r.stderr ?? "").trim() };
 }
 
-function runGate(name, cmdArgs) {
-  const r = spawnSync("node", cmdArgs, { cwd: REPO_ROOT, encoding: "utf8", maxBuffer: 1 << 24 });
-  const ok = (r.status ?? 1) === 0;
-  const text = `${r.stdout ?? ""}\n${r.stderr ?? ""}`.trim();
-  const detail = ok
-    ? (text.split("\n").find((l) => /clean|OK|in sync|complete/i.test(l)) ?? "passed")
-    : (text.split("\n").find((l) => /error|FAIL|violation|✗/i.test(l)) ?? "failed");
-  return { name, ok, detail: detail.replace(/\s+/g, " ").slice(0, 200) };
-}
-
-function main() {
+async function main() {
   if (git(["rev-parse", "--is-inside-work-tree"]).code !== 0) {
     process.stderr.write("handoff: not a git repository\n");
     process.exit(1);
   }
+  process.chdir(REPO_ROOT);
 
   const nowIso = new Date().toISOString();
   const head = git(["rev-parse", "HEAD"]).out;
@@ -80,21 +72,26 @@ function main() {
   const stat = git(["diff", "--stat", range]).out;
   const uncommitted = git(["status", "--porcelain"]).out
     .split("\n").map((l) => l.slice(3).trim()).filter(Boolean);
+  const candidateFiles = git(["ls-files", "--cached", "--others", "--exclude-standard"]).out
+    .split("\n").filter(Boolean);
 
   // Verification — resilient: each gate captured, never aborts the handoff.
   let verification = [];
   if (!flag("--no-verify")) {
-    verification = [
-      runGate("law-lint", ["tooling/law-lint/src/law-lint.mjs"]),
-      runGate("governance", ["tooling/governance-gate/src/governance-gate.mjs", "all"]),
-      runGate("no-loopback", [ENFORCER("no-localhost"), "--all"]),  // heady-allow:no-localhost — gate-runner references the law by name
-      runGate("glass-box", [ENFORCER("glass-box"), "--all"]),
-      runGate("secret-scan", [ENFORCER("secret-scan"), "--all"]),
-      runGate("zod-boundary", [ENFORCER("zod-boundary"), "--all"]),
-      runGate("phi-timing", [ENFORCER("phi-timing"), "--all"]),
-      runGate("projection-drift", ["tooling/projection-engine/bin/check-drift.mjs"]),
-      runGate("coherence", ["tooling/coherence/src/coherence.mjs", "all"]),
+    const gates = [
+      ["law-lint", ["tooling/law-lint/src/law-lint.mjs"]],
+      ["governance", ["tooling/governance-gate/src/governance-gate.mjs", "all"]],
+      ["no-loopback", [ENFORCER("no-localhost"), "--all"]], // heady-allow:no-localhost — gate-runner references the law by name
+      ["glass-box", [ENFORCER("glass-box"), "--all"]],
+      ["secret-scan", [ENFORCER("secret-scan"), "--all"]],
+      ["zod-boundary", [ENFORCER("zod-boundary"), "--all"]],
+      ["phi-timing", [ENFORCER("phi-timing"), "--all"]],
+      ["projection-drift", ["tooling/projection-engine/bin/check-drift.mjs"]],
+      ["coherence", ["tooling/coherence/src/coherence.mjs", "check", "--no-write"]],
     ];
+    for (const [name, args] of gates) {
+      verification.push(await runGate(name, args, { cwd: REPO_ROOT, candidateFiles }));
+    }
   }
 
   const contextCandidates = [
@@ -128,7 +125,7 @@ function main() {
     process.stdout.write(JSON.stringify({
       firstRun, sinceShort, headShort, branch,
       commits: commits.length, files: files.length, uncommitted: uncommitted.length,
-      verification, bundlePath: flag("--dry-run") ? null : outPath,
+      verification, verificationSkipped: flag("--no-verify"), bundlePath: flag("--dry-run") ? null : outPath,
     }, null, 2) + "\n");
   } else {
     process.stdout.write(bundle);
@@ -136,4 +133,7 @@ function main() {
   }
 }
 
-main();
+main().catch((error) => {
+  process.stderr.write(`handoff: ${error?.message ?? String(error)}\n`);
+  process.exitCode = 1;
+});

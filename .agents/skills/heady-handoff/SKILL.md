@@ -5,7 +5,7 @@ description: Create, preview, inspect, and consume incremental Heady agent-hando
 
 <!-- HEADY_BRAND:BEGIN
 <!-- ╭───────────────────────────────────────────────────────────────╮
-<!-- │  HEADY™ Heady Handoff v1.0.0                                │
+<!-- │  HEADY™ Heady Handoff v1.1.0                                │
 <!-- │  Verified continuity between coding-agent sessions              │
 <!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
 <!-- ╰──────────────────────────────────────────────────────────────╯
@@ -56,6 +56,11 @@ node tooling/handoff/src/handoff.mjs --json
 ```
 
 Use `--no-verify` only when the user explicitly requests it or a required gate cannot run. Label the resulting handoff unverified.
+
+Gate failures and gate-runner execution errors are distinct. The CLI retries transient process
+exhaustion with φ-backoff and labels a persistent execution problem `ERROR`; never report it as a
+repository gate failure. Verification uses the coherence kernel's read-only mode so preview and
+generation do not rewrite generated registries.
 
 Before using `--since`, resolve the ref and check its relationship to HEAD. Do not silently choose a different range. When no checkpoint exists, the engine uses a recent-history first-run baseline rather than the repository's complete history; state that limitation.
 

@@ -14,6 +14,7 @@ from ground-truth artifacts, gates on **contradiction** (not incompleteness), an
 ```bash
 node src/coherence.mjs map          # derive .data/coherence/system-map.json
 node src/coherence.mjs check        # contradiction-tiered gate (exit 2 on error-tier)
+node src/coherence.mjs check --no-write  # read-only gate for previews and handoffs
 node src/coherence.mjs ripple <id>  # blast radius — e.g. `ripple embedding.dim` or `ripple pkg:@heady/db`
 node src/coherence.mjs all          # map + check (the CI/pre-push gate)
 ```

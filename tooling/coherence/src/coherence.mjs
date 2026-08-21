@@ -5,11 +5,10 @@
 // ║  The build-time realization of heady-knowledge-cartographer.        ║
 // ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
-import { execFileSync } from 'node:child_process';
 import {
   existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync,
 } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
 import { SCALAR_GUARDS, scalarViolations } from './scalar-guards.mjs';
@@ -17,6 +16,7 @@ import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger } from './pack
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
 } from '../../enforcers/lib/rules.mjs';
+import { check as checkDataConsistency } from '../../data-consistency/src/cli.mjs';
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const OUT = join(ROOT, '.data', 'coherence');
@@ -60,15 +60,42 @@ const CANON = ['docs', 'packages', 'tooling', 'configs', 'AGENTS.md', 'SOURCE_OF
 const SCALAR_SCOPE = [...CANON, '.agents'];
 // Canonical load-bearing scalars live in src/scalar-guards.mjs (table + pure semantics, so the
 // guard contract is unit-tested); the kernel supplies the IO (grep over SCALAR_SCOPE) below.
+const GREP_EXCLUDED_DIRS = new Set(['node_modules', '.git', '.turbo', 'dist', 'drupal', 'superseded-v1']);
+function grepFilesUnder(absolute, collected) {
+  let entries;
+  try { entries = readdirSync(absolute, { withFileTypes: true }); } catch { return; }
+  for (const entry of entries) {
+    const path = join(absolute, entry.name);
+    if (entry.isDirectory()) {
+      if (!GREP_EXCLUDED_DIRS.has(entry.name)) grepFilesUnder(path, collected);
+    } else if (entry.isFile()) collected.push(path);
+  }
+}
+
 const grep = (ere, paths, extraAllow) => {
-  try {
-    // `drupal` + `superseded-v1` are quarantined legacy/archived surfaces (mirrors
-    // tooling/data-consistency/invariants.json scope.exclude) — not part of the canonical rebuild.
-    const args = ['-rInE', '--exclude-dir=node_modules', '--exclude-dir=.git', '--exclude-dir=.turbo', '--exclude-dir=dist', '--exclude-dir=drupal', '--exclude-dir=superseded-v1', ere, ...paths];
-    return execFileSync('grep', args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 })
-      .split('\n').filter(Boolean)
-      .filter((l) => !(extraAllow && extraAllow.test(l)));
-  } catch { return []; }
+  let pattern;
+  try { pattern = new RegExp(ere); } catch { return []; }
+  const files = [];
+  for (const path of paths) {
+    const absolute = join(ROOT, path);
+    if (!existsSync(absolute)) continue;
+    let entries = null;
+    try { entries = readdirSync(absolute, { withFileTypes: true }); } catch { /* path is a file */ }
+    if (entries) grepFilesUnder(absolute, files);
+    else files.push(absolute);
+  }
+  const matches = [];
+  for (const file of files) {
+    let text;
+    try { text = readFileSync(file, 'utf8'); } catch { continue; }
+    if (text.includes('\u0000')) continue;
+    for (const [index, line] of text.split('\n').entries()) {
+      if (!pattern.test(line)) continue;
+      const match = `${relative(ROOT, file)}:${index + 1}:${line}`;
+      if (!(extraAllow && extraAllow.test(match))) matches.push(match);
+    }
+  }
+  return matches;
 };
 
 function packages() {
@@ -238,14 +265,11 @@ function check({ facts, pkgs }) {
   // CONTENT — FEDERATE the data-consistency engine as a sub-gate (invoke; do not reimplement its rules)
   if (has('tooling/data-consistency/src/cli.mjs')) {
     try {
-      const out = execFileSync('node', ['tooling/data-consistency/src/cli.mjs', '--json'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 });
-      const s = JSON.parse(out).summary || {};
+      const s = checkDataConsistency(ROOT).summary || {};
       if (s.errors > 0) err('FED-consistency', 'federated data-consistency engine reports content invariant violations', { errors: s.errors, warns: s.warns });
       else info('FED-consistency', 'data-consistency sub-gate clean', { files: (s.filesCanonical || 0) + (s.filesExtended || 0), errors: 0 });
-    } catch (e) {
-      const s = (() => { try { return JSON.parse(String(e.stdout || '')).summary; } catch { return null; } })();
-      if (s && s.errors > 0) err('FED-consistency', 'federated data-consistency engine reports content invariant violations', { errors: s.errors });
-      else err('FED-consistency', 'data-consistency sub-gate could not be evaluated', { error: String(e.message).slice(0, 120) });
+    } catch (error) {
+      err('FED-consistency', 'data-consistency sub-gate could not be evaluated', { error: String(error?.message ?? error).slice(0, 120) });
     }
   }
 
@@ -426,24 +450,27 @@ ${tbl(by('decision'), ['ADR', 'Title'], (v) => [v.name, v.def])}
 // ── main ──
 const cmd = process.argv[2] || 'all';
 const arg = process.argv[3];
-mkdirSync(OUT, { recursive: true });
+const noWrite = process.argv.includes('--no-write');
+if (!noWrite) mkdirSync(OUT, { recursive: true });
 const built = buildMap();
 const extra = [];
 
 if (cmd === 'map' || cmd === 'all') {
-  writeFileSync(join(OUT, 'system-map.json'), JSON.stringify(built.map, null, 2));
+  if (!noWrite) writeFileSync(join(OUT, 'system-map.json'), JSON.stringify(built.map, null, 2));
   log('info', 'system map built', built.map.counts);
 }
 if (cmd === 'ripple') {
   const r = ripple(arg, built);
-  writeFileSync(join(OUT, 'ripple.json'), JSON.stringify(r, null, 2));
+  if (!noWrite) writeFileSync(join(OUT, 'ripple.json'), JSON.stringify(r, null, 2));
   log('info', 'blast radius', { target: r.target, files: r.touches.length, packages: r.packages.length });
   process.exit(0);
 }
 if (cmd === 'vars' || cmd === 'all') {
   const { vars, secrets } = await buildVars();
-  writeFileSync(join(OUT, 'variable-registry.json'), JSON.stringify({ schema: 'variable-registry.v1', count: vars.length, vars }, null, 2));
-  writeFileSync(join(ROOT, 'docs', 'HEADY_VARIABLE_REGISTRY.md'), renderRegistry(vars));
+  if (!noWrite) {
+    writeFileSync(join(OUT, 'variable-registry.json'), JSON.stringify({ schema: 'variable-registry.v1', count: vars.length, vars }, null, 2));
+    writeFileSync(join(ROOT, 'docs', 'HEADY_VARIABLE_REGISTRY.md'), renderRegistry(vars));
+  }
   extra.push(...envDrift(secrets));
   const byClass = vars.reduce((a, v) => { a[v.class] = (a[v.class] || 0) + 1; return a; }, {});
   log('info', 'variable registry built', { total: vars.length, ...byClass });
@@ -452,7 +479,7 @@ if (cmd === 'check' || cmd === 'all' || cmd === 'vars') {
   const findings = [...(cmd === 'vars' ? [] : check(built)), ...extra];
   const errors = findings.filter((f) => f.tier === 'error');
   const report = { schema: 'coherence-report.v1', errors: errors.length, info: findings.length - errors.length, findings };
-  if (cmd !== 'vars') writeFileSync(join(OUT, 'coherence-report.json'), JSON.stringify(report, null, 2));
+  if (cmd !== 'vars' && !noWrite) writeFileSync(join(OUT, 'coherence-report.json'), JSON.stringify(report, null, 2));
   for (const f of errors) log('error', `CONTRADICTION ${f.id}`, { msg: f.msg, evidence: f.evidence });
   log(errors.length ? 'error' : 'info', `${cmd} complete`, { contradictions: errors.length, incomplete: report.info });
   if (errors.length) process.exit(2);

@@ -603,7 +603,11 @@ importers:
 
   tooling/governance-gate: {}
 
-  tooling/handoff: {}
+  tooling/handoff:
+    dependencies:
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../../packages/phi-math
 
   tooling/heady-derive: {}
 
