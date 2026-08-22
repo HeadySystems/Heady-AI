@@ -11,6 +11,15 @@
       "oauthCallbacks": ["https://auth.headysystems.com/oauth/callback/headyme"]
     },
     {
+      "name": "1ime1.com",
+      "type": "admin",
+      "purpose": "Admin surface — apps/headyme-portal behind Cloudflare Access",
+      "canonicalHost": "1ime1.com",
+      "redirects": ["www.1ime1.com"],
+      "ssl": true,
+      "oauthCallbacks": []
+    },
+    {
       "name": "headysystems.com",
       "type": "docs-status",
       "purpose": "Documentation and node status page",

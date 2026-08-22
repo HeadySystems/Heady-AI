@@ -56,8 +56,10 @@ const URLS = Object.freeze({
 // plus the Cloudflare-hosted operational sites from
 // configs/_domains/site-registry.yaml. Speculative brand domains whose DNS
 // points outside the Heady Cloudflare account (headyai.com, headybuddy.com,
-// headytrade.com, headylab.com) are deliberately EXCLUDED from CORS until
-// the human-gated zone verification recorded in facts.yaml completes.
+// headylab.com) are deliberately EXCLUDED from CORS until the human-gated
+// zone verification recorded in facts.yaml completes. headyfinance.com
+// (fintech advisory, Cloudflare-hosted) is likewise not yet in the allowlist
+// — adding it is a deliberate CORS change, gated on the same verification.
 // ═══════════════════════════════════════════════════════════════════════
 const DOMAINS = Object.freeze([
     'headyme.com',          // verified — primary user surface

@@ -162,10 +162,24 @@ function generateBlueprint() {
     const path = require('path');
     const ROOT = path.resolve(__dirname, '..', '..');
 
-    // Read key architecture files for context
-    const readFile = (p) => {
-        try { return fs.readFileSync(path.resolve(ROOT, p), 'utf8'); } catch { return null; }
-    };
+    // Domain roster is DERIVED, never listed here. configs/_generated/domain-roster.json
+    // is the committed projection of facts.yaml `domains:` (the SoT), written by
+    // `node tooling/coherence/src/coherence.mjs domains` and gated by that kernel's D6
+    // guard, so a contender can never be handed a superseded mesh. Read through fs
+    // rather than require() so a warm module cache cannot serve a stale roster.
+    const ROSTER_PATH = path.join(ROOT, 'configs', '_generated', 'domain-roster.json');
+    let domains;
+    try {
+        domains = JSON.parse(fs.readFileSync(ROSTER_PATH, 'utf8')).fqdns;
+    } catch (err) {
+        logger.error('blueprint.roster_unreadable', { path: ROSTER_PATH, error: err.message });
+        throw new Error(`domain roster projection unreadable at ${ROSTER_PATH} — run: node tooling/coherence/src/coherence.mjs domains`);
+    }
+    if (!Array.isArray(domains) || domains.length === 0) {
+        logger.error('blueprint.roster_empty', { path: ROSTER_PATH });
+        throw new Error(`domain roster projection at ${ROSTER_PATH} carries no domains`);
+    }
+    const domainCount = domains.length;
 
     const blueprint = {
         version: '3.0.1-OMEGA',
@@ -174,16 +188,16 @@ function generateBlueprint() {
             name: 'Heady™ Latent Operating System',
             vision: 'A 46-year autonomous AI operating system that stores executable potential as AST nodes in pgvector, materializes code on-demand, and operates as a self-healing multi-swarm civilization.',
             architecture: 'Zero-Repo Liquid Architecture — code only exists during compilation. 18 swarms, 31+ bees, 742 aspirational tasks.',
-            domains: ['headymcp.com', 'headyapi.com', 'headyio.com', 'headyme.com', 'headytrader.com', 'headymusic.com', 'headyfoundation.org', 'headysystems.com', 'myheady.ai'],
+            domains,
         },
 
         // ── Core Architecture Requirements ─────────────────────────
         coreModules: {
-            'heady-manager': 'Express.js server — entry point, bootstraps all services, serves all 9 domains via domain routing',
+            'heady-manager': `Express.js server — entry point, bootstraps all services, serves all ${domainCount} domains via domain routing`,
             'vector-memory': 'pgvector-backed 3D vector memory with PCA-lite projection, 8-octant zone mapping, Fibonacci sharding',
             'domain-router': 'Maps hostnames to UI modules — 22 hostname entries, 12 unique UI modules',
             'site-renderer': 'Dynamic HTML generation with Sacred Geometry animations and chat widgets',
-            'auto-projection': 'Pre-renders all 9 sites on boot, caches in RAM, pushes to Cloudflare KV edge',
+            'auto-projection': `Pre-renders all ${domainCount} sites on boot, caches in RAM, pushes to Cloudflare KV edge`,
             'vault-boot': 'Encrypted credential vault — AES-256-GCM, decrypts at boot, projects into process.env',
             'swarm-matrix': '18-swarm, 31-bee runtime registry with status tracking and activation APIs',
             'aspirational-registry': '742 unified aspirational tasks from 14 sources, mapped to swarms',
@@ -221,7 +235,7 @@ function generateBlueprint() {
         stack: {
             runtime: 'Node.js 20/22',
             framework: 'Express.js',
-            database: 'Neon Postgres + pgvector (1536-dim embeddings)',
+            database: 'Neon Postgres + pgvector (384-dim embeddings — facts.yaml embedding.dim / ADR-0015, @cf/baai/bge-small-en-v1.5)',
             cache: 'Upstash Redis + RAM (auto-projection)',
             edge: 'Cloudflare Workers + KV + R2',
             compute: 'Google Cloud Run (heady-manager service)',
@@ -280,9 +294,9 @@ CRITICAL REQUIREMENTS:
 3. Every service gets its own file in src/services/
 4. Use the EXACT same API endpoints and route structure
 5. Implement proper error handling with structured logging
-6. Use pgvector for vector memory (1536-dim embeddings)
+6. Use pgvector for vector memory (384-dim embeddings — the locked dimension, see ADR-0015)
 7. Implement the vault system (AES-256-GCM encrypted credentials)
-8. Build the domain router to serve all 9 domains from one Express server
+8. Build the domain router to serve all ${domainCount} domains from one Express server
 9. Implement the swarm matrix with all 18 swarms and 31 bees
 10. Build the HologramBee (AST-to-edge compiler) and ContextWeaverBee (memory assembler)
 11. Sacred Geometry CSS animations on all site renders

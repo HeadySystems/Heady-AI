@@ -12,6 +12,10 @@ import { join, relative, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
 import { SCALAR_GUARDS, scalarViolations } from './scalar-guards.mjs';
+import {
+  DOMAIN_CARRIERS, checkDomainCarriers, extractArenaSpecRoster, extractRegistryStatus,
+  rosterProjection,
+} from './domain-guards.mjs';
 import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger } from './packages-law.mjs';
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
@@ -20,6 +24,9 @@ import { check as checkDataConsistency } from '../../data-consistency/src/cli.mj
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const OUT = join(ROOT, '.data', 'coherence');
+// The domain roster is a COMMITTED projection (src/ consumers read it at runtime),
+// unlike the .data/ artifacts above which are build-local.
+const ROSTER_REL = 'configs/_generated/domain-roster.json';
 const log = (level, msg, f = {}) => process.stdout.write(`${JSON.stringify({ t: 'coherence', level, msg, ...f })}\n`);
 const rd = (p) => readFileSync(join(ROOT, p), 'utf8');
 const rdj = (p) => JSON.parse(rd(p));
@@ -192,6 +199,38 @@ function check({ facts, pkgs }) {
       else if (!r.exists_in_rebuild && !present) info('S5-unbuilt', 'planned package not yet built', { target: r.target });
     }
   }
+
+  // D1–D6 — domain canon vs every live carrier. Semantics live in
+  // domain-guards.mjs; the kernel supplies the IO (one read per carrier).
+  // A carrier file that is absent is itself a contradiction — the guard table
+  // is the registry of what MUST exist, so a silent skip would fail open.
+  const carriers = {};
+  for (const c of DOMAIN_CARRIERS) {
+    if (!has(c.file)) { err('D0-carrier-missing', 'registered domain carrier file is absent', { carrier: c.token, file: c.file }); continue; }
+    try { carriers[c.token] = c.extract(rd(c.file)); }
+    catch (e) { err('D0-carrier-unreadable', 'registered domain carrier could not be parsed', { carrier: c.token, file: c.file, error: e.message }); }
+  }
+  const brandRegistry = DOMAIN_CARRIERS.find((c) => c.token === 'domain-registry');
+  // Arena spec dumps have no runtime consumer, but they are the configs/-scoped
+  // content gates' only window into the legacy CommonJS spec in src/, so their roster
+  // is held to the canon too. Absent dumps are not a contradiction — they are optional.
+  const arenaSpecs = {};
+  for (const rel of [
+    'configs/battle-blueprint.json',
+    ...lsd('configs/battle-contexts').filter((e) => e.isFile() && e.name.endsWith('.json'))
+      .map((e) => `configs/battle-contexts/${e.name}`),
+  ]) {
+    if (!has(rel)) continue;
+    try { arenaSpecs[rel] = extractArenaSpecRoster(rd(rel)); }
+    catch (e) { err('D0-spec-unreadable', 'arena spec dump could not be parsed', { file: rel, error: e.message }); }
+  }
+  for (const f of checkDomainCarriers({
+    domains: facts.domains,
+    carriers,
+    registryStatus: has(brandRegistry.file) ? extractRegistryStatus(rd(brandRegistry.file)) : {},
+    roster: has(ROSTER_REL) ? rdj(ROSTER_REL) : null,
+    arenaSpecs,
+  })) err(f.id, f.msg, f.evidence);
 
   // S6 — decomposition @heady/* targets vs real package names (naming drift)
   if (has('tooling/decomposition/manifest.json')) {
@@ -480,7 +519,22 @@ if (cmd === 'check' || cmd === 'all' || cmd === 'vars') {
   const errors = findings.filter((f) => f.tier === 'error');
   const report = { schema: 'coherence-report.v1', errors: errors.length, info: findings.length - errors.length, findings };
   if (cmd !== 'vars' && !noWrite) writeFileSync(join(OUT, 'coherence-report.json'), JSON.stringify(report, null, 2));
-  for (const f of errors) log('error', `CONTRADICTION ${f.id}`, { msg: f.msg, evidence: f.evidence });
+  for (const f of errors) log('error', `CONTRADICTION ${f.id}`, { detail: f.msg, evidence: f.evidence });
   log(errors.length ? 'error' : 'info', `${cmd} complete`, { contradictions: errors.length, incomplete: report.info });
   if (errors.length) process.exit(2);
+}
+
+// AFTER check() on purpose. If this wrote first, D6 would compare the projection
+// to the value it had just derived from the same facts — self-consistent by
+// construction, so a stale committed projection could never fail `all`. Ordered
+// this way, a stale projection fails the run and `coherence.mjs domains` is the
+// explicit fix; and since check() exits on contradiction, a canon that disagrees
+// with itself is never projected onward to consumers.
+if (cmd === 'domains' || cmd === 'all') {
+  const projection = rosterProjection(built.facts.domains);
+  if (!noWrite) {
+    mkdirSync(join(ROOT, 'configs', '_generated'), { recursive: true });
+    writeFileSync(join(ROOT, ROSTER_REL), `${JSON.stringify(projection, null, 2)}\n`);
+  }
+  log('info', 'domain roster projected', { count: projection.count, out: ROSTER_REL });
 }

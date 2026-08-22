@@ -45,8 +45,10 @@
 
 ## (b) The 9 public domain sites
 
-⚠ **DRIFT — the "9 domains" list is contradictory across ≥3 sources.** Canonical = the newest, highest-strength
-ADR: **`docs/ADR/0019-nine-domain-brand-architecture.md`** (2026-06-17, registry mirror `src/config/domain-registry.js`).
+✅ **RECONCILED 2026-08-22 — the roster is no longer contradictory, and no longer 9.** The canon is
+`facts.yaml domains:` (**16** nodes), closed over every live carrier; the table below is the ADR-time
+brand snapshot, not the roster. Membership + each node's `sources:` are enforced by the coherence
+kernel's D1–D6 guards, and `configs/_generated/domain-roster.json` is the projection consumers read.
 Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-frontend-framework-selection.md` (lowercase).
 
 | Domain | Entity | UI / Purpose | Status |
@@ -56,7 +58,7 @@ Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-fronte
 | **headymcp.com** | HeadySystems | MCP gateway / per-request API console (Inner) | planned (`apps/mcp-dashboard` stub; edge worker live separately) |
 | **headybuddy.com** | HeadySystems | Companion AI (Middle) | planned |
 | **headyos.com** | HeadySystems | Latent OS — enterprise license (Middle) | planned |
-| **headytrade.com** | HeadySystems | FinTech / trading (Outer) | planned |
+| **headyfinance.com** | HeadySystems | FinTech advisory — risk + signal, paper-mode (Outer) | planned |
 | **headylab.com** | HeadySystems | Research / patents (Outer) | planned |
 | **headyconnection.org** | HeadyConnection (501(c)(3)) | Nonprofit portal — grants/donations; **IRS boundary: no commercial features** (Governance) | planned |
 | **headyweb.com** | HeadySystems | Web / frontend hub (Ops) | planned |
@@ -128,7 +130,7 @@ Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-fronte
 
 ## Open decisions / drift to resolve
 - **R1 — React vs vanilla Web Components for console/app** (compendium §I6 + MEMORY): ADR-0019 reconciliation says vanilla WC default, React only for complex canvas/console/MCP; the explicit per-surface call for the console/app SPA is still **open**.
-- **9-domain canonical list** — ≥3 conflicting sources (9 vs 11 vs 3 vs ~16). Canonical chosen here = `docs/ADR/0019-nine-domain-brand-architecture.md` (newest); others flagged but unreconciled.
+- ~~**9-domain canonical list**~~ — **CLOSED 2026-08-22.** Canon = `facts.yaml domains:` (16), closed over all 5 live carriers and gated by coherence D1–D6; consumers read `configs/_generated/domain-roster.json`. What remains is a *founder* call, not drift: brand fields (`entity`/`tenant`/`revenue`/`layer`) are ratified for 10 of 16.
 - **mcp-dashboard stack drift** — README claims Webpack Module Federation (a Dropped `FE-06` pattern), contradicting ADR-0019. Stub must be rebuilt to Vite + vanilla WC.
 - **ADR-0019 case-collision** — two different ADR-0019 files (`docs/adr/` frontend vs `docs/ADR/` nine-domain); rename one to avoid ambiguity.
 - **gateway SA key** — long-lived JSON SA key as Worker secret; migrate to WIF/keyless + rotate.
