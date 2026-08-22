@@ -15,8 +15,9 @@ HEADY_BRAND:END -->
 
 > **Bottom line.** The approval system is ~90% built and further along than HCP-0003's draft text
 > says. What remains is not code — it is nine external actions on GCP, Neon, and Firebase, plus one
-> signature. Nothing in `packages/bees` may be created until they are done. Two of the nine
-> (**S1** and **S2**) are open governance defects, not just setup.
+> signature. Nothing in `packages/bees` may be created until they are done. Three of them
+> (**S0**, **S1**, **S2**) are open governance decisions rather than setup, and S0 is order-sensitive:
+> it gets harder to make once genesis closes.
 
 ---
 
@@ -48,7 +49,36 @@ below are what change that.
 
 ---
 
-## 2. Two findings to decide on before anything is deployed
+## 2. Three findings to decide on before anything is deployed
+
+### S0 — decide ADR-0053 *before* genesis, not after
+
+A peer agent authored `docs/adr/0053-temporary-solo-founder-approval-quorum.md` on 2026-08-22, on
+branch `governance/solo-founder-quorum-amendment-20260822` (worktree
+`/tmp/heady-solo-founder-governance-20260822`, PR 288). Status **Proposed** — while Proposed it
+changes nothing and ADR-0031 stays authoritative.
+
+If accepted, it activates a temporary `solo_founder` mode: an approval-system or protected-migration
+change needs **one founder decision plus one separately authenticated ARBITER `ALLOW`** and **no
+external-human slot**, bound to the same payload/diff/policy/nonce/expiry. `ESCALATE`, `DENY`,
+signature failure, incomplete claim coverage, or binding drift all fail closed. It sunsets
+automatically at the earliest of a real external reviewer being registered, a second human joining,
+or **2026-11-19T23:59:59Z** — exactly `FIB[11]` = 89 days from proposal, which checks out.
+
+**Ordering matters, and this is the whole point of listing it as S0.** §5's evidence table below is
+written under ADR-0031: approval-system changes cost you *founder + external human security review* —
+a reviewer you do not currently have. Genesis itself is fine either way, because ADR-0031 §2's
+one-time exception routes acceptance through a founder-signed stage-0 Git object rather than the
+service. But **the moment genesis closes, amending the quorum becomes an approval-system change** and
+therefore needs the very external reviewer ADR-0053 exists to waive. Accept it before genesis, or
+accept that the waiver may be unreachable afterward.
+
+Its own activation is deliberately non-circular: it cannot ratify itself through the weaker quorum it
+proposes, so acceptance needs a founder-signed Git object over the exact amendment and implementation
+digests — the same shape as `adr-0031-accepted-e064a8943`. An agent may author and test it; an agent
+may not sign it, activate it, or infer acceptance.
+
+Not a recommendation to accept — a sequencing constraint if you intend to.
 
 ### S1 — the founder signing key is reachable by the agent session (governance defect)
 
@@ -359,7 +389,7 @@ What each class of change costs you, from `policies/approval.rego`:
 |---|---|---|
 | Standard sensitive | founder decision | — |
 | **Patent-locked** (e.g. `packages/bees/**` → HCP-0003) | founder decision | ARBITER `ALLOW` bound to the same diff hash |
-| Approval system / stage 0 | founder decision | **external human** security review (not you) |
+| Approval system / stage 0 | founder decision | **external human** security review (not you) — becomes ARBITER `ALLOW` instead **if** ADR-0053 is accepted (S0) |
 | Renovate patch-only | none | automated attestation, protected paths excluded |
 | Autonomous lane | none | requester + independent guard, bounded and one-shot |
 
@@ -415,3 +445,29 @@ The 2026-07-23 sign-and-continue instruction stays what the record already calls
   > authoring this pre-genesis is in scope — but it means the **S8 security review must cover a
   > change made on 2026-08-22**, after you last read this code. Review those two files, not a
   > remembered version of them.
+
+---
+
+## 8. Two genesis-adjacent traps found in local stashes (2026-08-22)
+
+Neither is applied; both are recorded so genesis is not surprised by them. Read-only inspection —
+nothing was popped, dropped, or restored.
+
+- **A stale `0004_approval_control_plane.sql` is parked in `stash@{2}`** (`agent-990-slice`,
+  `codex-cleanup-agent-990-slice-2026-08-22`), as its *untracked* component. It hashes to
+  `50d9f6c2a986545fd91e0bc78af604c5f0ee8685b9fe8fd89029b0cfe7a8bb89` — the **original** version from
+  `439cb776a6` ("bootstrap governed approval control plane", 2026-07-29), superseded the same day by
+  `5a19d0d761` ("make the 0001→0006 migration chain apply"), which produced the tracked
+  `9e4bff3c…6eae` that §4 binds. Same 1013 lines, different bytes. `agent-990-slice` does not track
+  `0004` at all (its migrations directory holds only `0001` and `0003`), so **popping that stash onto
+  that branch resurrects the pre-fix migration** and would bind a `migrationSha256` that never passed
+  the chain fix. If `agent-990-slice` ever needs `0004`, take it from the checkpoint branch.
+- **A code fix for the `--` argument problem is sitting unapplied in `stash@{3}`**
+  (`codex-safety-before-sync-2026-08-04`). It teaches
+  `packages/approvals/bin/prepare-genesis-manifest.mjs` to strip a leading `--`:
+  `process.argv[2] === "--" ? process.argv.slice(3) : process.argv.slice(2)`. §7 fixed this in the
+  docs instead, by removing the `--` from the commands, so the runbook as written already works and
+  this is belt-and-suspenders rather than a blocker. Deliberately **not** applied here: it edits a
+  genesis-critical path inside `packages/approvals/` for something that is not a live bug, and that is
+  a founder call, not an agent's. If you do want it, it is a pre-genesis-window change like the two in
+  §7 — cheaper now than after.
