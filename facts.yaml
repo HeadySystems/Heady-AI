@@ -64,11 +64,27 @@ deploy_targets:
   pages:
     kind: cloudflare-pages
 domains:
-  # ── Domain canon (SoT) — reconciles the three code registries ──────────
+  # ── Domain canon (SoT) — reconciles every live domain carrier ──────────
+  # Membership is one-directional: a carrier may only name domains present
+  # here, and each node's `sources:` must match exactly which carriers name it.
+  # Both directions are machine-enforced by the coherence kernel's D1–D6 guards
+  # (tooling/coherence/src/domain-guards.mjs) — `sources:` is checked, not decor.
   # source tokens:
-  #   domain-registry = src/config/domain-registry.js   (brand/tenant/CORS map)
-  #   global-config   = src/config/global.js            (runtime whitelist)
-  #   site-registry   = configs/_domains/site-registry.yaml (PM2 site processes)
+  #   domain-registry     = src/config/domain-registry.js   (brand/tenant/CORS map)
+  #   global-config       = src/config/global.js            (runtime whitelist)
+  #   site-registry       = configs/_domains/site-registry.yaml (PM2 site processes)
+  #   domain-architecture = configs/domain-architecture.json (routing/DNS hygiene:
+  #     canonicalHost/redirects/ssl + the OAuth callback topology). The domain-guard
+  #     authorized-hostname allowlist is NOT hand-listed anywhere — it derives from
+  #     configs/_generated/domain-roster.json, the D6-gated projection of this block.
+  #   edge-router         = configs/cloudflare-workers/heady-router-worker.js
+  #     (SITES map — the live Cloudflare edge routing table)
+  # Field-level reconciliation is NOT complete: entity/tenant/revenue/layer live
+  # only in src/config/domain-registry.js and exist for 10 of the 16 domains. The
+  # other 6 join it when the founder ratifies their brand architecture; until then
+  # the code registry is deliberately a subset and the D-guards allow that gap.
+  # The 16 legacy configs/_domains/*.yaml brand dumps are NOT carriers — their
+  # only referrer is the legacy task list src/config-buildout-tasks.js.
   # status semantics:
   #   verified   — founder-ruled canonical surface, confirmed live.
   #   unverified — declared by a registry only; Cloudflare zone/account
@@ -85,6 +101,8 @@ domains:
       - domain-registry
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
   1ime1:
     fqdn: 1ime1.com
@@ -96,6 +114,7 @@ domains:
       - domain-registry
       - global-config
       - site-registry
+      - domain-architecture
     dns_observed: cloudflare-ns https-302-cloudflare-access
   headymcp:
     fqdn: headymcp.com
@@ -105,6 +124,8 @@ domains:
       - domain-registry
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
   headyconnection:
     fqdn: headyconnection.org
@@ -114,6 +135,8 @@ domains:
       - domain-registry
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
   headysystems:
     fqdn: headysystems.com
@@ -122,6 +145,8 @@ domains:
     sources:
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
   headybuddy-org:
     fqdn: headybuddy.org
@@ -130,6 +155,7 @@ domains:
     sources:
       - global-config
       - site-registry
+      - edge-router
     dns_observed: cloudflare-ns https-200
   headybuddy-com:
     fqdn: headybuddy.com
@@ -138,6 +164,7 @@ domains:
     note: resolves to a third-party Shopify IP via Namecheap NS — likely not Heady-owned; do not route until human-verified
     sources:
       - domain-registry
+      - domain-architecture
     dns_observed: external-ns-namecheap shopify-ip https-unreachable
   headyai:
     fqdn: headyai.com
@@ -145,6 +172,7 @@ domains:
     status: unverified
     sources:
       - domain-registry
+      - domain-architecture
     dns_observed: external-ns-godaddy https-200
   headyos:
     fqdn: headyos.com
@@ -155,13 +183,6 @@ domains:
       - global-config
       - site-registry
     dns_observed: cloudflare-ns https-200
-  headytrade:
-    fqdn: headytrade.com
-    role: fintech-trading
-    status: unverified
-    sources:
-      - domain-registry
-    dns_observed: external-ns-godaddy https-unreachable
   headylab:
     fqdn: headylab.com
     role: research-patent-lab
@@ -183,6 +204,8 @@ domains:
     sources:
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
   headyapi:
     fqdn: headyapi.com
@@ -191,7 +214,25 @@ domains:
     sources:
       - global-config
       - site-registry
+      - domain-architecture
+      - edge-router
     dns_observed: cloudflare-ns https-200
+  headybot:
+    fqdn: headybot.com
+    role: bot-automation-surface
+    status: unverified
+    note: "Recorded 2026-08-22 by the D1 orphan guard — it was carried by configs/domain-architecture.json and the edge-router SITES map while absent from this SoT. Edge brand copy: autonomous engineering agents, battle arena, telemetry. No entity/tenant/revenue yet, so it is deliberately absent from src/config/domain-registry.js."
+    sources:
+      - domain-architecture
+      - edge-router
+  headylens:
+    fqdn: headylens.com
+    role: vision-spatial-graphics
+    status: unverified
+    note: "Recorded 2026-08-22 by the D1 orphan guard — carried by configs/domain-architecture.json and the edge-router SITES map while absent from this SoT. NAME COLLISION: this DOMAIN is vision/OCR/UI-review per the edge brand copy, whereas the PACKAGE @heady/headylens is the observability event stream. Different things sharing a name; do not merge them."
+    sources:
+      - domain-architecture
+      - edge-router
   headyfinance:
     fqdn: headyfinance.com
     role: fintech-advisory
@@ -200,6 +241,7 @@ domains:
     app: packages/headyfinance
     sources:
       - domain-registry
+      - domain-architecture
     dns_observed: cloudflare-ns https-200 portal-interim
 pipeline:
   stages:

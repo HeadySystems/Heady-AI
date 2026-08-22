@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "echo \"(lint wired at repo level)\"",
-    "test": "node --test test/stage0.test.mjs test/laws.test.mjs"
+    "test": "node --test test/*.test.mjs"
   },
   "license": "UNLICENSED",
   "private": true

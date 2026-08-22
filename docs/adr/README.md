@@ -6,8 +6,10 @@ The governing principle for all of these: **pick one source of truth per concern
 
 ## Status
 
-Of **53 ADRs (`0000`–`0052`)**, `0000`–`0051` are **Accepted** and `0052` (instruction provenance
-and channel authentication) is **Proposed** — authored 2026-08-09 in response to a live
+This branch contains **54 ADR files**: `0000`–`0052` plus proposed `0054`. Number `0053` is
+reserved by the concurrently published solo-founder quorum proposal in PR #288. `0000`–`0051`
+are **Accepted**; `0052` (instruction provenance and channel authentication) and `0054` (domain
+canon carrier closure) are **Proposed**. ADR-0052 was authored 2026-08-09 in response to a live
 instruction-provenance incident, awaiting founder signature per its own rule. `0000`–`0018` (the backbone: RAM-first rejection, canonical-repo authority,
 architecture backbone, pgvector retrieval, durable orchestration, agent governance, idempotency,
 DDL coordination, GDPR, PITR, rate limits, SLO, FinOps, founder governance, CDC, embedding lock,

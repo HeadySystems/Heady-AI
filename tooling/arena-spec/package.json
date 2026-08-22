@@ -1,0 +1,23 @@
+{
+  "name": "@heady/arena-spec",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Refreshes the committed Battle Arena spec artifacts from the live generator so the coherence D7 guard can hold them to the domain canon.",
+  "bin": {
+    "heady-arena-spec": "dump.mjs"
+  },
+  "scripts": {
+    "build": "echo \"(no build \u2014 runnable ESM)\"",
+    "lint": "echo \"(lint wired at repo level)\"",
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "heady",
+    "arena",
+    "spec",
+    "domain-canon",
+    "projection"
+  ],
+  "license": "UNLICENSED"
+}
