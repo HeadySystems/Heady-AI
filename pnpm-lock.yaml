@@ -628,6 +628,8 @@ importers:
         specifier: workspace:*
         version: link:../phi-math
 
+  tooling/arena-spec: {}
+
   tooling/auto-flow: {}
 
   tooling/awareness: {}
