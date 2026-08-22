@@ -14,6 +14,7 @@ const CONNECT_TIMEOUT_MS = Math.round((PHI ** FIB[5]) * 1000);
 const PROTOCOL_TIMEOUT_MS = FIB[8] * 1000;
 const RESTART_WINDOW_MS = FIB[12] * 1000;
 const MAX_RECONNECT_ATTEMPTS = FIB[8];
+const DISCONNECT_HEARTBEAT_MS = Math.round(PHI * 1000);
 const CA_PATH = process.env.NATS_CA_PATH ?? "/var/run/secrets/nats/ca.pem";
 
 function writeEvent(event) {
@@ -164,9 +165,25 @@ class NatsProtocolClient {
     return this.waitFor((frame) => frame.kind === "message" && frame.subject === subject);
   }
 
-  waitForDisconnect() {
-    if (!this.socket || this.socket.destroyed) return Promise.resolve();
-    return this.waitFor((frame) => frame.kind === "close" || frame.kind === "socket_error", RESTART_WINDOW_MS);
+  async waitForDisconnect() {
+    if (!this.socket || this.socket.destroyed) return;
+    const deadline = Date.now() + RESTART_WINDOW_MS;
+    while (Date.now() < deadline) {
+      const frame = this.waitFor(
+        (candidate) => candidate.kind === "pong" || candidate.kind === "close" || candidate.kind === "socket_error",
+        CONNECT_TIMEOUT_MS,
+      );
+      this.socket.write("PING\r\n");
+      try {
+        const observed = await frame;
+        if (observed.kind !== "pong") return;
+      } catch (error) {
+        if (!String(error?.message ?? error).startsWith("NATS protocol timeout for")) throw error;
+        return;
+      }
+      await wait(DISCONNECT_HEARTBEAT_MS);
+    }
+    throw new Error(`NATS restart was not observed for ${this.name}`);
   }
 
   cancelWaiters() {
