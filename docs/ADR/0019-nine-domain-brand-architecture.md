@@ -89,6 +89,13 @@ export const DOMAIN_REGISTRY = {
 
 ---
 
+## Superseded rows (pointer only — the tables above are unchanged)
+
+- **`headytrade.com` → `headyfinance.com`.** This legacy file is a historical artifact and its
+  tables are preserved as accepted; the retired brand is history here and appears nowhere live.
+  The succession is recorded in **ADR-0054 (Proposed)**; the operative canonical record is
+  `docs/adr/0033-nine-domain-brand-architecture.md`, and the live roster is `facts.yaml` `domains:`.
+
 ## Compliance
 
 | Concern | Status |
