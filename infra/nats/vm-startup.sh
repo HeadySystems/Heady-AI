@@ -110,7 +110,8 @@ chmod 0440 "${NATS_CONFIG_DIR}/heady.conf"
 chmod 0644 /etc/systemd/system/heady-nats.service
 
 systemctl daemon-reload
-systemctl enable --now heady-nats.service
+systemctl enable heady-nats.service
+systemctl restart heady-nats.service
 systemctl is-active --quiet heady-nats.service
 
 for NATS_UNUSED_UNIT in ssh.service exim4.service; do
