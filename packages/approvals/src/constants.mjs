@@ -94,7 +94,7 @@ const APPROVAL_SYSTEM_PREFIXES = Object.freeze([
   "packages/approvals/",
   "apps/approval-api/",
   "packages/db/migrations/0004_approval_control_plane.sql",
-  "packages/db/migrations/0007_autonomous_approval_grants.sql",
+  "packages/db/migrations/0010_autonomous_approval_grants.sql",
   "policies/approval.rego",
   "docs/adr/0031-solo-founder-approval-bootstrap.md",
   "docs/design/APPROVAL_SERVICE_BOOTSTRAP_SPEC.md",
@@ -140,8 +140,19 @@ function matchesProtectedPath(path, protectedPath) {
   return path === protectedPath.slice(0, -1) || path.startsWith(protectedPath);
 }
 
+// A migration whose NAME says approval keeps approval-system scope through a
+// renumber. Classification must stay a pure sync function, so this is
+// name-based and cannot see a file that touches heady_approval.* under some
+// other name — the migrations-directory test in test/core.test.mjs is what
+// asserts no such file exists. The explicit entries above stay for
+// auditability; this predicate is what survives the next renumber, after
+// 0007_autonomous_approval_grants → 0010 left a stale literal behind and
+// silently downgraded the real file to standard_sensitive.
+const APPROVAL_MIGRATION_RE = /^packages\/db\/migrations\/\d{4}_[a-z0-9_]*approval[a-z0-9_]*\.sql$/;
+
 export function isApprovalSystemPath(value) {
   const path = normalizeZonePath(value);
+  if (APPROVAL_MIGRATION_RE.test(path)) return true;
   return APPROVAL_SYSTEM_PREFIXES.some((prefix) => matchesProtectedPath(path, prefix));
 }
 
