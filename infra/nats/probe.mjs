@@ -169,7 +169,16 @@ class NatsProtocolClient {
     return this.waitFor((frame) => frame.kind === "close" || frame.kind === "socket_error", RESTART_WINDOW_MS);
   }
 
+  cancelWaiters() {
+    for (const waiter of this.waiters) {
+      clearTimeout(waiter.timer);
+      waiter.resolve({ kind: "cancelled" });
+    }
+    this.waiters = [];
+  }
+
   close() {
+    this.cancelWaiters();
     this.socket?.end();
   }
 }
@@ -177,10 +186,12 @@ class NatsProtocolClient {
 async function connectWithRetry(options) {
   let lastError;
   for (let attempt = 1; attempt <= MAX_RECONNECT_ATTEMPTS; attempt += 1) {
+    const client = new NatsProtocolClient(options);
     try {
-      return await new NatsProtocolClient(options).connect();
+      return await client.connect();
     } catch (error) {
       lastError = error;
+      client.close();
       await wait(phiBackoffMs(attempt));
     }
   }
@@ -189,14 +200,16 @@ async function connectWithRetry(options) {
 
 async function assertRejected(endpoint, token, ca) {
   const client = new NatsProtocolClient({ endpoint, token: `${token}-rejected`, ca, name: "heady-nats-rejected-auth" });
+  let authRejected = false;
   try {
     await client.connect();
-    throw new Error("NATS accepted an invalid token");
   } catch (error) {
-    if (error.message === "NATS accepted an invalid token") throw error;
+    if (!String(error?.message ?? error).startsWith("NATS authentication failed for")) throw error;
+    authRejected = true;
   } finally {
     client.close();
   }
+  if (!authRejected) throw new Error("NATS accepted an invalid token");
 }
 
 async function roundTrip({ endpoint, token, ca, subject, phase }) {

@@ -73,6 +73,7 @@ chmod 0440 "${NATS_SECRET_DIR}"/*
   printf 'tls {\n'
   printf '  cert_file: "%s/server-cert.pem"\n' "${NATS_SECRET_DIR}"
   printf '  key_file: "%s/server-key.pem"\n' "${NATS_SECRET_DIR}"
+  printf '  handshake_first: auto\n'
   printf '  timeout: 1.618\n'
   printf '}\n'
 } > "${NATS_CONFIG_DIR}/heady.conf"
