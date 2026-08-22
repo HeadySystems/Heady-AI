@@ -14,6 +14,7 @@
     "./flows/skill-preflight": "./flows/skill-preflight.flow.mjs"
   },
   "scripts": {
+    "pretest": "node ../coherence/src/coherence.mjs vars",
     "test": "node --test",
     "preflight": "node preflight.mjs",
     "lint": "echo \"(lint wired at repo level)\"",
