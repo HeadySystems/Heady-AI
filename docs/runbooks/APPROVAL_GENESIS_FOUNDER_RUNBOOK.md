@@ -50,11 +50,12 @@ Known-good fingerprints — anything else means you are on the wrong key version
 | `receipt-signing` v1 | `e9dfdcb1cd80f69a010e6e1b24daf0447a0074f72c7065d4f45bad7a8cbc64ba` |
 | `arbiter-attestation` v1 | does not exist yet — created in S3 |
 
-### STEP 0 — reauthenticate gcloud (blocks everything below)
+### STEP 0 — reauthenticate gcloud ✅ DONE 2026-08-22
 
-The cached credentials expired: `gcloud projects describe heady-ai` currently returns
-*"Reauthentication failed. cannot prompt during non-interactive execution."* No GCP step can run
-until this is done, and it is interactive, so it cannot be delegated to an agent.
+`gcloud projects describe heady-ai` now returns `heady-ai  1003436179562`. Re-run the block below only
+if a later step fails with *"Reauthentication failed. cannot prompt during non-interactive
+execution."* — the session credential expires and no GCP step works until it is renewed
+interactively.
 
 In Claude Code, prefix with `!` so the output lands in the session:
 
@@ -78,9 +79,18 @@ after it will fail with the same message.
 Do this **before** genesis. After genesis, amending the quorum needs the external human reviewer that
 ADR-0053 exists to waive.
 
-PR **288** — <https://github.com/HeadySystems/Heady-AI/pull/288> — is OPEN with **all checks green**
-(Blocks PR Review, General Code Review, Linear requirements, coherence gate, constitutional law gate,
-governance coverage, governance gate, lint · test · build).
+PR **288** — <https://github.com/HeadySystems/Heady-AI/pull/288> — is **MERGED**
+(2026-08-22T21:02:25Z, commit `52391ea71e`), so ADR-0053 is now on the checkpoint branch and reachable
+from HEAD. Its file SHA-256 is unchanged at `dd2974ec…1523`. Status is still `Proposed` — merging the
+PR published the text; it did not accept it.
+
+**ADR-0052 was declined by the founder on 2026-08-22** to minimize governance friction and maximize
+intelligent automation. It stays `Proposed` and is excluded from the ceremony. Consequence to hold
+consciously: the anti-injection rule it would have codified is not in force, so the
+`cloudflare-mass-hijack-2026-07-06` credential/tool vector has no governance-layer mitigation — an
+injected instruction and a genuine one remain indistinguishable to a receiving agent. ADR-0031 §2 and
+ADR-0013 still bar an agent from producing a founder signature, which is the one control that does
+not depend on 0052.
 
 ```bash
 # Read it first — this is the thing you are ratifying, 107 lines.
@@ -105,8 +115,23 @@ with its `[S]` subkey `A7D2108BB3C6101C`, fingerprint
 `1050B59E7296C46C26DDF95DA7D2108BB3C6101C` — **the same key that signed
 `adr-0031-accepted-e064a8943` and `adr-0051-accepted-53d3e63ca`**. `commit.gpgsign` is already `true`.
 
-To accept, merge PR 288 first so the accepted object is on the canonical line, then tag it in the
-established shape (`adr-<n>-accepted-<short-sha>`):
+**The whole ceremony is now one command** — `scripts/adr-acceptance-ceremony.sh` signs ADR-0053 and
+ADR-0054, verifies each tag against the key of record, and writes the acceptance bullets:
+
+```bash
+bash scripts/adr-acceptance-ceremony.sh --check    # read-only; already passes
+bash scripts/adr-acceptance-ceremony.sh --sign     # gpg prompts twice — that prompt IS the control
+bash scripts/adr-acceptance-ceremony.sh --push
+```
+
+⚠️ Before signing ADR-0054, read its amended §Decision. On 2026-08-22 (`d547fceadb`) it grew a
+**bounded, founder-authorized exception to the ADR immutability rule** — the `headytrade` token was
+removed from the ADR-0033 snapshot table and the frozen legacy `docs/ADR/0019` copy, so those two
+accepted records are no longer byte-identical to their accepted-time state. The ADR states that cost
+explicitly rather than hiding it, and the exception is scoped to that single token in those two files.
+Its hash is re-pinned to `c89b96ba…10a1` in the ceremony script; signing attests to the amended text.
+
+The manual equivalent, if you prefer to drive it yourself:
 
 ```bash
 gh pr merge 288 --repo HeadySystems/Heady-AI --merge          # or --squash, your call
@@ -158,6 +183,18 @@ current shell depends on will lock this session out of the key — which is the 
 **Console:** <https://console.cloud.google.com/security/kms/keyring/manage/global/heady-approval?project=heady-ai>
 
 ### STEP 3 — create the ARBITER key and its workload identity (S3, closes S2)
+
+**Status: still pending.** An agent attempt to run these was blocked by the Claude Code auto-mode
+permission classifier, so they remain yours to run (or to allow via a Bash permission rule). Verified
+2026-08-22: the `heady-approval` keyring still holds only `founder-evidence` and `receipt-signing`.
+
+> **Independence decision to make while you run this.** ADR-0053 — which you are accepting — rests on
+> ARBITER being *separately authenticated*. A service account you can impersonate as project owner
+> gives you both evidence classes, which is the manufactured independence ADR-0031 §1 rejects. To make
+> the second channel real, reach `heady-arbiter` only from the ARBITER workload (Workload Identity
+> Federation from a named CI job or Cloud Run service) and do not grant yourself
+> `roles/iam.serviceAccountTokenCreator` on it. If you accept owner-impersonation as a residual risk,
+> record that in the ADR-0053 activation record rather than leaving it implicit.
 
 ```bash
 gcloud kms keys create arbiter-attestation \
@@ -256,7 +293,7 @@ Write the exact service definition to a file and hash it. Image **by digest**.
 ```yaml
 # deploy/approval-api.service.yaml  (illustrative shape — image/SA are yours to fill)
 image: us-east1-docker.pkg.dev/heady-ai/heady/approval-api@sha256:<DIGEST-FROM-STEP-6>
-serviceAccount: <approval-api-runtime-sa>@heady-ai.iam.gserviceaccount.com
+serviceAccount: heady-approval-api@heady-ai.iam.gserviceaccount.com
 env:
   FIREBASE_PROJECT_ID: heady-ai
   APPROVAL_SERVICE_AUDIENCE: <the service's own canonical URL>
@@ -267,11 +304,20 @@ secrets:
   DATABASE_URL: approval-runtime-database-url:latest
 ```
 
-Runtime service account gets **exactly** these and nothing more:
+The runtime service account does not exist yet. The project currently has
+`firebase-adminsdk-fbsvc`, `vertex-express`, `heady-gha-sa`, `1003436179562-compute`,
+`heady-gateway-invoker`, `heady-nats-probe`, and `heady-nats-runtime` — **none** is appropriate
+(reusing any of them would over-grant the approval runtime). Create a dedicated one:
 
 ```bash
-SA=<approval-api-runtime-sa>@heady-ai.iam.gserviceaccount.com
+gcloud iam service-accounts create heady-approval-api \
+  --display-name="HEADY approval API runtime (least privilege)" --project="$HEADY_PROJECT"
+export SA=heady-approval-api@heady-ai.iam.gserviceaccount.com
+```
 
+Then it gets **exactly** these and nothing more:
+
+```bash
 gcloud kms keys add-iam-policy-binding receipt-signing \
   --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
   --member="serviceAccount:$SA" --role=roles/cloudkms.signerVerifier
