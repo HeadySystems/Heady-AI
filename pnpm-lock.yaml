@@ -628,6 +628,18 @@ importers:
         specifier: workspace:*
         version: link:../phi-math
 
+  tooling/approval-evidence:
+    dependencies:
+      '@heady/approvals':
+        specifier: workspace:*
+        version: link:../../packages/approvals
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../../packages/phi-math
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
+
   tooling/arena-spec: {}
 
   tooling/auto-flow: {}

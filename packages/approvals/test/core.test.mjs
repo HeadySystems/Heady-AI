@@ -86,6 +86,31 @@ test("change classification gives approval and patent zones precedence over auto
   }), "approval_system");
 });
 
+test("every migration that touches the approval schema classifies as approval_system", async () => {
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+  const migrationsDir = fileURLToPath(new URL("../../db/migrations/", import.meta.url));
+  const migrations = readdirSync(migrationsDir).filter((name) => name.endsWith(".sql"));
+
+  // Classification is name-based because it must stay a pure sync function.
+  // This walks the actual file bodies, so a migration that touches
+  // heady_approval.* under a name the predicate cannot see is a FINDING —
+  // either rename it or add it to APPROVAL_SYSTEM_PREFIXES.
+  const touchesApprovalSchema = migrations
+    .filter((name) => readFileSync(join(migrationsDir, name), "utf8").includes("heady_approval."));
+
+  // 0004 (control plane) and 0010 (autonomous grants + insert guards) at minimum.
+  assert.ok(touchesApprovalSchema.length >= 2);
+  for (const name of touchesApprovalSchema) {
+    assert.equal(classifyChange({
+      subjectType: "change",
+      patentLocked: false,
+      zonePaths: [`packages/db/migrations/${name}`],
+    }), "approval_system", `${name} touches heady_approval.* but is not approval_system scope`);
+  }
+});
+
 test("state machine only permits the accepted directed transitions", () => {
   assert.equal(canTransition("draft", "pending"), true);
   assert.equal(canTransition("pending", "approved"), true);
