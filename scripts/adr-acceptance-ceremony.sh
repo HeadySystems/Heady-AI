@@ -4,9 +4,12 @@
 # ║  Founder-run. Creates the OpenPGP-signed acceptance tags for the ║
 # ║  Proposed ADRs, verifies each one, then records the acceptance in ║
 # ║  the ADR bodies. An agent MUST NOT run this: ADR-0031 §2 and     ║
-# ║  ADR-0013 reserve the founder signature to the founder, and      ║
-# ║  ADR-0052 §2 makes a signed Git object the only sufficient       ║
-# ║  evidence for ratifying a governance artifact.                   ║
+# ║  ADR-0013 reserve the founder signature to the founder. That is  ║
+# ║  sufficient authority on its own — it does not depend on 0052.   ║
+# ║                                                                  ║
+# ║  SCOPE: ADR-0053 and ADR-0054 only. The founder declined         ║
+# ║  ADR-0052 on 2026-08-22 (minimize friction / maximize            ║
+# ║  automation); it stays Proposed and is NOT signed here.          ║
 # ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
@@ -28,8 +31,7 @@ cd "$REPO_ROOT"
 # ADR number · file · expected sha256 at time of preparation (2026-08-22).
 # A mismatch means the file changed after this script was written — re-read the
 # ADR before signing it, then update the hash here deliberately.
-readonly ADR_0052_FILE="docs/adr/0052-instruction-provenance-and-channel-authentication.md"
-readonly ADR_0052_SHA="e5c114f94c22893816b485263400ddf84629db2ad466e35b9954f64e7ed715d2"
+# ADR-0052 is deliberately absent: declined by the founder 2026-08-22, remains Proposed.
 readonly ADR_0054_FILE="docs/adr/0054-domain-canon-carrier-closure.md"
 # 0054 re-pinned 2026-08-22 after the founder directed that `headytrade` be removed
 # from the ADR-0033 and legacy ADR-0019 snapshot tables. That required amending 0054
@@ -84,7 +86,6 @@ $dirty
   [[ -n "$configured" ]] || die "git config user.signingkey is unset"
   log "  ok  user.signingkey $configured (gpg delegates to its [S] subkey)"
 
-  verify_file "$ADR_0052_FILE" "$ADR_0052_SHA"
   verify_file "$ADR_0054_FILE" "$ADR_0054_SHA"
 
   log "  note ADR-0053 lives on branch governance/solo-founder-quorum-amendment-20260822"
@@ -158,8 +159,7 @@ main() {
       log "Preconditions pass. Nothing was written. Re-run with --sign to perform the ceremony."
       ;;
     --sign)
-      local tag52 tag54 tag53=""
-      tag52="$(sign_one 0052 "Instruction Provenance and Channel Authentication" "$ADR_0052_FILE" "$ADR_0052_SHA" | tail -1)"
+      local tag54 tag53=""
       tag54="$(sign_one 0054 "Domain Canon Carrier Closure and HeadyFinance Succession" "$ADR_0054_FILE" "$ADR_0054_SHA" | tail -1)"
       if [[ "${ADR_0053_PRESENT:-0}" == "1" ]]; then
         local f53="docs/adr/0053-temporary-solo-founder-approval-quorum.md"
@@ -167,7 +167,6 @@ main() {
       fi
 
       log "── recording acceptance in the ADR bodies ───────────────────"
-      record_one 0052 "$ADR_0052_FILE" "$tag52"
       record_one 0054 "$ADR_0054_FILE" "$tag54"
       [[ -n "$tag53" ]] && record_one 0053 "docs/adr/0053-temporary-solo-founder-approval-quorum.md" "$tag53"
 
@@ -178,11 +177,13 @@ main() {
       git commit -S -m "docs(adr): record founder acceptance of the proposed ADRs
 
 Acceptance of record is the founder-signed tag on each line, verifiable with
-'git tag -v' against the ADR-0031 key $KEY_OF_RECORD. Per ADR-0052 §2 a signed
-Git object is the only evidence sufficient to ratify a governance artifact; the
-Status bullets here are the human-readable projection of those tags, not the
-acceptance itself." -- \
-        "$ADR_0052_FILE" "$ADR_0054_FILE" \
+'git tag -v' against the ADR-0031 key $KEY_OF_RECORD. ADR-0031 sec 2 reserves that
+signature to the founder, so the Status bullets written here are the human-readable
+projection of those tags, never the acceptance itself.
+
+ADR-0052 is intentionally not in this ceremony: the founder declined it on
+2026-08-22 to minimize governance friction. It remains Proposed." -- \
+        "$ADR_0054_FILE" \
         ${tag53:+docs/adr/0053-temporary-solo-founder-approval-quorum.md}
 
       log ""
