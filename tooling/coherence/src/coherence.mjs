@@ -12,6 +12,9 @@ import { join, relative, resolve } from 'node:path';
 import { checkStage0, parseCodeownersPatterns } from './stage0.mjs';
 import { checkLaws } from './laws.mjs';
 import { SCALAR_GUARDS, scalarViolations } from './scalar-guards.mjs';
+import {
+  DOMAIN_CARRIERS, checkDomainCarriers, extractRegistryStatus, rosterProjection,
+} from './domain-guards.mjs';
 import { checkFrameworks, checkTestsAlongside, checkMerkleTrigger } from './packages-law.mjs';
 import {
   LOCALHOST_RULES, GLASSBOX_LINE_RULES, GLASSBOX_BLOCK_RULES, SECRET_RULES,
@@ -20,6 +23,9 @@ import { check as checkDataConsistency } from '../../data-consistency/src/cli.mj
 
 const ROOT = resolve(new URL('../../..', import.meta.url).pathname);
 const OUT = join(ROOT, '.data', 'coherence');
+// The domain roster is a COMMITTED projection (src/ consumers read it at runtime),
+// unlike the .data/ artifacts above which are build-local.
+const ROSTER_REL = 'configs/_generated/domain-roster.json';
 const log = (level, msg, f = {}) => process.stdout.write(`${JSON.stringify({ t: 'coherence', level, msg, ...f })}\n`);
 const rd = (p) => readFileSync(join(ROOT, p), 'utf8');
 const rdj = (p) => JSON.parse(rd(p));
@@ -192,6 +198,24 @@ function check({ facts, pkgs }) {
       else if (!r.exists_in_rebuild && !present) info('S5-unbuilt', 'planned package not yet built', { target: r.target });
     }
   }
+
+  // D1–D6 — domain canon vs every live carrier. Semantics live in
+  // domain-guards.mjs; the kernel supplies the IO (one read per carrier).
+  // A carrier file that is absent is itself a contradiction — the guard table
+  // is the registry of what MUST exist, so a silent skip would fail open.
+  const carriers = {};
+  for (const c of DOMAIN_CARRIERS) {
+    if (!has(c.file)) { err('D0-carrier-missing', 'registered domain carrier file is absent', { carrier: c.token, file: c.file }); continue; }
+    try { carriers[c.token] = c.extract(rd(c.file)); }
+    catch (e) { err('D0-carrier-unreadable', 'registered domain carrier could not be parsed', { carrier: c.token, file: c.file, error: e.message }); }
+  }
+  const brandRegistry = DOMAIN_CARRIERS.find((c) => c.token === 'domain-registry');
+  for (const f of checkDomainCarriers({
+    domains: facts.domains,
+    carriers,
+    registryStatus: has(brandRegistry.file) ? extractRegistryStatus(rd(brandRegistry.file)) : {},
+    roster: has(ROSTER_REL) ? rdj(ROSTER_REL) : null,
+  })) err(f.id, f.msg, f.evidence);
 
   // S6 — decomposition @heady/* targets vs real package names (naming drift)
   if (has('tooling/decomposition/manifest.json')) {
@@ -474,6 +498,14 @@ if (cmd === 'vars' || cmd === 'all') {
   extra.push(...envDrift(secrets));
   const byClass = vars.reduce((a, v) => { a[v.class] = (a[v.class] || 0) + 1; return a; }, {});
   log('info', 'variable registry built', { total: vars.length, ...byClass });
+}
+if (cmd === 'domains' || cmd === 'all') {
+  const projection = rosterProjection(built.facts.domains);
+  if (!noWrite) {
+    mkdirSync(join(ROOT, 'configs', '_generated'), { recursive: true });
+    writeFileSync(join(ROOT, ROSTER_REL), `${JSON.stringify(projection, null, 2)}\n`);
+  }
+  log('info', 'domain roster projected', { count: projection.count, out: ROSTER_REL });
 }
 if (cmd === 'check' || cmd === 'all' || cmd === 'vars') {
   const findings = [...(cmd === 'vars' ? [] : check(built)), ...extra];

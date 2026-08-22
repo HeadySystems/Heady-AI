@@ -1,28 +1,35 @@
 {
   "version": "3.0.1-OMEGA",
-  "generated": "2026-03-06T21:05:26.986Z",
+  "generated": "2026-08-22T17:34:49.480Z",
   "project": {
     "name": "Heady™ Latent Operating System",
     "vision": "A 46-year autonomous AI operating system that stores executable potential as AST nodes in pgvector, materializes code on-demand, and operates as a self-healing multi-swarm civilization.",
     "architecture": "Zero-Repo Liquid Architecture — code only exists during compilation. 18 swarms, 31+ bees, 742 aspirational tasks.",
     "domains": [
-      "headymcp.com",
+      "1ime1.com",
+      "headyai.com",
       "headyapi.com",
-      "headyio.com",
-      "headyme.com",
+      "headybot.com",
+      "headybuddy.com",
+      "headybuddy.org",
+      "headyconnection.org",
       "headyfinance.com",
-      "headymusic.com",
-      "headyfoundation.org",
+      "headyio.com",
+      "headylab.com",
+      "headylens.com",
+      "headymcp.com",
+      "headyme.com",
+      "headyos.com",
       "headysystems.com",
-      "myheady.ai"
+      "headyweb.com"
     ]
   },
   "coreModules": {
-    "heady-manager": "Express.js server — entry point, bootstraps all services, serves all 9 domains via domain routing",
+    "heady-manager": "Express.js server — entry point, bootstraps all services, serves all 16 domains via domain routing",
     "vector-memory": "pgvector-backed 3D vector memory with PCA-lite projection, 8-octant zone mapping, Fibonacci sharding",
     "domain-router": "Maps hostnames to UI modules — 22 hostname entries, 12 unique UI modules",
     "site-renderer": "Dynamic HTML generation with Sacred Geometry animations and chat widgets",
-    "auto-projection": "Pre-renders all 9 sites on boot, caches in RAM, pushes to Cloudflare KV edge",
+    "auto-projection": "Pre-renders all 16 sites on boot, caches in RAM, pushes to Cloudflare KV edge",
     "vault-boot": "Encrypted credential vault — AES-256-GCM, decrypts at boot, projects into process.env",
     "swarm-matrix": "18-swarm, 31-bee runtime registry with status tracking and activation APIs",
     "aspirational-registry": "742 unified aspirational tasks from 14 sources, mapped to swarms",
@@ -56,7 +63,7 @@
   "stack": {
     "runtime": "Node.js 20/22",
     "framework": "Express.js",
-    "database": "Neon Postgres + pgvector (384-dim embeddings)",
+    "database": "Neon Postgres + pgvector (384-dim embeddings — facts.yaml embedding.dim / ADR-0015, @cf/baai/bge-small-en-v1.5)",
     "cache": "Upstash Redis + RAM (auto-projection)",
     "edge": "Cloudflare Workers + KV + R2",
     "compute": "Google Cloud Run (heady-manager service)",
@@ -119,5 +126,5 @@
       "prettier"
     ]
   },
-  "rebuildInstructions": "\nYou are rebuilding the Heady™ Latent OS from scratch.\n\nCRITICAL REQUIREMENTS:\n1. Each module must be its own file — NO monolithic files\n2. Every bee gets its own file in src/bees/\n3. Every service gets its own file in src/services/\n4. Use the EXACT same API endpoints and route structure\n5. Implement proper error handling with structured logging\n6. Use pgvector for vector memory (384-dim embeddings)\n7. Implement the vault system (AES-256-GCM encrypted credentials)\n8. Build the domain router to serve all 9 domains from one Express server\n9. Implement the swarm matrix with all 18 swarms and 31 bees\n10. Build the HologramBee (AST-to-edge compiler) and ContextWeaverBee (memory assembler)\n11. Sacred Geometry CSS animations on all site renders\n12. Health checks on every service with circuit breaker pattern\n13. Dockerfile must be multi-stage with non-root user\n14. GitHub Actions CI/CD with security scanning\n\nOUTPUT FORMAT:\n- Create a complete, runnable Node.js project\n- Include package.json with all dependencies\n- Include Dockerfile\n- Include .github/workflows/deploy.yml\n- Include README.md with architecture documentation\n- Every file should be production-quality with JSDoc comments\n"
+  "rebuildInstructions": "\nYou are rebuilding the Heady™ Latent OS from scratch.\n\nCRITICAL REQUIREMENTS:\n1. Each module must be its own file — NO monolithic files\n2. Every bee gets its own file in src/bees/\n3. Every service gets its own file in src/services/\n4. Use the EXACT same API endpoints and route structure\n5. Implement proper error handling with structured logging\n6. Use pgvector for vector memory (384-dim embeddings — the locked dimension, see ADR-0015)\n7. Implement the vault system (AES-256-GCM encrypted credentials)\n8. Build the domain router to serve all 16 domains from one Express server\n9. Implement the swarm matrix with all 18 swarms and 31 bees\n10. Build the HologramBee (AST-to-edge compiler) and ContextWeaverBee (memory assembler)\n11. Sacred Geometry CSS animations on all site renders\n12. Health checks on every service with circuit breaker pattern\n13. Dockerfile must be multi-stage with non-root user\n14. GitHub Actions CI/CD with security scanning\n\nOUTPUT FORMAT:\n- Create a complete, runnable Node.js project\n- Include package.json with all dependencies\n- Include Dockerfile\n- Include .github/workflows/deploy.yml\n- Include README.md with architecture documentation\n- Every file should be production-quality with JSDoc comments\n"
 }

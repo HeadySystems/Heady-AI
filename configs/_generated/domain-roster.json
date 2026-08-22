@@ -1,0 +1,123 @@
+{
+  "schema": "domain-roster.v1",
+  "generated_by": "node tooling/coherence/src/coherence.mjs domains",
+  "sot": "facts.yaml domains:",
+  "edit": "Never hand-edit. Change facts.yaml and regenerate; guard D6 fails on drift.",
+  "count": 16,
+  "fqdns": [
+    "1ime1.com",
+    "headyai.com",
+    "headyapi.com",
+    "headybot.com",
+    "headybuddy.com",
+    "headybuddy.org",
+    "headyconnection.org",
+    "headyfinance.com",
+    "headyio.com",
+    "headylab.com",
+    "headylens.com",
+    "headymcp.com",
+    "headyme.com",
+    "headyos.com",
+    "headysystems.com",
+    "headyweb.com"
+  ],
+  "domains": [
+    {
+      "key": "1ime1",
+      "fqdn": "1ime1.com",
+      "role": "admin-surface",
+      "status": "verified"
+    },
+    {
+      "key": "headyai",
+      "fqdn": "headyai.com",
+      "role": "ai-orchestration-hub",
+      "status": "unverified"
+    },
+    {
+      "key": "headyapi",
+      "fqdn": "headyapi.com",
+      "role": "api-playground",
+      "status": "unverified"
+    },
+    {
+      "key": "headybot",
+      "fqdn": "headybot.com",
+      "role": "bot-automation-surface",
+      "status": "unverified"
+    },
+    {
+      "key": "headybuddy-com",
+      "fqdn": "headybuddy.com",
+      "role": "companion-assistant",
+      "status": "unverified"
+    },
+    {
+      "key": "headybuddy-org",
+      "fqdn": "headybuddy.org",
+      "role": "companion-assistant",
+      "status": "unverified"
+    },
+    {
+      "key": "headyconnection",
+      "fqdn": "headyconnection.org",
+      "role": "org-nonprofit",
+      "status": "verified"
+    },
+    {
+      "key": "headyfinance",
+      "fqdn": "headyfinance.com",
+      "role": "fintech-advisory",
+      "status": "unverified"
+    },
+    {
+      "key": "headyio",
+      "fqdn": "headyio.com",
+      "role": "developer-portal",
+      "status": "unverified"
+    },
+    {
+      "key": "headylab",
+      "fqdn": "headylab.com",
+      "role": "research-patent-lab",
+      "status": "unverified"
+    },
+    {
+      "key": "headylens",
+      "fqdn": "headylens.com",
+      "role": "vision-spatial-graphics",
+      "status": "unverified"
+    },
+    {
+      "key": "headymcp",
+      "fqdn": "headymcp.com",
+      "role": "mcp-endpoint",
+      "status": "verified"
+    },
+    {
+      "key": "headyme",
+      "fqdn": "headyme.com",
+      "role": "primary-user-surface",
+      "status": "verified"
+    },
+    {
+      "key": "headyos",
+      "fqdn": "headyos.com",
+      "role": "latent-os-dashboard",
+      "status": "unverified"
+    },
+    {
+      "key": "headysystems",
+      "fqdn": "headysystems.com",
+      "role": "platform-operations",
+      "status": "unverified"
+    },
+    {
+      "key": "headyweb",
+      "fqdn": "headyweb.com",
+      "role": "web-frontend-hub",
+      "status": "unverified"
+    }
+  ]
+}
