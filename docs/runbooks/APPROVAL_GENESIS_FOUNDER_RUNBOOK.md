@@ -213,12 +213,28 @@ Done, verified live:
 > manufactured independence ADR-0031 §1 rejects, and ADR-0053's entire quorum rests on ARBITER being
 > *separately authenticated*. Activating 0053 without fixing this makes the second channel decoration.
 >
-> Fix (pick one, then record it in the ADR-0053 activation record):
-> 1. **Bind ARBITER to a workload, not a human.** Run ARBITER as a named Cloud Run service or CI job
->    via Workload Identity Federation; keep `roles/owner` off the ceremony identity, or move founder
->    signing to a separate identity per STEP 2 so the two channels have no common principal.
-> 2. **Accept owner-impersonation as residual risk** — but write it into the activation record
->    explicitly, so a later auditor sees a decision rather than an oversight.
+> **FOUNDER DECISION 2026-08-22 — owner-impersonation ACCEPTED as residual risk.** Option 2 below was
+> chosen deliberately, not by omission. This paragraph is the activation record ADR-0053 requires.
+>
+> What was accepted, stated precisely so a later auditor sees the shape of the risk:
+> `user:eric@headyconnection.org` holds project `roles/owner` and can therefore mint an ARBITER
+> attestation by impersonating `heady-arbiter`, while also holding `signerVerifier` on
+> `founder-evidence`. Under ADR-0053's `solo_founder` quorum — founder decision **plus** ARBITER
+> `ALLOW` and no external human — a single compromised or coerced principal can consequently satisfy
+> **both** required evidence classes for an approval-system or protected-migration change. The typed
+> quorum still records the two classes truthfully (ADR-0053 §4 is not violated); what is reduced is the
+> *independence* of the second one.
+>
+> Mitigations that remain in force and are worth not losing: the ARBITER key has exactly one IAM
+> binding and zero user-managed keys; every attestation is bound to an exact diff/payload/policy hash
+> with a nonce and a φ×5-minute expiry; escalation and binding drift fail closed; and the mode
+> self-expires 2026-11-19T23:59:59Z, at which point ADR-0031's external-human requirement resumes
+> automatically.
+>
+> Options not taken:
+> 1. **Bind ARBITER to a workload, not a human** — run it as a named Cloud Run service or CI job via
+>    Workload Identity Federation, keeping `roles/owner` off the ceremony identity. Still the correct
+>    end state; revisit when a second human or a dedicated ARBITER runtime exists.
 >
 > Deliberately **not** changed by an agent: project-level owner bindings are yours.
 
@@ -243,6 +259,11 @@ Done, verified live:
 >
 > Key deletion is destructive and will break whatever authenticates with it — inventory first. Not
 > performed by an agent.
+>
+> **Scope note:** the founder's 2026-08-22 acceptance of *owner-impersonation* covers the ARBITER
+> independence question above. It does **not** cover this finding, which is a different and larger
+> exposure: five exportable, never-expiring owner credentials are five copies of the whole trust root,
+> held by whoever has the files, not by a principal you can name. This item remains OPEN.
 
 The commands that produced the state above, for the record:
 
@@ -315,7 +336,33 @@ pnpm --filter @heady/approvals test:integration
 Expected: the plan lists `0010`, `0011`, `0012` pending; after apply, the integration suite's 4
 currently-skipped tests run. **Delete the temp branch when done.**
 
-### STEP 6 — Artifact Registry + immutable image (S6)
+### STEP 6 — Artifact Registry + immutable image ✅ BUILT 2026-08-22
+
+| Item | Value |
+|---|---|
+| Artifact Registry repo | `heady`, DOCKER, `us-east1` (created 2026-08-22) |
+| Build | `7a3fabfa-d2ed-4f11-af28-b6fa6e2caef0` · **SUCCESS** · 1m02s |
+| Image | `us-east1-docker.pkg.dev/heady-ai/heady/approval-api` |
+| Tag | `86c3730b088c26abbf60f733a200893eafa00962` |
+| **Deployment digest** | `sha256:b18b8e41b867a19288d65d164712a5f8b961f5657f5a42c46bc19e66933d16af` |
+
+That digest is `--deployment-artifact-digest`.
+
+> **`--rollback-artifact-digest` has no honest value yet.** This is the *first* approval-api image that
+> has ever built successfully — the only prior attempts, `e328fe38` (2026-08-22) and `c4cd2cad`
+> (2026-07-29), both FAILED, so no previously-good image exists to roll back to. `genesis:prepare`
+> validates the flag as an OCI digest but does not require it to differ from the deployment digest, so
+> passing the same digest twice would satisfy the schema while asserting a rollback path that does not
+> exist. Do one of these instead, deliberately:
+> 1. **Build a second image and treat it as the rollback baseline** — cheap, and gives a genuinely
+>    distinct digest to fall back to.
+> 2. **Pass the deployment digest for both and state in the security review that first-deployment
+>    rollback is "delete the Cloud Run service", not "deploy an earlier image"** — accurate, and
+>    arguably the truthful description of a first deployment.
+>
+> Not decided by an agent: it changes what the founder's signature attests to.
+
+The commands that produced the state above:
 
 ```bash
 gcloud artifacts repositories create heady \
@@ -491,7 +538,8 @@ Every row was measured, not inferred.
 | KMS `founder-evidence` v1 | ✅ Ed25519, ENABLED | fingerprint `0f7753c1…78ed` |
 | KMS `receipt-signing` v1 | ✅ Ed25519, ENABLED | fingerprint `e9dfdcb1…64ba` |
 | KMS `arbiter-attestation` v1 | ✅ Ed25519, ENABLED (created 2026-08-22) | fingerprint `cc7151dd…76b8`; sole IAM binding = `heady-arbiter` SA |
-| Artifact Registry repo `heady` (us-east1) | ❌ absent (only `gcr.io`, `cloud-run-source-deploy`) | `gcloud artifacts repositories list` |
+| Artifact Registry repo `heady` (us-east1) | ✅ created 2026-08-22 | `gcloud artifacts repositories list` |
+| approval-api image | ✅ built — `sha256:b18b8e41…16af` (build `7a3fabfa`, SUCCESS) | `gcloud artifacts docker images list` |
 | Cloud Run `approval-api` | ❌ **not deployed** | `gcloud run services list` |
 | Genesis manifest | ❌ cannot be produced yet — see §4 | `prepare-genesis-manifest.mjs` requires all 8 inputs |
 
@@ -782,7 +830,8 @@ recompute it at your final implementation commit — and note the pending `packa
 | `approvalSourceTreeSha256` | recompute — changes with the implementation commit | `git ls-tree` over `apps/approval-api`, `packages/approvals`, migration 0004, `policies/approval.rego` |
 | `arbiterPublicKeyFingerprint` | `cc7151dd68a5bd20364c28753ad2689678b2646e9891c6705dc1bd3777c076b8` | `configs/keys/approval/arbiter-attestation.public.jwk.json` |
 | `deploymentManifestSha256` | **pending S7** | — |
-| `deploymentArtifactDigest` / `rollbackArtifactDigest` | **pending S6** | — |
+| `deploymentArtifactDigest` | `sha256:b18b8e41b867a19288d65d164712a5f8b961f5657f5a42c46bc19e66933d16af` | build `7a3fabfa`, tag `86c3730b08` |
+| `rollbackArtifactDigest` | **decision needed** — no prior good image exists, see STEP 6 | — |
 | `governanceReportSha256` / `securityReviewSha256` | **pending S8** | — |
 
 ---
