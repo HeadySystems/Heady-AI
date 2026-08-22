@@ -56,7 +56,7 @@ Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-fronte
 | **headymcp.com** | HeadySystems | MCP gateway / per-request API console (Inner) | planned (`apps/mcp-dashboard` stub; edge worker live separately) |
 | **headybuddy.com** | HeadySystems | Companion AI (Middle) | planned |
 | **headyos.com** | HeadySystems | Latent OS — enterprise license (Middle) | planned |
-| **headytrade.com** | HeadySystems | FinTech / trading (Outer) | planned |
+| **headyfinance.com** | HeadySystems | FinTech advisory — risk + signal, paper-mode (Outer) | planned |
 | **headylab.com** | HeadySystems | Research / patents (Outer) | planned |
 | **headyconnection.org** | HeadyConnection (501(c)(3)) | Nonprofit portal — grants/donations; **IRS boundary: no commercial features** (Governance) | planned |
 | **headyweb.com** | HeadySystems | Web / frontend hub (Ops) | planned |

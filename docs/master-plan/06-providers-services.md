@@ -159,7 +159,7 @@ these by hostname.
 ## Drift flags vs the locked stack
 
 - **D1 — Cloud Run region.** `facts.yaml deploy_targets.origin.region: us-central1` vs **ADR-0022 (newer, ⭐⭐⭐⭐⭐) us-east1**, which matches the live service. **us-east1 canonical; facts.yaml stale.**
-- **D2 — Domain registry (3-way).** Task's 9 (incl. `heady-ai.com`, `headybuddy.org`) vs ADR-0019's 9 (incl. `headyai.com`, `headybuddy.com`, headyos/headytrade/headylab/headyweb; **omits headysystems.com**) vs compendium I7's 11 (adds headylens, headyfinance). The **edge router** serves the task's 9 minus heady-ai.com plus headylens.com.
+- **D2 — Domain registry (3-way).** Task's 9 (incl. `heady-ai.com`, `headybuddy.org`) vs ADR-0019's 9 (incl. `headyai.com`, `headybuddy.com`, headyos/headyfinance/headylab/headyweb; **omits headysystems.com**) vs compendium I7's 11 (adds headylens, headyfinance). The **edge router** serves the task's 9 minus heady-ai.com plus headylens.com.
 - **D3 — Firebase project.** Live `heady-ai` vs skill-asserted `gen-lang-client-0920560496` (`heady-firebase-auth-orchestrator`). Skill stale.
 - **D4 — OpenRouter.** Named as the chokepoint path in ADR-0018 but **no wired client and no credential** in the registry.
 - **D5 — GCP project name.** ADR-0022 nominal `heady-rebuild` vs live `heady-ai`.

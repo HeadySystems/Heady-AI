@@ -155,13 +155,6 @@ domains:
       - global-config
       - site-registry
     dns_observed: cloudflare-ns https-200
-  headytrade:
-    fqdn: headytrade.com
-    role: fintech-trading
-    status: unverified
-    sources:
-      - domain-registry
-    dns_observed: external-ns-godaddy https-unreachable
   headylab:
     fqdn: headylab.com
     role: research-patent-lab

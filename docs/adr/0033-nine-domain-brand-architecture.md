@@ -28,7 +28,7 @@ Establish a canonical nine-domain registry as the single source of truth for all
 | **headymcp.com** | HeadySystems Inc. | MCP Gateway | API / Per-Request | `headymcp` | Inner |
 | **headybuddy.com** | HeadySystems Inc. | Companion AI | Subscription + Usage | `headybuddy` | Middle |
 | **headyos.com** | HeadySystems Inc. | Latent OS | Enterprise License | `headyos` | Middle |
-| **headytrade.com** | HeadySystems Inc. | FinTech / Trading | Revenue Share + SaaS | `headytrade` | Outer |
+| **headyfinance.com** | HeadySystems Inc. | FinTech Advisory | Revenue Share + SaaS | `headyfinance` | Outer |
 | **headylab.com** | HeadySystems Inc. | Research / Patents | Enterprise + Grants | `headylab` | Outer |
 | **headyconnection.org** | HeadyConnection Inc. | Nonprofit Portal | Grants / Donations | `headyconnection` | Governance |
 | **headyweb.com** | HeadySystems Inc. | Web / Frontend Hub | Ad-supported / Free | `headyweb` | Ops |
@@ -57,7 +57,7 @@ export const DOMAIN_REGISTRY = {
   'headymcp.com':        { entity: 'HeadySystems', category: 'mcp',        layer: 'Inner',      tenant: 'headymcp',      commercial: true  },
   'headybuddy.com':      { entity: 'HeadySystems', category: 'companion',  layer: 'Middle',     tenant: 'headybuddy',    commercial: true  },
   'headyos.com':         { entity: 'HeadySystems', category: 'os',         layer: 'Middle',     tenant: 'headyos',       commercial: true  },
-  'headytrade.com':      { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headytrade',    commercial: true  },
+  'headyfinance.com':    { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headyfinance',  commercial: true  },
   'headylab.com':        { entity: 'HeadySystems', category: 'research',   layer: 'Outer',      tenant: 'headylab',      commercial: true  },
   'headyconnection.org': { entity: 'HeadyConnection', category: 'nonprofit', layer: 'Governance', tenant: 'headyconnection', commercial: false },
   'headyweb.com':        { entity: 'HeadySystems', category: 'web',        layer: 'Ops',        tenant: 'headyweb',      commercial: true  },
@@ -107,6 +107,7 @@ export const DOMAIN_REGISTRY = {
 
 - **The domain COUNT is registry-derived, not fixed.** "Nine" was the roster at acceptance time; the current mesh is an 11-domain site delivery mesh, and the machine-readable `domains:` block of `facts.yaml` (repo root, `/home/headyme/Heady-AI/facts.yaml`) is the source of truth for the current roster. See ADR-0038 for the registry decision, whose carrier moved from `src/config/domain-registry.js` to `facts.yaml`. The table above is preserved as the accepted 2026-06-17 snapshot, not as the live roster.
 - **What this ADR carries forward as invariant:** the legal-entity split (HeadyConnection Inc. nonprofit vs HeadySystems Inc. C-Corp), the IRS boundary (headyconnection.org must never serve commercial endpoints), and per-domain auth tenant isolation.
+- **`headytrade.com` → `headyfinance.com` (2026-08-22 rename).** The FinTech row of the snapshot table and the registry excerpt above were rewritten in place: the brand is `headyfinance`, the product is trading **advisory** (risk + signal, paper-mode default, no execution and no custody), and the code is `@heady/headyfinance`. `headytrade` no longer exists anywhere in the canon; the `facts.yaml` `domains.headyfinance.note` field carries the founder reconciliation of 2026-07-29 that established the successor name.
 - **Session layer:** canonical ADR-0028 (cross-domain SSO partitioned cookies) governs the session/cookie layer that sits on top of this entity split; the two are complementary — this ADR draws the entity boundary, ADR-0028 defines how sessions may lawfully cross it.
 
 ## Provenance
