@@ -89,8 +89,12 @@ roles, provisioning boundary, and revocation behavior.
    [Neon console](https://console.neon.tech/) or through the
    [Neon branching API](https://neon.com/docs/manage/branches).
 2. Give the migration job the branch’s direct connection URL as `DATABASE_URL`.
-3. Run `pnpm db:migrate` first; confirm that the expected ordered migrations are pending and that
-   the chain ends with `0007_autonomous_approval_grants.sql`.
+3. Run `pnpm db:migrate` first (plan-only; it writes nothing without `--apply`) and confirm the
+   expected ordered migrations are pending. The approval control plane is
+   `0004_approval_control_plane.sql` plus `0010_autonomous_approval_grants.sql` — `0010` is not
+   optional, it creates `heady_approval.autonomous_grant_claims` and the `guard_approval_insert` /
+   `validate_autonomous_event_binding` triggers. The chain itself ends with
+   `0012_neon_universal_source_ledger.sql`.
 4. Run `pnpm db:migrate:apply` only against the temporary branch.
 5. Run the integration suite with the temporary owner URL only for fixture setup and the
    least-privilege runtime URL for every service operation:
@@ -116,7 +120,7 @@ After the implementation commit is clean, the image and rollback images have imm
 the governance/security reports are content-addressed, run:
 
 ```bash
-pnpm --filter @heady/approvals genesis:prepare -- \
+pnpm --filter @heady/approvals genesis:prepare \
   --deployment-manifest-sha256 <64-hex-sha256> \
   --deployment-artifact-digest <immutable-image-digest> \
   --rollback-artifact-digest <immutable-rollback-image-digest> \
@@ -154,16 +158,19 @@ key whose asymmetric-sign permission is granted only to the founder identity, th
 JWK for the one-time principal registration:
 
 ```bash
-pnpm --filter @heady/approval-api key:public -- \
+pnpm --filter @heady/approval-api key:public \
   --key-version <founder-evidence-kms-key-version>
 ```
 
 For one approval, save the exact `heady.approval.evidence.v1` envelope built from the approval ID,
-payload hash, diff hash, policy hash, action, fresh nonce, short expiry, and decision detail. While
-authenticated locally as the founder—not as the approval API service account—run:
+payload hash, diff hash, policy hash, action, fresh nonce, short expiry, and decision detail.
+`tooling/approval-evidence` assembles that envelope from the `GET /api/approvals/:approvalId` view and
+prints the hash under signature; it holds no key material and refuses a request body this endpoint
+would later reject. While authenticated locally as the founder—not as the approval API service
+account—run:
 
 ```bash
-pnpm --filter @heady/approval-api evidence:sign -- \
+pnpm --filter @heady/approval-api evidence:sign \
   --key-version <founder-evidence-kms-key-version> \
   --envelope <canonical-evidence-envelope.json>
 ```

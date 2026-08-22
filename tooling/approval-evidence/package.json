@@ -1,0 +1,23 @@
+{
+  "heady_brand": "HEADY™ Approval Evidence Ceremony Builder v1.0.0 — © 2026 HeadySystems Inc.",
+  "name": "@heady/approval-evidence",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Builds the canonical heady.approval.evidence.v1 envelope a human principal signs, without holding key material.",
+  "main": "src/envelope.mjs",
+  "exports": {
+    ".": "./src/envelope.mjs"
+  },
+  "scripts": {
+    "build": "node --check src/envelope.mjs && node --check bin/build-evidence-envelope.mjs",
+    "envelope": "node bin/build-evidence-envelope.mjs",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/approvals": "workspace:*",
+    "@heady/phi-math": "workspace:*",
+    "zod": "3.25.76"
+  }
+}
