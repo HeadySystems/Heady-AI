@@ -65,10 +65,11 @@ Note a **case-collision**: a *different* ADR-0019 lives at `docs/adr/0019-fronte
 
 **SSO infra subdomains (not counted in the 9):** `auth.headysystems.com` (ADR-0028 unified auth route), `relay.headysystems.com` (iframed cross-site token relay). All 9 → **Cloudflare Pages backed by Cloud Run `us-east1`**, per-domain Firebase Auth tenant isolation, per-domain ML-DSA signing keys.
 
-⚠ **Conflicting lists (do not treat as canonical):**
+⚠ **Conflicting lists (do not treat as canonical)** — none of these is a registered carrier, so
+D1 does not see them; they are prose that must be read against `facts.yaml domains:`:
 - `docs/compendium/09-infra-and-services.md` §I7 lists **11** (adds headyio, headybot, headyapi, headylens, headyfinance; each a Drupal 11 site).
 - `.agents/skills/heady-perplexity-content-generation` "Site Roster (9 Sites)" — different set (heady-ai.com, headyex.com, headyfinance.com, admin.headysystems.com…).
-- `configs/_domains/domain-architecture.yaml` (v2.0, 2025-02-08, legacy) — only **3** brand domains.
+- `_archive/configs/_domains/domain-architecture.yaml` (v2.0, 2025-02-08, legacy) — only **3** brand domains. **Quarantined 2026-08-22** with 18 sibling dumps; it name-collided with the live carrier `configs/domain-architecture.json`. See that directory's README.
 - Legacy disposition (`docs/LEGACY_STACK_COMPONENT_DISPOSITION.md`) describes **~16** domain static-site sprawl → collapse to one SSG source + mass Drop.
 
 ---

@@ -17,7 +17,17 @@ const DOMAIN_MAP_PATH = join(REPO_ROOT, 'configs', 'domain-architecture.json');
 // kernel's D6 guard. A hardcoded roster in this file previously flagged 1ime1.com
 // (the verified admin surface) and headybuddy.org as "unauthorized".
 const DOMAIN_ROSTER_PATH = join(REPO_ROOT, 'configs', '_generated', 'domain-roster.json');
-const EXCLUDE_DIRS = ['node_modules', '.git', '.turbo', 'dist', '.data', 'artifacts', 'snapshots', 'tooling/data-consistency', 'docs/reports'];
+// Scope = AUTHORED Heady configuration. Dependency metadata, virtualenvs, lockfiles
+// and hashed build output name thousands of third-party hosts that no one chose and
+// no one can fix here; scanning them buried the ~18 real LAW-0 localhost hits under
+// 200+ rows of noise, which is how a hygiene report stops being read.
+const EXCLUDE_DIRS = [
+  'node_modules', '.git', '.turbo', 'dist', '.data', 'artifacts', 'snapshots',
+  'tooling/data-consistency', 'docs/reports',
+  '.venv', 'site-packages', '_archive',
+];
+// Lockfiles and hashed/minified bundles are generated, not authored.
+const EXCLUDE_FILES = /(^|\/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$|\.lock$|\.min\.(js|css)$|(^|\/)index-[0-9a-f]{8}\.js$/;
 const FILE_EXTS = ['.mjs', '.js', '.ts', '.json', '.hbs', '.md'];
 
 // Recursive walker
@@ -38,7 +48,7 @@ function walk(dir, out = []) {
     
     if (entry.isDirectory()) {
       walk(abs, out);
-    } else if (entry.isFile() && FILE_EXTS.some(ext => entry.name.endsWith(ext))) {
+    } else if (entry.isFile() && FILE_EXTS.some(ext => entry.name.endsWith(ext)) && !EXCLUDE_FILES.test(rel)) {
       out.push({ abs, rel });
     }
   }
@@ -184,6 +194,31 @@ async function main() {
 
   if (violations.length > 0) {
     mdReport.push(`### ✗ Non-Compliance Issues Found: **${violations.length}**`);
+    mdReport.push('');
+    mdReport.push(`Scope: authored configuration only — dependency metadata, virtualenvs, lockfiles and`);
+    mdReport.push(`hashed build output are excluded, since no one authored those hostnames.`);
+    mdReport.push(`Allowlist: ${headySuffixes.length} canon domains (derived from \`facts.yaml domains:\``);
+    mdReport.push(`via \`${relative(REPO_ROOT, DOMAIN_ROSTER_PATH).split(sep).join('/')}\`) + ${authHosts.size} auth host(s) + ${THIRD_PARTY_SUFFIXES.length} approved third parties.`);
+    mdReport.push('');
+
+    // Lead with the shape of the problem: a flat 200-row table is not actionable.
+    const byType = new Map();
+    const byFile = new Map();
+    for (const v of violations) {
+      byType.set(v.type, (byType.get(v.type) ?? 0) + 1);
+      byFile.set(v.file, (byFile.get(v.file) ?? 0) + 1);
+    }
+    mdReport.push('#### By type');
+    mdReport.push('| Type | Count |');
+    mdReport.push('|---|---|');
+    for (const [type, n] of [...byType].sort((a, b) => b[1] - a[1])) mdReport.push(`| \`${type}\` | ${n} |`);
+    mdReport.push('');
+    mdReport.push('#### Top files');
+    mdReport.push('| File | Count |');
+    mdReport.push('|---|---|');
+    for (const [file, n] of [...byFile].sort((a, b) => b[1] - a[1]).slice(0, 15)) mdReport.push(`| \`${file}\` | ${n} |`);
+    mdReport.push('');
+    mdReport.push('#### All findings');
     mdReport.push('| Type | File | Line | Excerpt | Message |');
     mdReport.push('|---|---|---|---|---|');
     for (const v of violations) {

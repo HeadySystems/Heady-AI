@@ -30,7 +30,14 @@ Use this skill when the user needs:
 
 ## Core Pattern
 
-The source pattern defines brand-level domains, production and development mappings, API subdomains, standardized OAuth callbacks, redirect rules, CDN domains, email domains, and domain policies in a single canonical configuration ([domain-architecture.yaml](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/configs/_domains/domain-architecture.yaml)).
+The source pattern defines brand-level domains, production and development mappings, API subdomains, standardized OAuth callbacks, redirect rules, CDN domains, email domains, and domain policies in a single configuration ([domain-architecture.yaml](https://github.com/HeadyMe/Heady-pre-production-9f2f0642/blob/main/configs/_domains/domain-architecture.yaml), legacy pre-production repo).
+
+> ⚠ **That file is NOT canonical in Heady-AI and was quarantined on 2026-08-22** to
+> `_archive/configs/_domains/domain-architecture.yaml`. In this repo the domain canon is
+> `facts.yaml` `domains:`; the routing/OAuth-callback carrier is `configs/domain-architecture.json`
+> (different file, note the extension); consumers read the generated projection
+> `configs/_generated/domain-roster.json`. Adding a domain means amending `facts.yaml`, never
+> authoring a new roster file — the coherence D1–D7 guards fail closed on unregistered rosters.
 
 ## Instructions
 
