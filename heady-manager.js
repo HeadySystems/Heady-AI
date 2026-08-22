@@ -1600,7 +1600,7 @@ try {
 // ─── HeadyService Dispatcher (Unified Intelligent Router) ─────────────
 try {
   const { HeadyServiceDispatcher, registerServiceRoutes } = require("./src/hc_service_dispatcher");
-  const dispatcher = new HeadyServiceDispatcher({ managerUrl: `http://localhost:${PORT}` });
+  const dispatcher = new HeadyServiceDispatcher({ managerUrl: URLS.MANAGER });
   registerServiceRoutes(app, dispatcher);
   logger.logNodeActivity("CONDUCTOR", "  🔀 HeadyService Dispatcher: LOADED (unified intelligent routing)");
 } catch (err) {
@@ -1881,6 +1881,7 @@ app.use((err, req, res, _next) => {
 // ── CSL API — Continuous Semantic Logic Gates ──────────────────
 const CSL = require('./src/core/semantic-logic');
 
+const { URLS } = require("./src/config/global");
 app.post('/api/csl/resonance', (req, res) => {
   const { vec_a, vec_b, threshold } = req.body;
   if (!vec_a || !vec_b) return res.status(400).json({ ok: false, error: 'vec_a and vec_b required' });

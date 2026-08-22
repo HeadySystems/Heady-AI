@@ -86,9 +86,13 @@ export function corsDevPolicy(req, res, next) {
     return corsPolicy(req, res, next);
   }
 
-  const origin = req.headers['origin'] ?? 'http://localhost:3000';
-  res.setHeader('Access-Control-Allow-Origin',      origin);
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  // No Origin header means this is not a cross-origin request: reflect nothing
+  // rather than inventing an origin to trust (the previous loopback default).
+  const origin = req.headers['origin'];
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin',      origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
   res.setHeader('Vary',                             'Origin');
 
   if (req.method === 'OPTIONS') {

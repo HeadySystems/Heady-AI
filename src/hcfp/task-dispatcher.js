@@ -23,6 +23,7 @@ const fs = require('fs');
 const { midiBus, CHANNELS } = require("../engines/midi-event-bus");
 const logger = require("../utils/logger");
 
+const { URLS } = require("../config/global");
 // ═══ Pipeline Source ═══
 const PIPELINE_FILE = path.join(__dirname, '..', 'auto-flow-200-tasks.json');
 
@@ -60,7 +61,7 @@ const SUB_AGENTS = {
     },
     "core": {
         name: "Core Platform",
-        endpoint: process.env.HEADY_BRAIN_URL || "https://127.0.0.1:3301/api/brain/chat",
+        endpoint: `${URLS.BRAIN}/api/brain/chat`,
         capabilities: ["chat", "analyze", "code", "reasoning", "think", "generate"],
         keywords: [], // Default — catches everything else
     },

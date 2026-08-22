@@ -181,7 +181,7 @@ async function storeInMemory(content, metadata) {
 
 
 // ─── Intelligent Model Cascade ──────────────────────────────────────
-// Priority: HeadyCompute → HeadyLocal → Contextual (never a dead template)
+// Priority: HeadyCompute → Contextual (never a dead template)
 // HeadyConductor routes to the best available backend automatically.
 
 async function chatViaOpenAI(message, system, temperature, max_tokens, history) {
@@ -226,45 +226,6 @@ async function chatViaOpenAI(message, system, temperature, max_tokens, history) 
                         reject(new Error("unexpected-response"));
                     }
                 } catch { reject(new Error("parse-error")); }
-            });
-        });
-        req.on("error", reject);
-        req.on("timeout", () => { req.destroy(); reject(new Error("timeout")); });
-        req.write(payload);
-        req.end();
-    });
-}
-
-async function chatViaOllama(message, system, temperature, max_tokens, history) {
-    const http = require("http");
-    // Build prompt with conversation history for context
-    let fullPrompt = system ? `${system}\n\n` : "";
-    if (history && history.length > 0) {
-        for (const msg of history) {
-            fullPrompt += msg.role === "user" ? `User: ${msg.content}\n` : `Assistant: ${msg.content}\n`;
-        }
-    }
-    fullPrompt += `User: ${message}`;
-    const payload = JSON.stringify({
-        model: "llama3.2",
-        prompt: fullPrompt,
-        stream: false,
-        options: { temperature: temperature || 0.7, num_predict: max_tokens || 4096 },
-    });
-
-    return new Promise((resolve, reject) => {
-        const req = http.request({
-            hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
-            headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
-            timeout: 30000,
-        }, (res) => {
-            let data = "";
-            res.on("data", (chunk) => (data += chunk));
-            res.on("end", () => {
-                try {
-                    const parsed = JSON.parse(data);
-                    resolve({ response: parsed.response || parsed.message?.content || data, model: "llama3.2" });
-                } catch { resolve({ response: data, model: "llama3.2" }); }
             });
         });
         req.on("error", reject);
@@ -849,54 +810,20 @@ router.post("/embed", async (req, res) => {
         { type: "brain_embed", model: model || "nomic-embed-text", ts }
     );
 
-    // Try HeadyLocal embeddings
-    try {
-        const http = require("http");
-        const payload = JSON.stringify({ model: model || "nomic-embed-text", prompt: text });
-
-        const result = await new Promise((resolve, reject) => {
-            const req2 = http.request(
-                {
-                    hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/embeddings", method: "POST",
-                    headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
-                    timeout: 15000
-                },
-                (res2) => {
-                    let data = "";
-                    res2.on("data", (chunk) => (data += chunk));
-                    res2.on("end", () => { try { resolve(JSON.parse(data)); } catch { reject(new Error("parse")); } });
-                }
-            );
-            req2.on("error", reject);
-            req2.on("timeout", () => { req2.destroy(); reject(new Error("timeout")); });
-            req2.write(payload);
-            req2.end();
-        });
-
-        logMemoryReceipt({
-            stored: `Real vector embedding created via HeadyLocal (${model || "nomic-embed-text"}) — ${result.embedding ? result.embedding.length : 0} dimensions`,
-            notStored: "Full 3D vector stored — nothing omitted",
-            method: "headylocal-vector-db",
-            fallbackUsed: false,
-        });
-
-        res.json({
-            ok: true,
-            embedding: result.embedding,
-            model: model || "nomic-embed-text",
-            dimensions: result.embedding ? result.embedding.length : 0,
-            source: "heady-local-headylocal",
-            stored_in_memory: true,
-            ts,
-        });
-    } catch (err) {
-        // Fallback: hash-based pseudo-embedding for structural matching
+    // The HeadyLocal (Ollama, :11434) attempt that used to wrap this was removed
+    // 2026-08-22: Zero-Localhost leaves no host to reach, so in every deployed
+    // environment it timed out and every caller already received the hash fallback
+    // below. Removing it makes the real behaviour visible instead of hiding it
+    // behind a 15s wait, and drops a LAW-0 breach. Semantic embedding for this route
+    // is UNIMPLEMENTED — see docs/LAW0_LOOPBACK_TRIAGE_2026-08-22.md.
+    {
+        // Hash-based pseudo-embedding for structural matching — NOT semantic.
         const hash = crypto.createHash("sha256").update(text || "").digest();
         const pseudoEmbed = Array.from(hash).map((b) => (b / 255) * 2 - 1);
 
         logMemoryReceipt({
             stored: `Hash-based pseudo-embedding (32 dims) — structural match only, NOT semantic: "${(text || "").substring(0, 80)}..."`,
-            notStored: `Semantic meaning NOT captured — real ${model || "nomic-embed-text"} embedding failed (${err.message}). Full text (${(text || "").length} chars) has no 3D vector representation.`,
+            notStored: `Semantic meaning NOT captured — no semantic embedding provider is wired to this route. Full text (${(text || "").length} chars) has no 3D vector representation.`,
             method: "hash-fallback",
             fallbackUsed: true,
         });
@@ -909,8 +836,8 @@ router.post("/embed", async (req, res) => {
             source: "heady-manager-fallback",
             stored_in_memory: true,
             fallback_used: true,
-            priority_fix: "HeadyLocal with nomic-embed-text not available — semantic search degraded",
-            note: "Hash-based fallback. For semantic embeddings, start HeadyLocal with nomic-embed-text.",
+            priority_fix: "No semantic embedding provider is wired to /api/brain/embed — semantic search degraded",
+            note: "Hash-based structural fallback. Wire a cloud embedding provider (@cf/baai/bge-small-en-v1.5, 384-dim per ADR-0015) to return real vectors.",
             ts,
         });
     }

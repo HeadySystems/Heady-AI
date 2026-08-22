@@ -1,12 +1,12 @@
 <!-- ⚠️ GENERATED REPORT — DO NOT EDIT DIRECTLY -->
 # HEADY™ Domain Hygiene & Law 0 Report
-**Generated on:** 2026-08-22T20:40:43.659Z · **Type:** Domain Hygiene Verification
+**Generated on:** 2026-08-22T21:12:05.711Z · **Type:** Domain Hygiene Verification
 
 ---
 
 ## 1. Compliance Summary
 
-### ✗ Non-Compliance Issues Found: **197**
+### ✗ Non-Compliance Issues Found: **156**
 
 Scope: authored configuration only — dependency metadata, virtualenvs, lockfiles and
 hashed build output are excluded, since no one authored those hostnames.
@@ -17,26 +17,40 @@ via `configs/_generated/domain-roster.json`) + 1 auth host(s) + 21 approved thir
 | Type | Count |
 |---|---|
 | `UNAUTHORIZED-HOSTNAME-URL` | 156 |
-| `LAW-0-VIOLATION` | 41 |
 
 #### Top files
 | File | Count |
 |---|---|
 | `configs/templates/auth-providers-swarm.js` | 48 |
 | `src/auth/provider-registry.js` | 30 |
-| `heady-manager.js` | 12 |
-| `src/mcp/colab-mcp-bridge.js` | 8 |
+| `heady-manager.js` | 11 |
 | `src/routes/vinci-canvas.js` | 7 |
-| `src/projection/domain-slicer.js` | 6 |
 | `configs/cloudflare-workers/heady-router-worker.js` | 5 |
-| `src/embedding-provider.js` | 3 |
 | `src/hc_auth.js` | 3 |
+| `src/projection/domain-slicer.js` | 3 |
 | `src/routes/advisor-routes.mjs` | 3 |
 | `src/services/onboarding-orchestrator.js` | 3 |
 | `.claude/settings.local.json` | 2 |
 | `apps/heady-portal-proxy/src/index.ts` | 2 |
 | `renovate.json` | 2 |
-| `src/auth-page-server.js` | 2 |
+| `src/config/global.js` | 2 |
+| `src/connectors/oauth-scopes.js` | 2 |
+| `src/embedding-provider.js` | 2 |
+
+#### Law 0 exemptions applied
+
+Loopback shapes where loopback is *correct*. Recorded, never silent —
+rationale in `docs/LAW0_LOOPBACK_TRIAGE_2026-08-22.md`.
+
+| File | Line | Reason |
+|---|---|---|
+| `src/auth-page-server.js` | 28 | `url-parse-base` |
+| `src/mcp/colab-mcp-bridge.js` | 349 | `url-parse-base` |
+| `src/mcp/colab-mcp-bridge.js` | 579 | `url-parse-base` |
+| `src/projection/domain-slicer.js` | 90 | `generated-artifact-prose` |
+| `src/projection/domain-slicer.js` | 176 | `container-self-healthcheck` |
+| `src/services/quantum-bridge.js` | 47 | `url-parse-base` |
+| `tests/unified-runtime-orchestrator.test.js` | 12 | `test-asserts-rejection` |
 
 #### All findings
 | Type | File | Line | Excerpt | Message |
@@ -107,14 +121,12 @@ via `configs/_generated/domain-roster.json`) + 1 auth host(s) + 21 approved thir
 | `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 407 | `await fetch('https://heartbeat.heady.systems/revoke', {` | URL "https://heartbeat.heady.systems" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 935 | `logger.logNodeActivity("CONDUCTOR", "  🔗 Cross-Device Sync Hub: ACTIVE (ws://0.0.0.0:" + PORT + "/w` | URL "ws://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1161 | `const EDGE_PROXY_URL = process.env.HEADY_EDGE_PROXY_URL || 'https://heady-edge-proxy.emailheadyconne` | URL "https://heady-edge-proxy.emailheadyconnection.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `heady-manager.js` | 1603 | `const dispatcher = new HeadyServiceDispatcher({ managerUrl: `http://localhost:${PORT}` });` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1641 | `"hf-liquid": { name: "HF Space Liquid Node", endpoint: "https://headyme-heady-hf-liquid-node.hf.spac` | URL "https://headyme-heady-hf-liquid-node.hf.space" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1940 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Gateway:${c.reset}    ` | URL "http://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1941 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Voice Relay:${c.reset}` | URL "ws://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1942 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Device Sync:${c.reset}` | URL "ws://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1944 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}API Docs:${c.reset}   ` | URL "http://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1941 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Gateway:${c.reset}    ` | URL "http://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1942 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Voice Relay:${c.reset}` | URL "ws://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1943 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}Device Sync:${c.reset}` | URL "ws://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `heady-manager.js` | 1945 | `logger.logNodeActivity("CONDUCTOR", `${c.bold}${c.purple}│${c.reset}  ${c.dim}API Docs:${c.reset}   ` | URL "http://0.0.0.0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `heady-registry.json` | 293 | `"endpoint": "https://headyme-heady-demo.hf.space",` | URL "https://headyme-heady-demo.hf.space" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `package.json` | 65 | `"health": "curl -s http://localhost:3301/health/live",` | Literal localhost URL "http://localhost:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `packages/codeflow/src/server.mjs` | 97 | `const url = new URL(req.url, 'http://h');` | URL "http://h" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `packages/headylens/src/server.mjs` | 105 | `const url = new URL(req.url, "http://h");` | URL "http://h" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `packages/observability/src/sentry-exporter.mjs` | 18 | `if (!key || !projectId) throw new TypeError("sentry-exporter: DSN must look like https://KEY@HOST/PR` | URL "https://KEY" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
@@ -152,55 +164,25 @@ via `configs/_generated/domain-roster.json`) + 1 auth host(s) + 21 approved thir
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/auth/provider-registry.js` | 326 | `validateUrl: 'https://api.replicate.com/v1/models',` | URL "https://api.replicate.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/auth/provider-registry.js` | 339 | `validateUrl: 'https://api.mistral.ai/v1/models',` | URL "https://api.mistral.ai" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/auth/provider-registry.js` | 352 | `validateUrl: 'https://api.cohere.ai/v1/models',` | URL "https://api.cohere.ai" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/auth-page-server.js` | 28 | `const url = new URL(req.url, `http://localhost:${PORT}`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/auth-page-server.js` | 96 | `console.log(`\n  🔐 Heady Auth Page live at: http://localhost:${PORT}\n`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/bees/session-templates.js` | 271 | `{ name: 'local', url: 'http://localhost:8420/health' },` | Literal localhost URL "http://localhost:8420" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/bees/session-templates.js` | 455 | `{ name: 'local', url: 'http://localhost:8420/health' },` | Literal localhost URL "http://localhost:8420" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/brain_connector.js` | 22 | `this._registerEndpoint("local-brain", { url: "https://127.0.0.1:3301/api/brain", priority: 1 });` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/compute-dashboard.js` | 147 | `checkRemoteNode("heady-manager", "https://127.0.0.1:3301/api/pulse"),` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/config/global.js` | 44 | `EDGE_PROXY: optionalEnv('HEADY_EDGE_PROXY_URL', 'https://heady-edge-proxy.emailheadyconnection.worke` | URL "https://heady-edge-proxy.emailheadyconnection.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/config/global.js` | 77 | `...DOMAINS.flatMap(d => [`https://${d}`, `https://www.${d}`]),` | URL "https://www." references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/connectors/oauth-scopes.js` | 58 | `azure: { label: "Azure Cloud", icon: "☁️", description: "Manage Azure subscriptions and resources", ` | URL "https://management.azure.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/connectors/oauth-scopes.js` | 59 | `powerbi: { label: "Power BI", icon: "📊", description: "Access dashboards and reports", scopes: ["ht` | URL "https://analysis.windows.net" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/embedding-provider.js` | 21 | `endpoint: opts.localEndpoint || "http://127.0.0.1:11434/api/embeddings",` | Literal localhost URL "http://127.0.0.1:11434" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `src/embedding-provider.js` | 27 | `endpoint: opts.edgeEndpoint || "https://heady-edge-node.headyme.workers.dev/api/embed",` | URL "https://heady-edge-node.headyme.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `UNAUTHORIZED-HOSTNAME-URL` | `src/embedding-provider.js` | 33 | `endpoint: "https://api.headycompute.com/v1/embeddings",` | URL "https://api.headycompute.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `src/embedding-provider.js` | 23 | `endpoint: opts.edgeEndpoint || "https://heady-edge-node.headyme.workers.dev/api/embed",` | URL "https://heady-edge-node.headyme.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
+| `UNAUTHORIZED-HOSTNAME-URL` | `src/embedding-provider.js` | 29 | `endpoint: "https://api.headycompute.com/v1/embeddings",` | URL "https://api.headycompute.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/hc_auth.js` | 893 | `{ name: 'Mozilla Thunderbird', platform: 'linux/windows/macos', url: 'https://www.thunderbird.net/' ` | URL "https://www.thunderbird.net" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/hc_auth.js` | 894 | `{ name: 'K-9 Mail', platform: 'android', url: 'https://k9mail.app/' },` | URL "https://k9mail.app" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/hc_auth.js` | 895 | `{ name: 'FairEmail', platform: 'android', url: 'https://email.faircode.eu/' },` | URL "https://email.faircode.eu" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/hc_deep_scan.js` | 18 | `const MANAGER_URL = "https://127.0.0.1:3301";` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/hcfp/pipeline-runner.js` | 260 | `fetch("https://127.0.0.1:3301/api/memory/store", {` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/hcfp/task-dispatcher.js` | 63 | `endpoint: process.env.HEADY_BRAIN_URL || "https://127.0.0.1:3301/api/brain/chat",` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/heady-mcp-server.js` | 1007 | `const edgeBase = process.env.HEADY_EDGE_URL || 'https://heady-edge-ai.headysystems.workers.dev';` | URL "https://heady-edge-ai.headysystems.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/heady-registry.js` | 193 | `const BASE = "https://127.0.0.1:3301";` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 349 | `const url = new URL(req.url, `http://localhost:${PORT}`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 579 | `const url = new URL(req.url, `http://localhost:${PORT}`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/mcp/colab-mcp-bridge.js` | 657 | `'GET  /vector/stats', 'WS   ws://host:port (WebSocket)',` | URL "ws://host" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 674 | `console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 675 | `console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 676 | `console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 677 | `console.log(`  📡 WebSocket : ws://localhost:${PORT}`);` | Literal localhost URL "ws://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/colab-mcp-bridge.js` | 678 | `console.log(`  📡 Health    : http://localhost:${PORT}/health`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/mcp/mcp-sse-transport.js` | 29 | `this.baseUrl = opts.baseUrl || process.env.HEADY_MANAGER_URL || 'http://localhost:3301';` | Literal localhost URL "http://localhost:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/middleware/cors.js` | 89 | `const origin = req.headers['origin'] ?? 'http://localhost:3000';` | Literal localhost URL "http://localhost:3000" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/middleware/security-headers.js` | 37 | `"font-src 'self' https://fonts.gstatic.com; " +` | URL "https://fonts.gstatic.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/projection/domain-slicer.js` | 77 | `[![Deploy](https://img.shields.io/badge/deploy-Cloud%20Run-blue?logo=google-cloud)](https://${domain` | URL "https://img.shields.io" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/projection/domain-slicer.js` | 78 | `[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE)` | URL "https://img.shields.io" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/projection/domain-slicer.js` | 79 | `[![Projected](https://img.shields.io/badge/projected-Heady%20Latent%20OS-purple)](https://github.com` | URL "https://img.shields.io" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/projection/domain-slicer.js` | 90 | `Visit \`http://localhost:3000\` to see ${siteConfig.name} running locally.` | Literal localhost URL "http://localhost:3000" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/projection/domain-slicer.js` | 157 | `console.log(\`🐝 ${siteConfig.name} running at http://localhost:\${PORT}\`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/projection/domain-slicer.js` | 176 | `CMD node -e "const h=require('http');h.get('http://localhost:8080/health',r=>{process.exit(r.statusC` | Literal localhost URL "http://localhost:8080" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/protocols/a2a.js` | 22 | `schema: 'https://a2a.heady.systems/v1/agent-card',` | URL "https://a2a.heady.systems" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/provider-benchmark.js` | 144 | `const ping = await httpPing("https://127.0.0.1:3301/api/pulse");` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/advisor-routes.mjs` | 18 | `'https://headyme.firebaseapp.com',` | URL "https://headyme.firebaseapp.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/advisor-routes.mjs` | 19 | `'https://headyme.web.app',` | URL "https://headyme.web.app" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/advisor-routes.mjs` | 20 | `'https://heady-ai.web.app',` | URL "https://heady-ai.web.app" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/routes/conductor.js` | 24 | `const MANAGER_URL = process.env.HEADY_MANAGER_URL || "https://127.0.0.1:3301";` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/routes/headybuddy-config.js` | 132 | `const pulse = await fetch('https://127.0.0.1:3301/api/pulse', { signal: AbortSignal.timeout(2000) })` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/routes/headybuddy-config.js` | 137 | `const headylocal = await fetch('http://127.0.0.1:11434/', { signal: AbortSignal.timeout(2000) });` | Literal localhost URL "http://127.0.0.1:11434" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/routes/hive-sdk.js` | 43 | `const req = http.request("http://127.0.0.1:3301/api/brain/chat", {` | Literal localhost URL "http://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/routes/lens.js` | 80 | `const INTERNAL_MANAGER_URL = process.env.HEADY_MANAGER_URL || "https://127.0.0.1:3301";` | Literal localhost URL "https://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/routes/memory.js` | 36 | `const QDRANT_URL = process.env.QDRANT_URL || "http://127.0.0.1:6333";` | Literal localhost URL "http://127.0.0.1:6333" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/models-api.js` | 47 | `error: { message: `Model '${model}' requires authentication. Get an API key at https://headyio.com.`` | URL "https://headyio.com." references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/vinci-canvas.js` | 43 | `endpoint: "https://labs.google/whisk",` | URL "https://labs.google" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/routes/vinci-canvas.js` | 59 | `endpoint: "https://api.headycompute.com/v1/chat/completions",` | URL "https://api.headycompute.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
@@ -212,11 +194,8 @@ via `configs/_generated/domain-roster.json`) + 1 auth host(s) + 21 approved thir
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/sandbox-executor.js` | 197 | `env: this.allowNetwork ? process.env : { ...process.env, no_proxy: "*", http_proxy: "http://blocked:` | URL "http://blocked:0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/sandbox-executor.js` | 197 | `env: this.allowNetwork ? process.env : { ...process.env, no_proxy: "*", http_proxy: "http://blocked:` | URL "http://blocked:0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/security/web3-ledger-anchor.js` | 17 | `const RPC_URL = process.env.WEB3_RPC_URL || "https://sepolia.base.org";` | URL "https://sepolia.base.org" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/services/dynamic-model-registry.js` | 362 | `const res = await fetch('http://localhost:4000/v1/models').catch(() => null);` | Literal localhost URL "http://localhost:4000" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/heady-notion.js` | 353 | `| headyweb.pages.dev | Browser dashboard | https://headyweb.pages.dev |` | URL "https://headyweb.pages.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/services/heady-notion.js` | 386 | `curl -4 http://127.0.0.1:3301/api/soul/health` | Literal localhost URL "http://127.0.0.1:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/liquid-state-manager.js` | 334 | `{ id: 'cloud-run', type: 'container', url: 'https://heady-manager-*.run.app', tier: 1 },` | URL "https://heady-manager-" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/services/liquid-state-manager.js` | 339 | `{ id: 'local-dev', type: 'dev-projection', url: 'http://localhost:3301', tier: 3 },` | Literal localhost URL "http://localhost:3301" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/onboarding-orchestrator.js` | 41 | `downloadUrl: 'https://www.thunderbird.net/',` | URL "https://www.thunderbird.net" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/onboarding-orchestrator.js` | 52 | `downloadUrl: 'https://k9mail.app/',` | URL "https://k9mail.app" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/onboarding-orchestrator.js` | 63 | `downloadUrl: 'https://email.faircode.eu/',` | URL "https://email.faircode.eu" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
@@ -224,17 +203,11 @@ via `configs/_generated/domain-roster.json`) + 1 auth host(s) + 21 approved thir
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/projection-dispatcher.js` | 268 | `const EDGE_PROXY_URL = process.env.HEADY_EDGE_PROXY_URL || 'https://heady-edge-proxy.emailheadyconne` | URL "https://heady-edge-proxy.emailheadyconnection.workers.dev" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/projection-engine.js` | 25 | `endpoint: 'https://heady-manager-<hash>.run.app',` | URL "https://heady-manager-" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/projection-engine.js` | 39 | `endpoint: 'https://headyme-heady-demo.hf.space',` | URL "https://headyme-heady-demo.hf.space" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/services/quantum-bridge.js` | 47 | `const urlParams = new URL(request.url, 'ws://localhost').searchParams;` | Literal localhost URL "ws://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/services/sentry.js` | 23 | `|| 'https://1b34e12c988678f066c6948a31d43ff0@o4510998791192576.ingest.us.sentry.io/4510998806069248'` | URL "https://1b34e12c988678f066c6948a31d43ff0" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/sites/site-registry.json` | 475 | `"discord": "https://discord.gg/heady"` | URL "https://discord.gg" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/sites/site-renderer.js` | 131 | `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1` | URL "http://www.w3.org" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `src/telemetry/otel.js` | 36 | `url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',` | Literal localhost URL "http://localhost:4318" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `src/vector-memory.js` | 428 | `const ollamaRes = await fetch(`http://127.0.0.1:${process.env.OLLAMA_PORT || 11434}/api/embeddings`,` | Literal localhost URL "http://127.0.0.1" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `src/vector-projection-engine.js` | 106 | `url: 'https://heady-manager.onrender.com',` | URL "https://heady-manager.onrender.com" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `templates/template-mcp-server/src/index.js` | 128 | `console.log(`[MCP] SSE endpoint: http://localhost:${PORT}/sse`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
-| `LAW-0-VIOLATION` | `templates/template-mcp-server/src/index.js` | 129 | `console.log(`[MCP] Health: http://localhost:${PORT}/health`);` | Literal localhost URL "http://localhost" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `tests/bees.test.js` | 68 | `const bee = factory.createFromTemplate('health-check', { target: 'test-service', url: 'https://httpb` | URL "https://httpbin.org" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
-| `LAW-0-VIOLATION` | `tests/unified-runtime-orchestrator.test.js` | 12 | `expect(validateCloudOnlyEndpoints(['http://localhost:3000/health'])).toBe(false);` | Literal localhost URL "http://localhost:3000" detected (Law 0). Use env variables or Tailscale MagicDNS instead. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `tooling/scaffold-planner/src/server.mjs` | 51 | `const url = new URL(req.url, "http://h");` | URL "http://h" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `tooling/verify-chain.local.mjs` | 49 | `await db.query(`INSERT INTO heady_990.filings (ein,tax_period_end,return_type,total_revenue,source_o` | URL "https://apps.irs.gov" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |
 | `UNAUTHORIZED-HOSTNAME-URL` | `tooling/verify990.local.mjs` | 86 | `VALUES ($1,'2023-12-31','990',2450000,$2,'https://apps.irs.gov/x.xml',$3) ON CONFLICT DO NOTHING`,` | URL "https://apps.irs.gov" references an unauthorized or legacy domain hostname. Use the canonical production domain mapping. |

@@ -28,6 +28,7 @@ const finops = require("../engines/finops-budget-router");
 const { classify } = require("./task-dispatcher");
 const { midiBus, CHANNELS, NOTES } = require("../engines/midi-event-bus");
 
+const { URLS } = require("../config/global");
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const PIPELINE_LOG = path.join(DATA_DIR, "hcfp-pipeline.jsonl");
 
@@ -257,7 +258,7 @@ function persist(manifestId) {
             text: `HCFP Pipeline ${manifest.id}\nPriority: ${manifest.priority}\n${summary}`,
             metadata: { type: "hcfp-pipeline", manifest_id: manifest.id, task_count: manifest.tasks.length },
         };
-        fetch("https://127.0.0.1:3301/api/memory/store", {
+        fetch(`${URLS.MANAGER}/api/memory/store`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(embedPayload),

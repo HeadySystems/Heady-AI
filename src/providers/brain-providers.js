@@ -4,7 +4,7 @@
  * src/providers/brain-providers.js — Multi-provider AI clients for HeadyBrain
  *
  * Extracted from src/routes/brain.js (Phase 2 monolith decomposition)
- * Contains: chatViaOpenAI, chatViaOllama, chatViaHuggingFace, chatViaGemini,
+ * Contains: chatViaOpenAI, chatViaHuggingFace, chatViaGemini,
  *           generateContextualResponse, filterResponse
  */
 
@@ -46,37 +46,6 @@ async function chatViaOpenAI(message, system, temperature, max_tokens) {
                         reject(new Error("unexpected-response"));
                     }
                 } catch { reject(new Error("parse-error")); }
-            });
-        });
-        req.on("error", reject);
-        req.on("timeout", () => { req.destroy(); reject(new Error("timeout")); });
-        req.write(payload);
-        req.end();
-    });
-}
-
-// ─── HeadyLocal (Ollama) ────────────────────────────────────────────
-async function chatViaOllama(message, system, temperature, max_tokens) {
-    const payload = JSON.stringify({
-        model: "llama3.2",
-        prompt: system ? `${system}\n\nUser: ${message}` : message,
-        stream: false,
-        options: { temperature: temperature || 0.7, num_predict: max_tokens || 4096 },
-    });
-
-    return new Promise((resolve, reject) => {
-        const req = http.request({
-            hostname: process.env.HEADY_LOCAL_HOST || "127.0.0.1", port: parseInt(process.env.OLLAMA_PORT || "11434"), path: "/api/generate", method: "POST",
-            headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
-            timeout: 30000,
-        }, (res) => {
-            let data = "";
-            res.on("data", (chunk) => (data += chunk));
-            res.on("end", () => {
-                try {
-                    const parsed = JSON.parse(data);
-                    resolve({ response: parsed.response || parsed.message?.content || data, model: "llama3.2" });
-                } catch { resolve({ response: data, model: "llama3.2" }); }
             });
         });
         req.on("error", reject);
@@ -223,7 +192,6 @@ function generateContextualResponse(message) {
 
 module.exports = {
     chatViaOpenAI,
-    chatViaOllama,
     chatViaHuggingFace,
     chatViaGemini,
     filterResponse,

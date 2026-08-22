@@ -62,7 +62,7 @@
     "branch:staging-to-main": "node scripts/branch-sync.js --staging-to-main",
     "branch:continuous": "node scripts/branch-sync.js --continuous",
     "sites:generate": "node scripts/generate-sites.js",
-    "health": "curl -s http://localhost:3301/health/live",
+    "health": "curl -s \"${HEADY_MANAGER_URL:?set HEADY_MANAGER_URL to the deployed origin}/health/live\"",
     "status": "pm2 list",
     "manager:restart": "pm2 restart heady-manager",
     "healthcheck": "node scripts/healthcheck.js",

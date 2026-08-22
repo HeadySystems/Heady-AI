@@ -60,6 +60,7 @@ async function benchmarkHF() {
     try {
         const { InferenceClient } = require("@huggingface/inference");
 const logger = require("./utils/logger");
+const { URLS } = require("./config/global");
         const tokens = [process.env.HF_TOKEN, process.env.HF_TOKEN_2, process.env.HF_TOKEN_3].filter(Boolean);
         if (tokens.length === 0) return { provider: "hf", ok: false, error: "no tokens" };
 
@@ -139,13 +140,13 @@ async function benchmarkHeadyJules() {
     }
 }
 
-async function benchmarkLocal() {
+async function benchmarkManager() {
     const start = Date.now();
-    const ping = await httpPing("https://127.0.0.1:3301/api/pulse");
+    const ping = await httpPing(`${URLS.MANAGER}/api/pulse`);
     return {
-        provider: "local-manager", ok: ping.ok, pingLatency: ping.latency,
+        provider: "heady-manager", ok: ping.ok, pingLatency: ping.latency,
         totalLatency: Date.now() - start,
-        connectionType: "HTTP (local)", protocol: "HTTP",
+        connectionType: "HTTPS (manager origin)", protocol: "HTTPS",
     };
 }
 
@@ -164,7 +165,7 @@ async function runFullBenchmark(vectorMem) {
     const benchStart = Date.now();
 
     const results = await Promise.allSettled([
-        benchmarkLocal(),
+        benchmarkManager(),
         benchmarkEdge(),
         benchmarkHF(),
         benchmarkHeadyPythia(),

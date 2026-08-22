@@ -10,18 +10,14 @@
  * Supports: LOCAL (HeadyLocal/nomic-embed-text), CLOUD (Workers AI @cf/bge),
  *           and OPENAI (text-embedding-3-small).
  *
- * Auto-selects provider: tries local → edge → cloud.
+ * Auto-selects provider: tries edge → cloud. The Ollama "local" tier was removed
+ * 2026-08-22 (ADR-0054 close-out): Zero-Localhost leaves no host to reach, and its
+ * nomic-embed-text output was 768-dim against the 384-dim lock (ADR-0015).
  */
 
 class EmbeddingProvider {
     constructor(opts = {}) {
         this.providers = {
-            local: {
-                enabled: opts.localEnabled !== false,
-                endpoint: opts.localEndpoint || "http://127.0.0.1:11434/api/embeddings",
-                model: opts.localModel || "nomic-embed-text",
-                dims: 768,
-            },
             edge: {
                 enabled: opts.edgeEnabled !== false,
                 endpoint: opts.edgeEndpoint || "https://heady-edge-node.headyme.workers.dev/api/embed",
@@ -36,10 +32,10 @@ class EmbeddingProvider {
                 apiKey: opts.openaiApiKey || process.env.HEADY_COMPUTE_KEY || null,
             },
         };
-        this.preferredOrder = opts.preferredOrder || ["local", "edge", "headycompute"];
+        this.preferredOrder = opts.preferredOrder || ["edge", "headycompute"];
         this.cache = new Map();
         this.maxCacheSize = opts.maxCacheSize || 1000;
-        this.stats = { local: 0, edge: 0, headycompute: 0, cached: 0, errors: 0 };
+        this.stats = { edge: 0, headycompute: 0, cached: 0, errors: 0 };
     }
 
     // ─── Embed text (auto-select provider) ───────────────────────
@@ -94,8 +90,6 @@ class EmbeddingProvider {
     // ─── Provider dispatch ───────────────────────────────────────
     async _callProvider(name, config, text) {
         switch (name) {
-            case "local":
-                return this._callLocal(config, text);
             case "edge":
                 return this._callEdge(config, text);
             case "headycompute":
@@ -103,18 +97,6 @@ class EmbeddingProvider {
             default:
                 throw new Error(`Unknown provider: ${name}`);
         }
-    }
-
-    async _callLocal(config, text) {
-        const res = await fetch(config.endpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model: config.model, prompt: text }),
-            signal: AbortSignal.timeout(10000),
-        });
-        if (!res.ok) throw new Error(`Local embed failed: ${res.status}`);
-        const data = await res.json();
-        return data.embedding || null;
     }
 
     async _callEdge(config, text) {

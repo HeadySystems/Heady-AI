@@ -87,7 +87,7 @@ cloud-deployed service dialing its own machine.
 | `src/services/dynamic-model-registry.js:362` | `fetch('http://localhost:4000/v1/models')` | needs an env-backed gateway URL |
 | `heady-manager.js:1603` | `managerUrl: \`http://localhost:${PORT}\`` | `URLS.MANAGER` |
 | `src/telemetry/otel.js:36` | `OTEL_EXPORTER_OTLP_ENDPOINT \|\| 'http://localhost:4318/v1/traces'` | fail closed — no collector is better than a fake one |
-| `src/middleware/cors.js:89` | `origin ?? 'http://localhost:3000'` | **security-relevant** — a missing Origin must not default to a trusted one; use `ALLOWED_ORIGINS` |
+| `src/middleware/cors.js:89` | `origin ?? 'http://localhost:3000'` | Inside `corsDevPolicy`, which delegates to the strict policy when `NODE_ENV=production` — so the blast radius is smaller than first stated here. Still wrong: a request with no `Origin` is not a CORS request, so reflect nothing instead of inventing an origin to trust. |
 | `src/routes/memory.js:36` | `QDRANT_URL \|\| "http://127.0.0.1:6333"` | **Qdrant is DROPPED** (facts.yaml + ADR-0003) — delete the path |
 | `src/embedding-provider.js:21` | `opts.localEndpoint \|\| "http://127.0.0.1:11434/api/embeddings"` | Ollama; see the open question below |
 | `src/vector-memory.js:428` | `fetch(\`http://127.0.0.1:${OLLAMA_PORT}/api/embeddings\`)` | Ollama; same |
@@ -152,4 +152,37 @@ reason is honest; a cosmetic rewrite is not.
 4. Re-run `node tooling/data-consistency/src/domain-guard.mjs`; LAW-0 should reach 0.
 5. **Only then** extend `SCAN_DIRS` in `tooling/enforcers/no-localhost.mjs` to cover
    `src/`, the repo root, and `templates/`, so the gate can never go blind to this
-   tree again. Doing this before step 4 turns the gate red and blocks unrelated work.
+   tree again.
+
+## Step 5 status: MEASURED, NOT APPLIED (2026-08-22)
+
+Steps 1–4 are **done** — the whole-repo domain-guard reports **LAW-0 = 0** (24 Category A
+sites fixed, 11 banners/scripts fixed, 7 exempted with recorded reasons).
+
+Step 5 was then attempted and **reverted**, because the measurement showed it is a second
+project rather than a final flourish. Extending `SCAN_DIRS` to
+`^(apps|packages|services|tooling|scripts|workers|src|templates)/|^[^/]+\.(m?js|cjs|ts|json)$`
+produces **60 violations across ~15 files**. That gate exits 2, so landing it would block
+every unrelated commit — the exact failure this ordering exists to avoid.
+
+The 60 are not 60 more bugs. `tooling/enforcers/lib/rules.mjs` scans raw text and cannot
+tell a connection from a mention, so it flags four shapes the whole-repo domain-guard never
+did:
+
+| Shape | Example | Verdict |
+|---|---|---|
+| **Prose in comments** | `src/services/heady-antigravity-bridge.js:18` — *"In compliance with rule: Zero `localhost`"* | False positive. A comment cannot open a socket. **Including the comments written by this very cleanup** (`src/routes/brain.js:814`, `src/vector-memory.js:427`) — documenting a Law 0 fix currently trips Law 0. |
+| **Caller-IP inspection** | `src/security/rate-limiter.js:36` — `ip === '127.0.0.1' \|\| ip === '::1'` | False positive. Reading who called is the opposite of dialing out. |
+| **A forbidden-token list** | `src/self-awareness.js:51` — `forbiddenStrings: ['localhost:3301', …]` | False positive, and pointed: the guard flags the code that enforces the same rule. |
+| **Bind addresses** | `src/vsa/bridge.py:137` — `0.0.0.0` | Binding all interfaces is how a container listens; it is not a connection target. |
+
+Genuine ones underneath: `src/security/rate-limiter.js:10`
+(`REDIS_URL \|\| 'redis://127.0.0.1:6379'`), `src/security/redis-connection-pool.js:16`
+(`REDIS_HOST \|\| '127.0.0.1'`), `src/services/daw-mcp-bridge.js:30`
+(`DAW_REMOTE_HOST \|\| "127.0.0.1"`), and the Python `src/vsa/swarm.py:217`.
+
+**Therefore step 5 needs, in order:** (a) teach `rules.mjs` to skip comment-only matches and
+caller-IP comparisons, or route those through the existing per-line
+`// heady-allow:no-localhost — reason` waiver; (b) fix the ~4 real env-fallback sites above;
+(c) then extend `SCAN_DIRS`. Until (a) lands, the enforcer would punish the documentation of
+its own rule.

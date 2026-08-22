@@ -671,11 +671,12 @@ function startHTTPServer() {
     server.listen(PORT, async () => {
         console.log(`\n  🐝 Heady MCP Multi-Transport Bridge`);
         console.log(`  ════════════════════════════════════`);
-        console.log(`  📡 HTTP REST : http://localhost:${PORT}/mcp/tools`);
-        console.log(`  📡 JSON-RPC  : http://localhost:${PORT}/mcp/rpc`);
-        console.log(`  📡 SSE       : http://localhost:${PORT}/sse`);
-        console.log(`  📡 WebSocket : ws://localhost:${PORT}`);
-        console.log(`  📡 Health    : http://localhost:${PORT}/health`);
+        console.log(`  📡 Listening : port ${PORT}`);
+        console.log(`  📡 HTTP REST : /mcp/tools`);
+        console.log(`  📡 JSON-RPC  : /mcp/rpc`);
+        console.log(`  📡 SSE       : /sse`);
+        console.log(`  📡 WebSocket : ws upgrade on the same port`);
+        console.log(`  📡 Health    : /health`);
         console.log(`  🧠 Vectors   : ${vectorStore.getStats().vectorCount} stored (${vectorStore.getStats().dimensions}D)`);
         console.log(`  ⚡ GPU       : ${GPU_CONFIG.useGPU ? 'enabled' : 'CPU mode'}`);
 

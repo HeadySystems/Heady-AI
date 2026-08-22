@@ -31,12 +31,14 @@ class TelemetryEngine {
             }),
         });
 
-        // Use OTLP Exporter (can wire to Admin Citadel later or external collector)
-        this.exporter = new OTLPTraceExporter({
-            url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT || 'http://localhost:4318/v1/traces',
-        });
-
-        this.provider.addSpanProcessor(new SimpleSpanProcessor(this.exporter));
+        // OTLP exporter is wired ONLY when a collector endpoint is configured. A
+        // loopback default silently exported every span into a black hole while
+        // reporting success; no collector is more honest than a fake one.
+        const otlpEndpoint = process.env.OTEL_EXPORTER_OTLP_ENDPOINT;
+        if (otlpEndpoint) {
+            this.exporter = new OTLPTraceExporter({ url: otlpEndpoint });
+            this.provider.addSpanProcessor(new SimpleSpanProcessor(this.exporter));
+        }
         this.provider.register();
 
         this.tracer = trace.getTracer(serviceName);

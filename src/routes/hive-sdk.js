@@ -23,7 +23,7 @@ const sseEmitter = new EventEmitter();
 const path = require("path");
 
 // Import the real brain chat functions
-let chatViaClaude, chatViaGemini, chatViaOpenAI, chatViaHuggingFace, chatViaOllama;
+let chatViaClaude, chatViaGemini, chatViaOpenAI, chatViaHuggingFace;
 try {
     const brainModule = require(path.join(__dirname, "brain"));
     // The brain module exports a router, but the chat functions are module-level
@@ -32,6 +32,7 @@ try {
 
 // Internal brain dispatch — calls the real /api/brain/chat endpoint
 const http = require("http");
+const { URLS } = require("../config/global");
 function brainChat(message, system, options = {}) {
     return new Promise((resolve, reject) => {
         const body = JSON.stringify({
@@ -40,7 +41,7 @@ function brainChat(message, system, options = {}) {
             temperature: options.temperature || 0.7,
             max_tokens: options.max_tokens || 2048,
         });
-        const req = http.request("http://127.0.0.1:3301/api/brain/chat", {
+        const req = http.request(`${URLS.BRAIN}/api/brain/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(body) },
             timeout: 30000,

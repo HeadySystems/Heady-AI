@@ -154,7 +154,7 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(\`🐝 ${siteConfig.name} running at http://localhost:\${PORT}\`);
+    console.log(\`🐝 ${siteConfig.name} listening on port \${PORT}\`);
     console.log(\`   Domain: ${domain}\`);
     console.log(\`   Projected from Heady Latent OS\`);
 });

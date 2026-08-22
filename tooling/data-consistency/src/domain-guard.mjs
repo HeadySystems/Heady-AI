@@ -103,10 +103,40 @@ async function main() {
 
   const files = walk(REPO_ROOT);
   const violations = [];
+  const law0Exempted = [];
 
   // Law 0: Localhost check
   const localhostPattern = /localhost|127\.0\.0\.1/i;
   const allowedLoopbackPattern = /localhost:1055|127\.0\.0\.1:1055/i;
+
+  // Law 0 exemptions — each is a shape where loopback is CORRECT, not tolerated.
+  // Triaged 2026-08-22; see docs/LAW0_LOOPBACK_TRIAGE_2026-08-22.md. Anything not
+  // matching one of these was fixed rather than exempted.
+  const LAW0_EXEMPT_LINE = [
+    {
+      // `new URL(relative, base)` needs an absolute base. The host is parsed and
+      // discarded; no connection is opened. Rewriting it to a real domain would
+      // be misleading, not safer.
+      why: 'url-parse-base',
+      re: /new URL\([^)]*,\s*[`'"](?:https?|wss?):\/\/(?:localhost|127\.0\.0\.1)/i,
+    },
+    {
+      // A container probing ITSELF. This is the idiomatic form and changing it
+      // would break the healthcheck.
+      why: 'container-self-healthcheck',
+      re: /HEALTHCHECK|CMD node -e/,
+    },
+    {
+      // Prose emitted INTO a scaffolded project, telling its developer how to run
+      // it. Content of a generated artifact, not a call this repo makes.
+      why: 'generated-artifact-prose',
+      re: /Visit .{0,12}(?:https?):\/\/(?:localhost|127\.0\.0\.1)/i,
+    },
+  ];
+  // Tests legitimately assert that Law 0 REJECTS loopback — path-exempt them, the
+  // same way tooling/coherence/src/scalar-guards.mjs exempts tests that assert the
+  // rejection of a wrong canonical number.
+  const LAW0_EXEMPT_PATH = /(^|\/)tests?\/|\.(test|spec)\.[cm]?js$/;
 
   // Allowed domain suffixes: the SoT-derived canon + auth topology + third parties.
   const headySuffixes = loadHeadyDomainSuffixes();
@@ -148,6 +178,11 @@ async function main() {
 
         // 1. Law 0: check localhost
         if (localhostPattern.test(hostname)) {
+          const exemptLine = LAW0_EXEMPT_LINE.find(e => e.re.test(line));
+          if (LAW0_EXEMPT_PATH.test(file.rel) || exemptLine) {
+            law0Exempted.push({ file: file.rel, line: i + 1, why: exemptLine ? exemptLine.why : 'test-asserts-rejection' });
+            continue;
+          }
           if (!allowedLoopbackPattern.test(fullUrl)) {
             violations.push({
               type: 'LAW-0-VIOLATION',
@@ -218,6 +253,17 @@ async function main() {
     mdReport.push('|---|---|');
     for (const [file, n] of [...byFile].sort((a, b) => b[1] - a[1]).slice(0, 15)) mdReport.push(`| \`${file}\` | ${n} |`);
     mdReport.push('');
+    if (law0Exempted.length > 0) {
+      mdReport.push('#### Law 0 exemptions applied');
+      mdReport.push('');
+      mdReport.push('Loopback shapes where loopback is *correct*. Recorded, never silent —');
+      mdReport.push('rationale in `docs/LAW0_LOOPBACK_TRIAGE_2026-08-22.md`.');
+      mdReport.push('');
+      mdReport.push('| File | Line | Reason |');
+      mdReport.push('|---|---|---|');
+      for (const e of law0Exempted) mdReport.push(`| \`${e.file}\` | ${e.line} | \`${e.why}\` |`);
+      mdReport.push('');
+    }
     mdReport.push('#### All findings');
     mdReport.push('| Type | File | Line | Excerpt | Message |');
     mdReport.push('|---|---|---|---|---|');
@@ -231,6 +277,7 @@ async function main() {
 
   writeFileSync(reportPath, mdReport.join('\n'), 'utf-8');
   console.log(`[DomainGuard] Wrote hygiene report to docs/reports/domain-hygiene-report.md`);
+  console.log(`[DomainGuard] Law 0 exemptions applied: ${law0Exempted.length}`);
   console.log(`[DomainGuard] Finished. Violations found: ${violations.length}`);
 
   if (violations.length > 0) {

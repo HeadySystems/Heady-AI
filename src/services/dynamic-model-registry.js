@@ -357,9 +357,11 @@ class DynamicModelRegistry {
             }
         }
 
-        // 5. LiteLLM Proxy Scan (local fallback on port 4000)
+        // 5. LiteLLM Proxy Scan — opt-in, cloud address only. Skipped when unset
+        // rather than probing a loopback port that cannot exist in a deployment.
         try {
-            const res = await fetch('http://localhost:4000/v1/models').catch(() => null);
+            const proxyUrl = process.env.HEADY_LITELLM_PROXY_URL;
+            const res = proxyUrl ? await fetch(`${proxyUrl}/v1/models`).catch(() => null) : null;
             if (res && res.ok) {
                 const data = await res.json();
                 if (data.data) {

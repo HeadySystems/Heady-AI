@@ -93,7 +93,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`\n  🔐 Heady Auth Page live at: http://localhost:${PORT}\n`);
+  console.log(`\n  🔐 Heady Auth Page listening on port ${PORT}\n`);
 });
 
 // ═════════════════════════════════════════════════════════════════

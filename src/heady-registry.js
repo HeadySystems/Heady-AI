@@ -33,6 +33,7 @@ const path = require("path");
 const http = require("http");
 const logger = require("./utils/logger");
 
+const { URLS } = require("./config/global");
 const REG_FILE = path.join(__dirname, "..", "data", "heady-registry.json");
 const REG_AUDIT = path.join(__dirname, "..", "data", "registry-audit.jsonl");
 const dir = path.dirname(REG_FILE);
@@ -190,7 +191,7 @@ async function incrementalScan() {
 
 // ── Full Registry Population (initial or on-demand) ─────────────
 async function fullPopulate() {
-    const BASE = "https://127.0.0.1:3301";
+    const BASE = URLS.MANAGER;
     const endpoints = [
         "pulse", "compute/dashboard", "orchestrator/agents", "orchestrator/nodes",
         "optimize/status", "optimize/skills", "optimize/connectors",

@@ -21,7 +21,8 @@ const router = express.Router();
 const http = require("http");
 const https = require("https");
 
-const MANAGER_URL = process.env.HEADY_MANAGER_URL || "https://127.0.0.1:3301";
+const { URLS } = require("../config/global");
+const MANAGER_URL = URLS.MANAGER;
 const LENS_SOURCE_OF_TRUTH_ENDPOINT = "/api/lens/source-of-truth?refresh=1";
 const conductorLog = [];
 const systemModel = {

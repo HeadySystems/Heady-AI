@@ -125,6 +125,6 @@ app.post('/messages/:sessionId', async (c) => {
 // ── Start Server ────────────────────────────────────────────────
 serve({ fetch: app.fetch, port: PORT }, () => {
     console.log(`[MCP] Heady™ MCP Server projected on :${PORT}`);
-    console.log(`[MCP] SSE endpoint: http://localhost:${PORT}/sse`);
-    console.log(`[MCP] Health: http://localhost:${PORT}/health`);
+    console.log(`[MCP] SSE endpoint: /sse`);
+    console.log(`[MCP] Health: /health`);
 });

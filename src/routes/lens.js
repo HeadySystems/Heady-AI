@@ -21,6 +21,7 @@ const https = require("https");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const logger = require("../utils/logger");
 
+const { URLS } = require("../config/global");
 // ── Vision Provider Setup (lazy — reads env at request time) ──
 let _genAI = null;
 function getGenAI() {
@@ -77,7 +78,7 @@ function getOpenAIKey() { return process.env.OPENAI_API_KEY || ""; }
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");
 const LENS_STATE_FILE = path.join(DATA_DIR, "lens-state.json");
-const INTERNAL_MANAGER_URL = process.env.HEADY_MANAGER_URL || "https://127.0.0.1:3301";
+const INTERNAL_MANAGER_URL = URLS.MANAGER;
 const _PHI_LENS = 1.618;
 const LENS_POLL_INTERVAL_MS = parseInt(process.env.LENS_POLL_INTERVAL_MS || String(Math.round(_PHI_LENS ** 5 * 1000)), 10); // φ⁵ ≈ 11,090ms — fluid observation pulse
 

@@ -32,8 +32,9 @@ const http = require("http");
 const logger = require("../utils/logger");
 const CSL = require("../core/semantic-logic");
 
-// Qdrant configuration
-const QDRANT_URL = process.env.QDRANT_URL || "http://127.0.0.1:6333";
+// Qdrant configuration. Qdrant is a DROPPED store (facts.yaml, ADR-0003) — pgvector
+// is the retrieval authority. No loopback default: unset means this path stays off.
+const QDRANT_URL = process.env.QDRANT_URL || "";
 const QDRANT_COLLECTION = "heady-memory";
 
 const DATA_DIR = path.join(__dirname, "..", "..", "data");

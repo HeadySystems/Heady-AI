@@ -9,6 +9,7 @@
 const EventEmitter = require("events");
 const logger = require("./utils/logger");
 
+const { URLS } = require("./config/global");
 class BrainConnector extends EventEmitter {
     constructor(opts = {}) {
         super();
@@ -19,7 +20,7 @@ class BrainConnector extends EventEmitter {
         this.circuitBreakers = new Map();
 
         // Register default local endpoint
-        this._registerEndpoint("local-brain", { url: "https://127.0.0.1:3301/api/brain", priority: 1 });
+        this._registerEndpoint("primary-brain", { url: `${URLS.BRAIN}/api/brain`, priority: 1 });
 
         // Start health checker
         this._healthInterval = setInterval(() => this._runHealthChecks(), this.healthCheckInterval);

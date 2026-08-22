@@ -423,24 +423,9 @@ async function embed(text) {
         }
     } catch { /* HF API failed, try next */ }
 
-    // Strategy 2: Ollama local (if running)
-    try {
-        const ollamaRes = await fetch(`http://127.0.0.1:${process.env.OLLAMA_PORT || 11434}/api/embeddings`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model: "nomic-embed-text", prompt: truncated }),
-            signal: AbortSignal.timeout(5000),
-        });
-        if (ollamaRes.ok) {
-            const data = await ollamaRes.json();
-            if (data.embedding && data.embedding.length >= 100) {
-                remoteEmbedCount++;
-                return data.embedding;
-            }
-        }
-    } catch { /* Ollama not available, fall through */ }
-
-    // Strategy 3: Local hash embed (deterministic fallback — works but no semantic meaning)
+    // Strategy 2: Local hash embed (deterministic fallback — works but no semantic meaning)
+    // A third strategy (Ollama on :11434) was removed 2026-08-22: Zero-Localhost leaves no
+    // host to reach, and its nomic-embed-text output was 768-dim against the 384-dim lock.
     localFallbackCount++;
     return localHashEmbed(truncated, 384);
 }

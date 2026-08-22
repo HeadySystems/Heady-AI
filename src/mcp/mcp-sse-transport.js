@@ -19,6 +19,7 @@ const crypto = require('crypto');
 const fetch = globalThis.fetch || require('node-fetch').default || require('node-fetch');
 const logger = require('../utils/logger');
 
+const { URLS } = require("../config/global");
 // ── Tool/Resource/Prompt definitions (imported from the MCP server) ──
 // We replicate the handler logic here since the stdio server can't be
 // reused directly — it's bound to stdin/stdout.
@@ -26,7 +27,7 @@ const logger = require('../utils/logger');
 class McpSseTransport {
     constructor(opts = {}) {
         this.oauthProvider = opts.oauthProvider;
-        this.baseUrl = opts.baseUrl || process.env.HEADY_MANAGER_URL || 'http://localhost:3301';
+        this.baseUrl = opts.baseUrl || URLS.MANAGER;
         this.apiKey = opts.apiKey || process.env.HEADY_API_KEY || '';
         this.sessions = new Map();  // sessionId → { res, tier, clientId }
         this.router = express.Router();

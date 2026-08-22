@@ -10,6 +10,7 @@
  */
 const router = require('express').Router();
 
+const { URLS } = require("../config/global");
 // Runtime config served to HeadyBuddy clients
 router.get('/', (req, res) => {
     res.json({
@@ -129,14 +130,9 @@ router.get('/', (req, res) => {
 router.get('/services', async (req, res) => {
     const checks = {};
     try {
-        const pulse = await fetch('https://127.0.0.1:3301/api/pulse', { signal: AbortSignal.timeout(2000) });
+        const pulse = await fetch(`${URLS.MANAGER}/api/pulse`, { signal: AbortSignal.timeout(2000) });
         checks.manager = pulse.ok ? 'connected' : 'degraded';
     } catch { checks.manager = 'disconnected'; }
-
-    try {
-        const headylocal = await fetch('http://127.0.0.1:11434/', { signal: AbortSignal.timeout(2000) });
-        checks.headylocal = headylocal.ok ? 'connected' : 'disconnected';
-    } catch { checks.headylocal = 'disconnected'; }
 
     checks.headyjules = !!process.env.HEADY_NEXUS_KEY ? 'configured' : 'not_configured';
     checks.headycompute = !!process.env.HEADY_COMPUTE_KEY ? 'configured' : 'not_configured';
