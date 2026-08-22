@@ -23,3 +23,17 @@ public keys stay so historical evidence and receipts remain replayable.
 `arbiter-attestation.public.jwk.json` is intentionally absent — that KMS key does not exist yet and
 must be created under an identity independent of the founder's, or the typed patent quorum is one
 person wearing two hats. See `docs/runbooks/APPROVAL_GENESIS_FOUNDER_RUNBOOK.md`.
+
+## arbiter-attestation (added 2026-08-22)
+
+| Field | Value |
+|---|---|
+| Key version | `projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/arbiter-attestation/cryptoKeyVersions/1` |
+| Algorithm | `EC_SIGN_ED25519`, state `ENABLED` |
+| `publicJwkFingerprint` | `cc7151dd68a5bd20364c28753ad2689678b2646e9891c6705dc1bd3777c076b8` |
+| Signing principal | `heady-arbiter@heady-ai.iam.gserviceaccount.com` (sole `roles/cloudkms.signerVerifier` binding, zero user-managed keys) |
+
+⚠️ Provisioned but not yet *independent*: project-level `roles/owner` can impersonate that service
+account, and the owner list includes the identity that also signs founder evidence. See the ARBITER
+independence warning in `docs/runbooks/APPROVAL_GENESIS_FOUNDER_RUNBOOK.md` STEP 3 before relying on
+this key as a second evidence channel.

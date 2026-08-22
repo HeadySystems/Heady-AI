@@ -182,19 +182,69 @@ current shell depends on will lock this session out of the key — which is the 
 
 **Console:** <https://console.cloud.google.com/security/kms/keyring/manage/global/heady-approval?project=heady-ai>
 
-### STEP 3 — create the ARBITER key and its workload identity (S3, closes S2)
+### STEP 3 — ARBITER key and workload identity ✅ PROVISIONED 2026-08-22
 
-**Status: still pending.** An agent attempt to run these was blocked by the Claude Code auto-mode
-permission classifier, so they remain yours to run (or to allow via a Bash permission rule). Verified
-2026-08-22: the `heady-approval` keyring still holds only `founder-evidence` and `receipt-signing`.
+Done, verified live:
 
-> **Independence decision to make while you run this.** ADR-0053 — which you are accepting — rests on
-> ARBITER being *separately authenticated*. A service account you can impersonate as project owner
-> gives you both evidence classes, which is the manufactured independence ADR-0031 §1 rejects. To make
-> the second channel real, reach `heady-arbiter` only from the ARBITER workload (Workload Identity
-> Federation from a named CI job or Cloud Run service) and do not grant yourself
-> `roles/iam.serviceAccountTokenCreator` on it. If you accept owner-impersonation as a residual risk,
-> record that in the ADR-0053 activation record rather than leaving it implicit.
+| Resource | State |
+|---|---|
+| `arbiter-attestation` crypto key | created, `ASYMMETRIC_SIGN` / `EC_SIGN_ED25519` |
+| version `1` | `ENABLED` |
+| `heady-arbiter@heady-ai.iam.gserviceaccount.com` | created, enabled, **zero user-managed keys** |
+| IAM on `arbiter-attestation` | exactly one binding — that SA, `roles/cloudkms.signerVerifier` |
+| Public JWK | `configs/keys/approval/arbiter-attestation.public.jwk.json` |
+| `publicJwkFingerprint` | `cc7151dd68a5bd20364c28753ad2689678b2646e9891c6705dc1bd3777c076b8` (recomputed from the committed file) |
+
+`--arbiter-public-jwk` is now satisfiable. That was the input blocking `genesis:prepare` outright.
+
+> ### ⚠️ ARBITER is provisioned but NOT yet independent — decide this before activating ADR-0053
+>
+> The SA's own IAM policy is empty (nobody holds `serviceAccountTokenCreator` on it directly), but
+> project-level `roles/owner` carries `iam.serviceAccounts.getAccessToken`, and the owner list is:
+>
+> ```
+> roles/owner  user:eric@headyconnection.org
+> roles/owner  serviceAccount:firebase-adminsdk-fbsvc@heady-ai.iam.gserviceaccount.com
+> ```
+>
+> So `eric@headyconnection.org` — **the identity this machine's agent sessions authenticate as, and the
+> same identity that currently holds `signerVerifier` on `founder-evidence`** — can impersonate
+> `heady-arbiter` and mint an ARBITER attestation. One principal, both evidence classes. That is the
+> manufactured independence ADR-0031 §1 rejects, and ADR-0053's entire quorum rests on ARBITER being
+> *separately authenticated*. Activating 0053 without fixing this makes the second channel decoration.
+>
+> Fix (pick one, then record it in the ADR-0053 activation record):
+> 1. **Bind ARBITER to a workload, not a human.** Run ARBITER as a named Cloud Run service or CI job
+>    via Workload Identity Federation; keep `roles/owner` off the ceremony identity, or move founder
+>    signing to a separate identity per STEP 2 so the two channels have no common principal.
+> 2. **Accept owner-impersonation as residual risk** — but write it into the activation record
+>    explicitly, so a later auditor sees a decision rather than an oversight.
+>
+> Deliberately **not** changed by an agent: project-level owner bindings are yours.
+
+> ### 🔴 Separate finding, worse than the above — an owner-level service account with 5 exported keys
+>
+> `firebase-adminsdk-fbsvc@heady-ai.iam.gserviceaccount.com` holds **`roles/owner` AND
+> `roles/iam.serviceAccountTokenCreator`** at project level, and has **5 user-managed keys that never
+> expire** (`validBeforeTime: 9999-12-31`), created 2026-03-15, 03-16, 03-19, and two on 2026-06-17.
+>
+> Any holder of any one of those five JSON files is project owner on `heady-ai`. That means they can
+> impersonate `heady-arbiter`, grant themselves `signerVerifier` on `founder-evidence`, read every
+> secret, and rewrite the approval service after genesis. This defeats the entire genesis trust model
+> before it starts, and it intersects the open SEC-001 exposure (live GCP SA keys found in the
+> dropzone) and the still-unexplained `cloudflare-mass-hijack-2026-07-06` credential vector.
+>
+> Recommended before genesis, in this order:
+> 1. Inventory which of the five key IDs are in use and by what. 2. Rotate/replace those consumers with
+> WIF or a least-privilege SA. 3. `gcloud iam service-accounts keys delete <KEY_ID>
+> --iam-account=firebase-adminsdk-fbsvc@heady-ai.iam.gserviceaccount.com` for each. 4. Strip
+> `roles/owner` and `roles/iam.serviceAccountTokenCreator` from that SA, leaving only the Firebase
+> Admin scopes it actually needs.
+>
+> Key deletion is destructive and will break whatever authenticates with it — inventory first. Not
+> performed by an agent.
+
+The commands that produced the state above, for the record:
 
 ```bash
 gcloud kms keys create arbiter-attestation \
@@ -440,7 +490,7 @@ Every row was measured, not inferred.
 | KMS keyring `heady-approval` (global) | ✅ exists | `gcloud kms keyrings list --location=global` |
 | KMS `founder-evidence` v1 | ✅ Ed25519, ENABLED | fingerprint `0f7753c1…78ed` |
 | KMS `receipt-signing` v1 | ✅ Ed25519, ENABLED | fingerprint `e9dfdcb1…64ba` |
-| KMS ARBITER key | ❌ **does not exist** | keyring holds only the two keys above |
+| KMS `arbiter-attestation` v1 | ✅ Ed25519, ENABLED (created 2026-08-22) | fingerprint `cc7151dd…76b8`; sole IAM binding = `heady-arbiter` SA |
 | Artifact Registry repo `heady` (us-east1) | ❌ absent (only `gcr.io`, `cloud-run-source-deploy`) | `gcloud artifacts repositories list` |
 | Cloud Run `approval-api` | ❌ **not deployed** | `gcloud run services list` |
 | Genesis manifest | ❌ cannot be produced yet — see §4 | `prepare-genesis-manifest.mjs` requires all 8 inputs |
@@ -730,7 +780,7 @@ recompute it at your final implementation commit — and note the pending `packa
 | `founderPublicKeyFingerprint` | `0f7753c16b03420af64a6415a746239d67a3e64a88c9177bca27c29b56a378ed` | `configs/keys/approval/founder-evidence.public.jwk.json` |
 | `receiptSignerPublicKeyFingerprint` | `e9dfdcb1cd80f69a010e6e1b24daf0447a0074f72c7065d4f45bad7a8cbc64ba` | `configs/keys/approval/receipt-signing.public.jwk.json` |
 | `approvalSourceTreeSha256` | recompute — changes with the implementation commit | `git ls-tree` over `apps/approval-api`, `packages/approvals`, migration 0004, `policies/approval.rego` |
-| `arbiterPublicKeyFingerprint` | **pending S3** | key does not exist |
+| `arbiterPublicKeyFingerprint` | `cc7151dd68a5bd20364c28753ad2689678b2646e9891c6705dc1bd3777c076b8` | `configs/keys/approval/arbiter-attestation.public.jwk.json` |
 | `deploymentManifestSha256` | **pending S7** | — |
 | `deploymentArtifactDigest` / `rollbackArtifactDigest` | **pending S6** | — |
 | `governanceReportSha256` / `securityReviewSha256` | **pending S8** | — |
