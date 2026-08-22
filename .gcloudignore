@@ -7,6 +7,18 @@
 # Respect .gitignore
 #!include:.gitignore
 
+# ── Re-include workspace packages the .gitignore credential globs swallow ──
+# .gitignore:19 `**/*secret*` and :33 `**/secrets/` are defense-in-depth against
+# committing credential FILES. They also match `packages/secrets/` — the package
+# that RESOLVES secrets and holds none. Git exempts it because it is already
+# tracked; gcloud applies the pattern regardless, so every Cloud Build upload
+# silently dropped it and `apps/approval-api/Dockerfile` failed at
+# `COPY packages/secrets/package.json` with "file not found in build context".
+# Negate the directory itself, not just its contents — a gitignore-style
+# exclusion of a parent directory cannot be undone from inside it.
+!packages/secrets/
+!packages/secrets/**
+
 # Credentials and local secret material
 .env
 .env.*
