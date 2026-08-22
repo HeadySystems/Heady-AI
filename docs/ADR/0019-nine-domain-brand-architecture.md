@@ -32,7 +32,7 @@ Establish a canonical nine-domain registry as the single source of truth for all
 | **headymcp.com** | HeadySystems Inc. | MCP Gateway | API / Per-Request | `headymcp` | Inner |
 | **headybuddy.com** | HeadySystems Inc. | Companion AI | Subscription + Usage | `headybuddy` | Middle |
 | **headyos.com** | HeadySystems Inc. | Latent OS | Enterprise License | `headyos` | Middle |
-| **headyfinance.com** | HeadySystems Inc. | FinTech Advisory | Revenue Share + SaaS | `headyfinance` | Outer |
+| **headytrade.com** | HeadySystems Inc. | FinTech / Trading | Revenue Share + SaaS | `headytrade` | Outer |
 | **headylab.com** | HeadySystems Inc. | Research / Patents | Enterprise + Grants | `headylab` | Outer |
 | **headyconnection.org** | HeadyConnection Inc. | Nonprofit Portal | Grants / Donations | `headyconnection` | Governance |
 | **headyweb.com** | HeadySystems Inc. | Web / Frontend Hub | Ad-supported / Free | `headyweb` | Ops |
@@ -61,7 +61,7 @@ export const DOMAIN_REGISTRY = {
   'headymcp.com':        { entity: 'HeadySystems', category: 'mcp',        layer: 'Inner',      tenant: 'headymcp',      commercial: true  },
   'headybuddy.com':      { entity: 'HeadySystems', category: 'companion',  layer: 'Middle',     tenant: 'headybuddy',    commercial: true  },
   'headyos.com':         { entity: 'HeadySystems', category: 'os',         layer: 'Middle',     tenant: 'headyos',       commercial: true  },
-  'headyfinance.com':    { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headyfinance',  commercial: true  },
+  'headytrade.com':      { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headytrade',    commercial: true  },
   'headylab.com':        { entity: 'HeadySystems', category: 'research',   layer: 'Outer',      tenant: 'headylab',      commercial: true  },
   'headyconnection.org': { entity: 'HeadyConnection', category: 'nonprofit', layer: 'Governance', tenant: 'headyconnection', commercial: false },
   'headyweb.com':        { entity: 'HeadySystems', category: 'web',        layer: 'Ops',        tenant: 'headyweb',      commercial: true  },
@@ -88,10 +88,6 @@ export const DOMAIN_REGISTRY = {
 - ADR-0019/ADR-0020 reserved placeholders now filled; INDEX.md gap closed.
 
 ---
-
-## Amendment — 2026-08-22: `headytrade.com` → `headyfinance.com`
-
-The FinTech domain row and the registry excerpt above were rewritten in place. The brand is `headyfinance`; the product is trading **advisory** (risk + signal engine, paper-mode default, no execution and no custody), implemented as `@heady/headyfinance`. `headytrade` is retired across the corpus. This legacy file is a historical artifact — the operative record is canonical `docs/adr/0033-nine-domain-brand-architecture.md`; the live domain roster is `facts.yaml` `domains:`.
 
 ## Compliance
 
