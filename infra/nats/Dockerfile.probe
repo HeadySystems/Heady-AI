@@ -1,0 +1,13 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Private NATS Probe Image v1.0.0                        ║
+# ║  Digest-pinned Node 22 carrier for the protocol verification.   ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+FROM docker.io/library/node:22.22.0-alpine3.22@sha256:7aa86fa052f6e4b101557ccb56717cb4311be1334381f526fe013418fe157384
+
+WORKDIR /app
+COPY --chown=node:node probe.mjs /app/probe.mjs
+USER node
+
+ENTRYPOINT ["node", "/app/probe.mjs"]
