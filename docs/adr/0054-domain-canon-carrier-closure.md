@@ -8,10 +8,14 @@ HEADY_BRAND:END -->
 
 # ADR-0054: Domain Canon Carrier Closure and HeadyFinance Succession
 
-- **Status:** Proposed
+- **Status:** Proposed — ratification pending the founder-signed tag `adr-0054-accepted-<sha>`
+- **Acceptance:** requires the ADR-0030/0031/0032-style ceremony (OpenPGP `git tag -s`, verifiable
+  with `git tag -v`). An agent cannot perform this act, and a commit asserting acceptance without it
+  is void — see the `91059537a4` → `c48062fc61` incident recorded in `docs/adr/README.md`.
 - **Date:** 2026-08-22
 - **Deciders:** Eric Haywood (HeadySystems Inc.)
-- **Amends if accepted:** ADR-0033 and ADR-0038
+- **Amends if accepted:** ADR-0033 and ADR-0038, and grants a bounded, one-time exception to the
+  ADR immutability rule stated in `docs/adr/README.md` (see §Decision)
 
 ## Context
 
@@ -41,7 +45,22 @@ If accepted:
 
 - The live domain canon recognizes `headyfinance.com` as the successor to `headytrade.com`, with a
   distinct `headyfinance` tenant. References to the retired brand are removed from live code and
-  projections while the accepted-time ADR-0033 snapshot remains unchanged.
+  projections.
+- **Founder-authorized exception to the ADR immutability rule.** `docs/adr/README.md` states that an
+  accepted ADR is "immutable once Accepted — superseded by a new ADR, never edited in place." On
+  2026-08-22 the founder ruled that **no surface may carry the retired brand, historical snapshots
+  included**, and directed that `headytrade` be removed from the ADR-0033 snapshot table and its
+  registry excerpt, and from the frozen legacy `docs/ADR/0019` copy of the same record.
+  - This exception is **bounded to the single token `headytrade` → `headyfinance`** in those two
+    files. It is not a general licence to edit accepted ADRs, and no other accepted record is
+    touched.
+  - Nothing about the decision is lost: the succession itself is recorded in this ADR, in each
+    amended file's pointer section, and in `facts.yaml` `domains.headyfinance.note`, which carries
+    the founder reconciliation of 2026-07-29 that established the successor name.
+  - The cost is stated plainly rather than hidden: those two records are no longer byte-identical to
+    their accepted-time state, so the "historical ADR evidence remains byte-stable" property claimed
+    under §Consequences holds for every accepted record **except** these two, by explicit founder
+    ruling. A reader comparing against the 2026-06-17 accepted state should expect this one delta.
 - The canon includes `headybot.com` and `headylens.com`. `headylens.com` the vision/OCR domain is
   distinct from the `@heady/headylens` observability package.
 - Canon size and delivered-site count remain distinct measurements. The canon contains 16 records;
@@ -63,7 +82,8 @@ rewrite or self-ratify accepted ADR history.
 
 ### Positive
 
-- Historical ADR evidence remains byte-stable and auditable.
+- Historical ADR evidence remains byte-stable and auditable, with the single bounded exception
+  the founder authorized in §Decision (the `headytrade` token in ADR-0033 and legacy ADR-0019).
 - Live domain carriers become derived or mechanically checked instead of silently drifting.
 - The HeadyFinance succession and two previously orphaned routing domains receive explicit review
   scope.

@@ -32,7 +32,7 @@ Establish a canonical nine-domain registry as the single source of truth for all
 | **headymcp.com** | HeadySystems Inc. | MCP Gateway | API / Per-Request | `headymcp` | Inner |
 | **headybuddy.com** | HeadySystems Inc. | Companion AI | Subscription + Usage | `headybuddy` | Middle |
 | **headyos.com** | HeadySystems Inc. | Latent OS | Enterprise License | `headyos` | Middle |
-| **headytrade.com** | HeadySystems Inc. | FinTech / Trading | Revenue Share + SaaS | `headytrade` | Outer |
+| **headyfinance.com** | HeadySystems Inc. | FinTech Advisory | Revenue Share + SaaS | `headyfinance` | Outer |
 | **headylab.com** | HeadySystems Inc. | Research / Patents | Enterprise + Grants | `headylab` | Outer |
 | **headyconnection.org** | HeadyConnection Inc. | Nonprofit Portal | Grants / Donations | `headyconnection` | Governance |
 | **headyweb.com** | HeadySystems Inc. | Web / Frontend Hub | Ad-supported / Free | `headyweb` | Ops |
@@ -61,7 +61,7 @@ export const DOMAIN_REGISTRY = {
   'headymcp.com':        { entity: 'HeadySystems', category: 'mcp',        layer: 'Inner',      tenant: 'headymcp',      commercial: true  },
   'headybuddy.com':      { entity: 'HeadySystems', category: 'companion',  layer: 'Middle',     tenant: 'headybuddy',    commercial: true  },
   'headyos.com':         { entity: 'HeadySystems', category: 'os',         layer: 'Middle',     tenant: 'headyos',       commercial: true  },
-  'headytrade.com':      { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headytrade',    commercial: true  },
+  'headyfinance.com':    { entity: 'HeadySystems', category: 'fintech',    layer: 'Outer',      tenant: 'headyfinance',  commercial: true  },
   'headylab.com':        { entity: 'HeadySystems', category: 'research',   layer: 'Outer',      tenant: 'headylab',      commercial: true  },
   'headyconnection.org': { entity: 'HeadyConnection', category: 'nonprofit', layer: 'Governance', tenant: 'headyconnection', commercial: false },
   'headyweb.com':        { entity: 'HeadySystems', category: 'web',        layer: 'Ops',        tenant: 'headyweb',      commercial: true  },
@@ -89,12 +89,15 @@ export const DOMAIN_REGISTRY = {
 
 ---
 
-## Superseded rows (pointer only — the tables above are unchanged)
+## Amended rows — 2026-08-22
 
-- **`headytrade.com` → `headyfinance.com`.** This legacy file is a historical artifact and its
-  tables are preserved as accepted; the retired brand is history here and appears nowhere live.
-  The succession is recorded in **ADR-0054 (Proposed)**; the operative canonical record is
-  `docs/adr/0033-nine-domain-brand-architecture.md`, and the live roster is `facts.yaml` `domains:`.
+- **`headytrade.com` → `headyfinance.com`.** The FinTech row and the registry excerpt above were
+  rewritten in place under the founder-authorized exception granted in **ADR-0054 §Decision**: no
+  surface may carry the retired brand, historical snapshots included. The exception is bounded to
+  this single token, here and in the canonical `docs/adr/0033-nine-domain-brand-architecture.md`.
+  **This file is therefore no longer byte-identical to its accepted-time state.** It remains a
+  frozen historical artifact in every other respect; the operative canonical record is ADR-0033 and
+  the live roster is `facts.yaml` `domains:`.
 
 ## Compliance
 
