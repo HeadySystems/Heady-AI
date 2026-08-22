@@ -62,8 +62,8 @@ historically integrated, never as canonical wiring.
 
 ## (b) The 9 Heady domains
 
-Spine = the 9 domains named in this domain's scope. **⚠ Three divergent domain registries exist** — see
-the drift section. Current serving is grounded in the runbook: the only live origin is the Firebase
+Spine = the domains named in this domain's scope. **The registries are reconciled** (2026-08-22) — canon is
+`facts.yaml domains:` (16 nodes), see D2. Current serving is grounded in the runbook: the only live origin is the Firebase
 subdomain `heady-ai.web.app`; every custom domain is DNS-blocked (founder-only external step). The
 Cloudflare edge router (`configs/cloudflare-workers/heady-router-worker.js`) is configured to serve 9 of
 these by hostname.
@@ -159,7 +159,7 @@ these by hostname.
 ## Drift flags vs the locked stack
 
 - **D1 — Cloud Run region.** `facts.yaml deploy_targets.origin.region: us-central1` vs **ADR-0022 (newer, ⭐⭐⭐⭐⭐) us-east1**, which matches the live service. **us-east1 canonical; facts.yaml stale.**
-- **D2 — Domain registry (3-way).** Task's 9 (incl. `heady-ai.com`, `headybuddy.org`) vs ADR-0019's 9 (incl. `headyai.com`, `headybuddy.com`, headyos/headytrade/headylab/headyweb; **omits headysystems.com**) vs compendium I7's 11 (adds headylens, headyfinance). The **edge router** serves the task's 9 minus heady-ai.com plus headylens.com.
+- **D2 — Domain registry.** ~~3-way divergence~~ → **RECONCILED 2026-08-22.** It was 5-way, not 3-way: `src/config/domain-registry.js` (10), `src/config/global.js` DOMAINS (9), `configs/_domains/site-registry.yaml` (9), `configs/domain-architecture.json` (12), the edge-router `SITES` map (9) — plus a 6th hardcoded roster buried in `tooling/data-consistency/src/domain-guard.mjs`. `facts.yaml domains:` is now closed over all of them (16 nodes; `headybot.com` + `headylens.com` were carrier-only orphans), every node's `sources:` names its carriers, and coherence guards D1–D6 enforce it one-directionally (a carrier may only name canon domains; the brand registry staying a ratified subset is legal). The arena blueprint and the domain-guard allowlist now derive from `configs/_generated/domain-roster.json`. Residual: brand fields ratified for 10 of 16 — founder call, tracked as AD-5.
 - **D3 — Firebase project.** Live `heady-ai` vs skill-asserted `gen-lang-client-0920560496` (`heady-firebase-auth-orchestrator`). Skill stale.
 - **D4 — OpenRouter.** Named as the chokepoint path in ADR-0018 but **no wired client and no credential** in the registry.
 - **D5 — GCP project name.** ADR-0022 nominal `heady-rebuild` vs live `heady-ai`.

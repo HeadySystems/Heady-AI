@@ -159,15 +159,15 @@ export const DOMAIN_REGISTRY = Object.freeze({
     status:      DomainStatus.UNVERIFIED,
     description: 'Heady Latent OS — enterprise licensing, sovereign AI platform',
   },
-  'headytrade.com': {
+  'headyfinance.com': {
     entity:      Entity.HEADY_SYSTEMS,
     category:    Category.FINTECH,
     layer:       Layer.OUTER,
-    tenant:      'headytrade',
+    tenant:      'headyfinance',
     revenue:     Revenue.REVENUE_SHARE,
     commercial:  true,
     status:      DomainStatus.UNVERIFIED,
-    description: 'FinTech / trading — HeadyCoin, Apex trading risk, subscription tiers',
+    description: 'FinTech advisory — @heady/headyfinance risk + signal engine, paper-mode default (no execution, no custody), subscription tiers',
   },
   'headylab.com': {
     entity:      Entity.HEADY_SYSTEMS,

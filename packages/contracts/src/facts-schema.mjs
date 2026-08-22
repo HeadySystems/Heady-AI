@@ -181,7 +181,11 @@ export function validateFactsV1(facts) {
 
   // Dynamic domain entries: every object child of `domains` (skip scalars like
   // dns_checked) must carry fqdn + role + a recognized status. This is the
-  // domain-canon SoT contract (facts.yaml reconciles the three code registries).
+  // domain-canon SoT contract: facts.yaml reconciles every live domain carrier
+  // (brand registry, runtime whitelist, site registry, routing/DNS map, edge
+  // router). Membership + `sources:` accuracy are enforced one-directionally by
+  // the coherence kernel's D1–D6 guards (tooling/coherence/src/domain-guards.mjs);
+  // this schema owns per-entry SHAPE only.
   const domains = at(obj, "domains");
   if (domains && typeof domains === "object" && !Array.isArray(domains)) {
     for (const [key, entry] of Object.entries(domains)) {
