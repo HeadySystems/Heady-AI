@@ -21,6 +21,362 @@ HEADY_BRAND:END -->
 
 ---
 
+## 0. Copy-paste execution sequence (all real values, in order)
+
+Every value below is live-verified, not a placeholder. Sections S0–S9 explain *why* each step exists;
+this section is what you actually run. **Reason for each step is one line — skip a step only by
+deciding to, not by missing it.**
+
+### Environment — paste once per shell
+
+```bash
+cd /home/headyme/Heady-AI
+
+export HEADY_PROJECT=heady-ai
+export HEADY_REGION=us-east1                     # canonical per 93dbe68084
+export HEADY_KEYRING=heady-approval
+export HEADY_KMS_LOCATION=global                 # the keyring is global, NOT regional
+
+export FOUNDER_KEY=projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/founder-evidence/cryptoKeyVersions/1
+export RECEIPT_KEY=projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/receipt-signing/cryptoKeyVersions/1
+export ARBITER_KEY=projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/arbiter-attestation/cryptoKeyVersions/1
+```
+
+Known-good fingerprints — anything else means you are on the wrong key version:
+
+| Key | `publicJwkFingerprint` |
+|---|---|
+| `founder-evidence` v1 | `0f7753c16b03420af64a6415a746239d67a3e64a88c9177bca27c29b56a378ed` |
+| `receipt-signing` v1 | `e9dfdcb1cd80f69a010e6e1b24daf0447a0074f72c7065d4f45bad7a8cbc64ba` |
+| `arbiter-attestation` v1 | does not exist yet — created in S3 |
+
+### STEP 0 — reauthenticate gcloud (blocks everything below)
+
+The cached credentials expired: `gcloud projects describe heady-ai` currently returns
+*"Reauthentication failed. cannot prompt during non-interactive execution."* No GCP step can run
+until this is done, and it is interactive, so it cannot be delegated to an agent.
+
+In Claude Code, prefix with `!` so the output lands in the session:
+
+```
+! gcloud auth login
+```
+
+Then confirm you are on the intended account and project:
+
+```bash
+gcloud config set account eric@headyconnection.org --quiet   # or your ceremony identity, see S1
+gcloud config set project heady-ai --quiet
+gcloud projects describe heady-ai --format='value(projectId,projectNumber)'
+```
+
+Expected: one line, `heady-ai` plus the numeric project number. If this errors, stop — everything
+after it will fail with the same message.
+
+### STEP 1 — accept ADR-0053, or explicitly decide not to (S0)
+
+Do this **before** genesis. After genesis, amending the quorum needs the external human reviewer that
+ADR-0053 exists to waive.
+
+PR **288** — <https://github.com/HeadySystems/Heady-AI/pull/288> — is OPEN with **all checks green**
+(Blocks PR Review, General Code Review, Linear requirements, coherence gate, constitutional law gate,
+governance coverage, governance gate, lint · test · build).
+
+```bash
+# Read it first — this is the thing you are ratifying, 107 lines.
+gh pr view 288 --repo HeadySystems/Heady-AI
+sed -n '1,120p' /tmp/heady-solo-founder-governance-20260822/docs/adr/0053-temporary-solo-founder-approval-quorum.md
+```
+
+Bindings to record in the acceptance record (ADR-0053 §Activation boundary requires them):
+
+| Field | Value |
+|---|---|
+| ADR-0053 authoring commit | `67218fe4ba450851171598bb652c5c110356c172` |
+| ADR-0053 file SHA-256 | `dd2974ec7e94adcbadda2abe310988fba0f6d1d5c6de981af6c53ff6a38d1523` |
+| Branch | `governance/solo-founder-quorum-amendment-20260822` |
+| Hard expiry to record | `2026-11-19T23:59:59Z` (`FIB[11]` = 89 days) |
+| Founder key fingerprint | `0f7753c16b03420af64a6415a746239d67a3e64a88c9177bca27c29b56a378ed` |
+| ARBITER key fingerprint | pending S3 |
+
+Your signing setup is already correct and needs no flags — `git config user.signingkey` is
+`C3050E4C4D0C9162` (primary `727C4B1BABDA056BABA44095C3050E4C4D0C9162`), and gpg automatically signs
+with its `[S]` subkey `A7D2108BB3C6101C`, fingerprint
+`1050B59E7296C46C26DDF95DA7D2108BB3C6101C` — **the same key that signed
+`adr-0031-accepted-e064a8943` and `adr-0051-accepted-53d3e63ca`**. `commit.gpgsign` is already `true`.
+
+To accept, merge PR 288 first so the accepted object is on the canonical line, then tag it in the
+established shape (`adr-<n>-accepted-<short-sha>`):
+
+```bash
+gh pr merge 288 --repo HeadySystems/Heady-AI --merge          # or --squash, your call
+git fetch origin && git checkout checkpoint/rebuild-substrate-2026-07-23 && git pull --ff-only
+
+ACCEPTED=$(git rev-parse HEAD)
+git tag -s "adr-0053-accepted-$(git rev-parse --short=9 HEAD)" -m \
+"Founder acceptance: ADR-0053 Temporary Solo-Founder Approval Quorum; \
+accepted object $(git rev-parse --short=9 HEAD); \
+ADR commit 67218fe4ba450851171598bb652c5c110356c172; \
+ADR sha256 dd2974ec7e94adcbadda2abe310988fba0f6d1d5c6de981af6c53ff6a38d1523; \
+temporary-mode hard expiry 2026-11-19T23:59:59Z"
+
+git tag -v "adr-0053-accepted-$(git rev-parse --short=9 HEAD)"   # expect: Good signature, EDDSA key 1050B59E…101C
+git push origin "adr-0053-accepted-$(git rev-parse --short=9 HEAD)"
+```
+
+Then flip the ADR's own `Status:` line from `Proposed` to `Accepted` with the tag name, the way
+ADR-0031 records its acceptance — an unrecorded tag is not an acceptance anyone can find later.
+
+**If you decide NOT to accept:** say so and the runbook's §5 table stands as written — but then
+budget for recruiting an external security reviewer before any post-genesis approval-system change.
+
+### STEP 2 — decide the founder-key IAM boundary (S1)
+
+```bash
+gcloud kms keys get-iam-policy founder-evidence \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT"
+```
+
+Currently returns `user:eric@headyconnection.org  roles/cloudkms.signerVerifier` — the identity this
+machine's agent sessions hold. To move signing to a host with no agent session:
+
+```bash
+# Revoke from the agent-reachable identity
+gcloud kms keys remove-iam-policy-binding founder-evidence \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --member=user:eric@headyconnection.org --role=roles/cloudkms.signerVerifier
+
+# Grant to the ceremony identity you will authenticate as on the clean device
+gcloud kms keys add-iam-policy-binding founder-evidence \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --member=user:eric@headysystems.com --role=roles/cloudkms.signerVerifier
+```
+
+⚠️ Run this yourself. An agent must not touch IAM on your signing key, and revoking the binding your
+current shell depends on will lock this session out of the key — which is the point.
+
+**Console:** <https://console.cloud.google.com/security/kms/keyring/manage/global/heady-approval?project=heady-ai>
+
+### STEP 3 — create the ARBITER key and its workload identity (S3, closes S2)
+
+```bash
+gcloud kms keys create arbiter-attestation \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --purpose=asymmetric-signing --default-algorithm=ec-sign-ed25519
+
+gcloud iam service-accounts create heady-arbiter \
+  --display-name="HEADY ARBITER attestation workload" --project="$HEADY_PROJECT"
+
+# Independence: the ARBITER key is signable ONLY by the ARBITER workload, never by your user account.
+gcloud kms keys add-iam-policy-binding arbiter-attestation \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --member=serviceAccount:heady-arbiter@heady-ai.iam.gserviceaccount.com \
+  --role=roles/cloudkms.signerVerifier
+
+# Verify: exactly one binding, to the service account, algorithm EC_SIGN_ED25519, state ENABLED
+gcloud kms keys versions list --key=arbiter-attestation \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --format='table(name,state,algorithm)'
+
+# Export the public JWK and save it BARE (crv/kty/x only) where genesis:prepare expects it
+pnpm --filter @heady/approval-api key:public --key-version "$ARBITER_KEY"
+```
+
+Take only the `publicJwk` object from that output into
+`configs/keys/approval/arbiter-attestation.public.jwk.json`, then confirm the fingerprint matches what
+the export printed:
+
+```bash
+node -e 'import("./packages/approvals/src/canonical.mjs").then(async m=>{const {readFileSync}=await import("node:fs");process.stdout.write(m.publicJwkFingerprint(JSON.parse(readFileSync("configs/keys/approval/arbiter-attestation.public.jwk.json","utf8")))+"\n")})'
+```
+
+### STEP 4 — Neon runtime login (S4)
+
+The role `heady_approval_api` already exists in production; it needs a password and a **pooled** URL.
+
+1. <https://console.neon.tech/> → your project → **Roles** → reset the password for
+   `heady_approval_api`.
+2. **Branches → Connect** → choose that role → copy the **Pooled** connection string. It must contain
+   `-pooler` in the host and `?sslmode=require`. The runtime rejects a direct URL, a non-Neon host, a
+   missing `sslmode`, and any owner-like login — `apps/approval-api/src/database.mjs:13-22,161`.
+3. Store it as a **new** secret. Do **not** overwrite the existing root `DATABASE_URL`:
+
+```bash
+printf '%s' 'PASTE_POOLED_URL_HERE' | gcloud secrets create approval-runtime-database-url \
+  --project="$HEADY_PROJECT" --replication-policy=automatic --data-file=-
+
+gcloud secrets versions list approval-runtime-database-url --project="$HEADY_PROJECT"
+```
+
+**Console:** <https://console.cloud.google.com/security/secret-manager?project=heady-ai>
+
+### STEP 5 — validate migrations on a throwaway Neon branch (S5)
+
+Production currently has 0001–0009 applied. `0010_autonomous_approval_grants.sql` is **part of the
+approval control plane** and must land.
+
+```bash
+# Create a copy-on-write branch in the Neon console, take its DIRECT (non-pooler) owner URL.
+DATABASE_URL='<temp-branch-DIRECT-owner-url>' pnpm db:migrate         # plan only — writes nothing
+DATABASE_URL='<temp-branch-DIRECT-owner-url>' pnpm db:migrate:apply   # apply on the TEMP branch only
+
+TEST_DATABASE_URL='<temp-branch-DIRECT-owner-url>' \
+TEST_RUNTIME_DATABASE_URL='<temp-branch-POOLED-runtime-url>' \
+pnpm --filter @heady/approvals test:integration
+```
+
+Expected: the plan lists `0010`, `0011`, `0012` pending; after apply, the integration suite's 4
+currently-skipped tests run. **Delete the temp branch when done.**
+
+### STEP 6 — Artifact Registry + immutable image (S6)
+
+```bash
+gcloud artifacts repositories create heady \
+  --repository-format=docker --location="$HEADY_REGION" --project="$HEADY_PROJECT"
+
+gcloud builds submit --config apps/approval-api/cloudbuild.yaml \
+  --substitutions _IMAGE_TAG="$(git rev-parse HEAD)",_REGION="$HEADY_REGION" \
+  --project="$HEADY_PROJECT"
+
+# Record the DIGEST, never the tag
+gcloud artifacts docker images list \
+  "$HEADY_REGION-docker.pkg.dev/$HEADY_PROJECT/heady/approval-api" \
+  --include-tags --project="$HEADY_PROJECT" --format='table(version,tags,createTime)'
+```
+
+Build a second image (previous good commit) so you have a rollback digest.
+
+**Console:** <https://console.cloud.google.com/artifacts?project=heady-ai> ·
+<https://console.cloud.google.com/cloud-build/builds?project=heady-ai>
+
+### STEP 7 — deployment manifest, not yet deployed (S7)
+
+Write the exact service definition to a file and hash it. Image **by digest**.
+
+```yaml
+# deploy/approval-api.service.yaml  (illustrative shape — image/SA are yours to fill)
+image: us-east1-docker.pkg.dev/heady-ai/heady/approval-api@sha256:<DIGEST-FROM-STEP-6>
+serviceAccount: <approval-api-runtime-sa>@heady-ai.iam.gserviceaccount.com
+env:
+  FIREBASE_PROJECT_ID: heady-ai
+  APPROVAL_SERVICE_AUDIENCE: <the service's own canonical URL>
+  APPROVAL_KMS_KEY_VERSION: projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/receipt-signing/cryptoKeyVersions/1
+  PORT: "8080"
+  LOG_LEVEL: info
+secrets:
+  DATABASE_URL: approval-runtime-database-url:latest
+```
+
+Runtime service account gets **exactly** these and nothing more:
+
+```bash
+SA=<approval-api-runtime-sa>@heady-ai.iam.gserviceaccount.com
+
+gcloud kms keys add-iam-policy-binding receipt-signing \
+  --keyring="$HEADY_KEYRING" --location="$HEADY_KMS_LOCATION" --project="$HEADY_PROJECT" \
+  --member="serviceAccount:$SA" --role=roles/cloudkms.signerVerifier
+
+gcloud secrets add-iam-policy-binding approval-runtime-database-url \
+  --project="$HEADY_PROJECT" --member="serviceAccount:$SA" \
+  --role=roles/secretmanager.secretAccessor
+```
+
+No Neon owner credentials, no bootstrap-table write, no access to `founder-evidence` or
+`arbiter-attestation`. Startup refuses owner-like credentials, so an over-granted deploy fails closed.
+
+Confirm Firebase Auth is enabled for `heady-ai` with a verified-email provider for your founder
+identity: <https://console.firebase.google.com/project/heady-ai/authentication/providers>
+
+```bash
+sha256sum deploy/approval-api.service.yaml     # → --deployment-manifest-sha256
+```
+
+### STEP 8 — gate report, security review, manifest, signature (S8)
+
+`genesis:prepare` refuses a dirty tree, untracked files included.
+
+```bash
+git status --porcelain --untracked-files=all      # must print NOTHING
+```
+
+Governance report as real JSON (not piped turbo text):
+
+```bash
+REPORT="docs/reports/approval-genesis-governance-$(git rev-parse --short HEAD).json"
+GATES=""
+for gate in \
+  "build:pnpm build" \
+  "test:pnpm test" \
+  "law-lint:node tooling/law-lint/src/law-lint.mjs" \
+  "governance-gate:node tooling/governance-gate/src/governance-gate.mjs"
+do
+  name="${gate%%:*}"; cmd="${gate#*:}"
+  out="$(eval "$cmd" 2>&1)"; code=$?
+  GATES="$GATES$(jq -cn --arg n "$name" --arg c "$cmd" --argjson e "$code" --arg o "$out" \
+    '{name:$n,command:$c,exitCode:$e,output:$o}'),"
+done
+jq -n --arg commit "$(git rev-parse HEAD)" --argjson gates "[${GATES%,}]" \
+  '{schema:"heady.approval.governance-report.v1",commit:$commit,gates:$gates,allPassed:($gates|all(.exitCode==0))}' \
+  > "$REPORT"
+jq '.allPassed' "$REPORT"        # must be true
+sha256sum "$REPORT"              # → --governance-report-sha256
+```
+
+Write your security review — it must cover the three files changed on 2026-08-22
+(`packages/approvals/src/constants.mjs`, `packages/approvals/test/core.test.mjs`,
+`apps/approval-api/README.md`) — then:
+
+```bash
+sha256sum docs/security/approval-genesis-security-review.md    # → --security-review-sha256
+
+pnpm --filter @heady/approvals genesis:prepare \
+  --deployment-manifest-sha256 <from STEP 7> \
+  --deployment-artifact-digest sha256:<from STEP 6> \
+  --rollback-artifact-digest sha256:<rollback from STEP 6> \
+  --governance-report-sha256 <from above> \
+  --security-review-sha256 <from above> \
+  --founder-public-jwk configs/keys/approval/founder-evidence.public.jwk.json \
+  --arbiter-public-jwk configs/keys/approval/arbiter-attestation.public.jwk.json \
+  --receipt-signer-public-jwk configs/keys/approval/receipt-signing.public.jwk.json
+```
+
+Then sign the printed manifest hash **outside the agent runtime**, same shape as STEP 1's tag:
+
+```bash
+git tag -s "approval-genesis-$(git rev-parse --short=9 HEAD)" -m \
+"Founder acceptance: approval genesis manifest <MANIFEST-SHA256>; implementation $(git rev-parse HEAD)"
+git tag -v "approval-genesis-$(git rev-parse --short=9 HEAD)"
+```
+
+### STEP 9 — the one-time genesis transaction (S9)
+
+By hand, through a governed **owner** session, in this order — see S9 for the full detail:
+
+1. apply the migration chain to production with the **direct owner** URL;
+2. deploy the exact image **digest**;
+3. insert principals (founder, ARBITER, deployment-guard, automation-requester, automation-guard) and
+   their public keys;
+4. in **one** transaction: the single `approval.system_bootstrapped` event + its KMS receipt + the one
+   permitted `heady_approval.bootstrap` row carrying the manifest hash and signed Git object ID;
+5. replay the full event chain and verify;
+6. drop the owner session; prove the API role can neither write `bootstrap` nor mint a second genesis.
+
+Verify it took:
+
+```bash
+gcloud run services list --project="$HEADY_PROJECT" --format='table(metadata.name,status.url)' | grep approval
+# then, against production: principals >= 5, bootstrap == 1, events == 1, receipts == 1
+```
+
+### STEP 10 — HCP-0003 and the bee runtime (§6)
+
+Only now. Add `/packages/bees/` to `.github/CODEOWNERS`, author the exact **non-applied** G02 diff,
+bind its `diff_hash`, `POST /api/approvals` with `patentLocked: true`, get the ARBITER `ALLOW`, sign
+the founder decision through §5, take the final ARBITER review — then create the files.
+
+
+---
+
 ## 1. Verified live state (2026-08-22)
 
 Every row was measured, not inferred.
