@@ -18,7 +18,7 @@ images:
   - ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/approval-api:${_IMAGE_TAG}
 
 substitutions:
-  _REGION: us-central1
+  _REGION: us-east1
   _REPOSITORY: heady
 
 options:

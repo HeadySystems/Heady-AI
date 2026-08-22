@@ -38,7 +38,7 @@ Every row was measured, not inferred.
 | KMS `founder-evidence` v1 | ✅ Ed25519, ENABLED | fingerprint `0f7753c1…78ed` |
 | KMS `receipt-signing` v1 | ✅ Ed25519, ENABLED | fingerprint `e9dfdcb1…64ba` |
 | KMS ARBITER key | ❌ **does not exist** | keyring holds only the two keys above |
-| Artifact Registry repo `heady` (us-central1) | ❌ absent (only `gcr.io`, `cloud-run-source-deploy`) | `gcloud artifacts repositories list` |
+| Artifact Registry repo `heady` (us-east1) | ❌ absent (only `gcr.io`, `cloud-run-source-deploy`) | `gcloud artifacts repositories list` |
 | Cloud Run `approval-api` | ❌ **not deployed** | `gcloud run services list` |
 | Genesis manifest | ❌ cannot be produced yet — see §4 | `prepare-genesis-manifest.mjs` requires all 8 inputs |
 
@@ -164,12 +164,12 @@ production only at S8, through your own hands.
 
 ### S6 — build the immutable image
 
-The `cloudbuild.yaml` pushes to `us-central1-docker.pkg.dev/heady-ai/heady/approval-api`, and the
+The `cloudbuild.yaml` pushes to `us-east1-docker.pkg.dev/heady-ai/heady/approval-api`, and the
 `heady` repository does not exist yet:
 
 ```bash
 gcloud artifacts repositories create heady \
-  --repository-format=docker --location=us-central1 --project=heady-ai
+  --repository-format=docker --location=us-east1 --project=heady-ai
 
 gcloud builds submit --config apps/approval-api/cloudbuild.yaml \
   --substitutions _IMAGE_TAG="$(git rev-parse HEAD)" --project=heady-ai
