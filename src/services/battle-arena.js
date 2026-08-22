@@ -174,7 +174,7 @@ function generateBlueprint() {
             name: 'Heady™ Latent Operating System',
             vision: 'A 46-year autonomous AI operating system that stores executable potential as AST nodes in pgvector, materializes code on-demand, and operates as a self-healing multi-swarm civilization.',
             architecture: 'Zero-Repo Liquid Architecture — code only exists during compilation. 18 swarms, 31+ bees, 742 aspirational tasks.',
-            domains: ['headymcp.com', 'headyapi.com', 'headyio.com', 'headyme.com', 'headytrader.com', 'headymusic.com', 'headyfoundation.org', 'headysystems.com', 'myheady.ai'],
+            domains: ['headymcp.com', 'headyapi.com', 'headyio.com', 'headyme.com', 'headyfinance.com', 'headymusic.com', 'headyfoundation.org', 'headysystems.com', 'myheady.ai'],
         },
 
         // ── Core Architecture Requirements ─────────────────────────
