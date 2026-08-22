@@ -88,7 +88,7 @@ chmod 0440 "${NATS_CONFIG_DIR}/heady.conf"
   printf 'Type=simple\n'
   printf 'User=nats\n'
   printf 'Group=nats\n'
-  printf 'ExecStartPre=/usr/bin/nats-server --test --config %s/heady.conf\n' "${NATS_CONFIG_DIR}"
+  printf 'ExecStartPre=/usr/bin/nats-server -t --config %s/heady.conf\n' "${NATS_CONFIG_DIR}"
   printf 'ExecStart=/usr/bin/nats-server --config %s/heady.conf\n' "${NATS_CONFIG_DIR}"
   printf 'ExecReload=/bin/kill -HUP $MAINPID\n'
   printf 'Restart=on-failure\n'
@@ -112,5 +112,11 @@ chmod 0644 /etc/systemd/system/heady-nats.service
 systemctl daemon-reload
 systemctl enable --now heady-nats.service
 systemctl is-active --quiet heady-nats.service
+
+for NATS_UNUSED_UNIT in ssh.service exim4.service; do
+  if systemctl list-unit-files "${NATS_UNUSED_UNIT}" --no-legend 2>/dev/null | grep --quiet "${NATS_UNUSED_UNIT}"; then
+    systemctl disable --now "${NATS_UNUSED_UNIT}"
+  fi
+done
 
 logger --tag heady-nats '{"level":"info","service":"heady-event-bus","status":"ready","transport":"tls","durability":"best-effort"}'
