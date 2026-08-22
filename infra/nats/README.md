@@ -1,5 +1,5 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║  HEADY™ Private NATS Runtime Record v1.0.0                    ║ -->
+<!-- ║  HEADY™ Private NATS Runtime Record v1.1.0                    ║ -->
 <!-- ║  Reproducible topology, supply-chain pins, and live receipts.  ║ -->
 <!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder             ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
@@ -73,4 +73,31 @@ The live receipt below is updated only from observed provider state and contains
 
 ## Live receipt
 
-Provisioning and runtime verification are pending in this branch revision.
+Observed on 2026-08-22 in project `heady-ai`:
+
+| Receipt field | Observed value |
+|---|---|
+| Source commit | `6e89a831acea2949f7ad00bb989da0dc567f73ca` |
+| Startup script SHA-256 | `00604d799232dda8f80b5a7fd28809529634d42b24c17806023e3cca17432671` |
+| Probe source SHA-256 | `96c0dcda0e59aedcac78e296e66b45563ddde2773b5855b4e5aa4453aea7b14a` |
+| Probe image digest | `sha256:6253115d9d2da6ae1834e991a75bf62787f085ad5104329911a492a4e32d2dc2` |
+| Broker internal address | `10.34.0.2` |
+| Broker configuration SHA-256 | `d94d6effbe993f3b3f45a6d6d0404271d462166dd3ade6ddb98b56ca1f71784e` |
+| CA certificate SHA-256 fingerprint | `F8:51:DA:74:55:0F:5B:1A:72:12:D3:86:F8:F3:3B:70:6A:8D:F8:5C:FF:68:6D:CC:A0:02:49:C2:48:EE:8C:FD` |
+| Server certificate SHA-256 fingerprint | `F4:A5:BB:32:B8:CB:1E:84:F9:A8:60:32:81:1E:32:2E:44:A7:1C:CD:1F:F9:FC:A7:B8:65:85:66:61:68:B6:56` |
+| Successful Cloud Run execution | `heady-nats-probe-jbvdx` |
+| Execution result | one task succeeded in 1 minute 19.53 seconds |
+
+The successful execution recorded, in order, `invalid_auth_rejected`, `round_trip_ok` before the
+restart, `ready_for_restart`, `disconnect_observed`, and a final `pass` covering TLS, invalid-token
+rejection, publish, subscribe, disconnect, and reconnect. The broker returned on NATS `2.14.3` with
+TLS required, the same configuration digest, and a clean startup-script completion.
+
+Two earlier executions are retained as negative evidence rather than represented as acceptance:
+`heady-nats-probe-ppzmf` exposed a TLS-first client mismatch, and `heady-nats-probe-qmnmd` exposed a
+passive half-open TCP detection flaw. Both defects were corrected in the source-bound probe above;
+the final execution is the acceptance receipt.
+
+The five regional secrets are pinned at version `1`. The certificate secrets, broker token, and
+endpoint were never printed or written to source. Application consumption remains deliberately
+unbound until its independently reviewed release is authorized.
