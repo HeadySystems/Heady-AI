@@ -161,10 +161,19 @@ domain-registry-lint:
   - **Enforced by** `tooling/coherence/src/domain-guards.mjs` (pure semantics + 22 unit tests; the kernel
     owns the IO, mirroring `scalar-guards.mjs`): D1 carrier orphan · D2/D3 `sources:` accuracy in both
     directions · D4 sourceless node · D5 `status` agreement between the canon and the brand registry ·
-    D6 staleness of the generated projection. `sources:` is therefore checked, not decorative.
+    D6 staleness of the generated projection · D7 roster carried by a Battle Arena spec dump.
+    `sources:` is therefore checked, not decorative. **Ordering matters:** the projection is written
+    AFTER `check()` runs, otherwise D6 would compare the projection against the value it had just
+    derived from the same facts — self-consistent by construction, so a stale committed projection
+    could never fail the default `all` invocation.
   - **Consumers derive, never list.** `configs/_generated/domain-roster.json` (written by
     `node tooling/coherence/src/coherence.mjs domains`, timestamp-free so it is byte-comparable) is the
     projection that consumers read: the Battle Arena rebuild spec and the domain-guard allowlist both do.
+    The committed `configs/battle-*` spec dumps have no runtime consumer but are retained on purpose —
+    they are the only window the `configs/`-scoped content gates have into the legacy CommonJS spec under
+    `src/`, which is how a wrong pgvector storage dimension survived there against the 384-dim lock.
+    `node tooling/arena-spec/dump.mjs` refreshes them and D7 fails when they drift, so that retention
+    argument has a mechanism behind it rather than being a claim.
   - **Closure added two records:** `headybot.com` and `headylens.com` were carried by the routing map and
     the live edge router while absent from the canon. Canon is now **16 nodes** — a count of *records*,
     not of delivered sites; the "11-domain site delivery mesh" language elsewhere describes delivery and

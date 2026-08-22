@@ -4,9 +4,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import {
-  DOMAIN_CARRIERS, checkDomainCarriers, domainNodes, extractFrozenArray,
-  extractJsonDomainNames, extractQuotedMapKeys, extractRegistryStatus,
-  extractYamlDomainField, rosterFromFacts, rosterProjection,
+  DOMAIN_CARRIERS, checkDomainCarriers, domainNodes, extractArenaSpecRoster,
+  extractFrozenArray, extractJsonDomainNames, extractQuotedMapKeys,
+  extractRegistryStatus, extractYamlDomainField, rosterFromFacts, rosterProjection,
 } from '../src/domain-guards.mjs';
 
 const ROOT = new URL('../../../', import.meta.url).pathname;
@@ -97,6 +97,33 @@ test('the projection is timestamp-free, so it is byte-comparable across runs', (
   assert.equal(rosterProjection(DOMAINS).count, 2);
 });
 
+test('D7 fires when an arena spec dump carries a roster other than the canon', () => {
+  const findings = checkDomainCarriers({
+    domains: DOMAINS, carriers: CARRIERS,
+    arenaSpecs: { 'configs/battle-blueprint.json': ['headyme.com', 'headymusic.com'] },
+  });
+  assert.deepEqual(ids(findings), ['D7-spec-drift']);
+  assert.deepEqual(findings[0].evidence.missing, ['headylab.com']);
+  assert.deepEqual(findings[0].evidence.stale, ['headymusic.com']);
+});
+
+test('D7-spec-rosterless fires when a dump carries no roster at all', () => {
+  const findings = checkDomainCarriers({
+    domains: DOMAINS, carriers: CARRIERS, arenaSpecs: { 'configs/battle-blueprint.json': null },
+  });
+  assert.deepEqual(ids(findings), ['D7-spec-rosterless']);
+});
+
+test('D7 is silent on a dump carrying exactly the canon roster', () => {
+  assert.deepEqual(
+    checkDomainCarriers({
+      domains: DOMAINS, carriers: CARRIERS,
+      arenaSpecs: { 'configs/battle-blueprint.json': rosterFromFacts(DOMAINS) },
+    }),
+    [],
+  );
+});
+
 // ── extractors: enum/struct noise must never be mistaken for a domain ────
 
 test('extractQuotedMapKeys takes block-opening fqdn keys only', () => {
@@ -116,6 +143,16 @@ test('extractYamlDomainField skips null placeholders', () => {
 
 test('extractJsonDomainNames reads domains[].name', () => {
   assert.deepEqual(extractJsonDomainNames('{"domains":[{"name":"headyme.com"},{"name":"x"}]}'), ['headyme.com']);
+});
+
+test('extractArenaSpecRoster unwraps a context dump\'s escaped inner spec', () => {
+  const spec = { project: { domains: ['headyme.com', 'nope'] } };
+  const blueprintDump = JSON.stringify(spec);
+  const contextDump = JSON.stringify({ role: 'system', content: `PROJECT SPECIFICATION:\n${JSON.stringify(spec, null, 2)}\n\nGO` });
+  assert.deepEqual(extractArenaSpecRoster(blueprintDump), ['headyme.com']);
+  assert.deepEqual(extractArenaSpecRoster(contextDump), ['headyme.com']);
+  assert.equal(extractArenaSpecRoster('{"role":"system","content":"no spec here"}'), null);
+  assert.equal(extractArenaSpecRoster('{}'), null);
 });
 
 test('extractRegistryStatus maps DomainStatus enum refs to canon values', () => {

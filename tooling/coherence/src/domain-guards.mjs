@@ -82,6 +82,29 @@ export function extractYamlDomainField(text) {
   return fqdnsOnly([...text.matchAll(/^\s*-?\s*domain:\s*(\S+)\s*$/gm)].map((m) => m[1]));
 }
 
+/**
+ * The domain roster carried inside a Battle Arena spec dump. The blueprint dump is
+ * plain JSON; a contender-context dump embeds the same blueprint as an ESCAPED JSON
+ * string inside `content`, so the inner document is unwrapped before reading. These
+ * dumps have no runtime consumer, but they are the only window the configs/-scoped
+ * content gates have into the legacy CommonJS spec in src/ — which is how a wrong
+ * pgvector storage dimension survived there against the 384-dim EMBED-DIM-LOCK.
+ * Returns null when the text carries no roster at all (not a dump).
+ */
+export function extractArenaSpecRoster(text) {
+  const doc = JSON.parse(text);
+  let spec = doc;
+  if (typeof doc.content === 'string') {
+    const open = doc.content.indexOf('{');
+    const close = doc.content.lastIndexOf('}');
+    // Prose with no embedded document is simply not a spec — null, not a parse error.
+    if (open === -1 || close < open) return null;
+    spec = JSON.parse(doc.content.slice(open, close + 1));
+  }
+  const domains = spec?.project?.domains;
+  return Array.isArray(domains) ? fqdnsOnly(domains) : null;
+}
+
 /** `{ domains: [ { name } … ] }`. */
 export function extractJsonDomainNames(text) {
   const parsed = JSON.parse(text);
@@ -145,9 +168,10 @@ export function rosterProjection(domains) {
  * @param {object}  input.carriers       token → fqdn list actually found in that carrier
  * @param {object} [input.registryStatus] fqdn → status from src/config/domain-registry.js
  * @param {object} [input.roster]        parsed configs/_generated/domain-roster.json
+ * @param {object} [input.arenaSpecs]    file → roster carried by that arena spec dump
  * @returns {Array<{id:string,msg:string,evidence:object}>} contradictions (empty = reconciled)
  */
-export function checkDomainCarriers({ domains, carriers, registryStatus, roster }) {
+export function checkDomainCarriers({ domains, carriers, registryStatus, roster, arenaSpecs }) {
   const findings = [];
   const err = (id, msg, evidence) => findings.push({ id, msg, evidence });
 
@@ -192,6 +216,22 @@ export function checkDomainCarriers({ domains, carriers, registryStatus, roster 
     const node = byFqdn.get(fqdn);
     if (node && node.status !== status) {
       err('D5-status-drift', 'brand registry status disagrees with the facts.yaml domain canon', { fqdn, facts: node.status, registry: status });
+    }
+  }
+
+  // D7 — a spec dump handed to an external model must carry the canon roster.
+  for (const [file, dumped] of Object.entries(arenaSpecs ?? {})) {
+    if (dumped === null) {
+      err('D7-spec-rosterless', 'arena spec dump carries no domain roster', { file });
+      continue;
+    }
+    const want = rosterFromFacts(domains);
+    if (JSON.stringify(dumped) !== JSON.stringify(want)) {
+      err('D7-spec-drift', 'arena spec dump roster disagrees with facts.yaml — refresh with `node tooling/arena-spec/dump.mjs`', {
+        file,
+        missing: want.filter((f) => !dumped.includes(f)),
+        stale: dumped.filter((f) => !want.includes(f)),
+      });
     }
   }
 
