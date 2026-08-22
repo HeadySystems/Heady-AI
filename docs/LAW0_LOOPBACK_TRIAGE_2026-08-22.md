@@ -15,6 +15,29 @@ blind sweep would break three categories of site where loopback is correct.
 **Nothing here is fixed yet.** Remediating ~24 call sites in legacy runtime code is
 its own change with its own risk, and it needs the policy below settled first.
 
+## Why the Law 0 gate is green while 42 violations exist
+
+`tooling/enforcers/no-localhost.mjs:16` scans:
+
+```js
+const SCAN_DIRS = /^(apps|packages|services|tooling|scripts|workers)\//;
+```
+
+`src/` is not in that list, and neither is the repo root (`heady-manager.js`,
+`package.json`) or `templates/`. **Every one of the 42 findings below lives in a
+directory the Law 0 enforcer does not look at** — which is why `no-loopback=pass`
+appears in the handoff verification block while this document exists. The finding
+came from `tooling/data-consistency/src/domain-guard.mjs`, which walks the whole
+repo.
+
+This is the same shape as the EMBED-DIM-LOCK miss fixed in `553b73fd25`: legacy
+`src/` is outside the scan scope, so canon violations there are invisible to CI.
+
+**Consequence for the plan:** fixing Category A is not enough. Extend `SCAN_DIRS`
+to cover `src/` (and the root + `templates/`) as the LAST step, once B/C/D are
+exempted and A is fixed — extending it first turns the gate red immediately and
+blocks every unrelated commit.
+
 ## The fix pattern (already in the tree)
 
 `src/config/global.js` states its own contract in its header:
@@ -127,3 +150,6 @@ reason is honest; a cosmetic rewrite is not.
    `src/middleware/cors.js:89` for a security review of its own — a missing `Origin`
    header currently defaults to a trusted value.
 4. Re-run `node tooling/data-consistency/src/domain-guard.mjs`; LAW-0 should reach 0.
+5. **Only then** extend `SCAN_DIRS` in `tooling/enforcers/no-localhost.mjs` to cover
+   `src/`, the repo root, and `templates/`, so the gate can never go blind to this
+   tree again. Doing this before step 4 turns the gate red and blocks unrelated work.
