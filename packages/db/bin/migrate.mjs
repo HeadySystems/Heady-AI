@@ -37,7 +37,10 @@ async function resolveClient(connectionString) {
 }
 
 async function main() {
-  const { DATABASE_URL } = await loadSecrets({ require: ["DATABASE_URL"] });
+  const { DATABASE_URL } = await loadSecrets({
+    only: ["DATABASE_URL"],
+    require: ["DATABASE_URL"],
+  });
   if (LOOPBACK.test(DATABASE_URL)) {
     emit("error", "DATABASE_URL references a loopback address (cloud-deployed only)");
     return 1;

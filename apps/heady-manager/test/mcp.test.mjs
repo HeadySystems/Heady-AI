@@ -146,6 +146,9 @@ test("modern MCP discovery and tool execution use one audited intelligence pipel
     const listed = await client.listTools();
     const names = listed.tools.map((tool) => tool.name);
     assert.ok(names.includes("heady_health"));
+    assert.ok(names.includes("heady_project_tree"));
+    assert.ok(names.includes("heady_env_audit"));
+    assert.ok(names.includes("heady_governance_enforce"));
     assert.ok(names.includes("heady_deep_scan"));
     assert.ok(!names.includes("heady_chat"));
     assert.ok(!names.includes("heady_memory_search"));
@@ -160,9 +163,46 @@ test("modern MCP discovery and tool execution use one audited intelligence pipel
     assert.match(result.structuredContent.receipt.recordSha256, /^[a-f0-9]{64}$/);
     assert.equal(progress.length, 8);
 
+    const project = await client.callTool({
+      name: "heady_project_tree",
+      arguments: {
+        files: [{ path: "packages/example/src/index.mjs", size: 34, sha256: "a".repeat(64) }],
+      },
+    });
+    assert.equal(project.structuredContent.result.fileCount, 1);
+    assert.equal(project.structuredContent.result.directories[0].path, "packages");
+    assert.match(project.structuredContent.result.merkleRoot, /^[a-f0-9]{64}$/);
+
+    const environment = await client.callTool({
+      name: "heady_env_audit",
+      arguments: {
+        declared: ["DATABASE_URL", "HEADY_MCP_BEARER"],
+        present: ["DATABASE_URL"],
+        required: ["DATABASE_URL", "HEADY_MCP_BEARER"],
+      },
+    });
+    assert.deepEqual(environment.structuredContent.result.missingRequired, ["HEADY_MCP_BEARER"]);
+    assert.deepEqual(environment.structuredContent.result.sensitiveNames, ["DATABASE_URL", "HEADY_MCP_BEARER"]);
+    assert.equal(environment.structuredContent.result.ok, false);
+
+    const governance = await client.callTool({
+      name: "heady_governance_enforce",
+      arguments: {
+        files: [{ path: "packages/example/src/index.mjs", content: "export const value = 1;\nconsole.log(value);\n" }],
+      },
+    });
+    assert.equal(governance.structuredContent.result.allowed, false);
+    assert.ok(governance.structuredContent.result.findings.some((finding) => finding.rule === "brand-header"));
+    assert.ok(governance.structuredContent.result.findings.some((finding) => finding.rule === "structured-logging"));
+
     const phases = app.mcp.audit.records.map((record) => record.phase);
-    assert.deepEqual(phases, ["STARTED", "SUCCEEDED"]);
-    assert.equal(app.mcp.state().calls, 1);
+    assert.deepEqual(phases, [
+      "STARTED", "SUCCEEDED",
+      "STARTED", "SUCCEEDED",
+      "STARTED", "SUCCEEDED",
+      "STARTED", "SUCCEEDED",
+    ]);
+    assert.equal(app.mcp.state().calls, 4);
   } finally {
     await client.close();
     await app.stop();

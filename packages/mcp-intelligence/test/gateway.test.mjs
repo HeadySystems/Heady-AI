@@ -71,6 +71,9 @@ test("advertises schemas without exposing direct tool handlers", () => {
   const { gateway } = fixture();
   const advertised = gateway.advertised();
   assert.ok(advertised.some((tool) => tool.name === "heady_health"));
+  assert.ok(advertised.some((tool) => tool.name === "heady_project_tree"));
+  assert.ok(advertised.some((tool) => tool.name === "heady_env_audit"));
+  assert.ok(advertised.some((tool) => tool.name === "heady_governance_enforce"));
   assert.ok(advertised.some((tool) => tool.name === "heady_deep_scan"));
   assert.ok(!advertised.some((tool) => tool.name === "heady_memory_search"));
   assert.ok(advertised.every((tool) => !("handler" in tool)));

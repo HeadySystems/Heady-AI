@@ -189,15 +189,15 @@ export function createCoreToolDefinitions(runtime) {
       title: "Environment Metadata Audit",
       description: "Compare environment variable names only; values and secrets are never accepted or returned.",
       inputSchema: z.object({ declared: z.array(z.string().min(1)).max(MAX_FILES), present: z.array(z.string().min(1)).max(MAX_FILES), required: z.array(z.string().min(1)).max(MAX_FILES) }),
-      outputSchema: z.object({ missingRequired: z.array(z.string()), undeclaredPresent: z.array(z.string()), secretNamed: z.array(z.string()), ok: z.boolean() }),
+      outputSchema: z.object({ missingRequired: z.array(z.string()), undeclaredPresent: z.array(z.string()), sensitiveNames: z.array(z.string()), ok: z.boolean() }),
       handler: ({ input }) => {
         const declared = new Set(input.declared);
         const present = new Set(input.present);
-        const secretName = /(?:token|secret|password|passphrase|api.?key|private.?key)/i;
+        const secretName = /(?:token|secret|password|passphrase|api.?key|private.?key|bearer|credential|database.?url|dsn|(?:^|_)pass(?:_|$))/i;
         const missingRequired = [...new Set(input.required)].filter((name) => !present.has(name)).sort();
         const undeclaredPresent = [...present].filter((name) => !declared.has(name)).sort();
-        const secretNamed = [...declared].filter((name) => secretName.test(name)).sort();
-        return { missingRequired, undeclaredPresent, secretNamed, ok: missingRequired.length === 0 };
+        const sensitiveNames = [...declared].filter((name) => secretName.test(name)).sort();
+        return { missingRequired, undeclaredPresent, sensitiveNames, ok: missingRequired.length === 0 };
       },
     }),
     tool({
