@@ -24,6 +24,14 @@
 !.agents/workflows/secret-rotation.md
 !.claude/commands/heady-secret-rotation.md
 !.claude/commands/secret-rotation.md
+# Generated Codex adapters contain rotation procedure metadata only. Keep their
+# exact paths trackable so a clean checkout can satisfy the workflow-sync gate.
+!.agents/codex-workflows/heady-secret-rotation/
+!.agents/codex-workflows/heady-secret-rotation/**
+!.agents/codex-workflows/secret-rotation/
+!.agents/codex-workflows/secret-rotation/**
+!.agents/skills/heady-secret-rotation
+!.agents/skills/secret-rotation
 *.secret
 # Pasted credential dropzone — GCP/Firebase service-account JSON keys live here. NEVER commit.
 dropzone/

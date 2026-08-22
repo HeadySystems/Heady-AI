@@ -29,6 +29,13 @@
     "@heady/secrets": "workspace:*",
     "@heady/contracts": "workspace:*",
     "@heady/heady990": "workspace:*",
-    "zod": "3.25.76"
+    "@heady/mcp-intelligence": "workspace:*",
+    "@modelcontextprotocol/node": "2.0.0",
+    "@modelcontextprotocol/server": "2.0.0",
+    "zod": "3.25.76",
+    "zod4": "npm:zod@4.4.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.0.0"
   }
 }

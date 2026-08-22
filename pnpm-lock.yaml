@@ -145,6 +145,9 @@ importers:
       yaml:
         specifier: ^2.9.0
         version: 2.9.0
+      zod:
+        specifier: 3.25.76
+        version: 3.25.76
     devDependencies:
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.65.0
@@ -289,6 +292,9 @@ importers:
       '@heady/logger':
         specifier: workspace:*
         version: link:../../packages/logger
+      '@heady/mcp-intelligence':
+        specifier: workspace:*
+        version: link:../../packages/mcp-intelligence
       '@heady/observability':
         specifier: workspace:*
         version: link:../../packages/observability
@@ -310,12 +316,25 @@ importers:
       '@heady/task-ledger':
         specifier: workspace:*
         version: link:../../packages/task-ledger
+      '@modelcontextprotocol/node':
+        specifier: 2.0.0
+        version: 2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.12.34)
+      '@modelcontextprotocol/server':
+        specifier: 2.0.0
+        version: 2.0.0
       express:
         specifier: ^5.2.1
         version: 5.2.1
       zod:
         specifier: 3.25.76
         version: 3.25.76
+      zod4:
+        specifier: npm:zod@4.4.3
+        version: zod@4.4.3
+    devDependencies:
+      '@modelcontextprotocol/client':
+        specifier: 2.0.0
+        version: 2.0.0
 
   apps/heady-portal-gateway:
     devDependencies:
@@ -499,6 +518,24 @@ importers:
       '@heady/phi-math':
         specifier: workspace:*
         version: link:../phi-math
+
+  packages/mcp-intelligence:
+    dependencies:
+      '@heady/csl-engine':
+        specifier: workspace:*
+        version: link:../csl-engine
+      '@heady/phi-math':
+        specifier: workspace:*
+        version: link:../phi-math
+      '@heady/resilience':
+        specifier: workspace:*
+        version: link:../resilience
+      '@heady/security-mesh':
+        specifier: workspace:*
+        version: link:../security-mesh
+      zod4:
+        specifier: npm:zod@4.4.3
+        version: zod@4.4.3
 
   packages/memory-stream:
     dependencies:
@@ -1993,6 +2030,24 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  '@modelcontextprotocol/client@2.0.0':
+    resolution: {integrity: sha512-8f1OghQ2rjzIOfqgUCP+8GiUWqRs89njoWLNqAe8kWmDePv3s1fZXseej+QXemssEuuOvLLmLO/kqM3IQHtISw==}
+    engines: {node: '>=20'}
+
+  '@modelcontextprotocol/core@2.0.0':
+    resolution: {integrity: sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==}
+    engines: {node: '>=20'}
+
+  '@modelcontextprotocol/node@2.0.0':
+    resolution: {integrity: sha512-Y4hAC2XdGDUdDOCbLDOCA4+aL3NUldjsOWlDL/YwpAxrPhRm1xHd7lZ+mLacvZ9t3PaH28wgNoaLQGrIk1P2pg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@modelcontextprotocol/server': ^2.0.0
+      hono: 4.12.34
+    peerDependenciesMeta:
+      hono:
+        optional: true
+
   '@modelcontextprotocol/sdk@1.29.0':
     resolution: {integrity: sha512-zo37mZA9hJWpULgkRpowewez1y6ML5GsXJPY8FI0tBBCd77HEvza4jDqRKOXgHNn867PVGCyTdzqpz0izu5ZjQ==}
     engines: {node: '>=18'}
@@ -2002,6 +2057,10 @@ packages:
     peerDependenciesMeta:
       '@cfworker/json-schema':
         optional: true
+
+  '@modelcontextprotocol/server@2.0.0':
+    resolution: {integrity: sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==}
+    engines: {node: '>=20'}
 
   '@napi-rs/wasm-runtime@1.1.6':
     resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
@@ -5971,6 +6030,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
 snapshots:
 
   '@anthropic-ai/sdk@0.78.0(zod@3.25.76)':
@@ -7505,6 +7567,27 @@ snapshots:
       - encoding
       - supports-color
 
+  '@modelcontextprotocol/client@2.0.0':
+    dependencies:
+      '@modelcontextprotocol/core': 2.0.0
+      cross-spawn: 7.0.6
+      eventsource: 3.0.7
+      eventsource-parser: 3.1.0
+      jose: 6.2.4
+      pkce-challenge: 5.0.1
+      zod: 4.4.3
+
+  '@modelcontextprotocol/core@2.0.0':
+    dependencies:
+      zod: 4.4.3
+
+  '@modelcontextprotocol/node@2.0.0(@modelcontextprotocol/server@2.0.0)(hono@4.12.34)':
+    dependencies:
+      '@hono/node-server': 2.0.10(hono@4.12.34)
+      '@modelcontextprotocol/server': 2.0.0
+    optionalDependencies:
+      hono: 4.12.34
+
   '@modelcontextprotocol/sdk@1.29.0(zod@3.25.76)':
     dependencies:
       '@hono/node-server': 2.0.10(hono@4.12.34)
@@ -7526,6 +7609,11 @@ snapshots:
       zod-to-json-schema: 3.25.2(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
+
+  '@modelcontextprotocol/server@2.0.0':
+    dependencies:
+      '@modelcontextprotocol/core': 2.0.0
+      zod: 4.4.3
 
   '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
@@ -12061,3 +12149,5 @@ snapshots:
   zod@3.22.3: {}
 
   zod@3.25.76: {}
+
+  zod@4.4.3: {}

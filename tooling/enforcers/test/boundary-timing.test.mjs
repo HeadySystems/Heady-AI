@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 
 // Mirror the enforcers' matching contracts (lock-step with zod-boundary.mjs / phi-timing.mjs).
 const BOUNDARY_READ = /\breq\.body\b|\brequest\.json\s*\(/;
-const VALIDATOR_ANCHOR = /from\s+['"]@heady\/contracts['"]|from\s+['"]zod['"]/;
+const VALIDATOR_ANCHOR = /from\s+['"]@heady\/contracts['"]|from\s+['"](?:zod|zod4)['"]/;
 const BOUNDARY_WAIVER = /heady-allow:\s*zod-boundary/;
 const TIMING_LITERAL = /\bset(?:Timeout|Interval)\s*\(.*,\s*\d{2,}\s*\)/;
 const TIMING_WAIVER = /heady-allow:\s*phi-timing/;
@@ -43,6 +43,7 @@ test('boundary: PASSES when the validator comes from @heady/contracts', () => {
 
 test('boundary: PASSES a zod-anchored file and honors the line waiver', () => {
   assert.equal(scanBoundary('import { z } from "zod";\nconst b = schema.parse(req.body);').violations, 0);
+  assert.equal(scanBoundary('import { z } from "zod4";\nconst b = schema.parse(req.body);').violations, 0);
   const w = scanBoundary('const raw = req.body; // heady-allow:zod-boundary — proxied verbatim, validated downstream');
   assert.equal(w.violations, 0);
   assert.equal(w.waived, 1);

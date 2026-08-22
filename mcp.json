@@ -1,16 +1,11 @@
 {
-    "mcpServers": {
-        "Heady": {
-            "command": "node",
-            "args": ["/home/headyme/workspace/latent-core-dev/src/mcp/colab-mcp-bridge.js"],
-            "cwd": "/home/headyme/workspace/latent-core-dev",
-            "env": {
-                "HEADY_MCP_TRANSPORT": "stdio",
-                "HEADY_API_KEY": "${HEADY_API_KEY}",
-                "HEADY_BRAIN_URL": "https://headyio.com",
-                "HEADY_MANAGER_URL": "https://api.headysystems.com",
-                "HEADY_DEVICE_ID": "aa126931-8780-46c2-a57d-f69d5b54c26f"
-            }
-        }
+  "mcpServers": {
+    "Heady": {
+      "type": "http",
+      "url": "https://headymcp.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${HEADY_MCP_BEARER}"
+      }
     }
+  }
 }
