@@ -17,11 +17,13 @@ domain. This 35 is a *curated* roster: the legacy monolith actually carries **~7
 — the lexicon names the canonical subset, the compendium reconciles three overlapping taxonomies, and the
 deployment blueprint inflates to "197 worker bees / 24 domains" (a *capacity* statement, R4-superseded).
 
-**Critical status finding:** the rebuild monorepo has **no `packages/bees`, `packages/orchestration`, or
-`packages/engines`** (verified `ls packages/`). The only rebuild touchpoint is
-`packages/heady-sacred-geometry-sdk/lib/template-engine.js`, which *scores* templates on `bees` and
-`headyswarmTasks` dimensions but does not implement the runtime. Therefore **every one of the 35 bees and
-the entire swarm-coordination layer is `legacy-only` or `planned`** — none is `built` in the rebuild.
+**Critical status finding** (re-verified 2026-08-22): the rebuild monorepo has **no `packages/bees`,
+`packages/orchestration`, or `packages/engines`** (verified `ls packages/`), and now has **zero**
+rebuild-side touchpoint at all. The sole previous one,
+`packages/heady-sacred-geometry-sdk/lib/template-engine.js` — a template *scorer*, never a runtime —
+moved to `_archive/legacy-packages/heady-sacred-geometry-sdk/lib/template-engine.js` in the
+`ce4aa9ef53` disposition sweep (2026-07-23). Therefore **every one of the 35 bees and the entire
+swarm-coordination layer is `legacy-only` or `planned`** — none is `built` in the rebuild.
 `tooling/decomposition/manifest.json` group **G02 `bee-swarm-runtime`** is the transfer authority: targets
 `packages/bees` + `packages/orchestration` + `packages/engines`; sources `agents/` (AG-01 adapt),
 `agents/headybee-swarm.js` (AG-02 adapt — "salvage routing; drop Pinecone/Redis"),
@@ -130,9 +132,11 @@ standalone legacy module. Rebuild loc = **none** for all (no `packages/bees`); t
   `~/Heady/src/services/heady-bee-factory/index.js`, registry `~/Heady/src/core/bee-registry/bee-templates.js`
   (the kebab-bee template definitions incl. `ulti-bee`), `~/Heady/src/autonomy/heady-template-registry.js`.
   `BeeFactory` in `base-heady-bee.js` (`registerTemplate`/`create`/`getRegisteredTypes`/`hasTemplate`).
-- **Rebuild (path).** `packages/heady-sacred-geometry-sdk/lib/template-engine.js` — `TemplateEngine`
-  6-dimensional weighted scorer (`skills` 0.20, `workflows` 0.20, `nodes` 0.10, `headyswarmTasks` 0.25,
-  `bees` 0.15, `situations` 0.10) selecting optimal templates; **scoring only, no factory runtime**.
+- **Rebuild (path).** none live. `TemplateEngine` — the 6-dimensional weighted scorer (`skills` 0.20,
+  `workflows` 0.20, `nodes` 0.10, `headyswarmTasks` 0.25, `bees` 0.15, `situations` 0.10) selecting
+  optimal templates, **scoring only, no factory runtime** — now sits at
+  `_archive/legacy-packages/heady-sacred-geometry-sdk/lib/template-engine.js` (archived `ce4aa9ef53`).
+  Step (3) below reinstates it from there.
 - **Parts.** template match → provision → parameterize → register → execute → converge → extract (distill
   back into a new template via `heady-distiller`).
 - **OSS (current+planned).** none external (pure JS); planned = function emitting Workflow steps / Queue
@@ -244,7 +248,7 @@ standalone legacy module. Rebuild loc = **none** for all (no `packages/bees`); t
 
 1. **Bees covered:** all **35** canonical (`lexicon.yaml`); 34 `legacy-only`/`partial` in `~/Heady/src/bees/`, `ulti-bee` is `planned` (template-only, no module).
 2. **Swarm systems covered (5):** BaseHeadyBee lifecycle, Bee Factory & Template Registry, Swarm Coordination (5-tier routing + DAG + load-balance + circuit breakers), Swarm Consensus & Convergence, Stigmergy/Pheromone.
-3. **Rebuild status:** NONE built — no `packages/bees`/`orchestration`/`engines`; only `template-engine.js` scorer exists. All transfer via manifest **G02 → `packages/{bees,orchestration,engines}`**.
+3. **Rebuild status:** NONE built — no `packages/bees`/`orchestration`/`engines`, and since `ce4aa9ef53` not even the `template-engine.js` scorer (archived to `_archive/legacy-packages/`). All transfer via manifest **G02 → `packages/{bees,orchestration,engines}`**, whose landing is gated by `docs/hcp/HCP-0003-bee-swarm-runtime.md` → `docs/runbooks/APPROVAL_GENESIS_FOUNDER_RUNBOOK.md`.
 4. **Drift flags (4):** (a) bee count 35 canonical vs compendium **33** vs skill **"30+"** vs legacy **~73** vs blueprint **197**; (b) BaseBee **timeout** 6854ms (code) vs 1618ms (compendium); (c) `swarm-consensus.js` is **file-locking**, not the vote-fusion `normalize(Σwᵢaᵢ)`/`N≥3f+1` the compendium asserts (confidence drift); (d) registry **fib(11)=89** vs "≤10,000 concurrent". (`maxRetries=8` is NOT a drift — same value, two formulas.)
 5. **Open decisions (3):** canonical BaseBee timeout value (code vs compendium, rebuild implements neither); which factory generation to port (`bee-factory.js` vs `-v2.js` vs `08-bee-factory.js`); whether vote-fusion consensus is genuinely ported or must be built fresh in `@heady/csl-engine`.
 6. **Law/ADR touchpoints:** ADR-0005 (single-agent-first, sandbox, human-approved PR), ADR-0010 (token-budget caps concurrency), ADR-0004 (Workflows/Durable Objects), ADR-0020 (NATS), ADR-0003/0015 (pgvector/embedding), LAW-07 (auto-success); R4 supersedes per-port 197-bee deployment; AG-02 drops Pinecone/Redis.
