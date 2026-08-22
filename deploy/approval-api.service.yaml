@@ -1,0 +1,68 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ Approval API — Cloud Run deployment manifest v1.0.0      ║
+# ║  Genesis STEP 7. Image pinned BY DIGEST, never by tag: ADR-0031  ║
+# ║  §2 requires the genesis manifest to bind an immutable artifact. ║
+# ║  Apply with:                                                     ║
+# ║    gcloud run services replace deploy/approval-api.service.yaml \║
+# ║      --region us-east1 --project heady-ai                        ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+# ╚══════════════════════════════════════════════════════════════════╝
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: heady-approval-api
+  labels:
+    heady-component: approval-control-plane
+    heady-governance: adr-0031
+  annotations:
+    # Not public. The app authenticates Firebase humans and Google workload
+    # identities itself, but Cloud Run must not be the open front door for the
+    # approval control plane.
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        # fib(8) = 21. Bounded so a runaway caller cannot fan out the control
+        # plane; raise only through @heady/phi-math, never a magic number.
+        autoscaling.knative.dev/maxScale: "21"
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      serviceAccountName: heady-approval-api@heady-ai.iam.gserviceaccount.com
+      containerConcurrency: 8
+      timeoutSeconds: 60
+      containers:
+        - image: us-east1-docker.pkg.dev/heady-ai/heady/approval-api@sha256:b18b8e41b867a19288d65d164712a5f8b961f5657f5a42c46bc19e66933d16af
+          ports:
+            - name: http1
+              containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: LOG_LEVEL
+              value: info
+            - name: FIREBASE_PROJECT_ID
+              value: heady-ai
+            # The audience Google workload ID tokens must carry. Cloud Run URLs
+            # in this project follow https://<service>-n5s7hbzdga-<rr>.a.run.app
+            # (-ue = us-east1), so this is the PREDICTED URL. Verify it against
+            # the deployed service before the genesis manifest is signed: the
+            # manifest hash binds this value, and a wrong audience fails closed
+            # on every workload call.
+            - name: APPROVAL_SERVICE_AUDIENCE
+              value: https://heady-approval-api-n5s7hbzdga-ue.a.run.app
+            - name: APPROVAL_KMS_KEY_VERSION
+              value: projects/heady-ai/locations/global/keyRings/heady-approval/cryptoKeys/receipt-signing/cryptoKeyVersions/1
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: approval-runtime-database-url
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+  traffic:
+    - percent: 100
+      latestRevision: true

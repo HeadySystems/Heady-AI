@@ -302,8 +302,22 @@ node -e 'import("./packages/approvals/src/canonical.mjs").then(async m=>{const {
 
 The role `heady_approval_api` already exists in production; it needs a password and a **pooled** URL.
 
-1. <https://console.neon.tech/> → your project → **Roles** → reset the password for
-   `heady_approval_api`.
+> ### ⚠️ The "reset the password" flow does NOT work for this role
+> Verified 2026-08-22 against the live Neon API. `heady_approval_api` was created by migration `0004`
+> with **no password at all**, so Neon refuses to set one this way:
+> `422 ROLE_PASSWORD_NOT_AVAILABLE — cannot update password for role without password`. The
+> connection-URI endpoint consequently returns a URI with an **empty** credential, which the runtime
+> rejects. Use SQL as the owner instead:
+> ```sql
+> ALTER ROLE heady_approval_api WITH PASSWORD '<generated>' LOGIN;
+> ```
+> Generate with `openssl rand -base64 24`, run it through the **`neondb_owner`** direct connection, and
+> put the result straight into Secret Manager — not into a file or a retained shell history. Neon
+> project is `cool-wind-37254039` ("Heady", `azure-westus3`); production branch
+> `br-hidden-union-aabqn03y`; the API key in Secret Manager as `NEON_SECRET` is valid.
+
+1. ~~Neon console → **Roles** → reset the password for `heady_approval_api`.~~ Superseded by the
+   `ALTER ROLE` above.
 2. **Branches → Connect** → choose that role → copy the **Pooled** connection string. It must contain
    `-pooler` in the host and `?sslmode=require`. The runtime rejects a direct URL, a non-Neon host, a
    missing `sslmode`, and any owner-like login — `apps/approval-api/src/database.mjs:13-22,161`.
@@ -318,7 +332,41 @@ gcloud secrets versions list approval-runtime-database-url --project="$HEADY_PRO
 
 **Console:** <https://console.cloud.google.com/security/secret-manager?project=heady-ai>
 
-### STEP 5 — validate migrations on a throwaway Neon branch (S5)
+### STEP 5 — validate migrations on a throwaway Neon branch ✅ CHAIN PROVEN 2026-08-22
+
+Run against a real copy-on-write branch of production, not simulated:
+
+| | |
+|---|---|
+| COW branch | `br-small-mud-aa7m3mc1` — `genesis-s5-validation-20260822`, parent `br-hidden-union-aabqn03y` |
+| Endpoint | `ep-bold-wave-aaw0ysw5` (direct and `-pooler` both resolved) |
+| Plan | 9 applied, 3 pending — `0010`, `0011`, `0012` |
+| **Apply** | ✅ all three clean — `applied:3 skipped:9 total:12` |
+
+**The full 0001→0012 chain is proven to apply.** That retires the standing worry that the chain halts
+at `0003`/`0004` on a bare branch: it does not halt on a COW branch of production, because the roles
+and Data-API grants already exist there.
+
+> **Not finished — the integration suite.** It needs `TEST_RUNTIME_DATABASE_URL`, which needs the
+> STEP 4 `ALTER ROLE` password. An agent attempt to set one on the temp branch was blocked by the
+> Claude Code permission classifier. **The COW branch was left alive on purpose** so you can finish in
+> a minute instead of rebuilding it:
+>
+> ```bash
+> # as neondb_owner on br-small-mud-aa7m3mc1:
+> #   ALTER ROLE heady_approval_api WITH PASSWORD '<generated>' LOGIN;
+> TEST_DATABASE_URL='<temp-direct-owner-uri>?sslmode=require' \
+> TEST_RUNTIME_DATABASE_URL='<temp-pooled-runtime-uri>?sslmode=require' \
+> pnpm --filter @heady/approvals test:integration      # un-skips the 4 skipped tests
+> ```
+>
+> **Then delete it — it is a live billable branch:**
+> ```bash
+> curl -X DELETE -H "Authorization: Bearer $NEON_API_KEY" \
+>   https://console.neon.tech/api/v2/projects/cool-wind-37254039/branches/br-small-mud-aa7m3mc1
+> ```
+
+The original manual sequence, for reference:
 
 Production currently has 0001–0009 applied. `0010_autonomous_approval_grants.sql` is **part of the
 approval control plane** and must land.
@@ -383,7 +431,31 @@ Build a second image (previous good commit) so you have a rollback digest.
 **Console:** <https://console.cloud.google.com/artifacts?project=heady-ai> ·
 <https://console.cloud.google.com/cloud-build/builds?project=heady-ai>
 
-### STEP 7 — deployment manifest, not yet deployed (S7)
+### STEP 7 — deployment manifest ✅ WRITTEN 2026-08-22 (not deployed)
+
+`deploy/approval-api.service.yaml` — a real `gcloud run services replace` manifest. Image pinned **by
+digest**, service account `heady-approval-api`, `DATABASE_URL` from
+`approval-runtime-database-url:latest`, ingress `internal-and-cloud-load-balancing` (the control plane
+must not be an open front door even though the app authenticates its own callers), `maxScale: 21` =
+fib(8).
+
+| Field | Value |
+|---|---|
+| **`--deployment-manifest-sha256`** | `0dc1534ba2ff1c73affbf8d3c58ecf0ba13feebb6056bfa5143748cffe49218a` |
+
+> **One value in it is a prediction, and the manifest hash binds it.**
+> `APPROVAL_SERVICE_AUDIENCE` = `https://heady-approval-api-n5s7hbzdga-ue.a.run.app`, derived from this
+> project's observed URL pattern (`heady-mcp-server-n5s7hbzdga-ue`, `heady-auth-n5s7hbzdga-uc`; `-ue` =
+> us-east1). **Verify it against the deployed service before signing** — a wrong audience fails closed
+> on every workload call, and fixing it after signing invalidates the manifest hash. Deploy once under
+> a throwaway service name first if you want certainty before the hash is bound.
+
+Org-policy note: the Organization Policy API is **disabled** on `heady-ai`, so
+`iam.allowedPolicyMemberDomains` and `run.allowedIngress` could not be read. The manifest deliberately
+does not rely on public ingress, which sidesteps the domain-restricted-sharing blocker rather than
+hitting it at deploy time.
+
+The original step, for reference:
 
 Write the exact service definition to a file and hash it. Image **by digest**.
 
@@ -533,7 +605,7 @@ Every row was measured, not inferred.
 | Neon `heady_approval` schema | ✅ **live in production** — all 9 tables exist | migration 0004 applied (9 of 12 migrations applied) |
 | Neon role `heady_approval_api` | ✅ exists | `pg_roles` |
 | Genesis state | ❌ **not run** — `principals`, `bootstrap`, `events`, `receipts` all **0 rows** | live count |
-| Pending migrations | ⚠️ `0010_autonomous_approval_grants`, `0011`, `0012` **not applied** | `pnpm db:migrate` (plan-only) |
+| Pending migrations | ⚠️ `0010`/`0011`/`0012` still pending **in production** — ✅ proven to apply on COW `br-small-mud-aa7m3mc1` | `pnpm db:migrate:apply` (temp branch) |
 | KMS keyring `heady-approval` (global) | ✅ exists | `gcloud kms keyrings list --location=global` |
 | KMS `founder-evidence` v1 | ✅ Ed25519, ENABLED | fingerprint `0f7753c1…78ed` |
 | KMS `receipt-signing` v1 | ✅ Ed25519, ENABLED | fingerprint `e9dfdcb1…64ba` |
@@ -829,7 +901,7 @@ recompute it at your final implementation commit — and note the pending `packa
 | `receiptSignerPublicKeyFingerprint` | `e9dfdcb1cd80f69a010e6e1b24daf0447a0074f72c7065d4f45bad7a8cbc64ba` | `configs/keys/approval/receipt-signing.public.jwk.json` |
 | `approvalSourceTreeSha256` | recompute — changes with the implementation commit | `git ls-tree` over `apps/approval-api`, `packages/approvals`, migration 0004, `policies/approval.rego` |
 | `arbiterPublicKeyFingerprint` | `cc7151dd68a5bd20364c28753ad2689678b2646e9891c6705dc1bd3777c076b8` | `configs/keys/approval/arbiter-attestation.public.jwk.json` |
-| `deploymentManifestSha256` | **pending S7** | — |
+| `deploymentManifestSha256` | `0dc1534ba2ff1c73affbf8d3c58ecf0ba13feebb6056bfa5143748cffe49218a` | `deploy/approval-api.service.yaml` |
 | `deploymentArtifactDigest` | `sha256:b18b8e41b867a19288d65d164712a5f8b961f5657f5a42c46bc19e66933d16af` | build `7a3fabfa`, tag `86c3730b08` |
 | `rollbackArtifactDigest` | **decision needed** — no prior good image exists, see STEP 6 | — |
 | `governanceReportSha256` / `securityReviewSha256` | **pending S8** | — |
