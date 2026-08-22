@@ -31,7 +31,12 @@ cd "$REPO_ROOT"
 readonly ADR_0052_FILE="docs/adr/0052-instruction-provenance-and-channel-authentication.md"
 readonly ADR_0052_SHA="e5c114f94c22893816b485263400ddf84629db2ad466e35b9954f64e7ed715d2"
 readonly ADR_0054_FILE="docs/adr/0054-domain-canon-carrier-closure.md"
-readonly ADR_0054_SHA="376521ff259f80bfd22e36b6d9b5bbc5bf7bbec76b7a4d0a717207cafce66347"
+# 0054 re-pinned 2026-08-22 after the founder directed that `headytrade` be removed
+# from the ADR-0033 and legacy ADR-0019 snapshot tables. That required amending 0054
+# §Decision to carry the bounded, founder-authorized exception to the ADR immutability
+# rule — otherwise the record would have contradicted the tree. The hash below is the
+# AMENDED text: re-read §Decision and §Consequences before signing.
+readonly ADR_0054_SHA="c89b96ba9594ff269a1c35aca5809c26ef926e2637fc2d0a89e46975b06110a1"
 
 log() { printf '%s\n' "$*" >&2; }
 die() { printf 'ABORT: %s\n' "$*" >&2; exit 1; }
