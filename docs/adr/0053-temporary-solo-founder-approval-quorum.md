@@ -5,7 +5,8 @@ HEADY_BRAND:END -->
 
 # ADR-0053: Temporary Solo-Founder Approval Quorum
 
-- **Status:** Proposed (2026-08-22) — requested by the founder; not active and not self-ratifying
+- **Status:** Accepted (2026-08-23)
+- **Acceptance:** Founder-signed tag `adr-0053-accepted-dfdd2bc87` (OpenPGP, EDDSA `1050B59E7296C46C26DDF95DA7D2108BB3C6101C` — the key of record; `git tag -v adr-0053-accepted-dfdd2bc87` returns Good signature)
 - **Decider:** Eric Anthony Haywood (pending authenticated acceptance)
 - **Supersedes if accepted:** ADR-0031 sections 1 and 4 only for the bounded temporary interval below
 - **Security effect while Proposed:** none; ADR-0031 remains authoritative

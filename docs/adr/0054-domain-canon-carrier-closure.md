@@ -8,7 +8,8 @@ HEADY_BRAND:END -->
 
 # ADR-0054: Domain Canon Carrier Closure and HeadyFinance Succession
 
-- **Status:** Proposed — ratification pending the founder-signed tag `adr-0054-accepted-<sha>`
+- **Status:** Accepted (2026-08-23)
+- **Acceptance:** Founder-signed tag `adr-0054-accepted-dfdd2bc87` (OpenPGP, EDDSA `1050B59E7296C46C26DDF95DA7D2108BB3C6101C` — the key of record; `git tag -v adr-0054-accepted-dfdd2bc87` returns Good signature)
 - **Acceptance:** requires the ADR-0030/0031/0032-style ceremony (OpenPGP `git tag -s`, verifiable
   with `git tag -v`). An agent cannot perform this act, and a commit asserting acceptance without it
   is void — see the `91059537a4` → `c48062fc61` incident recorded in `docs/adr/README.md`.
