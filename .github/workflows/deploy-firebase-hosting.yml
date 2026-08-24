@@ -35,12 +35,12 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install pnpm (version from root packageManager field)
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -70,7 +70,7 @@ jobs:
 
       - name: Authenticate → Google Cloud (Workload Identity)
         id: auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         continue-on-error: true
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY }}
@@ -170,7 +170,7 @@ jobs:
 
       - name: Upload release manifest artifact
         if: steps.release_manifest.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-manifest
           path: release-manifest.json
