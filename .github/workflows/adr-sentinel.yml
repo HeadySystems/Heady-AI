@@ -41,13 +41,13 @@ jobs:
       changed_core: ${{ steps.scan.outputs.changed_core }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0   # full history required for diff
 
       - name: Get changed files
         id: files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v47
         with:
           files_yaml: |
             manifests:
@@ -113,10 +113,10 @@ jobs:
       report_json: ${{ steps.check.outputs.report_json }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -133,7 +133,7 @@ jobs:
         run: node scripts/check-adr-coverage.js
 
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: adr-coverage-report
           path: /tmp/adr-coverage-report.json
@@ -150,16 +150,16 @@ jobs:
     if: always() && needs.detect-changes.outputs.has_arch_changes == 'true'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download coverage report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: adr-coverage-report
           path: /tmp
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -234,13 +234,13 @@ jobs:
       medium:      ${{ steps.scan.outputs.medium }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Get changed files for diff-mode scan
         id: changed
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v47
         with:
           files: |
             **/*.js
@@ -253,7 +253,7 @@ jobs:
             **/*.yml
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
@@ -274,7 +274,7 @@ jobs:
 
       - name: Upload PQC scan report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pqc-scan-report
           path: /tmp/pqc-scan-report.json
@@ -291,16 +291,16 @@ jobs:
     if: always() && github.event_name == 'pull_request'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Download PQC scan report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: pqc-scan-report
           path: /tmp
 
       - name: Setup Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
 
