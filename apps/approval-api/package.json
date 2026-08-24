@@ -22,12 +22,12 @@
     "@heady/secrets": "workspace:*",
     "@heady/shared": "workspace:*",
     "express": "5.2.1",
-    "express-rate-limit": "8.6.0",
+    "express-rate-limit": "8.6.2",
     "fast-crc32c": "2.0.0",
-    "firebase-admin": "14.2.0",
+    "firebase-admin": "14.3.0",
     "google-auth-library": "10.9.1",
     "helmet": "8.3.0",
-    "pg": "8.22.0",
+    "pg": "8.23.0",
     "zod": "3.25.76"
   },
   "devDependencies": {
