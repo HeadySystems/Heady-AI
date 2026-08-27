@@ -3,7 +3,7 @@
 // ║  Parses OHLC bars from CSV text (the free-data format from Stooq /  ║
 // ║  Yahoo / most providers: Date,Open,High,Low,Close,Volume). Pure —   ║
 // ║  no network, no subscription. Drop a downloaded CSV in and backtest.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /**

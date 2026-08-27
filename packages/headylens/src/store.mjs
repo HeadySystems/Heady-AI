@@ -3,7 +3,7 @@
 // ║  Pluggable record stores: in-memory ring (live tail) + plain      ║
 // ║  append-only NDJSON (durable history). PLAIN by design — no       ║
 // ║  hash-chain, no signing (that tamper-evidence is the G9 audit-of- ║
-// ║  record, deferred). © 2026 HeadySystems Inc. — Eric Haywood       ║
+// ║  record, deferred). Made with ❤️ by HeadySystems Inc.             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Retention (ADR-0008): every store is bounded by capacity AND maxAgeMs, and supports erasure

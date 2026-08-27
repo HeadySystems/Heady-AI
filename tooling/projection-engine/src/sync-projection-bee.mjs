@@ -7,7 +7,7 @@
 // ║  is a derived layer. Dropped from the legacy: `git add -A`/push      ║
 // ║  (the mass-deletion hazard) and RAM-as-authority framing. A "bee" is  ║
 // ║  a pure work-unit — no live-swarm runtime is implied or faked.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { project } from "./projector.mjs";
 

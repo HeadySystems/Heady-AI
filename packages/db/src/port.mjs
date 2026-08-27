@@ -5,7 +5,7 @@
 // ║  driver. tx(fn) hands fn a pg-client-shaped handle inside           ║
 // ║  BEGIN/COMMIT with ROLLBACK on throw — exactly the `tx` contract    ║
 // ║  @heady/task-ledger already codes against.                          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import pg from "pg";

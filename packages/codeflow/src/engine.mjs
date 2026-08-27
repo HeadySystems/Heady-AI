@@ -3,7 +3,7 @@
 // ║  Proposal state machine: every code change is submitted, validated,║
 // ║  governed, approved, applied, and reversible. Grounded in ADR-0005 ║
 // ║  (three-layer gate, human approval for sensitive paths, no self-   ║
-// ║  approve). © 2026 HeadySystems Inc. — Eric Haywood, Founder        ║
+// ║  approve). Made with ❤️ by HeadySystems Inc.                       ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createHash, randomUUID } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';

@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Heady Maintenance Ops v1.0.0                          ║
 // ║  Runtime artifact detection and forbidden content scanning     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 'use strict';
 

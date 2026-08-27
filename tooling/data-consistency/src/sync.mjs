@@ -4,7 +4,7 @@
 // ║  Pulls data from the current Heady build into the rebuild:        ║
 // ║  transform → validate (consistency gate) → record provenance.     ║
 // ║  Supersedes scratch/migrate_skills.js (CommonJS, ungated).        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // "Ensures data is updated for the rebuild when taken from the current build":

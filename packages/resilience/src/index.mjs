@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Resilience v1.0.0 — circuit breaker, retry, timeout,      ║
 // ║  bulkhead, graceful shutdown. φ-scaled (AGENTS.md).               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { phiBackoffMs, CIRCUIT_BREAKER, PHI } from "@heady/phi-math";

@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Neon Integration Tests v1.0.0                  ║
 // ║  Transactions, receipts, idempotency, concurrency, and DB armor.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import assert from "node:assert/strict";

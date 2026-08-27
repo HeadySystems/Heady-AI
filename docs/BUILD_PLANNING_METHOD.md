@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Build-Planning Method — map once, slice straight through   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 
@@ -79,4 +79,4 @@ single front-loaded pass.
 
 ---
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

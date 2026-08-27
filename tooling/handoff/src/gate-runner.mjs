@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Handoff Gate Runner v1.0.0                              ║
 // ║  Resilient, classified execution for read-only handoff gates.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { resolve } from "node:path";

@@ -3,7 +3,7 @@
 // ║  Fake transactional executor (buffers journal inserts until        ║
 // ║  COMMIT, discards on ROLLBACK) so ordering, idempotency, drift,     ║
 // ║  and halt-on-failure are proven without a database.                 ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

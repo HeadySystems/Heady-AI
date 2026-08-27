@@ -3,7 +3,7 @@
 // ║  The org + filing records the loader persists. Strict, dependency- ║
 // ║  free (facts-schema idiom): a filing MUST carry provenance         ║
 // ║  (source object id + content hash) — no fact without its source.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 export const RETURN_TYPES = Object.freeze(["990", "990-EZ", "990-PF", "990-N"]);

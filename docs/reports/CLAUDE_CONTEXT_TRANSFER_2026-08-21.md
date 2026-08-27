@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ Claude Context Transfer Report
 Layer: governed knowledge ingestion
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Claude Context Transfer — 2026-08-21

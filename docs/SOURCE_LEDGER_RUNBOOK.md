@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ Neon Source Ledger Runbook
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Neon Source Ledger Runbook

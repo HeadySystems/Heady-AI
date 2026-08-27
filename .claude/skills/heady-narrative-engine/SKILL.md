@@ -27,7 +27,7 @@ description: "Heady Narrative Engine — story-driven interaction choreography t
 -->
 # Heady Narrative Engine
 
-> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**
+> **Made with ❤️ by HeadySystems Inc. — 51 Provisional Patents**
 > Sacred Geometry v4.0 | PHI-math foundation | CSL gates throughout
 
 ## When to Use This Skill

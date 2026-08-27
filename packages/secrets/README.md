@@ -112,4 +112,4 @@ node --test test/secrets.test.mjs
 ```
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

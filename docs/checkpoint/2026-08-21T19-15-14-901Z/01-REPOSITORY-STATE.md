@@ -2,7 +2,7 @@
 <!-- ╭────────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Repository Checkpoint State v1.0.0                 │
 <!-- │  Git and handoff evidence with dirty-work safeguards          │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰─────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

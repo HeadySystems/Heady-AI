@@ -4,7 +4,7 @@
 // ║  v1.1.0: pure template core exported for tests (resolvePath /       ║
 // ║  renderTemplate), CLI entry behind the argv guard (importing this   ║
 // ║  module no longer executes it), structured JSON log lines.          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import fs from 'node:fs/promises';

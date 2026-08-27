@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Projection Maintenance Ops v1.0.0                     ║
 // ║  Stale projection surface detection and protected-path gates   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 'use strict';
 

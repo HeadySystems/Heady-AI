@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Deterministic Embedding Bootstrap v1.0.0              ║
 // ║  Chunking and queue assignment for embedding pipelines         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 'use strict';
 

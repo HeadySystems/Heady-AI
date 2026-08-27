@@ -6,7 +6,7 @@ description: Batch exact-scope destructive actions into one hashed, one-time app
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Destructive Manifest Approval v1.0.0                    ║
 ║  Exact targets · one-time consent · drift-invalidated execution ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

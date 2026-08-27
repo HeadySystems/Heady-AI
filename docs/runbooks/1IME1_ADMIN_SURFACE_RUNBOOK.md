@@ -4,7 +4,7 @@
 <!-- ║  Human-gated checklist: make https://1ime1.com serve              ║
 <!-- ║  apps/headyme-portal (Firebase Hosting, project heady-ai).        ║
 <!-- ║  FILE: docs/runbooks/1IME1_ADMIN_SURFACE_RUNBOOK.md               ║
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+<!-- ║  Made with ❤️ by HeadySystems Inc.                                ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ KMS Evidence Ceremony v1.0.0                            ║
 // ║  Human-invoked signing of one canonical approval envelope.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFile } from "node:fs/promises";

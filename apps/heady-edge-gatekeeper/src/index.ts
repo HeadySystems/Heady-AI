@@ -2,7 +2,7 @@
 // ║  HEADY™ Edge Gatekeeper — Cloudflare Worker ingress               ║
 // ║  Ed25519-authed ingest → Workers AI embed → Vectorize upsert.     ║
 // ║  Structured JSON logs → Logpush (the Workers logging transport).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { Hono } from "hono";
 import { cors } from "hono/cors";

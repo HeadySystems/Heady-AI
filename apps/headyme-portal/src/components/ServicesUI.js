@@ -5,7 +5,7 @@
 // ║  one-sentence explanation → Go) with <heady-service-nav> (live     ║
 // ║  categorized catalog). Deep links: #services/<category>/<service>. ║
 // ║  Spec: docs/blueprints/headyme-navigation-ia.md                    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import './BuddyGuide.js';  // registers <heady-buddy-guide>

@@ -4,7 +4,7 @@
 // ║  Native interface to the interactive rebuild plan. Two builds:    ║
 // ║  --build v1 (Heady-V1 legacy) | --build ai (Heady-AI rebuild).    ║
 // ║  plan · status · accept · defer · replan · verify · sync.         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, realpathSync } from "node:fs";

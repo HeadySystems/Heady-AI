@@ -1,7 +1,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ Approval API Container v1.0.0                           ║
 # ║  Reproducible, non-root Cloud Run runtime for the control plane.║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ║  Made with ❤️ by HeadySystems Inc.                              ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 FROM --platform=linux/amd64 docker.io/library/node:22.22.0-bookworm-slim@sha256:7cc56ef285a8568121537d17b05e72128f01b89c54607b51acf084a50ef483f3

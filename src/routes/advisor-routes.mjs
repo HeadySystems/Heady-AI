@@ -3,7 +3,7 @@
 // ║  Read-only surface exposing battle-tested knowledge to rebuild.   ║
 // ║  Auth: Firebase ID token (Bearer) — same project as portal.       ║
 // ║  Mount: app.use('/api/advisor', advisorRoutes)                    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import express  from 'express';
 

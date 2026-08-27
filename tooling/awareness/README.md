@@ -1,4 +1,4 @@
-<!-- HEADY_BRAND:BEGIN — © 2026 HeadySystems Inc. — Eric Haywood, Founder — HEADY_BRAND:END -->
+<!-- HEADY_BRAND:BEGIN — Made with ❤️ by HeadySystems Inc. — HEADY_BRAND:END -->
 # @heady/awareness — Heady Change Awareness
 
 Realtime codebase awareness for Heady and any external AI. On every meaningful change it

@@ -2,7 +2,7 @@
 // ║  HEADY™ Decomposition Engine v1.0.0                                ║
 // ║  Reverse-engineers legacy Heady into transfer-ready component       ║
 // ║  bundles + repo scaffolds, fail-closed on secrets & patent IP.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -193,7 +193,7 @@ codemod (G2.5) → characterization tests (G3-pre) → \`eval-gate\` (G3) → co
 
 ${result.missing && result.missing.length ? `## Missing source paths (recorded)\n\n${result.missing.map((m) => `- \`${m.path}\` (${m.id})`).join('\n')}\n` : ''}
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*
 `;
   writeFileSync(join(dir, 'README.md'), md);
 }

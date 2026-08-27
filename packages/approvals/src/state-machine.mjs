@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval State Machine v1.0.0                            ║
 // ║  Fail-closed legal transitions for immutable approval history.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { ConflictError } from "@heady/shared";

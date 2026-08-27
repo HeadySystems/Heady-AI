@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Task Ledger v1.0.0                                       ║
 // ║  Transactional task scheduling, state machine, and outbox sync    ║
-// ║  (Linear/Sentry). © 2026 HeadySystems Inc. — Eric Haywood, Founder ║
+// ║  (Linear/Sentry). Made with ❤️ by HeadySystems Inc.                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { isValidStatus } from "@heady/db";

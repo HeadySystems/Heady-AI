@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Genesis Manifest Tests v1.0.0                  ║
 // ║  Determinism, accepted anchor binding, and scope denial tests.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import assert from "node:assert/strict";

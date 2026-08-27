@@ -3,7 +3,7 @@
 // ║  Read-only, dependency-free HTTP surface over the collector:      ║
 // ║  /api/lens/query (time-windowed, detail-graded) + /api/lens/      ║
 // ║  stream (SSE live tail) + /api/lens/health. Token-auth, fail-     ║
-// ║  closed. © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+// ║  closed. Made with ❤️ by HeadySystems Inc.                        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Mirrors packages/codeflow/src/server.mjs (node:http, bearer token, φ-derived PORT). GET-only —

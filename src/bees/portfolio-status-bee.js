@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ PortfolioStatusBee v1.0.0                              ║
 // ║  Swarm 22 (Announcer) — Domain lifecycle status injection      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFile } from 'node:fs/promises';

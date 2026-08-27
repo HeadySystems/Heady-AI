@@ -4,7 +4,7 @@
 // ║  approval API rebuilds server-side, so a human principal signs   ║
 // ║  the same canonical bytes the service will verify. Holds no key  ║
 // ║  material and performs no signing.                                ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { randomBytes } from "node:crypto";

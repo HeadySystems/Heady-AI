@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ ADR-0053 — Temporary Solo-Founder Approval Quorum
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # ADR-0053: Temporary Solo-Founder Approval Quorum

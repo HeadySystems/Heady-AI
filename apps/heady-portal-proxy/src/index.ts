@@ -5,7 +5,7 @@
 // ║  cutover: only the Worker route script changes — no DNS/email      ║
 // ║  records are touched. /api/* is handled by heady-portal-gateway    ║
 // ║  (a more-specific route), never this worker.                       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 export interface Env {

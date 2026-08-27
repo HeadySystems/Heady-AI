@@ -3,7 +3,7 @@
 // ║  HEADY™ Auto-Flow — Skill/Workflow Preflight v1.0.0              ║
 // ║  Scans the whole skill + workflow catalog before a task and       ║
 // ║  returns a CSL-gated shortlist of what could be beneficially used.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Step 0 of any Auto-Flow: "what do we already have that fits THIS task?"

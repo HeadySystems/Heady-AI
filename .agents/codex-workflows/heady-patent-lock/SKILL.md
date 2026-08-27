@@ -8,7 +8,7 @@ description: "Run the canonical heady-patent-lock Heady workflow. Set up PATENT_
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Codex Workflow Shortcut                                 ║
 ║  Generated adapter — canonical instructions stay in workflows   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+║  Made with ❤️ by HeadySystems Inc.                              ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

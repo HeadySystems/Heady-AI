@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Unified Runtime Orchestrator v1.0.0                   ║
 // ║  Cloud-only endpoint validation and runtime snapshot builder   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 'use strict';
 

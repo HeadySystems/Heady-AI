@@ -9,7 +9,7 @@
 // ║   uninstall-hooks remove the awareness git hooks                  ║
 // ║   status          service health + metrics                        ║
 // ║   serve           run the service (optional --poll HEAD loop)      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { dirname, join } from "node:path";

@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ Approval API v1.1.0
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Approval API

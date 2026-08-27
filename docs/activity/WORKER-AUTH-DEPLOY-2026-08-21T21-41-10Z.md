@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ Worker Authentication Deployment Receipt
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Worker authentication and deployment receipt

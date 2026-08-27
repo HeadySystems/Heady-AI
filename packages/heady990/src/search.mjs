@@ -4,7 +4,7 @@
 // ║  keyword (tsvector) and semantic (pgvector) queries via DbPort and  ║
 // ║  fuses their rankings here with RRF — no store coupling, so the      ║
 // ║  fusion is unit-testable and the SQL is inspectable. k=60 per the    ║
-// ║  standard RRF constant. © 2026 HeadySystems Inc. — Eric Haywood    ║
+// ║  standard RRF constant. Made with ❤️ by HeadySystems Inc.          ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** Standard RRF constant. */

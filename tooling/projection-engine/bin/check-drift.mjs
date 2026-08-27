@@ -6,7 +6,7 @@
 // ║  source moved (source-ahead) is STALE — re-run `heady-project`.     ║
 // ║  Fail-closed (exit 2) on any drift so stale shells can't merge      ║
 // ║  silently (the generated-artifact-not-hand-edited discipline).      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";

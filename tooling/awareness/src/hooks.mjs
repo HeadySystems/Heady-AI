@@ -7,7 +7,7 @@
 // ║  blew up this host (1400% CPU / 11GB, CLAUDE_MEMORY §6). Hooks      ║
 // ║  cost nothing idle, never block or fail the git operation, and     ║
 // ║  are idempotent + reversible (marked block, preserves user hooks). ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, existsSync, chmodSync, mkdirSync } from "node:fs";

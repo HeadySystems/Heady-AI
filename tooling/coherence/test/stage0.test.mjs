@@ -2,7 +2,7 @@
 // ║  HEADY™ Stage 0 tests — node:test, zero deps                      ║
 // ║  Arms the central gate; the CODEOWNERS matcher + manifest schema    ║
 // ║  get facts.v1-grade rigor so a STAGE0 exit-2 never misfires.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

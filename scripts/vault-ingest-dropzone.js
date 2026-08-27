@@ -8,7 +8,7 @@ import pino from 'pino';
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Vault Ingestion Script v1.0.0                            ║
 // ║  Migrates raw credentials from dropzone to encrypted vector space║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

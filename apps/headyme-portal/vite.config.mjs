@@ -7,7 +7,7 @@
 // ║    deploy rolls the SW byte-diff → auto-update toast fires),      ║
 // ║    writes dist/sw.js; also pins the manifest "version" field.     ║
 // ║  No vite-plugin-pwa — the hand-rolled SW is the deliverable.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";

@@ -3,7 +3,7 @@
 // ║  Refreshes the committed Battle Arena spec artifacts under configs/ ║
 // ║  from the live generator, so the D7 guard can hold them to the      ║
 // ║  domain canon.                                                      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // WHY THESE ARTIFACTS EXIST. Nothing reads them at runtime — the live spec is

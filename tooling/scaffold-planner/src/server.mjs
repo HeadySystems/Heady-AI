@@ -3,7 +3,7 @@
 // ║  Shared decision state for both interfaces: GET plan+decisions,   ║
 // ║  POST one decision. Web (AdminUI section) + CLI converge on the   ║
 // ║  same .data/scaffold/decisions.json overlay. Token-auth, the      ║
-// ║  plan source is read-only. © 2026 HeadySystems — Eric Haywood     ║
+// ║  plan source is read-only. Made with ❤️ by HeadySystems Inc.      ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Mirrors packages/codeflow/src/server.mjs (node:http, bearer token, φ-PORT). The ONLY write is the

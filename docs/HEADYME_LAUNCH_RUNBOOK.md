@@ -7,7 +7,7 @@
 >
 > Generated from `tooling/build-plan/goals/headyme-launch.json` via
 > `node tooling/build-plan/src/plan.mjs`. Re-run that command to refresh the DAG.
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder.
+> Made with ❤️ by HeadySystems Inc.
 
 ## Honest headline
 

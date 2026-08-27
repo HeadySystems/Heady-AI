@@ -4,7 +4,7 @@
 // ║  call is fail-closed: it returns a structured { ok, ... } result  ║
 // ║  and NEVER throws on a non-zero git exit. NOTHING here mutates     ║
 // ║  history — history rewrites are gated to the squash *proposer*.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { spawnSync } from "node:child_process";

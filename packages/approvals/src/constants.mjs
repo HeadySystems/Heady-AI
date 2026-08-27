@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Constants v1.0.0                                ║
 // ║  Typed states, evidence classes, and φ-derived security windows. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { FIB, PHI } from "@heady/phi-math";

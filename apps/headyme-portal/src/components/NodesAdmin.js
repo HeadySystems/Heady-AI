@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Nodes Operations Console v1.0.0                         ║
 // ║  Authenticated runtime, dispatch, audit, and maintenance UI.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { FIB, HEARTBEAT_MS } from '@heady/phi-math';

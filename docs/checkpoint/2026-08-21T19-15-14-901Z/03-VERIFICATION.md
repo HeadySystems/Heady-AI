@@ -2,7 +2,7 @@
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Checkpoint Verification Evidence v1.0.0           │
 <!-- │  Gate outcomes separated from runner and environment faults   │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

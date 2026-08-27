@@ -7,7 +7,7 @@
 // ║   • PostToolUse(Write/Edit under .agents/workflows|.agents/skills) ║
 // ║       → targeted sync so the new command/skill is live mid-session ║
 // ║  Fail-OPEN: never blocks a session or edit (always exit 0).        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";

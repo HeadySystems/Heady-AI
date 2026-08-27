@@ -3,7 +3,7 @@
 ║  HEADY™ Autopilot 2026-07-04 — human-gated checklist              ║
 ║  Every step below is structurally reserved for the founder:       ║
 ║  external credentials, IAM, DNS, support tickets, destructive ops.║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

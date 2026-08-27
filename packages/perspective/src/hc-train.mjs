@@ -3,7 +3,7 @@
 // ║  HEADY™ Perspective — hc-train (TrainPort) v1.0.0                 ║
 // ║  Calibrate HeadyPerspective from ground truth (HeadyRegistry +      ║
 // ║  lexicon): source perspective levels + role weights. Deterministic  ║
-// ║  (canonical hash) and persisted. © 2026 HeadySystems — E. Haywood   ║
+// ║  (canonical hash) and persisted. Made with ❤️ by HeadySystems Inc.  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync } from 'node:fs';

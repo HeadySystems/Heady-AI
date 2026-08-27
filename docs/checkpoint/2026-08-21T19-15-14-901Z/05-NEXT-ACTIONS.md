@@ -2,7 +2,7 @@
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Checkpoint Next Actions v1.0.0                      │
 <!-- │  Ordered local and live follow-up with explicit stop gates    │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

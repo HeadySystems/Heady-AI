@@ -2,7 +2,7 @@
      ║  HEADY™ Design-Data Bundle v1.0.0 — docs/design                   ║
      ║  Canon-derived inputs for Claude design tools and v0.dev so       ║
      ║  generated UI cannot drift from the system.                       ║
-     ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+     ║  Made with ❤️ by HeadySystems Inc.                                ║
      ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # docs/design — the design-data bundle

@@ -2,7 +2,7 @@
 // ║  HEADY™ facts.v1 schema tests — node:test, zero deps              ║
 // ║  Proves the golden-record law: valid record passes; every known    ║
 // ║  drift (patents 51→60 counter is OK; dim/stages/store LOCKS fail).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

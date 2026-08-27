@@ -3,7 +3,7 @@
 // ║  HEADY™ report binding — coherence + drift state                  ║
 // ║  Prints JSON for {{coherence.*}} slots. Reads the generated        ║
 // ║  artifacts under .data/coherence (fail-soft → nulls when absent).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";

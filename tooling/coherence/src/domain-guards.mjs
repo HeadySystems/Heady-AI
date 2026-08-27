@@ -6,7 +6,7 @@
 // ║  node's `sources:` must equal exactly the set of carriers naming it. ║
 // ║  Pure semantics — the coherence kernel owns the file IO (mirrors     ║
 // ║  scalar-guards.mjs), so this contract is unit-testable.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // The asymmetry is DELIBERATE and load-bearing:

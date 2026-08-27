@@ -2,7 +2,7 @@
 // ║  HEADY™ AI Nodes Orchestration Tests v1.0.0                     ║
 // ║  Fail-closed auth, durable dispatch/idempotency, audit routes,   ║
 // ║  and honest registry/readiness reporting.                       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

@@ -5,7 +5,7 @@
 // ║  Outbound: mints a Google identity token (SA JWT → id_token) with  ║
 // ║            run.invoker for the Cloud Run audience and forwards.     ║
 // ║  Fail-closed: no valid Firebase token ⇒ 401, request never leaves. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // The Cloud Run service is deployed --no-allow-unauthenticated (org policy + least

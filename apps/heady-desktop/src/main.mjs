@@ -4,7 +4,7 @@
 // ║  Portal origin chain: HEADY_PORTAL_URL env → facts.yaml-derived   ║
 // ║  default (src/generated/build-info.json). HTTPS-only, fail-closed.║
 // ║  Honest offline fallback page + φ-backoff auto-retry.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { app, BrowserWindow, dialog, session, shell } from 'electron';
 import { readFileSync } from 'node:fs';

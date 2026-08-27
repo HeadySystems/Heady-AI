@@ -2,7 +2,7 @@
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Workflow Risk and Benefit Analysis v1.0.0           │
 <!-- │  Portfolio value, overlaps, controls, and adoption guidance   │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

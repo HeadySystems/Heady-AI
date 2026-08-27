@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ Autonomous Approval Signing v1.0.0                     ║ -->
 <!-- ║  Machine approval and one-time signing authorization design.    ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.               ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Autonomous approval signing

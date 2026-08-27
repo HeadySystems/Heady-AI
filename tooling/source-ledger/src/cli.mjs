@@ -2,7 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Source Ledger CLI v1.0.0                               ║
 // ║  Plan-first Neon SSOT reconciliation and guarded source commit. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { lstatSync, readFileSync, readlinkSync } from "node:fs";

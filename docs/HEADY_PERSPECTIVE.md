@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Perspective — authority bias + optimal-company routing     ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 
@@ -62,4 +62,4 @@ Pairs with the consistency-bus (HeadyRegistry enforcement on data) and the coher
 truth): perspective decides *whose view weighs how much* and *who does what*, biased by authority.
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

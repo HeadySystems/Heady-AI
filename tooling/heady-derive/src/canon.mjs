@@ -3,7 +3,7 @@
 // ║  Builds the flat dot-key map of authoritative values that may be   ║
 // ║  injected into files. Reads ONLY from the single sources of truth  ║
 // ║  (facts.yaml via @heady/config + lexicon.yaml) — never hardcodes.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";

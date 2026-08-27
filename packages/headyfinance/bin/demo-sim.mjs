@@ -4,7 +4,7 @@
 // ║  A runnable, no-money, no-broker demonstration of the advisory     ║
 // ║  brain: feeds a scripted tick series through the risk engine and   ║
 // ║  prints the per-tick signal + the first breach. Structured JSON.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createRiskEngine } from "../src/risk-engine.mjs";
 import { runPaperSession } from "../src/paper-sim.mjs";

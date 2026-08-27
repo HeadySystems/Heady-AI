@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Master Incorporation Plan — Domain 07: Open-Source        ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

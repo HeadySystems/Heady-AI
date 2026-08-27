@@ -6,7 +6,7 @@
 // ║   • an optional HEAD-poll loop (φ⁷≈29s) that reacts ONLY when the  ║
 // ║     commit sha actually moved — catches commits from ANY source   ║
 // ║     (external AIs, `git pull`) WITHOUT a filesystem watcher.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { dirname, join } from "node:path";

@@ -5,7 +5,7 @@
 // ║  through the @heady/auto-context enrichment middleware is a Law 4  ║
 // ║  violation — the request would reach a model on partial state.     ║
 // ║  Realizes Unbreakable Law 4 + Master Directive 1.                  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // HOW IT GATES (fail-closed, low-false-positive):

@@ -11,7 +11,7 @@
 // ║                                                                    ║
 // ║  Usage: node handoff.mjs [--since <ref>] [--out <path>] [--json]   ║
 // ║         [--dry-run] [--no-verify]                                  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";

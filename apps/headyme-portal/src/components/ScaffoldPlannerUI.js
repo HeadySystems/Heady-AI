@@ -3,7 +3,7 @@
 // ║  Two clear interfaces: Heady-AI (rebuild) and Heady-V1 (legacy).  ║
 // ║  Accept / defer / replan each option; decisions persist locally;  ║
 // ║  replan converses with HeadyBuddy (pluggable, honest when off).   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Reads the single-source plan served at /scaffold-plan.json (emitted by `heady-scaffold sync` from

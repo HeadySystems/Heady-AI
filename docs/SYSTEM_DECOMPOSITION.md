@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ System Decomposition — Legacy → Rebuild Transfer Map      ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 
@@ -189,4 +189,4 @@ reversible moves.
 ---
 
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

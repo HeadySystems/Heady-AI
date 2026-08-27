@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval API Composition Root v1.0.0                    ║
 // ║  Vault, Neon, OPA, identity, KMS, and graceful shutdown wiring. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { getApps, initializeApp } from "firebase-admin/app";

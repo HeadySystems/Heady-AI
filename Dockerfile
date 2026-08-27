@@ -1,7 +1,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ Canonical Manager Container v1.0.0                      ║
 # ║  Node 22 + pnpm production image for apps/heady-manager.        ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ║  Made with ❤️ by HeadySystems Inc.                              ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 FROM node:22-slim AS dependencies

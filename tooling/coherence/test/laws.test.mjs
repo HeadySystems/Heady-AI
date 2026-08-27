@@ -2,7 +2,7 @@
 // ║  HEADY™ Law-Coverage tests — node:test, zero deps                 ║
 // ║  Proves the "no toothless law" gate: enforcer membership, the       ║
 // ║  downgrade ratchet, AGENTS.md contiguity, advisory surfacing.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

@@ -46,4 +46,4 @@ review when ARBITER escalates, before `status: approved`.
 | [HCP-0003](HCP-0003-bee-swarm-runtime.md) | Canonical HeadyBee and swarm runtime | draft | yes (HS-060; adjacent claims explicitly excluded) | Approval API bootstrap, diff hash, 2 signed approvals, and ARBITER ALLOW |
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

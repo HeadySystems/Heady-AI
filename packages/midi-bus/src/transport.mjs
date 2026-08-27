@@ -11,7 +11,7 @@
 // ║     interface; it is NOT stubbed here (a non-functional stub would  ║
 // ║     violate AGENTS.md #3). Build it as its own module when the      ║
 // ║     edge/datagram target is chosen; nothing above it changes.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { ValidationError } from "@heady/shared";
 

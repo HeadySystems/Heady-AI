@@ -5,7 +5,7 @@
 // ║  must resolve, be CODEOWNERS-locked, and include the kernel itself. ║
 // ║  Realizes STEPWISE §0.8 / ADR-0016. Dependency-free + fully pure    ║
 // ║  (all IO injected) so it unit-tests without touching the repo.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** Strip leading slash(es) so CODEOWNERS `/a/b` and manifest `a/b` compare equal. */

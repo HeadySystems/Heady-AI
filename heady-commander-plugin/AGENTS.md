@@ -61,7 +61,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ [Module Name] v[X.Y.Z]                                ║
 // ║  [One-line description]                                        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -131,4 +131,4 @@ pnpm wrangler pages deploy dist/
 ---
 
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

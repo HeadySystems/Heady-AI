@@ -5,7 +5,7 @@
 <!-- ║  iOS, desktop browser) + native desktop shell (apps/heady-desktop)║
 <!-- ║  and the update story for each surface.                           ║
 <!-- ║  FILE: docs/runbooks/INSTALL_HEADY_ON_YOUR_DEVICES.md             ║
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+<!-- ║  Made with ❤️ by HeadySystems Inc.                                ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

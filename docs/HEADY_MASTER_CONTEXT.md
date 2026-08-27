@@ -8,7 +8,7 @@ DRIVE_INDEX, DRIVE_REORGANIZATION_PLAN, heady-full-spectrum-audit-report, heady-
 heady-pitch-deck, Heady_Development_Deployment_Guide, HEADY_TECHNICAL_REFERENCE, sites_README),
 IRS Letter 947, Linear HEA-1–317, User context profile, MCP config, Skills manifests
 ∞ Sacred Geometry · Liquid Intelligence ∞
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # HEADY_MASTER_CONTEXT.md v5.0

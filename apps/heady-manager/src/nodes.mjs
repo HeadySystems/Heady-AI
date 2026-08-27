@@ -2,7 +2,7 @@
 // ║  HEADY™ AI Nodes Orchestration v1.0.0                           ║
 // ║  Authenticated node registry, durable dispatch, and audit        ║
 // ║  projection over the Neon task ledger and transactional outbox.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createHash, timingSafeEqual } from "node:crypto";

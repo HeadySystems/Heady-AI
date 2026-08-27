@@ -60,4 +60,4 @@ Collapse 4 orgs → 1 (`HeadySystems`) as the first migration step, before code 
 - `docs/ENV_SEPARATION.md` — legacy vs rebuild provider namespacing spec.
 
 φ = 1.618033988749895 — Fibonacci-scaled per LAW-10
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.

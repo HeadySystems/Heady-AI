@@ -2,7 +2,7 @@
 // ║  HEADY™ φ-Math Foundation v1.0.0                                  ║
 // ║  Golden-ratio constants + derivations. Zero magic numbers — every ║
 // ║  timeout, TTL, pool size, and threshold in Heady derives from φ.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Canonical reference (ported from maximum-potential/phi-constants.cjs → ESM).

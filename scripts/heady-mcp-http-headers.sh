@@ -2,7 +2,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ MCP HTTP Header Helper v1.0.0                          ║
 # ║  Resolves MCP bearer headers from GCP Secret Manager           ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ║  Made with ❤️ by HeadySystems Inc.                             ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 set -euo pipefail

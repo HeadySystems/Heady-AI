@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ AutoFlow Provider Receipts                             ║ -->
 <!-- ║  IDs, deployment versions, probes, and withheld promotions.    ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Provider Receipts

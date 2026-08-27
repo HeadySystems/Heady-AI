@@ -2,7 +2,7 @@
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Workflow Inventory v1.0.0                           │
 <!-- │  Significance, benefit, use, and evidence boundary by flow    │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

@@ -3,7 +3,7 @@
 // ║  Binds the parsed fields to their SOURCE (object id + content hash ║
 // ║  + optional url) so every persisted fact is provenance-linked, and ║
 // ║  validates the result against the strict shapes. Pure.            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { parse990 } from "./parse.mjs";
 import { validateOrg, validateFiling } from "./shapes.mjs";

@@ -6,7 +6,7 @@
 // ║  network, NO subscription, NO real money. A live Apex/Tradovate     ║
 // ║  adapter is a FUTURE implementation of this SAME contract (it does  ║
 // ║  not exist yet — real money is triple-gated: account + paper-proven ║
-// ║  + explicit founder go). © 2026 HeadySystems Inc. — Eric Haywood   ║
+// ║  + explicit founder go). Made with ❤️ by HeadySystems Inc.         ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // ExecutionAdapter contract (what a live adapter must also implement):

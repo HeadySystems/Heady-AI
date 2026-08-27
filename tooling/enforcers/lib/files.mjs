@@ -4,7 +4,7 @@
 // ║  enforcers. Default CI mode scans only files changed vs the merge  ║
 // ║  base so the gate holds NEW code to the standard without           ║
 // ║  retroactively failing the rebuild baseline (compliant day one).   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';

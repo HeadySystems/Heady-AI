@@ -5,7 +5,7 @@
 // ║  soft_gate/risk_gate. A gate returns a smooth activation in [0,1]   ║
 // ║  and a ternary signal {-1 repel · 0 hold · +1 engage}, so risk      ║
 // ║  decisions degrade gracefully near a limit instead of snapping.     ║
-// ║  Pure. © 2026 HeadySystems Inc. — Eric Haywood, Founder            ║
+// ║  Pure. Made with ❤️ by HeadySystems Inc.                           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { sigmoid } from "@heady/csl-engine";
 

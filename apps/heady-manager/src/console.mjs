@@ -6,7 +6,7 @@
 // ║  projection_only via its manifest; an unwired token is              ║
 // ║  not_connected; a gate/redirect is degraded — no masquerades.       ║
 // ║  Kernel-managed {start,stop,health,metrics}; timers unref'd.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync } from "node:fs";

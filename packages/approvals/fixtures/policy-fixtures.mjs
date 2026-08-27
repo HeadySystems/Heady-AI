@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Policy Fixtures v1.0.0                          ║
 // ║  Exact-diff evidence fixtures shared by approval policy tests.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const HASHES = Object.freeze({

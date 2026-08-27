@@ -2,7 +2,7 @@
 // ║  HEADY™ Codeflow line diff v1.0.0                                 ║
 // ║  Bounded LCS line diff → unified preview + add/remove counts, for   ║
 // ║  the proposal's audit record and the reviewer's eyes.              ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { FIB } from '../../phi-math/src/index.mjs';
 

@@ -3,7 +3,7 @@
 // ║  HEADY™ Skill/Workflow Validator v1.0.0                          ║
 // ║  Validates ALL data in .agents/skills + .agents/workflows:        ║
 // ║  frontmatter, name↔dir, description, stubs, wikilinks, dupes.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Structural/data validation of the skill + workflow corpus (token-level

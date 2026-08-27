@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Observability v1.0.0 — metrics + spans                   ║
 // ║  Vendor-neutral core; OTel + Sentry + Langfuse exporters wire on  ║
-// ║  top. © 2026 HeadySystems Inc. — Eric Haywood, Founder            ║
+// ║  top. Made with ❤️ by HeadySystems Inc.                           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Dependency-free metrics registry + span timer. Trace ids come from

@@ -3,7 +3,7 @@
 // ║  On-disk SoR projection for the corpus embedding workflow.        ║
 // ║  Reconstructible (ADR-0000): merkle index · dedup ledger ·        ║
 // ║  embedding-jobs outbox · vector projection · run report.          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // This is the local stand-in for the canonical stores: in production the authority is Neon pgvector

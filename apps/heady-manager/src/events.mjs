@@ -4,7 +4,7 @@
 // ║  shared with the intelligence stack) onto GET /api/events as SSE.   ║
 // ║  Ring-buffer replay via Last-Event-ID, φ⁷ heartbeat, kernel-managed ║
 // ║  ({start,stop,health,metrics}) so /health reports the fabric.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Producers wired here (all REAL, none synthetic):

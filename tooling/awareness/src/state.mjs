@@ -5,7 +5,7 @@
 // ║  reconstructible, tmp+rename, no torn reads). Holds the last       ║
 // ║  observed HEAD, run counters, the live context snapshot, and the   ║
 // ║  most recent squash proposal. NOT an authority — a projection.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createStore } from "../../embed-corpus/src/store.mjs";

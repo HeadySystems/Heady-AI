@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Event Canonicalization v1.0.0                  ║
 // ║  Stable event envelopes for hash chaining and offline replay.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { EVENT_SCHEMA } from "./constants.mjs";

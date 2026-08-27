@@ -5,7 +5,7 @@
 // ║  (.git/node_modules/build/dist/…), bounds file size, and replaces    ║
 // ║  binary/oversize bodies with a stable marker so the tree hash stays  ║
 // ║  deterministic. Shared by the generator and the drift checker.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";

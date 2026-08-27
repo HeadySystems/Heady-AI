@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Secret Resolution Core v1.0.0                             ║
 // ║  Pure, dependency-free resolution + validation. Fail-closed.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // No IO: the provider is injected as an async `lookup(name) -> value|undefined`, so this is unit-

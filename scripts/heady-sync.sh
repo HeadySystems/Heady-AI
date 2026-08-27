@@ -3,7 +3,7 @@
 # ║  HEADY™ heady-sync — git sync across devices, secret-guarded        ║
 # ║  Stash → commit → pull --rebase → push. FAILS CLOSED on a detected ║
 # ║  live credential (never pushes a secret). LFS-aware.                ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ║  Made with ❤️ by HeadySystems Inc.                                 ║
 # ╚══════════════════════════════════════════════════════════════════╝
 set -euo pipefail
 

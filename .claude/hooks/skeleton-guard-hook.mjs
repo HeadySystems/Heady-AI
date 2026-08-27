@@ -3,7 +3,7 @@
 // ║  HEADY™ Skeleton Guard — PreToolUse Hook v1.0.0                  ║
 // ║  Blocks file writes to unrecognized scaffold locations.          ║
 // ║  Wired into .claude/settings.json alongside heady-rules.mjs.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Reads the hook payload from stdin, extracts the file_path from the

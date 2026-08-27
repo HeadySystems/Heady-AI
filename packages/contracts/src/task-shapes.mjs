@@ -6,7 +6,7 @@
 // ║  every route that reads a request body imports its validator from   ║
 // ║  THIS package, so the shape has exactly one authority. Zod codegen  ║
 // ║  from the same spec remains a later build step (ADR-0002).          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** Version-agnostic UUID (matches the OpenAPI `format: uuid` intent). */

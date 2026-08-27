@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ Exact Approval and External Review Scope               ║ -->
 <!-- ║  Cryptographic bindings for the protected policy change.       ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Exact Approval and External Review Scope

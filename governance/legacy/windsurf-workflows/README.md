@@ -2,7 +2,7 @@
   HEADY™ · governance/legacy/windsurf-workflows/ — provenance archive
   Windsurf/Cascade-era workflow corpus. Frozen. Not wired as active commands.
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # governance/legacy/windsurf-workflows/ — Windsurf-Era Workflow Corpus

@@ -9,7 +9,7 @@
 // ║  confused-deputy flag; per-session Enable/Disable; token_expired    ║
 // ║  renders one-tap Re-authorize (dispatches `heady-reauthorize`,     ║
 // ║  the OAuth-lifecycle integration point) — never a dead end.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { consoleApi, events } from '../services/heady-api.js';
 import {

@@ -5,7 +5,7 @@
 // ║  same port → SUCCEEDED with result — X-Heady-Trace-Id asserted at   ║
 // ║  every hop. Requires HEADY_TEST_DATABASE_URL (a BRANCH, never       ║
 // ║  root); skips cleanly when unset. Self-cleaning.                    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

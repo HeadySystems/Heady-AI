@@ -5,7 +5,7 @@
 // ║  swap the paper broker for a live Apex/Tradovate adapter (same      ║
 // ║  contract) and it trades for real — which stays triple-gated. Here  ║
 // ║  it drives a paper broker over historical/replayed bars: no         ║
-// ║  network, no money. © 2026 HeadySystems Inc. — Eric Haywood        ║
+// ║  network, no money. Made with ❤️ by HeadySystems Inc.              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { SIGNAL } from "./risk-engine.mjs";
 

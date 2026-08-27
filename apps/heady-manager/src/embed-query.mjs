@@ -6,7 +6,7 @@
 // ║  Fail-closed on a wrong dimension (never corrupt a cosine ranking); ║
 // ║  φ-backoff on transient 429/5xx/network; structured logs only.      ║
 // ║  Absent creds ⇒ the composition root passes null ⇒ keyword-only.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { LOCKED_MODEL, assertModelLock } from "@heady/embedding/core";
 import { withRetry } from "@heady/resilience";

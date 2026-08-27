@@ -3,7 +3,7 @@
 // ║  Side-effect-free: parses git deltas, shapes the checkpoint, and   ║
 // ║  renders the handoff bundle. The CLI (handoff.mjs) feeds it real   ║
 // ║  git/gate output. Pure → fully unit-testable.                     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 export const CHECKPOINT_SCHEMA = "heady.handoff.checkpoint/v1";
@@ -228,7 +228,7 @@ export function renderBundle(b) {
   out.push(`- **New:** \`${b.headShort}\` (next \`/heady-handoff\` reports from here)`);
   out.push("");
   out.push("---");
-  out.push("*© 2026 HeadySystems Inc. — Eric Haywood, Founder*");
+  out.push("*Made with ❤️ by HeadySystems Inc.*");
   out.push("");
 
   return out.join("\n");

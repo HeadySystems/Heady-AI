@@ -72,7 +72,7 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ [Module Name] v[X.Y.Z]                                ║
 // ║  [One-line description]                                        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -166,7 +166,7 @@ pnpm wrangler pages deploy dist/
 ---
 
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*
 
 
 ---
@@ -235,7 +235,7 @@ Collapse 4 orgs → 1 (`HeadySystems`) as the first migration step, before code 
 - `docs/ENV_SEPARATION.md` — legacy vs rebuild provider namespacing spec.
 
 φ = 1.618033988749895 — Fibonacci-scaled per LAW-10
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 
 
 ---
@@ -276,7 +276,7 @@ We are currently operating inside `/home/headyme/Heady-AI/`.
 # ║  HEADY™ facts.yaml — golden record (single source of derived facts)║
 # ║  Loaded/validated by @heady/config. Derived artifacts (README       ║
 # ║  badges, CI matrices, OpenAPI servers) generate FROM this file.     ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+# ║  Made with ❤️ by HeadySystems Inc.                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 schema: facts.v1
 company:

@@ -2,7 +2,7 @@
 // ║  HEADY™ Secret Providers v1.0.0                                   ║
 // ║  Injectable lookups: env (runtime/dev) + GCP Secret Manager       ║
 // ║  (via gcloud, zero SDK deps) + auto (gcp→env fallback).           ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Production pattern: Cloud Run maps Secret Manager → env via `--set-secrets`, so the runtime path is

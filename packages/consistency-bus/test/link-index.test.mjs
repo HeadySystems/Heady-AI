@@ -3,7 +3,7 @@
 // ║  Proves the prod-enforcement floor: when the gitignored generated  ║
 // ║  registry is absent, the index falls back to the COMMITTED golden  ║
 // ║  record so locked-value enforcement stays live (never fail-open).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

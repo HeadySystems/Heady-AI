@@ -5,7 +5,7 @@
 // ║  layer, never the authority (ADR-0000 rejects latent-as-truth).      ║
 // ║  Strict dependency-free validators in the facts-schema idiom; the    ║
 // ║  §8 console reads the emitted ServerManifest to render real vs       ║
-// ║  projection_only. © 2026 HeadySystems Inc. — Eric Haywood, Founder  ║
+// ║  projection_only. Made with ❤️ by HeadySystems Inc.                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** ADR-0017 §5 lifecycle — forward-only except deprecated→active. */

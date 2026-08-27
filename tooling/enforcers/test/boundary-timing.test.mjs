@@ -2,7 +2,7 @@
 // ║  HEADY™ zod-boundary + phi-timing enforcer tests                   ║
 // ║  Proves the Law-5 boundary gate and the Law-8 timing slice FLAG    ║
 // ║  known violations, IGNORE known-safe forms, and honor waivers.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

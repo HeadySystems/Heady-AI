@@ -2,7 +2,7 @@
 // ║  HEADY™ @heady/headylens — public API v1.0.0                      ║
 // ║  The connectable lens: tap every substrate → one time-ordered,    ║
 // ║  detail-graded, redacted stream → query + live SSE.               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { RingStore, NdjsonStore, multiStore } from "./store.mjs";

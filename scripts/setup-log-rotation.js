@@ -3,7 +3,7 @@
  * ║  HEADY™ Log Rotation Configuration Check v1.0.0                 ║
  * ║  Validates the opt-in local PM2 policy without installing any   ║
  * ║  persistent host configuration.                                ║
- * ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+ * ║  Made with ❤️ by HeadySystems Inc.                              ║
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 

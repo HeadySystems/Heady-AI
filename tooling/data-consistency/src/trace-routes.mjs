@@ -2,7 +2,7 @@
 // ║  HEADY™ Communication & Signals Tracer v1.0.0                    ║
 // ║  Parses imports, NATS pub/sub, CSL gates, and API routes to      ║
 // ║  build a detailed dependency, route, and signal inventory.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';

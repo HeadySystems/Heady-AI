@@ -7,7 +7,7 @@
 // ║  unit-tests without a database; the driver wires in bin/migrate.    ║
 // ║  Supersedes the legacy runner now archived at                       ║
 // ║  _archive/legacy-src-services/consistency/migrate.js.               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createHash } from "node:crypto";

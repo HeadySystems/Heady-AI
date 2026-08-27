@@ -2,7 +2,7 @@
 // ║  HEADY™ Consistency Bus — Processor (ProcessPort) v1.0.0          ║
 // ║  Process every ingress/egress payload: recognize registered values,║
 // ║  block inbound drift on locked values, normalize outbound to       ║
-// ║  canonical. © 2026 HeadySystems Inc. — Eric Haywood, Founder       ║
+// ║  canonical. Made with ❤️ by HeadySystems Inc.                      ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { lookup } from './link-index.mjs';
 

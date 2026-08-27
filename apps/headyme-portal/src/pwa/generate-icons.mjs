@@ -8,7 +8,7 @@
 // ║  Glyph scale is φ-derived; canvas is dark-canon bg.primary from   ║
 // ║  docs/design/design-tokens.json (color.dark.bg.primary #0a0a0f).  ║
 // ║  Run: pnpm --filter headyme-portal icons                          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, mkdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";

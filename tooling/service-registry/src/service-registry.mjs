@@ -6,7 +6,7 @@
 // ║  not in the registry, or a registry secret no provider claims, is  ║
 // ║  drift (fail-closed, mirrors the .env↔registry coherence gate).    ║
 // ║  Also the query API behind the `heady_subscriptions` MCP tool.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";

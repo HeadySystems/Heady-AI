@@ -56,4 +56,4 @@ The `output/` directory is gitignored — it contains `.env.legacy`, `.env.rebui
 and GCP service account keys. Never commit these.
 
 φ = 1.618033988749895
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.

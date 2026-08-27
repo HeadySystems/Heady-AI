@@ -6,7 +6,7 @@ description: Intelligence-first @heady and /heady router that selects and execut
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Intelligence-First Command Router v1.0.0                 ║
 ║  Grounds every task in available, governed Heady capabilities.   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

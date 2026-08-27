@@ -2,7 +2,7 @@
 // ║  HEADY™ heady-manager — Workers-AI query embedder tests           ║
 // ║  Mock fetch (no network): proves request shape + auth, the 384-dim ║
 // ║  fail-closed guard, and φ-backoff retry on transient failures.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -2,7 +2,7 @@
 // ║  HEADY™ heady-manager — 990 service route tests (A3)              ║
 // ║  Fake DbPort + express, no live DB/network: proves hybrid vs       ║
 // ║  keyword-only search, provenance in results, and honest disabled.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

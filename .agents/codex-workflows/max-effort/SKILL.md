@@ -8,7 +8,7 @@ description: "Run the canonical max-effort Heady workflow. MANDATORY — Zero li
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Codex Workflow Shortcut                                 ║
 ║  Generated adapter — canonical instructions stay in workflows   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+║  Made with ❤️ by HeadySystems Inc.                              ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

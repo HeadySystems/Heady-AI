@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Codex Workflow Shortcut Sync Tests v1.0.0               ║
 // ║  Verifies complete, collision-safe Codex workflow projection.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -6,7 +6,7 @@ description: Inventory and explain all discovered modifications, then let the us
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Auto Progress v1.0.0                                   ║
 ║  Whole-state inventory · user-selected promotion · live proof   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

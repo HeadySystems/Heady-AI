@@ -2,7 +2,7 @@
   HEADY™ · MASTER DIRECTIVE 7 — DIRECTIVE 7: HCFULLPIPELINE — THE 22-STAGE COGNITIVE DAG
   LAYER: root · scope: GLOBAL_PERMANENT · enforcement: MANDATORY
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # DIRECTIVE 7: HCFULLPIPELINE — THE 22-STAGE COGNITIVE DAG (v9.0)

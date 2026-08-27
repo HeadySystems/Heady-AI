@@ -2,7 +2,7 @@
 // ║  HEADY™ Scaffold Planner — store v1.0.0                           ║
 // ║  Shared IO: the immutable plan source + the decision overlay.     ║
 // ║  One module so the CLI and the sync server never drift on paths.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";

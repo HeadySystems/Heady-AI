@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Research Binder v1.0.0                                  ║
 // ║  Parses specs for research annotations and binds live citations. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';

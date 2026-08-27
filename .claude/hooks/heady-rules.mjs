@@ -2,7 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Rule-Enforcement Hook v1.2.0                              ║
 // ║  PreToolUse gate — mechanically enforces AGENTS.md coding rules   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Wired into .claude/settings.json as a PreToolUse hook on Edit|Write|

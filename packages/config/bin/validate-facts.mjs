@@ -5,7 +5,7 @@
 // ║  (@heady/contracts), emits structured lines, exits non-zero on any ║
 // ║  violation. This is the fail-closed enforcement point (`npm run     ║
 // ║  facts:validate`) that does not depend on the turbo test cache.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, existsSync } from "node:fs";

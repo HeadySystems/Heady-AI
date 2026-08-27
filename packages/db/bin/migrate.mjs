@@ -8,7 +8,7 @@
 // ║  SAFETY RAIL: plan-only (read-only) by DEFAULT — mutating the      ║
 // ║  database requires the explicit --apply flag, so a verification    ║
 // ║  run can never write. Target a Neon COW branch, never root.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { loadSecrets } from "@heady/secrets";

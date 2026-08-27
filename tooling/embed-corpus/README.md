@@ -87,4 +87,4 @@ node --test test/workflow.test.mjs        # store + embedder resolver
 The pure planning/merkle core is tested in `packages/embedding` (`test/corpus.test.mjs`).
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

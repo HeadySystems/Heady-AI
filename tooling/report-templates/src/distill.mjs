@@ -9,7 +9,7 @@
 // ║  optimization is an optional layer on top (see distiller skill).   ║
 // ║                                                                    ║
 // ║  Usage: distill.mjs <docDirOrGlobRoot> [outRecipe.json]           ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, readdirSync, writeFileSync, statSync, existsSync } from "node:fs";
 import { resolve, join, relative } from "node:path";

@@ -8,7 +8,7 @@
 // ║    • the level LOCKS once it reaches the starting balance,          ║
 // ║    • BREACH when real-time *equity (balance + unrealized P&L)*      ║
 // ║      touches the level.                                             ║
-// ║  Pure + deterministic. © 2026 HeadySystems Inc. — Eric Haywood     ║
+// ║  Pure + deterministic. Made with ❤️ by HeadySystems Inc.           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /**

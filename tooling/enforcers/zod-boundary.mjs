@@ -4,7 +4,7 @@
 // ║  file that READS a request body (req.body / request.json()) must   ║
 // ║  import its validator from @heady/contracts (the shape authority)  ║
 // ║  or zod (once ADR-0002 codegen lands). Fail-closed on unvalidated  ║
-// ║  ingress. © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+// ║  ingress. Made with ❤️ by HeadySystems Inc.                        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

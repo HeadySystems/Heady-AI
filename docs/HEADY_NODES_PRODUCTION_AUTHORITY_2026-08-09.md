@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ Nodes Production Authority Record v1.0.0                 ║ -->
 <!-- ║  Wave-0 authority reconciliation, live evidence, and release DAG ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.                ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Heady Nodes Production Authority Record — 2026-08-09

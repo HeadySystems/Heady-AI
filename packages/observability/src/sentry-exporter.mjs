@@ -5,7 +5,7 @@
 // ║  fire-and-forget, bounded, never throws into the caller. The        ║
 // ║  X-Heady-Trace-Id is carried verbatim as tag `headyTraceId` (the    ║
 // ║  GATE-2 visibility contract) and normalized into Sentry's 32-hex    ║
-// ║  trace_id where it fits. © 2026 HeadySystems Inc. — Eric Haywood.  ║
+// ║  trace_id where it fits. Made with ❤️ by HeadySystems Inc.         ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { randomUUID } from "node:crypto";

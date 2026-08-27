@@ -6,7 +6,7 @@
 // ║  payloads, 7-bit-safe so arbitrary bytes survive). Output is a      ║
 // ║  Uint8Array — wire-ready for ANY transport (in-process today,       ║
 // ║  UDP/QUIC later) without changing producers or consumers.          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { ValidationError } from "@heady/shared";
 

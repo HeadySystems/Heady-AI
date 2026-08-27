@@ -4,7 +4,7 @@
 // ║  from the repo golden record facts.yaml. No hardcoded duplicates: ║
 // ║  package.json + src/generated/build-info.json are projections     ║
 // ║  of facts.yaml and are rewritten here on every dev/build/dist.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';

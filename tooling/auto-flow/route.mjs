@@ -2,7 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Intelligence Router v1.0.0                               ║
 // ║  Authority-aware task routing across Heady skills and workflows. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { existsSync } from "node:fs";

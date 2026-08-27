@@ -2,7 +2,7 @@
 // ║  HEADY™ Auto-Flow definition: skill-preflight v1.0.0             ║
 // ║  Before any task runs, scan the whole skill+workflow catalog and  ║
 // ║  CSL-gate a shortlist of what could be beneficially used.         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Conforms to FlowSchema from the `heady-auto-flow` skill. Declarative data:

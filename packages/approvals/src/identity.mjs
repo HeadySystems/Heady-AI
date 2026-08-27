@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval Principal Verification v1.0.0                  ║
 // ║  Server-derived identities and explicit Ed25519 evidence keys.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { HeadyError, UnauthorizedError } from "@heady/shared";

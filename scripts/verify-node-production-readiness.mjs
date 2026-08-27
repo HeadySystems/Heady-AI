@@ -2,7 +2,7 @@
 // ║  HEADY™ Node Production Readiness Verifier v1.0.0               ║
 // ║  Fails closed when orchestration, audit, image, or region        ║
 // ║  prerequisites remain declarative or contradictory.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, readdirSync } from "node:fs";

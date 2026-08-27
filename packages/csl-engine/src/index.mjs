@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ CSL Engine v1.0.0 — Continuous Semantic Logic            ║
 // ║  Geometric logic gates over unit vectors + the ternary cslGate.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
+// ║  Made with ❤️ by HeadySystems Inc. · ⚠️ PATENT zone                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Vectors-as-logic: AND=cosine, OR=superposition, NOT=orthogonal projection,

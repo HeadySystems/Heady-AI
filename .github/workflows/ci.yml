@@ -2,7 +2,7 @@
 # ║  HEADY™ CI — build/test + the coherence scan gate                  ║
 # ║  Stages mirror facts.pipeline (lint·typecheck·test·build·scan).    ║
 # ║  Actions are Renovate digest-pinned (facts.supply_chain.primary).  ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ║  Made with ❤️ by HeadySystems Inc.                                 ║
 # ╚══════════════════════════════════════════════════════════════════╝
 name: ci
 

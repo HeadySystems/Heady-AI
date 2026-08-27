@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Data-Consistency Checker v1.0.0                           ║
 // ║  Pure invariant engine: token gates + structural cross-ref checks ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Pure functions only (no IO) so the gate is unit-testable like

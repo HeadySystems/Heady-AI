@@ -6,7 +6,7 @@
 // ║  managed; DbPort + query-embedder injected by the composition root  ║
 // ║  (no factory ⇒ disabled: health ok/disabled, routes 503 — dev/tests ║
 // ║  never touch a live DB). No embedder ⇒ keyword-only (honest         ║
-// ║  degrade). © 2026 HeadySystems Inc. — Eric Haywood, Founder        ║
+// ║  degrade). Made with ❤️ by HeadySystems Inc.                       ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { startSpan, captureError, metrics, noopExporter } from "@heady/observability";
 import { HEALTH } from "@heady/shared";

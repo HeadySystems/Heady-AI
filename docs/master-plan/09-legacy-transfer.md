@@ -2,7 +2,7 @@
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Master Incorporation Plan · Domain 09                     ║
 ║  Legacy Transfer Disposition — the cross-cutting transfer map     ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 
@@ -327,4 +327,4 @@ uncaptured items worth a note** (carry real source but no manifest row):
 6. **Coverage:** manifest→legacy verified (MC-03 = stale paths not missing; `gitleaks.yml` genuinely absent); reverse scan found ~7 source-bearing top-level dirs (`remotes`, `source-reference`, `templates`, `code-archaeology`, etc.) uncaptured by any manifest row — recommend explicit drop/defer rows to reach true 100% top-level coverage.
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

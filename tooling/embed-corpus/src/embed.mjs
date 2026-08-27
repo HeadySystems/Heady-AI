@@ -6,7 +6,7 @@
 // ║  Phases: 0 spec-sync → 1 consistency-gate (fail-closed) →         ║
 // ║  2 scan → 3 merkle-trigger (ADR-0023) → 4 embed (ADR-0024) →      ║
 // ║  5 commit. Embedding NEVER runs unless the gate passes.           ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { spawnSync } from "node:child_process";

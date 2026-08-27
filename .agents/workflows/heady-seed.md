@@ -6,7 +6,7 @@ description: Plan and verify a fresh Heady workspace bootstrap while keeping sec
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Workspace Seed v2.0.0                                  ║
 ║  Plan-first bootstrap with explicit persistence and data gates. ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

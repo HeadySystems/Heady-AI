@@ -3,7 +3,7 @@
 # ║  Every <!--heady:inject KEY--> managed region must match the golden ║
 # ║  record (facts.yaml/lexicon.yaml). Fail-closed on any hand-edited   ║
 # ║  drift — the lock that makes the "60-vs-51 patents" / "8-vs-21      ║
-# ║  stages" class of drift impossible. © 2026 HeadySystems — E. Haywood║
+# ║  stages" class of drift impossible. Made with ❤️ by HeadySystems Inc. ║
 # ╚══════════════════════════════════════════════════════════════════╝
 name: derive-gate
 

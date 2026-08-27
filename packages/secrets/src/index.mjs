@@ -2,7 +2,7 @@
 // ║  HEADY™ @heady/secrets — public API v1.0.0                        ║
 // ║  Fail-closed secret loading via secure injection (Secret Manager  ║
 // ║  / env), validated against the registry. Never logs values.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { SECRETS } from "./registry.mjs";

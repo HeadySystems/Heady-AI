@@ -4,7 +4,7 @@
 // ║  (locked-value drift ⇒ fail-closed BLOCK) and egress              ║
 // ║  normalization (never emit a stale linked value). Extracted from  ║
 // ║  the proven codeflow wiring so all service surfaces share it.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { loadLinkIndex, ingressGuard, egressNormalize } from "./index.mjs";

@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ AutoFlow Git and Worktree Evidence                     ║ -->
 <!-- ║  Fetch comparison, concurrent commits, and promotion gates.    ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Git and Worktree Evidence

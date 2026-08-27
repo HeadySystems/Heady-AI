@@ -2,7 +2,7 @@
      ║  HEADY™ IA & Sitemap v1.0.0 — docs/design bundle                  ║
      ║  Two surfaces (admin 1ime1.com · user headyme.com), one canon.    ║
      ║  Service IA derived from src/hc_service_dispatcher.js             ║
-     ║  SERVICE_CATALOG. © 2026 HeadySystems Inc. — Eric Haywood         ║
+     ║  SERVICE_CATALOG. Made with ❤️ by HeadySystems Inc.               ║
      ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Information Architecture — admin (1ime1.com) + user (headyme.com)

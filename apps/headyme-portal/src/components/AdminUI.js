@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Admin Control Plane v3.0.0 — Dual-State Tab Strip         ║
 // ║  Adds system-tabs nav bar; all existing panels unchanged.          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import { api } from '../services/heady-api.js';

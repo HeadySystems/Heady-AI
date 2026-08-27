@@ -13,7 +13,7 @@
 // ║    navigations    → network-first, offline fallback to the        ║
 // ║                     precached app shell (/index.html)             ║
 // ║    shell files    → versioned precache, cache-first               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const STAMP = "{{HEADY_SW_VERSION}}";

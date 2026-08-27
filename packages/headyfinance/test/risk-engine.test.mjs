@@ -2,7 +2,7 @@
 // ║  HEADY™ headyfinance — risk/signal engine + paper-sim tests       ║
 // ║  Deterministic, synthetic-input — no broker, no market data, no    ║
 // ║  real money. Proves the advisory brain end-to-end on paper.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

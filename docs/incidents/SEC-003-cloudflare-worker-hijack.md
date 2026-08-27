@@ -1,7 +1,7 @@
 <!-- HEADY_BRAND:BEGIN
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ SEC-003 — Cloudflare Worker reverse-proxy hijack          ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+║  Made with ❤️ by HeadySystems Inc.                                ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

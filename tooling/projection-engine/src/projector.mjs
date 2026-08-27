@@ -6,7 +6,7 @@
 // ║  caller supplies source files + the prior projection.yaml; this      ║
 // ║  returns the drift verdict, the emitted ServerManifest (validated    ║
 // ║  by @heady/contracts), and the next manifest to persist.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { validateServerManifest, validateProjectionManifest } from "@heady/contracts";
 import { treeHash } from "./hash.mjs";

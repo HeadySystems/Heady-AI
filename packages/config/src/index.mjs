@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Config v1.0.0 — facts.yaml golden-record loader + env     ║
 // ║  Single source of derived facts (DX-01). Fail-closed env access.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Dependency-free: a minimal YAML reader for the controlled `facts.yaml` subset

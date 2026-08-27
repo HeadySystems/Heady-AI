@@ -2,7 +2,7 @@
  * ╔══════════════════════════════════════════════════════════════════╗
  * ║  HEADY™ Dropzone Watcher Service v1.0.0                          ║
  * ║  Monitors ./dropzone and ingests files into Heady Vector Space   ║
- * ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+ * ║  Made with ❤️ by HeadySystems Inc.                               ║
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 

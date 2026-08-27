@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Autonomous Grant Verification v1.0.0                    ║
 // ║  Offline validation of one-time KMS-signed authorization grants.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { publicJwkFingerprint, safeHashEqual, sha256 } from "./canonical.mjs";

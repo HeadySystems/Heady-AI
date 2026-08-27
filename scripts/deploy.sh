@@ -2,7 +2,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ deploy — codeflow API (Cloud Run) + portal (Firebase Host) ║
 # ║  Idempotent. Reads project from facts; regenerates status first.    ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+# ║  Made with ❤️ by HeadySystems Inc.                                ║
 # ╚══════════════════════════════════════════════════════════════════╝
 set -euo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

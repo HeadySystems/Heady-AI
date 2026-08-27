@@ -7,7 +7,7 @@
 // ║  JSON under .data/sync-fabric/) · event receipts.                 ║
 // ║  Transport: /ws/sync upgrade via `ws`. Fail-closed: upgrades are  ║
 // ║  503 until the SYNC_TOKEN digest arms, 401 on mismatch.           ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createHash, timingSafeEqual, randomUUID } from "node:crypto";

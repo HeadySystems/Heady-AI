@@ -2,7 +2,7 @@
   HEADY™ · docs/master-plan/05-laws-directives.md
   Master Incorporation Plan — Domain 05: Unbreakable Laws, Directives & Governance
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Domain 05 — Unbreakable Laws, Directives & Governance
@@ -352,4 +352,4 @@ it is an independent paraphrase. Drift **D-5**.
 ---
 
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

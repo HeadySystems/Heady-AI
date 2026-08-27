@@ -3,7 +3,7 @@
 # ║  Canonical (and only) Firebase deploy workflow. Builds             ║
 # ║  apps/headyme-portal and deploys against its firebase.json         ║
 # ║  (project heady-ai, default site). WIF-first auth, SA fallback.    ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ║  Made with ❤️ by HeadySystems Inc.                                 ║
 # ╚══════════════════════════════════════════════════════════════════╝
 name: Deploy Portal to Firebase Hosting
 

@@ -7,7 +7,7 @@
 // ║  Status honesty: confidence tiers spoken plainly; unreachable API  ║
 // ║  renders an explicit "Buddy is offline" state — never faked.       ║
 // ║  Spec: docs/blueprints/headyme-navigation-ia.md §5                 ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { services } from '../services/heady-api.js';
 import { serviceMeta, CATEGORIES } from '../services/service-categories.js';

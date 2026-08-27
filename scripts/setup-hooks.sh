@@ -2,7 +2,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ Git Hooks Setup Script                                   ║
 # ║  Installs ARBITER fail-closed security gates natively            ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+# ║  Made with ❤️ by HeadySystems Inc.                               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 echo "🦁 HEADY ARBITER: Setting up native Git Hooks..."

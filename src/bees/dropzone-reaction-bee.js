@@ -2,7 +2,7 @@
  * ╔══════════════════════════════════════════════════════════════════╗
  * ║  HEADY™ Dropzone Reaction Bee v1.0.0                             ║
  * ║  Executes exhaustive workflow matrix on dropped files            ║
- * ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+ * ║  Made with ❤️ by HeadySystems Inc.                               ║
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 

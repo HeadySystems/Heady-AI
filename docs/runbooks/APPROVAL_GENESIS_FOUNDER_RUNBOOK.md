@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ Approval Genesis — Founder Runbook v1.0.0
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # Approval Genesis — Founder Runbook

@@ -2,7 +2,7 @@
 // ║  HEADY™ Legacy Advisor Panel v1.0.0                               ║
 // ║  Native read interface to heady-production Expert Advisor.        ║
 // ║  Auth: Firebase ID token (same session as AdminUI).               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { auth, signOut } from '../services/firebase.js';
 import { legacyApi }     from '../services/heady-api.js';

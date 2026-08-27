@@ -1,7 +1,7 @@
 // ╭──────────────────────────────────────────────────────────────╮
 // │  HEADY™ Skill Registry Projection Tests v1.0.0               │
 // │  Verifies content drift detection and deterministic repair.      │
-// │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+// │  Made with ❤️ by HeadySystems Inc.                          │
 // ╰─────────────────────────────────────────────────────────────╯
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -185,5 +185,5 @@ library callable by individual services.
 
 <!-- HEADY_BRAND:BEGIN
   Heady™ Change Proposal HCP-0002 — Kernel CSL Stage-Transition Gate (C1 / Step 4)
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->

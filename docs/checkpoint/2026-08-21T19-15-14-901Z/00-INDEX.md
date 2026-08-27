@@ -2,7 +2,7 @@
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Analysis Checkpoint Index v1.0.0                   │
 <!-- │  Navigable evidence pack for workflow and repository review   │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

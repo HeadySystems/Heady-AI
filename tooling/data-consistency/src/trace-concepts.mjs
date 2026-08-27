@@ -2,7 +2,7 @@
 // ║  HEADY™ Concept Alignment & Activity Tracer v1.0.0               ║
 // ║  Parses concepts-index.yaml, checks implementation directories, ║
 // ║  maps codebase occurrences, and calculates alignment scores.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';

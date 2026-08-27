@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Events v1.0.0 — typed action/observation bus              ║
 // ║  Subject taxonomy, local projection, and production NATS bus.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Transport-agnostic core: subjects, wildcard matching, a typed envelope, an

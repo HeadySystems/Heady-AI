@@ -6,7 +6,7 @@
 // ║  substrate workspace member (packages/ + tooling/) ships at least   ║
 // ║  one test file (AGENTS.md #9) — apps surface as INFO debt pending   ║
 // ║  their Phase-3 build-out. Dependency-free + pure (IO injected).     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** AGENTS.md Do-Not list, machine form: Vue/Angular are forbidden outright.

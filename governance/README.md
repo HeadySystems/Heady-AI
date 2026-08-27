@@ -2,7 +2,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗
 <!-- ║  HEADY™ governance/ — the enforced constitution                    ║
 <!-- ║  LAYER: root · scope: GLOBAL_PERMANENT · enforcement: MANDATORY     ║
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+<!-- ║  Made with ❤️ by HeadySystems Inc.                                 ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END
 -->

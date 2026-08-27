@@ -2,7 +2,7 @@
 // ║  HEADY™ Corpus Embed Pipeline v1.0.0                              ║
 // ║  The real embed path: drain QUEUED jobs through the locked        ║
 // ║  embedder, write-through to the SoR projection + dedup ledger.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Storage-free so it is unit-testable with an injected embedder (no Cloudflare/Neon needed). The

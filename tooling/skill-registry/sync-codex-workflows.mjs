@@ -2,7 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Codex Workflow Shortcut Sync v1.1.0                      ║
 // ║  Projects canonical workflows into Codex-discoverable skills.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Codex discovers repository shortcuts from `.agents/skills` and invokes
@@ -107,7 +107,7 @@ ${ADAPTER_MARKER}
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Codex Workflow Shortcut                                 ║
 ║  Generated adapter — canonical instructions stay in workflows   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+║  Made with ❤️ by HeadySystems Inc.                              ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

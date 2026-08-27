@@ -5,7 +5,7 @@
 // ║  setTimeout/setInterval in substrate sources — timing derives from  ║
 // ║  packages/phi-math (e.g. HEARTBEAT_MS = φ⁷×1000). Broader magic-    ║
 // ║  number detection stays review-enforced (high false-positive).      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

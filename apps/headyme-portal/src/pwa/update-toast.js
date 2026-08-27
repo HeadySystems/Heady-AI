@@ -4,7 +4,7 @@
 // ║  canon from docs/design/design-tokens.json; motion is φ-timed     ║
 // ║  (382ms = ψ²·1000, the V9 site transition) on the golden-section  ║
 // ║  bezier. Emits "heady:reload" when the user accepts.              ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { PSI2, FIB } from "@heady/phi-math";
 

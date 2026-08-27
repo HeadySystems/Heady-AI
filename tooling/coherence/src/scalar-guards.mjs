@@ -6,7 +6,7 @@
 // ║  across SCALAR_SCOPE. The kernel owns the IO (grep over the tree);  ║
 // ║  this module owns the semantics (allow filtering, extraction,       ║
 // ║  comparison) so the guard contract is unit-testable.                ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // Each guard: factKey (dotted facts.yaml key) · find (ERE for the kernel's grep — MUST co-locate

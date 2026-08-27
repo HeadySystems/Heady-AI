@@ -1,6 +1,6 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Embedding — locked embedder adapter (ADR-0015)            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 // Locked embedder adapter (ADR-0015). Canonical stack: Cloudflare Workers AI.
 // Not runnable in the bare scaffold — requires the Workers AI binding — but this is the real shape.

@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ DataCloud Service v9.0.0                              ║
 // ║  Native direct access to BigQuery and Spanner                  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { BigQuery } from '@google-cloud/bigquery';

@@ -5,7 +5,7 @@
 // ║  swappable transport. inject() fires a unit, control() pushes an   ║
 // ║  operating-parameter update, injectData() streams a decomposed     ║
 // ║  file/doc payload via SysEx — all transport-agnostic.              ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { ValidationError } from "@heady/shared";
 import { encodeFrame, decodeFrame, to7bit, from7bit, MSG, SYSTEM, HEADY_SYSEX_ID } from "./codec.mjs";

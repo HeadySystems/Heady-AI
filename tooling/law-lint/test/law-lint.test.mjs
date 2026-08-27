@@ -2,7 +2,7 @@
 // ║  HEADY™ Law-Lint v2 — unit tests. `node --test`                  ║
 // ║  Scope: ESM-only (#1) + HEADY brand-header (#6). Logging/         ║
 // ║  placeholders/localhost are tooling/enforcers' canonical domain.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

@@ -7,7 +7,7 @@
 // ║  503 when unconfigured. Replaces the prior KV-hologram/Colab-       ║
 // ║  compiler router, which pointed at a decommissioned us-east1 origin ║
 // ║  and a dead compile webhook (AGENTS.md: no dead-end integrations).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // Hosts that speak the MCP surface (tagged for origin-side routing/telemetry).

@@ -2,7 +2,7 @@
 // ║  HEADY™ Consistency Bus — Propagation (PropagatePort) v1.0.0      ║
 // ║  An authorized canonical change → its blast radius → a change-set   ║
 // ║  covering every link-site → governed global apply (no partial       ║
-// ║  update). © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+// ║  update). Made with ❤️ by HeadySystems Inc.                        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';

@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ headyfinance — backtest tests (mechanics, no lookahead,   ║
 // ║  risk gating). Asserts the SIMULATION is correct — never that any   ║
-// ║  strategy is profitable. © 2026 HeadySystems Inc. — Eric Haywood   ║
+// ║  strategy is profitable. Made with ❤️ by HeadySystems Inc.         ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

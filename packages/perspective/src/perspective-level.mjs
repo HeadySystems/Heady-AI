@@ -3,7 +3,7 @@
 // ║  Assign a perspective level (weight ∈ [0,1]) to every source — the  ║
 // ║  authority bias. Canonical sources (facts/AGENTS/ADR/SoT) weigh     ║
 // ║  most; legacy/stale least. Auditable, never arbitrary.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';

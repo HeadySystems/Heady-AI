@@ -5,7 +5,7 @@
 // ║  live DB is reachable it reports the file-backed codeflow ledger    ║
 // ║  + the decomposition artifact, and null for DB-only counts.        ║
 // ║  (A live build wires this to @heady/task-ledger getUndispatchedOutbox/counts.)
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from "node:fs";
 import { resolve, join } from "node:path";

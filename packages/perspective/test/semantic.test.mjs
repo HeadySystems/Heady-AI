@@ -2,7 +2,7 @@
 // ║  HEADY™ Perspective — semantic (CSL cosine) tests                  ║
 // ║  Uses a TEST-ONLY deterministic mock embedder. Production uses the  ║
 // ║  locked bge-small embedder only (no fake embeddings in src).        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

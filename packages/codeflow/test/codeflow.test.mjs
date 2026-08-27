@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Codeflow tests — the governed proposal lifecycle           ║
 // ║  Bad inputs are fragment-built so this source embeds no banned      ║
-// ║  literal. © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+// ║  literal. Made with ❤️ by HeadySystems Inc.                        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

@@ -3,7 +3,7 @@
 // ║  Deterministic, FAIL-CLOSED checks run before any file write.      ║
 // ║  This is the gate — a Node service's fs.write never triggers the   ║
 // ║  PreToolUse hook, so validation must live here, not in the harness.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { isAbsolute, normalize } from 'node:path';
 import { FIB } from '../../phi-math/src/index.mjs';

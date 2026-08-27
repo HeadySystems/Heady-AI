@@ -2,7 +2,7 @@
   HEADY™ · governance/legacy/ — provenance archive
   Pre-reconciliation source corpus. Frozen. Authority lives one level up.
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # governance/legacy/ — Provenance Archive

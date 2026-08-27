@@ -252,4 +252,4 @@ This index is the navigable map; the skill **directories stay flat** so each can
 
 ---
 *∞ Sacred Geometry · Liquid Intelligence · Permanent Life ∞*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

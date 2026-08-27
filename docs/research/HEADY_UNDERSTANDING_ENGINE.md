@@ -5,7 +5,7 @@
 > is it good — or bad — and why?…"). Research the methods successful "understanding systems" use, gather
 > them into Heady's knowledge/intelligence stacks, and design **a system that defines a system** for
 > increasing Heady's understanding of things — internal and external.
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder.
+> Made with ❤️ by HeadySystems Inc.
 
 ---
 

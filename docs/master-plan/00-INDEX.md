@@ -3,7 +3,7 @@
 > The authoritative, decomposed inventory + incorporation plan for **every** significant Heady
 > system: agents, bees/swarms, the named cognitive/orchestration engines, skills, workflows,
 > directives, unbreakable laws, service providers + services, OSS (current + planned), UIs +
-> projections, and legacy transfer disposition. © 2026 HeadySystems Inc. — Eric Haywood.
+> projections, and legacy transfer disposition. Made with ❤️ by HeadySystems Inc.
 >
 > **Status:** BUILDING (autopilot, full master plan). Approve or adjust any section.
 

@@ -1,6 +1,6 @@
 # HEADY™ headyme.com Navigation IA — Buddy-Guided Service Navigation
 
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder
+> Made with ❤️ by HeadySystems Inc.
 > Status: **v1.0 — implemented in `apps/headyme-portal` (route `#services`)**
 > Ground truth: `src/hc_service_dispatcher.js` (`SERVICE_CATALOG`, `INTENT_KEYWORDS`, `registerServiceRoutes`) · `src/services/buddy-chat-contract.js` · `src/buddy-agent-hub.js`
 

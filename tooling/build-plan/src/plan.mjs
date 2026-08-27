@@ -3,7 +3,7 @@
 // ║  Map an end goal once → emit two build plans (mapped-straight-     ║
 // ║  through vs simple-first) → compare them deterministically.        ║
 // ║  Deterministic: canonical-hash stable across runs (replay-proof).  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';

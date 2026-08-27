@@ -3,7 +3,7 @@
 // ║  api        → rebuild codeflow  (VITE_CODEFLOW_API)               ║
 // ║  legacyApi  → legacy advisor    (VITE_LEGACY_API)                 ║
 // ║  lens       → HeadyLens stream  (VITE_HEADYLENS_API)              ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 async function _call(base, method, path, body, token) {
   const res = await fetch(`${base}${path}`, {

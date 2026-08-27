@@ -164,4 +164,4 @@ constitution** before importing the rest. Until then, Heady-AI's laws are **doct
 law** — the single exception being the data/stack consistency gate.
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

@@ -6,7 +6,7 @@
 // ║  beat as a live, human-readable story thread (grouped by traceId). ║
 // ║  ADR-0026 palette: #00d4aa teal=healthy · #7c5eff violet=degraded  ║
 // ║  · amber=stalled. φ⁷ heartbeat (29034ms) reconnect cadence.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { lens } from '../services/heady-api.js';
 

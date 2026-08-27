@@ -2,7 +2,7 @@
 // ║  HEADY™ Locked Embedder Resolver v1.0.0                           ║
 // ║  Resolves the ADR-0015 embedder from env (Workers AI or HF), or   ║
 // ║  null when no binding exists.                                      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // The lock (ADR-0015) pins the MODEL IDENTITY — bge-small-en-v1.5, 384-dim, mean — not the serving

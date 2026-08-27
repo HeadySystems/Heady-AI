@@ -3,7 +3,7 @@
 // ║  HEADY™ Skeleton Guard — Verify Placement v1.0.0                 ║
 // ║  CSL-gated file placement validator — ensures every file lands    ║
 // ║  in a recognized scaffold location per skeleton.json manifest.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Dependency-free (mirrors tooling/auto-flow/preflight.mjs).

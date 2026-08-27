@@ -2,7 +2,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Trigger Update Utility v1.0                              ║
 // ║  Hits the Universal Proxy with a noteworthy observation          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const fetch = require('node-fetch');

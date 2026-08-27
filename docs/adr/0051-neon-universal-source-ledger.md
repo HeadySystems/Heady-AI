@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ ADR-0051 — Neon Universal Source Ledger
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # ADR-0051: Neon Universal Source Ledger

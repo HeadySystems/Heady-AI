@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Repo-Context Builder v1.0.0                               ║
 // ║  Gathers structural facts (ADRs, doc refs, task provenance)       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // IO layer that assembles the `repo` context object consumed by the pure

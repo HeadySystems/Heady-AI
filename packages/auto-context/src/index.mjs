@@ -7,7 +7,7 @@
 // ║   2. PROJECTION (edge) — VectorizeProjector: Neon→Vectorize WAL    ║
 // ║      replication + drift verification (the awareness substrate     ║
 // ║      a retriever reads from).                                     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
+// ║  Made with ❤️ by HeadySystems Inc. · ⚠️ PATENT zone                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // ── Systemic enrichment (Unbreakable Law 4) ──

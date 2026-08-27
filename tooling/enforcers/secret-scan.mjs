@@ -3,7 +3,7 @@
 // ║  High-signal committed-secret detector. A fast, dependency-free    ║
 // ║  complement to gitleaks so an obvious credential leak is caught    ║
 // ║  even if the gitleaks config drifts. Realizes Unbreakable Law 0.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

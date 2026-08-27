@@ -5,7 +5,7 @@
 // ║  already-resolved token digest — secret loading stays in          ║
 // ║  @heady/secrets. Deliberately imports no φ policy and no          ║
 // ║  security-mesh surface (ARBITER conditions, 2026-07-04).          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createHash, timingSafeEqual } from "node:crypto";

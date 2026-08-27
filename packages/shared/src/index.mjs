@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Shared v1.0.0 — cross-cutting errors, Result, contracts   ║
 // ║  Zero-dep ESM primitives imported across the monorepo.            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // ─── Typed errors (structured-logging friendly) ───────────────────────────────

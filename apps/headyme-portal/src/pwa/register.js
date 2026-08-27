@@ -5,7 +5,7 @@
 // ║  postMessage HEADY_SKIP_WAITING → controllerchange → one reload.  ║
 // ║  Update polling rides the golden heartbeat (φ⁷s) scaled by        ║
 // ║  FIB[10] (~26.6 min) plus a check whenever the tab regains focus. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { HEARTBEAT_MS, FIB } from "@heady/phi-math";
 import "./update-toast.js";

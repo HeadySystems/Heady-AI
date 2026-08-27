@@ -2,7 +2,7 @@
 // ║  HEADY™ Narrative tests — node:test                              ║
 // ║  Proves: beats publish typed events on the real subject prefix,   ║
 // ║  HeadyLens captures + filters them, and narrateStep brackets work.║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

@@ -4,7 +4,7 @@
 // ║  Turns one approval view into the canonical envelope to sign and ║
 // ║  prints the exact KMS ceremony + decision request that follow.   ║
 // ║  Never touches private key material.                             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync } from "node:fs";

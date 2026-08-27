@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Antigravity Bridge v1.1.0                                ║
 // ║  Node.js ESM Bridge to the Python Antigravity SDK Worker         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+// ║  Made with ❤️ by HeadySystems Inc.                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { connect, StringCodec } from 'nats';

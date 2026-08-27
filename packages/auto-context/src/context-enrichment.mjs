@@ -4,7 +4,7 @@
 // ║  Realizes Unbreakable Law 4 (Context Maximization) + Master       ║
 // ║  Directive 1 (Omnipresent Contextual Awareness): every reasoning  ║
 // ║  stage is fed CSL-ranked live ecosystem state before it runs.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
+// ║  Made with ❤️ by HeadySystems Inc. · ⚠️ PATENT zone                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // WHAT.  Given a task signal (text + optional embedding), retrieve the most

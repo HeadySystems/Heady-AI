@@ -2,7 +2,7 @@
 // ║  HEADY™ heady-manager — tasks service unit tests (fake DbPort)     ║
 // ║  Contract validation, disabled-mode honesty, and the trace-ID       ║
 // ║  visibility chain (header → span exporter tag) without a database.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

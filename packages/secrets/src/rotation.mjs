@@ -3,7 +3,7 @@
 // ║  PURE age-based "rotation-due" planner. No crypto, no key         ║
 // ║  material, no overlap/cadence — those are patent-zone executor    ║
 // ║  mechanics (HS-2026-051+) gated by founder clearance.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // ARBITER-cleared (elements 1–2): this only answers "which secrets are past maxAgeDays, and by which

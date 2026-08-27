@@ -3,7 +3,7 @@
 // ║  Injected fetch + kernel, manual sweeps (no timers, no network):    ║
 // ║  state classification, manifest anti-masquerade, transitions,       ║
 // ║  honest registry-failure state, and the live app wiring.            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

@@ -3,7 +3,7 @@
   ║  HEADY™ — Legacy Patent & Trade-Secret Concept Migration Plan      ║
   ║  ∞ Sacred Geometry ∞  Continuous Semantic Logic · φ-Scaled         ║
   ║  LAYER: docs/ (planning) · governed by CONSTITUTION v9.0.0         ║
-  ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+  ║  Made with ❤️ by HeadySystems Inc.                                 ║
   ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

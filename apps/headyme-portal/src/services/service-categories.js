@@ -5,7 +5,7 @@
 // ║  Keyed by SERVICE NAME so unknown catalog entries degrade into    ║
 // ║  the visible "More" group instead of breaking the nav.            ║
 // ║  Spec: docs/blueprints/headyme-navigation-ia.md                   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 export const FALLBACK_CATEGORY = 'more';

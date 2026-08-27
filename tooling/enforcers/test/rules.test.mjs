@@ -2,7 +2,7 @@
 // ║  HEADY™ Enforcer tests — the gates are not no-ops                  ║
 // ║  Proves each rule set FLAGS known violations and IGNORES known     ║
 // ║  safe forms. Realizes Law 8 (tests alongside code).                ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

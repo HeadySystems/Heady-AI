@@ -2,7 +2,7 @@
 // ║  HEADY™ Perspective — Assignment (AssignPort) v1.0.0              ║
 // ║  Route a task to roles by competency-match × perspective weight.    ║
 // ║  Every defined role weighs in; the ranking is deterministic.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { tokenize } from './roles.mjs';
 import { embedTexts, semanticScore, gateVerdict } from './semantic.mjs';

@@ -3,7 +3,7 @@
 // ║  The single catalog of every secret the system consumes — names,  ║
 // ║  required-ness, and validation shape. Mirrors .env.example and is ║
 // ║  the authority for `heady-secrets` and loadSecrets().             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Pure data — the only import is the FIB constant array (φ-scaling, AGENTS.md #8). `kind: "url"`

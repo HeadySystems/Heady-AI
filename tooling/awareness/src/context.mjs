@@ -6,7 +6,7 @@
 // ║  gate verdict, the Merkle root, and the embed-outbox backlog —     ║
 // ║  including an HONEST embedderBound flag (enqueue-only vs live).    ║
 // ║  Read-only + cheap: reflects persisted artifacts, embeds nothing.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createStore, FILES } from "../../embed-corpus/src/store.mjs";

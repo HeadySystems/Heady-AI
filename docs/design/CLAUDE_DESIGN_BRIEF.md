@@ -3,7 +3,7 @@
      ║  Brand voice, comfort principles, layout grammar, do/don't for    ║
      ║  Claude-based design work on the admin (1ime1.com) and user       ║
      ║  (headyme.com) surfaces. Derived from repo canon — sources cited  ║
-     ║  inline. © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+     ║  inline. Made with ❤️ by HeadySystems Inc.                        ║
      ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Claude Design Brief — Heady surfaces

@@ -5,7 +5,7 @@
 // ║  THIS module is that schema. Dependency-free, pure — the loader     ║
 // ║  (@heady/config) supplies the parsed object; the coherence gate     ║
 // ║  cross-checks repo prose AGAINST these values (complementary).      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Design (per the rebuild invariant order — this is step 3, the null keystone):

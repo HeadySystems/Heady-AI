@@ -3,7 +3,7 @@
 // ║  HEADY™ heady-secrets CLI v1.0.0                                  ║
 // ║  list · doctor (fail-closed resolution) · rotate (secure inject)  ║
 // ║  Secrets travel value→store via stdin only; never argv, never     ║
-// ║  logged. © 2026 HeadySystems Inc. — Eric Haywood, Founder         ║
+// ║  logged. Made with ❤️ by HeadySystems Inc.                        ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, realpathSync } from "node:fs";

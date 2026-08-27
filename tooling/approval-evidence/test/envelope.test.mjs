@@ -2,7 +2,7 @@
 // ║  HEADY™ Approval Evidence Envelope Tests v1.0.0                  ║
 // ║  Proves the locally built envelope is byte-identical to the one  ║
 // ║  the approval service reconstructs for a decision.               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import assert from "node:assert/strict";

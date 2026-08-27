@@ -2,7 +2,7 @@
      ║  HEADY™ Component Inventory v1.0.0 — docs/design bundle           ║
      ║  What exists in apps/headyme-portal today + the target component  ║
      ║  set for the living-dashboard home. Derived from source, not      ║
-     ║  aspiration. © 2026 HeadySystems Inc. — Eric Haywood, Founder     ║
+     ║  aspiration. Made with ❤️ by HeadySystems Inc.                    ║
      ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # Component Inventory — headyme-portal (current) → living dashboard (target)

@@ -12,7 +12,7 @@
 // ║  Honest states: directory-unavailable + health-unknown are shown   ║
 // ║  as exactly that. φ⁷ heartbeat (29034ms) retry cadence.            ║
 // ║  Spec: docs/blueprints/headyme-navigation-ia.md §3/§5.3            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { services, events } from '../services/heady-api.js';
 import { buildGroups } from '../services/service-categories.js';

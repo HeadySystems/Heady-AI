@@ -151,5 +151,5 @@ capabilities require separately reviewed adapters or proposals.
 
 <!-- HEADY_BRAND:BEGIN
   Heady™ Change Proposal HCP-0003 — Canonical HeadyBee and Swarm Runtime
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->

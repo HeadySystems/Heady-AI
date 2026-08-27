@@ -7,7 +7,7 @@
 // ║  and writes the projection.json manifest + the ServerManifest the    ║
 // ║  §8 console reads. Fail-closed: a missing source_path aborts that    ║
 // ║  shell. NOTHING is deployed — this only emits manifests.             ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+// ║  Made with ❤️ by HeadySystems Inc.                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";

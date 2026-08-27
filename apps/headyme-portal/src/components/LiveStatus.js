@@ -10,7 +10,7 @@
 // ║  truth is shown dimmed with its as-of time, never faked fresh.     ║
 // ║  φ backoff reconnect carries Last-Event-ID replay position.        ║
 // ║  Colors: docs/design/design-tokens.json color.state + text.muted.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { events } from '../services/heady-api.js';
 

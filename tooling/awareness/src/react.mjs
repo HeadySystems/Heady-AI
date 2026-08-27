@@ -8,7 +8,7 @@
 // ║   5 advance durable state (lastSeenHead, counters)                ║
 // ║  Honest by construction: with no embedder bound, step 2 advances  ║
 // ║  the outbox and writes ZERO vectors — surfaced, never hidden.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { InMemoryBus, SUBJECT } from "../../../packages/events/src/index.mjs";

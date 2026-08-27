@@ -4,7 +4,7 @@
 // ║  `heady-consistency check` — the single global data-consistency  ║
 // ║  gate. Exit 1 on errors, 0 when clean. Used standalone and as the ║
 // ║  gate inside the sync system.                                     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, realpathSync } from "node:fs";

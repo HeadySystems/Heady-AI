@@ -2,7 +2,7 @@
 // ║  HEADY™ Cloud Maintenance Policy v1.0.0                         ║
 // ║  Read-only runtime maintenance health for ephemeral Cloud Run;  ║
 // ║  durable records remain in Neon and are never locally pruned.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { HEALTH } from "@heady/shared";

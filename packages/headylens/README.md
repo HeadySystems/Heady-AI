@@ -77,4 +77,4 @@ node --test test/headylens.test.mjs    # 9 tests: normalize, redact, tiers, stor
 ```
 
 ---
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

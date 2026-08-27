@@ -6,7 +6,7 @@
 // ║  cluster, and emits the exact git command — but NEVER runs it.     ║
 // ║  History rewriting is irreversible → autoApply:false,              ║
 // ║  requiresHumanConfirmation:true (org rule: destructive ⇒ confirm). ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import * as g from "./git.mjs";

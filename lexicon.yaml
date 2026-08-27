@@ -3,7 +3,7 @@
 # ║  The ONE home for human-language definitions of Heady terms that    ║
 # ║  cannot be derived from code. Variables (env/secrets/constants/     ║
 # ║  facts) are DERIVED, not listed here — see docs/HEADY_VARIABLE_     ║
-# ║  REGISTRY.md (generated). © 2026 HeadySystems Inc. — Eric Haywood   ║
+# ║  REGISTRY.md (generated). Made with ❤️ by HeadySystems Inc.         ║
 # ╚══════════════════════════════════════════════════════════════════╝
 schema: lexicon.v1
 # Each term: def (one line) + sot (where the authority lives). Keep defs crisp; the registry renders them.

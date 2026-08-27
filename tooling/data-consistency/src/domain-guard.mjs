@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Domain Hygiene Guard v1.0.0                             ║
 // ║  Enforces Law 0 (no localhost) and checks domain name hygiene.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';

@@ -3,7 +3,7 @@
 // ║  HEADY™ Skill Registry — Claude Code registration v1.0.0         ║
 // ║  Normalizes .agents/skills/* into .claude/skills/* so Claude Code ║
 // ║  can discover them: frontmatter-first, name=dir, clean desc.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // The legacy/migrated skill packs in `.agents/skills/<name>/SKILL.md` are the

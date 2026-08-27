@@ -4,7 +4,7 @@
 // ║  @heady/db/port. Requires HEADY_TEST_DATABASE_URL (point it at a   ║
 // ║  branch endpoint, NEVER root) — skips cleanly when unset so CI     ║
 // ║  without credentials stays green. Cleans up every row it creates.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

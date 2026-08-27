@@ -5,7 +5,7 @@
 // ║  emits a ternary signal {-1 repel · 0 hold · +1 engage}. It does    ║
 // ║  NOT execute, route, or hold funds — it advises. Ported + corrected ║
 // ║  from src/trading/apex-risk-agent.js; no console (an optional        ║
-// ║  onEvent sink is injected). © 2026 HeadySystems Inc. — Eric Haywood║
+// ║  onEvent sink is injected). Made with ❤️ by HeadySystems Inc.      ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { resolveAccount, APEX_RULES } from "./accounts.mjs";
 import { createDrawdownTracker } from "./drawdown.mjs";

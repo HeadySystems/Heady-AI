@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Production-only external dependency closure for the Heady approval API container.",
-  "headyBrand": "© 2026 HeadySystems Inc. — Eric Haywood, Founder",
+  "headyBrand": "Made with ❤️ by HeadySystems Inc.",
   "dependencies": {
     "@google-cloud/kms": "5.7.0",
     "@open-policy-agent/opa-wasm": "1.10.0",

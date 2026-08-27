@@ -3,7 +3,7 @@
 // ║  Signs a built envelope with an ephemeral Ed25519 key and checks ║
 // ║  the service-side ceremony verifier accepts it — proving the      ║
 // ║  loop without ever invoking the founder's KMS key.               ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import assert from "node:assert/strict";

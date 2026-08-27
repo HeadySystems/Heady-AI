@@ -3,7 +3,7 @@
 // ║  The "optimal software company" as weighted roles: the 8 cognitive ║
 // ║  agents + bee workers + skills, each with competencies + a base     ║
 // ║  perspective weight. Derived from HeadyRegistry (no hand-authoring).║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';

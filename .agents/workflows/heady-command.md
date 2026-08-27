@@ -6,7 +6,7 @@ description: Compatibility alias for the canonical authority-aware /heady intell
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Command Compatibility Alias v2.0.0                       ║
 ║  Routes legacy heady-command usage into the canonical /heady.    ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

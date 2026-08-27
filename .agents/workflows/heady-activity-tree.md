@@ -6,7 +6,7 @@ description: Produce an evidence-backed workflow activity snapshot and checkpoin
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Workflow Activity Evidence v2.0.0                       ║
 ║  Safe repository, workflow, and verification state reporting.   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

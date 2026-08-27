@@ -2,7 +2,7 @@
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ ADR-0054                                                ║
 ║  Domain canon carrier closure and HeadyFinance succession       ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+║  Made with ❤️ by HeadySystems Inc.                             ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

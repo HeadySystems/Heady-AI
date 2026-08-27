@@ -10,7 +10,7 @@
 # ║  SCOPE: ADR-0053 and ADR-0054 only. The founder declined         ║
 # ║  ADR-0052 on 2026-08-22 (minimize friction / maximize            ║
 # ║  automation); it stays Proposed and is NOT signed here.          ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+# ║  Made with ❤️ by HeadySystems Inc.                              ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
 # Usage:

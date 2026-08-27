@@ -6,7 +6,7 @@
 // ║  ConsoleSummary. Dependency-free validators in the facts-schema     ║
 // ║  idiom; Zod codegen remains a later build step (ADR-0002).          ║
 // ║  Heartbeat = φ⁷×1000 ms — import HEARTBEAT_MS from @heady/phi-math. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** §8 connector state model — token_expired and projection_only are first-class. */

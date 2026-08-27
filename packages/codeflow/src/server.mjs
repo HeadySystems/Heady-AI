@@ -2,7 +2,7 @@
 // ║  HEADY™ Codeflow API v1.0.0                                       ║
 // ║  Minimal dependency-free HTTP surface for the governed codeflow +  ║
 // ║  a real /api/status (reads the actual coherence/registry/decomp    ║
-// ║  artifacts — never fabricated). © 2026 HeadySystems — E. Haywood   ║
+// ║  artifacts — never fabricated). Made with ❤️ by HeadySystems Inc.  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createServer } from 'node:http';
 import { timingSafeEqual } from 'node:crypto';

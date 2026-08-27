@@ -2,7 +2,7 @@
 // ║  HEADY™ Firebase token-verification tests                         ║
 // ║  Signs RS256 tokens with a throwaway keypair, verifies via an      ║
 // ║  injected cert resolver, and exercises every reject path.          ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

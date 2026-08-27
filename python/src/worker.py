@@ -9,7 +9,7 @@ from google.antigravity.triggers import every, TriggerContext
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ Antigravity Worker Node v1.1.0                           ║
 # ║  Latent Service bridging Google Antigravity SDK to NATS          ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║
+# ║  Made with ❤️ by HeadySystems Inc.                             ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")

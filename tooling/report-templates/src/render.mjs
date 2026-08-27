@@ -13,7 +13,7 @@
 // ║                                                                    ║
 // ║  Modes:  render.mjs render [name]   → write the report(s)          ║
 // ║          render.mjs check  [name]   → exit 1 if any output is stale ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";

@@ -5,7 +5,7 @@
 // ║  pipeline; it spawns `heady-embed --json` and consumes the report  ║
 // ║  so the LEDGER stays the single source of truth for "embedded"     ║
 // ║  (CLAUDE_MEMORY §2) and there is exactly one embed code path.      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { spawnSync } from "node:child_process";

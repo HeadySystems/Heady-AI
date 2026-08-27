@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Memory Stream v1.0.0                                     ║
 // ║  pgvector retrieval + φ-fusion scoring + memory outbox events.    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
+// ║  Made with ❤️ by HeadySystems Inc. · ⚠️ PATENT zone                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { assertEmbedding } from "@heady/db";

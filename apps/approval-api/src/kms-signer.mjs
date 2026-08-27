@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Approval KMS Receipt Signer v1.0.0                      ║
 // ║  Integrity-checked Cloud KMS Ed25519 asymmetric signatures.     ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { createPublicKey } from "node:crypto";

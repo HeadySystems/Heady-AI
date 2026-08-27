@@ -4,7 +4,7 @@
 // ║  Each returns an array aligned to the input (leading nulls until    ║
 // ║  the lookback is satisfied) so a backtest can index by bar with no  ║
 // ║  off-by-one. No magic: SMA, EMA (k=2/(n+1)), Wilder's RSI.         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const nums = (a) => { if (!Array.isArray(a) || a.some((x) => !Number.isFinite(x))) throw new TypeError("series must be an array of finite numbers"); };

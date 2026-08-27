@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Data-Consistency Scanner v1.0.0                           ║
 // ║  Dependency-free filesystem discovery for the consistency gate    ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Walks the repository and returns the in-scope file set for the checker.

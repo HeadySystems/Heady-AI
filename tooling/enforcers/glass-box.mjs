@@ -3,7 +3,7 @@
 // ║  Fail-closed scan for unstructured logging, swallowed failures,    ║
 // ║  and placeholder shortcuts. Realizes Unbreakable Laws 1 & 2:       ║
 // ║  structured JSON logging only, no empty catch, no TODO/FIXME/stub. ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

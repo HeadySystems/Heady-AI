@@ -3,7 +3,7 @@
 # ║  Build context = repo root. The server imports sibling packages    ║
 # ║  via relative paths (phi-math, csl-engine, consistency-bus,        ║
 # ║  perspective) — all pure ESM, no node_modules required.            ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+# ║  Made with ❤️ by HeadySystems Inc.                                 ║
 # ╚══════════════════════════════════════════════════════════════════╝
 FROM node:22-slim
 

@@ -4,7 +4,7 @@
 > system? **Answer: yes — and Heady already has the bones.** This is the microkernel + capability-
 > contract + plugin-registry pattern, unifying the *currently ad-hoc* drop-in mechanisms (skills,
 > bees, kernel services) under one **Heady Module (HMOD)** abstraction.
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder. (Design doc → should become an ADR once the
+> Made with ❤️ by HeadySystems Inc. (Design doc → should become an ADR once the
 > `docs/adr` ↔ `docs/ADR` directory collision is resolved.)
 
 ## Why now

@@ -6,7 +6,7 @@
 // ║  { startingBalance, maxDrawdown, initialMAE } instead.              ║
 // ║  ⚠ Apex changes its published rules over time — verify these        ║
 // ║  against Apex's current official rules before any funded use.        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** Apex tier presets: balance, trailing max drawdown, initial MAE, safety-net buffer. */

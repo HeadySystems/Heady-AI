@@ -2,7 +2,7 @@
   HEADY™ · MASTER DIRECTIVE 6 — DIRECTIVE 6: EMPATHIC MASKING & PERSONA FIDELITY
   LAYER: root · scope: GLOBAL_PERMANENT · enforcement: MANDATORY
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # DIRECTIVE 6: EMPATHIC MASKING & PERSONA FIDELITY

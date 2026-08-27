@@ -2,7 +2,7 @@
   HEADY™ · governance/enforcement/ENF-anti-shortcut.md
   Anti-Shortcut & No-Placeholder enforcement protocol (the "environment enforces" layer).
   ∞ Sacred Geometry · Liquid Intelligence ∞
-  © 2026 HeadySystems Inc. — Eric Haywood, Founder
+  Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 ---
 title: "Enforcement: Anti-Shortcut & No-Placeholder Protocols"

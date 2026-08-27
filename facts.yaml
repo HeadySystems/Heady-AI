@@ -2,7 +2,7 @@
 # ║  HEADY™ facts.yaml — golden record (single source of derived facts)║
 # ║  Loaded/validated by @heady/config. Derived artifacts (README       ║
 # ║  badges, CI matrices, OpenAPI servers) generate FROM this file.     ║
-# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                   ║
+# ║  Made with ❤️ by HeadySystems Inc.                                  ║
 # ╚══════════════════════════════════════════════════════════════════╝
 schema: facts.v1
 company:

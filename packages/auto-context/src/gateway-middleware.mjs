@@ -5,7 +5,7 @@
 // ║  Contextual Awareness). It WRAPS a gateway so every reasoning     ║
 // ║  entry is fed a CSL-ranked context capsule BEFORE it runs — no    ║
 // ║  agent can opt out, because the gateway is the only door.         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder · ⚠️ PATENT zone ║
+// ║  Made with ❤️ by HeadySystems Inc. · ⚠️ PATENT zone                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // WHY MIDDLEWARE, NOT A SKILL.  A skill is invoked at an agent's discretion; a wrapped gateway

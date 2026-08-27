@@ -1,6 +1,6 @@
 <!-- HEADY_BRAND:BEGIN
 Heady™ ADR-0031 — Solo-Founder Approval-System Bootstrap
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.
 HEADY_BRAND:END -->
 
 # ADR-0031: Solo-Founder Approval-System Bootstrap

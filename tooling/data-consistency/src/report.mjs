@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Consistency Report Formatter v1.0.0                       ║
 // ║  Renders findings as human text or machine JSON                   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const MARK = { error: "✗", warn: "▲", info: "·" };

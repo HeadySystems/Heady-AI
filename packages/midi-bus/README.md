@@ -59,4 +59,4 @@ wired.control(CHANNEL.EMBED, /* param */ 7, /* value */ 127);
 7-bit SysEx), fail-closed validation, and a **transport-swap proof** (identical producer code on
 two wires yields identical decoded frames).
 
-© 2026 HeadySystems Inc. — Eric Haywood, Founder
+Made with ❤️ by HeadySystems Inc.

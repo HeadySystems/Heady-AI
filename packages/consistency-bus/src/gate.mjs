@@ -2,7 +2,7 @@
 // ║  HEADY™ Consistency Bus — Gate (GatePort) v1.0.0                  ║
 // ║  After any propagation, the coherence kernel must be green — the    ║
 // ║  fail-closed proof that data is consistent system-wide.            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';

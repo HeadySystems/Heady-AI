@@ -13,7 +13,7 @@
 // ║  Usage: node sync-workflows.mjs [--check] [--json]                 ║
 // ║   --check  report drift, change nothing, exit 1 if out of sync     ║
 // ║   (default) link missing/wrong commands, prune orphans            ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readdirSync, existsSync, mkdirSync, rmSync, symlinkSync, lstatSync, readlinkSync } from "node:fs";
 import { join, dirname, relative } from "node:path";

@@ -4,7 +4,7 @@
 // ║  enforcers and their tests. Single source of truth for the         ║
 // ║  forbidden-pattern contract documented in                          ║
 // ║  governance/enforcement/ENF-anti-shortcut.md.                      ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 // ── Law 0: No-Localhost ──────────────────────────────────────────────

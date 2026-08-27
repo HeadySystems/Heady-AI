@@ -4,7 +4,7 @@
 // ║  (sandbox stays ON — AGENTS.md ESM law yields to the security     ║
 // ║  boundary here). Exposes ONLY appVersion + platform, frozen,      ║
 // ║  via contextBridge. No IPC surface, no node globals leak.         ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚═════════════════════════════════════════════════════════════════╝
 'use strict';
 const { contextBridge } = require('electron');

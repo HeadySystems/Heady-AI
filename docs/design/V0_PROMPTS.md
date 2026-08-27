@@ -3,7 +3,7 @@
      ║  Ready-to-paste prompts with canon token values EMBEDDED so v0    ║
      ║  output cannot drift from the system. Values from                 ║
      ║  docs/design/design-tokens.json (see provenance there).           ║
-     ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+     ║  Made with ❤️ by HeadySystems Inc.                                ║
      ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # v0.dev Prompt Pack

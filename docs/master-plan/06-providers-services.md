@@ -5,7 +5,7 @@
 > **Ground truth (in priority order):** `facts.yaml` (locked stack) · `packages/secrets/src/registry.mjs`
 > + `.env.example` (every credential) · `docs/adr/*` + `docs/ADR/*` (decisions) · `docs/HEADYME_LAUNCH_RUNBOOK.md`
 > + `docs/PORTAL_GATEWAY_DEPLOY.md` (live deploy state) · skills = claims verified against the above.
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder.
+> Made with ❤️ by HeadySystems Inc.
 
 **Status legend:** `live` = serving/credential-verified in this environment · `configured` = code wired +
 credential slot exists, not yet serving · `potential` = named in plan/skills, no wired integration · `🔮`

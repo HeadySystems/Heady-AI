@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Heady approval control plane API — Neon SoT, typed OPA quorum, Firebase/workload identity, and KMS receipts.",
-  "headyBrand": "© 2026 HeadySystems Inc. — Eric Haywood, Founder",
+  "headyBrand": "Made with ❤️ by HeadySystems Inc.",
   "main": "src/index.mjs",
   "scripts": {
     "build": "echo '(no build — runnable ESM with precompiled policy WASM)'",

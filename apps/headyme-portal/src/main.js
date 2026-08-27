@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Portal Shell v3.0.1 — Dual-State Router                   ║
 // ║  Routes: #onboarding · #admin (rebuild) · #legacy (advisor)        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import './style.css';
 import { OnboardingUI } from './components/OnboardingUI.js';

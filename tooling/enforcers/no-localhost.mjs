@@ -3,7 +3,7 @@
 // ║  Zero-tolerance scan for localhost / 127.0.0.1 / 0.0.0.0 and       ║
 // ║  hardcoded host:port in committed source. Realizes Unbreakable     ║
 // ║  Law 0 — connection targets come from env / secret manager only.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';

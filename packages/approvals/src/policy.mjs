@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ OPA Approval Policy Runtime v1.0.0                       ║
 // ║  Loads the source-bound WASM policy and fails closed on drift.   ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { readFile } from "node:fs/promises";

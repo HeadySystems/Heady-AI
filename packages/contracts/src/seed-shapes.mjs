@@ -8,7 +8,7 @@
 // ║  at the boundary. Magnitudes (φ-scaled ceilings) are applied by the ║
 // ║  executor via @heady/phi-math; this contract enforces the SHAPE.    ║
 // ║  Strict, dependency-free — the facts-schema / projection-shapes     ║
-// ║  idiom. © 2026 HeadySystems Inc. — Eric Haywood, Founder           ║
+// ║  idiom. Made with ❤️ by HeadySystems Inc.                          ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 /** Where a seed came from — the boundary condition's origin. */

@@ -2,7 +2,7 @@
 // ║  HEADY™ MIDI-Bus — unit tests. `node --test`                     ║
 // ║  Proves codec round-trips (incl. arbitrary bytes via 7-bit SysEx), ║
 // ║  and that the bus delivers over BOTH transports identically.       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { test } from "node:test";
 import assert from "node:assert/strict";

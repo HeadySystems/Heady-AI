@@ -1,7 +1,7 @@
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  HEADY™ Nodes Admin Presentation Logic v1.0.0                   ║
 // ║  Pure state shaping for truthful orchestration administration.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
+// ║  Made with ❤️ by HeadySystems Inc.                              ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const ACTION_PATTERN = /^[a-z][a-z0-9._-]*$/;

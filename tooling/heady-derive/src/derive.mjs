@@ -13,7 +13,7 @@
 // ║                                                                    ║
 // ║  Modes:  derive.mjs check   → exit 1 if any region is stale (CI)   ║
 // ║          derive.mjs write   → rewrite stale regions in place       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, join } from "node:path";

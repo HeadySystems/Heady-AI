@@ -6,7 +6,7 @@ description: Route a noteworthy observation through the canonical @heady intelli
 ╔══════════════════════════════════════════════════════════════════╗
 ║  HEADY™ Trigger Update Compatibility Workflow v2.0.0            ║
 ║  Observation intake through the governed intelligence router.   ║
-║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+║  Made with ❤️ by HeadySystems Inc.                               ║
 ╚══════════════════════════════════════════════════════════════════╝
 HEADY_BRAND:END -->
 

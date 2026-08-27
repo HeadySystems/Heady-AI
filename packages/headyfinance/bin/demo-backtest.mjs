@@ -4,7 +4,7 @@
 // ║  Runs an SMA-crossover strategy over a synthetic historical series ║
 // ║  through the risk-gated backtester and prints honest metrics.      ║
 // ║  No broker, no data subscription, no real money. Structured JSON.  ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { createRiskEngine } from "../src/risk-engine.mjs";
 import { runStrategy } from "../src/strategy.mjs";

@@ -8,7 +8,7 @@
 // ║  can't be silently demoted to advisory); AGENTS.md numbered rules   ║
 // ║  are contiguously covered; advisory gaps + known defects surface.   ║
 // ║  Dependency-free + pure (rule ids / module-exists injected).        ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                  ║
+// ║  Made with ❤️ by HeadySystems Inc.                                 ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const TIERS = ["enforced", "advisory"];

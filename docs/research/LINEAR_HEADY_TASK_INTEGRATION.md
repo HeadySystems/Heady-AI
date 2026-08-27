@@ -8,7 +8,7 @@
 >
 > **Method.** Ground-truth: rebuild code (`packages/*`, `tooling/*`), legacy `src/*`, ADRs, compendium,
 > + the **live Linear workspace** (verified via MCP: team `Heady`/HEA, 9 projects, 317+ issues).
-> © 2026 HeadySystems Inc. — Eric Haywood, Founder.
+> Made with ❤️ by HeadySystems Inc.
 >
 > **Scope tags:** **[BUILT]** working rebuild · **[LEGACY]** `src/`-only · **[PLANNED]** spec/ADR only ·
 > **[LIVE-EXT]** external system verified via MCP.

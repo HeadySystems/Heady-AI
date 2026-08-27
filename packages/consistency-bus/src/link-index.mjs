@@ -3,7 +3,7 @@
 // ║  The runtime view of HeadyRegistry: every registered key → its     ║
 // ║  canonical value, class, source-of-truth, and lock status.         ║
 // ║  Sourced from the generated variable-registry (no hand authoring). ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';

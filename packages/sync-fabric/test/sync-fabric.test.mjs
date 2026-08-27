@@ -4,7 +4,7 @@
 // ║  context broadcast round-trip, session handoff store/resume,      ║
 // ║  rate-limit kick (FIB[8] msg/s → close 1008), anonymized          ║
 // ║  presence REST, debounced JSON persistence.                       ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 
 import { test } from "node:test";

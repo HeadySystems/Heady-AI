@@ -3,7 +3,7 @@
 // ║  Pure plan flattening + decision overlay + integrity verify. Two  ║
 // ║  builds: Heady-V1 (legacy) and Heady-AI (rebuild). Shared by the  ║
 // ║  heady-scaffold CLI and the AdminUI section (one source of truth).║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                 ║
+// ║  Made with ❤️ by HeadySystems Inc.                                ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // No IO: the plan, the decision overlay, and "does this path exist" are all injected, so the engine

@@ -20,7 +20,7 @@ metadata:
 # MAXIMUM POTENTIAL — Universal Coding Agent System Prompt
 
 > **Heady™ Sovereign AI Platform — Sacred Geometry v4.0**
-> **© 2026 HeadySystems Inc. — Eric Haywood, Founder — 51 Provisional Patents**
+> **Made with ❤️ by HeadySystems Inc. — 51 Provisional Patents**
 > **Target: Claude, GPT, Gemini, Perplexity, Windsurf, Cursor, Copilot, Any Agent**
 
 ---
@@ -896,4 +896,4 @@ This skill includes companion reference files:
 
 *This prompt is open-source and domain-agnostic. Fork it. Extend it. Make it yours.*
 *Φ ≈ 1.618 · Sacred Geometry v4.0 · Alive Software Architecture · 51 Provisional Patents*
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

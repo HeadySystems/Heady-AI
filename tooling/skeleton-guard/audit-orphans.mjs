@@ -3,7 +3,7 @@
 // ║  HEADY™ Skeleton Guard — Audit Orphans v1.0.0                    ║
 // ║  Whole-repo scanner that verifies every authored file is in a    ║
 // ║  recognized scaffold location per skeleton.json.                 ║
-// ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+// ║  Made with ❤️ by HeadySystems Inc.                               ║
 // ╚══════════════════════════════════════════════════════════════════╝
 //
 // Walks the entire repo tree (excluding node_modules, .git, .turbo, dist),

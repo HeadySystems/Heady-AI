@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ AutoFlow Execution Activity                            ║ -->
 <!-- ║  G1, worktrees, approval ceiling, D1, P1, P2, and P3 receipts. ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # AutoFlow Execution Activity — 2026-08-21T21:17:53Z

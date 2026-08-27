@@ -7,7 +7,7 @@ description: "Create, preview, inspect, and consume incremental Heady agent-hand
 <!-- ╭───────────────────────────────────────────────────────────────╮
 <!-- │  HEADY™ Heady Handoff v1.1.0                                │
 <!-- │  Verified continuity between coding-agent sessions              │
-<!-- │  © 2026 HeadySystems Inc. — Eric Haywood, Founder           │
+<!-- │  Made with ❤️ by HeadySystems Inc.                          │
 <!-- ╰──────────────────────────────────────────────────────────────╯
 <!-- HEADY_BRAND:END -->
 

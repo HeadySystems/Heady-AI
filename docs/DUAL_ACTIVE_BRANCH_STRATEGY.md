@@ -11,7 +11,7 @@
 <!-- ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
 <!-- ║  HEADY™ · DUAL_ACTIVE_BRANCH_STRATEGY.md                            ║
 <!-- ║  Dual-active branch model: main + rebuild both live.             ║
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder                ║
+<!-- ║  Made with ❤️ by HeadySystems Inc.                               ║
 <!-- ╚══════════════════════════════════════════════════════════════════╝
 <!-- HEADY_BRAND:END -->
 
@@ -204,4 +204,4 @@ When cherry-pick fails cleanly:
 
 ---
 φ = 1.618033988749895 · Fibonacci-scaled limits per LAW-10 Sacred Geometry.
-*© 2026 HeadySystems Inc. — Eric Haywood, Founder*
+*Made with ❤️ by HeadySystems Inc.*

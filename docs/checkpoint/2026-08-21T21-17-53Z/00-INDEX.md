@@ -1,7 +1,7 @@
 <!-- ╔══════════════════════════════════════════════════════════════════╗ -->
 <!-- ║  HEADY™ AutoFlow Checkpoint Index                              ║ -->
 <!-- ║  Exact Git, provider, artifact, and approval evidence.         ║ -->
-<!-- ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder              ║ -->
+<!-- ║  Made with ❤️ by HeadySystems Inc.              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 # AutoFlow Checkpoint — 2026-08-21T21:17:53Z
