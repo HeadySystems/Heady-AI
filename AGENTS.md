@@ -48,7 +48,16 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
 3. **Zero `TODO`/`FIXME`/`HACK`.** If it's not done, don't commit it.
 4. **Zero `localhost`.** All URLs from env vars. Cloud-deployed only.
 5. **Zod validation** on all API inputs. No unvalidated data crosses service boundaries.
-6. **HEADY_BRAND header** required in all new files.
+6. **HEADY_BRAND header** required in all new files. Its credit line reads
+   **`Made with ❤️ by HeadySystems Inc.`** — never a personal byline (2026-08-27, founder
+   ruled). The founder's name stays where it is **attribution or a record**, not a credit:
+   ADR `Deciders:`/`Decider:` fields, `Acceptance: Founder-signed tag …`, incident/audit
+   evidence, git identity, `AGENTS.md` §Identity, `docs/DUAL_ACTIVE_BRANCH_STRATEGY.md`
+   §Author (it carries the legal entity and EIN), `docs/LAW_TRANSFER_AUDIT.md` authorship,
+   and `SECURITY.md`'s role reference. Do not scrub those in a brand sweep. Also do not
+   rebrand `packages/db/migrations/*.sql`: the journal checksum in
+   `packages/db/src/migrate.mjs` is sha256 over raw file text, so editing a header there
+   halts `migrate` wherever the migration is already applied.
 7. **Redis keys** always namespaced: `tenant:{id}:*`.
 8. **φ-derived constants.** Timeouts, TTLs, pool sizes from `@heady/phi-math` (`packages/phi-math`). Zero magic numbers.
 9. **Tests alongside code.** Vitest for unit, Playwright for E2E, k6 for load.
