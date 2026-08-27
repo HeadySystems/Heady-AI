@@ -1,0 +1,364 @@
+{
+  "schema": "heady.edge.inventory.v1",
+  "account": "heady",
+  "scripts": [
+    {
+      "script": "1ime1-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "heady-ai-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "heady-ai-org",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-ai-org-worker",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-api",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-api-production",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-api-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-bot-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-buddy-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-cloud-worker",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-connection-com-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-connection-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-edge-gateway",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-edge-node",
+      "source": "cloudflare/heady-edge-node/wrangler.toml",
+      "status": "active"
+    },
+    {
+      "script": "heady-edge-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-edge-proxy-production",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-edge-router-production",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-finance-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-guard",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-intent-router",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-io-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-lens-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-mcp-gateway-production",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-mcp-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-mcp-worker",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-os-worker",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "heady-portal-gateway",
+      "source": "apps/heady-portal-gateway/wrangler.json",
+      "status": "active"
+    },
+    {
+      "script": "heady-portal-proxy",
+      "source": "apps/heady-portal-proxy/wrangler.json",
+      "status": "active"
+    },
+    {
+      "script": "heady-router",
+      "source": "configs/cloudflare-workers/wrangler.toml",
+      "status": "active"
+    },
+    {
+      "script": "heady-systems-proxy",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headyadvisor-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyagent-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyapi-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headybot-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headybuddy-org",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headycloud-site",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headyconnection-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyconnection-org",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headycore-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headycreator-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyex-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyfinance-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyio-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyio-worker",
+      "source": "configs/cloudflare-workers/headyio-worker/wrangler.toml",
+      "status": "active"
+    },
+    {
+      "script": "headykey-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headylens-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headymcp-com",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headymcp-edge",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headyme-com",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headyos-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyos-site",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headysecure-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headysystems-com",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "headyvault-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "headyweb-com",
+      "source": null,
+      "status": "quarantined",
+      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
+    },
+    {
+      "script": "liquid-gateway-worker",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "liquid-gateway-worker-production",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "sentry-linear-sync",
+      "source": null,
+      "status": "unprovenanced",
+      "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
+    },
+    {
+      "script": "worker-ai-gateway",
+      "source": "cloudflare/worker-ai-gateway/wrangler.toml",
+      "status": "active"
+    },
+    {
+      "script": "worker-heady-router",
+      "source": "cloudflare/worker-heady-router/wrangler.toml",
+      "status": "active"
+    },
+    {
+      "script": "worker-mcp-telemetry",
+      "source": "cloudflare/worker-mcp-telemetry/wrangler.toml",
+      "status": "active"
+    }
+  ]
+}

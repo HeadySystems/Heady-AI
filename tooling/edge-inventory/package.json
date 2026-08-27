@@ -1,0 +1,20 @@
+{
+  "heady_brand": "HEADY™ Edge Inventory Gate v1.0.0 — Made with ❤️ by HeadySystems Inc.",
+  "name": "@heady/edge-inventory",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reconciles deployed Cloudflare Worker scripts and zone routes against what this repository declares. SEC-003 remediation step 5.",
+  "main": "src/edge-inventory.mjs",
+  "exports": { ".": "./src/edge-inventory.mjs" },
+  "scripts": {
+    "build": "node --check src/edge-inventory.mjs && node --check bin/check-edge.mjs",
+    "check": "node bin/check-edge.mjs",
+    "test": "node --test",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "dependencies": {
+    "@heady/phi-math": "workspace:*",
+    "zod": "3.25.76"
+  }
+}
