@@ -1021,6 +1021,39 @@ The 2026-07-23 sign-and-continue instruction stays what the record already calls
 
 ---
 
+## 9. `policies/approval.rego` is byte-frozen until an OPA recompile (2026-08-27)
+
+**Do not edit that file for cosmetic reasons — not even a comment.** Its bytes are bound in three
+places at once:
+
+- `packages/approvals/policy/manifest.json` pins `sourceSha256`
+  `a58695bb843e9b4b3ec918559c3a0499a06ee20e4ea4d4905fa8f7eb429238f6`;
+- `packages/approvals/bin/prepare-genesis-manifest.mjs` `assertHash()`es it and aborts genesis
+  preparation on mismatch;
+- the genesis review bundle (PR #261's `genesis-review-scope.json`) hashes it into the digest an
+  external reviewer signs off on.
+
+This already fired once. The 2026-08-27 branding sweep `f69ddccdcd` replaced one comment line —
+`© 2026 HeadySystems Inc. — Eric Haywood, Founder` → `Made with ❤️ by HeadySystems Inc.` — across 44
+files including this one. `pnpm --filter @heady/approvals build` then failed with
+`TypeError: approval.rego source hash does not match the compiled policy manifest`, which meant the
+approval package's build gate was red and `genesis:prepare` could not have run. Restored to the exact
+reviewed bytes in the same-day fix.
+
+**If you do want the new byline in the policy**, it takes an OPA `1.18.2` recompile in the *same*
+commit — and OPA is not installed on this machine:
+
+```bash
+# install OPA 1.18.2 first: https://www.openpolicyagent.org/docs/latest/#running-opa
+OPA_BIN=/absolute/path/to/opa pnpm --filter @heady/approvals policy:build
+```
+
+That regenerates `approval.wasm` and the manifest together. Note it produces a **new WASM artifact**,
+so PR #261's review bundle and any signed genesis manifest must be re-hashed against it. Cheapest
+before genesis; expensive after.
+
+---
+
 ## 8. Two genesis-adjacent traps found in local stashes (2026-08-22)
 
 Neither is applied; both are recorded so genesis is not surprised by them. Read-only inspection —

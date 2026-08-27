@@ -1,7 +1,7 @@
 # ╔══════════════════════════════════════════════════════════════════╗
 # ║  HEADY™ Approval Policy v1.0.0                                  ║
 # ║  Typed quorum and evidence binding for the approval control plane.║
-# ║  Made with ❤️ by HeadySystems Inc.                              ║
+# ║  © 2026 HeadySystems Inc. — Eric Haywood, Founder               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 
 package heady.approval
