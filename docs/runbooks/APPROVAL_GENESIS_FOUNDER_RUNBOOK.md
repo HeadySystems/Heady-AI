@@ -1021,6 +1021,43 @@ The 2026-07-23 sign-and-continue instruction stays what the record already calls
 
 ---
 
+## 10. Projection manifests must be regenerated from a CLEAN checkout (2026-08-27)
+
+`tooling/projection-engine` computes a source hash by walking the **filesystem**, not git. It does not
+respect `.gitignore`, so a working checkout that has built the app produces a different hash than CI's
+clean checkout:
+
+| Tree | Files under `apps/headyme-portal` | `headyweb` `last_sync_hash` |
+|---|---|---|
+| Developer checkout (has `dist/`, `.turbo/`, `.env`) | 44 | `f7e96714…` |
+| Clean checkout / CI | 43 | `0fe08a0a…` |
+
+**Consequence:** regenerating projections from a normal working checkout produces manifests that
+**can never go green in CI**, and the drift gate stays red on every branch. This happened during the
+2026-08-27 brand-sweep cleanup and had to be redone.
+
+**Procedure — always regenerate from a throwaway clean worktree:**
+
+```bash
+git worktree add --detach /tmp/heady-clean-projections <branch>
+cd /tmp/heady-clean-projections
+ln -s /home/headyme/Heady-AI/node_modules node_modules      # deps only, no build output
+node tooling/projection-engine/bin/generate-manifests.mjs
+node tooling/projection-engine/bin/check-drift.mjs          # must be drifted:[]
+cp configs/projections/*.projection.json <repo>/configs/projections/
+git worktree remove /tmp/heady-clean-projections
+```
+
+**Safety note, checked:** the manifests store only `last_sync_hash`, `last_sync_commit` and metadata —
+**no file list and no file content** — so a polluted regeneration never leaked `.env` material into a
+commit. It only produced an unreproducible hash.
+
+**Open defect, not fixed here:** `collectSource()` should honour `.gitignore` (or take an explicit
+allow-list) so the gate is environment-independent. Fixing it changes every recorded hash once, so it
+is cheapest to do deliberately in its own change rather than as a side effect.
+
+---
+
 ## 9. `policies/approval.rego` is byte-frozen until an OPA recompile (2026-08-27)
 
 **Do not edit that file for cosmetic reasons — not even a comment.** Its bytes are bound in three
