@@ -22,7 +22,9 @@ const ArgumentsSchema = z.tuple([
   z.string().min(1),
 ]);
 
-const [, keyVersionName, , envelopePath] = ArgumentsSchema.parse(process.argv.slice(2));
+const [, keyVersionName, , envelopePath] = ArgumentsSchema.parse(
+  process.argv[2] === "--" ? process.argv.slice(3) : process.argv.slice(2),
+);
 const envelope = EvidenceEnvelopeSchema.parse(JSON.parse(
   await readFile(resolve(envelopePath), "utf8"),
 ));

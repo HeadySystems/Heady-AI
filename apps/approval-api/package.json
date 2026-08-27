@@ -9,6 +9,11 @@
   "scripts": {
     "build": "echo '(no build — runnable ESM with precompiled policy WASM)'",
     "evidence:sign": "node bin/sign-evidence-envelope.mjs",
+    "founder:terminal": "node bin/founder-terminal.mjs",
+    "genesis:bundle:hash": "node bin/hash-genesis-review-bundle.mjs",
+    "genesis:execute": "node bin/execute-genesis.mjs",
+    "genesis:sign": "node bin/sign-genesis-manifest.mjs",
+    "genesis:verify": "node bin/verify-genesis.mjs",
     "key:public": "node bin/export-kms-public-jwk.mjs",
     "test": "node --test",
     "start": "node src/index.mjs",

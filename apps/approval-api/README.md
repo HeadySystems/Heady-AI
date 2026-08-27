@@ -146,6 +146,41 @@ The remaining human gate is intentionally external:
 6. replay the complete chain; and
 7. remove the owner session and verify the API role cannot write `bootstrap` or mint a second genesis.
 
+The proposed implementation of steps 4–7 is isolated for external human review in
+[`docs/review/approval-genesis-executor/README.md`](../../docs/review/approval-genesis-executor/README.md).
+Its executor is not invoked by application startup, deployment, CI, or any agent workflow.
+
+### Founder-run KMS signature for the canonical genesis manifest
+
+The founder may invoke the Ed25519 evidence key version without exporting private material. Confirm
+the exact canonical manifest hash as a required argument and run this personally from a founder-
+authenticated terminal:
+
+```bash
+pnpm --filter @heady/approval-api founder:terminal -- \
+  --key-version "$HEADY_FOUNDER_KEY_VERSION" \
+  --firebase-email "eric@headyconnection.org"
+
+pnpm --filter @heady/approval-api genesis:sign -- \
+  --key-version "$HEADY_FOUNDER_KEY_VERSION" \
+  --manifest "$HEADY_STAGE0_DIR/genesis-manifest.json" \
+  --confirm-manifest-sha256 "$HEADY_GENESIS_MANIFEST_SHA256" \
+  > "$HEADY_STAGE0_DIR/genesis-manifest.signature.json"
+```
+
+The founder terminal is an ephemeral, history-disabled shell. Before opening, it requires the pinned
+canonical branch and ADR tag, active `eric@headyconnection.org` or
+`eric@headysystems.com` gcloud and application-default credentials, the pinned founder GPG secret
+key, no service-account override or impersonation, read-only validation of the exact Ed25519 KMS
+key version, and a fresh revoked-aware Firebase sign-in for project `heady-ai`. It places the
+short-lived ID token only in the history-disabled child shell and never prints the token or Firebase
+password. Both email aliases map to the same human founder principal and can never count as
+independent approvals. Manifest preparation still requires its separate clean detached worktree.
+
+The command rejects noncanonical JSON, a changed confirmation hash, a KMS key whose public
+fingerprint differs from the founder key bound in the manifest, or a signature that fails local
+verification. It never receives or exports the private key.
+
 Cloud KMS’s [asymmetric signing guide](https://cloud.google.com/kms/docs/create-validate-signatures)
 describes the Ed25519 operation used here. Firebase’s
 [ID-token verification guide](https://firebase.google.com/docs/auth/admin/verify-id-tokens) describes
