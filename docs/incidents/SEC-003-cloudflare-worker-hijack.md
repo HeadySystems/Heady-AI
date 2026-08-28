@@ -85,6 +85,51 @@ account credential — or a token/integration holding its authority — was used
 party. **The vector is presumed still open**; remediating the workers without first
 revoking that access invites immediate re-hijack.
 
+## Step 2 COMPLETE — blast radius (2026-08-27, read-only audit-log enumeration)
+
+Evidence: `docs/incidents/SEC-003-evidence/`.
+
+**The blast radius is narrower than feared: 23 worker deploys and nothing else.**
+
+| Checked in 2026-07-05 → 07-09 | Count |
+|---|---|
+| `script_update` by `eric@headyconnection.org` @ `138.199.43.66` | 23 |
+| `script_deploy` by the same actor/IP | 23 |
+| DNS record changes | **0** |
+| API token creations | **0** |
+| Zone setting changes | **0** |
+| Account member changes | **0** |
+
+The only non-script events in the window are Cloudflare **system** certificate-pack lifecycle entries
+(actor id `1`, type `system`, no IP) — routine cert management, not attacker action. The attacker IP
+`138.199.43.66` appears **zero** times across the most recent 1,000 audit entries
+(2026-08-02 → 08-27): no recurrence, no persistence established through the audit-visible surface.
+
+**23 scripts were touched, 20 remain hijacked.** The three already remediated —
+`headymcp-com`, `headyme-com`, `headysystems-com` — reconcile exactly with the earlier per-domain
+fixes, confirming the count rather than revealing new scope.
+
+Payload confirmed independently: **4,628 bytes**, sha256
+`6e6bfb9406a365a485936c4bfe9eb567c2c38dcd66924806831df8147e084b05`, containing
+`app2.holyburgje4.xyz`. The body itself is **deliberately not committed** — the hash and the audit log
+prove it without redistributing the payload; the body is kept local-only at
+`.data/incidents/SEC-003/hijack-script-body.js`.
+
+> ### 🔴 Step 1 is NOT complete — a pre-incident API token is still live
+> Verified 2026-08-27, after the founder reported credentials rotated. Token
+> **`ae4f66e64bbd085e0e3886383ac443b4`** returns `status: active` from
+> `/user/tokens/verify` and still returns HTTP 200 on `workers/scripts`. It is the token stored in
+> the working checkout's `.env`, whose mtime is `2026-07-29` — i.e. it predates the rotation and was
+> not replaced.
+>
+> **Step 3 must not proceed while it lives.** This document's own step 1 says deletion is "reversible
+> by the attacker in minutes" until revocation is complete, and a surviving pre-incident credential is
+> exactly that condition. Revoke that token id, then re-verify with
+> `curl -H "Authorization: Bearer <token>" https://api.cloudflare.com/client/v4/user/tokens/verify`
+> — it must return `success: false`.
+
+---
+
 ## Remediation — order matters
 
 1. **Revoke first.** Rotate the Cloudflare account password, force re-auth on all sessions,

@@ -1,0 +1,85 @@
+{
+  "schema": "heady.incident.evidence.v1",
+  "incident": "SEC-003",
+  "collected_at": "2026-08-27",
+  "collected_by": "read-only Cloudflare API enumeration + audit log",
+  "hijack_payload": {
+    "bytes": 4628,
+    "sha256": "6e6bfb9406a365a485936c4bfe9eb567c2c38dcd66924806831df8147e084b05",
+    "shared_etag_prefix": "f6f727d4d623",
+    "target_origin": "https://app2.holyburgje4.xyz",
+    "body_location": ".data/incidents/SEC-003/hijack-script-body.js (LOCAL ONLY \u2014 the payload is deliberately not committed; this hash proves it)"
+  },
+  "actor": {
+    "email": "eric@headyconnection.org",
+    "type": "user",
+    "ip": "138.199.43.66",
+    "note": "The account owner's own identity was used. Compromised credential or authorized third-party tool, not a separate principal."
+  },
+  "window": {
+    "first": "2026-07-06T19:13:57Z",
+    "last": "2026-07-06T19:15:22Z"
+  },
+  "scripts_deployed_in_window": [
+    "1ime1-com",
+    "heady-ai-com",
+    "headyadvisor-com",
+    "headyagent-com",
+    "headyapi-com",
+    "headybot-com",
+    "headybuddy-org",
+    "headyconnection-com",
+    "headyconnection-org",
+    "headycore-com",
+    "headycreator-com",
+    "headyex-com",
+    "headyfinance-com",
+    "headyio-com",
+    "headykey-com",
+    "headylens-com",
+    "headymcp-com",
+    "headyme-com",
+    "headyos-com",
+    "headysecure-com",
+    "headysystems-com",
+    "headyvault-com",
+    "headyweb-com"
+  ],
+  "still_hijacked": [
+    "1ime1-com",
+    "heady-ai-com",
+    "headyadvisor-com",
+    "headyagent-com",
+    "headyapi-com",
+    "headybot-com",
+    "headybuddy-org",
+    "headyconnection-com",
+    "headyconnection-org",
+    "headycore-com",
+    "headycreator-com",
+    "headyex-com",
+    "headyfinance-com",
+    "headyio-com",
+    "headykey-com",
+    "headylens-com",
+    "headyos-com",
+    "headysecure-com",
+    "headyvault-com",
+    "headyweb-com"
+  ],
+  "already_remediated": [
+    "headymcp-com",
+    "headyme-com",
+    "headysystems-com"
+  ],
+  "blast_radius": {
+    "script_update": 23,
+    "script_deploy": 23,
+    "dns_changes": 0,
+    "token_creations": 0,
+    "zone_setting_changes": 0,
+    "member_changes": 0,
+    "note": "The only non-script events in the window are Cloudflare system certificate-pack lifecycle (actor id 1, type system, no IP). No action by 138.199.43.66 other than the 46 script events.",
+    "actor_ip_recurrence_2026_08_02_to_08_27": 0
+  }
+}
