@@ -1,0 +1,43 @@
+#!/bin/sh
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  HEADY™ pre-commit — fail-closed gate on the staged set          ║
+# ║  Made with ❤️ by HeadySystems Inc.                                ║
+# ╚══════════════════════════════════════════════════════════════════╝
+#
+# This file lives in tooling/hooks because core.hooksPath points here. A hook in
+# .git/hooks is SHADOWED and never executes — which is exactly how the ARBITER
+# secret scan sat inert. Keep new hooks here, tracked and reviewable.
+#
+# Skip a single commit with:  HEADY_SKIP_PRECOMMIT=1 git commit …
+# Remove entirely by deleting this file.
+
+[ "${HEADY_SKIP_PRECOMMIT:-0}" = "1" ] && exit 0
+
+ROOT="$(git rev-parse --show-toplevel)" || exit 0
+cd "$ROOT" || exit 0
+
+# Nothing staged (e.g. `git commit` during a merge) — nothing to gate.
+git diff --cached --quiet && exit 0
+
+fail=0
+
+# 1. Secrets. Fail-closed: a scanner that cannot run is not a pass.
+printf '%s\n' "heady/pre-commit: secret scan"
+if ! node tooling/enforcers/secret-scan.mjs --all; then
+  printf '%s\n' "  BLOCKED: secret-scan failed. Nothing is committed." >&2
+  fail=1
+fi
+
+# 2. Byte pins. Editing a file whose bytes are bound elsewhere breaks a build, a
+#    deploy or a migration in an environment you are not looking at.
+printf '%s\n' "heady/pre-commit: byte pins"
+if ! node tooling/byte-pins/bin/byte-pins.mjs check --staged; then
+  printf '%s\n' "  BLOCKED: a byte-pinned path is staged. Re-pin it in THIS commit (command above)," >&2
+  printf '%s\n' "           or unstage it. Override once with HEADY_SKIP_PRECOMMIT=1 if you are re-pinning" >&2
+  printf '%s\n' "           deliberately and the pin update is part of the same commit." >&2
+  fail=1
+fi
+
+[ "$fail" -eq 0 ] || exit 1
+printf '%s\n' "heady/pre-commit: ok"
+exit 0
