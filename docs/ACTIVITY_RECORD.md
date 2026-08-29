@@ -38,11 +38,46 @@ hostnames now return a default origin page, not the attacker. `check-edge.mjs`: 
 
 ### M5 · SEC-003 residuals
 
-1. **Roll any API token predating 2026-07-06 that carries `API Tokens Write`.** Such a token
-   can mint a replacement credential, which makes every other rotation moot. They are not
-   enumerable with an account-scoped token, so this needs your eyes:
-   → https://dash.cloudflare.com/profile/api-tokens — check the **Created** column, roll
-   anything older than 2026-07-06 that has token-write permission.
+1. ~~**Roll any API token predating 2026-07-06 that carries `API Tokens Write`.**~~ **Mostly
+   done 2026-08-28.** They *are* enumerable — with the **Global API Key**
+   (`X-Auth-Email` + `X-Auth-Key`), not an account-scoped token, and across **two** surfaces:
+   `/user/tokens` and `/accounts/{id}/tokens`. `/user/tokens` also defaults to `per_page=20`
+   while the account holds 25, which is why the first sweep looked complete and was not.
+
+   Five carried `API Tokens Write`. **Four revoked**, chosen on `last_used_on` rather than
+   guesswork:
+
+   | Token | Name | Last used | Action |
+   |---|---|---|---|
+   | `ae1afddb…` | lingering-waterfall-ec0a | **never** | revoked |
+   | `9334c680…` | Create Additional Tokens | 2026-02-21 | revoked |
+   | `47ce6a6c…` | Create Additional Tokens | 2026-03-16 | revoked |
+   | `034f0781…` | Heady_Cloudflare_API_Token | 2026-03-25 | revoked |
+   | `a582a2a9…` | Create Additional Tokens | **2026-08-24** | **HELD — in active use** |
+
+   Active tokens 29 → 25; token-minting credentials 5 → 1.
+
+   **`a582a2a9d0fbc6b94fb76e8f70babeb3` is yours to close.** It was used four days ago, so
+   something depends on it, and it predates the hijack. Identify the consumer, then **roll**
+   it (new secret, same id) rather than revoking — revoking breaks whatever that is.
+
+   **Still pending — 19 more, blocked on a permission gate, not on judgement.** All 8
+   Cloudflare tunnels are `down`/`inactive` with **zero connections**, so the 17 tunnel
+   tokens (13 of them *never used*) break nothing. Two more are idle six months and carry
+   exactly the capabilities this incident abused:
+   `ed8599fbff6d…` **Heady Workers Route Write Token** (route write = the hijack primitive) and
+   `2fe12b800216…` **"Read all resources"** — misleadingly named, it holds `Access: Apps Write`
+   and `AI Gateway Write`.
+
+   ```bash
+   # user-scope:    DELETE /user/tokens/{id}
+   # account-scope: DELETE /accounts/{account_id}/tokens/{id}
+   #   headers: X-Auth-Email: $CLOUDFLARE_EMAIL   X-Auth-Key: $CLOUDFLARE_API_KEY
+   ```
+   Left deliberately untouched: `9e110941…` (cache purge), `26c0cf5a…` (pages read),
+   `fe014f83…` (zone debug) — low privilege and possibly CI; and `51d7e448…` (**Edit zone
+   DNS**) — idle since 2026-03-16 but DNS-write breakage is high-impact, so it wants a
+   deliberate decision rather than a sweep.
 2. **Decide on 33 unprovenanced Workers.** The gate accepts them because they are *declared*,
    but this repo cannot prove it produced them — the same blind spot as SEC-003, narrower.
    Either provenance them to a source path or retire them. I can produce the list and a
