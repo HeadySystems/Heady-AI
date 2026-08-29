@@ -61,23 +61,26 @@ hostnames now return a default origin page, not the attacker. `check-edge.mjs`: 
    something depends on it, and it predates the hijack. Identify the consumer, then **roll**
    it (new secret, same id) rather than revoking — revoking breaks whatever that is.
 
-   **Still pending — 19 more, blocked on a permission gate, not on judgement.** All 8
-   Cloudflare tunnels are `down`/`inactive` with **zero connections**, so the 17 tunnel
-   tokens (13 of them *never used*) break nothing. Two more are idle six months and carry
-   exactly the capabilities this incident abused:
-   `ed8599fbff6d…` **Heady Workers Route Write Token** (route write = the hijack primitive) and
-   `2fe12b800216…` **"Read all resources"** — misleadingly named, it holds `Access: Apps Write`
-   and `AI Gateway Write`.
+   **The remaining 19 were revoked 2026-08-28** once the permission gate was lifted: all 17
+   Cloudflare tunnel tokens (evidence first — all 8 tunnels are `down`/`inactive` with **zero
+   connections**, and 13 of the tokens had *never* been used, so nothing broke),
+   `ed8599fbff6d…` **Heady Workers Route Write Token** (route write is the hijack primitive,
+   idle 6 months) and `2fe12b800216…` **"Read all resources"** (misleadingly named — it held
+   `Access: Apps Write` and `AI Gateway Write`, idle 6 months). 19 revoked, 0 failed.
 
-   ```bash
-   # user-scope:    DELETE /user/tokens/{id}
-   # account-scope: DELETE /accounts/{account_id}/tokens/{id}
-   #   headers: X-Auth-Email: $CLOUDFLARE_EMAIL   X-Auth-Key: $CLOUDFLARE_API_KEY
-   ```
-   Left deliberately untouched: `9e110941…` (cache purge), `26c0cf5a…` (pages read),
-   `fe014f83…` (zone debug) — low privilege and possibly CI; and `51d7e448…` (**Edit zone
-   DNS**) — idle since 2026-03-16 but DNS-write breakage is high-impact, so it wants a
-   deliberate decision rather than a sweep.
+   **Account surface: 29 active tokens → 6.** What remains:
+
+   | Token | Issued | Last used | Keep because |
+   |---|---|---|---|
+   | `ae4f66e6…` heady-rebuild-scoped | 2026-07-23 | 2026-08-29 | post-hijack, correctly scoped, in active use |
+   | `a582a2a9…` Create Additional Tokens | 2026-02-21 | 2026-08-24 | ⚠️ **the last token-minter — yours to roll** |
+   | `51d7e448…` Edit zone DNS | 2026-02-17 | 2026-03-16 | DNS-write breakage is high-impact |
+   | `9e110941…` Cache Purge | 2026-02-21 | 2026-02-21 | low privilege, may serve CI |
+   | `26c0cf5a…` Pages Read | 2026-02-21 | 2026-02-21 | low privilege, may serve CI |
+   | `fe014f83…` Zone Debug | 2026-02-21 | 2026-02-21 | low privilege, may serve CI |
+
+   Four of the six predate the hijack and are idle; they were kept on purpose rather than
+   swept, but each still wants a deliberate keep-or-retire call from you.
 2. **Decide on 33 unprovenanced Workers.** The gate accepts them because they are *declared*,
    but this repo cannot prove it produced them — the same blind spot as SEC-003, narrower.
    Either provenance them to a source path or retire them. I can produce the list and a
