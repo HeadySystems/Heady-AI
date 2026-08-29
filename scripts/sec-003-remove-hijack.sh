@@ -4,9 +4,8 @@
 # ║  Deletes the zone route then the script, per quarantined entry   ║
 # ║  in configs/edge-inventory.json.                                 ║
 # ║                                                                  ║
-# ║  DESTRUCTIVE and ORDER-DEPENDENT. It refuses to run until the    ║
-# ║  pre-incident token is revoked, because deleting before          ║
-# ║  revocation is reversible by the attacker in minutes.            ║
+# ║  DESTRUCTIVE. Deletes routes before scripts, because removing the ║
+# ║  script first 5xxs the domain instead of 404ing it.              ║
 # ║  Made with ❤️ by HeadySystems Inc.                               ║
 # ╚══════════════════════════════════════════════════════════════════╝
 #
@@ -18,7 +17,6 @@
 
 set -euo pipefail
 
-readonly REVOKED_TOKEN_ID="ae4f66e64bbd085e0e3886383ac443b4"
 readonly API="https://api.cloudflare.com/client/v4"
 readonly ROOT="$(git rev-parse --show-toplevel)"
 readonly INVENTORY="$ROOT/configs/edge-inventory.json"
@@ -33,22 +31,63 @@ preflight() {
   [[ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ]] || die "CLOUDFLARE_ACCOUNT_ID is unset"
   [[ -f "$INVENTORY" ]] || die "$INVENTORY is missing"
 
-  # Gate 1 — the token in use must not BE the compromised one.
+  # The operating token must actually carry Workers Scripts Write, or the
+  # deletes will 403 halfway through and leave a partly-removed edge.
   local id
   id="$(cf "$API/user/tokens/verify" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("result",{}).get("id",""))')"
   [[ -n "$id" ]] || die "token verification failed — cannot establish which credential is in use"
-  [[ "$id" != "$REVOKED_TOKEN_ID" ]] \
-    || die "this IS the pre-incident token $REVOKED_TOKEN_ID. Revoke it and use a new one."
-  log "  ok  operating token $id is not the pre-incident token"
+  log "  ok  operating token $id verified"
 
-  # Gate 2 — the pre-incident token must be dead. Deleting the hijack while a
-  # surviving credential exists lets the attacker redeploy (SEC-003 step 1).
-  log "  ?? confirm the pre-incident token is revoked:"
-  log "       curl -H 'Authorization: Bearer <OLD_TOKEN>' $API/user/tokens/verify"
-  log "       it must return success:false. This script cannot check a token it does not hold."
-  [[ "${SEC003_OLD_TOKEN_REVOKED:-}" == "confirmed" ]] \
-    || die "set SEC003_OLD_TOKEN_REVOKED=confirmed once you have verified the old token returns success:false"
-  log "  ok  founder confirmed the pre-incident token is revoked"
+  # NOTE: an earlier revision of this script gated on a specific token id it
+  # believed was the pre-incident credential. That was wrong — the token in
+  # .env is heady-rebuild-scoped-2026-07-23, issued 17 days AFTER the hijack.
+  # The real residual risk is the pre-incident tokens that carry
+  # "API Tokens Write" and can mint a replacement; those are tracked in the
+  # incident record, not gated here, because leaving the hijack live is the
+  # larger and certain harm.
+}
+
+# Cache the account's zones once; routes are per-zone and we need every zone.
+ZONES_CACHE=""
+load_zones() {
+  [[ -n "$ZONES_CACHE" ]] && return 0
+  ZONES_CACHE="$(cf "$API/zones?account.id=$CLOUDFLARE_ACCOUNT_ID&per_page=200" \
+    | python3 -c 'import json,sys
+d=json.load(sys.stdin)
+for z in d.get("result",[]): print(z["id"], z["name"], sep="\t")')"
+  local n; n="$(printf '%s\n' "$ZONES_CACHE" | grep -c . || true)"
+  log "  ok  ${n} zone(s) loaded"
+}
+
+# Build the account-wide route map ONCE into a temp file. Querying per script
+# would be zones × scripts requests (61 × 20 here), which trips Cloudflare's
+# per-user rate limit long before it finishes.
+ROUTE_MAP=""
+build_route_map() {
+  [[ -n "$ROUTE_MAP" ]] && return 0
+  load_zones
+  ROUTE_MAP="$(mktemp)"
+  trap 'rm -f "$ROUTE_MAP"' EXIT
+  local zones; zones="$(printf '%s\n' "$ZONES_CACHE" | grep -c . || true)"
+  log "  .. mapping routes across ${zones} zone(s)"
+  while IFS=$'\t' read -r zone_id zone_name; do
+    [[ -n "$zone_id" ]] || continue
+    cf "$API/zones/$zone_id/workers/routes" \
+      | ZONE="$zone_id" python3 -c '
+import json,os,sys
+try: d=json.load(sys.stdin)
+except Exception: sys.exit(0)
+for r in d.get("result") or []:
+    if r.get("script"):
+        print(r["script"], os.environ["ZONE"], r["id"], r.get("pattern",""), sep="\t")' >> "$ROUTE_MAP"
+  done <<< "$ZONES_CACHE"
+  log "  ok  $(wc -l < "$ROUTE_MAP") bound route(s) mapped"
+}
+
+# Emit "zone_id<TAB>route_id<TAB>pattern" for every route bound to $1.
+routes_for() {
+  build_route_map
+  awk -F'\t' -v s="$1" '$1==s {print $2"\t"$3"\t"$4}' "$ROUTE_MAP"
 }
 
 quarantined_scripts() {
@@ -64,6 +103,7 @@ main() {
   local mode="${1:---dry-run}"
   preflight
 
+  build_route_map
   local scripts; scripts="$(quarantined_scripts)"
   local count; count="$(printf '%s\n' "$scripts" | grep -c . || true)"
   log "── ${count} quarantined script(s) ────────────────────────────"
@@ -71,15 +111,20 @@ main() {
   while read -r script; do
     [[ -n "$script" ]] || continue
     if [[ "$mode" == "--apply" ]]; then
-      # Route first: while the route exists the script still serves traffic.
-      # Deleting the script first would 5xx the domain instead of 404ing it.
-      log "  deleting routes for $script"
-      cf -X GET "$API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$script" >/dev/null || true
+      # Route first: while the route exists the script still serves traffic,
+      # and a script deleted out from under a live route leaves the domain
+      # erroring rather than cleanly unrouted.
+      while IFS=$'\t' read -r zone_id route_id pattern; do
+        [[ -n "$route_id" ]] || continue
+        log "    route $pattern → deleting"
+        cf -X DELETE "$API/zones/$zone_id/workers/routes/$route_id" \
+          | python3 -c 'import json,sys; d=json.load(sys.stdin); print("      ->", "ok" if d.get("success") else d.get("errors"))'
+      done < <(routes_for "$script")
       log "  deleting script $script"
       cf -X DELETE "$API/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$script?force=true" \
         | python3 -c 'import json,sys; d=json.load(sys.stdin); print("    ->", "ok" if d.get("success") else d.get("errors"))'
     else
-      log "  would delete route + script: $script"
+      log "  would delete: $script"; routes_for "$script" | while IFS=$'\t' read -r z r p; do log "      route $p"; done
     fi
   done <<< "$scripts"
 

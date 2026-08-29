@@ -115,18 +115,34 @@ Payload confirmed independently: **4,628 bytes**, sha256
 prove it without redistributing the payload; the body is kept local-only at
 `.data/incidents/SEC-003/hijack-script-body.js`.
 
-> ### 🔴 Step 1 is NOT complete — a pre-incident API token is still live
-> Verified 2026-08-27, after the founder reported credentials rotated. Token
-> **`ae4f66e64bbd085e0e3886383ac443b4`** returns `status: active` from
-> `/user/tokens/verify` and still returns HTTP 200 on `workers/scripts`. It is the token stored in
-> the working checkout's `.env`, whose mtime is `2026-07-29` — i.e. it predates the rotation and was
-> not replaced.
+> ### ✅ CORRECTION 2026-08-28 — the token I flagged was never the problem
+> An earlier revision of this record claimed token `ae4f66e64bbd085e0e3886383ac443b4` was a surviving
+> **pre-incident** credential and used that to block step 3. **That was wrong.** Enumerating
+> `/user/tokens?per_page=100` (the default page size is 20, which is why it was missed at first) shows
+> it is **`heady-rebuild-scoped-2026-07-23`**, issued `2026-07-23T14:24:40Z` — **17 days AFTER the
+> hijack**. It is the scoped rebuild token, correctly scoped (`Workers Scripts Write`,
+> `Workers Routes Write`, `Zone Read`). The false inference came from reading `.env`'s mtime as if it
+> dated the credential. It dates the file.
 >
-> **Step 3 must not proceed while it lives.** This document's own step 1 says deletion is "reversible
-> by the attacker in minutes" until revocation is complete, and a surviving pre-incident credential is
-> exactly that condition. Revoke that token id, then re-verify with
-> `curl -H "Authorization: Bearer <token>" https://api.cloudflare.com/client/v4/user/tokens/verify`
-> — it must return `success: false`.
+> ### 🔴 The real residual exposure: 27 of 29 active tokens predate the hijack
+> Five of them can deploy workers or mint new tokens, which means revoking any one credential does not
+> close the path:
+>
+> | Token | Name | Issued | Capability that matters |
+> |---|---|---|---|
+> | `9334c680…` | Create Additional Tokens | 2026-02-21 | `API Tokens Write` |
+> | `a582a2a9…` | Create Additional Tokens | 2026-02-21 | `API Tokens Write` (modified 2026-08-28) |
+> | `47ce6a6c…` | Create Additional Tokens | 2026-03-16 | `Account API Tokens Write`, Access org/IdP writes |
+> | `2fe12b80…` | "Read all resources" | 2026-02-12 | name is misleading — carries `Access: Apps Write`, `AI Gateway Write` |
+> | `034f0781…` | Heady_Cloudflare_API_Token | 2026-02-16 | broad Access writes |
+>
+> **Three separate tokens named "Create Additional Tokens" holding `API Tokens Write` is a standing
+> privilege-escalation primitive**: any one of them mints a fresh full-scope token on demand. That, not
+> any single token, is what "rotate the credentials" has to mean here.
+>
+> Note also that user tokens and **account-owned** tokens are different surfaces
+> (`/user/tokens` vs `/accounts/{id}/tokens`) with different dashboard pages. Rotating one page leaves
+> the other untouched — a likely reason the first rotation felt complete but wasn't.
 
 ---
 
