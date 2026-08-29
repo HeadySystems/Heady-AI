@@ -1,0 +1,15 @@
+{
+  "name": "@heady/byte-pins",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Registry of paths whose bytes are bound elsewhere (checksum journals, manifest hashes, signed tags, equality gates). Ask before a repo-wide sweep.",
+  "bin": { "heady-byte-pins": "bin/byte-pins.mjs" },
+  "scripts": {
+    "build": "echo \"(no build — runnable ESM)\"",
+    "test": "node --test test/*.test.mjs",
+    "lint": "echo \"(lint wired at repo level)\""
+  },
+  "keywords": ["heady", "byte-pins", "checksum", "manifest", "sweep-guard"],
+  "license": "UNLICENSED"
+}

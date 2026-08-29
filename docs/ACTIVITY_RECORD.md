@@ -141,12 +141,18 @@ before each — they carry the exact commands and the order-sensitivity.
    `redis-connection-pool.js:16`, `daw-mcp-bridge.js:30`, `vsa/swarm.py:217`); then extend
    `SCAN_DIRS` to `src/`. Fully specified in
    `docs/LAW0_LOOPBACK_TRIAGE_2026-08-22.md` §"Step 5 status".
-2. **Edge-inventory reconciliation** — the gate that would have caught SEC-003 on day one:
+2. ✅ **DONE 2026-08-28 — byte-pin sweep guard.** `tooling/byte-pins` registers every path
+   whose bytes are bound elsewhere and exits 2 with the re-pin command.
+   `node tooling/byte-pins/bin/byte-pins.mjs check --staged`. Replayed against the branding
+   sweep it flags all three things that broke: `approval-policy`, `projection-sources`,
+   `adr-ceremony`. **Not wired into a hook** — that needs your approval; say the word and
+   I will add it to the pre-commit gate.
+3. **Edge-inventory reconciliation** — the gate that would have caught SEC-003 on day one:
    enumerate deployed Workers + zone routes, assert every script is one this repo produced
    and every origin it fetches is a Heady origin, fail closed otherwise. Same shape as the
    D1–D7 domain-carrier guards, one layer down. *This is the structural fix for "why wasn't
    that known".*
-3. **Rotate the `.env` Cloudflare token into GCP Secret Manager** once M1 step 4 is done.
+4. **Rotate the `.env` Cloudflare token into GCP Secret Manager.**
 
 ---
 

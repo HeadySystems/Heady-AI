@@ -54,10 +54,12 @@ This codebase belongs to **HeadySystems Inc.** — the Heady™ Latent-Space Ope
    ADR `Deciders:`/`Decider:` fields, `Acceptance: Founder-signed tag …`, incident/audit
    evidence, git identity, `AGENTS.md` §Identity, `docs/DUAL_ACTIVE_BRANCH_STRATEGY.md`
    §Author (it carries the legal entity and EIN), `docs/LAW_TRANSFER_AUDIT.md` authorship,
-   and `SECURITY.md`'s role reference. Do not scrub those in a brand sweep. Also do not
-   rebrand `packages/db/migrations/*.sql`: the journal checksum in
-   `packages/db/src/migrate.mjs` is sha256 over raw file text, so editing a header there
-   halts `migrate` wherever the migration is already applied.
+   and `SECURITY.md`'s role reference. Do not scrub those in a brand sweep. **Before ANY repo-wide
+   sweep**, run `node tooling/byte-pins/bin/byte-pins.mjs check --staged` — it lists the
+   paths whose bytes are bound elsewhere (migration checksum journals, manifest
+   `sourceSha256`, projection `last_sync_hash`, the ADR ceremony's pinned hashes, equality
+   gates) and exits 2 with the re-pin command for each. That registry is the single list;
+   do not maintain a second one here.
 7. **Redis keys** always namespaced: `tenant:{id}:*`.
 8. **φ-derived constants.** Timeouts, TTLs, pool sizes from `@heady/phi-math` (`packages/phi-math`). Zero magic numbers.
 9. **Tests alongside code.** Vitest for unit, Playwright for E2E, k6 for load.
