@@ -7,7 +7,7 @@ HEADY_BRAND:END -->
 
 # Heady Activity Record
 
-**Living document — a stable path that is always current.** Updated 2026-08-27.
+**Living document — a stable path that is always current.** Updated 2026-08-28.
 Branch `checkpoint/rebuild-substrate-2026-07-23` @ `6909f642a6`.
 
 > **Why this exists and is not a twelfth status surface.** Three record types, three jobs:
@@ -23,68 +23,57 @@ Branch `checkpoint/rebuild-substrate-2026-07-23` @ `6909f642a6`.
 
 Ranked. Each has a full procedure because none of them can be done by an agent.
 
-### M1 · Revoke Cloudflare access — SEC-003, ACTIVE, do this first
+### M1 · Roll the Cloudflare **Global API Key** — the one thing still gating SEC-003
 
-**Why first:** 20 production Workers currently reverse-proxy to an attacker origin
-(`docs/incidents/SEC-003-cloudflare-worker-hijack.md`). They were deployed through your own
-account on 2026-07-06 from IP `138.199.43.66`. **Removing the workers before revoking access
-lets whoever holds that credential redo it in minutes.** Revocation is the first move, not
-the cleanup.
+**Status 2026-08-28: rotation is INCOMPLETE, and the gap is specific.** SEC-003 steps 2
+(blast radius) and 5 (edge-inventory gate) are done; step 3 (removing the 20 hijacked
+workers) is written and staged in `scripts/sec-003-remove-hijack.sh` but deliberately
+**not executed**, because deleting the hijack while a live credential survives just invites
+a redeploy.
 
-Account ID: `8b1fa38f282c691423c6399247d53323`
+Two credentials in this checkout's `.env` are still live right now:
 
-1. **Change the account password.**
-   → https://dash.cloudflare.com/profile/authentication
-   *If that path has moved: dash → profile icon (top right) → My Profile → Authentication.*
-   Use a fresh generated password; do not reuse anything that has been in a tool config.
+| Credential | State | Why it matters |
+|---|---|---|
+| **`CLOUDFLARE_API_KEY` (Global API Key)** + `CLOUDFLARE_EMAIL` | ⚠ **LIVE** — `/user` returns 200 for `eric@headyconnection.org` | **Prime suspect.** A Global API Key authenticates *as the user*, producing exactly the audit signature the attacker left: `actor.type: "user"`, the account email, no token id, `interface: ""`. It is account-wide with full permissions, **a password change does NOT revoke it**, and it does **not** appear on the API Tokens page. |
+| `CLOUDFLARE_API_TOKEN` id `ae4f66e64bbd085e0e3886383ac443b4` | ⚠ **active**, HTTP 200 on `workers/scripts` | Scoped, and a scoped token would have shown a token actor in the log — so probably not the vector, but it predates rotation, so roll it too. |
 
-2. **Confirm 2FA is enabled** on the same page. If it is already on, **re-roll it** — an
-   attacker with session-level access may have enrolled their own device. Regenerate
-   recovery codes and store them outside the repo.
+**Do this:**
 
-3. **Terminate all other sessions.** Same Authentication page → "Active Sessions" (or
-   "Sessions") → sign out everywhere. This is what actually ejects a live intruder.
+1. **Roll the Global API Key — this is the step that was missed.**
+   → https://dash.cloudflare.com/profile/api-tokens → scroll past *API Tokens* to the
+   **API Keys** section at the bottom → **Global API Key** → **Change**.
+   *This section is separate from API Tokens and is why a password rotation felt complete.*
+2. **Roll the scoped token** `ae4f66e64bbd085e0e3886383ac443b4` on the same page.
+3. **Update both** in `.env` and in GCP Secret Manager →
+   https://console.cloud.google.com/security/secret-manager?project=heady-ai
+4. **Confirm the old ones are dead** — I will run this and paste the result:
+   ```bash
+   cd ~/Heady-AI && set -a && . ./.env && set +a
+   curl -s -H "X-Auth-Email: $CLOUDFLARE_EMAIL" -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
+     https://api.cloudflare.com/client/v4/user | head -c 120     # expect success:false on the OLD key
+   curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+     https://api.cloudflare.com/client/v4/user/tokens/verify | head -c 120
+   ```
+5. **Then tell me** and I run `scripts/sec-003-remove-hijack.sh` — all 20 routes and scripts,
+   with verification per domain.
 
-4. **Review and revoke API tokens.**
-   → https://dash.cloudflare.com/profile/api-tokens
-   For each token, check **Last used** and **Created**. Anything you do not recognise, or
-   anything created near 2026-07-06, roll immediately.
-   - The token this repo uses has id **`ae4f66e64bbd085e0e3886383ac443b4`** and is currently
-     `active`. It is account-scoped (it cannot list other tokens — verified), so it is
-     *probably* not the one that did this, but roll it anyway on principle.
-   - After rolling it, update it in **both** places or the tooling breaks:
-     `.env` (`CLOUDFLARE_API_TOKEN`) and GCP Secret Manager →
-     https://console.cloud.google.com/security/secret-manager?project=heady-ai
-     Tell me when it is rolled and I will re-verify every gate that touches Cloudflare.
-
-5. **Revoke third-party app authorizations.** dash → My Profile → look for **Authorized
-   Applications** / connected apps, and revoke everything you do not actively use. The
-   2026-07-06 deploy came from a datacenter IP acting *as you*, so an OAuth-connected
-   third-party tool is a leading candidate for the vector.
-   *(I am less certain of this exact URL than the ones above — navigate from My Profile.)*
-
-6. **Read the audit log yourself** for the window and after.
-   → https://dash.cloudflare.com/8b1fa38f282c691423c6399247d53323/manage-account/audit-log
-   *If moved: dash → Manage Account → Audit Log.* Filter from `2026-07-06`. Look for any
-   `*_deploy`, DNS record, token-create, or member-add event you did not perform. **20
-   workers may not be the whole change** — I will pull this via API too, but your eyes on
-   the account-level view matter because some entries are user-scoped, not account-scoped.
-
-**Verification, run when done** — I will also run this for you:
-```bash
-# expect: the repo token is rejected until .env is updated with the new one
-cd ~/Heady-AI && set -a && . ./.env && set +a
-curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  https://api.cloudflare.com/client/v4/user/tokens/verify | head -c 200
-```
-
-**Then hand back to me.** The moment revocation is done I will: pull the full audit log from
-2026-07-06 forward, remove all 20 zone routes and hijacked scripts, and re-verify each
-domain serves Heady code. Bodies of all 20 are archived so the before/after is provable.
+**Good news from step 2:** blast radius is smaller than feared. In 2026-07-05..09 that actor
+performed 23 script updates/deploys and **nothing else** — zero DNS changes, zero token
+creations, zero zone-setting or member changes. The IP appears zero times in the most recent
+1,000 audit entries, so there is no recurrence. 20 remain hijacked; the other 3 were already
+fixed and reconcile exactly.
 
 ---
 
-### M2 · Sign the ADR acceptance ceremony — one command
+### M2 · ~~Sign the ADR acceptance ceremony~~ ✅ DONE 2026-08-23
+
+Signed: tags `adr-0053-accepted-dfdd2bc87` and `adr-0054-accepted-dfdd2bc87`; ADR-0054 is
+`Status: Accepted (2026-08-23)`. The domain-canon work is no longer governance-pending, and
+genesis STEP 1 (S0) is satisfied. Original procedure kept below for the next ceremony.
+
+<details><summary>original procedure</summary>
+
 
 **Why it matters:** three ADRs sit `Proposed`. ADR-0054 governs the domain-canon work
 already merged, which its own text says "remains governance-pending until this ADR is
@@ -110,8 +99,9 @@ asserting acceptance without a verifiable founder act.
    It signs, fail-closed verifies each tag against the key of record, rewrites each
    `Status:` bullet to `Accepted`, runs law-lint + governance-gate, and commits.
 4. **Push:** `bash scripts/adr-acceptance-ceremony.sh --push`
-5. Tell me, and I will update the `docs/adr/README.md` status paragraph (it still says 0054
-   is Proposed) and close out with a handoff.
+5. Tell me, and I will update the `docs/adr/README.md` status paragraph and close out.
+
+</details>
 
 ---
 
