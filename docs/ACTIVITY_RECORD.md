@@ -23,46 +23,33 @@ Branch `checkpoint/rebuild-substrate-2026-07-23` @ `6909f642a6`.
 
 Ranked. Each has a full procedure because none of them can be done by an agent.
 
-### M1 · Roll the Cloudflare **Global API Key** — the one thing still gating SEC-003
+### M1 · ~~SEC-003~~ ✅ **CONTAINED 2026-08-28**
 
-**Status 2026-08-28: rotation is INCOMPLETE, and the gap is specific.** SEC-003 steps 2
-(blast radius) and 5 (edge-inventory gate) are done; step 3 (removing the 20 hijacked
-workers) is written and staged in `scripts/sec-003-remove-hijack.sh` but deliberately
-**not executed**, because deleting the hijack while a live credential survives just invites
-a redeploy.
+Global API Key rolled by the founder; hijack removed and independently verified.
+`scripts/sec-003-remove-hijack.sh --apply` deleted 20 apex routes then 20 scripts (account
+61 → 41), leaving the clean `www.*` routes on `worker-heady-router` untouched. All 41
+survivors were re-fetched and grepped: **zero contain `app2.holyburgje4.xyz`**. Affected
+hostnames now return a default origin page, not the attacker. `check-edge.mjs`: clean.
 
-Two credentials in this checkout's `.env` are still live right now:
+**Three residuals moved to your queue as M5.** Full detail in
+`docs/incidents/SEC-003-cloudflare-worker-hijack.md` §Remaining.
 
-| Credential | State | Why it matters |
-|---|---|---|
-| **`CLOUDFLARE_API_KEY` (Global API Key)** + `CLOUDFLARE_EMAIL` | ⚠ **LIVE** — `/user` returns 200 for `eric@headyconnection.org` | **Prime suspect.** A Global API Key authenticates *as the user*, producing exactly the audit signature the attacker left: `actor.type: "user"`, the account email, no token id, `interface: ""`. It is account-wide with full permissions, **a password change does NOT revoke it**, and it does **not** appear on the API Tokens page. |
-| `CLOUDFLARE_API_TOKEN` id `ae4f66e64bbd085e0e3886383ac443b4` | ⚠ **active**, HTTP 200 on `workers/scripts` | Scoped, and a scoped token would have shown a token actor in the log — so probably not the vector, but it predates rotation, so roll it too. |
+---
 
-**Do this:**
+### M5 · SEC-003 residuals
 
-1. **Roll the Global API Key — this is the step that was missed.**
-   → https://dash.cloudflare.com/profile/api-tokens → scroll past *API Tokens* to the
-   **API Keys** section at the bottom → **Global API Key** → **Change**.
-   *This section is separate from API Tokens and is why a password rotation felt complete.*
-2. **Roll the scoped token** `ae4f66e64bbd085e0e3886383ac443b4` on the same page.
-3. **Update both** in `.env` and in GCP Secret Manager →
-   https://console.cloud.google.com/security/secret-manager?project=heady-ai
-4. **Confirm the old ones are dead** — I will run this and paste the result:
-   ```bash
-   cd ~/Heady-AI && set -a && . ./.env && set +a
-   curl -s -H "X-Auth-Email: $CLOUDFLARE_EMAIL" -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
-     https://api.cloudflare.com/client/v4/user | head -c 120     # expect success:false on the OLD key
-   curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-     https://api.cloudflare.com/client/v4/user/tokens/verify | head -c 120
-   ```
-5. **Then tell me** and I run `scripts/sec-003-remove-hijack.sh` — all 20 routes and scripts,
-   with verification per domain.
-
-**Good news from step 2:** blast radius is smaller than feared. In 2026-07-05..09 that actor
-performed 23 script updates/deploys and **nothing else** — zero DNS changes, zero token
-creations, zero zone-setting or member changes. The IP appears zero times in the most recent
-1,000 audit entries, so there is no recurrence. 20 remain hijacked; the other 3 were already
-fixed and reconcile exactly.
+1. **Roll any API token predating 2026-07-06 that carries `API Tokens Write`.** Such a token
+   can mint a replacement credential, which makes every other rotation moot. They are not
+   enumerable with an account-scoped token, so this needs your eyes:
+   → https://dash.cloudflare.com/profile/api-tokens — check the **Created** column, roll
+   anything older than 2026-07-06 that has token-write permission.
+2. **Decide on 33 unprovenanced Workers.** The gate accepts them because they are *declared*,
+   but this repo cannot prove it produced them — the same blind spot as SEC-003, narrower.
+   Either provenance them to a source path or retire them. I can produce the list and a
+   proposed disposition per script on request.
+3. **Disclosure call.** Anyone who authenticated against those 20 hostnames between
+   2026-07-06 and 2026-08-28 sent credentials to the attacker. `headyconnection.org` is a
+   501(c)(3) public portal, so this is a compliance decision, not a technical one.
 
 ---
 

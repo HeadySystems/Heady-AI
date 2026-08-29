@@ -3,18 +3,6 @@
   "account": "heady",
   "scripts": [
     {
-      "script": "1ime1-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "heady-ai-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
       "script": "heady-ai-org",
       "source": null,
       "status": "unprovenanced",
@@ -179,99 +167,15 @@
       "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
     },
     {
-      "script": "headyadvisor-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyagent-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyapi-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headybot-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headybuddy-org",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
       "script": "headycloud-site",
       "source": null,
       "status": "unprovenanced",
       "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
     },
     {
-      "script": "headyconnection-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyconnection-org",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headycore-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headycreator-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyex-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyfinance-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyio-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
       "script": "headyio-worker",
       "source": "configs/cloudflare-workers/headyio-worker/wrangler.toml",
       "status": "active"
-    },
-    {
-      "script": "headykey-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headylens-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
     },
     {
       "script": "headymcp-com",
@@ -292,40 +196,16 @@
       "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
     },
     {
-      "script": "headyos-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
       "script": "headyos-site",
       "source": null,
       "status": "unprovenanced",
       "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
     },
     {
-      "script": "headysecure-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
       "script": "headysystems-com",
       "source": null,
       "status": "unprovenanced",
       "note": "Deployed but no wrangler config in this repository produces it. Triage: identify the source, then move to active or delete."
-    },
-    {
-      "script": "headyvault-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
-    },
-    {
-      "script": "headyweb-com",
-      "source": null,
-      "status": "quarantined",
-      "note": "SEC-003 \u2014 reverse-proxy to app2.holyburgje4.xyz, deployed 2026-07-06, etag f6f727d4d623. Delete only AFTER Cloudflare credential rotation (SEC-003 step 1)."
     },
     {
       "script": "liquid-gateway-worker",

@@ -7,7 +7,8 @@ HEADY_BRAND:END -->
 
 # SEC-003 — 20 Cloudflare Workers reverse-proxy to an attacker origin
 
-- **Status:** 🔴 **OPEN — ACTIVE**, verified live 2026-08-26
+- **Status:** 🟡 **CONTAINED 2026-08-28** — the hijack is removed and independently
+  re-verified. Open only on the residual items in §Remaining.
 - **Severity:** Critical — credential and session interception on 20 production domains
 - **Onset:** 2026-07-06T19:10–19:15Z · **Duration:** 51 days and counting
 - **Verified by:** direct read-only Cloudflare API enumeration (scripts, zone routes, audit log)
@@ -145,6 +146,43 @@ prove it without redistributing the payload; the body is kept local-only at
 > the other untouched — a likely reason the first rotation felt complete but wasn't.
 
 ---
+
+## Containment — executed 2026-08-28
+
+`scripts/sec-003-remove-hijack.sh --apply`, routes deleted before scripts so each domain
+unrouted cleanly (404) rather than erroring against a live route with no script.
+
+- **20 routes deleted**, one apex `<domain>/*` per hijacked domain. The clean
+  `www.<domain>/*` routes bound to `worker-heady-router` were deliberately left alone.
+- **20 scripts deleted.** Account went 61 → 41.
+- **Independently verified**, not trusted from the delete responses: every one of the 41
+  remaining scripts was re-fetched and grepped — **zero contain `app2.holyburgje4.xyz`**.
+- **Visitor-level check:** the affected hostnames now return a default Apache placeholder
+  from their DNS origin with `server: cloudflare` and no redirect to the attacker. Not Heady
+  content, but no longer credential-intercepting. Restoring real content on those domains is
+  ordinary work, not incident work.
+- `configs/edge-inventory.json` reduced 61 → 41 rows; `check-edge.mjs` reports
+  `quarantined: 0, undeclared: 0, missing: 0 — clean`.
+
+**Credential state at execution.** The founder rotated the Global API Key and confirmed it.
+That roll is not verifiable from the account audit log, because profile-level actions are
+user events rather than account events — it rests on the founder's attestation. The
+operating token was `heady-rebuild-scoped-2026-07-23`, **issued 17 days after the hijack**,
+so it is not the vector; an earlier revision of the removal script gated on it by mistake
+and that gate was corrected in `963886b3ab` before execution.
+
+## Remaining
+
+1. **Pre-incident tokens carrying `API Tokens Write`** can mint a replacement credential.
+   They are not enumerable with an account-scoped token; review them at
+   https://dash.cloudflare.com/profile/api-tokens and roll anything predating 2026-07-06.
+2. **33 of the 41 surviving scripts are `unprovenanced`** — the edge-inventory gate accepts
+   them because they are declared, but this repo cannot prove it produced them. That is the
+   same blind spot that let SEC-003 run for 51 days, just narrower. Provenance them or
+   retire them.
+3. **Disclosure.** Anyone who authenticated against the 20 hostnames between 2026-07-06 and
+   2026-08-28 transmitted credentials to the attacker. `headyconnection.org` is a 501(c)(3)
+   public portal; handle per the nonprofit's obligations.
 
 ## Remediation — order matters
 
