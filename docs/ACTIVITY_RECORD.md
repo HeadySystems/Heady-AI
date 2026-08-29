@@ -139,10 +139,67 @@ remains is not code:
 
 | Step | What | Where |
 |---|---|---|
-| **S1** | Decide the founder-key IAM boundary | https://console.cloud.google.com/iam-admin/iam?project=heady-ai · service accounts: https://console.cloud.google.com/iam-admin/serviceaccounts?project=heady-ai |
+| **S1** | Decide the founder-key IAM boundary | **full procedure below** |
 | **S4** | Neon runtime login | https://console.neon.tech |
 | **S8** | Gate report + security review + manifest + **a second signature** | runbook §STEP 8 |
 | **S9** | The one-time genesis transaction | runbook §STEP 9 |
+
+#### S1 in full — the founder-key IAM boundary
+
+**The decision, plainly.** `roles/cloudkms.signerVerifier` on the `founder-evidence` KMS key
+is currently held by `user:eric@headyconnection.org` — *the identity this machine's agent
+sessions authenticate as*. So today, an agent session on this box can sign founder evidence.
+That is the same shape as every other finding this week: a control that is not a control if
+an agent can reach it. S1 is the decision to move signing to an identity that only exists on
+a device with no agent session.
+
+**⚠️ Run every command yourself.** The runbook is explicit that an agent must not touch IAM
+on your signing key, and the revoke will lock this session out of the key — which is the
+point, and the proof it worked.
+
+Resolved values (no placeholders): project `heady-ai` · keyring `heady-approval` ·
+location `global` · key `founder-evidence`.
+
+**0. Re-auth — gcloud is expired on this box.** I hit `Reauthentication failed. cannot
+prompt during non-interactive execution` trying to read the policy:
+```bash
+gcloud auth login
+```
+
+**1. Read the current binding** before changing anything:
+```bash
+gcloud kms keys get-iam-policy founder-evidence \
+  --keyring=heady-approval --location=global --project=heady-ai
+```
+Expect `user:eric@headyconnection.org` with `roles/cloudkms.signerVerifier`.
+
+**2. Decide**, then run the matching branch.
+
+*Branch A — move signing off the agent-reachable identity (what the runbook recommends):*
+```bash
+gcloud kms keys remove-iam-policy-binding founder-evidence \
+  --keyring=heady-approval --location=global --project=heady-ai \
+  --member=user:eric@headyconnection.org --role=roles/cloudkms.signerVerifier
+
+gcloud kms keys add-iam-policy-binding founder-evidence \
+  --keyring=heady-approval --location=global --project=heady-ai \
+  --member=user:eric@headysystems.com --role=roles/cloudkms.signerVerifier
+```
+Do the `add` from the clean device, or at least confirm you can authenticate as
+`eric@headysystems.com` there **before** the `remove` — otherwise you are locked out of your
+own signing key with no path back except project-owner recovery.
+
+*Branch B — accept the current boundary.* Legitimate for a solo founder, but then record it:
+the ADR-0031 threat model assumes the signing identity is not agent-reachable, so accepting
+B means amending that assumption in writing rather than leaving it implicitly violated.
+
+**3. Verify the move took** — re-run the step 1 read. From *this* machine, Branch A should
+now FAIL with a permission error on the key. That failure is the success signal.
+
+**Console:** <https://console.cloud.google.com/security/kms/keyring/manage/global/heady-approval?project=heady-ai>
+
+**Then tell me which branch**, and I will record it in the runbook and the incident-adjacent
+governance notes, and move on to S4 (Neon runtime login).
 
 Only then does STEP 10 open HCP-0003 and the bee runtime. Read the runbook step bodies
 before each — they carry the exact commands and the order-sensitivity.
