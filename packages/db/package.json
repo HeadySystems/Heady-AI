@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@heady/secrets": "workspace:*",
-    "pg": "8.22.0"
+    "pg": "8.23.0"
   },
   "keywords": ["heady", "postgres", "neon", "pgvector", "outbox", "idempotency", "drizzle", "migrations"]
 }
